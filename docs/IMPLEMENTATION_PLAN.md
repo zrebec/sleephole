@@ -604,6 +604,9 @@ detection log matches reality. **Stop.**
 - [x] Street-light upgrade (§7.3); unfinished→complete bonus (§8) — done in F3 (`TownBuilder`)
 - [ ] Štatistiky screen (§9) with Swift Charts
 - [ ] JSON backup export/import; 7-day expiry reminder notification
+- [ ] **Ruin repair** (owner request): a later good night can rebuild a ruin (decide: replaces the new building, or a bonus like the unfinished→complete rule)
+- [ ] Maybe a per-night cap on total time away (tolerance is per trip today) – ask the owner
+- See `README.md` → „Čo nás čaká“ for the owner-facing roadmap and the XS→XXL idea list
 **Accept:** a week of real use. **Stop.**
 
 ### F5 — Living town
