@@ -1,0 +1,3631 @@
+[
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-00.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-00",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-01.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-01",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-02.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-02",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-03.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-03",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-04.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-04",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-05.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-05",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-06.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-06",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-07.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-07",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-08.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-08",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-09.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-09",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-10.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-10",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-11.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-11",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-12.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-12",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-13.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-13",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-14.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-14",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.334,
+      0.209
+    ],
+    "file": "L0/o-crane-15.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-crane-15",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Žeriav",
+    "size": [
+      471,
+      717
+    ]
+  },
+  {
+    "anchor": [
+      0.447,
+      0.38
+    ],
+    "file": "L0/o-ruin-1.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-ruin-1",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Ruina",
+    "size": [
+      329,
+      213
+    ]
+  },
+  {
+    "anchor": [
+      0.466,
+      0.421
+    ],
+    "file": "L0/o-ruin-2.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "o-ruin-2",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Ruina",
+    "size": [
+      580,
+      339
+    ]
+  },
+  {
+    "anchor": [
+      0.459,
+      0.373
+    ],
+    "file": "L0/o-ruin-flowers-1.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-ruin-flowers-1",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Zarastená ruina",
+    "size": [
+      336,
+      217
+    ]
+  },
+  {
+    "anchor": [
+      0.466,
+      0.421
+    ],
+    "file": "L0/o-ruin-flowers-2.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "o-ruin-flowers-2",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Zarastená ruina",
+    "size": [
+      580,
+      339
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.222
+    ],
+    "file": "L0/o-scaffold-1.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-scaffold-1",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Lešenie",
+    "size": [
+      285,
+      353
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.245
+    ],
+    "file": "L0/o-scaffold-2.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "o-scaffold-2",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Lešenie",
+    "size": [
+      541,
+      583
+    ]
+  },
+  {
+    "anchor": [
+      0.468,
+      0.416
+    ],
+    "file": "L0/o-site-1.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "o-site-1",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Stavenisko",
+    "size": [
+      319,
+      197
+    ]
+  },
+  {
+    "anchor": [
+      0.48,
+      0.447
+    ],
+    "file": "L0/o-site-2.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "o-site-2",
+    "kind": "overlay",
+    "level": 0,
+    "nameSK": "Stavenisko",
+    "size": [
+      572,
+      324
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.481
+    ],
+    "file": "L0/t-grass-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-grass-a",
+    "kind": "terrain",
+    "level": 0,
+    "nameSK": "Tráva",
+    "size": [
+      285,
+      164
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.481
+    ],
+    "file": "L0/t-grass-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-grass-b",
+    "kind": "terrain",
+    "level": 0,
+    "nameSK": "Tráva",
+    "size": [
+      285,
+      164
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.481
+    ],
+    "file": "L0/t-lot.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-lot",
+    "kind": "terrain",
+    "level": 0,
+    "nameSK": "Stavebný pozemok",
+    "size": [
+      285,
+      164
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.481
+    ],
+    "file": "L0/t-plaza.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-plaza",
+    "kind": "terrain",
+    "level": 0,
+    "nameSK": "Dlažba",
+    "size": [
+      285,
+      164
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "ES",
+    "file": "L0/t-road-bend-es.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-bend-es",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "NE",
+    "file": "L0/t-road-bend-ne.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-bend-ne",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "NW",
+    "file": "L0/t-road-bend-nw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-bend-nw",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "SW",
+    "file": "L0/t-road-bend-sw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-bend-sw",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "EW",
+    "file": "L0/t-road-crossing-ew.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-crossing-ew",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "NS",
+    "file": "L0/t-road-crossing-ns.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-crossing-ns",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "NESW",
+    "file": "L0/t-road-crossroad-nesw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-crossroad-nesw",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "E",
+    "file": "L0/t-road-end-e.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-end-e",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "N",
+    "file": "L0/t-road-end-n.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-end-n",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "S",
+    "file": "L0/t-road-end-s.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-end-s",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "W",
+    "file": "L0/t-road-end-w.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-end-w",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "ESW",
+    "file": "L0/t-road-intersection-esw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-intersection-esw",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "NES",
+    "file": "L0/t-road-intersection-nes.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-intersection-nes",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "NEW",
+    "file": "L0/t-road-intersection-new.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-intersection-new",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "NSW",
+    "file": "L0/t-road-intersection-nsw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-intersection-nsw",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "EW",
+    "file": "L0/t-road-straight-ew.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-straight-ew",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.5,
+      0.49
+    ],
+    "connects": "NS",
+    "file": "L0/t-road-straight-ns.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "t-road-straight-ns",
+    "kind": "road",
+    "level": 0,
+    "nameSK": "Cesta",
+    "size": [
+      285,
+      161
+    ]
+  },
+  {
+    "anchor": [
+      0.451,
+      0.394
+    ],
+    "file": "L0/v-ambulance-ne.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-ambulance-ne",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      316,
+      200
+    ]
+  },
+  {
+    "anchor": [
+      0.451,
+      0.394
+    ],
+    "file": "L0/v-ambulance-nw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-ambulance-nw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      316,
+      200
+    ]
+  },
+  {
+    "anchor": [
+      0.451,
+      0.394
+    ],
+    "file": "L0/v-ambulance-se.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-ambulance-se",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      316,
+      200
+    ]
+  },
+  {
+    "anchor": [
+      0.451,
+      0.394
+    ],
+    "file": "L0/v-ambulance-sw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-ambulance-sw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      316,
+      200
+    ]
+  },
+  {
+    "anchor": [
+      0.455,
+      0.401
+    ],
+    "file": "L0/v-delivery-ne.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-delivery-ne",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      314,
+      196
+    ]
+  },
+  {
+    "anchor": [
+      0.455,
+      0.401
+    ],
+    "file": "L0/v-delivery-nw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-delivery-nw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      314,
+      196
+    ]
+  },
+  {
+    "anchor": [
+      0.455,
+      0.401
+    ],
+    "file": "L0/v-delivery-se.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-delivery-se",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      314,
+      196
+    ]
+  },
+  {
+    "anchor": [
+      0.455,
+      0.401
+    ],
+    "file": "L0/v-delivery-sw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-delivery-sw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      314,
+      196
+    ]
+  },
+  {
+    "anchor": [
+      0.454,
+      0.399
+    ],
+    "file": "L0/v-firetruck-ne.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-firetruck-ne",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      315,
+      197
+    ]
+  },
+  {
+    "anchor": [
+      0.454,
+      0.399
+    ],
+    "file": "L0/v-firetruck-nw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-firetruck-nw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      315,
+      197
+    ]
+  },
+  {
+    "anchor": [
+      0.454,
+      0.399
+    ],
+    "file": "L0/v-firetruck-se.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-firetruck-se",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      315,
+      197
+    ]
+  },
+  {
+    "anchor": [
+      0.454,
+      0.399
+    ],
+    "file": "L0/v-firetruck-sw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-firetruck-sw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      315,
+      197
+    ]
+  },
+  {
+    "anchor": [
+      0.456,
+      0.404
+    ],
+    "file": "L0/v-garbage-truck-ne.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-garbage-truck-ne",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      313,
+      195
+    ]
+  },
+  {
+    "anchor": [
+      0.456,
+      0.404
+    ],
+    "file": "L0/v-garbage-truck-nw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-garbage-truck-nw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      313,
+      195
+    ]
+  },
+  {
+    "anchor": [
+      0.456,
+      0.404
+    ],
+    "file": "L0/v-garbage-truck-se.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-garbage-truck-se",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      313,
+      195
+    ]
+  },
+  {
+    "anchor": [
+      0.456,
+      0.404
+    ],
+    "file": "L0/v-garbage-truck-sw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-garbage-truck-sw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      313,
+      195
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-police-ne.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-police-ne",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-police-nw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-police-nw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-police-se.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-police-se",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-police-sw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-police-sw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-sedan-ne.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-sedan-ne",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-sedan-nw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-sedan-nw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-sedan-se.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-sedan-se",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-sedan-sw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-sedan-sw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-suv-ne.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-suv-ne",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-suv-nw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-suv-nw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-suv-se.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-suv-se",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.464,
+      0.419
+    ],
+    "file": "L0/v-suv-sw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-suv-sw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      308,
+      188
+    ]
+  },
+  {
+    "anchor": [
+      0.458,
+      0.409
+    ],
+    "file": "L0/v-taxi-ne.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-taxi-ne",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      311,
+      193
+    ]
+  },
+  {
+    "anchor": [
+      0.458,
+      0.409
+    ],
+    "file": "L0/v-taxi-nw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-taxi-nw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      311,
+      193
+    ]
+  },
+  {
+    "anchor": [
+      0.458,
+      0.409
+    ],
+    "file": "L0/v-taxi-se.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-taxi-se",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      311,
+      193
+    ]
+  },
+  {
+    "anchor": [
+      0.458,
+      0.409
+    ],
+    "file": "L0/v-taxi-sw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-taxi-sw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      311,
+      193
+    ]
+  },
+  {
+    "anchor": [
+      0.462,
+      0.416
+    ],
+    "file": "L0/v-van-ne.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-van-ne",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      309,
+      189
+    ]
+  },
+  {
+    "anchor": [
+      0.462,
+      0.416
+    ],
+    "file": "L0/v-van-nw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-van-nw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      309,
+      189
+    ]
+  },
+  {
+    "anchor": [
+      0.462,
+      0.416
+    ],
+    "file": "L0/v-van-se.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-van-se",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      309,
+      189
+    ]
+  },
+  {
+    "anchor": [
+      0.462,
+      0.416
+    ],
+    "file": "L0/v-van-sw.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "v-van-sw",
+    "kind": "vehicle",
+    "level": 0,
+    "nameSK": "Auto",
+    "size": [
+      309,
+      189
+    ]
+  },
+  {
+    "anchor": [
+      0.422,
+      0.338
+    ],
+    "file": "L1/l1-bigblock-e.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l1-bigblock-e",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Veľký bytový dom",
+    "size": [
+      641,
+      422
+    ]
+  },
+  {
+    "anchor": [
+      0.369,
+      0.26
+    ],
+    "file": "L1/l1-bigblock-i.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l1-bigblock-i",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Veľký bytový dom",
+    "size": [
+      734,
+      549
+    ]
+  },
+  {
+    "anchor": [
+      0.392,
+      0.292
+    ],
+    "file": "L1/l1-bigblock-j.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l1-bigblock-j",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Veľký bytový dom",
+    "size": [
+      691,
+      489
+    ]
+  },
+  {
+    "anchor": [
+      0.403,
+      0.309
+    ],
+    "file": "L1/l1-bigblock-k.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l1-bigblock-k",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Veľký bytový dom",
+    "size": [
+      671,
+      462
+    ]
+  },
+  {
+    "anchor": [
+      0.337,
+      0.222
+    ],
+    "file": "L1/l1-bigblock-l.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l1-bigblock-l",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Veľký bytový dom",
+    "size": [
+      802,
+      641
+    ]
+  },
+  {
+    "anchor": [
+      0.367,
+      0.258
+    ],
+    "file": "L1/l1-bigblock-n.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l1-bigblock-n",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Veľký bytový dom",
+    "size": [
+      738,
+      554
+    ]
+  },
+  {
+    "anchor": [
+      0.329,
+      0.219
+    ],
+    "file": "L1/l1-block-a-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-a-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      434,
+      360
+    ]
+  },
+  {
+    "anchor": [
+      0.329,
+      0.219
+    ],
+    "file": "L1/l1-block-a-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-a-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      434,
+      360
+    ]
+  },
+  {
+    "anchor": [
+      0.332,
+      0.223
+    ],
+    "file": "L1/l1-block-b-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-b-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      429,
+      354
+    ]
+  },
+  {
+    "anchor": [
+      0.332,
+      0.223
+    ],
+    "file": "L1/l1-block-b-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-b-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      429,
+      354
+    ]
+  },
+  {
+    "anchor": [
+      0.382,
+      0.283
+    ],
+    "file": "L1/l1-block-c-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-c-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      374,
+      278
+    ]
+  },
+  {
+    "anchor": [
+      0.382,
+      0.283
+    ],
+    "file": "L1/l1-block-c-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-c-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      374,
+      278
+    ]
+  },
+  {
+    "anchor": [
+      0.329,
+      0.219
+    ],
+    "file": "L1/l1-block-d-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-d-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      434,
+      360
+    ]
+  },
+  {
+    "anchor": [
+      0.329,
+      0.219
+    ],
+    "file": "L1/l1-block-d-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-d-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      434,
+      360
+    ]
+  },
+  {
+    "anchor": [
+      0.308,
+      0.197
+    ],
+    "file": "L1/l1-block-f-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-f-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      463,
+      400
+    ]
+  },
+  {
+    "anchor": [
+      0.308,
+      0.197
+    ],
+    "file": "L1/l1-block-f-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-f-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      463,
+      400
+    ]
+  },
+  {
+    "anchor": [
+      0.301,
+      0.19
+    ],
+    "file": "L1/l1-block-g-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-g-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      474,
+      415
+    ]
+  },
+  {
+    "anchor": [
+      0.301,
+      0.19
+    ],
+    "file": "L1/l1-block-g-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-g-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      474,
+      415
+    ]
+  },
+  {
+    "anchor": [
+      0.337,
+      0.227
+    ],
+    "file": "L1/l1-block-h-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-h-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      424,
+      346
+    ]
+  },
+  {
+    "anchor": [
+      0.337,
+      0.227
+    ],
+    "file": "L1/l1-block-h-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-block-h-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Bytový dom",
+    "size": [
+      424,
+      346
+    ]
+  },
+  {
+    "anchor": [
+      0.402,
+      0.313
+    ],
+    "file": "L1/l1-house-a-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-a-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      355,
+      252
+    ]
+  },
+  {
+    "anchor": [
+      0.402,
+      0.313
+    ],
+    "file": "L1/l1-house-a-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-a-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      355,
+      252
+    ]
+  },
+  {
+    "anchor": [
+      0.402,
+      0.313
+    ],
+    "file": "L1/l1-house-a-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-a-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      355,
+      252
+    ]
+  },
+  {
+    "anchor": [
+      0.405,
+      0.316
+    ],
+    "file": "L1/l1-house-b-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-b-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      353,
+      249
+    ]
+  },
+  {
+    "anchor": [
+      0.405,
+      0.316
+    ],
+    "file": "L1/l1-house-b-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-b-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      353,
+      249
+    ]
+  },
+  {
+    "anchor": [
+      0.405,
+      0.316
+    ],
+    "file": "L1/l1-house-b-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-b-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      353,
+      249
+    ]
+  },
+  {
+    "anchor": [
+      0.383,
+      0.286
+    ],
+    "file": "L1/l1-house-c-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-c-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      372,
+      276
+    ]
+  },
+  {
+    "anchor": [
+      0.383,
+      0.286
+    ],
+    "file": "L1/l1-house-c-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-c-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      372,
+      276
+    ]
+  },
+  {
+    "anchor": [
+      0.383,
+      0.286
+    ],
+    "file": "L1/l1-house-c-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-c-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      372,
+      276
+    ]
+  },
+  {
+    "anchor": [
+      0.395,
+      0.301
+    ],
+    "file": "L1/l1-house-d-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-d-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      362,
+      261
+    ]
+  },
+  {
+    "anchor": [
+      0.395,
+      0.301
+    ],
+    "file": "L1/l1-house-d-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-d-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      362,
+      261
+    ]
+  },
+  {
+    "anchor": [
+      0.395,
+      0.301
+    ],
+    "file": "L1/l1-house-d-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-d-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      362,
+      261
+    ]
+  },
+  {
+    "anchor": [
+      0.376,
+      0.275
+    ],
+    "file": "L1/l1-house-e-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-e-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      380,
+      286
+    ]
+  },
+  {
+    "anchor": [
+      0.376,
+      0.275
+    ],
+    "file": "L1/l1-house-e-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-e-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      380,
+      286
+    ]
+  },
+  {
+    "anchor": [
+      0.376,
+      0.275
+    ],
+    "file": "L1/l1-house-e-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-e-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      380,
+      286
+    ]
+  },
+  {
+    "anchor": [
+      0.384,
+      0.287
+    ],
+    "file": "L1/l1-house-f-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-f-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      371,
+      275
+    ]
+  },
+  {
+    "anchor": [
+      0.384,
+      0.287
+    ],
+    "file": "L1/l1-house-f-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-f-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      371,
+      275
+    ]
+  },
+  {
+    "anchor": [
+      0.384,
+      0.287
+    ],
+    "file": "L1/l1-house-f-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-f-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      371,
+      275
+    ]
+  },
+  {
+    "anchor": [
+      0.417,
+      0.335
+    ],
+    "file": "L1/l1-house-g-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-g-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      343,
+      236
+    ]
+  },
+  {
+    "anchor": [
+      0.417,
+      0.335
+    ],
+    "file": "L1/l1-house-g-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-g-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      343,
+      236
+    ]
+  },
+  {
+    "anchor": [
+      0.417,
+      0.335
+    ],
+    "file": "L1/l1-house-g-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-g-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      343,
+      236
+    ]
+  },
+  {
+    "anchor": [
+      0.412,
+      0.327
+    ],
+    "file": "L1/l1-house-h-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-h-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      347,
+      241
+    ]
+  },
+  {
+    "anchor": [
+      0.412,
+      0.327
+    ],
+    "file": "L1/l1-house-h-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-h-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      347,
+      241
+    ]
+  },
+  {
+    "anchor": [
+      0.412,
+      0.327
+    ],
+    "file": "L1/l1-house-h-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-h-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      347,
+      241
+    ]
+  },
+  {
+    "anchor": [
+      0.411,
+      0.325
+    ],
+    "file": "L1/l1-house-i-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-i-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      347,
+      242
+    ]
+  },
+  {
+    "anchor": [
+      0.411,
+      0.325
+    ],
+    "file": "L1/l1-house-i-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-i-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      347,
+      242
+    ]
+  },
+  {
+    "anchor": [
+      0.411,
+      0.325
+    ],
+    "file": "L1/l1-house-i-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-i-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      347,
+      242
+    ]
+  },
+  {
+    "anchor": [
+      0.389,
+      0.293
+    ],
+    "file": "L1/l1-house-j-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-j-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      367,
+      269
+    ]
+  },
+  {
+    "anchor": [
+      0.389,
+      0.293
+    ],
+    "file": "L1/l1-house-j-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-j-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      367,
+      269
+    ]
+  },
+  {
+    "anchor": [
+      0.389,
+      0.293
+    ],
+    "file": "L1/l1-house-j-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-j-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      367,
+      269
+    ]
+  },
+  {
+    "anchor": [
+      0.35,
+      0.244
+    ],
+    "file": "L1/l1-house-k-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-k-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      407,
+      324
+    ]
+  },
+  {
+    "anchor": [
+      0.35,
+      0.244
+    ],
+    "file": "L1/l1-house-k-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-k-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      407,
+      324
+    ]
+  },
+  {
+    "anchor": [
+      0.35,
+      0.244
+    ],
+    "file": "L1/l1-house-k-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-k-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      407,
+      324
+    ]
+  },
+  {
+    "anchor": [
+      0.361,
+      0.256
+    ],
+    "file": "L1/l1-house-l-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-l-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      395,
+      307
+    ]
+  },
+  {
+    "anchor": [
+      0.361,
+      0.256
+    ],
+    "file": "L1/l1-house-l-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-l-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      395,
+      307
+    ]
+  },
+  {
+    "anchor": [
+      0.361,
+      0.256
+    ],
+    "file": "L1/l1-house-l-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-l-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      395,
+      307
+    ]
+  },
+  {
+    "anchor": [
+      0.418,
+      0.337
+    ],
+    "file": "L1/l1-house-m-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-m-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      341,
+      234
+    ]
+  },
+  {
+    "anchor": [
+      0.418,
+      0.337
+    ],
+    "file": "L1/l1-house-m-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-m-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      341,
+      234
+    ]
+  },
+  {
+    "anchor": [
+      0.418,
+      0.337
+    ],
+    "file": "L1/l1-house-m-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-m-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      341,
+      234
+    ]
+  },
+  {
+    "anchor": [
+      0.403,
+      0.313
+    ],
+    "file": "L1/l1-house-n-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-n-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      354,
+      251
+    ]
+  },
+  {
+    "anchor": [
+      0.403,
+      0.313
+    ],
+    "file": "L1/l1-house-n-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-n-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      354,
+      251
+    ]
+  },
+  {
+    "anchor": [
+      0.403,
+      0.313
+    ],
+    "file": "L1/l1-house-n-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-n-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      354,
+      251
+    ]
+  },
+  {
+    "anchor": [
+      0.373,
+      0.272
+    ],
+    "file": "L1/l1-house-o-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-o-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      382,
+      289
+    ]
+  },
+  {
+    "anchor": [
+      0.373,
+      0.272
+    ],
+    "file": "L1/l1-house-o-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-o-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      382,
+      289
+    ]
+  },
+  {
+    "anchor": [
+      0.373,
+      0.272
+    ],
+    "file": "L1/l1-house-o-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-o-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      382,
+      289
+    ]
+  },
+  {
+    "anchor": [
+      0.39,
+      0.296
+    ],
+    "file": "L1/l1-house-p-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-p-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      365,
+      267
+    ]
+  },
+  {
+    "anchor": [
+      0.39,
+      0.296
+    ],
+    "file": "L1/l1-house-p-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-p-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      365,
+      267
+    ]
+  },
+  {
+    "anchor": [
+      0.39,
+      0.296
+    ],
+    "file": "L1/l1-house-p-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-p-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      365,
+      267
+    ]
+  },
+  {
+    "anchor": [
+      0.39,
+      0.296
+    ],
+    "file": "L1/l1-house-q-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-q-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      365,
+      267
+    ]
+  },
+  {
+    "anchor": [
+      0.39,
+      0.296
+    ],
+    "file": "L1/l1-house-q-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-q-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      365,
+      267
+    ]
+  },
+  {
+    "anchor": [
+      0.39,
+      0.296
+    ],
+    "file": "L1/l1-house-q-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-q-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      365,
+      267
+    ]
+  },
+  {
+    "anchor": [
+      0.352,
+      0.245
+    ],
+    "file": "L1/l1-house-r-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-r-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      405,
+      321
+    ]
+  },
+  {
+    "anchor": [
+      0.352,
+      0.245
+    ],
+    "file": "L1/l1-house-r-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-r-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      405,
+      321
+    ]
+  },
+  {
+    "anchor": [
+      0.352,
+      0.245
+    ],
+    "file": "L1/l1-house-r-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-r-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      405,
+      321
+    ]
+  },
+  {
+    "anchor": [
+      0.383,
+      0.285
+    ],
+    "file": "L1/l1-house-s-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-s-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      373,
+      277
+    ]
+  },
+  {
+    "anchor": [
+      0.383,
+      0.285
+    ],
+    "file": "L1/l1-house-s-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-s-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      373,
+      277
+    ]
+  },
+  {
+    "anchor": [
+      0.383,
+      0.285
+    ],
+    "file": "L1/l1-house-s-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-s-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      373,
+      277
+    ]
+  },
+  {
+    "anchor": [
+      0.381,
+      0.283
+    ],
+    "file": "L1/l1-house-t-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-t-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      374,
+      279
+    ]
+  },
+  {
+    "anchor": [
+      0.381,
+      0.283
+    ],
+    "file": "L1/l1-house-t-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-t-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      374,
+      279
+    ]
+  },
+  {
+    "anchor": [
+      0.381,
+      0.283
+    ],
+    "file": "L1/l1-house-t-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-t-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      374,
+      279
+    ]
+  },
+  {
+    "anchor": [
+      0.384,
+      0.287
+    ],
+    "file": "L1/l1-house-u-0.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-u-0",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      371,
+      275
+    ]
+  },
+  {
+    "anchor": [
+      0.384,
+      0.287
+    ],
+    "file": "L1/l1-house-u-a.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-u-a",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      371,
+      275
+    ]
+  },
+  {
+    "anchor": [
+      0.384,
+      0.287
+    ],
+    "file": "L1/l1-house-u-b.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l1-house-u-b",
+    "kind": "building",
+    "level": 1,
+    "nameSK": "Rodinný dom",
+    "size": [
+      371,
+      275
+    ]
+  },
+  {
+    "anchor": [
+      0.414,
+      0.326
+    ],
+    "file": "L2/l2-library-a.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l2-library-a",
+    "kind": "building",
+    "level": 2,
+    "nameSK": "Knižnica",
+    "size": [
+      653,
+      438
+    ]
+  },
+  {
+    "anchor": [
+      0.39,
+      0.29
+    ],
+    "file": "L2/l2-library-b.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l2-library-b",
+    "kind": "building",
+    "level": 2,
+    "nameSK": "Mestská knižnica",
+    "size": [
+      693,
+      493
+    ]
+  },
+  {
+    "anchor": [
+      0.375,
+      0.273
+    ],
+    "file": "L2/l2-museum-a.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l2-museum-a",
+    "kind": "building",
+    "level": 2,
+    "nameSK": "Múzeum",
+    "size": [
+      722,
+      523
+    ]
+  },
+  {
+    "anchor": [
+      0.42,
+      0.335
+    ],
+    "file": "L2/l2-museum-b.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l2-museum-b",
+    "kind": "building",
+    "level": 2,
+    "nameSK": "Múzeum umenia",
+    "size": [
+      644,
+      425
+    ]
+  },
+  {
+    "anchor": [
+      0.43,
+      0.352
+    ],
+    "file": "L2/l2-park-fountain.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l2-park-fountain",
+    "kind": "park",
+    "level": 2,
+    "nameSK": "Park s fontánou",
+    "size": [
+      630,
+      406
+    ]
+  },
+  {
+    "anchor": [
+      0.428,
+      0.349
+    ],
+    "file": "L2/l2-park-garden.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l2-park-garden",
+    "kind": "park",
+    "level": 2,
+    "nameSK": "Záhrada so sochou",
+    "size": [
+      632,
+      409
+    ]
+  },
+  {
+    "anchor": [
+      0.43,
+      0.352
+    ],
+    "file": "L2/l2-park-pond.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l2-park-pond",
+    "kind": "park",
+    "level": 2,
+    "nameSK": "Park s jazierkom",
+    "size": [
+      630,
+      406
+    ]
+  },
+  {
+    "anchor": [
+      0.382,
+      0.284
+    ],
+    "file": "L2/l2-park-small.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l2-park-small",
+    "kind": "park",
+    "level": 2,
+    "nameSK": "Malý park",
+    "size": [
+      374,
+      278
+    ]
+  },
+  {
+    "anchor": [
+      0.403,
+      0.313
+    ],
+    "connects": "NS",
+    "file": "L2/l2-road-lit-ns.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l2-road-lit-ns",
+    "kind": "road-lit",
+    "level": 2,
+    "nameSK": "Osvetlená ulica",
+    "size": [
+      354,
+      251
+    ]
+  },
+  {
+    "anchor": [
+      0.403,
+      0.313
+    ],
+    "connects": "EW",
+    "file": "L2/l2-road-lit-we.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "l2-road-lit-we",
+    "kind": "road-lit",
+    "level": 2,
+    "nameSK": "Osvetlená ulica",
+    "size": [
+      354,
+      251
+    ]
+  },
+  {
+    "anchor": [
+      0.397,
+      0.3
+    ],
+    "file": "L3/l3-firestation.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l3-firestation",
+    "kind": "building",
+    "level": 3,
+    "nameSK": "Hasičská stanica",
+    "size": [
+      681,
+      476
+    ]
+  },
+  {
+    "anchor": [
+      0.383,
+      0.279
+    ],
+    "file": "L3/l3-hospital.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l3-hospital",
+    "kind": "building",
+    "level": 3,
+    "nameSK": "Nemocnica",
+    "size": [
+      707,
+      511
+    ]
+  },
+  {
+    "anchor": [
+      0.41,
+      0.319
+    ],
+    "file": "L3/l3-police.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l3-police",
+    "kind": "building",
+    "level": 3,
+    "nameSK": "Polícia",
+    "size": [
+      660,
+      448
+    ]
+  },
+  {
+    "anchor": [
+      0.39,
+      0.29
+    ],
+    "file": "L3/l3-school.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l3-school",
+    "kind": "building",
+    "level": 3,
+    "nameSK": "Škola",
+    "size": [
+      693,
+      493
+    ]
+  },
+  {
+    "anchor": [
+      0.327,
+      0.216
+    ],
+    "file": "L3/l3-townhall.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l3-townhall",
+    "kind": "building",
+    "level": 3,
+    "nameSK": "Radnica",
+    "size": [
+      827,
+      662
+    ]
+  },
+  {
+    "anchor": [
+      0.31,
+      0.194
+    ],
+    "file": "L4/l4-sky-a-0.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-sky-a-0",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Mrakodrap",
+    "size": [
+      872,
+      737
+    ]
+  },
+  {
+    "anchor": [
+      0.31,
+      0.194
+    ],
+    "file": "L4/l4-sky-a-a.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-sky-a-a",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Mrakodrap",
+    "size": [
+      872,
+      737
+    ]
+  },
+  {
+    "anchor": [
+      0.256,
+      0.145
+    ],
+    "file": "L4/l4-sky-b-0.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-sky-b-0",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Mrakodrap",
+    "size": [
+      1056,
+      988
+    ]
+  },
+  {
+    "anchor": [
+      0.256,
+      0.145
+    ],
+    "file": "L4/l4-sky-b-a.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-sky-b-a",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Mrakodrap",
+    "size": [
+      1056,
+      988
+    ]
+  },
+  {
+    "anchor": [
+      0.268,
+      0.154
+    ],
+    "file": "L4/l4-sky-c-0.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-sky-c-0",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Mrakodrap",
+    "size": [
+      1010,
+      925
+    ]
+  },
+  {
+    "anchor": [
+      0.268,
+      0.154
+    ],
+    "file": "L4/l4-sky-c-a.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-sky-c-a",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Mrakodrap",
+    "size": [
+      1010,
+      925
+    ]
+  },
+  {
+    "anchor": [
+      0.231,
+      0.125
+    ],
+    "file": "L4/l4-sky-d-0.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-sky-d-0",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Mrakodrap",
+    "size": [
+      1170,
+      1143
+    ]
+  },
+  {
+    "anchor": [
+      0.231,
+      0.125
+    ],
+    "file": "L4/l4-sky-d-a.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-sky-d-a",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Mrakodrap",
+    "size": [
+      1170,
+      1143
+    ]
+  },
+  {
+    "anchor": [
+      0.268,
+      0.154
+    ],
+    "file": "L4/l4-sky-e-0.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-sky-e-0",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Mrakodrap",
+    "size": [
+      1010,
+      925
+    ]
+  },
+  {
+    "anchor": [
+      0.268,
+      0.154
+    ],
+    "file": "L4/l4-sky-e-a.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-sky-e-a",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Mrakodrap",
+    "size": [
+      1010,
+      925
+    ]
+  },
+  {
+    "anchor": [
+      0.3,
+      0.183
+    ],
+    "file": "L4/l4-tower-m.png",
+    "footprint": [
+      2,
+      2
+    ],
+    "id": "l4-tower-m",
+    "kind": "building",
+    "level": 4,
+    "nameSK": "Výšková budova",
+    "size": [
+      903,
+      779
+    ]
+  }
+]

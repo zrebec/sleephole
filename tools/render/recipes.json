@@ -1,0 +1,10851 @@
+[
+ {
+  "id": "l1-house-a-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-a",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7231
+   }
+  ]
+ },
+ {
+  "id": "l1-house-a-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-a",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7231,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-a-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-a",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7231,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-b-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-b",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.5142
+   }
+  ]
+ },
+ {
+  "id": "l1-house-b-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-b",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.5142,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-b-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-b",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.5142,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-c-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-c",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7307
+   }
+  ]
+ },
+ {
+  "id": "l1-house-c-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-c",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7307,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-c-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-c",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7307,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-d-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-d",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.5352
+   }
+  ]
+ },
+ {
+  "id": "l1-house-d-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-d",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.5352,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-d-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-d",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.5352,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-e-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-e",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7231
+   }
+  ]
+ },
+ {
+  "id": "l1-house-e-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-e",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7231,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-e-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-e",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7231,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-f-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-f",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6583
+   }
+  ]
+ },
+ {
+  "id": "l1-house-f-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-f",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6583,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-f-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-f",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6583,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-g-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-g",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6483
+   }
+  ]
+ },
+ {
+  "id": "l1-house-g-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-g",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6483,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-g-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-g",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6483,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-h-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-h",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7231
+   }
+  ]
+ },
+ {
+  "id": "l1-house-h-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-h",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7231,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-h-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-h",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7231,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-i-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-i",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7307
+   }
+  ]
+ },
+ {
+  "id": "l1-house-i-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-i",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7307,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-i-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-i",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7307,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-j-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-j",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6861
+   }
+  ]
+ },
+ {
+  "id": "l1-house-j-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-j",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6861,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-j-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-j",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6861,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-k-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-k",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9216
+   }
+  ]
+ },
+ {
+  "id": "l1-house-k-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-k",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9216,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-k-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-k",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9216,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-l-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-l",
+    "pos": [
+     0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.9095
+   }
+  ]
+ },
+ {
+  "id": "l1-house-l-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-l",
+    "pos": [
+     0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.9095,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-l-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-l",
+    "pos": [
+     0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.9095,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-m-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-m",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6583
+   }
+  ]
+ },
+ {
+  "id": "l1-house-m-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-m",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6583,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-m-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-m",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6583,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-n-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-n",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.5268
+   }
+  ]
+ },
+ {
+  "id": "l1-house-n-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-n",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.5268,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-n-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-n",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.5268,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-o-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-o",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7402
+   }
+  ]
+ },
+ {
+  "id": "l1-house-o-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-o",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7402,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-o-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-o",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.7402,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-p-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-p",
+    "pos": [
+     0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.7581
+   }
+  ]
+ },
+ {
+  "id": "l1-house-p-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-p",
+    "pos": [
+     0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.7581,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-p-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-p",
+    "pos": [
+     0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.7581,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-q-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-q",
+    "pos": [
+     0.0,
+     0.0,
+     -0.016
+    ],
+    "rot": 0,
+    "scale": 0.7581
+   }
+  ]
+ },
+ {
+  "id": "l1-house-q-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-q",
+    "pos": [
+     0.0,
+     0.0,
+     -0.016
+    ],
+    "rot": 0,
+    "scale": 0.7581,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-q-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-q",
+    "pos": [
+     0.0,
+     0.0,
+     -0.016
+    ],
+    "rot": 0,
+    "scale": 0.7581,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-r-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-r",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9144
+   }
+  ]
+ },
+ {
+  "id": "l1-house-r-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-r",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9144,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-r-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-r",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9144,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-s-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-s",
+    "pos": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6685
+   }
+  ]
+ },
+ {
+  "id": "l1-house-s-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-s",
+    "pos": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6685,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-s-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-s",
+    "pos": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6685,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-t-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-t",
+    "pos": [
+     0.005,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6684
+   }
+  ]
+ },
+ {
+  "id": "l1-house-t-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-t",
+    "pos": [
+     0.005,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6684,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-t-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-t",
+    "pos": [
+     0.005,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6684,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-u-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-u",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6583
+   }
+  ]
+ },
+ {
+  "id": "l1-house-u-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-u",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6583,
+    "texture": "City Kit - Suburban/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-house-u-b",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Rodinný dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/building-type-u",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.6583,
+    "texture": "City Kit - Suburban/Models/Textures/variation-b.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-block-a-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-a",
+    "pos": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l1-block-a-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-a",
+    "pos": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-block-b-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-b",
+    "pos": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9691
+   }
+  ]
+ },
+ {
+  "id": "l1-block-b-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-b",
+    "pos": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9691,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-block-c-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-c",
+    "pos": [
+     -0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.8624
+   }
+  ]
+ },
+ {
+  "id": "l1-block-c-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-c",
+    "pos": [
+     -0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.8624,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-block-d-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-d",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l1-block-d-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-d",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-block-f-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-f",
+    "pos": [
+     0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.9126
+   }
+  ]
+ },
+ {
+  "id": "l1-block-f-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-f",
+    "pos": [
+     0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.9126,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-block-g-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-g",
+    "pos": [
+     0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.9691
+   }
+  ]
+ },
+ {
+  "id": "l1-block-g-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-g",
+    "pos": [
+     0.0,
+     0.0,
+     -0.0
+    ],
+    "rot": 0,
+    "scale": 0.9691,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-block-h-0",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-h",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9326
+   }
+  ]
+ },
+ {
+  "id": "l1-block-h-a",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Bytový dom",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-h",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9326,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   }
+  ]
+ },
+ {
+  "id": "l1-bigblock-e",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Veľký bytový dom",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-e",
+    "pos": [
+     -0.0,
+     0.0,
+     -0.15
+    ],
+    "rot": 0,
+    "scale": 0.9756
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.78,
+     0.0,
+     0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.6,
+     0.0,
+     0.78
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l1-bigblock-i",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Veľký bytový dom",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-i",
+    "pos": [
+     -0.0,
+     0.0,
+     -0.15
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.78,
+     0.0,
+     0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.6,
+     0.0,
+     0.78
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l1-bigblock-j",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Veľký bytový dom",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-j",
+    "pos": [
+     0.0,
+     0.0,
+     -0.15
+    ],
+    "rot": 0,
+    "scale": 0.7679
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.78,
+     0.0,
+     0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.6,
+     0.0,
+     0.78
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l1-bigblock-k",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Veľký bytový dom",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-k",
+    "pos": [
+     0.0,
+     0.0,
+     -0.15
+    ],
+    "rot": 0,
+    "scale": 0.7679
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.78,
+     0.0,
+     0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.6,
+     0.0,
+     0.78
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l1-bigblock-l",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Veľký bytový dom",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-l",
+    "pos": [
+     0.0,
+     0.0,
+     -0.15
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.78,
+     0.0,
+     0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.6,
+     0.0,
+     0.78
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l1-bigblock-n",
+  "level": 1,
+  "kind": "building",
+  "nameSK": "Veľký bytový dom",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-n",
+    "pos": [
+     0.0,
+     0.0,
+     -0.15
+    ],
+    "rot": 0,
+    "scale": 0.6897
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.78,
+     0.0,
+     0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.6,
+     0.0,
+     0.78
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l2-park-small",
+  "level": 2,
+  "kind": "park",
+  "nameSK": "Malý park",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.98,
+     0.03,
+     0.98
+    ],
+    "color": "#7cc26a",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     -0.25,
+     0.0,
+     -0.25
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-small",
+    "pos": [
+     0.3,
+     0.0,
+     -0.3
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Holiday Kit/Models/OBJ format/bench",
+    "pos": [
+     0.05,
+     0.0,
+     0.28
+    ],
+    "rot": 0,
+    "scale": 0.3
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_redA",
+    "pos": [
+     0.35,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_yellowA",
+    "pos": [
+     -0.35,
+     0.0,
+     0.25
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_purpleA",
+    "pos": [
+     0.38,
+     0.0,
+     0.05
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l2-park-fountain",
+  "level": 2,
+  "kind": "park",
+  "nameSK": "Park s fontánou",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#7cc26a",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "Fantasy Town Kit/Models/OBJ format/fountain-round-detail",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.5
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     -0.72,
+     0.0,
+     -0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.72,
+     0.0,
+     -0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     -0.72,
+     0.0,
+     0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-small",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Holiday Kit/Models/OBJ format/bench",
+    "pos": [
+     0,
+     0.0,
+     0.72
+    ],
+    "rot": 0,
+    "scale": 0.3
+   },
+   {
+    "src": "Holiday Kit/Models/OBJ format/bench",
+    "pos": [
+     0.72,
+     0.0,
+     0
+    ],
+    "rot": 90,
+    "scale": 0.3
+   },
+   {
+    "src": "Holiday Kit/Models/OBJ format/lantern",
+    "pos": [
+     -0.45,
+     0.0,
+     0.45
+    ],
+    "rot": 0,
+    "scale": 0.33
+   },
+   {
+    "src": "Holiday Kit/Models/OBJ format/lantern",
+    "pos": [
+     0.45,
+     0.0,
+     -0.45
+    ],
+    "rot": 0,
+    "scale": 0.33
+   }
+  ]
+ },
+ {
+  "id": "l2-park-garden",
+  "level": 2,
+  "kind": "park",
+  "nameSK": "Záhrada so sochou",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#7cc26a",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/statue_obelisk",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.9
+   },
+   {
+    "src": "Fantasy Town Kit/Models/OBJ format/hedge",
+    "pos": [
+     -0.55,
+     0.0,
+     0
+    ],
+    "rot": 0,
+    "scale": 0.9
+   },
+   {
+    "src": "Fantasy Town Kit/Models/OBJ format/hedge",
+    "pos": [
+     0.55,
+     0.0,
+     0
+    ],
+    "rot": 180,
+    "scale": 0.9
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     -0.75,
+     0.0,
+     -0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     -0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_redA",
+    "pos": [
+     -0.3,
+     0.0,
+     0.6
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_yellowB",
+    "pos": [
+     0.3,
+     0.0,
+     0.65
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_purpleB",
+    "pos": [
+     0.6,
+     0.0,
+     0.35
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_redB",
+    "pos": [
+     -0.6,
+     0.0,
+     0.4
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Holiday Kit/Models/OBJ format/bench",
+    "pos": [
+     0,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 0.3
+   }
+  ]
+ },
+ {
+  "id": "l2-park-pond",
+  "level": 2,
+  "kind": "park",
+  "nameSK": "Park s jazierkom",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#7cc26a",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.9,
+     0.035,
+     0.7
+    ],
+    "color": "#6cc3e8",
+    "pos": [
+     0.1,
+     0.0,
+     0.1
+    ]
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/lily_large",
+    "pos": [
+     0.05,
+     0.035,
+     0.05
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/lily_small",
+    "pos": [
+     0.3,
+     0.035,
+     0.25
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/rock_smallA",
+    "pos": [
+     -0.4,
+     0.0,
+     0.4
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/rock_smallC",
+    "pos": [
+     0.6,
+     0.0,
+     -0.2
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     -0.72,
+     0.0,
+     -0.7
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-small",
+    "pos": [
+     -0.4,
+     0.0,
+     -0.78
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.72,
+     0.0,
+     -0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Holiday Kit/Models/OBJ format/bench",
+    "pos": [
+     -0.6,
+     0.0,
+     0.1
+    ],
+    "rot": 90,
+    "scale": 0.3
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_yellowA",
+    "pos": [
+     0.7,
+     0.0,
+     0.7
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_redA",
+    "pos": [
+     -0.2,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l2-road-lit-we",
+  "level": 2,
+  "kind": "road-lit",
+  "nameSK": "Osvetlená ulica",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-straight",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/light-square",
+    "pos": [
+     0.25,
+     0.0,
+     0.45
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/light-square",
+    "pos": [
+     -0.25,
+     0.0,
+     -0.45
+    ],
+    "rot": 180,
+    "scale": 1.0
+   }
+  ],
+  "connects": "EW"
+ },
+ {
+  "id": "l2-road-lit-ns",
+  "level": 2,
+  "kind": "road-lit",
+  "nameSK": "Osvetlená ulica",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-straight",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/light-square",
+    "pos": [
+     0.45,
+     0.0,
+     -0.25
+    ],
+    "rot": 90,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/light-square",
+    "pos": [
+     -0.45,
+     0.0,
+     0.25
+    ],
+    "rot": 270,
+    "scale": 1.0
+   }
+  ],
+  "connects": "NS"
+ },
+ {
+  "id": "l2-museum-a",
+  "level": 2,
+  "kind": "building",
+  "nameSK": "Múzeum",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "Modular Buildings/Models/OBJ format/building-sample-house-c",
+    "pos": [
+     0.0,
+     0.0,
+     -0.25
+    ],
+    "rot": 0,
+    "scale": 0.75
+   },
+   {
+    "box": [
+     1.5,
+     0.05,
+     0.32
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.72
+    ]
+   },
+   {
+    "src": "Building Kit/Models/OBJ format/column",
+    "pos": [
+     -0.6,
+     0.05,
+     0.74
+    ],
+    "rot": 0,
+    "scale": 0.24
+   },
+   {
+    "src": "Building Kit/Models/OBJ format/column",
+    "pos": [
+     -0.2,
+     0.05,
+     0.74
+    ],
+    "rot": 0,
+    "scale": 0.24
+   },
+   {
+    "src": "Building Kit/Models/OBJ format/column",
+    "pos": [
+     0.2,
+     0.05,
+     0.74
+    ],
+    "rot": 0,
+    "scale": 0.24
+   },
+   {
+    "src": "Building Kit/Models/OBJ format/column",
+    "pos": [
+     0.6,
+     0.05,
+     0.74
+    ],
+    "rot": 0,
+    "scale": 0.24
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/statue_column",
+    "pos": [
+     0.85,
+     0.0,
+     0.85
+    ],
+    "rot": 0,
+    "scale": 0.5
+   }
+  ],
+  "signs": [
+   {
+    "text": "MÚZEUM",
+    "color": "#7b4a2a",
+    "height": 0.4,
+    "textColor": "#ffffff"
+   }
+  ]
+ },
+ {
+  "id": "l2-museum-b",
+  "level": 2,
+  "kind": "building",
+  "nameSK": "Múzeum umenia",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-e",
+    "pos": [
+     -0.0,
+     0.0,
+     -0.3
+    ],
+    "rot": 0,
+    "scale": 1.0,
+    "texture": "City Kit - Commercial/Models/Textures/variation-b.png"
+   },
+   {
+    "src": "Building Kit/Models/OBJ format/column-wide",
+    "pos": [
+     -0.55,
+     0.0,
+     0.35
+    ],
+    "rot": 0,
+    "scale": 0.3
+   },
+   {
+    "src": "Building Kit/Models/OBJ format/column-wide",
+    "pos": [
+     0,
+     0.0,
+     0.35
+    ],
+    "rot": 0,
+    "scale": 0.3
+   },
+   {
+    "src": "Building Kit/Models/OBJ format/column-wide",
+    "pos": [
+     0.55,
+     0.0,
+     0.35
+    ],
+    "rot": 0,
+    "scale": 0.3
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/statue_obelisk",
+    "pos": [
+     -0.7,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 0.7
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-small",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "signs": [
+   {
+    "text": "GALÉRIA",
+    "color": "#6b3f8f",
+    "height": 0.8,
+    "textColor": "#ffffff"
+   }
+  ]
+ },
+ {
+  "id": "l2-library-a",
+  "level": 2,
+  "kind": "building",
+  "nameSK": "Knižnica",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "Modular Buildings/Models/OBJ format/building-sample-house-a",
+    "pos": [
+     -0.2,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 0.85
+   },
+   {
+    "src": "Holiday Kit/Models/OBJ format/bench",
+    "pos": [
+     0.35,
+     0.0,
+     0.7
+    ],
+    "rot": 0,
+    "scale": 0.3
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     -0.75,
+     0.0,
+     0.7
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     0.75,
+     0.0,
+     0.35
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "signs": [
+   {
+    "text": "KNIŽNICA",
+    "color": "#2f7a55",
+    "height": 0.5,
+    "textColor": "#ffffff"
+   }
+  ]
+ },
+ {
+  "id": "l2-library-b",
+  "level": 2,
+  "kind": "building",
+  "nameSK": "Mestská knižnica",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-k",
+    "pos": [
+     0.0,
+     0.0,
+     -0.3
+    ],
+    "rot": 0,
+    "scale": 0.9,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   },
+   {
+    "src": "Holiday Kit/Models/OBJ format/bench",
+    "pos": [
+     -0.3,
+     0.0,
+     0.72
+    ],
+    "rot": 0,
+    "scale": 0.3
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.72
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-small",
+    "pos": [
+     -0.8,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "signs": [
+   {
+    "text": "KNIŽNICA",
+    "color": "#2f7a55",
+    "height": 0.55,
+    "textColor": "#ffffff"
+   }
+  ]
+ },
+ {
+  "id": "l3-townhall",
+  "level": 3,
+  "kind": "building",
+  "nameSK": "Radnica",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "Modular Buildings/Models/OBJ format/building-sample-tower-c",
+    "pos": [
+     0.0,
+     0.0,
+     -0.416
+    ],
+    "rot": 0,
+    "scale": 0.75
+   },
+   {
+    "src": "Modular Buildings/Models/OBJ format/building-sample-house-b",
+    "pos": [
+     -0.55,
+     0.0,
+     -0.35
+    ],
+    "rot": 0,
+    "scale": 0.7
+   },
+   {
+    "src": "Modular Buildings/Models/OBJ format/building-sample-house-b",
+    "pos": [
+     0.55,
+     0.0,
+     -0.35
+    ],
+    "rot": 0,
+    "scale": 0.7
+   },
+   {
+    "src": "Fantasy Town Kit/Models/OBJ format/fountain-round",
+    "pos": [
+     0,
+     0.0,
+     0.62
+    ],
+    "rot": 0,
+    "scale": 0.3
+   },
+   {
+    "box": [
+     0.03,
+     1.1,
+     0.03
+    ],
+    "color": "#9a9aa8",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.2,
+     0.32
+    ],
+    "color": "#f2c14e",
+    "pos": [
+     0.75,
+     0.82,
+     0.59
+    ]
+   },
+   {
+    "box": [
+     0.024,
+     0.06,
+     0.32
+    ],
+    "color": "#3a9a5b",
+    "pos": [
+     0.75,
+     0.89,
+     0.59
+    ]
+   },
+   {
+    "box": [
+     0.03,
+     0.2,
+     0.03
+    ],
+    "color": "#8a6a3a",
+    "pos": [
+     -0.62,
+     0.0,
+     0.78
+    ]
+   },
+   {
+    "box": [
+     0.03,
+     0.2,
+     0.03
+    ],
+    "color": "#8a6a3a",
+    "pos": [
+     -0.08,
+     0.0,
+     0.78
+    ]
+   }
+  ],
+  "signs": [
+   {
+    "text": "RADNICA",
+    "color": "#b8862b",
+    "height": 0.72,
+    "textColor": "#ffffff",
+    "pos": [
+     -0.35,
+     0.24,
+     0.8
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l3-school",
+  "level": 3,
+  "kind": "building",
+  "nameSK": "Škola",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-k",
+    "pos": [
+     0.0,
+     0.0,
+     -0.35
+    ],
+    "rot": 0,
+    "scale": 0.9,
+    "texture": "City Kit - Commercial/Models/Textures/variation-b.png"
+   },
+   {
+    "box": [
+     0.5,
+     0.05,
+     0.4
+    ],
+    "color": "#e8d28a",
+    "pos": [
+     0.55,
+     0.0,
+     0.55
+    ]
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     -0.75,
+     0.0,
+     0.65
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-small",
+    "pos": [
+     -0.45,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-small",
+    "pos": [
+     0.8,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "signs": [
+   {
+    "text": "ŠKOLA",
+    "color": "#e07b24",
+    "height": 0.6,
+    "textColor": "#ffffff"
+   }
+  ]
+ },
+ {
+  "id": "l3-firestation",
+  "level": 3,
+  "kind": "building",
+  "nameSK": "Hasičská stanica",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Industrial/Models/OBJ format/building-g",
+    "pos": [
+     0.0,
+     0.0,
+     -0.3
+    ],
+    "rot": 0,
+    "scale": 0.95
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/firetruck",
+    "pos": [
+     0.45,
+     0.0,
+     0.55
+    ],
+    "rot": 0,
+    "scale": 0.15
+   }
+  ],
+  "signs": [
+   {
+    "text": "HASIČI",
+    "color": "#c8342b",
+    "height": 0.8,
+    "textColor": "#ffffff"
+   }
+  ]
+ },
+ {
+  "id": "l3-police",
+  "level": 3,
+  "kind": "building",
+  "nameSK": "Polícia",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-c",
+    "pos": [
+     -0.2,
+     0.0,
+     -0.3
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-a",
+    "pos": [
+     0.6,
+     0.0,
+     -0.45
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/police",
+    "pos": [
+     0.45,
+     0.0,
+     0.6
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ],
+  "signs": [
+   {
+    "text": "POLÍCIA",
+    "color": "#1f4fa3",
+    "height": 0.7,
+    "textColor": "#ffffff"
+   }
+  ]
+ },
+ {
+  "id": "l3-hospital",
+  "level": 3,
+  "kind": "building",
+  "nameSK": "Nemocnica",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-j",
+    "pos": [
+     0.0,
+     0.0,
+     -0.3
+    ],
+    "rot": 0,
+    "scale": 0.85
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/ambulance",
+    "pos": [
+     0.55,
+     0.0,
+     0.65
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ],
+  "signs": [
+   {
+    "text": "NEMOCNICA",
+    "color": "#ffffff",
+    "height": 0.82,
+    "textColor": "#d8342b"
+   }
+  ]
+ },
+ {
+  "id": "l4-sky-a-0",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Mrakodrap",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-skyscraper-a",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.7,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l4-sky-a-a",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Mrakodrap",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-skyscraper-a",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.7,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l4-sky-b-0",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Mrakodrap",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-skyscraper-b",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.7,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l4-sky-b-a",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Mrakodrap",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-skyscraper-b",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.7,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l4-sky-c-0",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Mrakodrap",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-skyscraper-c",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.7,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l4-sky-c-a",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Mrakodrap",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-skyscraper-c",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.7,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l4-sky-d-0",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Mrakodrap",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-skyscraper-d",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.7,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l4-sky-d-a",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Mrakodrap",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-skyscraper-d",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.7,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l4-sky-e-0",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Mrakodrap",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-skyscraper-e",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.7,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l4-sky-e-a",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Mrakodrap",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-skyscraper-e",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0,
+    "texture": "City Kit - Commercial/Models/Textures/variation-a.png"
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     -0.7,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "l4-tower-m",
+  "level": 4,
+  "kind": "building",
+  "nameSK": "Výšková budova",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-m",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.75,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "t-grass-a",
+  "level": 0,
+  "kind": "terrain",
+  "nameSK": "Tráva",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     1,
+     0.04,
+     1
+    ],
+    "color": "#8fcf6f",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "t-grass-b",
+  "level": 0,
+  "kind": "terrain",
+  "nameSK": "Tráva",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     1,
+     0.04,
+     1
+    ],
+    "color": "#86c768",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "t-plaza",
+  "level": 0,
+  "kind": "terrain",
+  "nameSK": "Dlažba",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     1,
+     0.04,
+     1
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "t-lot",
+  "level": 0,
+  "kind": "terrain",
+  "nameSK": "Stavebný pozemok",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     1,
+     0.04,
+     1
+    ],
+    "color": "#b98a5e",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "t-road-straight-ew",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-straight",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "connects": "EW",
+  "shadow": false
+ },
+ {
+  "id": "t-road-straight-ns",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-straight",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 1.0
+   }
+  ],
+  "connects": "NS",
+  "shadow": false
+ },
+ {
+  "id": "t-road-crossing-ew",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-crossing",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "connects": "EW",
+  "shadow": false
+ },
+ {
+  "id": "t-road-crossing-ns",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-crossing",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 1.0
+   }
+  ],
+  "connects": "NS",
+  "shadow": false
+ },
+ {
+  "id": "t-road-crossroad-nesw",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-crossroad",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "connects": "NESW",
+  "shadow": false
+ },
+ {
+  "id": "t-road-intersection-esw",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-intersection",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "connects": "ESW",
+  "shadow": false
+ },
+ {
+  "id": "t-road-intersection-nes",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-intersection",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 1.0
+   }
+  ],
+  "connects": "NES",
+  "shadow": false
+ },
+ {
+  "id": "t-road-intersection-new",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-intersection",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 1.0
+   }
+  ],
+  "connects": "NEW",
+  "shadow": false
+ },
+ {
+  "id": "t-road-intersection-nsw",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-intersection",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 1.0
+   }
+  ],
+  "connects": "NSW",
+  "shadow": false
+ },
+ {
+  "id": "t-road-bend-sw",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-bend",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "connects": "SW",
+  "shadow": false
+ },
+ {
+  "id": "t-road-bend-es",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-bend",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 1.0
+   }
+  ],
+  "connects": "ES",
+  "shadow": false
+ },
+ {
+  "id": "t-road-bend-ne",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-bend",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 1.0
+   }
+  ],
+  "connects": "NE",
+  "shadow": false
+ },
+ {
+  "id": "t-road-bend-nw",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-bend",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 1.0
+   }
+  ],
+  "connects": "NW",
+  "shadow": false
+ },
+ {
+  "id": "t-road-end-e",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-end",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "connects": "E",
+  "shadow": false
+ },
+ {
+  "id": "t-road-end-n",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-end",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 1.0
+   }
+  ],
+  "connects": "N",
+  "shadow": false
+ },
+ {
+  "id": "t-road-end-w",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-end",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 1.0
+   }
+  ],
+  "connects": "W",
+  "shadow": false
+ },
+ {
+  "id": "t-road-end-s",
+  "level": 0,
+  "kind": "road",
+  "nameSK": "Cesta",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Roads/Models/OBJ format/road-end",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 1.0
+   }
+  ],
+  "connects": "S",
+  "shadow": false
+ },
+ {
+  "id": "o-scaffold-1",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Lešenie",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.035,
+     1.25,
+     0.035
+    ],
+    "color": "#c8914f",
+    "pos": [
+     -0.47,
+     0.0,
+     -0.47
+    ]
+   },
+   {
+    "box": [
+     0.035,
+     1.25,
+     0.035
+    ],
+    "color": "#c8914f",
+    "pos": [
+     -0.47,
+     0.0,
+     0.47
+    ]
+   },
+   {
+    "box": [
+     0.035,
+     1.25,
+     0.035
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.47,
+     0.0,
+     -0.47
+    ]
+   },
+   {
+    "box": [
+     0.035,
+     1.25,
+     0.035
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.47,
+     0.0,
+     0.47
+    ]
+   },
+   {
+    "box": [
+     0.94,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.3,
+     0.47
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     0.94
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.47,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.94,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.3,
+     -0.47
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     0.94
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     -0.47,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.94,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.62,
+     0.47
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     0.94
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.47,
+     0.62,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.94,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.62,
+     -0.47
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     0.94
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     -0.47,
+     0.62,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.94,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.94,
+     0.47
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     0.94
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.47,
+     0.94,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.94,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.94,
+     -0.47
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     0.94
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     -0.47,
+     0.94,
+     0.0
+    ]
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-scaffold-2",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Lešenie",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     0.035,
+     1.9,
+     0.035
+    ],
+    "color": "#c8914f",
+    "pos": [
+     -0.94,
+     0.0,
+     -0.94
+    ]
+   },
+   {
+    "box": [
+     0.035,
+     1.9,
+     0.035
+    ],
+    "color": "#c8914f",
+    "pos": [
+     -0.94,
+     0.0,
+     0.94
+    ]
+   },
+   {
+    "box": [
+     0.035,
+     1.9,
+     0.035
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.94,
+     0.0,
+     -0.94
+    ]
+   },
+   {
+    "box": [
+     0.035,
+     1.9,
+     0.035
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.94,
+     0.0,
+     0.94
+    ]
+   },
+   {
+    "box": [
+     1.88,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.3,
+     0.94
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     1.88
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.94,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.88,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.3,
+     -0.94
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     1.88
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     -0.94,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.88,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.62,
+     0.94
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     1.88
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.94,
+     0.62,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.88,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.62,
+     -0.94
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     1.88
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     -0.94,
+     0.62,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.88,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.94,
+     0.94
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     1.88
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.94,
+     0.94,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.88,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     0.94,
+     -0.94
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     1.88
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     -0.94,
+     0.94,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.88,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     1.26,
+     0.94
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     1.88
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.94,
+     1.26,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.88,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     1.26,
+     -0.94
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     1.88
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     -0.94,
+     1.26,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.88,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     1.58,
+     0.94
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     1.88
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.94,
+     1.58,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.88,
+     0.03,
+     0.04
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     0.0,
+     1.58,
+     -0.94
+    ]
+   },
+   {
+    "box": [
+     0.04,
+     0.03,
+     1.88
+    ],
+    "color": "#d9a15e",
+    "pos": [
+     -0.94,
+     1.58,
+     0.0
+    ]
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-site-1",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Stavenisko",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.98,
+     0.03,
+     0.98
+    ],
+    "color": "#b98a5e",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-cone",
+    "pos": [
+     0.4,
+     0.0,
+     0.4
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-cone",
+    "pos": [
+     -0.4,
+     0.0,
+     0.42
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-barrier",
+    "pos": [
+     0,
+     0.0,
+     0.44
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-light",
+    "pos": [
+     0.42,
+     0.0,
+     -0.4
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "o-site-2",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Stavenisko",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#b98a5e",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-cone",
+    "pos": [
+     0.9,
+     0.0,
+     0.9
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-cone",
+    "pos": [
+     -0.9,
+     0.0,
+     0.92
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-barrier",
+    "pos": [
+     -0.3,
+     0.0,
+     0.92
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-barrier",
+    "pos": [
+     0.3,
+     0.0,
+     0.92
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-light",
+    "pos": [
+     0.92,
+     0.0,
+     -0.9
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-light",
+    "pos": [
+     -0.92,
+     0.0,
+     -0.9
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "o-ruin-1",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Ruina",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.98,
+     0.03,
+     0.98
+    ],
+    "color": "#a99a86",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.7,
+     0.22,
+     0.08
+    ],
+    "color": "#b7b3c4",
+    "pos": [
+     -0.05,
+     0.0,
+     -0.35
+    ]
+   },
+   {
+    "box": [
+     0.08,
+     0.34,
+     0.55
+    ],
+    "color": "#a9a5b8",
+    "pos": [
+     -0.35,
+     0.0,
+     -0.1
+    ]
+   },
+   {
+    "box": [
+     0.18,
+     0.1,
+     0.14
+    ],
+    "color": "#9d98ab",
+    "pos": [
+     0.1,
+     0.0,
+     0.1
+    ]
+   },
+   {
+    "box": [
+     0.12,
+     0.07,
+     0.1
+    ],
+    "color": "#b7b3c4",
+    "pos": [
+     0.25,
+     0.0,
+     -0.05
+    ]
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/rock_smallA",
+    "pos": [
+     0.2,
+     0.0,
+     0.25
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/rock_smallC",
+    "pos": [
+     -0.2,
+     0.0,
+     0.2
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-barrier",
+    "pos": [
+     0.3,
+     0.0,
+     0.42
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "o-ruin-2",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Ruina",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#a99a86",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.4,
+     0.22,
+     0.08
+    ],
+    "color": "#b7b3c4",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.7
+    ]
+   },
+   {
+    "box": [
+     0.08,
+     0.34,
+     1.1
+    ],
+    "color": "#a9a5b8",
+    "pos": [
+     -0.7,
+     0.0,
+     -0.2
+    ]
+   },
+   {
+    "box": [
+     0.18,
+     0.1,
+     0.14
+    ],
+    "color": "#9d98ab",
+    "pos": [
+     0.2,
+     0.0,
+     0.2
+    ]
+   },
+   {
+    "box": [
+     0.12,
+     0.07,
+     0.1
+    ],
+    "color": "#b7b3c4",
+    "pos": [
+     0.5,
+     0.0,
+     -0.1
+    ]
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/rock_smallA",
+    "pos": [
+     0.4,
+     0.0,
+     0.5
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/rock_smallC",
+    "pos": [
+     -0.4,
+     0.0,
+     0.4
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-barrier",
+    "pos": [
+     0.6,
+     0.0,
+     0.84
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "o-ruin-flowers-1",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Zarastená ruina",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.98,
+     0.03,
+     0.98
+    ],
+    "color": "#a99a86",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.7,
+     0.22,
+     0.08
+    ],
+    "color": "#b7b3c4",
+    "pos": [
+     -0.05,
+     0.0,
+     -0.35
+    ]
+   },
+   {
+    "box": [
+     0.08,
+     0.34,
+     0.55
+    ],
+    "color": "#a9a5b8",
+    "pos": [
+     -0.35,
+     0.0,
+     -0.1
+    ]
+   },
+   {
+    "box": [
+     0.18,
+     0.1,
+     0.14
+    ],
+    "color": "#9d98ab",
+    "pos": [
+     0.1,
+     0.0,
+     0.1
+    ]
+   },
+   {
+    "box": [
+     0.12,
+     0.07,
+     0.1
+    ],
+    "color": "#b7b3c4",
+    "pos": [
+     0.25,
+     0.0,
+     -0.05
+    ]
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/rock_smallA",
+    "pos": [
+     0.2,
+     0.0,
+     0.25
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/rock_smallC",
+    "pos": [
+     -0.2,
+     0.0,
+     0.2
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-barrier",
+    "pos": [
+     0.3,
+     0.0,
+     0.42
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_redA",
+    "pos": [
+     -0.1,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_yellowA",
+    "pos": [
+     0.3,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_purpleA",
+    "pos": [
+     -0.3,
+     0.0,
+     0.35
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/plant_bushLarge",
+    "pos": [
+     0.05,
+     0.0,
+     -0.2
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/grass_large",
+    "pos": [
+     -0.35,
+     0.0,
+     -0.3
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "o-ruin-flowers-2",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Zarastená ruina",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#a99a86",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.4,
+     0.22,
+     0.08
+    ],
+    "color": "#b7b3c4",
+    "pos": [
+     -0.1,
+     0.0,
+     -0.7
+    ]
+   },
+   {
+    "box": [
+     0.08,
+     0.34,
+     1.1
+    ],
+    "color": "#a9a5b8",
+    "pos": [
+     -0.7,
+     0.0,
+     -0.2
+    ]
+   },
+   {
+    "box": [
+     0.18,
+     0.1,
+     0.14
+    ],
+    "color": "#9d98ab",
+    "pos": [
+     0.2,
+     0.0,
+     0.2
+    ]
+   },
+   {
+    "box": [
+     0.12,
+     0.07,
+     0.1
+    ],
+    "color": "#b7b3c4",
+    "pos": [
+     0.5,
+     0.0,
+     -0.1
+    ]
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/rock_smallA",
+    "pos": [
+     0.4,
+     0.0,
+     0.5
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/rock_smallC",
+    "pos": [
+     -0.4,
+     0.0,
+     0.4
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Roads/Models/OBJ format/construction-barrier",
+    "pos": [
+     0.6,
+     0.0,
+     0.84
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_redA",
+    "pos": [
+     -0.2,
+     0.0,
+     0.6
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_yellowA",
+    "pos": [
+     0.6,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/flower_purpleA",
+    "pos": [
+     -0.6,
+     0.0,
+     0.7
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/plant_bushLarge",
+    "pos": [
+     0.05,
+     0.0,
+     -0.4
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Nature Kit/Models/OBJ format/grass_large",
+    "pos": [
+     -0.7,
+     0.0,
+     -0.6
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ]
+ },
+ {
+  "id": "o-crane-00",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.0778,
+     2.15,
+     0.1061
+    ],
+    "rot": 45.0
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.5657,
+     2.25,
+     -0.5657
+    ],
+    "rot": 45.0
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.2121,
+     2.25,
+     0.2121
+    ],
+    "rot": 45.0
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.3677,
+     2.19,
+     0.3677
+    ],
+    "rot": 45.0
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.9024,
+     2.21,
+     -0.9024
+    ],
+    "rot": 45.0
+   },
+   {
+    "box": [
+     0.022,
+     1.26,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.9024,
+     0.95,
+     -0.9024
+    ],
+    "rot": 45.0
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.9024,
+     0.8899999999999999,
+     -0.9024
+    ],
+    "rot": 135.0
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#ff3b30",
+    "pos": [
+     1.1314,
+     2.29,
+     -1.1314
+    ],
+    "rot": 45.0
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-01",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.1107,
+     2.15,
+     0.0711
+    ],
+    "rot": 66.04758878007993
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.3248,
+     2.25,
+     -0.7311
+    ],
+    "rot": 66.04758878007993
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.1218,
+     2.25,
+     0.2742
+    ],
+    "rot": 66.04758878007993
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.2111,
+     2.19,
+     0.4752
+    ],
+    "rot": 66.04758878007993
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.5277,
+     2.21,
+     -1.188
+    ],
+    "rot": 66.04758878007993
+   },
+   {
+    "box": [
+     0.022,
+     1.083,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.5277,
+     1.1267766952966367,
+     -1.188
+    ],
+    "rot": 66.04758878007993
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.5277,
+     1.0667766952966367,
+     -1.188
+    ],
+    "rot": 156.04758878007993
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#ff3b30",
+    "pos": [
+     0.6496,
+     2.29,
+     -1.4622
+    ],
+    "rot": 66.04758878007993
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-02",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.1271,
+     2.15,
+     0.0337
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0851,
+     2.25,
+     -0.7955
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.0319,
+     2.25,
+     0.2983
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.0553,
+     2.19,
+     0.517
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.1352,
+     2.21,
+     -1.2631
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     0.022,
+     1.01,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.1352,
+     1.2,
+     -1.2631
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.1352,
+     1.14,
+     -1.2631
+    ],
+    "rot": 173.89087296526012
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#6b1d19",
+    "pos": [
+     0.1703,
+     2.29,
+     -1.5909
+    ],
+    "rot": 83.89087296526012
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-03",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.1314,
+     2.15,
+     0.0067
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.081,
+     2.25,
+     -0.7959
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0304,
+     2.25,
+     0.2985
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     0.0527,
+     2.19,
+     0.5173
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     -0.1207,
+     2.21,
+     -1.1859
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     0.022,
+     1.083,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     -0.1207,
+     1.126776695296637,
+     -1.1859
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     -0.1207,
+     1.0667766952966369,
+     -1.1859
+    ],
+    "rot": 185.81337428812077
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#6b1d19",
+    "pos": [
+     -0.1621,
+     2.29,
+     -1.5918
+    ],
+    "rot": 95.81337428812077
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-04",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.1315,
+     2.15,
+     -0.0029
+    ],
+    "rot": 100.0
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.1389,
+     2.25,
+     -0.7878
+    ],
+    "rot": 100.0
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0521,
+     2.25,
+     0.2954
+    ],
+    "rot": 100.0
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     0.0903,
+     2.19,
+     0.5121
+    ],
+    "rot": 100.0
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     -0.187,
+     2.21,
+     -1.0605
+    ],
+    "rot": 100.0
+   },
+   {
+    "box": [
+     0.022,
+     1.26,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     -0.187,
+     0.95,
+     -1.0605
+    ],
+    "rot": 100.0
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     -0.187,
+     0.8899999999999999,
+     -1.0605
+    ],
+    "rot": 190.0
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#ff3b30",
+    "pos": [
+     -0.2778,
+     2.29,
+     -1.5757
+    ],
+    "rot": 100.0
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-05",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.1314,
+     2.15,
+     0.0067
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.081,
+     2.25,
+     -0.7959
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0304,
+     2.25,
+     0.2985
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     0.0527,
+     2.19,
+     0.5173
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     -0.0954,
+     2.21,
+     -0.9375
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     0.022,
+     1.437,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     -0.0954,
+     0.7732233047033631,
+     -0.9375
+    ],
+    "rot": 95.81337428812077
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     -0.0954,
+     0.7132233047033631,
+     -0.9375
+    ],
+    "rot": 185.81337428812077
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#ff3b30",
+    "pos": [
+     -0.1621,
+     2.29,
+     -1.5918
+    ],
+    "rot": 95.81337428812077
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-06",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.1271,
+     2.15,
+     0.0337
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0851,
+     2.25,
+     -0.7955
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.0319,
+     2.25,
+     0.2983
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.0553,
+     2.19,
+     0.517
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.0861,
+     2.21,
+     -0.8044
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     0.022,
+     1.51,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.0861,
+     0.7,
+     -0.8044
+    ],
+    "rot": 83.89087296526012
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.0861,
+     0.6399999999999999,
+     -0.8044
+    ],
+    "rot": 173.89087296526012
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#6b1d19",
+    "pos": [
+     0.1703,
+     2.29,
+     -1.5909
+    ],
+    "rot": 83.89087296526012
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-07",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.1107,
+     2.15,
+     0.0711
+    ],
+    "rot": 66.04758878007995
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.3248,
+     2.25,
+     -0.7311
+    ],
+    "rot": 66.04758878007995
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.1218,
+     2.25,
+     0.2742
+    ],
+    "rot": 66.04758878007995
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.2111,
+     2.19,
+     0.4752
+    ],
+    "rot": 66.04758878007995
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.283,
+     2.21,
+     -0.6371
+    ],
+    "rot": 66.04758878007995
+   },
+   {
+    "box": [
+     0.022,
+     1.437,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.283,
+     0.773223304703363,
+     -0.6371
+    ],
+    "rot": 66.04758878007995
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.283,
+     0.7132233047033629,
+     -0.6371
+    ],
+    "rot": 156.04758878007993
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#6b1d19",
+    "pos": [
+     0.6496,
+     2.29,
+     -1.4622
+    ],
+    "rot": 66.04758878007995
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-08",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.0778,
+     2.15,
+     0.1061
+    ],
+    "rot": 45.00000000000001
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.5657,
+     2.25,
+     -0.5657
+    ],
+    "rot": 45.00000000000001
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.2121,
+     2.25,
+     0.2121
+    ],
+    "rot": 45.00000000000001
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.3677,
+     2.19,
+     0.3677
+    ],
+    "rot": 45.00000000000001
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.4411,
+     2.21,
+     -0.4411
+    ],
+    "rot": 45.00000000000001
+   },
+   {
+    "box": [
+     0.022,
+     1.26,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.4411,
+     0.9499999999999998,
+     -0.4411
+    ],
+    "rot": 45.00000000000001
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.4411,
+     0.8899999999999999,
+     -0.4411
+    ],
+    "rot": 135.0
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#ff3b30",
+    "pos": [
+     1.1314,
+     2.29,
+     -1.1314
+    ],
+    "rot": 45.00000000000001
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-09",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.0345,
+     2.15,
+     0.1269
+    ],
+    "rot": 23.95241121992007
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.7311,
+     2.25,
+     -0.3248
+    ],
+    "rot": 23.95241121992007
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.2742,
+     2.25,
+     0.1218
+    ],
+    "rot": 23.95241121992007
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.4752,
+     2.19,
+     0.2111
+    ],
+    "rot": 23.95241121992007
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.5484,
+     2.21,
+     -0.2436
+    ],
+    "rot": 23.95241121992007
+   },
+   {
+    "box": [
+     0.022,
+     1.083,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.5484,
+     1.1267766952966367,
+     -0.2436
+    ],
+    "rot": 23.95241121992007
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.5484,
+     1.0667766952966367,
+     -0.2436
+    ],
+    "rot": 113.95241121992007
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#ff3b30",
+    "pos": [
+     1.4622,
+     2.29,
+     -0.6496
+    ],
+    "rot": 23.95241121992007
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-10",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     -0.0061,
+     2.15,
+     0.1314
+    ],
+    "rot": 6.109127034739892
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.7955,
+     2.25,
+     -0.0851
+    ],
+    "rot": 6.109127034739892
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.2983,
+     2.25,
+     0.0319
+    ],
+    "rot": 6.109127034739892
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.517,
+     2.19,
+     0.0553
+    ],
+    "rot": 6.109127034739892
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.6261,
+     2.21,
+     -0.067
+    ],
+    "rot": 6.109127034739892
+   },
+   {
+    "box": [
+     0.022,
+     1.01,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.6261,
+     1.2,
+     -0.067
+    ],
+    "rot": 6.109127034739892
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.6261,
+     1.14,
+     -0.067
+    ],
+    "rot": 96.10912703473988
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#6b1d19",
+    "pos": [
+     1.5909,
+     2.29,
+     -0.1703
+    ],
+    "rot": 6.109127034739892
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-11",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     -0.0331,
+     2.15,
+     0.1273
+    ],
+    "rot": -5.813374288120755
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.7959,
+     2.25,
+     0.081
+    ],
+    "rot": -5.813374288120755
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.2985,
+     2.25,
+     -0.0304
+    ],
+    "rot": -5.813374288120755
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.5173,
+     2.19,
+     -0.0527
+    ],
+    "rot": -5.813374288120755
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.7044,
+     2.21,
+     0.0717
+    ],
+    "rot": -5.813374288120755
+   },
+   {
+    "box": [
+     0.022,
+     1.083,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.7044,
+     1.1267766952966372,
+     0.0717
+    ],
+    "rot": -5.813374288120755
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.7044,
+     1.066776695296637,
+     0.0717
+    ],
+    "rot": 84.18662571187924
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#6b1d19",
+    "pos": [
+     1.5918,
+     2.29,
+     0.1621
+    ],
+    "rot": -5.813374288120755
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-12",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     -0.0423,
+     2.15,
+     0.1246
+    ],
+    "rot": -10.0
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.7878,
+     2.25,
+     0.1389
+    ],
+    "rot": -10.0
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.2954,
+     2.25,
+     -0.0521
+    ],
+    "rot": -10.0
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.5121,
+     2.19,
+     -0.0903
+    ],
+    "rot": -10.0
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.8107,
+     2.21,
+     0.1429
+    ],
+    "rot": -10.0
+   },
+   {
+    "box": [
+     0.022,
+     1.26,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.8107,
+     0.9500000000000001,
+     0.1429
+    ],
+    "rot": -10.0
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.8107,
+     0.8900000000000001,
+     0.1429
+    ],
+    "rot": 80.0
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#ff3b30",
+    "pos": [
+     1.5757,
+     2.29,
+     0.2778
+    ],
+    "rot": -10.0
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-13",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     -0.0331,
+     2.15,
+     0.1273
+    ],
+    "rot": -5.813374288120762
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.7959,
+     2.25,
+     0.081
+    ],
+    "rot": -5.813374288120762
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.2985,
+     2.25,
+     -0.0304
+    ],
+    "rot": -5.813374288120762
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.5173,
+     2.19,
+     -0.0527
+    ],
+    "rot": -5.813374288120762
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     0.9527,
+     2.21,
+     0.097
+    ],
+    "rot": -5.813374288120762
+   },
+   {
+    "box": [
+     0.022,
+     1.437,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     0.9527,
+     0.773223304703363,
+     0.097
+    ],
+    "rot": -5.813374288120762
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     0.9527,
+     0.7132233047033629,
+     0.097
+    ],
+    "rot": 84.18662571187923
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#ff3b30",
+    "pos": [
+     1.5918,
+     2.29,
+     0.1621
+    ],
+    "rot": -5.813374288120762
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-14",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     -0.0061,
+     2.15,
+     0.1314
+    ],
+    "rot": 6.109127034739878
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.7955,
+     2.25,
+     -0.0851
+    ],
+    "rot": 6.109127034739878
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.2983,
+     2.25,
+     0.0319
+    ],
+    "rot": 6.109127034739878
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.517,
+     2.19,
+     0.0553
+    ],
+    "rot": 6.109127034739878
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     1.0848,
+     2.21,
+     -0.1161
+    ],
+    "rot": 6.109127034739878
+   },
+   {
+    "box": [
+     0.022,
+     1.51,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     1.0848,
+     0.7,
+     -0.1161
+    ],
+    "rot": 6.109127034739878
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     1.0848,
+     0.6399999999999999,
+     -0.1161
+    ],
+    "rot": 96.10912703473988
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#6b1d19",
+    "pos": [
+     1.5909,
+     2.29,
+     -0.1703
+    ],
+    "rot": 6.109127034739878
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "o-crane-15",
+  "level": 0,
+  "kind": "overlay",
+  "nameSK": "Žeriav",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "box": [
+     0.42,
+     0.12,
+     0.42
+    ],
+    "color": "#9a98a8",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.13,
+     2.05,
+     0.13
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.0,
+     0.12,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.3,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.52,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.74,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     0.96,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.18,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.4,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.6199999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.145,
+     0.025,
+     0.145
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     1.8399999999999999,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.16,
+     0.08,
+     0.16
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.17,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.2,
+     0.15,
+     0.17
+    ],
+    "color": "#eef0f6",
+    "pos": [
+     0.0345,
+     2.15,
+     0.1269
+    ],
+    "rot": 23.952411219920027
+   },
+   {
+    "box": [
+     1.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     0.7311,
+     2.25,
+     -0.3248
+    ],
+    "rot": 23.952411219920027
+   },
+   {
+    "box": [
+     0.6,
+     0.07,
+     0.08
+    ],
+    "color": "#f2b632",
+    "pos": [
+     -0.2742,
+     2.25,
+     0.1218
+    ],
+    "rot": 23.952411219920027
+   },
+   {
+    "box": [
+     0.18,
+     0.16,
+     0.16
+    ],
+    "color": "#8d8fa3",
+    "pos": [
+     -0.4752,
+     2.19,
+     0.2111
+    ],
+    "rot": 23.952411219920027
+   },
+   {
+    "box": [
+     0.06,
+     0.34,
+     0.06
+    ],
+    "color": "#c98f1c",
+    "pos": [
+     0.0,
+     2.32,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     0.1,
+     0.04,
+     0.1
+    ],
+    "color": "#55576a",
+    "pos": [
+     1.0993,
+     2.21,
+     -0.4883
+    ],
+    "rot": 23.952411219920027
+   },
+   {
+    "box": [
+     0.022,
+     1.437,
+     0.022
+    ],
+    "color": "#3a3b48",
+    "pos": [
+     1.0993,
+     0.7732233047033629,
+     -0.4883
+    ],
+    "rot": 23.952411219920027
+   },
+   {
+    "box": [
+     0.34,
+     0.06,
+     0.09
+    ],
+    "color": "#c8914f",
+    "pos": [
+     1.0993,
+     0.7132233047033629,
+     -0.4883
+    ],
+    "rot": 113.95241121992002
+   },
+   {
+    "box": [
+     0.05,
+     0.05,
+     0.05
+    ],
+    "color": "#6b1d19",
+    "pos": [
+     1.4622,
+     2.29,
+     -0.6496
+    ],
+    "rot": 23.952411219920027
+   }
+  ],
+  "shadow": false
+ },
+ {
+  "id": "v-sedan-sw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-sedan-se",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-sedan-ne",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-sedan-nw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-taxi-sw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/taxi",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-taxi-se",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/taxi",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-taxi-ne",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/taxi",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-taxi-nw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/taxi",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-van-sw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/van",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-van-se",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/van",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-van-ne",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/van",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-van-nw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/van",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-suv-sw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/suv",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-suv-se",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/suv",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-suv-ne",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/suv",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-suv-nw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/suv",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-police-sw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/police",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-police-se",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/police",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-police-ne",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/police",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-police-nw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/police",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-ambulance-sw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/ambulance",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-ambulance-se",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/ambulance",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-ambulance-ne",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/ambulance",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-ambulance-nw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/ambulance",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-firetruck-sw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/firetruck",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-firetruck-se",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/firetruck",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-firetruck-ne",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/firetruck",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-firetruck-nw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/firetruck",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-garbage-truck-sw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/garbage-truck",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-garbage-truck-se",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/garbage-truck",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-garbage-truck-ne",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/garbage-truck",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-garbage-truck-nw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/garbage-truck",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-delivery-sw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/delivery",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-delivery-se",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/delivery",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 90,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-delivery-ne",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/delivery",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ]
+ },
+ {
+  "id": "v-delivery-nw",
+  "level": 0,
+  "kind": "vehicle",
+  "nameSK": "Auto",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Car Kit/Models/OBJ format/delivery",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 270,
+    "scale": 0.15
+   }
+  ]
+ }
+]

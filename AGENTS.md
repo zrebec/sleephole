@@ -1,0 +1,70 @@
+# AGENTS.md — SleepHole
+
+You are working on **SleepHole**, a personal native iPhone app (Swift / SwiftUI / SpriteKit / SwiftData)
+that builds a sleep habit: start a building at bedtime, leave the phone alone, confirm waking up in the
+morning → a low-poly isometric town grows night by night. A SleepTown-like game for one person.
+
+**You have no memory of previous sessions.** Everything you need is in the files below. Read them in order
+before doing anything:
+
+1. `docs/IMPLEMENTATION_PLAN.md` — **the plan** (English): status board (§0), decisions, architecture,
+   pseudo-code, phase task lists with checkboxes, findings log. **Source of truth for implementation.**
+2. `docs/PLAN.md` — product background and the owner's decisions (Slovak). Source of truth for intent.
+3. `assets/sprites/catalog.json` + `docs/previews/demo_town.png` — the finished art and how it should look.
+
+## How to work
+
+* **Find the current phase:** the first row in §0 of the plan that is not ✅. Work **only** on that phase,
+  task by task, ticking `- [x]` in the plan as you go.
+* **Checkpoint protocol:** when the phase's acceptance criteria are met, STOP. Update §0 (status) and §12
+  (findings), then give the owner a short summary **in Slovak**: what was done, how to test it on the
+  iPhone (exact steps), what the next phase will be. Do not start the next phase until the owner says so.
+* **The owner commits.** Never `git commit`/`push` unless explicitly asked. Keep changes small and focused.
+* **Tests first for logic.** All rules live in the `SleepCore` Swift package and are unit-tested
+  (`cd SleepCore && swift test`). UI/system code stays thin.
+* If something in the plan is wrong or impossible, don't silently diverge: write it into §12, propose the
+  fix to the owner, and adjust the plan once agreed.
+
+## Hard rules (owner decisions — do not change without asking)
+
+* iPhone only, native Swift. No PWA, no Android, no cross-platform frameworks.
+* **No Screen Time APIs** (FamilyControls, ManagedSettings, DeviceActivity). The app never blocks anything;
+  it only detects leaving the app.
+* Free **Personal Team** signing: no HealthKit, AlarmKit, iCloud, push until phase F6.
+* Night rules **R2** (plan D15): start ≤ bedtime+5 min, 5 min setup grace, then any user-initiated background collapses the building (calls excused), confirm by shake or wake code from wake−30 min, alarm max 2 min. Tone is **cute and never cruel** — no shaming
+  copy, ambiguity is resolved in the owner's favour.
+* Levels: nights 1–5 → L1, 6–15 → L1–L2, 16–30 → L1–L3, 31+ → L1–L4 (plan §5.5).
+* UI text **Slovak with correct diacritics**. Code, comments, identifiers, agent docs: **English**.
+* Never rename a shipped sprite id (ids are persisted). Add new ones instead.
+
+## Commands
+
+```bash
+cd SleepCore && swift test                        # domain logic tests (works without Xcode)
+xcodegen generate                                 # regenerate SleepHole.xcodeproj from project.yml
+xcodebuild -scheme SleepHole -destination 'platform=iOS Simulator,name=iPhone 17' build
+# Sprite pipeline (only when assets change; needs the raw Kenney bundle, run OUTSIDE the sandbox):
+python3 tools/render/make_recipes.py
+swift tools/render/render_sprites.swift tools/render/recipes.json assets/sprites
+python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/demo_town.py assets/sprites
+```
+
+## Map
+
+| Path | What |
+|---|---|
+| `docs/IMPLEMENTATION_PLAN.md` | the plan (read first) |
+| `docs/PLAN.md` | product decisions (Slovak) |
+| `SleepCore/` | pure Swift package: schedule, night evaluation, progression, picker, town layout |
+| `SleepHole/` | iOS app target (created in F0) |
+| `project.yml` | XcodeGen spec (created in F0) |
+| `assets/sprites/` | 174 rendered isometric sprites + `catalog.json` (ship in the app) |
+| `assets/audio/` | alarm loops + sound effects, CAF (ship in the app) |
+| `tools/render/` | asset pipeline: recipe generator, SceneKit renderer, previews, reference projection |
+| `assets/Kenney Game Assets All-in-1 3/` | raw CC0 source bundle, git-ignored, only for re-rendering |
+
+## About the owner
+
+Former IT analyst / PHP & Java developer, new to iOS. Speaks Slovak. Works in small checkpointed steps and
+tests everything on the real phone; energy and time vary day to day — keep steps small, explanations
+clear, and never pressure the pace. When he asks you to decide, give a clear recommendation with reasons.
