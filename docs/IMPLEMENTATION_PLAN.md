@@ -20,6 +20,7 @@
 | F3 | Town rendering (SpriteKit) | 🟡 built + installed 2026-09-29 (owner asked for a surprise – no details were told), awaiting first real nights | town shows all past nights |
 | F4 | Progression, level-ups, statistics, backup | 🟡 stats/backup/level-up/ruin repair done 2026-09-30; vibrations, achievements, town name, weekly journal done; shop next | one week of use |
 | I18N | English (default) + Slovak, in-app switch stored in SQLite | ✅ done (2026-09-30), installed on the owner's iPhone | owner switches the language in Settings and checks both |
+| LIM | Limits: town rename 1×/year (else 5 000 🪙), schedule change free on days 1–3 / first week (else streak reset) | 📝 planned 2026-09-30, awaiting owner approval | owner tests rename + schedule change |
 | F5 | Living town (day/night, lamps, cars) | ⬜ todo | "I like looking at it" |
 | F6 | *(optional, paid account)* HealthKit, AlarmKit, TestFlight | ⬜ later | owner decides to pay |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
@@ -626,6 +627,30 @@ detection log matches reality. **Stop.**
         finished week appears once on the result screen of the Sunday → Monday night (or of the next night when
         that one was skipped: `WeeklyJournal.finishedWeek`). The result screen scrolls now.
 **Accept:** a week of real use. **Stop.**
+
+### LIM — Limits: town rename + schedule changes (owner 2026-09-30, answers recorded; PLAN – awaiting approval)
+Owner decisions: rename 1× per **365 days** free, otherwise **5 000 🪙**; schedule (bedtime + wake) free on
+**days 1–3 of every month** (the app asks on those days) and during the **first 7 days** (calibration – for the
+owner counted from this version), otherwise the change **resets the 🔥 streak** (buildings, coins, levels,
+achievements stay).
+- [ ] **SleepCore `Limits`** (pure, tested): `RenamePolicy` → free (first naming / typo fix within 10 min of the
+      last rename / ≥ 365 days since the last free rename) or paid 5 000; `SchedulePolicy` → free (day 1–3 of the
+      month, first 7 days, onboarding) or "resets the streak"; next free date for both.
+- [ ] **Streak breaks:** `Progression.currentStreak/bestStreak` + `Economy.ledger` (streak bonus run) take
+      `breaks: [NightKey]` – a paid schedule change resets the run from the next night; history (best streak,
+      achievements already earned) is not rewritten.
+- [ ] **Coin spending:** SwiftData `CoinSpend` (date, amount, reason) – general ledger, reused by the shop later;
+      `coins = earned − spent`, never negative; in the backup (optional → old backups load).
+- [ ] **Storage:** `UserProgress.lastRenameAt/lastFreeRenameAt/scheduleCalibrationStart/schedulePromptMonth`,
+      `ScheduleChange` records (date, old → new, free / paid) – the paid ones are the streak breaks.
+- [ ] **UI:** rename only via an explicit dialog showing the cost ("Free – once a year" / "5 000 🪙, free again on …",
+      disabled when coins are short) – the Settings text field that saved on every keystroke goes away. Schedule
+      pickers edit a draft + "Save" with a confirmation when it resets the streak (shows the streak length and the
+      next free window); footers explain the rules; guide / first setup stay free. Monthly card on "Today" on
+      days 1–3: "New month 🌙 Does your bedtime still fit?" [It fits] [Adjust].
+- [ ] Tests (SleepCore policies + streak breaks + ledger; app: rename cost / spend / backup, schedule save paths,
+      monthly card), i18n EN+SK, docs.
+**Accept:** owner renames (free, typo fix, paid), changes the schedule inside / outside the window. **Stop.**
 
 ### F5 — Living town
 - [ ] Day/night tint, lamp glows, window glints
