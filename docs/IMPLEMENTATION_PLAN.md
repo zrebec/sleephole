@@ -20,7 +20,7 @@
 | F3 | Town rendering (SpriteKit) | 🟡 built + installed 2026-09-29 (owner asked for a surprise – no details were told), awaiting first real nights | town shows all past nights |
 | F4 | Progression, level-ups, statistics, backup | 🟡 stats/backup/level-up/ruin repair done 2026-09-30; vibrations, achievements, town name, weekly journal done; shop next | one week of use |
 | I18N | English (default) + Slovak, in-app switch stored in SQLite | ✅ done (2026-09-30), installed on the owner's iPhone | owner switches the language in Settings and checks both |
-| LIM | Limits: town rename 1×/year (else 5 000 🪙), schedule change free on days 1–3 / first week (else streak reset) | 📝 planned 2026-09-30, awaiting owner approval | owner tests rename + schedule change |
+| LIM | Limits: town rename 1×/year (else 5 000 🪙), schedule change free on days 1–3 / first week (else streak reset) | ✅ done (2026-09-30), installed | owner tests rename + schedule change |
 | F5 | Living town (day/night, lamps, cars) | ⬜ todo | "I like looking at it" |
 | F6 | *(optional, paid account)* HealthKit, AlarmKit, TestFlight | ⬜ later | owner decides to pay |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
@@ -628,27 +628,27 @@ detection log matches reality. **Stop.**
         that one was skipped: `WeeklyJournal.finishedWeek`). The result screen scrolls now.
 **Accept:** a week of real use. **Stop.**
 
-### LIM — Limits: town rename + schedule changes (owner 2026-09-30, answers recorded; PLAN – awaiting approval)
+### LIM — Limits: town rename + schedule changes (owner 2026-09-30) – ✅ implemented 2026-09-30
 Owner decisions: rename 1× per **365 days** free, otherwise **5 000 🪙**; schedule (bedtime + wake) free on
 **days 1–3 of every month** (the app asks on those days) and during the **first 7 days** (calibration – for the
 owner counted from this version), otherwise the change **resets the 🔥 streak** (buildings, coins, levels,
 achievements stay).
-- [ ] **SleepCore `Limits`** (pure, tested): `RenamePolicy` → free (first naming / typo fix within 10 min of the
+- [x] **SleepCore `Limits`** (pure, tested): `RenamePolicy` → free (first naming / typo fix within 10 min of the
       last rename / ≥ 365 days since the last free rename) or paid 5 000; `SchedulePolicy` → free (day 1–3 of the
       month, first 7 days, onboarding) or "resets the streak"; next free date for both.
-- [ ] **Streak breaks:** `Progression.currentStreak/bestStreak` + `Economy.ledger` (streak bonus run) take
+- [x] **Streak breaks:** `Progression.currentStreak/bestStreak` + `Economy.ledger` (streak bonus run) take
       `breaks: [NightKey]` – a paid schedule change resets the run from the next night; history (best streak,
       achievements already earned) is not rewritten.
-- [ ] **Coin spending:** SwiftData `CoinSpend` (date, amount, reason) – general ledger, reused by the shop later;
+- [x] **Coin spending:** SwiftData `CoinSpend` (date, amount, reason) – general ledger, reused by the shop later;
       `coins = earned − spent`, never negative; in the backup (optional → old backups load).
-- [ ] **Storage:** `UserProgress.lastRenameAt/lastFreeRenameAt/scheduleCalibrationStart/schedulePromptMonth`,
+- [x] **Storage:** `UserProgress.lastRenameAt/lastFreeRenameAt/scheduleCalibrationStart/schedulePromptMonth`,
       `ScheduleChange` records (date, old → new, free / paid) – the paid ones are the streak breaks.
-- [ ] **UI:** rename only via an explicit dialog showing the cost ("Free – once a year" / "5 000 🪙, free again on …",
+- [x] **UI:** rename only via an explicit dialog showing the cost ("Free – once a year" / "5 000 🪙, free again on …",
       disabled when coins are short) – the Settings text field that saved on every keystroke goes away. Schedule
       pickers edit a draft + "Save" with a confirmation when it resets the streak (shows the streak length and the
       next free window); footers explain the rules; guide / first setup stay free. Monthly card on "Today" on
       days 1–3: "New month 🌙 Does your bedtime still fit?" [It fits] [Adjust].
-- [ ] Tests (SleepCore policies + streak breaks + ledger; app: rename cost / spend / backup, schedule save paths,
+- [x] Tests (SleepCore policies + streak breaks + ledger; app: rename cost / spend / backup, schedule save paths,
       monthly card), i18n EN+SK, docs.
 **Accept:** owner renames (free, typo fix, paid), changes the schedule inside / outside the window. **Stop.**
 
@@ -755,6 +755,7 @@ entitlement), TestFlight, drop the expiry reminder.
 | 2026-09-30 | **Sound stories** (owner: "like a survival Let's Play without commentary – you imagine what happens from the sounds; random is good here"). Ripping game / YouTube audio is not legal → built from Kenney CC0 packs already in the bundle (Impact Sounds, RPG Audio, Foley Sounds): `tools/audio/make_stories.py` writes 105 one-shots `st_<group>_<n>.caf` (mono 44.1 kHz PCM, trimmed, -3 dB peak) + 3 synthesised 60 s beds `bed_forest/cave/workshop.caf` (AAC in CAF via `afconvert` – ffmpeg can't mux AAC into CAF; gapless thanks to the packet table; levelled to -24 dB RMS, ~0.9 MB each). Ambience cases `story-forest|cave|workshop` (bed through `loopPlayer`), `StoryTeller` (Night/Stories.swift, seeded RNG, 6 scenes per world, never the same scene twice in a row, pauses 6–25 s or sometimes 40–90 s) schedules one-shots on 4 `AVAudioPlayerNode`s → mixer → reverb (cave large chamber 45 % wet) → main mixer; volume/fade follow the sleep timer (`setLevel`). |
 | 2026-09-30 | **Stories v2 – chapters + the journey** (owner answers: chapters in order, carpentry workshop, night nature + animals + water + weather, CC0 only). 50 CC0 recordings via the official Freesound API (`tools/audio/freesound.json` manifest, `fetch_freesound.py`, key in `~/.freesound_key` – never in the repo; raw OGG previews in git-ignored `assets/freesound/`, authors in `assets/audio/CREDITS-freesound.txt`). `make_stories.py` cuts 78 clips (window / split-by-silence, `tame()` soft limiter, all mono 44.1 kHz so the 4 story players share one format; AAC 64k) and mixes 7 chapter beds (75 s, AAC 96k, −27 dB RMS, 3 dB headroom – AAC overshoots on camp-fire clicks). Swift: `StoryChapter` (bed, weighted scenes, opening scene, reverb, pauses), `StoryWorld.journey` = cabin → carpentry → wind → storm → lake → after (10–20 min each, sleepy long pauses at the end); `AudioKeeper` crossfades the beds with two players (`crossfadeBed`, 8 s) and keeps the chapter's bed on volume changes / engine restarts. Ambience ids unchanged (`story-workshop` is now the carpentry), new `story-journey`. |
 | 2026-09-30 | **5 new alarms, App-Store-safe** (owner wants to publish one day): Zedge is NOT safe (user uploads, personal-use licence) → CC0 Freesound recordings (manifest `use: "alarm"`: dawn chorus, singing bowls, a Symphonion music box playing the public-domain "Klosterglocken", kalimba) + Bach's Prelude in C (public domain, own harp synthesis). `make_alarms.py` renders them (≤ 28.5 s mono PCM CAF – notification sounds must be ≤ 30 s and PCM; `python3 tools/audio/make_alarms.py birds bowl …` renders only the named ones so the old alarms stay byte-identical); peaky recordings are compressed to the loudness of the others (`rms_db`). `AlarmSound` raw values = file names (persisted, never rename). |
+| 2026-09-30 | **LIM done.** SleepCore `RenamePolicy` / `SchedulePolicy` (Limits.swift) + `breaks: [NightKey]` in `Progression.currentStreak/bestStreak`, `Economy.ledger/earned`, `Achievements.unlocked`, `Stats.summary`, `WeeklyJournal` – a break is the night key after the change day; `currentStreak` also honours a break for tonight (lastNight + 1) so the streak shows 0 immediately. App: SwiftData `CoinSpend` (coins = earned − spent) + `ScheduleChange` (breakKey only when not free); `UserProgress.lastRenameAt` (anchor; a typo fix does not move it – otherwise endless free edits), `lastFreeRenameAt`, `scheduleCalibrationStart` (set on the first launch with LIM – for the owner 2026-09-30), `schedulePromptMonth`. New ModelContainer types must be registered in `SleepHoleApp` AND every test container. Rename only via `RenameTownAlert` (cost in the message, button disabled when short); Settings schedule = draft + "Save" + confirmation (only when a streak > 0 would be lost); guide first run applies directly (free, not recorded before onboarding), replayed guide shows it read-only. Monthly card (`showsMonthlySchedulePrompt`, days 1–3) + repeating notification `schedule-month` on the 1st at wake + 1 h (re-scheduled with the reminders). Numbers in `L()` get grouping ("5 000" / "5,000"). |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |

@@ -46,6 +46,9 @@ before doing anything:
   diacritics) goes into `SleepHole/Resources/Localizable.xcstrings`. Dates/times via `Fmt`. After adding strings:
   build, then `python3 tools/i18n/keys.py` must report 0 missing / 0 without sk. `I18nTests` fails on any Slovak
   literal left in `SleepHole/`. Code, comments, identifiers, agent docs: **English**.
+* Limits (owner 2026-09-30, plan LIM): renaming the town – first naming free, typo fix 10 min, 1× per 365 days free,
+  else **5 000 🪙**; bedtime / wake changes free on **days 1–3 of every month** and in the **first 7 days**, else
+  the 🔥 streak starts again (nothing else is taken away). Coins = earned − spent (`CoinSpend`), never negative.
 * Never rename a shipped sprite id (ids are persisted). Add new ones instead.
 * **The GitHub repo is PUBLIC.** Never commit device logs, the device UDID, the wake code, health or other
   personal information about the owner. Pulled journals go to `docs/device-logs/` (git-ignored).
