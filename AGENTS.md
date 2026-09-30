@@ -31,9 +31,16 @@ before doing anything:
 * **No Screen Time APIs** (FamilyControls, ManagedSettings, DeviceActivity). The app never blocks anything;
   it only detects leaving the app.
 * Free **Personal Team** signing: no HealthKit, AlarmKit, iCloud, push until phase F6.
-* Night rules **R2** (plan D15): start ≤ bedtime+5 min, 5 min setup grace, then any user-initiated background collapses the building (calls excused), confirm by shake or wake code from wake−30 min, alarm max 2 min. Tone is **cute and never cruel** — no shaming
+* Night rules **R3** (plan D15 + findings 2026-09-29/30): start only bedtime −10…+5 min; setup until
+  max(start, bedtime) + 5 min; after it, leaving the app → warning after ~3 s and 10 s to return, else the
+  building collapses (calls excused); screen off is fine, the app must stay in the foreground; confirm by shake
+  or wake code from wake −30 min; complete only while the alarm rings (2 min), unfinished until +60 min. Tone is **cute and never cruel** — no shaming
   copy, ambiguity is resolved in the owner's favour.
 * Levels: nights 1–5 → L1, 6–15 → L1–L2, 16–30 → L1–L3, 31+ → L1–L4 (plan §5.5).
+* Coins 🪙: complete night 100, unfinished 50, every 7th complete night in a row +200; nap 50 / 25.
+  Building prices (shop, next): L1 100, L2 200, L3 400, L4 1000.
+* Nap "Odpočinok" (plan D16): 30/60 min, only in its window (default 13:00–15:00), once a day, never builds.
+  The home screen always shows both "Ísť spať" and "Odpočinok" buttons (disabled outside their windows).
 * UI text **Slovak with correct diacritics**. Code, comments, identifiers, agent docs: **English**.
 * Never rename a shipped sprite id (ids are persisted). Add new ones instead.
 
@@ -55,12 +62,16 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 |---|---|
 | `docs/IMPLEMENTATION_PLAN.md` | the plan (read first) |
 | `docs/PLAN.md` | product decisions (Slovak) |
+| `docs/IMPLEMENTATION_I18N.md` | full spec for the EN/SK multi-language phase (string inventory, architecture, tests) |
 | `SleepCore/` | pure Swift package: schedule, night evaluation, progression, picker, town layout |
 | `SleepHole/` | iOS app target (created in F0) |
 | `project.yml` | XcodeGen spec (created in F0) |
 | `assets/sprites/` | 174 rendered isometric sprites + `catalog.json` (ship in the app) |
 | `assets/audio/` | alarm loops + sound effects, CAF (ship in the app) |
 | `tools/render/` | asset pipeline: recipe generator, SceneKit renderer, previews, reference projection |
+| `tools/audio/` | alarm synthesis (`make_alarms.py`), rain loops (`make_rain.py`) |
+| `tools/test_app.sh`, `tools/coverage.sh`, `tools/sim_shot.sh` | app tests + coverage, SleepCore coverage, simulator screenshots |
+| `docs/device-logs/` | journals pulled from the owner's iPhone (real nights) |
 | `assets/Kenney Game Assets All-in-1 3/` | raw CC0 source bundle, git-ignored, only for re-rendering |
 
 ## About the owner

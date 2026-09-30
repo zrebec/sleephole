@@ -71,7 +71,7 @@ final class AppModel {
         }
         if let t = time(value("-bedtime")) { settings.schedule.bedtime = t }
         if let t = time(value("-wake")) { settings.schedule.wake = t }
-        if let a = value("-ambience") { settings.ambience = a == "silence" ? .silence : .brownNoise }
+        if let a = value("-ambience") { settings.ambience = AudioKeeper.Ambience(rawValue: a) ?? .brownNoise }
         #if targetEnvironment(simulator)
         if let n = value("-seedNights").flatMap(Int.init), let catalog = SpriteLibrary.loadFromBundle().catalog {
             try? context.delete(model: NightRecord.self)
@@ -140,10 +140,56 @@ final class AppModel {
 
     /// Finalized real nights, oldest first (debug nights never count).
     func realResults() -> [NightRecord] {
-        records().filter { !$0.isDebug && $0.isFinalized }
+        records().filter { !$0.isDebug && !$0.isNap && $0.isFinalized }
+    }
+
+    /// Naps for the stats: how many complete ones and the coins they paid.
+    var napSummary: (count: Int, coins: Int) {
+        let outcomes = napResults().compactMap(\.outcome)
+        return (outcomes.filter { $0 == .complete }.count, outcomes.reduce(0) { $0 + NapPlan.reward($1) })
+    }
+
+    /// Finalized real naps (coins only).
+    func napResults() -> [NightRecord] {
+        records().filter { !$0.isDebug && $0.isNap && $0.isFinalized }
     }
 
     var builtNights: Int { realResults().filter { $0.outcome?.isBuildNight == true }.count }
+
+    // MARK: - one night in detail (Štatistiky → tap a calendar day)
+
+    func nightRecord(for key: NightKey) -> NightRecord? {
+        records().last { !$0.isDebug && !$0.isNap && $0.isFinalized && $0.keyString == key.description }
+    }
+
+    /// The nap taken on the day before the morning `key` (i.e. the afternoon before that night).
+    func napRecord(before key: NightKey) -> NightRecord? {
+        let day = key.adding(days: -1, calendar: calendar).description
+        return records().last { !$0.isDebug && $0.isNap && $0.isFinalized && $0.keyString == day }
+    }
+
+    func townBuilding(for key: NightKey) -> TownBuilding? {
+        townSnapshot?.buildings.first { $0.nightKey == key }
+    }
+
+    func coinsEarned(for key: NightKey) -> Int? {
+        Economy.ledger(realResults().compactMap(\.result), calendar: calendar).last { $0.key == key }?.coins
+    }
+
+    /// Everything for the Štatistiky tab.
+    var stats: StatsSummary {
+        Stats.summary(realResults().compactMap(\.result), today: NightKey(date: clock.now, calendar: calendar),
+                      calendar: calendar)
+    }
+
+    /// Coin balance 🪙 (replayed from the real nights; spending comes with the building shop).
+    var coins: Int {
+        Economy.earned(realResults().compactMap(\.result), calendar: calendar)
+            + napResults().compactMap(\.outcome).reduce(0) { $0 + NapPlan.reward($1) }
+    }
+    /// What the night in `shownResult` paid (reward + streak bonus).
+    private(set) var lastReward = 0
+    private(set) var lastStreakBonus = 0
 
     /// Current 🔥 streak: complete nights in a row up to the most recent night that could be finished.
     var streak: Int {
@@ -178,6 +224,41 @@ final class AppModel {
                                       calendar: calendar)
         townFocus = snap.buildings.last.map { IsoProjection.scenePoint(x: $0.placement.centre.x, z: $0.placement.centre.z) }
         townVersion += 1
+    }
+
+    // MARK: - afternoon rest ("Odpočinok", owner 2026-09-30)
+
+    /// Why the nap button is disabled right now (nil = it can be started).
+    func napBlockReason(at t: Date? = nil) -> String? {
+        let now = t ?? clock.now
+        if active != nil { return "Práve prebieha stavba." }
+        let plan = settings.nap
+        let key = NightKey(date: now, calendar: calendar)
+        if records().contains(where: { $0.isNap && !$0.isDebug && $0.keyString == key.description }) {
+            return "Dnešný odpočinok už bol 😴"
+        }
+        guard plan.canStart(at: now, calendar: calendar) else {
+            return "Teraz nemôžeš odpočívať (\(plan.windowStart)–\(plan.windowEnd))."
+        }
+        return nil
+    }
+
+    func startNap() {
+        guard napBlockReason() == nil else { return }
+        let now = clock.now
+        let window = settings.nap.session(startingAt: now, calendar: calendar)
+        let rec = NightRecord(window: window, buildingId: "", isDebug: false,
+                              setupGrace: NapPlan.rules.setupGrace, isNap: true)
+        rec.append(.started, at: now)
+        context.insert(rec)
+        save()
+        active = rec
+        startServices(for: rec)
+        if servicesEnabled {
+            Notifications.scheduleNight(setupEnds: window.setupEnds(start: now, rules: NapPlan.rules), wake: window.wake,
+                                        alarmFile: settings.alarmSound.fileName)
+        }
+        refresh(now: now)
     }
 
     /// One-shot (owner request): the next debug test night counts as a real night for the town.
@@ -217,6 +298,47 @@ final class AppModel {
         progress().firstNightBriefingAt = clock.now
         save()
         firstNightBriefed = true
+    }
+
+    // MARK: - backup (F4)
+
+    func makeBackup() -> BackupFile {
+        let p = progress()
+        return BackupFile(exportedAt: clock.now, settings: settings, onboardingCompletedAt: p.onboardingCompletedAt,
+                          firstNightBriefingAt: p.firstNightBriefingAt, nights: records().map(\.backup))
+    }
+
+    /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
+    func restore(_ b: BackupFile) throws {
+        guard active == nil else { throw BackupError.nightRunning }
+        guard b.version <= BackupFile.currentVersion else { throw BackupError.tooNew }
+        try context.delete(model: NightRecord.self)
+        for n in b.nights { context.insert(NightRecord(backup: n)) }
+        let p = progress()
+        p.onboardingCompletedAt = b.onboardingCompletedAt
+        p.firstNightBriefingAt = b.firstNightBriefingAt
+        save()
+        settings = b.settings
+        loadProgress()
+        shownResult = nil
+        rebuildTown()
+        refresh()
+    }
+
+    enum BackupError: LocalizedError {
+        case nightRunning, tooNew
+        var errorDescription: String? {
+            switch self {
+            case .nightRunning: "Počas stavby sa záloha nedá obnoviť."
+            case .tooNew: "Záloha je z novšej verzie SleepHole."
+            }
+        }
+    }
+
+    /// Automatic backup after every finished night → Documents (Files app) and a safe copy for migrations.
+    func writeAutoBackup() {
+        guard let data = try? makeBackup().encoded() else { return }
+        try? data.write(to: BackupFile.autoBackupURL, options: .atomic)
     }
 
     /// Debug: show the guide and the first-night checklist again.
@@ -278,7 +400,7 @@ final class AppModel {
         debugWindow = nil
         startServices(for: rec)
         if servicesEnabled {
-            Notifications.scheduleNight(start: now, setupGrace: rec.setupGrace, wake: rec.wake,
+            Notifications.scheduleNight(setupEnds: rec.window.setupEnds(start: now, rules: rec.rules), wake: rec.wake,
                                         alarmFile: settings.alarmSound.fileName)
             SoundFX.play("night_start", volume: 0.5)
         }
@@ -290,6 +412,7 @@ final class AppModel {
     func confirm(code: String? = nil) -> Bool {
         guard let rec = active, rec.window.canConfirm(at: clock.now) else { return false }
         if let code, code != settings.wakeCode { return false }
+        append(code == nil ? .confirmedByShake : .confirmedByCode)
         append(.confirmed)
         refresh()
         return true
@@ -335,11 +458,39 @@ final class AppModel {
         refresh()
     }
 
+    // MARK: - sleep sound during the night (owner 2026-09-30: allowed while building – you stay in the app)
+
+    /// The sleep sound started from the night screen: which one and until when (nil end = all night).
+    private(set) var sleepSound: (ambience: AudioKeeper.Ambience, endsAt: Date?)?
+
+    func playSleepSound(_ ambience: AudioKeeper.Ambience, minutes: Int?) {
+        guard active != nil else { return }
+        settings.ambience = ambience
+        settings.ambienceMinutes = minutes
+        let seconds = minutes.map { Double($0) * 60 }
+        sleepSound = ambience == .silence ? nil : (ambience, seconds.map { clock.now + $0 })
+        guard servicesEnabled else { return }
+        audio.setVolume(settings.volume, ambience: ambience)
+        audio.sleepTimer(seconds: seconds, volume: settings.volume)
+    }
+
+    func stopSleepSound() {
+        sleepSound = nil
+        if servicesEnabled { audio.silenceNow() }
+    }
+
     // MARK: - live info for the UI
 
-    var collapsedAt: Date? { active.flatMap { NightEvaluator.collapsedAt($0.log, rules: $0.rules) } }
+    var collapsedAt: Date? {
+        active.flatMap { NightEvaluator.collapsedAt($0.log, rules: $0.isNap ? NapPlan.rules : $0.rules) }
+    }
 
-    var graceEnds: Date? { active.flatMap { rec in rec.startedAt.map { $0 + rec.setupGrace } } }
+    /// End of the setup time: bedtime + grace (or start + grace after bedtime), see `NightWindow.setupEnds`.
+    var graceEnds: Date? {
+        active.flatMap { rec in
+            rec.startedAt.map { rec.window.setupEnds(start: $0, rules: rec.isNap ? NapPlan.rules : rec.rules) }
+        }
+    }
 
     // MARK: - night services
 
@@ -355,6 +506,10 @@ final class AppModel {
         guard servicesEnabled else { return }
         UIApplication.shared.isIdleTimerDisabled = false
         try? audio.start(ambience: settings.ambience, volume: settings.volume)
+        if let total = settings.ambienceSeconds {                     // sleep timer from the start of the night
+            let elapsed = clock.now.timeIntervalSince(rec.startedAt ?? clock.now)
+            audio.sleepTimer(seconds: max(0, total - elapsed), volume: settings.volume)
+        }
         audio.onInterruption = { [weak self] text in
             self?.append(text.hasSuffix("began") ? .audioInterrupted : .audioResumed)
         }
@@ -371,6 +526,7 @@ final class AppModel {
     }
 
     private func stopServices() {
+        sleepSound = nil
         guard servicesEnabled else { return }
         alarmTask?.cancel()
         alarmTask = nil
@@ -424,8 +580,9 @@ final class AppModel {
 
     private func finalize(_ rec: NightRecord) {
         let before = builtNights
+        let coinsBefore = coins
         let log = rec.log
-        let result = NightEvaluator.result(for: log, key: log.key, rules: rec.rules)
+        let result = NightEvaluator.result(for: log, key: log.key, rules: rec.isNap ? NapPlan.rules : rec.rules)
         rec.outcomeRaw = result.outcome.rawValue
         rec.awaySeconds = result.awaySeconds
         rec.finalizedAt = clock.now
@@ -433,8 +590,12 @@ final class AppModel {
         stopServices()
         active = nil
         shownResult = rec
-        levelUp = rec.isDebug ? nil : Progression.levelUp(builtBefore: before, builtAfter: builtNights)
-        if !rec.isDebug { rebuildTown() }
+        levelUp = rec.isDebug || rec.isNap ? nil : Progression.levelUp(builtBefore: before, builtAfter: builtNights)
+        if !rec.isDebug && !rec.isNap { rebuildTown() }
+        lastReward = rec.isDebug ? 0 : coins - coinsBefore
+        if !rec.isDebug { writeAutoBackup() }
+        lastStreakBonus = rec.isDebug || rec.isNap ? 0
+            : Economy.ledger(realResults().compactMap(\.result), calendar: calendar).last?.streakBonus ?? 0
         phase = .result
         if servicesEnabled {
             switch result.outcome {

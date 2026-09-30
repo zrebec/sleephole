@@ -17,4 +17,7 @@ xcuserdata/
 # render scratch
 tools/render/_*
 
+# private device logs
+docs/device-logs/*
+
 .DS_Store

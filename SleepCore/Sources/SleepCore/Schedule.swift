@@ -87,15 +87,18 @@ public struct NightWindow: Codable, Equatable, Sendable {
     public let key: NightKey
     public let bedtime: Date
     public let wake: Date
+    /// Overrides `earlyConfirm` (a nap can be confirmed only when it is over → 0).
+    public var earlyConfirmOverride: TimeInterval?
 
-    public init(key: NightKey, bedtime: Date, wake: Date) {
+    public init(key: NightKey, bedtime: Date, wake: Date, earlyConfirmOverride: TimeInterval? = nil) {
         self.key = key
         self.bedtime = bedtime
         self.wake = wake
+        self.earlyConfirmOverride = earlyConfirmOverride
     }
 
     public var startOpens: Date { bedtime - Self.startLead }
-    public var confirmOpens: Date { wake - Self.earlyConfirm }
+    public var confirmOpens: Date { wake - (earlyConfirmOverride ?? Self.earlyConfirm) }
     public var confirmOnTimeUntil: Date { wake + Self.onTimeConfirm }
     public var confirmLateUntil: Date { wake + Self.lateConfirm }
     public var duration: TimeInterval { wake.timeIntervalSince(bedtime) }

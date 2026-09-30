@@ -9,6 +9,8 @@ final class NightRecord {
     @Attribute(.unique) var id: String
     var keyString: String
     var isDebug: Bool
+    /// Afternoon rest (not a night): never builds, never counts for streaks/levels, pays nap coins.
+    var isNap: Bool = false
     var bedtime: Date
     var wake: Date
     var buildingId: String
@@ -23,10 +25,13 @@ final class NightRecord {
 
     /// `idPrefix`: "bonus" for a test night that counts for the town (one-shot, owner request) –
     /// a unique id so it never collides with the real night of the same date.
-    init(window: NightWindow, buildingId: String, isDebug: Bool, setupGrace: TimeInterval, idPrefix: String? = nil) {
+    init(window: NightWindow, buildingId: String, isDebug: Bool, setupGrace: TimeInterval, idPrefix: String? = nil,
+         isNap: Bool = false) {
         self.keyString = window.key.description
         let stamp = Int(Date().timeIntervalSince1970)
-        self.id = isDebug ? "debug-\(stamp)" : idPrefix.map { "\($0)-\(stamp)" } ?? window.key.description
+        self.isNap = isNap
+        self.id = isNap ? "nap-\(window.key.description)"
+            : isDebug ? "debug-\(stamp)" : idPrefix.map { "\($0)-\(stamp)" } ?? window.key.description
         self.isDebug = isDebug
         self.bedtime = window.bedtime
         self.wake = window.wake
@@ -35,7 +40,9 @@ final class NightRecord {
         self.setupGrace = setupGrace
     }
 
-    var window: NightWindow { NightWindow(key: NightKey(keyString)!, bedtime: bedtime, wake: wake) }
+    var window: NightWindow {
+        NightWindow(key: NightKey(keyString)!, bedtime: bedtime, wake: wake, earlyConfirmOverride: isNap ? 0 : nil)
+    }
 
     var rules: SleepRules {
         var r = SleepRules()

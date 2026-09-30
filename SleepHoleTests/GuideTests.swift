@@ -87,7 +87,7 @@ struct GuideTests {
         render(GuideView(replay: true), m)
         render(ScheduleFields(), m)
         render(FirstNightBriefing(), m)
-        render(CanStartView(), m)
+        render(HomeView(), m)
         render(RootView(), m)                                             // shows the guide cover
         m.completeOnboarding()
         render(RootView(), m)

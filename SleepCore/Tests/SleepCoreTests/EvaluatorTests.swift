@@ -89,6 +89,19 @@ import Testing
         #expect(NightEvaluator.collapsedAt(grace) == night.bedtime + 5 * 60 + 13)
     }
 
+    /// Owner bug 2026-09-30: starting early must not shorten the setup time.
+    @Test func earlyStartGetsSetupUntilBedtimePlusGrace() {
+        let early = night.bedtime - 9 * 60                                  // 20:51 for a 21:00 bedtime → 14 min
+        #expect(night.setupEnds(start: early) == night.bedtime + 5 * 60)
+        #expect(night.setupEnds(start: night.bedtime + 3 * 60) == night.bedtime + 8 * 60)   // late start: full 5 min
+        // away 12 min right after an early start → still in the setup, stands
+        let l = log([(-9, .started), (-8.5, .leftApp), (4, .returned), (4.5, .locked), (wakeMinutes, .confirmed)])
+        #expect(NightEvaluator.collapsedAt(l) == nil)
+        // away beyond bedtime + 5 min (+ 13 s) → collapses
+        let late = log([(-9, .started), (-8.5, .leftApp), (5.5, .returned), (wakeMinutes, .confirmed)])
+        #expect(NightEvaluator.collapsedAt(late) == night.bedtime + 5 * 60 + 13)
+    }
+
     @Test func startAndConfirmWindows() {
         // owner rule: start only from bedtime − 10 min to bedtime + 5 min
         #expect(!night.canStart(at: night.bedtime - 10 * 60 - 1))

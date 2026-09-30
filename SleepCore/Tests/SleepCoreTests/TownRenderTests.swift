@@ -49,6 +49,21 @@ import Testing
         #expect(t.buildings[1].state == .unfinished)
     }
 
+    @Test func aGoodNightRepairsTheOldestRuinWhenNothingIsUnfinished() {
+        let t = TownBuilder.build(results: results([("l1-house-a-0", .ruins), ("l1-house-b-0", .ruins),
+                                                    ("l1-house-c-0", .complete)]), catalog: catalog)
+        #expect(t.buildings[0].state == .complete && t.buildings[0].repairedLater)
+        #expect(t.buildings[1].state == .ruins)
+        // unfinished first, ruins second – one per good night
+        let u = TownBuilder.build(results: results([("l1-house-a-0", .ruins), ("l1-house-b-0", .unfinished),
+                                                    ("l1-house-c-0", .complete)]), catalog: catalog)
+        #expect(u.buildings[0].state == .ruins && u.buildings[1].completedLater)
+        // lit-street ruins stay ruins (nothing to rebuild)
+        let lit = TownBuilder.build(results: results([("l2-road-lit-we", .ruins), ("l1-house-c-0", .complete)]),
+                                    catalog: catalog)
+        #expect(lit.buildings[0].state == .ruins)
+    }
+
     @Test func litStreetsUpgradeRoadsOrBecomeARuin() {
         var items: [(String, Outcome)] = (0..<6).map { _ in ("l1-house-a-0", .complete) }
         items.append(("l2-road-lit-we", .complete))
@@ -104,7 +119,7 @@ import Testing
     }
 
     @Test func ruinsBloomAfterAWeek() {
-        let items: [(String, Outcome)] = [("l3-police", .ruins)]
+        let items: [(String, Outcome)] = [("l3-police", .ruins)]      // no later good night → stays a ruin
         #expect(model(items, today: first.adding(days: 6, calendar: bratislava)).1.sprites.contains { $0.spriteId == "o-ruin-2" })
         #expect(model(items, today: first.adding(days: 7, calendar: bratislava)).1.sprites.contains { $0.spriteId == "o-ruin-flowers-2" })
     }

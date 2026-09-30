@@ -1,0 +1,6 @@
+346642__inspectorj__rain-on-windows-interior-a.wav
+  "Rain on Windows, Interior, A" by InspectorJ (www.jshaw.co.uk) of Freesound.org
+  https://freesound.org/s/346642/
+  License: Creative Commons Attribution 4.0 (CC BY 4.0) https://creativecommons.org/licenses/by/4.0/
+  Used in SleepHole as "Dážď na okno" (assets/audio/rain_window.caf): trimmed, mono, 24 kHz, crossfaded loop
+  (tools/audio/make_rain.py). Credited in the app (Nastavenia → Poďakovanie) and in README.md.

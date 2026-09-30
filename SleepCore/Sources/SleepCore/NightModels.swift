@@ -15,6 +15,8 @@ public enum NightEventKind: String, Codable, Sendable {
     case abandoned      // owner explicitly cancelled the night
     case alarmStopped   // the alarm stopped ringing on its own (max 2 min)
     case audioInterrupted  // diagnostics: our keep-alive audio was interrupted (no effect on the outcome)
+    case confirmedByShake  // diagnostics: how "Vstal som" was done (logged right before `.confirmed`)
+    case confirmedByCode
     case audioResumed
 }
 

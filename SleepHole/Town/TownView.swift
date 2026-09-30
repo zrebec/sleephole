@@ -117,6 +117,7 @@ struct TownTab: View {
         HStack(spacing: 14) {
             Label("\(count)", systemImage: "building.2.fill")
             Label("\(people)", systemImage: "person.2.fill")
+            Text("🪙 \(model.coins)")
             if (snapshot?.buildings.isEmpty ?? true) {
                 Text("Prvá budova pribudne po prvej noci 🌙").font(.caption)
             }
@@ -145,7 +146,8 @@ struct BuildingSheet: View {
             Text("Noc \(formatted(building.nightKey))").foregroundStyle(.secondary)
             switch building.state {
             case .complete:
-                Label(building.completedLater ? "Dostavaná neskôr 💪" : "Hotová 🎉", systemImage: "checkmark.seal.fill")
+                Label(building.repairedLater ? "Opravená 🛠️ – z ruiny je zase budova"
+                      : building.completedLater ? "Dostavaná neskôr 💪" : "Hotová 🎉", systemImage: "checkmark.seal.fill")
                     .foregroundStyle(.green)
             case .unfinished:
                 Label("Rozostavaná – dokončí ju ďalšia dobrá noc", systemImage: "hammer.fill").foregroundStyle(.orange)

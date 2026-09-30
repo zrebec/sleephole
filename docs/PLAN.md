@@ -52,6 +52,8 @@
 | D12 | Postup | **Po fázach s checkpointmi.** Každú fázu otestuješ na iPhone a až potom ideme ďalej. Commity robíš ty. |
 | D13 | Levely budov | **L1** obyčajné budovy (domy, bytovky) · **L2** parky, osvetlené ulice, múzeá, knižnice · **L3** radnica, škola, hasiči, polícia, nemocnica · **L4** mrakodrapy. Stavebné noci 1–5 iba L1, 6–15 L1+L2, 16–30 L1–L3, od 31. noci všetko. Každú noc jedna náhodná budova (najprv sa náhodne vyberie level, potom budova). |
 | D14 | Jazyk | UI po slovensky, kód a dokumentácia pre agentov po anglicky. |
+| D15 | Pravidlá noci R3 | pozri §4 (štart −10/+5 min, príprava do večierky + 5 min, varovanie a 10 s na návrat, hotová iba počas zvonenia budíka). |
+| D16 | Odpočinok (nap) | Popoludní **30 alebo 60 min** (iné hodnoty nie), iba v okne (predvolene **13:00–15:00**, nastaviteľné), **raz denne**. Štart presne o 15:00 so 60 min = do 16:00. Rovnaké pravidlá ako v noci (appka v popredí, zamknutý telefón), príprava 2 min, na konci budík. **Budovu nestavia**, nemení sériu ani levely, **+50 🪙** hotový / **+25 🪙** skrátený, zapíše sa do denníka a štatistík. Na obrazovke Dnes sú **stále obe tlačidlá** „Ísť spať“ a „Odpočinok“, mimo okna neaktívne s vysvetlením. |
 
 ---
 
@@ -101,6 +103,8 @@ iOS nemá oficiálne API „používateľ zamkol telefón“. Riešenie:
 | Hotová | potvrdené **počas zvonenia budíka** (2 min) |
 | Rozostavaná | potvrdené po dozvonení budíka, najneskôr do 60 min |
 | Ruina | stavba sa zrútila, zrušená noc, alebo nepotvrdené do hodiny po budíčku |
+
+| Odpočinok | 30/60 min v okne 13:00–15:00, raz denne, rovnaké pravidlá, príprava 2 min, budík na konci; +50 🪙 (skrátený +25), budovu nestavia |
 
 - **Séria (streak)** = počet po sebe idúcich nocí s výsledkom Hotová. Rozostavaná ju nezvýši, ale ani nepreruší.
 - Ruiny sa nikdy nemažú. Po 7 dňoch zarastú kvetmi.

@@ -70,9 +70,77 @@ struct ServicesTests {
         NotificationCenter.default.post(name: AVAudioSessionInterruptionNotificationName, object: nil)
     }
 
+    @Test func everyNoiseRendersAndTheSleepTimerFadesToSilence() async throws {
+        let audio = AudioKeeper()
+        for a in AudioKeeper.Ambience.allCases {
+            try audio.start(ambience: a, volume: 0.2)
+            try? await Task.sleep(for: .milliseconds(150))                 // let the render block run
+            #expect(audio.isRunning)
+        }
+        try audio.start(ambience: .rainTent, volume: 0.2)
+        audio.sleepTimer(seconds: 6, volume: 0.2)                         // exact end: 6 s (last 5 s fade)
+        let end = try #require(audio.sleepSoundEndsAt)
+        #expect(abs(end.timeIntervalSinceNow - 6) < 0.2)
+        try? await Task.sleep(for: .seconds(0.5))
+        #expect(audio.currentGain > 0.1)                                  // still full before the fade
+        let deadline = Date() + 25                                        // tests share the main actor → poll
+        while audio.currentGain > 0.001, Date() < deadline { try? await Task.sleep(for: .milliseconds(100)) }
+        #expect(audio.currentGain < 0.001 && audio.isRunning)            // silent but still alive
+        #expect(Date() >= end - 0.15)                                     // not (noticeably) earlier than the end
+        audio.sleepTimer(seconds: nil, volume: 0.2)                       // all night: no end
+        #expect(audio.sleepSoundEndsAt == nil && audio.currentGain > 0.1)
+        audio.silenceNow()
+        #expect(audio.currentGain == 0)
+        audio.stop()
+    }
+
+    @Test func rainLoopsPlayThroughThePlayerAndObeyTheTimer() async throws {
+        let audio = AudioKeeper()
+        try audio.start(ambience: .rainWindow, volume: 0.3)
+        #expect(audio.isLoopPlaying && audio.currentGain == 0.3)
+        audio.setVolume(0.3, ambience: .rainTent)                         // switch loop → other loop
+        #expect(audio.isLoopPlaying && audio.currentMode == .rainTent)
+        audio.setVolume(0.3, ambience: .brownNoise)                       // loop → generator
+        #expect(!audio.isLoopPlaying && audio.currentGain == 0.3)
+        audio.setVolume(0.3, ambience: .rainTent)
+        audio.silenceNow()
+        #expect(audio.currentGain == 0 && audio.isRunning)
+        audio.stop()
+        #expect(!audio.isLoopPlaying)
+        for a in AudioKeeper.Ambience.allCases where a.loopFile != nil {
+            #expect(Bundle.main.url(forResource: a.loopFile, withExtension: nil) != nil)
+        }
+    }
+
+    /// Owner bug 2026-09-30: white → pink did not switch and Stop did not stop.
+    @Test func soundPreviewSwitchesLiveAndStops() async {
+        let p = SoundPreview()
+        p.switchTo(.pinkNoise, volume: 0.2)                      // nothing playing → nothing starts
+        #expect(p.playing == nil && !p.isRunning)
+        p.play(.whiteNoise, volume: 0.2, seconds: 15 * 60)
+        #expect(p.playing == .whiteNoise && p.mode == .whiteNoise && p.isRunning)
+        #expect(abs((p.endsAt ?? .distantPast).timeIntervalSinceNow - 900) < 1)       // plays 15 min, not 10 s
+        p.switchTo(.pinkNoise, volume: 0.2)
+        #expect(p.playing == .pinkNoise && p.mode == .pinkNoise && p.isRunning)
+        p.setVolume(0.3)
+        #expect(abs(p.gain - 0.3) < 0.001)
+        p.stop()
+        #expect(p.playing == nil && !p.isRunning)
+        p.play(.rainTent, volume: 0.2, seconds: nil)                  // "Celú noc": until ■
+        #expect(p.endsAt == nil && p.playing == .rainTent)
+        p.switchTo(.silence, volume: 0.2)                         // silence = stop
+        #expect(p.playing == nil && !p.isRunning)
+        p.play(.silence, volume: 0.2, seconds: 60)                // nothing to play
+        #expect(p.playing == nil)
+        p.play(.brownNoise, volume: 0.2, seconds: 0.3)            // stops by itself
+        let deadline = Date() + 10
+        while p.playing != nil, Date() < deadline { try? await Task.sleep(for: .milliseconds(100)) }
+        #expect(p.playing == nil && !p.isRunning)
+    }
+
     @Test func notificationsScheduleAndCancel() {
         Notifications.scheduleReminders(Schedule(reminderOffsets: [30, 0]))
-        Notifications.scheduleNight(start: Date(), setupGrace: 300, wake: Date() + 3600, alarmFile: "alarm_gentle.caf")
+        Notifications.scheduleNight(setupEnds: Date() + 300, wake: Date() + 3600, alarmFile: "alarm_gentle.caf")
         Notifications.nudge(tolerance: 10)
         Notifications.cancelNudge()
         Notifications.cancelBackupAlarm()

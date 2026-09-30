@@ -68,13 +68,14 @@ struct AppModelTests {
         h.model.startNight()
         #expect(h.model.phase == .building)
         #expect(h.model.active?.buildingId.hasPrefix("l1-") == true)          // first nights: level 1 only
-        #expect(h.model.graceEnds == date(5, 22, 30))
+        #expect(h.model.graceEnds == date(5, 22, 35))                        // bedtime 22:30 + 5 min (early start)
         #expect(!h.model.confirm(code: "1234"))                               // too early
         h.clock.now = date(6, 6, 30); h.model.refresh()
         #expect(h.model.phase == .alarm)
         #expect(h.model.active?.log.has(.alarmFired) == true)
         #expect(!h.model.confirm(code: "0000"))                               // wrong code
         #expect(h.model.confirm(code: "1234"))
+        #expect(h.model.shownResult?.log.has(.confirmedByCode) == true)
         #expect(h.model.phase == .result)
         #expect(h.model.shownResult?.outcome == .complete)
         #expect(h.model.builtNights == 1)
@@ -91,6 +92,7 @@ struct AppModelTests {
         #expect(h.model.phase == .building)
         #expect(h.model.confirm())
         #expect(h.model.shownResult?.outcome == .complete)
+        #expect(h.model.shownResult?.log.has(.confirmedByShake) == true)
     }
 
     @Test func leavingTheAppCollapsesTheBuilding() {
@@ -213,6 +215,90 @@ struct AppModelTests {
     @Test func confirmingAfterTheAlarmStoppedIsUnfinished() {
         let h = harness(at: date(5, 12))
         #expect(playNight(h, day: 5, confirmAfterWake: 2 * 60 + 16) == .unfinished)   // owner test 29.09 19:06
+    }
+
+    @Test func coinsForRealNightsOnly() {
+        let h = harness(at: date(1, 12))
+        playNight(h, day: 1)                                              // complete +100
+        #expect(h.model.coins == 100 && h.model.lastReward == 100)
+        playNight(h, day: 2, confirmAfterWake: 30 * 60)                   // unfinished +50
+        #expect(h.model.coins == 150)
+        h.clock.now = date(3, 15)
+        h.model.startTestNight(); h.model.startNight()                    // debug: nothing
+        h.clock.now += 240; h.model.refresh(); h.model.confirm()
+        #expect(h.model.coins == 150 && h.model.lastReward == 0)
+        h.model.acknowledgeResult()
+        h.model.nextTestNightCounts = true                                // the counted test night pays
+        h.model.startTestNight(); h.model.startNight()
+        h.clock.now += 240; h.model.refresh(); h.model.confirm()
+        #expect(h.model.coins == 250)
+    }
+
+    @Test func seventhNightPaysTheStreakBonus() {
+        let h = harness(at: date(1, 12))
+        for d in 1...6 { playNight(h, day: d) }
+        h.clock.now = date(7, 22, 25); h.model.refresh(); h.model.startNight()
+        h.clock.now = date(8, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
+        #expect(h.model.lastReward == 300 && h.model.lastStreakBonus == 200)
+        #expect(h.model.coins == 900)
+    }
+
+    @Test func sleepSoundDuringTheNight() {
+        let h = harness(at: date(5, 22, 25)); h.model.refresh()
+        h.model.playSleepSound(.rainTent, minutes: 15)                         // no night yet → ignored
+        #expect(h.model.sleepSound == nil)
+        h.model.startNight()
+        h.clock.now = date(5, 22, 50)
+        h.model.playSleepSound(.rainTent, minutes: 15)
+        #expect(h.model.sleepSound?.ambience == .rainTent && h.model.sleepSound?.endsAt == date(5, 23, 5))
+        #expect(h.model.settings.ambience == .rainTent && h.model.settings.ambienceMinutes == 15)
+        h.model.playSleepSound(.pinkNoise, minutes: nil)                   // all night
+        #expect(h.model.sleepSound?.endsAt == nil)
+        h.model.stopSleepSound()
+        #expect(h.model.sleepSound == nil)
+        h.model.playSleepSound(.silence, minutes: 5)
+        #expect(h.model.sleepSound == nil)
+        #expect(h.model.collapsedAt == nil)                                // staying in the app is fine
+    }
+
+    @Test func napWindowOnePerDayAndMessages() {
+        let h = harness(at: date(5, 12, 59))
+        #expect(h.model.napBlockReason()?.contains("13:00–15:00") == true)
+        h.clock.now = date(5, 15, 0)                                        // edge: exactly the window end
+        #expect(h.model.napBlockReason() == nil)
+        h.model.startNap()
+        #expect(h.model.active?.isNap == true && h.model.phase == .building)
+        #expect(h.model.active?.wake == date(5, 15, 30))                    // 30 min default
+        #expect(h.model.graceEnds == date(5, 15, 2))                         // 2 min setup
+        #expect(h.model.napBlockReason() == "Práve prebieha stavba.")
+        #expect(!h.model.confirm(code: "1234"))                             // only at the end
+        h.clock.now = date(5, 15, 30); h.model.refresh()
+        #expect(h.model.phase == .alarm)
+        #expect(h.model.confirm(code: "1234"))
+        #expect(h.model.shownResult?.isNap == true && h.model.shownResult?.outcome == .complete)
+        #expect(h.model.coins == 50 && h.model.lastReward == 50 && h.model.levelUp == nil)
+        #expect(h.model.napSummary.count == 1 && h.model.napSummary.coins == 50)
+        #expect(h.model.builtNights == 0 && h.model.townSnapshot?.buildings.isEmpty == true && h.model.streak == 0)
+        h.model.acknowledgeResult()
+        #expect(h.model.napBlockReason() == "Dnešný odpočinok už bol 😴")
+        h.clock.now = date(5, 18, 0)
+        #expect(h.model.napBlockReason() != nil)
+    }
+
+    @Test func sixtyMinuteNapFromTheEdgeAndAnInterruptedNap() {
+        let h = harness(at: date(5, 15, 0))
+        h.model.settings.nap.minutes = 60
+        h.model.startNap()
+        #expect(h.model.active?.wake == date(5, 16, 0))                     // 15:00 → 16:00
+        h.clock.now = date(5, 15, 10); h.model.append(.leftApp)
+        h.clock.now = date(5, 15, 12); h.model.append(.returned)
+        #expect(h.model.collapsedAt != nil)
+        h.clock.now = date(5, 16, 1); h.model.refresh(); h.model.confirm()
+        #expect(h.model.shownResult?.outcome == .ruins && h.model.coins == 0)
+        // a nap never blocks the night
+        h.model.acknowledgeResult()
+        h.clock.now = date(5, 22, 25); h.model.refresh()
+        #expect(h.model.phase == .canStart)
     }
 
     @Test func settingsChangesArePersisted() {

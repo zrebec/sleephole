@@ -27,10 +27,10 @@ enum Notifications {
     }
 
     /// Scheduled when a night starts: end-of-setup warning + backup alarm (only matters if the app dies).
-    static func scheduleNight(start: Date, setupGrace: TimeInterval, wake: Date, alarmFile: String) {
-        let warnAt = start + max(setupGrace - 30, setupGrace / 2)
-        schedule("grace-end", at: warnAt, title: "Príprava končí",
-                 body: "Ešte chvíľa na nastavenie – potom sa vráť do SleepHole a zamkni telefón 🌙", sound: .default)
+    static func scheduleNight(setupEnds: Date, wake: Date, alarmFile: String) {
+        // owner 2026-09-30: warn 15 s before the setup time runs out
+        schedule("grace-end", at: setupEnds - 15, title: "⏳ Ostáva 15 s na prípravu",
+                 body: "Vráť sa do SleepHole a zamkni telefón 🌙", sound: .default, urgent: true)
         schedule("alarm-backup", at: wake + 30, title: "Dobré ráno ☀️",
                  body: "Otvor SleepHole a potvrď vstávanie.",
                  sound: UNNotificationSound(named: UNNotificationSoundName(alarmFile)), urgent: true)

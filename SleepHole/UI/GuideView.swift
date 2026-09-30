@@ -19,19 +19,23 @@ enum GuideText {
         "Stavbu môžeš začať najskôr \(SK.minutes(NightWindow.startLead)) pred večierkou a najneskôr \(SK.minutes(rules.startDeadline)) po nej. Inak sa noc počíta ako vynechaná."
     }
     static var setup: String {
-        "Po štarte máš \(SK.minutes(rules.setupGrace)) na prípravu – pustiť si podcast či rozprávku. Potom sa vráť do SleepHole."
+        "Na prípravu (podcast, rozprávka, selfie…) máš čas od štartu až do večierky a ešte \(SK.minutes(rules.setupGrace)) po nej – kto začne skôr, má viac času. 15 s pred koncom ťa upozorníme, potom sa vráť do SleepHole."
     }
     static var night: String {
         "Displej môžeš vypnúť, ale SleepHole musí zostať v popredí. Keď odídeš do inej appky dlhšie ako na \(SK.seconds(rules.accidentalTolerance)), stavba sa zrúti."
     }
     static let calls = "Telefonát sa nepočíta – po hovore sa len vráť do appky."
+    static var nap: String {
+        let p = NapPlan.default
+        return "Popoludní si môžeš dať odpočinok (30 alebo 60 min) – iba v okne \(p.windowStart)–\(p.windowEnd) (dá sa zmeniť), raz denne. Platí to isté ako v noci, na prípravu máš \(SK.minutes(NapPlan.rules.setupGrace)), na konci zazvoní budík. Hotový odpočinok = +\(NapPlan.reward(.complete)) 🪙, budovu nestavia."
+    }
     static var alarm: String {
         "Budík zvoní najviac \(SK.minutes(rules.alarmDuration)). Vstávanie potvrdíš zatrasením telefónu alebo kódom – najskôr \(SK.minutes(NightWindow.earlyConfirm)) pred budíčkom."
     }
     static var outcomes: [(String, String)] {
         [("🏢 Hotová", "potvrdíš do \(SK.minutes(NightWindow.onTimeConfirm)) po budíčku"),
          ("🚧 Rozostavaná", "potvrdíš do \(SK.minutes(NightWindow.lateConfirm)) po budíčku – ďalšia dobrá noc ju dostavia"),
-         ("🧱 Ruina", "stavba sa zrútila, zrušil si noc, alebo si nepotvrdil vstávanie. Ruiny časom zarastú kvetmi 🌸")]
+         ("🧱 Ruina", "stavba sa zrútila, zrušil si noc, alebo si nepotvrdil vstávanie. Ďalšia hotová noc ju opraví 🛠️ (ak nečaká rozostavaná budova), inak časom zarastie kvetmi 🌸")]
     }
     static var levels: [(String, String)] {
         let t = Progression.thresholds
@@ -112,15 +116,17 @@ struct GuideView: View {
     private func row(_ icon: String, _ text: String) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon).frame(width: 26).foregroundStyle(.yellow)
-            Text(text).fixedSize(horizontal: false, vertical: true)
+            Text(text).font(.body.leading(.loose)).fixedSize(horizontal: false, vertical: true)
         }
     }
 
     private var welcome: some View {
         pageLayout("moon.stars.fill", "Vitaj v SleepHole") {
-            BuildingImage(id: "l1-house-a-a", maxHeight: 150).frame(maxWidth: .infinity)
+            BuildingImage(id: "l1-house-a-a", maxHeight: 170).frame(maxWidth: .infinity)
             Text("Každý večer začneš stavať budovu. Keď v noci necháš telefón na pokoji a ráno vstaneš načas, budova sa dokončí – a z tvojich nocí rastie mesto.")
+                .font(.title3)
             Text("Cieľ je jednoduchý: chodiť spať a vstávať každý deň v rovnakom čase. 💙")
+                .font(.title3)
                 .foregroundStyle(.secondary)
         }
     }
@@ -130,6 +136,8 @@ struct GuideView: View {
         return pageLayout("clock.fill", "Tvoj rozvrh") {
             Text("Rovnaký čas každý deň je základ dobrého spánku. Neskôr ho zmeníš v Nastaveniach.")
             ScheduleFields().padding().background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            Text("Odpočinok: \(model.settings.nap.minutes) min, medzi \(model.settings.nap.windowStart) a \(model.settings.nap.windowEnd) (zmeníš v Nastaveniach).")
+                .font(.footnote).foregroundStyle(.secondary)
         }
     }
 
@@ -139,6 +147,7 @@ struct GuideView: View {
             row("headphones", GuideText.setup)
             row("lock.iphone", GuideText.night)
             row("phone.fill", GuideText.calls)
+            row("bed.double.fill", GuideText.nap)
             row("bell.badge", "Ak odídeš z appky, príde upozornenie „Vráť sa do SleepHole“.")
         }
     }
@@ -168,7 +177,9 @@ struct GuideView: View {
                     Text(text).foregroundStyle(.secondary)
                 }
             }
-            Text("Budovu si nevyberáš – každú noc je prekvapenie. 🎁").foregroundStyle(.secondary)
+            Text("Mince 🪙").font(.headline)
+            Text("Hotová noc = \(Economy.reward(.complete)) 🪙, rozostavaná = \(Economy.reward(.unfinished)) 🪙 a každá \(Economy.streakBonusEvery). hotová noc v rade pridá bonus +\(Economy.streakBonus) 🪙. Čoskoro si za ne budeš kupovať budovy: dom \(Economy.price(level: 1)), L2 \(Economy.price(level: 2)), L3 \(Economy.price(level: 3)), L4 \(Economy.price(level: 4)) 🪙.")
+                .foregroundStyle(.secondary)
         }
     }
 
@@ -242,7 +253,7 @@ struct FirstNightBriefing: View {
         NavigationStack {
             List {
                 Section {
-                    Label("Po štarte máš \(SK.minutes(GuideText.rules.setupGrace)) na podcast či rozprávku.", systemImage: "headphones")
+                    Label("Na podcast či rozprávku máš čas do večierky + \(SK.minutes(GuideText.rules.setupGrace)).", systemImage: "headphones")
                     Label("Potom sa vráť do SleepHole a zamkni telefón.", systemImage: "lock.iphone")
                     Label("Telefón nechaj na nabíjačke.", systemImage: "battery.100.bolt")
                     Label("Budík o \(clockFormat.string(from: model.window.wake)) – zatras telefónom alebo zadaj kód \(model.settings.wakeCode).", systemImage: "alarm.fill")

@@ -22,9 +22,10 @@ Osobná iPhone appka na **pravidelný spánok**, v duchu hry SleepTown. Večer z
 | 📱 **Noc** | displej môže byť vypnutý, ale SleepHole musí ostať v popredí. Pri odchode príde **„⚠️ Vráť sa!“** a máš **10 s** na návrat, inak sa stavba zrúti |
 | 📞 **Výnimky** | telefonát sa nepočíta. Ak appku v noci vypne iOS, počíta sa to v tvoj prospech |
 | ⏰ **Budík** | zvoní najviac **2 minúty** (aj v tichom režime) a rozsvieti obrazovku. Vstanie potvrdíš **zatrasením** alebo **kódom** (najskôr 30 min pred budíčkom) |
-| 🏢 **Hotová** | potvrdené počas zvonenia budíka |
-| 🚧 **Rozostavaná** | potvrdené po dozvonení, najneskôr do 60 min. Ďalšia dobrá noc ju dostavia |
-| 🧱 **Ruina** | stavba sa zrútila, noc bola zrušená, alebo si vstanie nepotvrdil. Po týždni zarastie kvetmi 🌸 |
+| 🏢 **Hotová** | potvrdené počas zvonenia budíka (+100 🪙, každá 7. hotová noc v rade +200 🪙) |
+| 🚧 **Rozostavaná** | potvrdené po dozvonení, najneskôr do 60 min (+50 🪙). Ďalšia dobrá noc ju dostavia |
+| 🧱 **Ruina** | stavba sa zrútila, noc bola zrušená, alebo si vstanie nepotvrdil. Ďalšia hotová noc ju opraví 🛠️ (ak nečaká rozostavaná budova), inak po týždni zarastie kvetmi 🌸 |
+| 😴 **Odpočinok** | popoludní **30 alebo 60 min**, iba v okne (predvolene **13:00–15:00**), **raz denne**. Rovnaké pravidlá ako v noci, príprava 2 min, na konci budík. **Budovu nestavia**, hotový **+50 🪙**, skrátený **+25 🪙** |
 
 **Levely** podľa počtu stavebných nocí (hotová alebo rozostavaná):
 
@@ -56,7 +57,12 @@ Každú noc sa náhodne vyberie jeden z odomknutých levelov a z neho budova. Bu
   - Poplach (agresívny).
 
   Jemné budíky postupne silnejú, agresívne hrajú naplno hneď.
-- **🔥 Séria** hotových nocí za sebou.
+- **Dnes:** vždy dve tlačidlá, **🌙 Ísť spať** a **😴 Odpočinok**. Mimo svojho okna sú neaktívne a vysvetlia prečo.
+- **🔥 Séria** hotových nocí za sebou a **🪙 mince** (noci, bonus za sériu, odpočinky).
+- **Štatistiky:** séria, kalendár nocí, priemerný štart a vstávanie, pravidelnosť, graf, odpočinky, levely.
+- **Oslava levelu** s konfetami, **oprava ruín** dobrou nocou.
+- **Zvuky na zaspávanie:** hnedý, ružový a biely šum, dážď na stan a dážď na okno. Hrajú presne podľa časovača (1–60 min alebo celú noc) aj počas stavby a pri vypnutej obrazovke.
+- **Záloha:** export a import do súboru a automatická záloha po každej noci (Súbory → Na mojom iPhone → SleepHole).
 - **Sprievodca pri prvom spustení** (6 stránok). Čísla v ňom sa berú priamo z pravidiel v kóde. Pred prvou nocou sa ukáže aj kontrolný zoznam „Tvoja prvá noc“. Oboje sa zapíše do databázy.
 - **Nastavenia:** večierka, budíček, pripomienka, ranný kód, zvuk v noci a budík s ukážkou, stav povolenia upozornení.
 - **Vývojárske nástroje:**
@@ -93,8 +99,8 @@ xcodegen generate && open SleepHole.xcodeproj     # potom ▶ Run na iPhone (ná
 ### Testy
 
 ```bash
-tools/coverage.sh     # SleepCore: 67 testov, ~96 % riadkov
-tools/test_app.sh     # appka na simulátore iPhone 16 Pro: 47 testov, ~89 % riadkov
+tools/coverage.sh     # SleepCore: 81 testov, ~97 % riadkov
+tools/test_app.sh     # appka na simulátore iPhone 16 Pro: 62 testov, ~92 % riadkov
 ```
 
 Ďalšie nástroje:
@@ -115,7 +121,7 @@ tools/test_app.sh     # appka na simulátore iPhone 16 Pro: 47 testov, ~89 % ria
 | F1 | SleepCore a testy | ✅ |
 | F2 | noc bez grafiky mesta | ✅ testy na zariadení, ⏳ prvá skutočná noc |
 | F3 | mesto (SpriteKit) | ✅ postavené, ⏳ čaká na skutočné noci |
-| F4 | levely, štatistiky, záloha | ⬜ |
+| F4 | levely, štatistiky, záloha, mince, odpočinok | ✅ väčšina, ⏳ obchod s budovami |
 | F5 | živé mesto | ⬜ |
 | F6 | platený Apple účet | ⬜ na rade |
 | F7 | nové budovy | ⬜ |
@@ -131,12 +137,12 @@ tools/test_app.sh     # appka na simulátore iPhone 16 Pro: 47 testov, ~89 % ria
   - neskôr HealthKit a Apple Watch (overenie spánku, budík vibráciou na zápästí),
   - TestFlight.
 
-**F4: motivácia a prehľad**
-- Oslava odomknutého levelu.
-- Štatistiky: séria (najdlhšia aj aktuálna), kalendár nocí, priemerný čas štartu a vstania, **pravidelnosť**, graf za 30 dní.
-- **Oprava ruiny:** dobrá noc môže ruinu znovu postaviť.
-- Záloha a obnova do súboru (JSON). Pripomienka 7-dňovej expirácie (kým nie je platený účet).
-- Možno celkový limit času mimo appky za noc (teraz sa tolerancia ráta pre každý odchod zvlášť).
+**Obchod s budovami za 🪙**
+- Ceny: dom 100, L2 200, L3 400, L4 1000. Dlhšie ostaneš „v dedinke“, polícia príde až po týždňoch.
+- Zostáva dohodnúť, kedy sa budova vyberá, kedy sa strhnú mince a čo, keď na nič nie je dosť.
+
+**Anglická verzia (i18n)**
+- Katalóg prekladov, anglické názvy budov a anglické tabule na budovách.
 
 **F5: živé mesto**
 - Deň a noc podľa skutočného času, svietiace lampy a okná.
@@ -162,4 +168,5 @@ tools/test_app.sh     # appka na simulátore iPhone 16 Pro: 47 testov, ~89 % ria
 
 - **Grafika a časť zvukov:** [Kenney](https://kenney.nl) (CC0). Vyrenderované a poskladané vlastnými skriptmi v `tools/`.
 - **Melódie budíkov:** E. Grieg (*Peer Gynt*, 1875) a L. van Beethoven (*9. symfónia*, 1824), obe voľné dielo. Trúbka a Poplach sú vlastné skladby. Všetko je syntetizované v `tools/audio/make_alarms.py`.
+- **Dážď na okno:** „Rain on Windows, Interior, A“ od [InspectorJ](https://freesound.org/s/346642/) (www.jshaw.co.uk), Freesound, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), upravené do slučky. Dážď na stan a šumy sú syntetizované (`tools/audio/make_rain.py`, `AudioKeeper`).
 - **Inšpirácia:** [SleepTown](https://apps.apple.com/app/sleeptown/id1210251567) od Seekrtech.

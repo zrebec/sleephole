@@ -4,7 +4,9 @@ import Foundation
 public struct SleepRules: Codable, Equatable, Sendable {
     /// "Začať stavbu" is possible until bedtime + 5 min; later the night is missed.
     public var startDeadline: TimeInterval = 5 * 60
-    /// After starting, the app may be in the background for up to 5 min (set up a podcast, a story…).
+    /// Setup time after bedtime: the app may be in the background from the start until
+    /// max(start, bedtime) + setupGrace (owner, 2026-09-30: starting at 20:51 for a 21:00 bedtime gives
+    /// 9 + 5 = 14 min to set up a podcast, a story, selfies…).
     public var setupGrace: TimeInterval = 5 * 60
     /// After the grace period ANY user-initiated background collapses the building (like SleepTown),
     /// except for this tiny tolerance for an accidental swipe.
@@ -58,7 +60,7 @@ public enum NightEvaluator {
     /// staying away longer than the accidental tolerance collapses the building.
     public static func collapsedAt(_ log: NightLog, rules: SleepRules = SleepRules()) -> Date? {
         guard let start = log.startedAt else { return nil }
-        let graceEnd = start + rules.setupGrace
+        let graceEnd = log.window.setupEnds(start: start, rules: rules)
         for (a, b) in awayIntervals(log) {
             let from = max(a, graceEnd)
             let allowed = rules.accidentalTolerance + rules.noticeDelay
@@ -98,6 +100,12 @@ public enum NightEvaluator {
 }
 
 extension NightWindow {
+    /// End of the setup time for a night started at `start`: until bedtime + grace, or start + grace
+    /// when started after bedtime (never less than the full grace).
+    public func setupEnds(start: Date, rules: SleepRules = SleepRules()) -> Date {
+        max(start, bedtime) + rules.setupGrace
+    }
+
     /// "Začať stavbu" is enabled in [startOpens, startCloses].
     public func startCloses(_ rules: SleepRules = SleepRules()) -> Date { bedtime + rules.startDeadline }
     public func canStart(at t: Date, rules: SleepRules = SleepRules()) -> Bool {

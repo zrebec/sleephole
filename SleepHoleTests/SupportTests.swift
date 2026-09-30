@@ -21,7 +21,7 @@ struct SupportTests {
     @Test func everyAlarmSoundShipsInTheBundle() {
         for s in AppSettings.AlarmSound.allCases {
             #expect(Bundle.main.url(forResource: s.fileName, withExtension: nil) != nil, "\(s)")
-            #expect(!s.title.isEmpty && s.rampSeconds >= 0 && s.id == s.rawValue)
+            #expect(!s.title.isEmpty && !s.detail.isEmpty && s.rampSeconds >= 0 && s.id == s.rawValue)
         }
         #expect(AppSettings().alarmSound == .gentle)                          // owner's default
     }
@@ -34,6 +34,24 @@ struct SupportTests {
         #expect(back == s)
         let code = AppSettings.randomCode()
         #expect(code.count == 4 && code.allSatisfy(\.isNumber))
+    }
+
+    @Test func ambienceIdsAndLegacyValues() throws {
+        let dec = JSONDecoder()
+        #expect(try dec.decode(AudioKeeper.Ambience.self, from: Data("\"Hnedý šum\"".utf8)) == .brownNoise)
+        #expect(try dec.decode(AudioKeeper.Ambience.self, from: Data("\"Ticho\"".utf8)) == .silence)
+        #expect(try dec.decode(AudioKeeper.Ambience.self, from: Data("\"rain\"".utf8)) == .rainTent)
+        #expect(try dec.decode(AudioKeeper.Ambience.self, from: Data("\"???\"".utf8)) == .brownNoise)
+        for a in AudioKeeper.Ambience.allCases { #expect(!a.title.isEmpty && !a.detail.isEmpty && a.id == a.rawValue) }
+        // settings saved by an older build (no timer, Slovak ambience) still load
+        let old = #"{"alarmSound":"alarm_ode","wakeCode":"1356","volume":0.16,"ambience":"Ticho","schedule":{"bedtime":{"hour":21,"minute":0},"wake":{"hour":4,"minute":30},"reminderOffsets":[30]}}"#
+        let s = try dec.decode(AppSettings.self, from: Data(old.utf8))
+        #expect(s.ambience == .silence && s.ambienceMinutes == nil && s.alarmSound == .ode)
+        #expect(s.napPlan == nil && s.nap == .default)                   // no nap in old settings → default
+        var withNap = s
+        withNap.nap.minutes = 60
+        #expect(try dec.decode(AppSettings.self, from: JSONEncoder().encode(withNap)).nap.minutes == 60)
+        #expect(AppSettings.ambienceTimerOptions.contains(nil) && AppSettings.ambienceTimerOptions.contains(1))
     }
 
     @Test func nightRecordKeepsItsLog() {
@@ -50,6 +68,9 @@ struct SupportTests {
         #expect(d.id.hasPrefix("debug-"))
         let b = NightRecord(window: w, buildingId: "x", isDebug: false, setupGrace: 300, idPrefix: "bonus")
         #expect(b.id.hasPrefix("bonus-"))
+        let n = NightRecord(window: w, buildingId: "", isDebug: false, setupGrace: 120, isNap: true)
+        #expect(n.id == "nap-\(w.key)" && n.window.earlyConfirmOverride == 0 && n.backup.isNap == true)
+        #expect(NightRecord(backup: n.backup).isNap)
     }
 
     @Test func populationCountsHomesNotRuins() throws {

@@ -40,6 +40,9 @@ targets:
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIRequiresFullScreen: true
         ITSAppUsesNonExemptEncryption: false
+        # the automatic backup in Documents is visible in Files → On My iPhone → SleepHole
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: sk.zrebec.sleephole

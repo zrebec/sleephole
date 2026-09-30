@@ -14,6 +14,8 @@ public struct TownBuilding: Equatable, Sendable {
     public var state: BuildingState
     /// An unfinished building completed by a later good night ("dostavaná", plan §8).
     public var completedLater: Bool = false
+    /// A ruin rebuilt by a later good night ("opravená", owner 2026-09-30).
+    public var repairedLater: Bool = false
 }
 
 /// The whole town derived from the finalized nights. Nothing about the town is stored: it is replayed
@@ -41,11 +43,18 @@ public enum TownBuilder {
                     : r.outcome == .unfinished ? .unfinished : .ruins
                 append(&town, entry: entry, buildingId: id, key: r.key, state: state)
             }
-            // A complete night also finishes the oldest unfinished building (gentle bonus).
-            if r.outcome == .complete,
-               let i = town.buildings.firstIndex(where: { $0.state == .unfinished && $0.nightKey < r.key }) {
-                town.buildings[i].state = .complete
-                town.buildings[i].completedLater = true
+            // A complete night also helps ONE older building (gentle bonus): first it finishes the oldest
+            // unfinished building, otherwise it repairs the oldest ruin (not lit-street ruins – nothing to rebuild).
+            if r.outcome == .complete {
+                if let i = town.buildings.firstIndex(where: { $0.state == .unfinished && $0.nightKey < r.key }) {
+                    town.buildings[i].state = .complete
+                    town.buildings[i].completedLater = true
+                } else if let i = town.buildings.firstIndex(where: {
+                    $0.state == .ruins && $0.nightKey < r.key && $0.placement.catalogId == $0.buildingId
+                }) {
+                    town.buildings[i].state = .complete
+                    town.buildings[i].repairedLater = true
+                }
             }
         }
         return town

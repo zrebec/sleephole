@@ -16,9 +16,10 @@
 | A | Assets: sprites + audio + render pipeline | ✅ done (2026-09-29) | reviewed `docs/previews/demo_town.png` |
 | F0 | Tooling + empty app on the iPhone | ✅ done (2026-09-29) | app icon launches on owner's iPhone |
 | F1 | `SleepCore` domain package + tests | ✅ done (2026-09-29), rules revised by owner → R2 | `swift test` green, owner reads rules summary |
-| F2 | Night loop without town graphics | 🟡 built + installed 2026-09-29, owner tests fast nights, then real nights | 2–3 real nights, detection verified |
+| F2 | Night loop without town graphics | ✅ done (2026-09-30, first real night complete) | 2–3 real nights, detection verified |
 | F3 | Town rendering (SpriteKit) | 🟡 built + installed 2026-09-29 (owner asked for a surprise – no details were told), awaiting first real nights | town shows all past nights |
-| F4 | Progression, level-ups, statistics, backup | ⬜ todo | one week of use |
+| F4 | Progression, level-ups, statistics, backup | 🟡 stats/backup/level-up/ruin repair done 2026-09-30; shop + i18n next | one week of use |
+| I18N | English (default) + Slovak, in-app switch stored in SQLite | ✅ spec APPROVED 2026-09-30 → implement `docs/IMPLEMENTATION_I18N.md` (start at its §0) |
 | F5 | Living town (day/night, lamps, cars) | ⬜ todo | "I like looking at it" |
 | F6 | *(optional, paid account)* HealthKit, AlarmKit, TestFlight | ⬜ later | owner decides to pay |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
@@ -54,6 +55,7 @@ leaving the app. Tone: cute, warm, **never cruel**.
 | D12 | Work in **checkpointed phases**; the owner tests on the phone; **the owner commits** (agents never commit). |
 | D13 | **Level unlocks** (owner, 2026-09-29): first 5 building nights only L1; next 10 → L1+L2; next 15 → L1–L3; from then on (the "next 20" and beyond) → L1–L4, i.e. everything. One random building per night. |
 | D14 | UI language **Slovak** (with correct diacritics). Code, comments, docs for agents: English. |
+| D16 | **Nap ("Odpočinok", owner 2026-09-30):** 30 or 60 min only; start only inside the nap window (default 13:00–15:00, inclusive – starting at 15:00 with 60 min lasts until 16:00); once per day; same detection rules as a night with a 2-min setup (`NapPlan.rules`); alarm at the end, confirm only when it is over (`earlyConfirmOverride = 0`); complete +50 🪙, cut short +25 🪙; never builds, never changes streaks/levels/stats of nights; stored as `NightRecord(isNap: true, id "nap-<date>")`. The home screen always shows BOTH buttons ("🌙 Ísť spať", "😴 Odpočinok"), disabled outside their windows with a reason. |
 | D15 | **Night rules R2** (owner, 2026-09-29, supersedes the graded away-time of D4): start possible **only from bedtime − 10 min until bedtime + 5 min** (owner: critical; later = missed night); after starting, **5 min setup grace** in which the app may be in the background (podcast, bedtime story); after that **any user-initiated background collapses the building** like SleepTown (10 s accidental tolerance – agent's choice); screen off / locked is fine but the app must stay in the foreground; **phone calls are system-forced → excused**; killed by the system → owner's favour, but avoid it (background audio). Finish ("Vstal som") earliest **wake − 30 min**, by **shaking or typing a wake code** (code visible in Settings). The **alarm rings at most 2 min**. Confirm ≤ wake+15 → complete, ≤ wake+60 → unfinished, later → ruins. |
 
 ---
@@ -600,11 +602,11 @@ detection log matches reality. **Stop.**
 **Accept:** "Simulovať 30 nocí" produces a town that looks like `docs/previews/demo_town.png`. **Stop.**
 
 ### F4 — Progression, stats, backup
-- [ ] Level-up banner + `level_up.caf`; level progress on Dnes
+- [x] Level-up banner + `level_up.caf`; level progress on Dnes
 - [x] Street-light upgrade (§7.3); unfinished→complete bonus (§8) — done in F3 (`TownBuilder`)
-- [ ] Štatistiky screen (§9) with Swift Charts
-- [ ] JSON backup export/import; 7-day expiry reminder notification
-- [ ] **Ruin repair** (owner request): a later good night can rebuild a ruin (decide: replaces the new building, or a bonus like the unfinished→complete rule)
+- [x] Štatistiky screen (§9) with Swift Charts
+- [x] JSON backup export/import; 7-day expiry reminder notification
+- [x] **Ruin repair** (owner request): a later good night can rebuild a ruin (decide: replaces the new building, or a bonus like the unfinished→complete rule)
 - [ ] Maybe a per-night cap on total time away (tolerance is per trip today) – ask the owner
 - See `README.md` → „Čo nás čaká“ for the owner-facing roadmap and the XS→XXL idea list
 **Accept:** a week of real use. **Stop.**
@@ -617,6 +619,38 @@ detection log matches reality. **Stop.**
 ### F6 — Paid Apple Developer Program *(only when the owner decides)*
 HealthKit sleep analysis (Apple Watch) as a bonus badge "overené hodinkami", AlarmKit alarm (request the
 entitlement), TestFlight, drop the expiry reminder.
+
+### Backlog from the owner (2026-09-30) – to discuss / schedule
+- [x] **UI polish (2026-09-30):** bigger fonts on the guide's first page; alarm picker as "Zvonenie budíka" label + full-width
+      picker below (long names wrapped the row); preview Play/Stop as round Liquid Glass icon buttons
+      (▶ / ■, `.buttonStyle(.glass)` on iOS 26, `.bordered` + `.circle` fallback), left-aligned next to each other
+- [x] **Sleep sounds + timer (2026-09-30):** white / pink / brown noise, rain (synthesised or CC0 recording); play for 1 (test),
+      5, 15, 30, 45, 60 min or all night – after the timer fade to SILENCE but keep the engine running (keep-alive)
+- [x] **Coins earned (2026-09-30):** `Economy` in SleepCore (complete 100, unfinished 50, ruins 0, every 7th
+      complete night in a row +200; replayed from real nights like the town). Shown on Dnes (🪙 next to 🔥), in the
+      town header and on the result screen. Debug nights pay nothing; the "counts for the town" test night pays.
+- [ ] **Building shop (next):** prices L1 100, L2 200, L3 400, L4 1000 (`Economy.price`). Owner's intent: you spend
+      a long time in villages/suburbs before a block of flats, police comes much later. Open: when to choose
+      (at "Začať stavbu"?), what if coins are short (proposal: a free random L1), pay on start or on completion,
+      ruin repair price.
+- [ ] **Economy (coins)** – owner's idea: a complete night pays coins (e.g. 100 for L1, more for higher levels);
+      from L2 on you BUY buildings you want (~200 coins each); an "allowed apps" slot costs 1000 coins and can be
+      changed once a year. Needs a design session (open questions in the chat of 2026-09-30).
+- [ ] **Allowed apps during the night** (later, after F6): let 3 chosen apps (Podcasts, YT Music, Spotify…) not
+      collapse the building. Needs FamilyControls/DeviceActivity (paid account + distribution entitlement) and
+      contradicts D3 (no Screen Time APIs) → owner decision required.
+- [ ] **Alternative distribution in the EU** (DMA): alternative app marketplaces (e.g. AltStore PAL) / web
+      distribution – only relevant if SleepHole ever goes public; requires the paid account + notarization.
+
+### i18n – English version (owner: important for Kenney and Apple)
+- UI texts are Slovak literals. SwiftUI `Text("…")` literals are `LocalizedStringKey`s → Xcode extracts them into a
+  String Catalog (`Localizable.xcstrings`) automatically; add `en` there.
+- Texts built in Swift code need `String(localized:)`: `GuideText`, `SK` plurals (use the catalog's plural
+  variations instead), notifications, `AlarmSound.title`, `Ambience.title`, result/outcome texts.
+- Catalog building names: add `nameEN` (or a string key) to `catalog.json` via `make_recipes.py`.
+- **Sprites with Slovak signs** (MÚZEUM, GALÉRIA, KNIŽNICA, RADNICA, ŠKOLA, HASIČI, POLÍCIA, NEMOCNICA): render an
+  English variant of those ~9 sprites (`l3-police@en` …) and pick the file by locale; everything else is language-free.
+- Persisted values already use stable ids (ambience ids since 2026-09-30, alarm file names, catalog ids).
 
 ### F7 — Assets
 - [ ] **More L3 buildings** (owner request 2026-09-29 – L3 has only 5, the town repeats them): e.g. post
@@ -660,6 +694,14 @@ entitlement), TestFlight, drop the expiry reminder.
 | 2026-09-29 | **Owner fast-night tests (evening):** journal saved in `docs/device-logs/2026-09-29-evening/`. Correct night → building in the town ✅. Leaving after the grace → collapsed ✅, but the "Vráť sa" nudge was NOT seen (likely Focus/DND filtering; Personal Teams cannot use Time Sensitive notifications – build error "Personal development teams … do not support the Time Sensitive Notifications capability"). Confirming after the alarm had stopped gave "complete" → owner says it must be unfinished. |
 | 2026-09-29 | **Rules R3** (owner): complete ONLY while the alarm rings (`NightWindow.onTimeConfirm` = 2 min = `alarmDuration`), then unfinished until +60 min, then ruins. The 10 s to return count from the warning: `SleepRules.noticeDelay` = 3 s → collapse after 13 s away. At the alarm a silent notification lights up the lock screen (`Notifications.alarmScreen`, apps cannot turn the screen on). Settings show the notification permission + a hint to allow SleepHole in Focus. 🔥 `StreakBadge` on Dnes/result (`AppModel.streak`). First-run guide (`GuideView`, 6 pages, texts generated from the rule constants) + "Tvoja prvá noc" checklist before the first real night; both stored in SwiftData `UserProgress`. Guide tip about iOS night updates (restart kills the app → counts in the owner's favour, only the backup notification rings). |
 | 2026-09-29 | **Bug fixed – "Vráť sa" never sent:** `AppModel.append` checked `collapsedAt` AFTER storing `.leftApp`; an open away interval counts until wake → always "collapsed" → no nudge. Now evaluated before storing (`nudgesSent` counter, regression test `leavingAfterTheGraceSendsExactlyOneWarning`). Finishing the guide also asks for notification permission if the button was skipped. |
+| 2026-09-30 | **First real night ✅** (`docs/device-logs/2026-09-30-first-night/`): started 20:57:25, setup in other apps until 21:02:21 (4 s before its end), locked 21:02:28; 4 short unlocks (21:12, 22:01, 23:46, 00:03) with instant return – not counted; confirmed 04:26:03, before the 04:30 alarm (so the alarm never rang); app never killed; outcome complete, building `l1-house-j-a`. |
+| 2026-09-30 | **Owner bug fixed:** setup time is now until `max(start, bedtime) + setupGrace` (`NightWindow.setupEnds`) – an early start gives more setup time (20:51 → until 21:05 = 14 min). Warning notification 15 s before the setup ends ("⏳ Ostáva 15 s na prípravu"). The trip rule is unchanged (warning after ~3 s, 10 s to return). `confirmedByShake/confirmedByCode` diagnostic events. Credits screen (Nastavenia → Poďakovanie). Paid-account TO-DO: `docs/TODO-APPLE-DEVELOPER.md`; Kenney thank-you email draft: `docs/drafts/email-kenney.md`. Kenney has NO rain/ambient audio (the All-in-1 bundle already contains everything he made) → rain must be synthesised or come from CC0 recordings. |
+| 2026-09-30 | **Settings bug:** two Buttons in one Form row fire TOGETHER on a tap (default style) → "Stop" also triggered "Play", the preview never stopped/switched. Fix: `.buttonStyle(.borderless)` per button (+ glass via `.glassEffect` modifier), `SoundPreview` controller that switches the noise live (`switchTo`) and stops reliably; regression test `soundPreviewSwitchesLiveAndStops`. Pickers are now standard rows (label left, value right) with short titles + a detail footer. |
+| 2026-09-30 | **Sleep sound = exact duration** (owner): `AudioKeeper.sleepTimer(seconds:volume:)` plays in a seamless loop for EXACTLY the "Hrať" time (last 5 s fade, silent at the end, engine keeps running; nil = until ■/all night), works with the screen off (background audio). Settings ▶ uses it (`SoundPreview`, no more 10 s preview). During a night the owner can start/stop it from the night screen (`SleepSoundSheet` → `AppModel.playSleepSound/stopSleepSound`) – allowed because the app stays in the foreground. App tests 53, app coverage 90.3 %. |
+| 2026-09-30 | **Rain v2:** owner's recording (InspectorJ, Freesound 346642, CC BY 4.0) analysed: 51 % energy < 100 Hz, centroid 235 Hz, ~0.7 distinct drops/s → a dark "wash" (sounds like noise). New `rain_tent.caf` synthesised by `tools/audio/make_rain.py` (drop = impulse → damped fabric resonator 170–420 Hz + tiny click, Poisson 40–100 drops/s with gusts, heavy tree drips, soft rain bed, stereo; ~35 audible drops/s, 60 s seamless loop) + `rain_window.caf` (the recording as a seamless loop, credited in the app + README + `sounds/CREDITS.txt`). `AudioKeeper` plays loop ambiences through an `AVAudioPlayerNode` (.loops); the level/timer logic is shared (`setLevel`). Ambience id "rain" = rain on a tent (old settings still load). |
+| 2026-09-30 | **F4 part 1:** `Stats` (SleepCore: streaks, coins, circular-mean start/wake, regularity = circular std-dev, 35-day calendar, 30-night series) + `StatsView` (tiles, calendar grid, averages, regularity verdict, Swift Charts start times vs bedtime, level progress). **Backup:** `BackupFile` JSON (settings, guide flags, all nights with events) – Settings → Záloha: export via ShareLink, import via fileImporter + confirmation (refused during a night / newer version); auto-backup after every real night to Documents (`UIFileSharingEnabled` → Files → On My iPhone → SleepHole). **Level-up celebration** (`ConfettiView` + `LevelUpCard` with sample buildings). **Ruin repair:** a complete night finishes the oldest unfinished building, otherwise repairs the oldest ruin (`repairedLater`, not lit-street ruins). SleepCore 77 tests / 96.8 %, app 60 tests / 91.9 %. |
+| 2026-09-30 | **Nap implemented** (D16): SleepCore `NapPlan` (window, session, rules, reward; 100 % covered), `AppSettings.napPlan` optional (old settings still load), `NightRecord.isNap`, `AppModel.napBlockReason/startNap/napSummary`, excluded from town/streak/levels/night stats, coins added; `HomeView` (replaces Idle/CanStart) with both buttons, `NapResting` screen, nap result, Settings → Odpočinok (segmented 30/60 + window), guide row + schedule note, stats card. SleepCore 81 tests / 97 %, app 62 tests / 92 %. |
+| 2026-09-30 | **Night story in Štatistiky:** tappable calendar (plain buttons – borderless tinted the day numbers; `Text(verbatim:)` for years, LocalizedStringKey formats Ints as "2 026"; auto-scroll to the detail). `NightReport` (SleepCore) derives start, first lock, alarm fired/stopped, wake + confirm method, trips during/after the setup (with durations), screen checks (= `.unlocked` events), calls, relaunches, collapse; replay-tested on the owner's first real night (2 setup trips, 5 screen checks). `NightDetail` shows it with the building sprite, coins and that afternoon's nap; a missed day says the app did not run. |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
 | 2026-09-29 | Owner's iPhone: "Bunny 16 Pro", UDID 00008140-001E0D683C31801C; can be installed from the CLI with `xcrun devicectl device install app` when connected. |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |

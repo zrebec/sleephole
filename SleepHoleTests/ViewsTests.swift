@@ -47,6 +47,10 @@ struct ViewsTests {
         render(TodayView(), m)                                      // building, setup grace
         clock.now = date(5, 23); m.refresh()
         render(TodayView(), m)                                      // building, locked phone
+        render(SleepSoundSheet(), m)
+        m.playSleepSound(.rainTent, minutes: 30)
+        render(TodayView(), m)                                      // sleep sound label
+        m.stopSleepSound()
         m.append(.leftApp)
         clock.now += 60; m.refresh()
         render(TodayView(), m)                                      // collapsed
@@ -65,6 +69,15 @@ struct ViewsTests {
             render(ResultView(), m)
             m.acknowledgeResult()
         }
+        clock.now = date(8, 13, 30); m.refresh()
+        render(TodayView(), m)                                      // home: nap available, sleep disabled
+        m.startNap(); render(TodayView(), m)                        // nap screen (setup)
+        clock.now += 5 * 60; m.refresh(); render(TodayView(), m)    // resting
+        m.append(.leftApp); clock.now += 30; m.append(.returned); render(TodayView(), m)   // interrupted
+        clock.now = date(8, 14, 0); m.refresh(); m.confirm()
+        render(TodayView(), m)                                      // nap result
+        m.acknowledgeResult()
+        clock.now = date(8, 23, 30); m.refresh(); render(TodayView(), m)   // too late for tonight
         m.startTestNight(); render(TodayView(), m)                  // debug canStart
         m.startNight(); clock.now += 240; m.refresh(); m.confirm()
         render(TodayView(), m)                                      // debug result
@@ -87,5 +100,6 @@ struct ViewsTests {
         render(ConstructionSite(buildingId: "l3-police", progress: 0.5), m)
         render(NightSky(), m)
         render(LevelInfo(), m)
+        render(NavigationStack { CreditsView() }, m)
     }
 }

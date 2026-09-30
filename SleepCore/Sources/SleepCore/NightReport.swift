@@ -1,0 +1,70 @@
+import Foundation
+
+/// A human-readable story of one night, derived from its event log (Štatistiky → tap a calendar day).
+public struct NightReport: Equatable, Sendable {
+    public struct Trip: Equatable, Sendable {
+        public let start: Date
+        /// nil = never came back before the end of the night.
+        public let end: Date?
+        public var duration: TimeInterval? { end.map { $0.timeIntervalSince(start) } }
+    }
+
+    public enum ConfirmMethod: String, Sendable { case shake, code }
+
+    public let startedAt: Date?
+    public let setupEnds: Date?
+    /// First time the phone was locked after the start ("went to sleep").
+    public let firstLockAt: Date?
+    public let confirmedAt: Date?
+    public let confirmMethod: ConfirmMethod?
+    public let alarmFiredAt: Date?
+    public let alarmStoppedAt: Date?
+    /// Trips to other apps that STARTED during the setup time.
+    public let setupTrips: [Trip]
+    /// Trips to other apps after the setup time.
+    public let nightTrips: [Trip]
+    /// Phone unlocks while the app sat in the background (Face ID + swipe up) – e.g. to check the time.
+    public let screenChecks: [Date]
+    public let calls: [Trip]
+    /// Cold launches during the night (the app had been killed).
+    public let relaunches: [Date]
+    public let collapsedAt: Date?
+    public let abandonedAt: Date?
+
+    public init(log: NightLog, rules: SleepRules = SleepRules()) {
+        let events = log.sortedEvents
+        let start = log.startedAt
+        startedAt = start
+        setupEnds = start.map { log.window.setupEnds(start: $0, rules: rules) }
+        firstLockAt = events.first { $0.kind == .locked && $0.at >= (start ?? .distantPast) }?.at
+        confirmedAt = log.confirmedAt
+        confirmMethod = log.has(.confirmedByCode) ? .code : log.has(.confirmedByShake) ? .shake : nil
+        alarmFiredAt = log.first(.alarmFired)?.at
+        alarmStoppedAt = log.first(.alarmStopped)?.at
+        abandonedAt = log.first(.abandoned)?.at
+
+        var trips: [Trip] = [], calls: [Trip] = []
+        var awaySince: Date?, callSince: Date?
+        for e in events {
+            switch e.kind {
+            case .leftApp: awaySince = awaySince ?? e.at
+            case .returned, .locked, .confirmed:
+                if let s = awaySince { trips.append(Trip(start: s, end: e.at)); awaySince = nil }
+            case .appLaunched: if let s = awaySince { trips.append(Trip(start: s, end: nil)); awaySince = nil }
+            case .callStarted: callSince = callSince ?? e.at
+            case .callEnded: if let s = callSince { calls.append(Trip(start: s, end: e.at)); callSince = nil }
+            default: break
+            }
+        }
+        if let s = awaySince { trips.append(Trip(start: s, end: nil)) }
+        if let s = callSince { calls.append(Trip(start: s, end: nil)) }
+        let setupEnd = setupEnds ?? .distantPast
+        setupTrips = trips.filter { $0.start < setupEnd }
+        nightTrips = trips.filter { $0.start >= setupEnd }
+        self.calls = calls
+        let end = log.confirmedAt ?? .distantFuture
+        screenChecks = events.filter { $0.kind == .unlocked && $0.at > (start ?? .distantPast) && $0.at < end }.map(\.at)
+        relaunches = events.filter { $0.kind == .appLaunched }.map(\.at)
+        collapsedAt = NightEvaluator.collapsedAt(log, rules: rules)
+    }
+}

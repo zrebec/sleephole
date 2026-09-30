@@ -65,7 +65,7 @@ struct DetectionTestView: View {
                 Toggle("Test beží", isOn: $running)
                     .onChange(of: running) { _, on in on ? test.start() : test.stop() }
                 Picker("Zvuk v pozadí", selection: $test.ambience) {
-                    ForEach(AudioKeeper.Ambience.allCases) { Text($0.rawValue).tag($0) }
+                    ForEach(AudioKeeper.Ambience.allCases) { Text($0.title).tag($0) }
                 }
                 .onChange(of: test.ambience) { _, _ in test.setVolume() }
                 HStack {
