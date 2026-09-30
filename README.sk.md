@@ -64,6 +64,9 @@ Každú noc sa náhodne vyberie jeden z odomknutých levelov a z neho budova. Bu
 - **🔥 Séria** hotových nocí za sebou a **🪙 mince** (noci, bonus za sériu, odpočinky).
 - **Štatistiky:** séria, kalendár nocí, priemerný štart a vstávanie, pravidelnosť, graf, odpočinky, levely.
 - **Oslava levelu** s konfetami, **oprava ruín** dobrou nocou.
+- **Úspechy:** 12 (prvá budova, 3/7/30 nocí v rade, 10/50/100 postavených nocí, prvá budova levelu 2/3, prvý mrakodrap, prvý odpočinok, opravená ruina), každý +50 🪙 (veľké +200).
+- **Názov mesta** (ťukni naň v hlavičke Mesta) a **týždenný mestský denník** v Štatistikách; v pondelok ráno ukáže obrazovka výsledku, aký bol uplynulý týždeň.
+- **Vibrácie** pri štarte noci, pri zamknutí telefónu, pred koncom prípravy, pri varovaní „Vráť sa!“ a keď sa včas vrátiš.
 - **Zvuky na zaspávanie:** hnedý, ružový a biely šum, dážď na stan a dážď na okno. Hrajú presne podľa časovača (1–60 min alebo celú noc) aj počas stavby a pri vypnutej obrazovke.
 - **Záloha:** export a import do súboru a automatická záloha po každej noci (Súbory → Na mojom iPhone → SleepHole).
 - **Sprievodca pri prvom spustení** (6 stránok). Čísla v ňom sa berú priamo z pravidiel v kóde. Pred prvou nocou sa ukáže aj kontrolný zoznam „Tvoja prvá noc“. Oboje sa zapíše do databázy.
@@ -88,7 +91,7 @@ SleepHoleTests/   testy appky (hostované, Swift Testing)
 assets/sprites/   190 PNG spritov + catalog.json      assets/audio/  budíky a zvuky (CAF)
 tools/render/     Kenney OBJ → izometrické sprity (SceneKit), náhľady, rozloženie mesta
 tools/audio/      syntéza budíkov (numpy)
-tools/i18n/       kontrola kľúčov prekladov (keys.py)
+tools/i18n/       kontrola kľúčov prekladov (keys.py), pridanie prekladov (add.py)
 SleepHole/Resources/Localizable.xcstrings   všetky texty appky (kľúč = anglický text, preklad sk)
 docs/             PLAN.md (rozhodnutia, SK) · IMPLEMENTATION_PLAN.md (pre agentov, EN) · RUN_ON_IPHONE.md
 project.yml       XcodeGen (.xcodeproj sa generuje, nie je v gite)
@@ -104,8 +107,8 @@ xcodegen generate && open SleepHole.xcodeproj     # potom ▶ Run na iPhone (ná
 ### Testy
 
 ```bash
-tools/coverage.sh     # SleepCore: 84 testov, ~97 % riadkov
-tools/test_app.sh     # appka na simulátore iPhone 16 Pro: 75 testov, ~92 % riadkov
+tools/coverage.sh     # SleepCore: 95 testov, ~97 % riadkov
+tools/test_app.sh     # appka na simulátore iPhone 16 Pro: 81 testov, ~93 % riadkov
 python3 tools/i18n/keys.py   # po builde: chýbajúce / nepreložené kľúče v katalógu
 ```
 
@@ -159,9 +162,9 @@ python3 tools/i18n/keys.py   # po builde: chýbajúce / nepreložené kľúče v
 **Nápady (XS → XXL)**
 | | |
 |---|---|
-| XS | zavibrovanie pri štarte stavby a pri zamknutí |
-| S | úspechy („Prvá budova“, „7 nocí v rade“, „Prvý mrakodrap“), vlastný názov mesta |
-| M | widget na ploche so sériou a odpočtom do večierky, týždenný „mestský denník“ |
+| ~~XS~~ | ✅ zavibrovanie pri štarte stavby a pri zamknutí |
+| ~~S~~ | ✅ úspechy, vlastný názov mesta |
+| M | widget na ploche so sériou a odpočtom do večierky (✅ týždenný „mestský denník“ je hotový) |
 | L | ročné obdobia: sneh a vianočné stromčeky v zime, jesenné farby |
 | XL | Live Activity s rastúcou budovou na zamknutej obrazovke, appka pre Apple Watch |
 | XXL | spoločné mesto s partnerom alebo kamarátmi (iCloud), vydanie v App Store |

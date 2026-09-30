@@ -629,6 +629,22 @@
         }
       }
     },
+    "A great week for your town 🏙️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A great week for your town 🏙️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skvelý týždeň pre tvoje mesto 🏙️"
+          }
+        }
+      }
+    },
     "A hundred nights that built something.": {
       "localizations": {
         "en": {
@@ -689,6 +705,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Park, múzeum alebo knižnica v tvojom meste."
+          }
+        }
+      }
+    },
+    "A perfect week – every night complete! 🌟": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A perfect week – every night complete! 🌟"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dokonalý týždeň – každá noc hotová! 🌟"
+          }
+        }
+      }
+    },
+    "A quiet week. Tonight is a new start 🌱": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A quiet week. Tonight is a new start 🌱"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokojný týždeň. Dnes večer je nový začiatok 🌱"
           }
         }
       }
@@ -949,6 +997,22 @@
         }
       }
     },
+    "Average start %@ · wake-up %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Average start %@ · wake-up %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Priemerný štart %1$@ · vstávanie %2$@"
+          }
+        }
+      }
+    },
     "Back": {
       "localizations": {
         "en": {
@@ -1105,6 +1169,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Beethoven – hracia skrinka."
+          }
+        }
+      }
+    },
+    "Best streak: %lld 🔥": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best streak: %lld 🔥"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Najdlhšia séria: %lld 🔥"
+          }
+        }
+      }
+    },
+    "Better than last week – your town noticed 💪": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Better than last week – your town noticed 💪"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lepšie ako minulý týždeň – tvoje mesto si to všimlo 💪"
           }
         }
       }
@@ -1413,6 +1509,38 @@
         }
       }
     },
+    "Complete naps: %lld 😴": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Complete naps: %lld 😴"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotové odpočinky: %lld 😴"
+          }
+        }
+      }
+    },
+    "Complete nights last week: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Complete nights last week: %lld"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotové noci minulý týždeň: %lld"
+          }
+        }
+      }
+    },
     "Complete 🎉": {
       "localizations": {
         "en": {
@@ -1621,6 +1749,22 @@
         }
       }
     },
+    "Earlier weeks": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Earlier weeks"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Staršie týždne"
+          }
+        }
+      }
+    },
     "End": {
       "localizations": {
         "en": {
@@ -1681,6 +1825,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Každý večer začneš stavať budovu. Keď v noci necháš telefón na pokoji a ráno vstaneš načas, budova sa dokončí – a z tvojich nocí rastie mesto."
+          }
+        }
+      }
+    },
+    "Every night counts – your town keeps growing 🌱": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every night counts – your town keeps growing 🌱"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každá noc sa počíta – tvoje mesto rastie ďalej 🌱"
           }
         }
       }
@@ -2677,6 +2837,22 @@
         }
       }
     },
+    "New buildings: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New buildings: %lld"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nové budovy: %lld"
+          }
+        }
+      }
+    },
     "New simulation": {
       "localizations": {
         "en": {
@@ -2833,6 +3009,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Postavené noci: %1$lld · odomknutý level %2$lld"
+          }
+        }
+      }
+    },
+    "No nights yet this week – tonight can be the first 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No nights yet this week – tonight can be the first 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tento týždeň ešte žiadna noc – dnešná môže byť prvá 🌙"
           }
         }
       }
@@ -4249,6 +4441,22 @@
         }
       }
     },
+    "This week · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This week · %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tento týždeň · %@"
+          }
+        }
+      }
+    },
     "Three complete nights in a row.": {
       "localizations": {
         "en": {
@@ -4341,6 +4549,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mesto a levely"
+          }
+        }
+      }
+    },
+    "Town journal": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Town journal"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mestský denník"
           }
         }
       }
@@ -4453,6 +4677,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Budíček"
+          }
+        }
+      }
+    },
+    "Week of %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Week of %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Týždeň %@"
           }
         }
       }
@@ -4869,6 +5109,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tvoje mesto siaha do neba."
+          }
+        }
+      }
+    },
+    "Your week in the town 📖": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your week in the town 📖"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoj týždeň v meste 📖"
           }
         }
       }

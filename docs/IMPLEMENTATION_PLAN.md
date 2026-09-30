@@ -18,7 +18,7 @@
 | F1 | `SleepCore` domain package + tests | ✅ done (2026-09-29), rules revised by owner → R2 | `swift test` green, owner reads rules summary |
 | F2 | Night loop without town graphics | ✅ done (2026-09-30, first real night complete) | 2–3 real nights, detection verified |
 | F3 | Town rendering (SpriteKit) | 🟡 built + installed 2026-09-29 (owner asked for a surprise – no details were told), awaiting first real nights | town shows all past nights |
-| F4 | Progression, level-ups, statistics, backup | 🟡 stats/backup/level-up/ruin repair done 2026-09-30; shop + i18n next | one week of use |
+| F4 | Progression, level-ups, statistics, backup | 🟡 stats/backup/level-up/ruin repair done 2026-09-30; vibrations, achievements, town name, weekly journal done; shop next | one week of use |
 | I18N | English (default) + Slovak, in-app switch stored in SQLite | ✅ done (2026-09-30), installed on the owner's iPhone | owner switches the language in Settings and checks both |
 | F5 | Living town (day/night, lamps, cars) | ⬜ todo | "I like looking at it" |
 | F6 | *(optional, paid account)* HealthKit, AlarmKit, TestFlight | ⬜ later | owner decides to pay |
@@ -619,9 +619,12 @@ detection log matches reality. **Stop.**
         Stats card (locked ones grey, tap = description). Town name (`UserProgress.townName`, default
         "My Town"/"Moje mesto", trimmed, max 30 chars) in the Town header (tap → rename) and Settings, in the backup.
         New UI strings: `python3 tools/i18n/add.py translations.json`.
-  - [ ] **M weekly journal:** Mon–Sun summary (nights by outcome, buildings, coins, average start/wake, best
-        streak, naps, vs. last week, a warm sentence) as a Stats card with past weeks; on Monday after "I'm up"
-        the result screen shows last week's summary.
+  - [x] **M weekly journal** (`SleepCore/WeeklyJournal.swift`, `UI/JournalView.swift`): a night belongs to the week
+        of its EVENING (key − 1), Monday–Sunday; per week: outcomes, new buildings, coins (nights incl. streak
+        bonus + naps), average start/wake, best streak, complete naps, a never-shaming sentence (fewer good nights
+        than last week are never mentioned). Stats card "Town journal" (this week + collapsed earlier weeks); the
+        finished week appears once on the result screen of the Sunday → Monday night (or of the next night when
+        that one was skipped: `WeeklyJournal.finishedWeek`). The result screen scrolls now.
 **Accept:** a week of real use. **Stop.**
 
 ### F5 — Living town

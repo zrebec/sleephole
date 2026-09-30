@@ -379,6 +379,7 @@ struct ResultView: View {
     var body: some View {
         if let rec = model.shownResult, let outcome = rec.outcome {
             let name = model.catalog?[rec.buildingId]?.displayName ?? L("building")
+            ScrollView {
             VStack(spacing: 18) {
                 if rec.isNap {
                     Text(verbatim: outcome == .complete ? "😴" : outcome == .unfinished ? "🥱" : "🧸").font(.system(size: 90))
@@ -412,6 +413,15 @@ struct ResultView: View {
                     }
                 }
                 if !rec.isDebug { NewAchievements(achievements: model.newAchievements) }
+                if let week = model.finishedWeek {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(L("Your week in the town 📖")).font(.headline)
+                        WeekJournalView(week: week,
+                                        previous: model.journalWeek(monday: week.monday.adding(days: -7, calendar: .current)))
+                    }
+                    .padding(12)
+                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+                }
                 if outcome == .complete, !rec.isDebug, !rec.isNap { StatusBadges() }
                 if let level = model.levelUp {
                     Label(L("Level \(level) unlocked!"), systemImage: "star.fill")
@@ -422,6 +432,7 @@ struct ResultView: View {
                     .buttonStyle(.borderedProminent).controlSize(.large)
             }
             .padding()
+            }
             .navigationTitle(rec.isNap ? L("Nap") : L("Night result"))
             .overlay {
                 if let level = model.levelUp, !celebrationClosed {

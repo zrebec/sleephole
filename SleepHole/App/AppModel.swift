@@ -202,6 +202,25 @@ final class AppModel {
     }
     /// Achievements earned by the night in `shownResult` (result screen).
     private(set) var newAchievements: [Achievement] = []
+
+    // MARK: - weekly town journal (owner 2026-09-30, idea M)
+
+    /// Weeks (Monday–Sunday evenings) with nights or naps, newest first.
+    var journalWeeks: [WeekSummary] {
+        WeeklyJournal.weeks(results: realResults().compactMap(\.result), naps: napResults().compactMap(\.result),
+                            calendar: calendar)
+    }
+
+    func journalWeek(monday: NightKey) -> WeekSummary {
+        WeeklyJournal.week(monday: monday, results: realResults().compactMap(\.result),
+                           naps: napResults().compactMap(\.result), calendar: calendar)
+    }
+
+    /// Monday of the week we are in now.
+    var currentMonday: NightKey { WeeklyJournal.monday(of: NightKey(date: clock.now, calendar: calendar), calendar: calendar) }
+
+    /// The week that just ended, shown once on the result screen (Monday morning after "I'm up").
+    private(set) var finishedWeek: WeekSummary?
     /// What the night in `shownResult` paid (reward + streak bonus).
     private(set) var lastReward = 0
     private(set) var lastStreakBonus = 0
@@ -482,6 +501,7 @@ final class AppModel {
         shownResult = nil
         levelUp = nil
         newAchievements = []
+        finishedWeek = nil
         refresh()
     }
 
@@ -685,6 +705,12 @@ final class AppModel {
         if !rec.isDebug && !rec.isNap { rebuildTown() }
         lastReward = rec.isDebug ? 0 : coins - coinsBefore
         newAchievements = achievements.map(\.achievement).filter { !achievedBefore.contains($0) }
+        finishedWeek = nil
+        if !rec.isDebug, !rec.isNap, let key = NightKey(rec.keyString) {
+            let previous = realResults().last { $0.id != rec.id && $0.bedtime < rec.bedtime }.flatMap { NightKey($0.keyString) }
+            finishedWeek = WeeklyJournal.finishedWeek(after: key, previous: previous, calendar: calendar)
+                .map(journalWeek(monday:)).flatMap { $0.nights > 0 ? $0 : nil }
+        }
         if !rec.isDebug { writeAutoBackup() }
         lastStreakBonus = rec.isDebug || rec.isNap ? 0
             : Economy.ledger(realResults().compactMap(\.result), calendar: calendar).last?.streakBonus ?? 0

@@ -43,6 +43,8 @@ struct StatsView: View {
                         let n = model.napSummary
                         Label(L("\(n.count) complete naps") + " · +\(n.coins) 🪙", systemImage: "bed.double.fill")
                     }
+                    card(L("Town journal")) { JournalCard() }
+                        .id("journal")
                     card(L("Achievements") + " \(model.achievements.count)/\(Achievement.allCases.count)") {
                         AchievementsCard()
                     }
@@ -56,8 +58,9 @@ struct StatsView: View {
                 }
                 .padding()
             }
-            .onAppear {                                   // `-scrollTo achievements` (screenshots)
-                if ProcessInfo.processInfo.arguments.contains("achievements") { proxy.scrollTo("achievements", anchor: .top) }
+            .onAppear {                                   // `-scrollTo journal|achievements` (screenshots)
+                let args = ProcessInfo.processInfo.arguments
+                for id in ["journal", "achievements"] where args.contains(id) { proxy.scrollTo(id, anchor: .top) }
             }
             .onChange(of: selectedDay) { _, day in
                 if day != nil { withAnimation { proxy.scrollTo("detail", anchor: .top) } }

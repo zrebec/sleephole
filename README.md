@@ -54,6 +54,9 @@ Every night one of the unlocked levels is picked at random, then a building from
 - **🔥 Streak** of complete nights and **🪙 coins** (nights, streak bonus, naps).
 - **Stats:** streak, night calendar with the story of each night, average start and wake-up, regularity, chart, naps, levels.
 - **Level-up celebration** with confetti, **ruin repair** by a good night.
+- **Achievements:** 12 of them (first building, 3/7/30 nights in a row, 10/50/100 nights built, first level 2/3 building, first skyscraper, first nap, ruin repaired), each pays +50 🪙 (big ones +200).
+- **Town name** (tap it in the Town header) and a **weekly town journal** in Stats; on Monday morning the result screen shows how the finished week went.
+- **Vibrations** when a night starts, when the phone locks, before the setup ends, with the “Come back!” warning and when you're back in time.
 - **Sleep sounds:** brown, pink and white noise, rain on a tent and rain on a window. They play exactly for the timer (1–60 min or all night), also during a night and with the screen off.
 - **Backup:** export / import to a file and an automatic backup after every night (Files → On My iPhone → SleepHole).
 - **First-run guide** (6 pages, language picker on the first one). The numbers in it come straight from the rules in the code. Before the first night a “Your first night” checklist appears too. Both are stored in the database.
@@ -75,7 +78,7 @@ SleepHoleTests/   app tests (hosted, Swift Testing)
 assets/sprites/   190 PNG sprites (+ 9 English sign variants) + catalog.json      assets/audio/  alarms and sounds (CAF)
 tools/render/     Kenney OBJ → isometric sprites (SceneKit), previews, town layout
 tools/audio/      alarm synthesis (numpy)
-tools/i18n/       translation key check (keys.py)
+tools/i18n/       translation key check (keys.py), adding translations (add.py)
 docs/             PLAN.md (decisions, SK) · IMPLEMENTATION_PLAN.md (for agents, EN) · IMPLEMENTATION_I18N.md · RUN_ON_IPHONE.md
 project.yml       XcodeGen (.xcodeproj is generated, not in git)
 ```
@@ -90,8 +93,8 @@ xcodegen generate && open SleepHole.xcodeproj     # then ▶ Run on the iPhone (
 ### Tests
 
 ```bash
-tools/coverage.sh            # SleepCore: 84 tests, ~97 % lines
-tools/test_app.sh            # the app on the iPhone 16 Pro simulator: 75 tests, ~92 % lines
+tools/coverage.sh            # SleepCore: 95 tests, ~97 % lines
+tools/test_app.sh            # the app on the iPhone 16 Pro simulator: 81 tests, ~93 % lines
 python3 tools/i18n/keys.py   # after a build: missing / untranslated keys in the catalog
 ```
 
@@ -145,9 +148,9 @@ More tools:
 **Ideas (XS → XXL)**
 | | |
 |---|---|
-| XS | a vibration when a night starts and when the phone locks |
-| S | achievements (“First building”, “7 nights in a row”, “First skyscraper”), your own town name |
-| M | a home-screen widget with the streak and a bedtime countdown, a weekly “town journal” |
+| ~~XS~~ | ✅ vibrations when a night starts and when the phone locks |
+| ~~S~~ | ✅ achievements, your own town name |
+| M | a home-screen widget with the streak and a bedtime countdown (✅ the weekly “town journal” is done) |
 | L | seasons: snow and Christmas trees in winter, autumn colours |
 | XL | a Live Activity with the growing building on the lock screen, an Apple Watch app |
 | XXL | a shared town with a partner or friends (iCloud), an App Store release |

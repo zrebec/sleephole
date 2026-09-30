@@ -97,4 +97,41 @@ struct ExtrasTests {
         render(TownTab(), m)
         render(SettingsView(), m)
     }
+
+    // MARK: weekly journal
+
+    @Test func finishedWeekOnTheResultScreenAfterSundayNight() {
+        let (m, clock) = model(store(), at: date(5, 12))                  // Monday 5 Oct 2026
+        for d in 5...10 { night(m, clock, day: d) }                        // Mon … Sat evenings
+        #expect(m.finishedWeek == nil)
+        clock.now = date(11, 22, 25); m.refresh(); m.startNight()          // Sunday evening
+        clock.now = date(12, 6, 31); m.refresh(); m.confirm(code: "1234")
+        let week = m.finishedWeek
+        #expect(week?.monday == NightKey("2026-10-05") && week?.complete == 7 && week?.built == 7)
+        render(ResultView(), m)
+        m.acknowledgeResult()
+        #expect(m.finishedWeek == nil)
+        night(m, clock, day: 12)                                           // Monday evening: already shown
+        #expect(m.finishedWeek == nil)
+        #expect(m.journalWeeks.count == 2 && m.currentMonday == NightKey("2026-10-12"))
+        render(StatsView(), m)
+        render(JournalCard(), m)
+    }
+
+    @Test func journalSentencesAreNeverShaming() throws {
+        let (m, clock) = model(store(), at: date(5, 12))
+        night(m, clock, day: 5)
+        let one = try #require(m.journalWeeks.first)
+        let empty = m.journalWeek(monday: NightKey("2026-09-28")!)
+        for lang in AppLanguage.allCases {
+            m.language = lang
+            #expect(!WeekJournalView.sentence(empty, previous: nil).isEmpty)
+            #expect(WeekJournalView.sentence(one, previous: nil) != WeekJournalView.sentence(empty, previous: nil))
+            #expect(WeekJournalView.sentence(one, previous: empty) == WeekJournalView.sentence(one, previous: nil))
+            render(WeekJournalView(week: one, previous: one), m)
+            render(JournalCard(), m)                                       // empty current week
+        }
+        m.language = .en
+        #expect(WeekJournalView.range(one) == "10/5 – 10/11")
+    }
 }
