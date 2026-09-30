@@ -2,47 +2,45 @@ import SleepCore
 import SwiftUI
 import UserNotifications
 
-/// Slovak number phrases ("5 minút", "2 minúty", "1 minútu", "10 sekúnd").
-enum SK {
-    static func minutes(_ t: TimeInterval) -> String { plural(Int((t / 60).rounded()), "minútu", "minúty", "minút") }
-    static func seconds(_ t: TimeInterval) -> String { plural(Int(t.rounded()), "sekundu", "sekundy", "sekúnd") }
-    static func nights(_ n: Int) -> String { plural(n, "noc", "noci", "nocí") }
-    static func plural(_ n: Int, _ one: String, _ few: String, _ many: String) -> String {
-        "\(n) " + (n == 1 ? one : (2...4).contains(n) ? few : many)
-    }
+/// Number phrases with correct plurals in the current language ("5 minutes" / "5 minút", "1 minútu").
+enum Plural {
+    static func minutes(_ t: TimeInterval) -> String { L("\(Int((t / 60).rounded())) minutes") }
+    static func seconds(_ t: TimeInterval) -> String { L("\(Int(t.rounded())) seconds") }
+    static func nights(_ n: Int) -> String { L("\(n) nights") }
 }
 
 /// The rules as sentences, generated from the real constants so the guide never lies.
 enum GuideText {
     static let rules = SleepRules()
     static var startWindow: String {
-        "Stavbu môžeš začať najskôr \(SK.minutes(NightWindow.startLead)) pred večierkou a najneskôr \(SK.minutes(rules.startDeadline)) po nej. Inak sa noc počíta ako vynechaná."
+        L("You can start building at the earliest \(Plural.minutes(NightWindow.startLead)) before bedtime and at the latest \(Plural.minutes(rules.startDeadline)) after it. Otherwise the night counts as missed.")
     }
     static var setup: String {
-        "Na prípravu (podcast, rozprávka, selfie…) máš čas od štartu až do večierky a ešte \(SK.minutes(rules.setupGrace)) po nej – kto začne skôr, má viac času. 15 s pred koncom ťa upozorníme, potom sa vráť do SleepHole."
+        L("For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus \(Plural.minutes(rules.setupGrace)) – start earlier, get more time. We'll warn you 15 s before it ends; then come back to SleepHole.")
     }
     static var night: String {
-        "Displej môžeš vypnúť, ale SleepHole musí zostať v popredí. Keď odídeš do inej appky dlhšie ako na \(SK.seconds(rules.accidentalTolerance)), stavba sa zrúti."
+        L("You can turn the screen off, but SleepHole must stay open. If you switch to another app for more than \(Plural.seconds(rules.accidentalTolerance)), the building collapses.")
     }
-    static let calls = "Telefonát sa nepočíta – po hovore sa len vráť do appky."
+    static var calls: String { L("Phone calls don't count – just come back to the app after the call.") }
     static var nap: String {
         let p = NapPlan.default
-        return "Popoludní si môžeš dať odpočinok (30 alebo 60 min) – iba v okne \(p.windowStart)–\(p.windowEnd) (dá sa zmeniť), raz denne. Platí to isté ako v noci, na prípravu máš \(SK.minutes(NapPlan.rules.setupGrace)), na konci zazvoní budík. Hotový odpočinok = +\(NapPlan.reward(.complete)) 🪙, budovu nestavia."
+        return L("In the afternoon you can take a nap (30 or 60 min) – only between \(Fmt.time(p.windowStart))–\(Fmt.time(p.windowEnd)) (changeable), once a day. Same rules as at night, \(Plural.minutes(NapPlan.rules.setupGrace)) to set up, an alarm at the end. A complete nap = +\(NapPlan.reward(.complete)) 🪙, it doesn't build.")
     }
     static var alarm: String {
-        "Budík zvoní najviac \(SK.minutes(rules.alarmDuration)). Vstávanie potvrdíš zatrasením telefónu alebo kódom – najskôr \(SK.minutes(NightWindow.earlyConfirm)) pred budíčkom."
+        L("The alarm rings for at most \(Plural.minutes(rules.alarmDuration)). Confirm you're up by shaking the phone or entering the code – at the earliest \(Plural.minutes(NightWindow.earlyConfirm)) before wake-up.")
     }
     static var outcomes: [(String, String)] {
-        [("🏢 Hotová", "potvrdíš do \(SK.minutes(NightWindow.onTimeConfirm)) po budíčku"),
-         ("🚧 Rozostavaná", "potvrdíš do \(SK.minutes(NightWindow.lateConfirm)) po budíčku – ďalšia dobrá noc ju dostavia"),
-         ("🧱 Ruina", "stavba sa zrútila, zrušil si noc, alebo si nepotvrdil vstávanie. Ďalšia hotová noc ju opraví 🛠️ (ak nečaká rozostavaná budova), inak časom zarastie kvetmi 🌸")]
+        [(L("🏢 Complete"), L("confirmed within \(Plural.minutes(NightWindow.onTimeConfirm)) after wake-up")),
+         (L("🚧 Unfinished"), L("confirmed within \(Plural.minutes(NightWindow.lateConfirm)) after wake-up – your next good night finishes it")),
+         (L("🧱 Ruins"), L("the building collapsed, you cancelled the night, or you didn't confirm getting up. Your next complete night repairs it 🛠️ (unless an unfinished building is waiting), otherwise flowers grow over it 🌸"))]
     }
-    static var levels: [(String, String)] {
+    /// title, what the level unlocks, when.
+    static var levels: [(title: String, what: String, when: String)] {
         let t = Progression.thresholds
-        return [("Level 1", "obyčajné domy a bytovky – od začiatku"),
-                ("Level 2", "parky, osvetlené ulice, múzeá, knižnice – po \(SK.nights(t[1].minBuilt))"),
-                ("Level 3", "radnica, škola, hasiči, polícia, nemocnica – po \(SK.nights(t[2].minBuilt))"),
-                ("Level 4", "mrakodrapy – po \(SK.nights(t[3].minBuilt))")]
+        return [(L("Level 1"), L("houses and apartment blocks"), L("from the start")),
+                (L("Level 2"), L("parks, lit streets, museums, libraries"), L("after \(Plural.nights(t[1].minBuilt))")),
+                (L("Level 3"), L("town hall, school, fire station, police, hospital"), L("after \(Plural.nights(t[2].minBuilt))")),
+                (L("Level 4"), L("skyscrapers"), L("after \(Plural.nights(t[3].minBuilt))"))]
     }
 }
 
@@ -68,12 +66,12 @@ struct GuideView: View {
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
             HStack {
-                if page > 0 { Button("Späť") { withAnimation { page -= 1 } } }
+                if page > 0 { Button(L("Back")) { withAnimation { page -= 1 } } }
                 Spacer()
                 if page < Self.pageCount - 1 {
-                    Button("Ďalej") { withAnimation { page += 1 } }.buttonStyle(.borderedProminent)
+                    Button(L("Next")) { withAnimation { page += 1 } }.buttonStyle(.borderedProminent)
                 } else {
-                    Button(replay ? "Zavrieť" : "Začnime 🌙") { finish() }.buttonStyle(.borderedProminent)
+                    Button(replay ? L("Close") : L("Let's start 🌙")) { finish() }.buttonStyle(.borderedProminent)
                 }
             }
             .padding()
@@ -121,11 +119,12 @@ struct GuideView: View {
     }
 
     private var welcome: some View {
-        pageLayout("moon.stars.fill", "Vitaj v SleepHole") {
+        pageLayout("moon.stars.fill", L("Welcome to SleepHole")) {
+            LanguagePicker()
             BuildingImage(id: "l1-house-a-a", maxHeight: 170).frame(maxWidth: .infinity)
-            Text("Každý večer začneš stavať budovu. Keď v noci necháš telefón na pokoji a ráno vstaneš načas, budova sa dokončí – a z tvojich nocí rastie mesto.")
+            Text(L("Every evening you start a building. Leave your phone alone at night and get up on time, and the building gets finished – your nights grow into a town."))
                 .font(.title3)
-            Text("Cieľ je jednoduchý: chodiť spať a vstávať každý deň v rovnakom čase. 💙")
+            Text(L("The goal is simple: go to bed and get up at the same time every day. 💙"))
                 .font(.title3)
                 .foregroundStyle(.secondary)
         }
@@ -133,30 +132,30 @@ struct GuideView: View {
 
     private var schedule: some View {
         @Bindable var model = model
-        return pageLayout("clock.fill", "Tvoj rozvrh") {
-            Text("Rovnaký čas každý deň je základ dobrého spánku. Neskôr ho zmeníš v Nastaveniach.")
+        return pageLayout("clock.fill", L("Your schedule")) {
+            Text(L("The same time every day is the base of good sleep. You can change it later in Settings."))
             ScheduleFields().padding().background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
-            Text("Odpočinok: \(model.settings.nap.minutes) min, medzi \(model.settings.nap.windowStart) a \(model.settings.nap.windowEnd) (zmeníš v Nastaveniach).")
+            Text(L("Nap: \(model.settings.nap.minutes) min, between \(Fmt.time(model.settings.nap.windowStart)) and \(Fmt.time(model.settings.nap.windowEnd)) (change it in Settings)."))
                 .font(.footnote).foregroundStyle(.secondary)
         }
     }
 
     private var nightRules: some View {
-        pageLayout("hammer.fill", "Ako prebieha noc") {
+        pageLayout("hammer.fill", L("How a night works")) {
             row("clock.badge.checkmark", GuideText.startWindow)
             row("headphones", GuideText.setup)
             row("lock.iphone", GuideText.night)
             row("phone.fill", GuideText.calls)
             row("bed.double.fill", GuideText.nap)
-            row("bell.badge", "Ak odídeš z appky, príde upozornenie „Vráť sa do SleepHole“.")
+            row("bell.badge", L("If you leave the app, you'll get a “Come back to SleepHole” alert."))
         }
     }
 
     private var morning: some View {
-        pageLayout("sun.max.fill", "Ráno") {
+        pageLayout("sun.max.fill", L("Morning")) {
             row("alarm.fill", GuideText.alarm)
             HStack {
-                Text("Tvoj kód:")
+                Text(L("Your code:"))
                 Text(model.settings.wakeCode).font(.title.monospacedDigit().bold())
             }
             ForEach(GuideText.outcomes, id: \.0) { title, text in
@@ -169,39 +168,39 @@ struct GuideView: View {
     }
 
     private var levels: some View {
-        pageLayout("star.fill", "Mesto a levely") {
-            Text("Každá noc, ktorá postaví budovu (hotovú či rozostavanú), ťa posunie ďalej:")
-            ForEach(GuideText.levels, id: \.0) { title, text in
+        pageLayout("star.fill", L("Town and levels")) {
+            Text(L("Every night that builds something (complete or unfinished) moves you forward:"))
+            ForEach(GuideText.levels, id: \.title) { level in
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(title).font(.headline)
-                    Text(text).foregroundStyle(.secondary)
+                    Text(level.title).font(.headline)
+                    Text(verbatim: "\(level.what) – \(level.when)").foregroundStyle(.secondary)
                 }
             }
-            Text("Mince 🪙").font(.headline)
-            Text("Hotová noc = \(Economy.reward(.complete)) 🪙, rozostavaná = \(Economy.reward(.unfinished)) 🪙 a každá \(Economy.streakBonusEvery). hotová noc v rade pridá bonus +\(Economy.streakBonus) 🪙. Čoskoro si za ne budeš kupovať budovy: dom \(Economy.price(level: 1)), L2 \(Economy.price(level: 2)), L3 \(Economy.price(level: 3)), L4 \(Economy.price(level: 4)) 🪙.")
+            Text(L("Coins 🪙")).font(.headline)
+            Text(L("A complete night = \(Economy.reward(.complete)) 🪙, unfinished = \(Economy.reward(.unfinished)) 🪙, and every \(Economy.streakBonusEvery)th complete night in a row adds a +\(Economy.streakBonus) 🪙 bonus. Soon you'll buy buildings with them: house \(Economy.price(level: 1)), L2 \(Economy.price(level: 2)), L3 \(Economy.price(level: 3)), L4 \(Economy.price(level: 4)) 🪙."))
                 .foregroundStyle(.secondary)
         }
     }
 
     private var tips: some View {
-        pageLayout("checklist", "Upozornenia a tipy") {
+        pageLayout("checklist", L("Notifications and tips")) {
             Button {
                 Task { notificationsAllowed = await Notifications.requestAuthorization() }
             } label: {
-                Label(notificationsAllowed == true ? "Upozornenia povolené ✓" : "Povoliť upozornenia",
+                Label(notificationsAllowed == true ? L("Notifications allowed ✓") : L("Allow notifications"),
                       systemImage: "bell.fill")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .disabled(notificationsAllowed == true)
-            Text("Pripomenú večierku, varujú pred zrútením stavby a sú záložným budíkom.")
+            Text(L("They remind you of bedtime, warn you before the building collapses and act as a backup alarm."))
                 .font(.footnote).foregroundStyle(.secondary)
-            row("key.fill", "Maj na iPhone nastavený kód / Face ID – bez neho appka nerozozná zamknutie telefónu.")
-            row("battery.100.bolt", "Nechaj telefón cez noc na nabíjačke.")
-            row("moon.zzz.fill", "Budík SleepHole zvoní aj v režime Nerušiť či Spánok. Aby prišlo aj varovanie „Vráť sa“, pridaj SleepHole do povolených appiek: Nastavenia → Sústredenie → Spánok (a Nerušiť) → Appky → Pridať.")
-            row("speaker.wave.2.fill", "Budík zvoní aj v tichom režime. Zvuk si vyberieš v Nastaveniach.")
-            row("arrow.down.circle", "iOS si v noci môže sám nainštalovať aktualizáciu a reštartovať telefón. Stavbe to neublíži (počíta sa v tvoj prospech), ale budík z appky vtedy nezazvoní – ozve sa len záložné upozornenie. Pokojnejšie spanie: Nastavenia → Všeobecné → Aktualizácia softvéru → Automatické aktualizácie → vypni inštaláciu.")
-            row("arrow.clockwise", "Bezplatná verzia appky vyprší po 7 dňoch – vtedy ju treba znova spustiť z Xcode. Dáta zostanú.")
+            row("key.fill", L("Keep a passcode / Face ID on your iPhone – without it the app can't tell when the phone is locked."))
+            row("battery.100.bolt", L("Keep your phone on the charger overnight."))
+            row("moon.zzz.fill", L("The SleepHole alarm also rings in Do Not Disturb or Sleep focus. To get the “Come back” warning too, allow SleepHole: Settings → Focus → Sleep (and Do Not Disturb) → Apps → Add."))
+            row("speaker.wave.2.fill", L("The alarm rings even in silent mode. Pick the sound in Settings."))
+            row("arrow.down.circle", L("iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – only the backup notification. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing."))
+            row("arrow.clockwise", L("The free version of the app expires after 7 days – run it again from Xcode then. Your data stays."))
         }
         .task {
             let settings = await UNUserNotificationCenter.current().notificationSettings()
@@ -216,11 +215,11 @@ struct ScheduleFields: View {
 
     var body: some View {
         VStack(spacing: 10) {
-            DatePicker("Večierka", selection: time(\.bedtime), displayedComponents: .hourAndMinute)
-            DatePicker("Budíček", selection: time(\.wake), displayedComponents: .hourAndMinute)
+            DatePicker(L("Bedtime"), selection: time(\.bedtime), displayedComponents: .hourAndMinute)
+            DatePicker(L("Wake-up"), selection: time(\.wake), displayedComponents: .hourAndMinute)
             Stepper(value: reminder, in: 0...120, step: 5) {
-                Text(reminder.wrappedValue == 0 ? "Pripomienka: vypnutá"
-                     : "Pripomienka \(reminder.wrappedValue) min pred večierkou")
+                Text(reminder.wrappedValue == 0 ? L("Reminder: off")
+                     : L("Reminder \(reminder.wrappedValue) min before bedtime"))
             }
         }
     }
@@ -253,13 +252,13 @@ struct FirstNightBriefing: View {
         NavigationStack {
             List {
                 Section {
-                    Label("Na podcast či rozprávku máš čas do večierky + \(SK.minutes(GuideText.rules.setupGrace)).", systemImage: "headphones")
-                    Label("Potom sa vráť do SleepHole a zamkni telefón.", systemImage: "lock.iphone")
-                    Label("Telefón nechaj na nabíjačke.", systemImage: "battery.100.bolt")
-                    Label("Budík o \(clockFormat.string(from: model.window.wake)) – zatras telefónom alebo zadaj kód \(model.settings.wakeCode).", systemImage: "alarm.fill")
-                    Label("Odchod do inej appky na viac ako \(SK.seconds(GuideText.rules.accidentalTolerance)) stavbu zrúti.", systemImage: "exclamationmark.triangle.fill")
+                    Label(L("You have until bedtime + \(Plural.minutes(GuideText.rules.setupGrace)) for a podcast or story."), systemImage: "headphones")
+                    Label(L("Then come back to SleepHole and lock your phone."), systemImage: "lock.iphone")
+                    Label(L("Keep your phone on the charger."), systemImage: "battery.100.bolt")
+                    Label(L("Alarm at \(Fmt.time(model.window.wake)) – shake your phone or enter code \(model.settings.wakeCode)."), systemImage: "alarm.fill")
+                    Label(L("Leaving to another app for more than \(Plural.seconds(GuideText.rules.accidentalTolerance)) collapses the building."), systemImage: "exclamationmark.triangle.fill")
                 } footer: {
-                    Text("Toto uvidíš len pred prvou nocou. Pravidlá nájdeš v Nastaveniach → Ako to funguje.")
+                    Text(L("You'll only see this before your first night. The rules are in Settings → How it works."))
                 }
                 Section {
                     Button {
@@ -267,13 +266,28 @@ struct FirstNightBriefing: View {
                         model.startNight()
                         dismiss()
                     } label: {
-                        Text("Rozumiem, začať stavbu").frame(maxWidth: .infinity).bold()
+                        Text(L("Got it, start building")).frame(maxWidth: .infinity).bold()
                     }
-                    Button("Ešte nie", role: .cancel) { dismiss() }
+                    Button(L("Not yet"), role: .cancel) { dismiss() }
                         .frame(maxWidth: .infinity)
                 }
             }
-            .navigationTitle("Tvoja prvá noc 🌙")
+            .navigationTitle(L("Your first night 🌙"))
         }
+    }
+}
+
+/// English | Slovenčina (native names) – Settings and the first guide page (I18N Q4).
+struct LanguagePicker: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        @Bindable var model = model
+        Picker(selection: $model.language) {
+            ForEach(AppLanguage.allCases) { Text(verbatim: $0.nativeName).tag($0) }
+        } label: {
+            Label(L("Language"), systemImage: "globe")
+        }
+        .pickerStyle(.segmented)
     }
 }

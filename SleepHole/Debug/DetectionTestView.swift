@@ -27,7 +27,7 @@ final class DetectionTest {
             audio.onInterruption = { [log] text in log.add(text) }
             audioError = nil
         } catch {
-            audioError = "Zvuk sa nespustil: \(error.localizedDescription)"
+            audioError = L("The sound didn't start: \(error.localizedDescription)")
         }
         monitor.onEvent = { [weak self] kind, date in self?.night?.append(kind, at: date) }
         monitor.start()
@@ -62,9 +62,9 @@ struct DetectionTestView: View {
     var body: some View {
         List {
             Section {
-                Toggle("Test beží", isOn: $running)
+                Toggle(L("Test running"), isOn: $running)
                     .onChange(of: running) { _, on in on ? test.start() : test.stop() }
-                Picker("Zvuk v pozadí", selection: $test.ambience) {
+                Picker(L("Background sound"), selection: $test.ambience) {
                     ForEach(AudioKeeper.Ambience.allCases) { Text($0.title).tag($0) }
                 }
                 .onChange(of: test.ambience) { _, _ in test.setVolume() }
@@ -76,7 +76,7 @@ struct DetectionTestView: View {
                 }
                 if let audioError = test.audioError { Text(audioError).foregroundStyle(.red).font(.caption) }
             } footer: {
-                Text("Zapni test a vyskúšaj: zamknúť telefón, odomknúť, prepnúť do inej appky, stiahnuť Control Center, otvoriť kameru zo zamknutej obrazovky, nechať sa zavolať. Nakoniec pošli záznam cez „Zdieľať“.")
+                Text(L("Start the test and try: lock the phone, unlock, switch apps, pull down Control Center, open the camera from the lock screen, get a call. Then send the log via “Share”."))
             }
 
             if let night = test.night {
@@ -85,13 +85,13 @@ struct DetectionTestView: View {
                         simulationStatus(night, now: ctx.date)
                     }
                 } header: {
-                    Text("Simulácia noci")
+                    Text(L("Night simulation"))
                 } footer: {
-                    Text("Príprava je skrátená na 10 s (v appke 5 min). Po nej sa stavba zrúti, ak je appka v pozadí dlhšie ako 10 s. Zamknutie telefónu je v poriadku.")
+                    Text(L("Setup is shortened to 10 s (5 min in the app). After it the building collapses if the app is in the background for more than 10 s. Locking the phone is fine."))
                 }
             }
 
-            Section("Záznam (\(test.log.entries.count))") {
+            Section(L("Log (\(test.log.entries.count))")) {
                 ForEach(test.log.entries.reversed()) { e in
                     VStack(alignment: .leading, spacing: 2) {
                         Text(ProbeLog.timeFormat.string(from: e.at))
@@ -103,13 +103,13 @@ struct DetectionTestView: View {
                 }
             }
         }
-        .navigationTitle("Test detekcie")
+        .navigationTitle(L("Detection test"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 ShareLink(item: test.log.exportText) { Image(systemName: "square.and.arrow.up") }
             }
             ToolbarItem(placement: .topBarLeading) {
-                Button("Vymazať", role: .destructive) { test.log.clear() }
+                Button(L("Clear"), role: .destructive) { test.log.clear() }
             }
         }
     }
@@ -121,16 +121,16 @@ struct DetectionTestView: View {
         let collapsed = NightEvaluator.collapsedAt(night, rules: DetectionTest.rules)
         VStack(alignment: .leading, spacing: 6) {
             if let collapsed, collapsed <= now {
-                Label("Stavba sa zrútila o \(ProbeLog.timeFormat.string(from: collapsed)) 🧱", systemImage: "xmark.octagon.fill")
+                Label(L("The building collapsed at \(ProbeLog.timeFormat.string(from: collapsed)) 🧱"), systemImage: "xmark.octagon.fill")
                     .foregroundStyle(.red)
             } else {
-                Label("Stavba stojí ✅", systemImage: "building.2.fill").foregroundStyle(.green)
+                Label(L("The building stands ✅"), systemImage: "building.2.fill").foregroundStyle(.green)
             }
             if graceLeft > 0 {
-                Text("Príprava: ešte \(Int(graceLeft.rounded(.up))) s").font(.caption)
+                Text(L("Setup: \(Int(graceLeft.rounded(.up))) s left")).font(.caption)
             }
-            Text("Čas mimo appky spolu: \(Int(NightEvaluator.awaySeconds(night))) s").font(.caption)
-            Button("Nová simulácia") { test.night = test.newNight() }.font(.caption)
+            Text(L("Total time away: \(Int(NightEvaluator.awaySeconds(night))) s")).font(.caption)
+            Button(L("New simulation")) { test.night = test.newNight() }.font(.caption)
         }
     }
 

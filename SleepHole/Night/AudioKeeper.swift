@@ -18,12 +18,12 @@ final class AudioKeeper {
 
         var title: String {
             switch self {
-            case .brownNoise: "Hnedý šum"
-            case .pinkNoise: "Ružový šum"
-            case .whiteNoise: "Biely šum"
-            case .rainTent: "Dážď na stan"
-            case .rainWindow: "Dážď na okno"
-            case .silence: "Ticho"
+            case .brownNoise: L("Brown noise")
+            case .pinkNoise: L("Pink noise")
+            case .whiteNoise: L("White noise")
+            case .rainTent: L("Rain on a tent")
+            case .rainWindow: L("Rain on a window")
+            case .silence: L("Silence")
             }
         }
 
@@ -38,19 +38,19 @@ final class AudioKeeper {
 
         var detail: String {
             switch self {
-            case .brownNoise: "Hlboký, tlmený – ako vzdialený vodopád."
-            case .pinkNoise: "Vyvážený, mäkký – ako vietor v lese."
-            case .whiteNoise: "Jasný, rovnomerný – ako ventilátor."
-            case .rainTent: "Ťukanie kvapiek na plachtu stanu, občas väčšia kvapka zo stromu."
-            case .rainWindow: "Tlmený dážď za oknom (nahrávka InspectorJ, CC BY 4.0)."
-            case .silence: "Nič nehrá (appka aj tak zostane v noci bdieť)."
+            case .brownNoise: L("Deep and soft – like a distant waterfall.")
+            case .pinkNoise: L("Balanced and gentle – like wind in a forest.")
+            case .whiteNoise: L("Bright and even – like a fan.")
+            case .rainTent: L("Drops tapping on the tent, now and then a big drip from a tree.")
+            case .rainWindow: L("Soft rain outside the window (recording by InspectorJ, CC BY 4.0).")
+            case .silence: L("Nothing plays (the app still stays awake at night).")
             }
         }
 
         init(from decoder: Decoder) throws {
             let raw = try decoder.singleValueContainer().decode(String.self)
             switch raw {
-            case "Hnedý šum": self = .brownNoise
+            case "Hnedý šum": self = .brownNoise   // i18n-ignore (legacy persisted value)
             case "Ticho": self = .silence
             default: self = Ambience(rawValue: raw) ?? .brownNoise
             }

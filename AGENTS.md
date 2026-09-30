@@ -41,7 +41,11 @@ before doing anything:
   Building prices (shop, next): L1 100, L2 200, L3 400, L4 1000.
 * Nap "Odpočinok" (plan D16): 30/60 min, only in its window (default 13:00–15:00), once a day, never builds.
   The home screen always shows both "Ísť spať" and "Odpočinok" buttons (disabled outside their windows).
-* UI text **Slovak with correct diacritics**. Code, comments, identifiers, agent docs: **English**.
+* UI languages: **English (default) + Slovak** (in-app switch stored in SwiftData `UserProgress.languageRaw`).
+  **Every UI string goes through `L("English key")`** (never a bare `Text("…")` literal); the Slovak text (correct
+  diacritics) goes into `SleepHole/Resources/Localizable.xcstrings`. Dates/times via `Fmt`. After adding strings:
+  build, then `python3 tools/i18n/keys.py` must report 0 missing / 0 without sk. `I18nTests` fails on any Slovak
+  literal left in `SleepHole/`. Code, comments, identifiers, agent docs: **English**.
 * Never rename a shipped sprite id (ids are persisted). Add new ones instead.
 * **The GitHub repo is PUBLIC.** Never commit device logs, the device UDID, the wake code, health or other
   personal information about the owner. Pulled journals go to `docs/device-logs/` (git-ignored).
@@ -67,6 +71,8 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `docs/IMPLEMENTATION_I18N.md` | full spec for the EN/SK multi-language phase (string inventory, architecture, tests) |
 | `SleepCore/` | pure Swift package: schedule, night evaluation, progression, picker, town layout |
 | `SleepHole/` | iOS app target (created in F0) |
+| `SleepHole/Resources/Localizable.xcstrings` | all UI texts: key = English, `sk` translation, plural variations |
+| `tools/i18n/keys.py` | compares the keys extracted from `L(...)` (build output) with the String Catalog |
 | `project.yml` | XcodeGen spec (created in F0) |
 | `assets/sprites/` | 174 rendered isometric sprites + `catalog.json` (ship in the app) |
 | `assets/audio/` | alarm loops + sound effects, CAF (ship in the app) |

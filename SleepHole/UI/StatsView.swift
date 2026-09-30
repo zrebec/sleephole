@@ -16,37 +16,37 @@ struct StatsView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                        tile("🔥", "\(s.currentStreak)", "séria teraz")
-                        tile("🏆", "\(s.bestStreak)", "najdlhšia séria")
-                        tile("🏗️", "\(s.builtNights)", "postavené noci")
-                        tile("🪙", "\(s.coins)", "mince")
+                        tile("🔥", "\(s.currentStreak)", L("current streak"))
+                        tile("🏆", "\(s.bestStreak)", L("best streak"))
+                        tile("🏗️", "\(s.builtNights)", L("nights built"))
+                        tile("🪙", "\(s.coins)", L("coins"))
                     }
-                    card("Kalendár nocí") {
+                    card(L("Night calendar")) {
                         CalendarGrid(days: s.calendar, selected: $selectedDay)
                         if let key = selectedDay {
                             Divider()
                             NightDetail(key: key).id("detail")
                         } else {
-                            Text("Ťukni na deň a uvidíš, ako tá noc prebehla.").font(.footnote).foregroundStyle(.secondary)
+                            Text(L("Tap a day to see how that night went.")).font(.footnote).foregroundStyle(.secondary)
                         }
                     }
-                    card("Priemer (posledných 14 nocí)") {
+                    card(L("Average (last 14 nights)")) {
                         HStack {
-                            metric("Štart stavby", s.averageStart.map(\.description) ?? "–")
+                            metric(L("Build start"), s.averageStart.map(Fmt.time) ?? "–")
                             Divider()
-                            metric("Vstávanie", s.averageWake.map(\.description) ?? "–")
+                            metric(L("Wake-up"), s.averageWake.map(Fmt.time) ?? "–")
                         }
                         regularity(s.regularityMinutes)
                     }
-                    card("Kedy začínaš a vstávaš") { NightChart(points: s.series, bedtime: model.settings.schedule) }
-                    card("Odpočinky") {
+                    card(L("When you start and get up")) { NightChart(points: s.series, bedtime: model.settings.schedule) }
+                    card(L("Naps")) {
                         let n = model.napSummary
-                        Label("\(n.count) hotových odpočinkov · +\(n.coins) 🪙", systemImage: "bed.double.fill")
+                        Label(L("\(n.count) complete naps") + " · +\(n.coins) 🪙", systemImage: "bed.double.fill")
                     }
-                    card("Levely") {
-                        ProgressView(value: Double(s.maxLevel), total: 4) { Text("Odomknutý level \(s.maxLevel) zo 4") }
+                    card(L("Levels")) {
+                        ProgressView(value: Double(s.maxLevel), total: 4) { Text(L("Level \(s.maxLevel) of 4 unlocked")) }
                         if let next = Progression.nightsToNextLevel(built: s.builtNights) {
-                            Text("Level \(next.level) o \(SK.nights(next.nights))").font(.footnote).foregroundStyle(.secondary)
+                            Text(L("Level \(next.level) in \(Plural.nights(next.nights))")).font(.footnote).foregroundStyle(.secondary)
                         }
                     }
                 }
@@ -56,7 +56,7 @@ struct StatsView: View {
                 if day != nil { withAnimation { proxy.scrollTo("detail", anchor: .top) } }
             }
             }
-            .navigationTitle("Štatistiky")
+            .navigationTitle(L("Stats"))
             .onAppear { if preselect, selectedDay == nil { selectedDay = model.realResults().last.map { NightKey($0.keyString)! } } }
         }
     }
@@ -64,7 +64,7 @@ struct StatsView: View {
     private func tile(_ icon: String, _ value: String, _ label: String) -> some View {
         VStack(spacing: 4) {
             Text(icon).font(.title)
-            Text(value).font(.title.bold().monospacedDigit())
+            Text(verbatim: value).font(.title.bold().monospacedDigit())
             Text(label).font(.caption).foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
@@ -93,12 +93,12 @@ struct StatsView: View {
     @ViewBuilder
     private func regularity(_ minutes: Double?) -> some View {
         if let m = minutes {
-            let (text, color): (String, Color) = m <= 15 ? ("výborná 🌟", .green) : m <= 30 ? ("dobrá 👍", .yellow)
-                : ("kolíše – skús začínať v rovnaký čas 🌙", .orange)
-            Label("Pravidelnosť: ±\(Int(m.rounded())) min – \(text)", systemImage: "metronome.fill")
+            let (text, color): (String, Color) = m <= 15 ? (L("excellent 🌟"), .green) : m <= 30 ? (L("good 👍"), .yellow)
+                : (L("varies – try to start at the same time 🌙"), .orange)
+            Label(L("Regularity: ±\(Int(m.rounded())) min – \(text)"), systemImage: "metronome.fill")
                 .font(.subheadline).foregroundStyle(color)
         } else {
-            Text("Pravidelnosť uvidíš po 2 nociach.").font(.subheadline).foregroundStyle(.secondary)
+            Text(L("You'll see your regularity after 2 nights.")).font(.subheadline).foregroundStyle(.secondary)
         }
     }
 }
@@ -127,16 +127,16 @@ struct CalendarGrid: View {
                         RoundedRectangle(cornerRadius: 6)
                             .fill(Self.color(d.outcome))
                             .aspectRatio(1, contentMode: .fit)
-                            .overlay(Text("\(d.key.day)").font(.caption2).foregroundStyle(.primary.opacity(0.7)))
+                            .overlay(Text(verbatim: "\(d.key.day)").font(.caption2).foregroundStyle(.primary.opacity(0.7)))
                             .overlay(RoundedRectangle(cornerRadius: 6)
                                 .stroke(Color.accentColor, lineWidth: selected.wrappedValue == d.key ? 3 : 0))
                     }
                     .buttonStyle(.plain)                 // no accent tint on the day numbers
-                    .accessibilityLabel("\(d.key.day). \(d.key.month).")
+                    .accessibilityLabel(Fmt.fullDate(d.key))
                 }
             }
             HStack(spacing: 12) {
-                legend(.green, "hotová"); legend(.orange, "rozostavaná"); legend(.gray, "ruina")
+                legend(.green, L("complete")); legend(.orange, L("unfinished")); legend(.gray, L("ruins"))
             }
             .font(.caption2)
         }
@@ -154,15 +154,15 @@ struct NightChart: View {
 
     var body: some View {
         if points.isEmpty {
-            Text("Graf sa naplní po prvých nociach.").font(.subheadline).foregroundStyle(.secondary)
+            Text(L("The chart fills up after your first nights.")).font(.subheadline).foregroundStyle(.secondary)
         } else {
             let bed = Double((bedtime.bedtime.hour * 60 + bedtime.bedtime.minute + 720) % 1440)
             Chart {
-                RuleMark(y: .value("Večierka", bed))
+                RuleMark(y: .value(L("Bedtime"), bed))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4])).foregroundStyle(.indigo.opacity(0.6))
                 ForEach(points, id: \.key) { p in
                     if let s = p.startMinutes {
-                        PointMark(x: .value("Noc", "\(p.key.day).\(p.key.month)."), y: .value("Štart", s))
+                        PointMark(x: .value(L("Night"), Fmt.dayMonth(p.key)), y: .value(L("Start"), s))
                             .foregroundStyle(CalendarGrid.color(p.outcome))
                     }
                 }
@@ -177,14 +177,11 @@ struct NightChart: View {
             }
             .chartYScale(domain: .automatic(includesZero: false))
             .frame(height: 180)
-            Text("Body = začiatok stavby, čiara = večierka.").font(.caption).foregroundStyle(.secondary)
+            Text(L("Dots = build start, line = bedtime.")).font(.caption).foregroundStyle(.secondary)
         }
     }
 
-    static func clock(_ minutes: Double) -> String {
-        let m = (Int(minutes.rounded()) % 1440 + 1440) % 1440
-        return String(format: "%d:%02d", m / 60, m % 60)
-    }
+    static func clock(_ minutes: Double) -> String { Fmt.time(minutesOfDay: Int(minutes.rounded())) }
 }
 
 /// The story of one night (plus that afternoon's nap).
@@ -192,42 +189,41 @@ struct NightDetail: View {
     @Environment(AppModel.self) private var model
     let key: NightKey
 
-    static let time: DateFormatter = { let f = DateFormatter(); f.dateFormat = "H:mm"; return f }()
-    static let timeSec: DateFormatter = { let f = DateFormatter(); f.dateFormat = "H:mm:ss"; return f }()
-
     static func duration(_ t: TimeInterval?) -> String {
-        guard let t else { return "nevrátil si sa" }
+        guard let t else { return L("you didn't come back") }
         let s = Int(t.rounded())
-        return s >= 60 ? "\(s / 60) min \(s % 60) s" : "\(s) s"
+        return s >= 60 ? L("\(s / 60) min \(s % 60) s") : L("\(s) s")
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(verbatim: "Noc na \(key.day). \(key.month). \(key.year)").font(.headline)   // verbatim: no "2 026"
+            Text(L("Night of \(Fmt.fullDate(key))")).font(.headline)
             if let rec = model.nightRecord(for: key), let outcome = rec.outcome {
                 let r = NightReport(log: rec.log, rules: rec.rules)
                 building(outcome: outcome)
-                row("🌙", "Začiatok stavby", r.startedAt.map { Self.timeSec.string(from: $0) })
-                row("🔒", "Zamkol si telefón", r.firstLockAt.map { Self.timeSec.string(from: $0) })
-                row("⏰", "Budík", r.alarmFiredAt.map { "zazvonil \(Self.timeSec.string(from: $0))" + (r.alarmStoppedAt.map { ", stíchol \(Self.time.string(from: $0))" } ?? "") }
-                    ?? ((r.confirmedAt ?? .distantFuture) < rec.wake ? "nezazvonil – vstal si skôr" : nil))
-                row("☀️", "Vstal si", r.confirmedAt.map { Self.timeSec.string(from: $0) + (r.confirmMethod.map { $0 == .code ? " (kód)" : " (zatrasenie)" } ?? "") })
-                trips("Odchody počas prípravy (do \(r.setupEnds.map { Self.time.string(from: $0) } ?? "–"))", r.setupTrips, ok: true)
-                trips("Odchody po príprave", r.nightTrips, ok: false)
-                chips("👀 Pohľady na displej: \(r.screenChecks.count)×", r.screenChecks)
-                if !r.calls.isEmpty { trips("📞 Telefonáty", r.calls, ok: true) }
-                if !r.relaunches.isEmpty { chips("🔄 Appka sa reštartovala", r.relaunches) }
-                if let c = r.collapsedAt { row("🧱", "Stavba sa zrútila", Self.timeSec.string(from: c)) }
-                if let a = r.abandonedAt { row("✋", "Noc si zrušil", Self.time.string(from: a)) }
-                if let coins = model.coinsEarned(for: key) { row("🪙", "Mince", "+\(coins)") }
+                row("🌙", L("Build started"), r.startedAt.map(Fmt.timeSec))
+                row("🔒", L("Phone locked"), r.firstLockAt.map(Fmt.timeSec))
+                row("⏰", L("Alarm"), r.alarmFiredAt.map { fired in
+                        r.alarmStoppedAt.map { L("rang at \(Fmt.timeSec(fired)), stopped \(Fmt.time($0))") }
+                            ?? L("rang at \(Fmt.timeSec(fired))") }
+                    ?? ((r.confirmedAt ?? .distantFuture) < rec.wake ? L("didn't ring – you got up earlier") : nil))
+                row("☀️", L("Got up"), r.confirmedAt.map { Fmt.timeSec($0) + (r.confirmMethod.map { $0 == .code ? L(" (code)") : L(" (shake)") } ?? "") })
+                trips(L("Trips during setup (until \(r.setupEnds.map(Fmt.time) ?? "–"))"), r.setupTrips, ok: true)
+                trips(L("Trips after setup"), r.nightTrips, ok: false)
+                chips(L("👀 Screen checks: \(r.screenChecks.count)×"), r.screenChecks)
+                if !r.calls.isEmpty { trips(L("📞 Calls"), r.calls, ok: true) }
+                if !r.relaunches.isEmpty { chips(L("🔄 The app restarted"), r.relaunches) }
+                if let c = r.collapsedAt { row("🧱", L("The building collapsed"), Fmt.timeSec(c)) }
+                if let a = r.abandonedAt { row("✋", L("You cancelled the night"), Fmt.time(a)) }
+                if let coins = model.coinsEarned(for: key) { row("🪙", L("Coins"), "+\(coins)") }
             } else {
-                Label("Appka v túto noc nebežala – nestavalo sa.", systemImage: "moon.zzz")
+                Label(L("The app didn't run that night – nothing was built."), systemImage: "moon.zzz")
                     .foregroundStyle(.secondary)
             }
             if let nap = model.napRecord(before: key), let o = nap.outcome {
                 Divider()
-                row("😴", "Odpočinok \(Self.time.string(from: nap.bedtime))–\(Self.time.string(from: nap.wake))",
-                    (o == .complete ? "hotový" : o == .unfinished ? "skrátený" : "nepodaril sa") + " · +\(NapPlan.reward(o)) 🪙")
+                row("😴", L("Nap \(Fmt.time(nap.bedtime))–\(Fmt.time(nap.wake))"),
+                    (o == .complete ? L("complete") : o == .unfinished ? L("cut short") : L("didn't work out")) + " · +\(NapPlan.reward(o)) 🪙")
             }
         }
         .font(.subheadline)
@@ -242,17 +238,17 @@ struct NightDetail: View {
             BuildingImage(id: id, progress: b?.state == .unfinished ? 0.6 : 1, maxHeight: 90)
                 .frame(width: 110)
             VStack(alignment: .leading, spacing: 4) {
-                Text(model.catalog?[model.nightRecord(for: key)?.buildingId ?? ""]?.nameSK ?? "").font(.headline)
-                Text(outcome == .complete ? "Hotová 🏢" : outcome == .unfinished ? "Rozostavaná 🚧" : "Ruina 🧱")
-                if b?.repairedLater == true { Text("Neskôr opravená 🛠️").foregroundStyle(.green) }
-                if b?.completedLater == true { Text("Neskôr dostavaná 💪").foregroundStyle(.green) }
+                Text(model.catalog?[model.nightRecord(for: key)?.buildingId ?? ""]?.displayName ?? "").font(.headline)
+                Text(outcome == .complete ? L("Complete 🏢") : outcome == .unfinished ? L("Unfinished 🚧") : L("Ruins 🧱"))
+                if b?.repairedLater == true { Text(L("Repaired later 🛠️")).foregroundStyle(.green) }
+                if b?.completedLater == true { Text(L("Finished later 💪")).foregroundStyle(.green) }
             }
         }
     }
 
     private func row(_ icon: String, _ label: String, _ value: String?) -> some View {
         HStack(alignment: .top) {
-            Text(icon)
+            Text(verbatim: icon)
             Text(label).foregroundStyle(.secondary)
             Spacer()
             Text(value ?? "–").monospacedDigit().multilineTextAlignment(.trailing)
@@ -261,11 +257,11 @@ struct NightDetail: View {
 
     private func trips(_ title: String, _ list: [NightReport.Trip], ok: Bool) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("\(title): \(list.count)×").foregroundStyle(.secondary)
+            Text(verbatim: "\(title): \(list.count)×").foregroundStyle(.secondary)
             ForEach(Array(list.enumerated()), id: \.offset) { _, t in
                 HStack {
-                    Text(Self.timeSec.string(from: t.start)).monospacedDigit()
-                    Text("→ \(Self.duration(t.duration))")
+                    Text(Fmt.timeSec(t.start)).monospacedDigit()
+                    Text(verbatim: "→ \(Self.duration(t.duration))")
                         .foregroundStyle(ok ? Color.secondary : (t.duration ?? .infinity) > 13 ? .orange : .secondary)
                 }
                 .font(.caption)
@@ -277,7 +273,7 @@ struct NightDetail: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title).foregroundStyle(.secondary)
             if !dates.isEmpty {
-                Text(dates.map { Self.time.string(from: $0) }.joined(separator: " · "))
+                Text(dates.map(Fmt.time).joined(separator: " · "))
                     .font(.caption.monospacedDigit())
             }
         }

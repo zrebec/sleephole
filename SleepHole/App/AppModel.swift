@@ -56,6 +56,7 @@ final class AppModel {
     ///   -startTestNight               immediately start a 4-min debug night (screenshots in the simulator)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
     ///   -openTab town                 start on the Mesto tab
+    ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
                                      args: [String] = ProcessInfo.processInfo.arguments) {
         func value(_ flag: String) -> String? {
@@ -102,6 +103,10 @@ final class AppModel {
         settings.save()
     }
 
+    static func launchLanguage(args: [String] = ProcessInfo.processInfo.arguments) -> AppLanguage? {
+        args.firstIndex(of: "-lang").flatMap { args.indices.contains($0 + 1) ? AppLanguage(rawValue: args[$0 + 1]) : nil }
+    }
+
     /// Injected time (tests use `FakeClock`).
     let clock: any Clock
     /// false in unit tests: no audio, lifecycle monitor, notifications, timers or sounds.
@@ -119,6 +124,7 @@ final class AppModel {
         self.settings = settings
         self.window = settings.schedule.window(containing: clock.now, calendar: .current)
         loadProgress()
+        if initialSettings == nil, let lang = Self.launchLanguage() { language = lang }
         resumeActiveNight()
         rebuildTown()
         refresh()
@@ -231,14 +237,14 @@ final class AppModel {
     /// Why the nap button is disabled right now (nil = it can be started).
     func napBlockReason(at t: Date? = nil) -> String? {
         let now = t ?? clock.now
-        if active != nil { return "Práve prebieha stavba." }
+        if active != nil { return L("A night is in progress.") }
         let plan = settings.nap
         let key = NightKey(date: now, calendar: calendar)
         if records().contains(where: { $0.isNap && !$0.isDebug && $0.keyString == key.description }) {
-            return "Dnešný odpočinok už bol 😴"
+            return L("You've already had today's nap 😴")
         }
         guard plan.canStart(at: now, calendar: calendar) else {
-            return "Teraz nemôžeš odpočívať (\(plan.windowStart)–\(plan.windowEnd))."
+            return L("You can't nap now (\(Fmt.time(plan.windowStart))–\(Fmt.time(plan.windowEnd))).")
         }
         return nil
     }
@@ -281,6 +287,23 @@ final class AppModel {
         let p = progress()
         onboardingDone = p.onboardingCompletedAt != nil
         firstNightBriefed = p.firstNightBriefingAt != nil
+        language = p.languageRaw.flatMap(AppLanguage.init(rawValue:)) ?? .fallback
+    }
+
+    // MARK: - language (stored in the database, `UserProgress.languageRaw`)
+
+    /// The UI language. Setting it stores the choice, switches `L(...)` at once and re-schedules the reminders.
+    var language: AppLanguage = .fallback {
+        didSet {
+            Lang.current = language
+            guard language != oldValue else { return }
+            let p = progress()
+            if p.languageRaw != language.rawValue {
+                p.languageRaw = language.rawValue
+                save()
+            }
+            if servicesEnabled { Notifications.scheduleReminders(settings.schedule) }
+        }
     }
 
     func completeOnboarding() {
@@ -305,7 +328,8 @@ final class AppModel {
     func makeBackup() -> BackupFile {
         let p = progress()
         return BackupFile(exportedAt: clock.now, settings: settings, onboardingCompletedAt: p.onboardingCompletedAt,
-                          firstNightBriefingAt: p.firstNightBriefingAt, nights: records().map(\.backup))
+                          firstNightBriefingAt: p.firstNightBriefingAt, nights: records().map(\.backup),
+                          language: p.languageRaw)
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
@@ -317,6 +341,7 @@ final class AppModel {
         let p = progress()
         p.onboardingCompletedAt = b.onboardingCompletedAt
         p.firstNightBriefingAt = b.firstNightBriefingAt
+        if let lang = b.language, AppLanguage(rawValue: lang) != nil { p.languageRaw = lang }
         save()
         settings = b.settings
         loadProgress()
@@ -329,8 +354,8 @@ final class AppModel {
         case nightRunning, tooNew
         var errorDescription: String? {
             switch self {
-            case .nightRunning: "Počas stavby sa záloha nedá obnoviť."
-            case .tooNew: "Záloha je z novšej verzie SleepHole."
+            case .nightRunning: L("A backup can't be restored during a night.")
+            case .tooNew: L("The backup is from a newer version of SleepHole.")
             }
         }
     }

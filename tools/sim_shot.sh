@@ -1,6 +1,6 @@
 #!/bin/sh
 # Screenshot the app in the iPhone 16 Pro simulator, then ALWAYS clean up (no alarms ringing on the Mac).
-# usage: tools/sim_shot.sh out.png wait_seconds [app args…]
+# usage: tools/sim_shot.sh out.png wait_seconds [app args…]   e.g. -seedNights 12 -openTab stats -lang sk
 OUT=$1; WAIT=$2; shift 2
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 SIM=${SIM:-CAB9AC31-E34E-404A-B7C5-B18CA7E1A63A}

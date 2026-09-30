@@ -11,14 +11,18 @@ struct RootView: View {
     private let screenshotMode = ProcessInfo.processInfo.arguments.contains { $0 == "-seedNights" || $0 == "-startTestNight" }
 
     var body: some View {
+        // `.id(language)`: a language switch rebuilds every screen so all `L(...)` texts are re-read at once
+        // (the selected tab survives).
+        let lang = model.language
         TabView(selection: $tab) {
-            Tab("Dnes", systemImage: "moon.stars.fill", value: 0) { TodayView() }
-            Tab("Mesto", systemImage: "building.2.fill", value: 1) { TownTab() }
-            Tab("Štatistiky", systemImage: "chart.bar.fill", value: 2) { StatsView() }
-            Tab("Nastavenia", systemImage: "gearshape.fill", value: 3) { SettingsView() }
+            Tab(L("Today"), systemImage: "moon.stars.fill", value: 0) { TodayView().id(lang) }
+            Tab(L("Town"), systemImage: "building.2.fill", value: 1) { TownTab().id(lang) }
+            Tab(L("Stats"), systemImage: "chart.bar.fill", value: 2) { StatsView().id(lang) }
+            Tab(L("Settings"), systemImage: "gearshape.fill", value: 3) { SettingsView().id(lang) }
         }
+        .environment(\.locale, lang.locale)
         .fullScreenCover(isPresented: Binding(get: { !model.onboardingDone && !screenshotMode }, set: { _ in })) {
-            GuideView()
+            GuideView().id(lang).environment(\.locale, lang.locale)
         }
     }
 }

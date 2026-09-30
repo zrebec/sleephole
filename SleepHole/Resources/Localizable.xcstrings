@@ -1,0 +1,5150 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    " (code)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (code)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (kód)"
+          }
+        }
+      }
+    },
+    " (shake)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (shake)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (zatrasenie)"
+          }
+        }
+      }
+    },
+    "%@ Playing until %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Playing until %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ Hrá do %2$@."
+          }
+        }
+      }
+    },
+    "%@ Playing until you press ■.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Playing until you press ■."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Hrá, kým nestlačíš ■."
+          }
+        }
+      }
+    },
+    "%@ is waiting – your next good night will finish it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is waiting – your next good night will finish it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ čaká na dokončenie – ďalšia dobrá noc ju dostavia."
+          }
+        }
+      }
+    },
+    "%@ · all night": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · all night"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · celú noc"
+          }
+        }
+      }
+    },
+    "%@ · away %lld s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · away %lld s"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · mimo %2$lld s"
+          }
+        }
+      }
+    },
+    "%@ · until %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · until %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · do %2$@"
+          }
+        }
+      }
+    },
+    "%lld complete naps": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld complete nap"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld complete naps"
+                }
+              }
+            }
+          }
+        },
+        "sk": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hotové odpočinky"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hotového odpočinku"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hotový odpočinok"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hotových odpočinkov"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld min": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min"
+          }
+        }
+      }
+    },
+    "%lld min %lld s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min %lld s"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld min %2$lld s"
+          }
+        }
+      }
+    },
+    "%lld minutes": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld minute"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld minutes"
+                }
+              }
+            }
+          }
+        },
+        "sk": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld minúty"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld minúty"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld minútu"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld minút"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld nights": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld night"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld nights"
+                }
+              }
+            }
+          }
+        },
+        "sk": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld noci"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld noci"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld noc"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld nocí"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld nights in a row": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld night in a row"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld nights in a row"
+                }
+              }
+            }
+          }
+        },
+        "sk": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld noci v rade"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld noci v rade"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld noc v rade"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld nocí v rade"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld s"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld s"
+          }
+        }
+      }
+    },
+    "%lld seconds": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld second"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld seconds"
+                }
+              }
+            }
+          }
+        },
+        "sk": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld sekundy"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld sekundy"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld sekundu"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld sekúnd"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "(quick test night – doesn't count for the town)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "(quick test night – doesn't count for the town)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "(rýchla testovacia noc – do mesta sa nepočíta)"
+          }
+        }
+      }
+    },
+    "1 min (test)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 min (test)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 min (test)"
+          }
+        }
+      }
+    },
+    "A backup can't be restored during a night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A backup can't be restored during a night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Počas stavby sa záloha nedá obnoviť."
+          }
+        }
+      }
+    },
+    "A complete night = %lld 🪙, unfinished = %lld 🪙, and every %lldth complete night in a row adds a +%lld 🪙 bonus. Soon you'll buy buildings with them: house %lld, L2 %lld, L3 %lld, L4 %lld 🪙.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A complete night = %lld 🪙, unfinished = %lld 🪙, and every %lldth complete night in a row adds a +%lld 🪙 bonus. Soon you'll buy buildings with them: house %lld, L2 %lld, L3 %lld, L4 %lld 🪙."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová noc = %1$lld 🪙, rozostavaná = %2$lld 🪙 a každá %3$lld. hotová noc v rade pridá bonus +%4$lld 🪙. Čoskoro si za ne budeš kupovať budovy: dom %5$lld, L2 %6$lld, L3 %7$lld, L4 %8$lld 🪙."
+          }
+        }
+      }
+    },
+    "A nap can only start in this window, once a day. A complete nap earns %lld 🪙.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A nap can only start in this window, once a day. A complete nap earns %lld 🪙."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinok sa dá začať iba v tomto okne, raz za deň. Za hotový odpočinok dostaneš %lld 🪙."
+          }
+        }
+      }
+    },
+    "A night is in progress.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A night is in progress."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Práve prebieha stavba."
+          }
+        }
+      }
+    },
+    "About": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O appke"
+          }
+        }
+      }
+    },
+    "After every night a backup is also saved automatically: Files → On My iPhone → SleepHole → %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After every night a backup is also saved automatically: Files → On My iPhone → SleepHole → %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po každej noci sa záloha uloží aj automaticky: Súbory → Na mojom iPhone → SleepHole → %@."
+          }
+        }
+      }
+    },
+    "Aggressive beeping, full volume at once.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggressive beeping, full volume at once."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agresívne pípanie, hneď naplno."
+          }
+        }
+      }
+    },
+    "Alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budík"
+          }
+        }
+      }
+    },
+    "Alarm at %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarm at %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budík o %@"
+          }
+        }
+      }
+    },
+    "Alarm at %@ – shake your phone or enter code %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarm at %@ – shake your phone or enter code %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budík o %1$@ – zatras telefónom alebo zadaj kód %2$@."
+          }
+        }
+      }
+    },
+    "Alarm music": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarm music"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hudba budíkov"
+          }
+        }
+      }
+    },
+    "Alarm!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarm!"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poplach"
+          }
+        }
+      }
+    },
+    "All buildings, roads, cars, trees and some sounds come from Kenney Game Assets (CC0 licence). Thank you for the wonderful assets and for giving them to the world. 💛": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All buildings, roads, cars, trees and some sounds come from Kenney Game Assets (CC0 licence). Thank you for the wonderful assets and for giving them to the world. 💛"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Všetky budovy, cesty, autá, stromy a časť zvukov pochádzajú z Kenney Game Assets (licencia CC0). Ďakujeme za nádherné assety a za to, že ich Kenney dáva svetu. 💛"
+          }
+        }
+      }
+    },
+    "All night": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All night"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Celú noc"
+          }
+        }
+      }
+    },
+    "Allow notifications": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow notifications"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Povoliť upozornenia"
+          }
+        }
+      }
+    },
+    "Authors": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authors"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autori"
+          }
+        }
+      }
+    },
+    "Average (last 14 nights)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Average (last 14 nights)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Priemer (posledných 14 nocí)"
+          }
+        }
+      }
+    },
+    "Back": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Späť"
+          }
+        }
+      }
+    },
+    "Background sound": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Background sound"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuk v pozadí"
+          }
+        }
+      }
+    },
+    "Backup": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Záloha"
+          }
+        }
+      }
+    },
+    "Balanced and gentle – like wind in a forest.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Balanced and gentle – like wind in a forest."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vyvážený, mäkký – ako vietor v lese."
+          }
+        }
+      }
+    },
+    "Bedtime": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedtime"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večierka"
+          }
+        }
+      }
+    },
+    "Bedtime %@ · wake-up %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedtime %@ · wake-up %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večierka %1$@ · budíček %2$@"
+          }
+        }
+      }
+    },
+    "Bedtime at %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedtime at %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večierka o %@"
+          }
+        }
+      }
+    },
+    "Bedtime in %lld minutes. Time to get ready 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedtime in %lld minutes. Time to get ready 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O %lld minút je večierka. Čas sa chystať 🌙"
+          }
+        }
+      }
+    },
+    "Beep-beep-beep, full volume at once.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beep-beep-beep, full volume at once."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bip-bip-bip, hneď naplno."
+          }
+        }
+      }
+    },
+    "Beethoven – music box.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beethoven – music box."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beethoven – hracia skrinka."
+          }
+        }
+      }
+    },
+    "Both pieces are in the public domain, re-synthesised for SleepHole. “Reveille” and “Alarm!” are original.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both pieces are in the public domain, re-synthesised for SleepHole. “Reveille” and “Alarm!” are original."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obe skladby sú voľné dielo, v SleepHole nanovo syntetizované. „Budíček“ a „Poplach“ sú vlastné skladby."
+          }
+        }
+      }
+    },
+    "Bright and even – like a fan.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bright and even – like a fan."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jasný, rovnomerný – ako ventilátor."
+          }
+        }
+      }
+    },
+    "Brown noise": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brown noise"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hnedý šum"
+          }
+        }
+      }
+    },
+    "Build start": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build start"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Štart stavby"
+          }
+        }
+      }
+    },
+    "Build started": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build started"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Začiatok stavby"
+          }
+        }
+      }
+    },
+    "Building": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Building"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budova"
+          }
+        }
+      }
+    },
+    "Building in progress": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Building in progress"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavba prebieha"
+          }
+        }
+      }
+    },
+    "Cancel night": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel night"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zrušiť noc"
+          }
+        }
+      }
+    },
+    "Cancel quick night": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel quick night"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zrušiť rýchlu noc"
+          }
+        }
+      }
+    },
+    "Cancel tonight? The building will turn into ruins.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel tonight? The building will turn into ruins."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zrušiť dnešnú noc? Budova sa zmení na ruinu."
+          }
+        }
+      }
+    },
+    "Chimes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chimes"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvonkohra"
+          }
+        }
+      }
+    },
+    "Clear": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vymazať"
+          }
+        }
+      }
+    },
+    "Close": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zavrieť"
+          }
+        }
+      }
+    },
+    "Code": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Code"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kód"
+          }
+        }
+      }
+    },
+    "Coins": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coins"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mince"
+          }
+        }
+      }
+    },
+    "Coins 🪙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coins 🪙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mince 🪙"
+          }
+        }
+      }
+    },
+    "Coins: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coins: %lld"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mince: %lld"
+          }
+        }
+      }
+    },
+    "Come back to SleepHole and lock your phone 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Come back to SleepHole and lock your phone 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vráť sa do SleepHole a zamkni telefón 🌙"
+          }
+        }
+      }
+    },
+    "Complete 🎉": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Complete 🎉"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová 🎉"
+          }
+        }
+      }
+    },
+    "Complete 🏢": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Complete 🏢"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová 🏢"
+          }
+        }
+      }
+    },
+    "Continue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokračovať"
+          }
+        }
+      }
+    },
+    "Credits": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Credits"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poďakovanie"
+          }
+        }
+      }
+    },
+    "Deep and soft – like a distant waterfall.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deep and soft – like a distant waterfall."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hlboký, tlmený – ako vzdialený vodopád."
+          }
+        }
+      }
+    },
+    "Delete all": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete all"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vymazať"
+          }
+        }
+      }
+    },
+    "Detection test": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detection test"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test detekcie"
+          }
+        }
+      }
+    },
+    "Detection test (F2)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detection test (F2)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test detekcie (F2)"
+          }
+        }
+      }
+    },
+    "Developer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Developer"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vývoj"
+          }
+        }
+      }
+    },
+    "Digital": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digital"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digitálny"
+          }
+        }
+      }
+    },
+    "Done! 🎉": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done! 🎉"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotovo! 🎉"
+          }
+        }
+      }
+    },
+    "Dots = build start, line = bedtime.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dots = build start, line = bedtime."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Body = začiatok stavby, čiara = večierka."
+          }
+        }
+      }
+    },
+    "Drops tapping on the tent, now and then a big drip from a tree.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drops tapping on the tent, now and then a big drip from a tree."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ťukanie kvapiek na plachtu stanu, občas väčšia kvapka zo stromu."
+          }
+        }
+      }
+    },
+    "End": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukončiť"
+          }
+        }
+      }
+    },
+    "End nap": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End nap"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukončiť odpočinok"
+          }
+        }
+      }
+    },
+    "End the nap? It won't earn coins.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "End the nap? It won't earn coins."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukončiť odpočinok? Mince za neho nebudú."
+          }
+        }
+      }
+    },
+    "Every evening you start a building. Leave your phone alone at night and get up on time, and the building gets finished – your nights grow into a town.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every evening you start a building. Leave your phone alone at night and get up on time, and the building gets finished – your nights grow into a town."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každý večer začneš stavať budovu. Keď v noci necháš telefón na pokoji a ráno vstaneš načas, budova sa dokončí – a z tvojich nocí rastie mesto."
+          }
+        }
+      }
+    },
+    "Every night that builds something (complete or unfinished) moves you forward:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every night that builds something (complete or unfinished) moves you forward:"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každá noc, ktorá postaví budovu (hotovú či rozostavanú), ťa posunie ďalej:"
+          }
+        }
+      }
+    },
+    "Export backup": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export backup"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportovať zálohu"
+          }
+        }
+      }
+    },
+    "Finished later 💪": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finished later 💪"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neskôr dostavaná 💪"
+          }
+        }
+      }
+    },
+    "For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus %@ – start earlier, get more time. We'll warn you 15 s before it ends; then come back to SleepHole.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus %@ – start earlier, get more time. We'll warn you 15 s before it ends; then come back to SleepHole."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na prípravu (podcast, rozprávka, selfie…) máš čas od štartu až do večierky a ešte %@ po nej – kto začne skôr, má viac času. 15 s pred koncom ťa upozorníme, potom sa vráť do SleepHole."
+          }
+        }
+      }
+    },
+    "From": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Od"
+          }
+        }
+      }
+    },
+    "From tonight these buildings can be built too.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From tonight these buildings can be built too."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Od dnešnej noci sa môžu stavať aj tieto budovy."
+          }
+        }
+      }
+    },
+    "Generate a new code": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generate a new code"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vygenerovať nový kód"
+          }
+        }
+      }
+    },
+    "Gentle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gentle"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jemný"
+          }
+        }
+      }
+    },
+    "Good morning ☀️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Good morning ☀️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dobré ráno ☀️"
+          }
+        }
+      }
+    },
+    "Got it, start building": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Got it, start building"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozumiem, začať stavbu"
+          }
+        }
+      }
+    },
+    "Got up": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Got up"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vstal si"
+          }
+        }
+      }
+    },
+    "Graphics and sounds": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Graphics and sounds"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grafika a zvuky"
+          }
+        }
+      }
+    },
+    "Great!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Great!"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Super!"
+          }
+        }
+      }
+    },
+    "Grieg – Peer Gynt, flute.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grieg – Peer Gynt, flute."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grieg – Peer Gynt, flauta."
+          }
+        }
+      }
+    },
+    "How a night works": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How a night works"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ako prebieha noc"
+          }
+        }
+      }
+    },
+    "How it works": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How it works"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ako to funguje"
+          }
+        }
+      }
+    },
+    "I'm up": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I'm up"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vstal som"
+          }
+        }
+      }
+    },
+    "If you leave the app, you'll get a “Come back to SleepHole” alert.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you leave the app, you'll get a “Come back to SleepHole” alert."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ak odídeš z appky, príde upozornenie „Vráť sa do SleepHole“."
+          }
+        }
+      }
+    },
+    "In the afternoon you can take a nap (30 or 60 min) – only between %@–%@ (changeable), once a day. Same rules as at night, %@ to set up, an alarm at the end. A complete nap = +%lld 🪙, it doesn't build.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the afternoon you can take a nap (30 or 60 min) – only between %@–%@ (changeable), once a day. Same rules as at night, %@ to set up, an alarm at the end. A complete nap = +%lld 🪙, it doesn't build."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Popoludní si môžeš dať odpočinok (30 alebo 60 min) – iba v okne %1$@–%2$@ (dá sa zmeniť), raz denne. Platí to isté ako v noci, na prípravu máš %3$@, na konci zazvoní budík. Hotový odpočinok = +%4$lld 🪙, budovu nestavia."
+          }
+        }
+      }
+    },
+    "In the morning shake your phone or enter this code.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the morning shake your phone or enter this code."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ráno zatras telefónom alebo zadaj tento kód."
+          }
+        }
+      }
+    },
+    "Inspiration": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inspiration"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inšpirácia"
+          }
+        }
+      }
+    },
+    "It's too late to build tonight 🌙 Tomorrow from %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's too late to build tonight 🌙 Tomorrow from %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na dnešnú stavbu je už neskoro 🌙 Zajtra od %@."
+          }
+        }
+      }
+    },
+    "Keep a passcode / Face ID on your iPhone – without it the app can't tell when the phone is locked.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep a passcode / Face ID on your iPhone – without it the app can't tell when the phone is locked."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maj na iPhone nastavený kód / Face ID – bez neho appka nerozozná zamknutie telefónu."
+          }
+        }
+      }
+    },
+    "Keep your phone on the charger overnight.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep your phone on the charger overnight."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nechaj telefón cez noc na nabíjačke."
+          }
+        }
+      }
+    },
+    "Keep your phone on the charger.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep your phone on the charger."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefón nechaj na nabíjačke."
+          }
+        }
+      }
+    },
+    "Language": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jazyk"
+          }
+        }
+      }
+    },
+    "Leaving to another app for more than %@ collapses the building.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leaving to another app for more than %@ collapses the building."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odchod do inej appky na viac ako %@ stavbu zrúti."
+          }
+        }
+      }
+    },
+    "Length": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Length"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dĺžka"
+          }
+        }
+      }
+    },
+    "Let's start 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Let's start 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Začnime 🌙"
+          }
+        }
+      }
+    },
+    "Level %lld in %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level %lld in %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level %1$lld o %2$@"
+          }
+        }
+      }
+    },
+    "Level %lld of 4 unlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level %lld of 4 unlocked"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odomknutý level %lld zo 4"
+          }
+        }
+      }
+    },
+    "Level %lld unlocked!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level %lld unlocked!"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level %lld odomknutý!"
+          }
+        }
+      }
+    },
+    "Level 1": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level 1"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level 1"
+          }
+        }
+      }
+    },
+    "Level 2": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level 2"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level 2"
+          }
+        }
+      }
+    },
+    "Level 3": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level 3"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level 3"
+          }
+        }
+      }
+    },
+    "Level 4": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level 4"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Level 4"
+          }
+        }
+      }
+    },
+    "Levels": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Levels"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Levely"
+          }
+        }
+      }
+    },
+    "Licence CC BY 4.0 – modified (trimmed, crossfaded into a loop). Used as “Rain on a window”.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Licence CC BY 4.0 – modified (trimmed, crossfaded into a loop). Used as “Rain on a window”."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Licencia CC BY 4.0 – upravené (orezané, zmiešané do slučky). Použité ako „Dážď na okno“."
+          }
+        }
+      }
+    },
+    "Lock your phone and good night 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lock your phone and good night 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamkni telefón a dobrú noc 🌙"
+          }
+        }
+      }
+    },
+    "Lock your phone and have a nice rest 🧸": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lock your phone and have a nice rest 🧸"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamkni telefón a pekne si odpočiň 🧸"
+          }
+        }
+      }
+    },
+    "Log (%lld)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log (%lld)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Záznam (%lld)"
+          }
+        }
+      }
+    },
+    "Made by Zrebec with help from Claude (Anthropic) 🐰🦊": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Made by Zrebec with help from Claude (Anthropic) 🐰🦊"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vytvoril Zrebec s pomocou Clauda (Anthropic) 🐰🦊"
+          }
+        }
+      }
+    },
+    "Morning": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Morning"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ráno"
+          }
+        }
+      }
+    },
+    "Morning Mood": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Morning Mood"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ranná nálada"
+          }
+        }
+      }
+    },
+    "Morning confirmation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Morning confirmation"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ranné potvrdenie"
+          }
+        }
+      }
+    },
+    "Nap": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nap"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinok"
+          }
+        }
+      }
+    },
+    "Nap %@–%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nap %@–%@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinok %1$@–%2$@"
+          }
+        }
+      }
+    },
+    "Nap complete!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nap complete!"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinok hotový!"
+          }
+        }
+      }
+    },
+    "Nap cut short": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nap cut short"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinok skrátený"
+          }
+        }
+      }
+    },
+    "Nap didn't work out": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nap didn't work out"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinok sa nepodaril"
+          }
+        }
+      }
+    },
+    "Nap: %lld min, between %@ and %@ (change it in Settings).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nap: %lld min, between %@ and %@ (change it in Settings)."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinok: %1$lld min, medzi %2$@ a %3$@ (zmeníš v Nastaveniach)."
+          }
+        }
+      }
+    },
+    "Naps": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naps"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinky"
+          }
+        }
+      }
+    },
+    "New simulation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New simulation"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nová simulácia"
+          }
+        }
+      }
+    },
+    "Next": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ďalej"
+          }
+        }
+      }
+    },
+    "Next test night counts for the town": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next test night counts for the town"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ďalšia testovacia noc sa počíta do mesta"
+          }
+        }
+      }
+    },
+    "Night": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noc"
+          }
+        }
+      }
+    },
+    "Night calendar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night calendar"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendár nocí"
+          }
+        }
+      }
+    },
+    "Night journal": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night journal"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nočný denník"
+          }
+        }
+      }
+    },
+    "Night of %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night of %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noc na %@"
+          }
+        }
+      }
+    },
+    "Night result": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night result"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Výsledok noci"
+          }
+        }
+      }
+    },
+    "Night simulation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night simulation"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simulácia noci"
+          }
+        }
+      }
+    },
+    "Nights built: %lld · level %lld unlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nights built: %lld · level %lld unlocked"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postavené noci: %1$lld · odomknutý level %2$lld"
+          }
+        }
+      }
+    },
+    "No worries, again tomorrow 🌱": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No worries, again tomorrow 🌱"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nevadí, zajtra znova 🌱"
+          }
+        }
+      }
+    },
+    "No worries. The alarm rings at %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No worries. The alarm rings at %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nevadí. Budík zazvoní o %@."
+          }
+        }
+      }
+    },
+    "Not this time": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not this time"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnes to nevyšlo"
+          }
+        }
+      }
+    },
+    "Not yet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not yet"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ešte nie"
+          }
+        }
+      }
+    },
+    "Nothing plays (the app still stays awake at night).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing plays (the app still stays awake at night)."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nič nehrá (appka aj tak zostane v noci bdieť)."
+          }
+        }
+      }
+    },
+    "Notifications": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upozornenia"
+          }
+        }
+      }
+    },
+    "Notifications allowed ✓": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications allowed ✓"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upozornenia povolené ✓"
+          }
+        }
+      }
+    },
+    "Notifications and tips": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications and tips"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upozornenia a tipy"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Ode to Joy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ode to Joy"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Óda na radosť"
+          }
+        }
+      }
+    },
+    "Open SleepHole and confirm you're up.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open SleepHole and confirm you're up."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otvor SleepHole a potvrď vstávanie."
+          }
+        }
+      }
+    },
+    "Open notification settings": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open notification settings"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otvoriť nastavenia upozornení"
+          }
+        }
+      }
+    },
+    "Phone calls don't count – just come back to the app after the call.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phone calls don't count – just come back to the app after the call."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefonát sa nepočíta – po hovore sa len vráť do appky."
+          }
+        }
+      }
+    },
+    "Phone locked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phone locked"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamkol si telefón"
+          }
+        }
+      }
+    },
+    "Pink noise": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pink noise"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ružový šum"
+          }
+        }
+      }
+    },
+    "Pizzicato, slowly getting louder.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pizzicato, slowly getting louder."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pizzicato, pomaly silnie."
+          }
+        }
+      }
+    },
+    "Play for": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play for"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hrať"
+          }
+        }
+      }
+    },
+    "Play preview": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play preview"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prehrať ukážku"
+          }
+        }
+      }
+    },
+    "Quick night (4 min, %lld s setup)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quick night (4 min, %lld s setup)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rýchla noc (4 min, príprava %lld s)"
+          }
+        }
+      }
+    },
+    "Rain on a tent": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rain on a tent"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dážď na stan"
+          }
+        }
+      }
+    },
+    "Rain on a window": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rain on a window"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dážď na okno"
+          }
+        }
+      }
+    },
+    "Regularity: ±%lld min – %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regularity: ±%lld min – %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pravidelnosť: ±%1$lld min – %2$@"
+          }
+        }
+      }
+    },
+    "Reminder %lld min before bedtime": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminder %lld min before bedtime"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pripomienka %lld min pred večierkou"
+          }
+        }
+      }
+    },
+    "Reminder: off": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminder: off"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pripomienka: vypnutá"
+          }
+        }
+      }
+    },
+    "Repaired later 🛠️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repaired later 🛠️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neskôr opravená 🛠️"
+          }
+        }
+      }
+    },
+    "Repaired 🛠️ – the ruin is a building again": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repaired 🛠️ – the ruin is a building again"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opravená 🛠️ – z ruiny je zase budova"
+          }
+        }
+      }
+    },
+    "Restore": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obnoviť"
+          }
+        }
+      }
+    },
+    "Restore from backup…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore from backup…"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obnoviť zo zálohy…"
+          }
+        }
+      }
+    },
+    "Restore the backup? Your current nights, town and settings will be replaced.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore the backup? Your current nights, town and settings will be replaced."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obnoviť zálohu? Terajšie noci, mesto a nastavenia sa nahradia."
+          }
+        }
+      }
+    },
+    "Restored: %lld nights ✓": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Restored: %lld night ✓"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Restored: %lld nights ✓"
+                }
+              }
+            }
+          }
+        },
+        "sk": {
+          "variations": {
+            "plural": {
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Obnovené: %lld noci ✓"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Obnovené: %lld noci ✓"
+                }
+              },
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Obnovená: %lld noc ✓"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Obnovené: %lld nocí ✓"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Retro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retro"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retro"
+          }
+        }
+      }
+    },
+    "Retro tune, slowly getting louder.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retro tune, slowly getting louder."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retro melódia, pomaly silnie."
+          }
+        }
+      }
+    },
+    "Reveille": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reveille"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budíček"
+          }
+        }
+      }
+    },
+    "Rising bells.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rising bells."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stúpajúce zvončeky."
+          }
+        }
+      }
+    },
+    "Ruins – part of the town too 🌱": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruins – part of the town too 🌱"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruina – aj to patrí k mestu 🌱"
+          }
+        }
+      }
+    },
+    "Ruins 🧱": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruins 🧱"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruina 🧱"
+          }
+        }
+      }
+    },
+    "Schedule": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schedule"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozvrh"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastavenia"
+          }
+        }
+      }
+    },
+    "Setup is shortened to 10 s (5 min in the app). After it the building collapses if the app is in the background for more than 10 s. Locking the phone is fine.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup is shortened to 10 s (5 min in the app). After it the building collapses if the app is in the background for more than 10 s. Locking the phone is fine."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Príprava je skrátená na 10 s (v appke 5 min). Po nej sa stavba zrúti, ak je appka v pozadí dlhšie ako 10 s. Zamknutie telefónu je v poriadku."
+          }
+        }
+      }
+    },
+    "Setup until %@ (%@ left)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup until %@ (%@ left)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Príprava do %1$@ (ešte %2$@)"
+          }
+        }
+      }
+    },
+    "Setup: %lld s left": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup: %lld s left"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Príprava: ešte %lld s"
+          }
+        }
+      }
+    },
+    "Setup: %lld s left for a podcast or story": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup: %lld s left for a podcast or story"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Príprava: ešte %lld s na podcast či rozprávku"
+          }
+        }
+      }
+    },
+    "Setup: %lld s left for a story or sound": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup: %lld s left for a story or sound"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Príprava: ešte %lld s na rozprávku či zvuk"
+          }
+        }
+      }
+    },
+    "Shake your phone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shake your phone"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatras telefónom"
+          }
+        }
+      }
+    },
+    "Shake your phone or enter your code in SleepHole.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shake your phone or enter your code in SleepHole."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatras telefónom alebo zadaj kód v SleepHole."
+          }
+        }
+      }
+    },
+    "Show the guide and first night again": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the guide and first night again"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Znova ukázať sprievodcu a prvú noc"
+          }
+        }
+      }
+    },
+    "Silence": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silence"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ticho"
+          }
+        }
+      }
+    },
+    "Sleep sound": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sleep sound"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuk na zaspávanie"
+          }
+        }
+      }
+    },
+    "Sleep sounds": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sleep sounds"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuky na zaspávanie"
+          }
+        }
+      }
+    },
+    "SleepHole – backup": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole – backup"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole – záloha"
+          }
+        }
+      }
+    },
+    "SleepTown by Seekrtech – the game that showed sleep can build a town.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepTown by Seekrtech – the game that showed sleep can build a town."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepTown od Seekrtech – hra, ktorá ukázala, že spánok môže byť stavba mesta."
+          }
+        }
+      }
+    },
+    "Soft rain outside the window (recording by InspectorJ, CC BY 4.0).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soft rain outside the window (recording by InspectorJ, CC BY 4.0)."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tlmený dážď za oknom (nahrávka InspectorJ, CC BY 4.0)."
+          }
+        }
+      }
+    },
+    "Sound": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sound"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuk"
+          }
+        }
+      }
+    },
+    "Start": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Štart"
+          }
+        }
+      }
+    },
+    "Start building by %@. You have until %@ to set up (podcast, bedtime story), then keep SleepHole open and lock your phone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start building by %@. You have until %@ to set up (podcast, bedtime story), then keep SleepHole open and lock your phone."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavbu začni do %1$@. Na prípravu (podcast, rozprávka) máš čas do %2$@, potom nechaj SleepHole v popredí a zamkni telefón."
+          }
+        }
+      }
+    },
+    "Start the test and try: lock the phone, unlock, switch apps, pull down Control Center, open the camera from the lock screen, get a call. Then send the log via “Share”.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start the test and try: lock the phone, unlock, switch apps, pull down Control Center, open the camera from the lock screen, get a call. Then send the log via “Share”."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapni test a vyskúšaj: zamknúť telefón, odomknúť, prepnúť do inej appky, stiahnuť Control Center, otvoriť kameru zo zamknutej obrazovky, nechať sa zavolať. Nakoniec pošli záznam cez „Zdieľať“."
+          }
+        }
+      }
+    },
+    "Stats": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stats"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Štatistiky"
+          }
+        }
+      }
+    },
+    "Stop": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zastaviť"
+          }
+        }
+      }
+    },
+    "Tap a day to see how that night went.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap a day to see how that night went."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ťukni na deň a uvidíš, ako tá noc prebehla."
+          }
+        }
+      }
+    },
+    "Test night (15 min, 5 min setup)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test night (15 min, 5 min setup)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testovacia noc (15 min, príprava 5 min)"
+          }
+        }
+      }
+    },
+    "Test running": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test running"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test beží"
+          }
+        }
+      }
+    },
+    "That's part of the town too – new chance tomorrow 🌱": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That's part of the town too – new chance tomorrow 🌱"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aj to patrí k mestu – zajtra nová šanca 🌱"
+          }
+        }
+      }
+    },
+    "The SleepHole alarm also rings in Do Not Disturb or Sleep focus. To get the “Come back” warning too, allow SleepHole: Settings → Focus → Sleep (and Do Not Disturb) → Apps → Add.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The SleepHole alarm also rings in Do Not Disturb or Sleep focus. To get the “Come back” warning too, allow SleepHole: Settings → Focus → Sleep (and Do Not Disturb) → Apps → Add."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budík SleepHole zvoní aj v režime Nerušiť či Spánok. Aby prišlo aj varovanie „Vráť sa“, pridaj SleepHole do povolených appiek: Nastavenia → Sústredenie → Spánok (a Nerušiť) → Appky → Pridať."
+          }
+        }
+      }
+    },
+    "The alarm rings even in silent mode. Pick the sound in Settings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The alarm rings even in silent mode. Pick the sound in Settings."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budík zvoní aj v tichom režime. Zvuk si vyberieš v Nastaveniach."
+          }
+        }
+      }
+    },
+    "The alarm rings for at most %@. Confirm you're up by shaking the phone or entering the code – at the earliest %@ before wake-up.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The alarm rings for at most %@. Confirm you're up by shaking the phone or entering the code – at the earliest %@ before wake-up."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budík zvoní najviac %1$@. Vstávanie potvrdíš zatrasením telefónu alebo kódom – najskôr %2$@ pred budíčkom."
+          }
+        }
+      }
+    },
+    "The app didn't run that night – nothing was built.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app didn't run that night – nothing was built."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appka v túto noc nebežala – nestavalo sa."
+          }
+        }
+      }
+    },
+    "The backup is from a newer version of SleepHole.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The backup is from a newer version of SleepHole."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Záloha je z novšej verzie SleepHole."
+          }
+        }
+      }
+    },
+    "The building collapsed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The building collapsed"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavba sa zrútila"
+          }
+        }
+      }
+    },
+    "The building collapsed at %@ 🧱": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The building collapsed at %@ 🧱"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavba sa zrútila o %@ 🧱"
+          }
+        }
+      }
+    },
+    "The building collapsed 🧱": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The building collapsed 🧱"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavba sa zrútila 🧱"
+          }
+        }
+      }
+    },
+    "The building stands ✅": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The building stands ✅"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavba stojí ✅"
+          }
+        }
+      }
+    },
+    "The catalog can't be loaded: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The catalog can't be loaded: %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katalóg sa nedá načítať: %@"
+          }
+        }
+      }
+    },
+    "The chart fills up after your first nights.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The chart fills up after your first nights."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Graf sa naplní po prvých nociach."
+          }
+        }
+      }
+    },
+    "The file can't be read: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The file can't be read: %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Súbor sa nedá prečítať: %@"
+          }
+        }
+      }
+    },
+    "The free version of the app expires after 7 days – run it again from Xcode then. Your data stays.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The free version of the app expires after 7 days – run it again from Xcode then. Your data stays."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bezplatná verzia appky vyprší po 7 dňoch – vtedy ju treba znova spustiť z Xcode. Dáta zostanú."
+          }
+        }
+      }
+    },
+    "The goal is simple: go to bed and get up at the same time every day. 💙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The goal is simple: go to bed and get up at the same time every day. 💙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cieľ je jednoduchý: chodiť spať a vstávať každý deň v rovnakom čase. 💙"
+          }
+        }
+      }
+    },
+    "The same time every day is the base of good sleep. You can change it later in Settings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The same time every day is the base of good sleep. You can change it later in Settings."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rovnaký čas každý deň je základ dobrého spánku. Neskôr ho zmeníš v Nastaveniach."
+          }
+        }
+      }
+    },
+    "The sound didn't start: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sound didn't start: %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuk sa nespustil: %@"
+          }
+        }
+      }
+    },
+    "Then come back to SleepHole and lock your phone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Then come back to SleepHole and lock your phone."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Potom sa vráť do SleepHole a zamkni telefón."
+          }
+        }
+      }
+    },
+    "They remind you of bedtime, warn you before the building collapses and act as a backup alarm.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "They remind you of bedtime, warn you before the building collapses and act as a backup alarm."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pripomenú večierku, varujú pred zrútením stavby a sú záložným budíkom."
+          }
+        }
+      }
+    },
+    "To": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do"
+          }
+        }
+      }
+    },
+    "Today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnes"
+          }
+        }
+      }
+    },
+    "Total time away: %lld s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total time away: %lld s"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas mimo appky spolu: %lld s"
+          }
+        }
+      }
+    },
+    "Town": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Town"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mesto"
+          }
+        }
+      }
+    },
+    "Town and levels": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Town and levels"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mesto a levely"
+          }
+        }
+      }
+    },
+    "Trips after setup": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trips after setup"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odchody po príprave"
+          }
+        }
+      }
+    },
+    "Trips during setup (until %@)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trips during setup (until %@)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odchody počas prípravy (do %@)"
+          }
+        }
+      }
+    },
+    "Trumpet, quickly getting louder.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trumpet, quickly getting louder."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trúbka, rýchlo silnie."
+          }
+        }
+      }
+    },
+    "Unfinished – your next good night will finish it": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfinished – your next good night will finish it"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozostavaná – dokončí ju ďalšia dobrá noc"
+          }
+        }
+      }
+    },
+    "Unfinished 🚧": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfinished 🚧"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozostavaná 🚧"
+          }
+        }
+      }
+    },
+    "Wake-up": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wake-up"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budíček"
+          }
+        }
+      }
+    },
+    "Welcome to SleepHole": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Welcome to SleepHole"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vitaj v SleepHole"
+          }
+        }
+      }
+    },
+    "Well rested 💙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Well rested 💙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pekne si si oddýchol 💙"
+          }
+        }
+      }
+    },
+    "When you start and get up": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When you start and get up"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kedy začínaš a vstávaš"
+          }
+        }
+      }
+    },
+    "White noise": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "White noise"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biely šum"
+          }
+        }
+      }
+    },
+    "Without notifications you won't get the “Come back” warning or the backup alarm. If you use a Focus (Sleep, Do Not Disturb), allow SleepHole in it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Without notifications you won't get the “Come back” warning or the backup alarm. If you use a Focus (Sleep, Do Not Disturb), allow SleepHole in it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez upozornení nepríde varovanie „Vráť sa“ ani záložný budík. Ak máš zapnuté Sústredenie (Spánok, Nerušiť), povoľ v ňom SleepHole."
+          }
+        }
+      }
+    },
+    "Wrong code": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wrong code"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nesprávny kód"
+          }
+        }
+      }
+    },
+    "You built: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You built: %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postavil si: %@"
+          }
+        }
+      }
+    },
+    "You can nap until %@. An alarm rings at the end; a complete nap earns +%lld 🪙.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can nap until %@. An alarm rings at the end; a complete nap earns +%lld 🪙."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočívať môžeš do %1$@. Na konci zazvoní budík, za hotový odpočinok +%2$lld 🪙."
+          }
+        }
+      }
+    },
+    "You can start building at the earliest %@ before bedtime and at the latest %@ after it. Otherwise the night counts as missed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can start building at the earliest %@ before bedtime and at the latest %@ after it. Otherwise the night counts as missed."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavbu môžeš začať najskôr %1$@ pred večierkou a najneskôr %2$@ po nej. Inak sa noc počíta ako vynechaná."
+          }
+        }
+      }
+    },
+    "You can turn the screen off, but SleepHole must stay open. If you switch to another app for more than %@, the building collapses.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can turn the screen off, but SleepHole must stay open. If you switch to another app for more than %@, the building collapses."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Displej môžeš vypnúť, ale SleepHole musí zostať v popredí. Keď odídeš do inej appky dlhšie ako na %@, stavba sa zrúti."
+          }
+        }
+      }
+    },
+    "You can't go to sleep yet – you can build from %@ to %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can't go to sleep yet – you can build from %@ to %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ešte nemôžeš ísť spať – stavať môžeš od %1$@ do %2$@."
+          }
+        }
+      }
+    },
+    "You can't nap now (%@–%@).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can't nap now (%@–%@)."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teraz nemôžeš odpočívať (%1$@–%2$@)."
+          }
+        }
+      }
+    },
+    "You cancelled the night": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You cancelled the night"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noc si zrušil"
+          }
+        }
+      }
+    },
+    "You have %lld seconds, or the building collapses 🏗️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have %lld seconds, or the building collapses 🏗️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máš %lld sekúnd, inak sa stavba zrúti 🏗️"
+          }
+        }
+      }
+    },
+    "You have until bedtime + %@ for a podcast or story.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have until bedtime + %@ for a podcast or story."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na podcast či rozprávku máš čas do večierky + %@."
+          }
+        }
+      }
+    },
+    "You'll only see this before your first night. The rules are in Settings → How it works.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You'll only see this before your first night. The rules are in Settings → How it works."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toto uvidíš len pred prvou nocou. Pravidlá nájdeš v Nastaveniach → Ako to funguje."
+          }
+        }
+      }
+    },
+    "You'll see your regularity after 2 nights.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You'll see your regularity after 2 nights."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pravidelnosť uvidíš po 2 nociach."
+          }
+        }
+      }
+    },
+    "You've already had today's nap 😴": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You've already had today's nap 😴"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnešný odpočinok už bol 😴"
+          }
+        }
+      }
+    },
+    "Your code:": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your code:"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoj kód:"
+          }
+        }
+      }
+    },
+    "Your first building appears after your first night 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your first building appears after your first night 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prvá budova pribudne po prvej noci 🌙"
+          }
+        }
+      }
+    },
+    "Your first night 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your first night 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoja prvá noc 🌙"
+          }
+        }
+      }
+    },
+    "Your nap was interrupted 😕": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your nap was interrupted 😕"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinok sa prerušil 😕"
+          }
+        }
+      }
+    },
+    "Your schedule": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your schedule"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoj rozvrh"
+          }
+        }
+      }
+    },
+    "Your streak starts today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your streak starts today"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Séria začína dnes"
+          }
+        }
+      }
+    },
+    "after %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "after %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "po %@"
+          }
+        }
+      }
+    },
+    "allowed ✓": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "allowed ✓"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "povolené ✓"
+          }
+        }
+      }
+    },
+    "best streak": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "best streak"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "najdlhšia séria"
+          }
+        }
+      }
+    },
+    "building": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "building"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "budova"
+          }
+        }
+      }
+    },
+    "coins": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "coins"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mince"
+          }
+        }
+      }
+    },
+    "complete": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "complete"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hotová"
+          }
+        }
+      }
+    },
+    "confirmed within %@ after wake-up": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "confirmed within %@ after wake-up"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "potvrdíš do %@ po budíčku"
+          }
+        }
+      }
+    },
+    "confirmed within %@ after wake-up – your next good night finishes it": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "confirmed within %@ after wake-up – your next good night finishes it"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "potvrdíš do %@ po budíčku – ďalšia dobrá noc ju dostavia"
+          }
+        }
+      }
+    },
+    "current streak": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "current streak"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "séria teraz"
+          }
+        }
+      }
+    },
+    "cut short": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cut short"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "skrátený"
+          }
+        }
+      }
+    },
+    "denied ✗": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "denied ✗"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zakázané ✗"
+          }
+        }
+      }
+    },
+    "didn't ring – you got up earlier": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "didn't ring – you got up earlier"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nezazvonil – vstal si skôr"
+          }
+        }
+      }
+    },
+    "didn't work out": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "didn't work out"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nepodaril sa"
+          }
+        }
+      }
+    },
+    "excellent 🌟": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "excellent 🌟"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "výborná 🌟"
+          }
+        }
+      }
+    },
+    "from the start": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "from the start"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "od začiatku"
+          }
+        }
+      }
+    },
+    "good 👍": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "good 👍"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dobrá 👍"
+          }
+        }
+      }
+    },
+    "houses and apartment blocks": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "houses and apartment blocks"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "obyčajné domy a bytovky"
+          }
+        }
+      }
+    },
+    "iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – only the backup notification. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – only the backup notification. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS si v noci môže sám nainštalovať aktualizáciu a reštartovať telefón. Stavbe to neublíži (počíta sa v tvoj prospech), ale budík z appky vtedy nezazvoní – ozve sa len záložné upozornenie. Pokojnejšie spanie: Nastavenia → Všeobecné → Aktualizácia softvéru → Automatické aktualizácie → vypni inštaláciu."
+          }
+        }
+      }
+    },
+    "in progress": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "in progress"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "prebieha"
+          }
+        }
+      }
+    },
+    "including a +%lld bonus for %lld nights in a row 🔥": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "including a +%lld bonus for %lld nights in a row 🔥"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "vrátane bonusu +%1$lld za %2$lld nocí v rade 🔥"
+          }
+        }
+      }
+    },
+    "keep it going 💪": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "keep it going 💪"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nepreruš ju 💪"
+          }
+        }
+      }
+    },
+    "nap": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nap"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "odpočinok"
+          }
+        }
+      }
+    },
+    "nights built": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nights built"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "postavené noci"
+          }
+        }
+      }
+    },
+    "not allowed yet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "not allowed yet"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zatiaľ nepovolené"
+          }
+        }
+      }
+    },
+    "or enter the code from Settings": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "or enter the code from Settings"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "alebo zadaj kód z Nastavení"
+          }
+        }
+      }
+    },
+    "parks, lit streets, museums, libraries": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "parks, lit streets, museums, libraries"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "parky, osvetlené ulice, múzeá, knižnice"
+          }
+        }
+      }
+    },
+    "rang at %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rang at %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zazvonil %@"
+          }
+        }
+      }
+    },
+    "rang at %@, stopped %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rang at %@, stopped %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zazvonil %1$@, stíchol %2$@"
+          }
+        }
+      }
+    },
+    "ruins": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ruins"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ruina"
+          }
+        }
+      }
+    },
+    "skyscrapers": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "skyscrapers"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mrakodrapy"
+          }
+        }
+      }
+    },
+    "sprites/catalog.json is missing from the app bundle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sprites/catalog.json is missing from the app bundle"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sprites/catalog.json chýba v balíku appky"
+          }
+        }
+      }
+    },
+    "the building collapsed, you cancelled the night, or you didn't confirm getting up. Your next complete night repairs it 🛠️ (unless an unfinished building is waiting), otherwise flowers grow over it 🌸": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "the building collapsed, you cancelled the night, or you didn't confirm getting up. Your next complete night repairs it 🛠️ (unless an unfinished building is waiting), otherwise flowers grow over it 🌸"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "stavba sa zrútila, zrušil si noc, alebo si nepotvrdil vstávanie. Ďalšia hotová noc ju opraví 🛠️ (ak nečaká rozostavaná budova), inak časom zarastie kvetmi 🌸"
+          }
+        }
+      }
+    },
+    "town hall, school, fire station, police, hospital": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "town hall, school, fire station, police, hospital"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "radnica, škola, hasiči, polícia, nemocnica"
+          }
+        }
+      }
+    },
+    "unfinished": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "unfinished"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rozostavaná"
+          }
+        }
+      }
+    },
+    "varies – try to start at the same time 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "varies – try to start at the same time 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kolíše – skús začínať v rovnaký čas 🌙"
+          }
+        }
+      }
+    },
+    "you didn't come back": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "you didn't come back"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nevrátil si sa"
+          }
+        }
+      }
+    },
+    "your first good night lights it": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "your first good night lights it"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "prvá dobrá noc ju zapáli"
+          }
+        }
+      }
+    },
+    "“Morning Mood” – Edvard Grieg, Peer Gynt (1875)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“Morning Mood” – Edvard Grieg, Peer Gynt (1875)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Ranná nálada“ – Edvard Grieg, Peer Gynt (1875)"
+          }
+        }
+      }
+    },
+    "“Ode to Joy” – Ludwig van Beethoven, Symphony No. 9 (1824)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“Ode to Joy” – Ludwig van Beethoven, Symphony No. 9 (1824)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Óda na radosť“ – Ludwig van Beethoven, 9. symfónia (1824)"
+          }
+        }
+      }
+    },
+    "“Rain on a tent” and all noises are synthesised by SleepHole itself.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“Rain on a tent” and all noises are synthesised by SleepHole itself."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Dážď na stan“ a všetky šumy sú syntetizované priamo v SleepHole."
+          }
+        }
+      }
+    },
+    "⏰ Good morning!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⏰ Good morning!"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⏰ Dobré ráno!"
+          }
+        }
+      }
+    },
+    "⏳ 15 s of setup left": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⏳ 15 s of setup left"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⏳ Ostáva 15 s na prípravu"
+          }
+        }
+      }
+    },
+    "⚠️ Come back to SleepHole!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ Come back to SleepHole!"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ Vráť sa do SleepHole!"
+          }
+        }
+      }
+    },
+    "🌙 Go to sleep": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌙 Go to sleep"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌙 Ísť spať"
+          }
+        }
+      }
+    },
+    "🏢 Complete": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🏢 Complete"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🏢 Hotová"
+          }
+        }
+      }
+    },
+    "👀 Screen checks: %lld×": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "👀 Screen checks: %lld×"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "👀 Pohľady na displej: %lld×"
+          }
+        }
+      }
+    },
+    "📞 Calls": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📞 Calls"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📞 Telefonáty"
+          }
+        }
+      }
+    },
+    "🔄 The app restarted": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔄 The app restarted"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔄 Appka sa reštartovala"
+          }
+        }
+      }
+    },
+    "😴 Nap (%lld min)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "😴 Nap (%lld min)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "😴 Odpočinok (%lld min)"
+          }
+        }
+      }
+    },
+    "🚧 Unfinished": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🚧 Unfinished"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🚧 Rozostavaná"
+          }
+        }
+      }
+    },
+    "🧱 Ruins": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🧱 Ruins"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🧱 Ruina"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

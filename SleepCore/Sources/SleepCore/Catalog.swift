@@ -11,11 +11,25 @@ public struct CatalogEntry: Codable, Hashable, Sendable, Identifiable {
     public let level: Int
     public let kind: Kind
     public let nameSK: String
+    /// English name; optional so older catalogs still decode.
+    public let nameEN: String?
     public let footprint: [Int]
     public let file: String
+    /// Variant with an English sign painted on it (e.g. "L3/l3-police.en.png"); nil = no text on the sprite.
+    public let fileEN: String?
     public let size: [Int]
     public let anchor: [Double]
     public let connects: String?
+
+    /// Display name for a language code ("sk", "en", …); unknown languages fall back to English, then Slovak.
+    public func name(_ lang: String) -> String {
+        lang == "sk" ? nameSK : (nameEN ?? nameSK)
+    }
+
+    /// Sprite file for a language: the English sign variant for every non-Slovak language, if there is one.
+    public func file(_ lang: String) -> String {
+        lang == "sk" ? file : (fileEN ?? file)
+    }
 }
 
 /// The whole sprite catalog, with lookups used by the app and the domain logic.

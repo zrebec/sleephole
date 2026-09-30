@@ -10,14 +10,14 @@ struct StreakBadge: View {
         TimelineView(.animation(minimumInterval: 0.08)) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
             HStack(spacing: 6) {
-                Text("🔥")
+                Text(verbatim: "🔥")
                     .font(.system(size: 30))
                     .scaleEffect(n > 0 ? 1 + 0.06 * sin(t * 9) + 0.03 * sin(t * 23) : 0.9)
                     .saturation(n > 0 ? 1 : 0)
                     .opacity(n > 0 ? 1 : 0.5)
                 VStack(alignment: .leading, spacing: 0) {
-                    Text(n > 0 ? "\(SK.nights(n)) v rade" : "Séria začína dnes").font(.headline)
-                    Text(n > 0 ? "nepreruš ju 💪" : "prvá dobrá noc ju zapáli").font(.caption).foregroundStyle(.secondary)
+                    Text(n > 0 ? L("\(n) nights in a row") : L("Your streak starts today")).font(.headline)
+                    Text(n > 0 ? L("keep it going 💪") : L("your first good night lights it")).font(.caption).foregroundStyle(.secondary)
                 }
             }
             .padding(.horizontal, 14).padding(.vertical, 8)
@@ -32,12 +32,12 @@ struct CoinBadge: View {
 
     var body: some View {
         HStack(spacing: 6) {
-            Text("🪙").font(.system(size: 26))
-            Text("\(model.coins)").font(.headline.monospacedDigit())
+            Text(verbatim: "🪙").font(.system(size: 26))
+            Text(verbatim: "\(model.coins)").font(.headline.monospacedDigit())
         }
         .padding(.horizontal, 14).padding(.vertical, 8)
         .background(.yellow.opacity(0.16), in: Capsule())
-        .accessibilityLabel("Mince: \(model.coins)")
+        .accessibilityLabel(L("Coins: \(model.coins)"))
     }
 }
 
@@ -58,9 +58,9 @@ struct LevelInfo: View {
         let built = model.builtNights
         let level = Progression.unlockedMaxLevel(builtBefore: built)
         VStack(spacing: 4) {
-            Text("Postavené noci: \(built) · odomknutý level \(level)").font(.footnote)
+            Text(L("Nights built: \(built) · level \(level) unlocked")).font(.footnote)
             if let next = Progression.nightsToNextLevel(built: built) {
-                Text("Level \(next.level) o \(SK.nights(next.nights))").font(.footnote).foregroundStyle(.secondary)
+                Text(L("Level \(next.level) in \(Plural.nights(next.nights))")).font(.footnote).foregroundStyle(.secondary)
             }
         }
         .padding(.top, 8)

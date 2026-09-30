@@ -6,37 +6,39 @@ struct CreditsView: View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Kenney").font(.headline)
-                    Text("Všetky budovy, cesty, autá, stromy a časť zvukov pochádzajú z Kenney Game Assets (licencia CC0). Ďakujeme za nádherné assety a za to, že ich Kenney dáva svetu. 💛")
-                    Link("www.kenney.nl", destination: URL(string: "https://www.kenney.nl")!)
+                    Text(verbatim: "Kenney").font(.headline)
+                    Text(L("All buildings, roads, cars, trees and some sounds come from Kenney Game Assets (CC0 licence). Thank you for the wonderful assets and for giving them to the world. 💛"))
+                    Link(destination: URL(string: "https://www.kenney.nl")!) { Text(verbatim: "www.kenney.nl") }
                 }
-            } header: { Text("Grafika a zvuky") }
+            } header: { Text(L("Graphics and sounds")) }
 
             Section {
-                Text("„Rain on Windows, Interior, A“ – InspectorJ (www.jshaw.co.uk), Freesound.org")
-                Text("Licencia CC BY 4.0 – upravené (orezané, zmiešané do slučky). Použité ako „Dážď na okno“.")
+                Text(verbatim: "“Rain on Windows, Interior, A” – InspectorJ (www.jshaw.co.uk), Freesound.org")
+                Text(L("Licence CC BY 4.0 – modified (trimmed, crossfaded into a loop). Used as “Rain on a window”."))
                     .font(.footnote).foregroundStyle(.secondary)
-                Link("freesound.org/s/346642", destination: URL(string: "https://freesound.org/s/346642/")!)
-                Link("creativecommons.org/licenses/by/4.0", destination: URL(string: "https://creativecommons.org/licenses/by/4.0/")!)
-                Text("„Dážď na stan“ a všetky šumy sú syntetizované priamo v SleepHole.")
+                Link(destination: URL(string: "https://freesound.org/s/346642/")!) { Text(verbatim: "freesound.org/s/346642") }
+                Link(destination: URL(string: "https://creativecommons.org/licenses/by/4.0/")!) {
+                    Text(verbatim: "creativecommons.org/licenses/by/4.0")
+                }
+                Text(L("“Rain on a tent” and all noises are synthesised by SleepHole itself."))
                     .font(.footnote).foregroundStyle(.secondary)
-            } header: { Text("Zvuky na zaspávanie") }
+            } header: { Text(L("Sleep sounds")) }
 
             Section {
-                Text("„Ranná nálada“ – Edvard Grieg, Peer Gynt (1875)")
-                Text("„Óda na radosť“ – Ludwig van Beethoven, 9. symfónia (1824)")
-                Text("Obe skladby sú voľné dielo, v SleepHole nanovo syntetizované. „Budíček“ a „Poplach“ sú vlastné skladby.")
+                Text(L("“Morning Mood” – Edvard Grieg, Peer Gynt (1875)"))
+                Text(L("“Ode to Joy” – Ludwig van Beethoven, Symphony No. 9 (1824)"))
+                Text(L("Both pieces are in the public domain, re-synthesised for SleepHole. “Reveille” and “Alarm!” are original."))
                     .font(.footnote).foregroundStyle(.secondary)
-            } header: { Text("Hudba budíkov") }
+            } header: { Text(L("Alarm music")) }
 
             Section {
-                Text("SleepTown od Seekrtech – hra, ktorá ukázala, že spánok môže byť stavba mesta.")
-            } header: { Text("Inšpirácia") }
+                Text(L("SleepTown by Seekrtech – the game that showed sleep can build a town."))
+            } header: { Text(L("Inspiration")) }
 
             Section {
-                Text("Vytvoril Zrebec s pomocou Clauda (Anthropic) 🐰🦊")
-            } header: { Text("Autori") }
+                Text(L("Made by Zrebec with help from Claude (Anthropic) 🐰🦊"))
+            } header: { Text(L("Authors")) }
         }
-        .navigationTitle("Poďakovanie")
+        .navigationTitle(L("Credits"))
     }
 }

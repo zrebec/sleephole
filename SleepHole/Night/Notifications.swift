@@ -17,8 +17,8 @@ enum Notifications {
         for (i, offset) in schedule.reminderOffsets.enumerated() where offset > 0 {
             let total = (schedule.bedtime.hour * 60 + schedule.bedtime.minute - offset + 24 * 60) % (24 * 60)
             let content = UNMutableNotificationContent()
-            content.title = "Večierka o \(schedule.bedtime)"
-            content.body = "O \(offset) minút je večierka. Čas sa chystať 🌙"
+            content.title = L("Bedtime at \(Fmt.time(schedule.bedtime))")
+            content.body = L("Bedtime in \(offset) minutes. Time to get ready 🌙")
             content.sound = .default
             let trigger = UNCalendarNotificationTrigger(dateMatching: DateComponents(hour: total / 60, minute: total % 60),
                                                         repeats: true)
@@ -29,37 +29,37 @@ enum Notifications {
     /// Scheduled when a night starts: end-of-setup warning + backup alarm (only matters if the app dies).
     static func scheduleNight(setupEnds: Date, wake: Date, alarmFile: String) {
         // owner 2026-09-30: warn 15 s before the setup time runs out
-        schedule("grace-end", at: setupEnds - 15, title: "⏳ Ostáva 15 s na prípravu",
-                 body: "Vráť sa do SleepHole a zamkni telefón 🌙", sound: .default, urgent: true)
-        schedule("alarm-backup", at: wake + 30, title: "Dobré ráno ☀️",
-                 body: "Otvor SleepHole a potvrď vstávanie.",
+        schedule("grace-end", at: setupEnds - 15, title: L("⏳ 15 s of setup left"),
+                 body: L("Come back to SleepHole and lock your phone 🌙"), sound: .default, urgent: true)
+        schedule("alarm-backup", at: wake + 30, title: L("Good morning ☀️"),
+                 body: L("Open SleepHole and confirm you're up."),
                  sound: UNNotificationSound(named: UNNotificationSoundName(alarmFile)), urgent: true)
     }
 
     /// Sent the moment leaving the app is detected; the owner then has `tolerance` seconds (D15).
     static func nudge(tolerance: TimeInterval) {
-        schedule("nudge", at: Date() + 0.2, title: "⚠️ Vráť sa do SleepHole!",
-                 body: "Máš \(Int(tolerance)) sekúnd, inak sa stavba zrúti 🏗️", sound: .defaultCritical,
+        schedule("nudge", at: Date() + 0.2, title: L("⚠️ Come back to SleepHole!"),
+                 body: L("You have \(Int(tolerance)) seconds, or the building collapses 🏗️"), sound: .defaultCritical,
                  urgent: true)
     }
 
     /// At the alarm: a silent, time-sensitive notification lights up the lock screen
     /// (apps cannot switch the screen on themselves). The sound comes from the app.
     static func alarmScreen() {
-        schedule("alarm-screen", at: Date() + 0.2, title: "⏰ Dobré ráno!",
-                 body: "Zatras telefónom alebo zadaj kód v SleepHole.", sound: nil, urgent: true)
+        schedule("alarm-screen", at: Date() + 0.2, title: L("⏰ Good morning!"),
+                 body: L("Shake your phone or enter your code in SleepHole."), sound: nil, urgent: true)
     }
 
     static func cancelNudge() { cancel(["nudge"]) }
     static func cancelBackupAlarm() { cancel(["alarm-backup"]) }
     static func cancelNight() { cancel(["grace-end", "alarm-backup", "nudge", "alarm-screen"]) }
 
-    /// "povolené" / "zakázané" / "nerozhodnuté" for the Settings screen.
+    /// "allowed" / "denied" / "not allowed yet" for the Settings screen.
     static func statusText() async -> String {
         switch await center.notificationSettings().authorizationStatus {
-        case .authorized, .provisional, .ephemeral: "povolené ✓"
-        case .denied: "zakázané ✗"
-        default: "zatiaľ nepovolené"
+        case .authorized, .provisional, .ephemeral: L("allowed ✓")
+        case .denied: L("denied ✗")
+        default: L("not allowed yet")
         }
     }
 

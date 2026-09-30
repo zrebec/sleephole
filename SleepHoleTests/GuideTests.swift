@@ -70,13 +70,24 @@ struct GuideTests {
     }
 
     @Test func guideTextUsesTheRealRules() {
+        Lang.current = .sk
+        defer { Lang.current = .en }
         #expect(GuideText.startWindow.contains("10 minút") && GuideText.startWindow.contains("5 minút"))
         #expect(GuideText.setup.contains("5 minút"))
         #expect(GuideText.night.contains("10 sekúnd"))
         #expect(GuideText.alarm.contains("2 minúty") && GuideText.alarm.contains("30 minút"))
         #expect(GuideText.outcomes.count == 3 && GuideText.levels.count == 4)
-        #expect(GuideText.levels[1].1.contains("5 nocí") && GuideText.levels[3].1.contains("30 nocí"))
-        #expect(SK.minutes(60) == "1 minútu" && SK.seconds(3) == "3 sekundy" && SK.nights(1) == "1 noc")
+        #expect(GuideText.levels[1].when.contains("5 nocí") && GuideText.levels[3].when.contains("30 nocí"))
+        #expect(Plural.minutes(60) == "1 minútu" && Plural.seconds(3) == "3 sekundy" && Plural.nights(1) == "1 noc")
+    }
+
+    @Test func guideTextInEnglish() {
+        Lang.current = .en
+        #expect(GuideText.startWindow.contains("10 minutes") && GuideText.startWindow.contains("5 minutes"))
+        #expect(GuideText.night.contains("10 seconds"))
+        #expect(GuideText.alarm.contains("2 minutes") && GuideText.alarm.contains("30 minutes"))
+        #expect(GuideText.levels[1].when == "after 5 nights" && GuideText.levels[0].what == "houses and apartment blocks")
+        #expect(Plural.minutes(60) == "1 minute" && Plural.seconds(3) == "3 seconds" && Plural.nights(1) == "1 night")
     }
 
     @Test func guideAndBriefingRender() {

@@ -263,14 +263,22 @@ struct AppModelTests {
 
     @Test func napWindowOnePerDayAndMessages() {
         let h = harness(at: date(5, 12, 59))
+        let was12h = Fmt.systemUses12h
+        defer { Fmt.systemUses12h = was12h }
+        Fmt.systemUses12h = false
         #expect(h.model.napBlockReason()?.contains("13:00–15:00") == true)
+        Fmt.systemUses12h = true
+        #expect(h.model.napBlockReason()?.replacingOccurrences(of: "\u{202F}", with: " ").contains("1:00 PM–3:00 PM") == true)
+        h.model.language = .sk
+        #expect(h.model.napBlockReason() == "Teraz nemôžeš odpočívať (13:00–15:00).")   // SK is always 24 h
+        h.model.language = .en
         h.clock.now = date(5, 15, 0)                                        // edge: exactly the window end
         #expect(h.model.napBlockReason() == nil)
         h.model.startNap()
         #expect(h.model.active?.isNap == true && h.model.phase == .building)
         #expect(h.model.active?.wake == date(5, 15, 30))                    // 30 min default
         #expect(h.model.graceEnds == date(5, 15, 2))                         // 2 min setup
-        #expect(h.model.napBlockReason() == "Práve prebieha stavba.")
+        #expect(h.model.napBlockReason() == "A night is in progress.")
         #expect(!h.model.confirm(code: "1234"))                             // only at the end
         h.clock.now = date(5, 15, 30); h.model.refresh()
         #expect(h.model.phase == .alarm)
@@ -280,7 +288,7 @@ struct AppModelTests {
         #expect(h.model.napSummary.count == 1 && h.model.napSummary.coins == 50)
         #expect(h.model.builtNights == 0 && h.model.townSnapshot?.buildings.isEmpty == true && h.model.streak == 0)
         h.model.acknowledgeResult()
-        #expect(h.model.napBlockReason() == "Dnešný odpočinok už bol 😴")
+        #expect(h.model.napBlockReason() == "You've already had today's nap 😴")
         h.clock.now = date(5, 18, 0)
         #expect(h.model.napBlockReason() != nil)
     }

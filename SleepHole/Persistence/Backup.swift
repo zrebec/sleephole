@@ -14,6 +14,8 @@ struct BackupFile: Codable, Equatable {
     var onboardingCompletedAt: Date?
     var firstNightBriefingAt: Date?
     var nights: [Night]
+    /// UI language (`AppLanguage` raw value). Optional → older backups still load.
+    var language: String? = nil
 
     struct Night: Codable, Equatable {
         var id: String

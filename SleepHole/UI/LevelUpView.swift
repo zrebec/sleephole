@@ -44,15 +44,15 @@ struct LevelUpCard: View {
     var body: some View {
         let samples = Array((model.catalog?.buildable(level: level) ?? []).filter { $0.kind != .roadLit }.prefix(3))
         VStack(spacing: 14) {
-            Text("🎉").font(.system(size: 54))
-            Text("Level \(level) odomknutý!").font(.largeTitle.bold())
-            Text(GuideText.levels[safe: level - 1]?.1.components(separatedBy: " – ").first ?? "")
+            Text(verbatim: "🎉").font(.system(size: 54))
+            Text(L("Level \(level) unlocked!")).font(.largeTitle.bold())
+            Text(GuideText.levels[safe: level - 1]?.what ?? "")
                 .multilineTextAlignment(.center).foregroundStyle(.secondary)
             HStack(spacing: 6) {
                 ForEach(samples) { BuildingImage(id: $0.id, maxHeight: 90) }
             }
-            Text("Od dnešnej noci sa môžu stavať aj tieto budovy.").font(.footnote).foregroundStyle(.secondary)
-            Button("Super!", action: onClose).buttonStyle(.borderedProminent).controlSize(.large)
+            Text(L("From tonight these buildings can be built too.")).font(.footnote).foregroundStyle(.secondary)
+            Button(L("Great!"), action: onClose).buttonStyle(.borderedProminent).controlSize(.large)
         }
         .padding(24)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 28))

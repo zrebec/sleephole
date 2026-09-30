@@ -31,3 +31,17 @@ func loadRealCatalog() throws -> Catalog {
     #expect(!roads.isEmpty)
     #expect(roads.allSatisfy { ($0.connects ?? "").allSatisfy { "NESW".contains($0) } && $0.connects != nil })
 }
+
+@Test func namesAndSignFilesPerLanguage() throws {
+    let catalog = try loadRealCatalog()
+    #expect(catalog.entries.allSatisfy { $0.nameEN != nil })
+    let police = try #require(catalog["l3-police"])
+    #expect(police.name("sk") == "Polícia" && police.name("en") == "Police station" && police.name("cs") == "Police station")
+    #expect(police.file("sk") == "L3/l3-police.png" && police.file("en") == "L3/l3-police.en.png")
+    let house = try #require(catalog["l1-house-a-a"])
+    #expect(house.fileEN == nil && house.file("en") == house.file)
+    // an older catalog without the English fields still decodes and falls back to Slovak
+    let old = #"[{"id":"x","level":1,"kind":"building","nameSK":"Dom","footprint":[1,1],"file":"L1/x.png","size":[1,1],"anchor":[0.5,0.5]}]"#
+    let entry = try #require(Catalog(jsonData: Data(old.utf8))["x"])
+    #expect(entry.name("en") == "Dom" && entry.file("en") == "L1/x.png")
+}

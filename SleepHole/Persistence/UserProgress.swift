@@ -9,6 +9,8 @@ final class UserProgress {
     var onboardingCompletedAt: Date?
     /// Read the "Tvoja prvá noc" checklist before the first real night.
     var firstNightBriefingAt: Date?
+    /// Chosen UI language (`AppLanguage` raw value); nil = never chosen → English (I18N Q1).
+    var languageRaw: String?
 
     init() {}
 }

@@ -22,12 +22,6 @@ struct TodayView: View {
 
 // MARK: - helpers
 
-let clockFormat: DateFormatter = {
-    let f = DateFormatter()
-    f.dateFormat = "H:mm"
-    return f
-}()
-
 struct BuildingImage: View {
     @Environment(SpriteLibrary.self) private var sprites
     let id: String
@@ -68,22 +62,22 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: 18) {
                     StatusBadges()
-                    Text("Večierka \(clockFormat.string(from: w.bedtime)) · budíček \(clockFormat.string(from: w.wake))")
+                    Text(L("Bedtime \(Fmt.time(w.bedtime)) · wake-up \(Fmt.time(w.wake))"))
                         .font(.title3.bold())
 
-                    actionButton("🌙 Ísť spať", enabled: canSleep, prominent: true) {
+                    actionButton(L("🌙 Go to sleep"), enabled: canSleep, prominent: true) {
                         if model.needsFirstNightBriefing { briefing = true } else { model.startNight() }
                     }
                     Text(sleepCaption(canSleep: canSleep, now: now, w: w))
                         .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
 
-                    actionButton("😴 Odpočinok (\(model.settings.nap.minutes) min)", enabled: napReason == nil,
+                    actionButton(L("😴 Nap (\(model.settings.nap.minutes) min)"), enabled: napReason == nil,
                                  prominent: false) { model.startNap() }
-                    Text(napReason ?? "Odpočívať môžeš do \(model.settings.nap.windowEnd). Na konci zazvoní budík, za hotový odpočinok +\(NapPlan.reward(.complete)) 🪙.")
+                    Text(napReason ?? L("You can nap until \(Fmt.time(model.settings.nap.windowEnd)). An alarm rings at the end; a complete nap earns +\(NapPlan.reward(.complete)) 🪙."))
                         .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
 
                     if model.debugWindow != nil {
-                        Button("Zrušiť rýchlu noc", role: .cancel) { model.cancelFastNight() }.font(.footnote)
+                        Button(L("Cancel quick night"), role: .cancel) { model.cancelFastNight() }.font(.footnote)
                     }
                     LevelInfo()
                 }
@@ -91,17 +85,17 @@ struct HomeView: View {
             }
             .sheet(isPresented: $briefing) { FirstNightBriefing() }
         }
-        .navigationTitle("Dnes")
+        .navigationTitle(L("Today"))
     }
 
     private func sleepCaption(canSleep: Bool, now: Date, w: NightWindow) -> String {
         if canSleep {
-            return "Stavbu začni do \(clockFormat.string(from: w.startCloses())). Na prípravu (podcast, rozprávka) máš čas do \(clockFormat.string(from: w.setupEnds(start: w.bedtime))), potom nechaj SleepHole v popredí a zamkni telefón."
+            return L("Start building by \(Fmt.time(w.startCloses())). You have until \(Fmt.time(w.setupEnds(start: w.bedtime))) to set up (podcast, bedtime story), then keep SleepHole open and lock your phone.")
         }
         if now > w.startCloses() {
-            return "Na dnešnú stavbu je už neskoro 🌙 Zajtra od \(clockFormat.string(from: w.startOpens))."
+            return L("It's too late to build tonight 🌙 Tomorrow from \(Fmt.time(w.startOpens)).")
         }
-        return "Ešte nemôžeš ísť spať – stavať môžeš od \(clockFormat.string(from: w.startOpens)) do \(clockFormat.string(from: w.startCloses()))."
+        return L("You can't go to sleep yet – you can build from \(Fmt.time(w.startOpens)) to \(Fmt.time(w.startCloses())).")
     }
 
     @ViewBuilder
@@ -129,39 +123,39 @@ struct NightView: View {
                 let total = rec.wake.timeIntervalSince(rec.startedAt ?? rec.bedtime)
                 let progress = min(1, max(0, now.timeIntervalSince(rec.startedAt ?? now) / max(1, total)))
                 VStack(spacing: 16) {
-                    Text(clockFormat.string(from: now)).font(.system(size: 64, weight: .thin, design: .rounded))
+                    Text(Fmt.time(now)).font(.system(size: 64, weight: .thin, design: .rounded))
                     if let collapsed = model.collapsedAt, collapsed <= now {
-                        Text(rec.isNap ? "Odpočinok sa prerušil 😕" : "Stavba sa zrútila 🧱")
+                        Text(rec.isNap ? L("Your nap was interrupted 😕") : L("The building collapsed 🧱"))
                             .font(.title2.bold()).foregroundStyle(.orange)
-                        Text("Nevadí. Budík zazvoní o \(clockFormat.string(from: rec.wake)).")
+                        Text(L("No worries. The alarm rings at \(Fmt.time(rec.wake))."))
                             .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
                     } else if rec.isNap {
                         NapResting(progress: progress)
                         if let graceEnds = model.graceEnds, graceEnds > now {
-                            Text("Príprava: ešte \(Int(graceEnds.timeIntervalSince(now).rounded(.up))) s na rozprávku či zvuk")
+                            Text(L("Setup: \(Int(graceEnds.timeIntervalSince(now).rounded(.up))) s left for a story or sound"))
                                 .font(.callout).foregroundStyle(.yellow)
                         } else {
-                            Text("Zamkni telefón a pekne si odpočiň 🧸").font(.callout).foregroundStyle(.secondary)
+                            Text(L("Lock your phone and have a nice rest 🧸")).font(.callout).foregroundStyle(.secondary)
                         }
                     } else {
                         ConstructionSite(buildingId: rec.buildingId, progress: progress)
-                        Text(model.catalog?[rec.buildingId]?.nameSK ?? "").font(.headline)
+                        Text(model.catalog?[rec.buildingId]?.displayName ?? "").font(.headline)
                         if let graceEnds = model.graceEnds, graceEnds > now {
                             let left = Int(graceEnds.timeIntervalSince(now).rounded(.up))
-                            Text(left >= 60 ? "Príprava do \(clockFormat.string(from: graceEnds)) (ešte \(SK.minutes(Double(left))))"
-                                            : "Príprava: ešte \(left) s na podcast či rozprávku")
+                            Text(left >= 60 ? L("Setup until \(Fmt.time(graceEnds)) (\(Plural.minutes(Double(left))) left)")
+                                            : L("Setup: \(left) s left for a podcast or story"))
                                 .font(.callout).foregroundStyle(.yellow)
                         } else {
-                            Text("Zamkni telefón a dobrú noc 🌙").font(.callout).foregroundStyle(.secondary)
+                            Text(L("Lock your phone and good night 🌙")).font(.callout).foregroundStyle(.secondary)
                         }
                     }
-                    Text("Budík o \(clockFormat.string(from: rec.wake))").font(.footnote).foregroundStyle(.secondary)
+                    Text(L("Alarm at \(Fmt.time(rec.wake))")).font(.footnote).foregroundStyle(.secondary)
                     Button { soundSheet = true } label: {
                         if let s = model.sleepSound, s.endsAt.map({ $0 > now }) ?? true {
-                            Label("\(s.ambience.title) · \(s.endsAt.map { "do " + clockFormat.string(from: $0) } ?? "celú noc")",
+                            Label(s.endsAt.map { L("\(s.ambience.title) · until \(Fmt.time($0))") } ?? L("\(s.ambience.title) · all night"),
                                   systemImage: "waveform")
                         } else {
-                            Label("Zvuk na zaspávanie", systemImage: "headphones")
+                            Label(L("Sleep sound"), systemImage: "headphones")
                         }
                     }
                     .buttonStyle(.bordered)
@@ -172,12 +166,12 @@ struct NightView: View {
                         ConfirmPanel()
                     }
                     Spacer()
-                    Button(rec.isNap ? "Ukončiť odpočinok" : "Zrušiť noc", role: .destructive) { confirmAbandon = true }
+                    Button(rec.isNap ? L("End nap") : L("Cancel night"), role: .destructive) { confirmAbandon = true }
                         .font(.footnote)
-                        .confirmationDialog(rec.isNap ? "Ukončiť odpočinok? Mince za neho nebudú."
-                                                      : "Zrušiť dnešnú noc? Budova sa zmení na ruinu.",
+                        .confirmationDialog(rec.isNap ? L("End the nap? It won't earn coins.")
+                                                      : L("Cancel tonight? The building will turn into ruins."),
                                             isPresented: $confirmAbandon, titleVisibility: .visible) {
-                            Button(rec.isNap ? "Ukončiť" : "Zrušiť noc", role: .destructive) { model.abandonNight() }
+                            Button(rec.isNap ? L("End") : L("Cancel night"), role: .destructive) { model.abandonNight() }
                         }
                 }
                 .padding()
@@ -198,12 +192,12 @@ struct NapResting: View {
             let breath = (1 + sin(t * 2 * .pi / 5)) / 2
             VStack(spacing: 14) {
                 ZStack(alignment: .topTrailing) {
-                    Text("🌙").font(.system(size: 110)).scaleEffect(0.96 + 0.06 * breath)
-                    Text("z Z z").font(.title.bold()).foregroundStyle(.white.opacity(0.4 + 0.6 * breath))
+                    Text(verbatim: "🌙").font(.system(size: 110)).scaleEffect(0.96 + 0.06 * breath)
+                    Text(verbatim: "z Z z").font(.title.bold()).foregroundStyle(.white.opacity(0.4 + 0.6 * breath))
                         .offset(x: 20, y: -10 - 8 * breath)
                 }
                 .frame(height: 170)
-                Text("Odpočinok").font(.headline).foregroundStyle(.yellow).opacity(0.5 + 0.5 * breath)
+                Text(L("Nap")).font(.headline).foregroundStyle(.yellow).opacity(0.5 + 0.5 * breath)
                 ProgressView(value: progress).tint(.yellow.opacity(0.8)).frame(maxWidth: 200)
             }
         }
@@ -254,7 +248,7 @@ struct ConstructionSite: View {
                         .offset(x: -40, y: -4)
                 }
                 .frame(width: 320, height: 260)
-                Text("Stavba prebieha")
+                Text(L("Building in progress"))
                     .font(.headline)
                     .foregroundStyle(.yellow)
                     .opacity(0.45 + 0.55 * breath)
@@ -308,11 +302,11 @@ struct SleepSoundSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Picker("Zvuk", selection: $ambience) {
+                Picker(L("Sound"), selection: $ambience) {
                     ForEach(AudioKeeper.Ambience.allCases.filter { $0 != .silence }) { Text($0.title).tag($0) }
                 }
                 .pickerStyle(.menu)
-                Picker("Hrať", selection: $minutes) {
+                Picker(L("Play for"), selection: $minutes) {
                     ForEach(AppSettings.ambienceTimerOptions, id: \.self) { Text(AppSettings.timerTitle($0)).tag($0) }
                 }
                 .pickerStyle(.menu)
@@ -320,7 +314,7 @@ struct SleepSoundSheet: View {
                                play: { model.playSleepSound(ambience, minutes: minutes); dismiss() },
                                stop: { model.stopSleepSound() })
             }
-            .navigationTitle("Zvuk na zaspávanie")
+            .navigationTitle(L("Sleep sound"))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 ambience = model.settings.ambience == .silence ? .brownNoise : model.settings.ambience
@@ -336,7 +330,7 @@ struct SleepSoundSheet: View {
 struct AlarmView: View {
     var body: some View {
         VStack(spacing: 24) {
-            Text("Dobré ráno ☀️").font(.largeTitle.bold())
+            Text(L("Good morning ☀️")).font(.largeTitle.bold())
             ConfirmPanel()
             Spacer()
         }
@@ -353,22 +347,22 @@ struct ConfirmPanel: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            Label("Zatras telefónom", systemImage: "iphone.radiowaves.left.and.right").font(.headline)
-            Text("alebo zadaj kód z Nastavení").font(.callout).foregroundStyle(.secondary)
+            Label(L("Shake your phone"), systemImage: "iphone.radiowaves.left.and.right").font(.headline)
+            Text(L("or enter the code from Settings")).font(.callout).foregroundStyle(.secondary)
             HStack {
-                TextField("Kód", text: $code)
+                TextField(L("Code"), text: $code)
                     .keyboardType(.numberPad)
                     .textFieldStyle(.roundedBorder)
                     .frame(maxWidth: 140)
                     .multilineTextAlignment(.center)
-                Button("Vstal som") {
+                Button(L("I'm up")) {
                     wrong = !model.confirm(code: code)
                     if wrong { code = "" }
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(code.isEmpty)
             }
-            if wrong { Text("Nesprávny kód").font(.footnote).foregroundStyle(.red) }
+            if wrong { Text(L("Wrong code")).font(.footnote).foregroundStyle(.red) }
         }
         .padding()
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
@@ -384,50 +378,50 @@ struct ResultView: View {
 
     var body: some View {
         if let rec = model.shownResult, let outcome = rec.outcome {
-            let name = model.catalog?[rec.buildingId]?.nameSK ?? "budova"
+            let name = model.catalog?[rec.buildingId]?.displayName ?? L("building")
             VStack(spacing: 18) {
                 if rec.isNap {
-                    Text(outcome == .complete ? "😴" : outcome == .unfinished ? "🥱" : "🧸").font(.system(size: 90))
-                    Text(outcome == .complete ? "Odpočinok hotový!" : outcome == .unfinished ? "Odpočinok skrátený"
-                         : "Odpočinok sa nepodaril").font(.largeTitle.bold())
-                    Text(outcome == .complete ? "Pekne si si oddýchol 💙" : "Nevadí, zajtra znova 🌱")
+                    Text(verbatim: outcome == .complete ? "😴" : outcome == .unfinished ? "🥱" : "🧸").font(.system(size: 90))
+                    Text(outcome == .complete ? L("Nap complete!") : outcome == .unfinished ? L("Nap cut short")
+                         : L("Nap didn't work out")).font(.largeTitle.bold())
+                    Text(outcome == .complete ? L("Well rested 💙") : L("No worries, again tomorrow 🌱"))
                         .multilineTextAlignment(.center)
                 } else {
                 switch outcome {
                 case .complete:
                     BuildingImage(id: rec.buildingId)
-                    Text("Hotovo! 🎉").font(.largeTitle.bold())
-                    Text("Postavil si: \(name)").font(.title3)
+                    Text(L("Done! 🎉")).font(.largeTitle.bold())
+                    Text(L("You built: \(name)")).font(.title3)
                 case .unfinished:
                     BuildingImage(id: rec.buildingId, progress: 0.6)
-                    Text("Rozostavaná 🚧").font(.largeTitle.bold())
-                    Text("\(name) čaká na dokončenie – ďalšia dobrá noc ju dostavia.").multilineTextAlignment(.center)
+                    Text(L("Unfinished 🚧")).font(.largeTitle.bold())
+                    Text(L("\(name) is waiting – your next good night will finish it.")).multilineTextAlignment(.center)
                 case .ruins, .missed:
                     BuildingImage(id: (model.catalog?[rec.buildingId]?.footprint.first ?? 1) == 2 ? "o-ruin-2" : "o-ruin-1")
-                    Text("Dnes to nevyšlo").font(.largeTitle.bold())
-                    Text("Aj to patrí k mestu – zajtra nová šanca 🌱").multilineTextAlignment(.center)
+                    Text(L("Not this time")).font(.largeTitle.bold())
+                    Text(L("That's part of the town too – new chance tomorrow 🌱")).multilineTextAlignment(.center)
                 }
                 }
                 if !rec.isDebug, model.lastReward > 0 {
                     VStack(spacing: 2) {
-                        Text("+\(model.lastReward) 🪙").font(.title.bold()).foregroundStyle(.yellow)
+                        Text(verbatim: "+\(model.lastReward) 🪙").font(.title.bold()).foregroundStyle(.yellow)
                         if model.lastStreakBonus > 0 {
-                            Text("vrátane bonusu +\(model.lastStreakBonus) za \(Economy.streakBonusEvery) nocí v rade 🔥")
+                            Text(L("including a +\(model.lastStreakBonus) bonus for \(Economy.streakBonusEvery) nights in a row 🔥"))
                                 .font(.footnote).foregroundStyle(.secondary)
                         }
                     }
                 }
                 if outcome == .complete, !rec.isDebug, !rec.isNap { StatusBadges() }
                 if let level = model.levelUp {
-                    Label("Odomkol si level \(level)!", systemImage: "star.fill")
+                    Label(L("Level \(level) unlocked!"), systemImage: "star.fill")
                         .font(.headline).foregroundStyle(.yellow)
                 }
-                if rec.isDebug { Text("(rýchla testovacia noc – do mesta sa nepočíta)").font(.caption).foregroundStyle(.secondary) }
-                Button("Pokračovať") { model.acknowledgeResult() }
+                if rec.isDebug { Text(L("(quick test night – doesn't count for the town)")).font(.caption).foregroundStyle(.secondary) }
+                Button(L("Continue")) { model.acknowledgeResult() }
                     .buttonStyle(.borderedProminent).controlSize(.large)
             }
             .padding()
-            .navigationTitle(rec.isNap ? "Odpočinok" : "Výsledok noci")
+            .navigationTitle(rec.isNap ? L("Nap") : L("Night result"))
             .overlay {
                 if let level = model.levelUp, !celebrationClosed {
                     ZStack {

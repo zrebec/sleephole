@@ -1,172 +1,162 @@
 # SleepHole 🌙🏗️
 
-Osobná iPhone appka na **pravidelný spánok**, v duchu hry SleepTown. Večer začneš stavať budovu, v noci necháš telefón na pokoji a ráno vstaneš s budíkom. Z každej noci pribudne do mesta jedna budova: hotová, rozostavaná alebo ruina. Mesto tak rastie noc po noci. Tón je milý a nikdy krutý 💙
+🇬🇧 English · 🇸🇰 [Slovensky](README.sk.md)
+
+A personal iPhone app for a **regular sleep schedule**, in the spirit of SleepTown. In the evening you start a building, at night you leave your phone alone, and in the morning you get up with the alarm. Every night adds one building to your town: complete, unfinished or ruins. The town grows night by night. The tone is warm and never cruel 💙
 
 <p align="center">
-  <img src="docs/previews/app-guide.png" width="240" alt="Sprievodca">
-  <img src="docs/previews/app-night.png" width="240" alt="Stavba počas noci">
-  <img src="docs/previews/app-town.png" width="240" alt="Mesto">
+  <img src="docs/previews/app-guide.png" width="240" alt="Guide">
+  <img src="docs/previews/app-night.png" width="240" alt="Building at night">
+  <img src="docs/previews/app-town.png" width="240" alt="Town">
 </p>
 
-> Natívna appka vo Swifte (SwiftUI, SpriteKit, SwiftData) len pre iPhone. **Nič neblokuje**, appka iba rozpozná, či si z nej v noci odišiel.
+> A native Swift app (SwiftUI, SpriteKit, SwiftData) for iPhone only. **It never blocks anything** – it only notices when you leave it at night.
+> The app speaks **English** (default) and **Slovak**; switch it in Settings.
 
 ---
 
-## Ako funguje noc
+## How a night works
 
-| | Pravidlo |
+| | Rule |
 |---|---|
-| 🔔 **Pripomienka** | notifikácia pred večierkou (predvolene 30 min) |
-| 🏗️ **Začať stavbu** | iba od **večierka − 10 min** do **večierka + 5 min**, inak je noc vynechaná |
-| 🎧 **Príprava** | po štarte máš **5 minút** v inej appke (podcast, rozprávka), potom sa vráť do SleepHole |
-| 📱 **Noc** | displej môže byť vypnutý, ale SleepHole musí ostať v popredí. Pri odchode príde **„⚠️ Vráť sa!“** a máš **10 s** na návrat, inak sa stavba zrúti |
-| 📞 **Výnimky** | telefonát sa nepočíta. Ak appku v noci vypne iOS, počíta sa to v tvoj prospech |
-| ⏰ **Budík** | zvoní najviac **2 minúty** (aj v tichom režime) a rozsvieti obrazovku. Vstanie potvrdíš **zatrasením** alebo **kódom** (najskôr 30 min pred budíčkom) |
-| 🏢 **Hotová** | potvrdené počas zvonenia budíka (+100 🪙, každá 7. hotová noc v rade +200 🪙) |
-| 🚧 **Rozostavaná** | potvrdené po dozvonení, najneskôr do 60 min (+50 🪙). Ďalšia dobrá noc ju dostavia |
-| 🧱 **Ruina** | stavba sa zrútila, noc bola zrušená, alebo si vstanie nepotvrdil. Ďalšia hotová noc ju opraví 🛠️ (ak nečaká rozostavaná budova), inak po týždni zarastie kvetmi 🌸 |
-| 😴 **Odpočinok** | popoludní **30 alebo 60 min**, iba v okne (predvolene **13:00–15:00**), **raz denne**. Rovnaké pravidlá ako v noci, príprava 2 min, na konci budík. **Budovu nestavia**, hotový **+50 🪙**, skrátený **+25 🪙** |
+| 🔔 **Reminder** | a notification before bedtime (30 min by default) |
+| 🏗️ **Start building** | only from **bedtime − 10 min** to **bedtime + 5 min**, otherwise the night is missed |
+| 🎧 **Setup** | after starting you have until bedtime **+ 5 minutes** in other apps (podcast, bedtime story), then come back to SleepHole |
+| 📱 **Night** | the screen may be off, but SleepHole must stay in the foreground. When you leave, **“⚠️ Come back!”** arrives and you have **10 s** to return, otherwise the building collapses |
+| 📞 **Exceptions** | phone calls don't count. If iOS kills the app at night, it counts in your favour |
+| ⏰ **Alarm** | rings for at most **2 minutes** (even in silent mode) and lights up the screen. Confirm you're up by **shaking** or with a **code** (at the earliest 30 min before wake-up) |
+| 🏢 **Complete** | confirmed while the alarm rings (+100 🪙, every 7th complete night in a row +200 🪙) |
+| 🚧 **Unfinished** | confirmed after the alarm stopped, at the latest within 60 min (+50 🪙). Your next good night finishes it |
+| 🧱 **Ruins** | the building collapsed, the night was cancelled, or you didn't confirm getting up. Your next complete night repairs it 🛠️ (unless an unfinished building is waiting), otherwise flowers grow over it after a week 🌸 |
+| 😴 **Nap** | in the afternoon, **30 or 60 min**, only in its window (**13:00–15:00** by default), **once a day**. Same rules as at night, 2 min setup, an alarm at the end. **It doesn't build**; complete **+50 🪙**, cut short **+25 🪙** |
 
-**Levely** podľa počtu stavebných nocí (hotová alebo rozostavaná):
+**Levels** by the number of building nights (complete or unfinished):
 
-| Noci | Odomknuté | Budovy |
+| Nights | Unlocked | Buildings |
 |---|---|---|
-| 1–5 | L1 | rodinné domy, bytovky |
-| 6–15 | L1–L2 | + parky, osvetlené ulice, múzeá, knižnice |
-| 16–30 | L1–L3 | + radnica, škola, hasiči, polícia, nemocnica |
-| 31+ | L1–L4 | + mrakodrapy |
+| 1–5 | L1 | family houses, apartment blocks |
+| 6–15 | L1–L2 | + parks, lit streets, museums, libraries |
+| 16–30 | L1–L3 | + town hall, school, fire station, police, hospital |
+| 31+ | L1–L4 | + skyscrapers |
 
-Každú noc sa náhodne vyberie jeden z odomknutých levelov a z neho budova. Budovy, ktoré v meste ešte nemáš, majú prednosť. Posledné 3 budovy sa nikdy nezopakujú.
-
----
-
-## Čo už existuje
-
-- **Noc od začiatku do konca:** štartové okno, 5-minútová príprava, rozpoznanie zamknutia a odchodu z appky, varovanie „Vráť sa“, tolerancia na telefonát, budík, potvrdenie zatrasením alebo kódom, výsledok so zvukom.
-- **Obrazovka noci:** nočná obloha s blikajúcimi hviezdami, budova rastúca odspodu na stavenisku, animovaný vežový žeriav a „dýchajúci“ nápis *Stavba prebieha*.
-- **Mesto (SpriteKit):** izometrická mapa bez hraníc, ktorá rastie od stredu po blokoch 4×4 a sama si dopĺňa cesty. Posúvanie so zotrvačnosťou a zoom dvoma prstami ako v SimCity. Ťuknutím na budovu zistíš, z ktorej noci je a v akom je stave. V hlavičke je počet budov a obyvateľov.
-- **190 izometrických spritov:** z Kenney 3D City Kitov (CC0) vlastným SceneKit rendererom. Budovy L1–L4 so slovenskými tabuľami, cesty, lešenie, ruiny, autá a 16-snímkový žeriav.
-- **8 budíkov:**
-  - jemný pizzicato (predvolený),
-  - Ranná nálada (Grieg),
-  - Óda na radosť (hracia skrinka),
-  - Zvonkohra,
-  - Retro,
-  - Budíček (trúbka),
-  - Digitálny,
-  - Poplach (agresívny).
-
-  Jemné budíky postupne silnejú, agresívne hrajú naplno hneď.
-- **Dnes:** vždy dve tlačidlá, **🌙 Ísť spať** a **😴 Odpočinok**. Mimo svojho okna sú neaktívne a vysvetlia prečo.
-- **🔥 Séria** hotových nocí za sebou a **🪙 mince** (noci, bonus za sériu, odpočinky).
-- **Štatistiky:** séria, kalendár nocí, priemerný štart a vstávanie, pravidelnosť, graf, odpočinky, levely.
-- **Oslava levelu** s konfetami, **oprava ruín** dobrou nocou.
-- **Zvuky na zaspávanie:** hnedý, ružový a biely šum, dážď na stan a dážď na okno. Hrajú presne podľa časovača (1–60 min alebo celú noc) aj počas stavby a pri vypnutej obrazovke.
-- **Záloha:** export a import do súboru a automatická záloha po každej noci (Súbory → Na mojom iPhone → SleepHole).
-- **Sprievodca pri prvom spustení** (6 stránok). Čísla v ňom sa berú priamo z pravidiel v kóde. Pred prvou nocou sa ukáže aj kontrolný zoznam „Tvoja prvá noc“. Oboje sa zapíše do databázy.
-- **Nastavenia:** večierka, budíček, pripomienka, ranný kód, zvuk v noci a budík s ukážkou, stav povolenia upozornení.
-- **Vývojárske nástroje:**
-  - rýchla noc (4 min) a testovacia noc (15 min),
-  - jednorazové započítanie testovacej noci do mesta,
-  - nočný denník,
-  - test detekcie,
-  - spúšťacie parametre pre agentov.
-
-**Dáta:** noci a stav sprievodcu sú v SwiftData (SQLite) v priečinku appky, nastavenia v UserDefaults. Mesto sa neukladá, pri každom otvorení sa poskladá z uložených nocí.
+Every night one of the unlocked levels is picked at random, then a building from it. Buildings you don't have yet come first. The last 3 buildings never repeat.
 
 ---
 
-## Projekt
+## What already exists
+
+- **The whole night:** start window, setup time, lock / app-switch detection, the “Come back” warning, call tolerance, alarm, confirmation by shaking or code, a result with sound.
+- **Night screen:** a night sky with twinkling stars, the building rising from the bottom on its building site, an animated tower crane and a “breathing” *Building in progress* label.
+- **Town (SpriteKit):** a borderless isometric map that grows from the centre in 4×4 blocks and fills in its own roads. Panning with inertia and pinch zoom like SimCity. Tap a building to see which night it's from and its state. The header shows buildings and population.
+- **190 isometric sprites** rendered from Kenney 3D City Kits (CC0) by our own SceneKit renderer. Buildings L1–L4 with signs in Slovak and English (9 buildings have an EN variant), roads, scaffolding, ruins, cars and a 16-frame crane.
+- **8 alarms:** Gentle pizzicato (default), Morning Mood (Grieg), Ode to Joy (music box), Chimes, Retro, Reveille (trumpet), Digital, Alarm! (aggressive). Gentle ones get louder slowly, aggressive ones play at full volume at once.
+- **Today:** always two buttons, **🌙 Go to sleep** and **😴 Nap**. Outside their windows they're disabled and explain why.
+- **🔥 Streak** of complete nights and **🪙 coins** (nights, streak bonus, naps).
+- **Stats:** streak, night calendar with the story of each night, average start and wake-up, regularity, chart, naps, levels.
+- **Level-up celebration** with confetti, **ruin repair** by a good night.
+- **Sleep sounds:** brown, pink and white noise, rain on a tent and rain on a window. They play exactly for the timer (1–60 min or all night), also during a night and with the screen off.
+- **Backup:** export / import to a file and an automatic backup after every night (Files → On My iPhone → SleepHole).
+- **First-run guide** (6 pages, language picker on the first one). The numbers in it come straight from the rules in the code. Before the first night a “Your first night” checklist appears too. Both are stored in the database.
+- **Two languages:** English (default) and Slovak. The switch is at the top of Settings; the choice is stored in the database and applies immediately, without a restart. Everything is translated, including notifications, building names and the signs painted on buildings.
+- **Settings:** language, bedtime, wake-up, reminder, wake code, night sound and alarm with preview, notification permission status.
+- **Developer tools:** quick night (4 min) and test night (15 min), counting one test night for the town, night journal, detection test, launch arguments for agents.
+
+**Data:** nights, guide progress and the chosen language live in SwiftData (SQLite) in the app's folder, settings in UserDefaults. The town is not stored – it's replayed from the saved nights every time.
+
+---
+
+## Project
 
 ```
-SleepCore/        Swift balík: pravidlá noci, rozvrh, levely, výber budovy, rozloženie mesta, projekcia (bez UI)
-SleepHole/        iOS appka: SwiftUI obrazovky, AppModel, SpriteKit mesto, zvuk, detekcia, notifikácie
-SleepHoleTests/   testy appky (hostované, Swift Testing)
-assets/sprites/   190 PNG spritov + catalog.json      assets/audio/  budíky a zvuky (CAF)
-tools/render/     Kenney OBJ → izometrické sprity (SceneKit), náhľady, rozloženie mesta
-tools/audio/      syntéza budíkov (numpy)
-docs/             PLAN.md (rozhodnutia, SK) · IMPLEMENTATION_PLAN.md (pre agentov, EN) · RUN_ON_IPHONE.md
-project.yml       XcodeGen (.xcodeproj sa generuje, nie je v gite)
+SleepCore/        Swift package: night rules, schedule, levels, building picker, town layout, projection (no UI)
+SleepHole/        iOS app: SwiftUI screens, AppModel, SpriteKit town, audio, detection, notifications
+SleepHole/Resources/Localizable.xcstrings   every UI text (key = English text, Slovak translation)
+SleepHoleTests/   app tests (hosted, Swift Testing)
+assets/sprites/   190 PNG sprites (+ 9 English sign variants) + catalog.json      assets/audio/  alarms and sounds (CAF)
+tools/render/     Kenney OBJ → isometric sprites (SceneKit), previews, town layout
+tools/audio/      alarm synthesis (numpy)
+tools/i18n/       translation key check (keys.py)
+docs/             PLAN.md (decisions, SK) · IMPLEMENTATION_PLAN.md (for agents, EN) · IMPLEMENTATION_I18N.md · RUN_ON_IPHONE.md
+project.yml       XcodeGen (.xcodeproj is generated, not in git)
 ```
 
-### Spustenie
+### Run
 
 ```bash
 brew install xcodegen
-xcodegen generate && open SleepHole.xcodeproj     # potom ▶ Run na iPhone (návod: docs/RUN_ON_IPHONE.md)
+xcodegen generate && open SleepHole.xcodeproj     # then ▶ Run on the iPhone (guide: docs/RUN_ON_IPHONE.md)
 ```
 
-### Testy
+### Tests
 
 ```bash
-tools/coverage.sh     # SleepCore: 81 testov, ~97 % riadkov
-tools/test_app.sh     # appka na simulátore iPhone 16 Pro: 62 testov, ~92 % riadkov
+tools/coverage.sh            # SleepCore: 84 tests, ~97 % lines
+tools/test_app.sh            # the app on the iPhone 16 Pro simulator: 75 tests, ~92 % lines
+python3 tools/i18n/keys.py   # after a build: missing / untranslated keys in the catalog
 ```
 
-Ďalšie nástroje:
-- `tools/sim_shot.sh`: screenshot zo simulátora (napr. `-seedNights 60 -openTab town`), simulátor po sebe vždy vypne.
-- `python3 tools/render/make_recipes.py` a `render_sprites.swift`: nové sprity.
-- `python3 tools/audio/make_alarms.py`: nové budíky.
+More tools:
+- `tools/sim_shot.sh`: a simulator screenshot (e.g. `-seedNights 60 -openTab town -lang sk`); always shuts the simulator down.
+- `python3 tools/render/make_recipes.py` and `render_sprites.swift`: new sprites.
+- `python3 tools/audio/make_alarms.py`: new alarms.
 
-**Pre AI agentov:** začni v [`AGENTS.md`](AGENTS.md). Stav fáz a všetky zistenia sú v [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md).
+**For AI agents:** start in [`AGENTS.md`](AGENTS.md). Phase status and all findings are in [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md).
 
 ---
 
-## Stav
+## Status
 
-| Fáza | | Stav |
+| Phase | | Status |
 |---|---|---|
-| A | assety (sprity, zvuky, pipeline) | ✅ |
-| F0 | nástroje, appka na iPhone | ✅ |
-| F1 | SleepCore a testy | ✅ |
-| F2 | noc bez grafiky mesta | ✅ testy na zariadení, ⏳ prvá skutočná noc |
-| F3 | mesto (SpriteKit) | ✅ postavené, ⏳ čaká na skutočné noci |
-| F4 | levely, štatistiky, záloha, mince, odpočinok | ✅ väčšina, ⏳ obchod s budovami |
-| F5 | živé mesto | ⬜ |
-| F6 | platený Apple účet | ⬜ na rade |
-| F7 | nové budovy | ⬜ |
+| A | assets (sprites, sounds, pipeline) | ✅ |
+| F0 | tooling, app on the iPhone | ✅ |
+| F1 | SleepCore and tests | ✅ |
+| F2 | the night without town graphics | ✅ |
+| F3 | town (SpriteKit) | ✅ built, ⏳ waiting for real nights |
+| F4 | levels, stats, backup, coins, nap | ✅ mostly, ⏳ building shop |
+| I18N | English + Slovak | ✅ |
+| F5 | living town | ⬜ |
+| F6 | paid Apple account | ⬜ next |
+| F7 | new buildings | ⬜ |
 
-## Čo nás čaká
+## What's next
 
-**Najbližšie**
-- **Vyhodnotenie prvej skutočnej noci:** vydrží appka celú noc, zobudí budík?
+**Soon**
+- **First nights with the town (F3):** how the town grows from real nights.
 - **Apple Developer Program (F6):**
-  - appka nebude po 7 dňoch expirovať,
-  - upozornenia *time-sensitive* prebijú Sústredenie,
-  - **AlarmKit** (systémový budík, zazvoní aj po reštarte iOS),
-  - neskôr HealthKit a Apple Watch (overenie spánku, budík vibráciou na zápästí),
+  - the app won't expire after 7 days,
+  - *time-sensitive* notifications break through Focus,
+  - **AlarmKit** (a system alarm that rings even after an iOS restart),
+  - later HealthKit and Apple Watch (sleep verification, a vibrating alarm on the wrist),
   - TestFlight.
 
-**Obchod s budovami za 🪙**
-- Ceny: dom 100, L2 200, L3 400, L4 1000. Dlhšie ostaneš „v dedinke“, polícia príde až po týždňoch.
-- Zostáva dohodnúť, kedy sa budova vyberá, kedy sa strhnú mince a čo, keď na nič nie je dosť.
+**Building shop for 🪙**
+- Prices: house 100, L2 200, L3 400, L4 1000. You stay “in the village” longer; the police arrive only after weeks.
+- Still to decide: when a building is chosen, when coins are charged, and what happens if there aren't enough.
 
-**Anglická verzia (i18n)**
-- Katalóg prekladov, anglické názvy budov a anglické tabule na budovách.
+**F5: living town**
+- Day and night by the real time, glowing lamps and windows.
+- Little cars driving on the roads, a growing population.
 
-**F5: živé mesto**
-- Deň a noc podľa skutočného času, svietiace lampy a okná.
-- Autíčka jazdiace po cestách, rastúci počet obyvateľov.
+**F7: more buildings**
+- Mainly L3: post office, church, hotel, stadium, railway station, cinema, swimming pool.
+- More L2 and L4 variants, later own models from Blender.
 
-**F7: viac budov**
-- Hlavne L3: pošta, kostol, hotel, štadión, železničná stanica, kino, kúpalisko.
-- Viac variantov L2 a L4, neskôr vlastné modely z Blendera.
-
-**Nápady (XS → XXL)**
+**Ideas (XS → XXL)**
 | | |
 |---|---|
-| XS | zavibrovanie pri štarte stavby a pri zamknutí |
-| S | úspechy („Prvá budova“, „7 nocí v rade“, „Prvý mrakodrap“), vlastný názov mesta |
-| M | widget na ploche so sériou a odpočtom do večierky, týždenný „mestský denník“ |
-| L | ročné obdobia: sneh a vianočné stromčeky v zime, jesenné farby |
-| XL | Live Activity s rastúcou budovou na zamknutej obrazovke, appka pre Apple Watch |
-| XXL | spoločné mesto s partnerom alebo kamarátmi (iCloud), vydanie v App Store |
+| XS | a vibration when a night starts and when the phone locks |
+| S | achievements (“First building”, “7 nights in a row”, “First skyscraper”), your own town name |
+| M | a home-screen widget with the streak and a bedtime countdown, a weekly “town journal” |
+| L | seasons: snow and Christmas trees in winter, autumn colours |
+| XL | a Live Activity with the growing building on the lock screen, an Apple Watch app |
+| XXL | a shared town with a partner or friends (iCloud), an App Store release |
 
 ---
 
-## Licencie a poďakovanie
+## Licences and thanks
 
-- **Grafika a časť zvukov:** [Kenney](https://kenney.nl) (CC0). Vyrenderované a poskladané vlastnými skriptmi v `tools/`.
-- **Melódie budíkov:** E. Grieg (*Peer Gynt*, 1875) a L. van Beethoven (*9. symfónia*, 1824), obe voľné dielo. Trúbka a Poplach sú vlastné skladby. Všetko je syntetizované v `tools/audio/make_alarms.py`.
-- **Dážď na okno:** „Rain on Windows, Interior, A“ od [InspectorJ](https://freesound.org/s/346642/) (www.jshaw.co.uk), Freesound, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), upravené do slučky. Dážď na stan a šumy sú syntetizované (`tools/audio/make_rain.py`, `AudioKeeper`).
-- **Inšpirácia:** [SleepTown](https://apps.apple.com/app/sleeptown/id1210251567) od Seekrtech.
+- **Graphics and some sounds:** [Kenney](https://kenney.nl) (CC0). Rendered and assembled by our own scripts in `tools/`.
+- **Alarm melodies:** E. Grieg (*Peer Gynt*, 1875) and L. van Beethoven (*Symphony No. 9*, 1824), both public domain. Reveille and Alarm! are original. Everything is synthesised in `tools/audio/make_alarms.py`.
+- **Rain on a window:** “Rain on Windows, Interior, A” by [InspectorJ](https://freesound.org/s/346642/) (www.jshaw.co.uk), Freesound, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), made into a loop. Rain on a tent and the noises are synthesised (`tools/audio/make_rain.py`, `AudioKeeper`).
+- **Inspiration:** [SleepTown](https://apps.apple.com/app/sleeptown/id1210251567) by Seekrtech.

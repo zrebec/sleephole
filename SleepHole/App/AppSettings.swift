@@ -18,7 +18,7 @@ struct AppSettings: Codable, Equatable {
     var ambienceSeconds: TimeInterval? { ambienceMinutes.map { Double($0) * 60 } }
 
     static func timerTitle(_ minutes: Int?) -> String {
-        minutes.map { $0 == 1 ? "1 min (test)" : "\($0) min" } ?? "Celú noc"
+        minutes.map { $0 == 1 ? L("1 min (test)") : L("\($0) min") } ?? L("All night")
     }
     var alarmSound: AlarmSound = .gentle
     /// Typed on the alarm screen as an alternative to shaking (D15).
@@ -39,27 +39,27 @@ struct AppSettings: Codable, Equatable {
 
         var title: String {
             switch self {
-            case .gentle: "Jemný"
-            case .morning: "Ranná nálada"
-            case .ode: "Óda na radosť"
-            case .chimes: "Zvonkohra"
-            case .retro: "Retro"
-            case .bugle: "Budíček"
-            case .digital: "Digitálny"
-            case .alert: "Poplach"
+            case .gentle: L("Gentle")
+            case .morning: L("Morning Mood")
+            case .ode: L("Ode to Joy")
+            case .chimes: L("Chimes")
+            case .retro: L("Retro")
+            case .bugle: L("Reveille")
+            case .digital: L("Digital")
+            case .alert: L("Alarm!")
             }
         }
 
         var detail: String {
             switch self {
-            case .gentle: "Pizzicato, pomaly silnie."
-            case .morning: "Grieg – Peer Gynt, flauta."
-            case .ode: "Beethoven – hracia skrinka."
-            case .chimes: "Stúpajúce zvončeky."
-            case .retro: "Retro melódia, pomaly silnie."
-            case .bugle: "Trúbka, rýchlo silnie."
-            case .digital: "Bip-bip-bip, hneď naplno."
-            case .alert: "Agresívne pípanie, hneď naplno."
+            case .gentle: L("Pizzicato, slowly getting louder.")
+            case .morning: L("Grieg – Peer Gynt, flute.")
+            case .ode: L("Beethoven – music box.")
+            case .chimes: L("Rising bells.")
+            case .retro: L("Retro tune, slowly getting louder.")
+            case .bugle: L("Trumpet, quickly getting louder.")
+            case .digital: L("Beep-beep-beep, full volume at once.")
+            case .alert: L("Aggressive beeping, full volume at once.")
             }
         }
 

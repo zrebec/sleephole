@@ -96,6 +96,9 @@ struct BackupStatsTests {
         render(NightChart(points: s.series, bedtime: m.settings.schedule), m)
         render(LevelUpCard(level: 2) {}, m)
         render(ConfettiView(), m)
+        let was12h = Fmt.systemUses12h
+        defer { Fmt.systemUses12h = was12h }
+        Fmt.systemUses12h = false
         #expect(NightChart.clock(1440 + 75) == "1:15" && NightChart.clock(-30) == "23:30")
         for o in [Outcome.complete, .unfinished, .ruins, .missed] { _ = CalendarGrid.color(o) }
         _ = CalendarGrid.color(nil)
@@ -132,7 +135,7 @@ struct BackupStatsTests {
         #expect(r.setupTrips.count == 1 && r.screenChecks.count == 1 && r.confirmMethod == .code)
         for k in [k2, k3, k9] { render(NightDetail(key: k), m) }
         render(StatsView(), m)
-        #expect(NightDetail.duration(nil) == "nevrátil si sa" && NightDetail.duration(181) == "3 min 1 s"
+        #expect(NightDetail.duration(nil) == "you didn't come back" && NightDetail.duration(181) == "3 min 1 s"
                 && NightDetail.duration(8) == "8 s")
     }
 

@@ -18,12 +18,13 @@ struct ViewsTests {
         cal.date(from: DateComponents(year: 2026, month: 10, day: d, hour: h, minute: m))!
     }
 
-    func makeModel(at now: Date) -> (AppModel, FakeClock, ModelContainer) {
+    func makeModel(at now: Date, language: AppLanguage = .en) -> (AppModel, FakeClock, ModelContainer) {
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let clock = FakeClock(now)
         var s = AppSettings()
         s.wakeCode = "1234"
         let m = AppModel(context: c.mainContext, catalog: sprites.catalog, clock: clock, settings: s, servicesEnabled: false)
+        m.language = language
         return (m, clock, c)
     }
 
@@ -38,8 +39,8 @@ struct ViewsTests {
         window.isHidden = true
     }
 
-    @Test func todayInEveryPhase() {
-        let (m, clock, _) = makeModel(at: date(5, 12))
+    @Test(arguments: AppLanguage.allCases) func todayInEveryPhase(language: AppLanguage) {
+        let (m, clock, _) = makeModel(at: date(5, 12), language: language)
         render(TodayView(), m)                                      // idle
         clock.now = date(5, 22, 25); m.refresh()
         render(TodayView(), m)                                      // canStart
@@ -83,8 +84,8 @@ struct ViewsTests {
         render(TodayView(), m)                                      // debug result
     }
 
-    @Test func settingsTownRootAndDebugScreens() {
-        let (m, clock, _) = makeModel(at: date(5, 12))
+    @Test(arguments: AppLanguage.allCases) func settingsTownRootAndDebugScreens(language: AppLanguage) {
+        let (m, clock, _) = makeModel(at: date(5, 12), language: language)
         render(SettingsView(), m)
         render(NightLogView(), m)
         render(TownTab(), m)                                        // empty town

@@ -16,61 +16,67 @@ struct SettingsView: View {
         NavigationStack {
             ScrollViewReader { proxy in
             Form {
-                Section("Rozvrh") {
+                Section {
+                    LanguagePicker()
+                } header: {
+                    Text(verbatim: "Language · Jazyk")
+                }
+
+                Section(L("Schedule")) {
                     ScheduleFields()
-                    Button("Ako to funguje") { showGuide = true }
+                    Button(L("How it works")) { showGuide = true }
                 }
                 .disabled(nightRunning)
 
                 Section {
-                    Picker("Dĺžka", selection: $model.settings.nap.minutes) {
-                        ForEach(NapPlan.allowedMinutes, id: \.self) { Text("\($0) min").tag($0) }
+                    Picker(L("Length"), selection: $model.settings.nap.minutes) {
+                        ForEach(NapPlan.allowedMinutes, id: \.self) { Text(L("\($0) min")).tag($0) }
                     }
                     .pickerStyle(.segmented)
-                    DatePicker("Od", selection: napTime(\.windowStart), displayedComponents: .hourAndMinute)
-                    DatePicker("Do", selection: napTime(\.windowEnd), displayedComponents: .hourAndMinute)
+                    DatePicker(L("From"), selection: napTime(\.windowStart), displayedComponents: .hourAndMinute)
+                    DatePicker(L("To"), selection: napTime(\.windowEnd), displayedComponents: .hourAndMinute)
                 } header: {
-                    Text("Odpočinok")
+                    Text(L("Nap"))
                 } footer: {
-                    Text("Odpočinok sa dá začať iba v tomto okne, raz za deň. Za hotový odpočinok dostaneš \(NapPlan.reward(.complete)) 🪙.")
+                    Text(L("A nap can only start in this window, once a day. A complete nap earns \(NapPlan.reward(.complete)) 🪙."))
                 }
                 .disabled(nightRunning)
 
                 Section {
                     HStack {
-                        Text("Kód")
+                        Text(L("Code"))
                         Spacer()
                         Text(model.settings.wakeCode).font(.title2.monospacedDigit().bold())
                     }
-                    Button("Vygenerovať nový kód") { model.settings.wakeCode = AppSettings.randomCode() }
+                    Button(L("Generate a new code")) { model.settings.wakeCode = AppSettings.randomCode() }
                 } header: {
-                    Text("Ranné potvrdenie")
+                    Text(L("Morning confirmation"))
                 } footer: {
-                    Text("Ráno zatras telefónom alebo zadaj tento kód.")
+                    Text(L("In the morning shake your phone or enter this code."))
                 }
 
                 Section {
                     HStack {
-                        Text("Upozornenia")
+                        Text(L("Notifications"))
                         Spacer()
                         Text(notificationStatus).foregroundStyle(.secondary)
                     }
-                    Button("Otvoriť nastavenia upozornení") {
+                    Button(L("Open notification settings")) {
                         if let url = URL(string: UIApplication.openNotificationSettingsURLString) {
                             UIApplication.shared.open(url)
                         }
                     }
                 } footer: {
-                    Text("Bez upozornení nepríde varovanie „Vráť sa“ ani záložný budík. Ak máš zapnuté Sústredenie (Spánok, Nerušiť), povoľ v ňom SleepHole.")
+                    Text(L("Without notifications you won't get the “Come back” warning or the backup alarm. If you use a Focus (Sleep, Do Not Disturb), allow SleepHole in it."))
                 }
 
                 Section {
-                    Picker("Zvuk", selection: $model.settings.ambience) {
+                    Picker(L("Sound"), selection: $model.settings.ambience) {
                         ForEach(AudioKeeper.Ambience.allCases) { Text($0.title).tag($0) }
                     }
                     .pickerStyle(.menu)
                     .onChange(of: model.settings.ambience) { _, a in preview.switchTo(a, volume: model.settings.volume) }
-                    Picker("Hrať", selection: $model.settings.ambienceMinutes) {
+                    Picker(L("Play for"), selection: $model.settings.ambienceMinutes) {
                         ForEach(AppSettings.ambienceTimerOptions, id: \.self) { m in
                             Text(AppSettings.timerTitle(m)).tag(m)
                         }
@@ -88,19 +94,19 @@ struct SettingsView: View {
                                    stop: { preview.stop() })
                         .disabled(model.active != nil || model.settings.ambience == .silence)
                 } header: {
-                    Text("Zvuk na zaspávanie").id("sounds")
+                    Text(L("Sleep sound")).id("sounds")
                 } footer: {
                     if let end = preview.endsAt {
-                        Text("\(model.settings.ambience.detail) Hrá do \(clockFormat.string(from: end)).")
+                        Text(L("\(model.settings.ambience.detail) Playing until \(Fmt.time(end))."))
                     } else if preview.playing != nil {
-                        Text("\(model.settings.ambience.detail) Hrá, kým nestlačíš ■.")
+                        Text(L("\(model.settings.ambience.detail) Playing until you press ■."))
                     } else {
                         Text(model.settings.ambience.detail)
                     }
                 }
 
                 Section {
-                    Picker("Budík", selection: $model.settings.alarmSound) {
+                    Picker(L("Alarm"), selection: $model.settings.alarmSound) {
                         ForEach(AppSettings.AlarmSound.allCases) { Text($0.title).tag($0) }
                     }
                     .pickerStyle(.menu)
@@ -112,40 +118,40 @@ struct SettingsView: View {
                                    stop: { SoundFX.stopPreview() })
                         .disabled(model.active != nil)
                 } header: {
-                    Text("Budík")
+                    Text(L("Alarm"))
                 } footer: {
                     Text(model.settings.alarmSound.detail)
                 }
 
                 Section {
                     ShareLink(item: BackupDocument(data: (try? model.makeBackup().encoded()) ?? Data()),
-                              preview: SharePreview("SleepHole – záloha")) {
-                        Label("Exportovať zálohu", systemImage: "square.and.arrow.up")
+                              preview: SharePreview(L("SleepHole – backup"))) {
+                        Label(L("Export backup"), systemImage: "square.and.arrow.up")
                     }
                     Button { importing = true } label: {
-                        Label("Obnoviť zo zálohy…", systemImage: "square.and.arrow.down")
+                        Label(L("Restore from backup…"), systemImage: "square.and.arrow.down")
                     }
                     .disabled(nightRunning)
                 } header: {
-                    Text("Záloha")
+                    Text(L("Backup"))
                 } footer: {
-                    Text("Po každej noci sa záloha uloží aj automaticky: Súbory → Na mojom iPhone → SleepHole → \(BackupFile.fileName).")
+                    Text(L("After every night a backup is also saved automatically: Files → On My iPhone → SleepHole → \(BackupFile.fileName)."))
                 }
 
-                Section("O appke") {
-                    NavigationLink("Poďakovanie") { CreditsView() }
+                Section(L("About")) {
+                    NavigationLink(L("Credits")) { CreditsView() }
                 }
 
-                Section("Vývoj") {
-                    Button("Rýchla noc (4 min, príprava \(Int(AppModel.debugGrace)) s)") { model.startTestNight() }
+                Section(L("Developer")) {
+                    Button(L("Quick night (4 min, \(Int(AppModel.debugGrace)) s setup)")) { model.startTestNight() }
                         .disabled(nightRunning)
-                    Button("Testovacia noc (15 min, príprava 5 min)") { model.startTestNight(minutes: 15, grace: 300) }
+                    Button(L("Test night (15 min, 5 min setup)")) { model.startTestNight(minutes: 15, grace: 300) }
                         .disabled(nightRunning)
-                    Toggle("Ďalšia testovacia noc sa počíta do mesta", isOn: $model.nextTestNightCounts)
+                    Toggle(L("Next test night counts for the town"), isOn: $model.nextTestNightCounts)
                         .disabled(nightRunning)
-                    NavigationLink("Nočný denník") { NightLogView() }
-                    NavigationLink("Test detekcie (F2)") { DetectionTestView() }
-                    Button("Znova ukázať sprievodcu a prvú noc") { model.resetGuide() }
+                    NavigationLink(L("Night journal")) { NightLogView() }
+                    NavigationLink(L("Detection test (F2)")) { DetectionTestView() }
+                    Button(L("Show the guide and first night again")) { model.resetGuide() }
                         .disabled(nightRunning)
                 }
             }
@@ -153,7 +159,7 @@ struct SettingsView: View {
                 if ProcessInfo.processInfo.arguments.contains("sounds") { proxy.scrollTo("sounds", anchor: .top) }
             }
             }
-            .navigationTitle("Nastavenia")
+            .navigationTitle(L("Settings"))
             .sheet(isPresented: $showGuide) { GuideView(replay: true) }
             .task { notificationStatus = await Notifications.statusText() }
             .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
@@ -163,24 +169,24 @@ struct SettingsView: View {
                     defer { if scoped { url.stopAccessingSecurityScopedResource() } }
                     pendingRestore = try BackupFile.decode(Data(contentsOf: url))
                 } catch {
-                    backupMessage = "Súbor sa nedá prečítať: \(error.localizedDescription)"
+                    backupMessage = L("The file can't be read: \(error.localizedDescription)")
                 }
             }
-            .confirmationDialog("Obnoviť zálohu? Terajšie noci, mesto a nastavenia sa nahradia.",
+            .confirmationDialog(L("Restore the backup? Your current nights, town and settings will be replaced."),
                                 isPresented: Binding(get: { pendingRestore != nil }, set: { if !$0 { pendingRestore = nil } }),
                                 titleVisibility: .visible) {
-                Button("Obnoviť", role: .destructive) {
+                Button(L("Restore"), role: .destructive) {
                     if let b = pendingRestore {
                         do {
                             try model.restore(b)
-                            backupMessage = "Obnovené: \(b.nights.count) nocí ✓"
+                            backupMessage = L("Restored: \(b.nights.count) nights ✓")
                         } catch { backupMessage = error.localizedDescription }
                     }
                     pendingRestore = nil
                 }
             }
             .alert(backupMessage ?? "", isPresented: Binding(get: { backupMessage != nil }, set: { if !$0 { backupMessage = nil } })) {
-                Button("OK", role: .cancel) {}
+                Button(L("OK"), role: .cancel) {}
             }
         }
     }
@@ -213,14 +219,15 @@ struct NightLogView: View {
                 }
             } label: {
                 VStack(alignment: .leading) {
-                    Text("\(rec.keyString)\(rec.isNap ? " · odpočinok" : "")\(rec.isDebug ? " · test" : "") · \(rec.outcome?.rawValue ?? "prebieha")")
-                    Text("\(rec.buildingId) · mimo \(Int(rec.awaySeconds)) s").font(.caption).foregroundStyle(.secondary)
+                    Text(verbatim: rec.keyString + (rec.isNap ? " · " + L("nap") : "") + (rec.isDebug ? " · test" : "")
+                         + " · " + (rec.outcome?.rawValue ?? L("in progress")))
+                    Text(L("\(rec.buildingId) · away \(Int(rec.awaySeconds)) s")).font(.caption).foregroundStyle(.secondary)
                 }
             }
         }
-        .navigationTitle("Nočný denník")
+        .navigationTitle(L("Night journal"))
         .toolbar {
-            Button("Vymazať", role: .destructive) { model.clearNights() }
+            Button(L("Delete all"), role: .destructive) { model.clearNights() }
                 .disabled(model.active != nil)
         }
     }
@@ -235,8 +242,8 @@ struct PreviewButtons: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            GlassCircleButton(systemImage: "play.fill", label: "Prehrať ukážku", highlighted: playing, action: play)
-            GlassCircleButton(systemImage: "stop.fill", label: "Zastaviť", action: stop)
+            GlassCircleButton(systemImage: "play.fill", label: L("Play preview"), highlighted: playing, action: play)
+            GlassCircleButton(systemImage: "stop.fill", label: L("Stop"), action: stop)
             Spacer()
         }
     }

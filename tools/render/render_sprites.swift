@@ -6,7 +6,11 @@
 //   swift tools/render/render_sprites.swift tools/render/recipes.json assets/sprites [onlyId]
 //
 // Input:  recipes.json  – list of sprite recipes (parts = models + transforms, optional signs)
-// Output: <out>/<level>/<id>.png  and  <out>/catalog.json (manifest consumed by the app)
+// Output: <out>/<level>/<id>.png  and  <out>/catalog.json (manifest consumed by the app).
+//         Sprites with a sign that has `textEN` also get <out>/<level>/<id>.en.png (same size + anchor, only the
+//         sign text differs) → catalog `fileEN`.
+// Env EN_ONLY=1: keep every existing Slovak PNG untouched – only refresh names (nameEN) in the catalog and
+//         render the English sign variants (used for the i18n phase so the owner's town stays pixel-identical).
 //
 // Projection contract (the app's IsoProjection MUST match this):
 //   * camera azimuth 45° (looks from +x,+z corner), elevation 30° -> 2:1 dimetric
@@ -40,6 +44,7 @@ struct Part: Codable {
 
 struct Sign: Codable {
     var text: String
+    var textEN: String?            // English sign → extra "<id>.en.png" variant
     var pos: [Double]?             // centre of the board; omitted = auto on the +z (front) face
                                    // of the first model part, at `height` × its height
     var height: Double?            // auto placement height fraction, default 0.72
@@ -54,6 +59,7 @@ struct Recipe: Codable {
     var level: Int                 // 0 = support/terrain sprites, 1…4 = unlock levels
     var kind: String               // building | park | road | terrain | overlay | vehicle
     var nameSK: String
+    var nameEN: String?
     var footprint: [Int]           // [w, d] in tiles
     var parts: [Part]
     var signs: [Sign]?
@@ -66,8 +72,10 @@ struct CatalogEntry: Codable {
     var level: Int
     var kind: String
     var nameSK: String
+    var nameEN: String?
     var footprint: [Int]
     var file: String
+    var fileEN: String?
     var size: [Int]
     var anchor: [Double]
     var connects: String?
@@ -81,6 +89,7 @@ guard args.count >= 3 else {
 let recipesURL = URL(fileURLWithPath: args[1])
 let outDir = URL(fileURLWithPath: args[2])
 let onlyId = args.count > 3 ? args[3] : nil
+let enOnly = ProcessInfo.processInfo.environment["EN_ONLY"] == "1"
 let kenney3D = URL(fileURLWithPath: "assets/Kenney Game Assets All-in-1 3/3D assets")
 
 let recipes = try JSONDecoder().decode([Recipe].self, from: Data(contentsOf: recipesURL))
@@ -195,12 +204,18 @@ func worldBox(_ node: SCNNode) -> (SIMD3<Double>, SIMD3<Double>) {
 let device = MTLCreateSystemDefaultDevice()!
 var catalog: [CatalogEntry] = []
 let catalogURL = outDir.appendingPathComponent("catalog.json")
-if onlyId != nil, let data = try? Data(contentsOf: catalogURL),
+if onlyId != nil || enOnly, let data = try? Data(contentsOf: catalogURL),
    let old = try? JSONDecoder().decode([CatalogEntry].self, from: data) {
     catalog = old
 }
 
 for r in recipes where onlyId == nil || r.id == onlyId {
+    let hasEN = (r.signs ?? []).contains { $0.textEN != nil }
+    if enOnly {
+        guard let i = catalog.firstIndex(where: { $0.id == r.id }) else { fatalError("EN_ONLY: \(r.id) not in catalog") }
+        catalog[i].nameEN = r.nameEN
+        if !hasEN { continue }
+    }
     let scene = SCNScene()
     scene.background.contents = NSColor.clear
     let content = SCNNode()
@@ -226,14 +241,19 @@ for r in recipes where onlyId == nil || r.id == onlyId {
         n.scale = SCNVector3(s, s, s)
         content.addChildNode(n)
     }
-    for s in r.signs ?? [] {
+    func placedSign(_ s: Sign, english: Bool) -> SCNNode {
+        var s = s
+        if english, let en = s.textEN { s.text = en }
         let sign = makeSign(s)
         if s.pos == nil, let first = signHost {
             let (lo, hi) = worldBox(first)
             sign.position = SCNVector3((lo.x + hi.x) / 2, lo.y + (hi.y - lo.y) * (s.height ?? 0.72), hi.z + 0.025)
         }
-        content.addChildNode(sign)
+        return sign
     }
+    // The Slovak signs define the bounds; the English variant reuses them so size + anchor stay identical.
+    var signNodes = (r.signs ?? []).map { placedSign($0, english: false) }
+    signNodes.forEach { content.addChildNode($0) }
 
     // Projected bounds: content bbox + footprint diamond (+ room for the shadow).
     var (lo, hi) = worldBox(content)
@@ -289,26 +309,43 @@ for r in recipes where onlyId == nil || r.id == onlyId {
     let renderer = SCNRenderer(device: device, options: nil)
     renderer.scene = scene
     renderer.pointOfView = camNode
-    let img = renderer.snapshot(atTime: 0, with: CGSize(width: pxW, height: pxH), antialiasingMode: .multisampling4X)
+    let dirURL = outDir.appendingPathComponent("L\(r.level)")
+    try FileManager.default.createDirectory(at: dirURL, withIntermediateDirectories: true)
+    func write(_ file: String) throws {
+        let img = renderer.snapshot(atTime: 0, with: CGSize(width: pxW, height: pxH), antialiasingMode: .multisampling4X)
+        guard let tiff = img.tiffRepresentation, let rep = NSBitmapImageRep(data: tiff),
+              let png = rep.representation(using: .png, properties: [:]) else { fatalError("png \(r.id)") }
+        try png.write(to: outDir.appendingPathComponent(file))
+        print("✓ \(file) \(pxW)x\(pxH)")
+    }
 
     // Anchor = where the world origin lands, normalized, y from bottom.
     // (image spans pxW/PPU × pxH/PPU world units centred on the bounds' centre)
     let ax = 0.5 - (sx.0 + sx.1) / 2 * PPU / Double(pxW)
     let ay = 0.5 - (sy.0 + sy.1) / 2 * PPU / Double(pxH)
-
-    let dirURL = outDir.appendingPathComponent("L\(r.level)")
-    try FileManager.default.createDirectory(at: dirURL, withIntermediateDirectories: true)
     let file = "L\(r.level)/\(r.id).png"
-    guard let tiff = img.tiffRepresentation, let rep = NSBitmapImageRep(data: tiff),
-          let png = rep.representation(using: .png, properties: [:]) else { fatalError("png \(r.id)") }
-    try png.write(to: outDir.appendingPathComponent(file))
+    if !enOnly { try write(file) }
 
+    var fileEN: String?
+    if hasEN {
+        signNodes.forEach { $0.removeFromParentNode() }
+        signNodes = (r.signs ?? []).map { placedSign($0, english: true) }
+        signNodes.forEach { content.addChildNode($0) }
+        fileEN = "L\(r.level)/\(r.id).en.png"
+        try write(fileEN!)
+    }
+
+    if enOnly {
+        let i = catalog.firstIndex { $0.id == r.id }!
+        catalog[i].fileEN = fileEN
+        if catalog[i].size != [pxW, pxH] { print("⚠️ \(r.id): size differs from the catalog \(catalog[i].size)") }
+        continue
+    }
     catalog.removeAll { $0.id == r.id }
-    catalog.append(CatalogEntry(id: r.id, level: r.level, kind: r.kind, nameSK: r.nameSK,
-                                footprint: r.footprint, file: file, size: [pxW, pxH],
+    catalog.append(CatalogEntry(id: r.id, level: r.level, kind: r.kind, nameSK: r.nameSK, nameEN: r.nameEN,
+                                footprint: r.footprint, file: file, fileEN: fileEN, size: [pxW, pxH],
                                 anchor: [(ax * 1000).rounded() / 1000, (ay * 1000).rounded() / 1000],
                                 connects: r.connects))
-    print("✓ \(file) \(pxW)x\(pxH)")
 }
 
 catalog.sort { ($0.level, $0.id) < ($1.level, $1.id) }

@@ -5,8 +5,9 @@
 > This file is the complete spec for the i18n phase: requirements, owner decisions, open questions,
 > the full string inventory with English proposals, architecture, step-by-step tasks, tests and effort.
 >
-> Written 2026-09-30. **Status: APPROVED by the owner (2026-09-30), all answers recorded in §3.
-> Ready to implement – start with §0.**
+> Written 2026-09-30. **Status: IMPLEMENTED 2026-09-30** (see IMPLEMENTATION_PLAN.md §12). The SK column of the
+> tables below was the proposal; the shipped Slovak texts are the ones from the pre-i18n code, now in
+> `SleepHole/Resources/Localizable.xcstrings`.
 
 ## 0. Start here (new session checklist)
 1. Read `AGENTS.md`, then `docs/IMPLEMENTATION_PLAN.md` §0 and the last ~15 rows of §12 (findings), then this file.
@@ -512,21 +513,21 @@ Legend: **file** relative to `SleepHole/`; `{x}` = interpolation; *plural* = nee
 ## 6. Implementation steps (tick in this file as you go)
 
 - [x] **I0 – Decisions:** owner's answers recorded in §3 (2026-09-30).
-- [ ] **I1 – Infrastructure:** `AppLanguage`, `Lang`, `L(...)`, `Fmt` (dates/times), `UserProgress.languageRaw`,
+- [x] **I1 – Infrastructure:** `AppLanguage`, `Lang`, `L(...)`, `Fmt` (dates/times), `UserProgress.languageRaw`,
       `AppModel.language` + `uiVersion`, root `.environment(\.locale)` + `.id(uiVersion)`, default EN (no migration),
       `BackupFile.language`, `project.yml` dev language `en` + `CFBundleLocalizations`, empty
       `Localizable.xcstrings` (source `en`). Settings: language section at the top; guide page 1 picker (Q4).
-- [ ] **I2 – Strings, file by file** (§5.2–§5.18): replace every Slovak literal with `L("English key")`, add the
+- [x] **I2 – Strings, file by file** (§5.2–§5.18): replace every Slovak literal with `L("English key")`, add the
       SK translation to the catalog (the SK text is in the table). Order: RootView, Badges, TodayView,
       LevelUpView, TownView, GuideView (+ delete the `SK` helper, use catalog plurals), SettingsView,
       StatsView, CreditsView, AppSettings/AudioKeeper enums, Notifications, AppModel/Backup/SpriteLibrary
       messages, DetectionTestView.
-- [ ] **I3 – Catalog names + EN signs:** `make_recipes.py` (`nameEN`, bilingual `sign`), render (outside the
+- [x] **I3 – Catalog names + EN signs:** `make_recipes.py` (`nameEN`, bilingual `sign`), render (outside the
       sandbox), `catalog.json` `nameEN` + `fileEN`, `CatalogEntry.nameEN/fileEN`, `SpriteLibrary` picks by language.
       Check `docs/previews/contact_sheet.png`.
-- [ ] **I4 – Notifications** rescheduled on language switch; night notifications use `L`.
-- [ ] **I5 – Tests** (§7) + screenshots in both languages (`tools/sim_shot.sh … -lang en|sk` – add the arg).
-- [ ] **I6 – Docs:** `README.md` in English + `README.sk.md` (today's Slovak README, updated) (Q9), `AGENTS.md` hard rule "every UI string via `L(...)`, keys in English",
+- [x] **I4 – Notifications** rescheduled on language switch; night notifications use `L`.
+- [x] **I5 – Tests** (§7) + screenshots in both languages (`tools/sim_shot.sh … -lang en|sk` – add the arg).
+- [x] **I6 – Docs:** `README.md` in English + `README.sk.md` (today's Slovak README, updated) (Q9), `AGENTS.md` hard rule "every UI string via `L(...)`, keys in English",
       `IMPLEMENTATION_PLAN.md` §0/§12, this file's status.
 
 ## 7. Tests (keep app coverage ≥ 85 %, SleepCore ≥ 90 %)

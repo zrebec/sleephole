@@ -99,7 +99,7 @@ struct TownTab: View {
                 }
                 header(snapshot)
             }
-            .navigationTitle("Mesto")
+            .navigationTitle(L("Town"))
             .navigationBarTitleDisplayMode(.inline)
             .sheet(item: Binding(get: { selected.map(SelectedBuilding.init) }, set: { selected = $0?.index })) { sel in
                 if let b = snapshot?.buildings[safe: sel.index] {
@@ -115,11 +115,11 @@ struct TownTab: View {
         let count = snapshot?.buildings.filter { $0.state == .complete }.count ?? 0
         let people = snapshot.map { TownStats.population($0, catalog: model.catalog) } ?? 0
         HStack(spacing: 14) {
-            Label("\(count)", systemImage: "building.2.fill")
-            Label("\(people)", systemImage: "person.2.fill")
-            Text("🪙 \(model.coins)")
+            Label { Text(verbatim: "\(count)") } icon: { Image(systemName: "building.2.fill") }
+            Label { Text(verbatim: "\(people)") } icon: { Image(systemName: "person.2.fill") }
+            Text(verbatim: "🪙 \(model.coins)")
             if (snapshot?.buildings.isEmpty ?? true) {
-                Text("Prvá budova pribudne po prvej noci 🌙").font(.caption)
+                Text(L("Your first building appears after your first night 🌙")).font(.caption)
             }
         }
         .font(.subheadline.bold())
@@ -139,20 +139,20 @@ struct BuildingSheet: View {
     let building: TownBuilding
 
     var body: some View {
-        let name = model.catalog?[building.buildingId]?.nameSK ?? "Budova"
+        let name = model.catalog?[building.buildingId]?.displayName ?? L("Building")
         VStack(spacing: 10) {
             BuildingImage(id: sheetSprite, progress: building.state == .unfinished ? 0.6 : 1, maxHeight: 130)
             Text(name).font(.title2.bold())
-            Text("Noc \(formatted(building.nightKey))").foregroundStyle(.secondary)
+            Text(L("Night of \(Fmt.fullDate(building.nightKey))")).foregroundStyle(.secondary)
             switch building.state {
             case .complete:
-                Label(building.repairedLater ? "Opravená 🛠️ – z ruiny je zase budova"
-                      : building.completedLater ? "Dostavaná neskôr 💪" : "Hotová 🎉", systemImage: "checkmark.seal.fill")
+                Label(building.repairedLater ? L("Repaired 🛠️ – the ruin is a building again")
+                      : building.completedLater ? L("Finished later 💪") : L("Complete 🎉"), systemImage: "checkmark.seal.fill")
                     .foregroundStyle(.green)
             case .unfinished:
-                Label("Rozostavaná – dokončí ju ďalšia dobrá noc", systemImage: "hammer.fill").foregroundStyle(.orange)
+                Label(L("Unfinished – your next good night will finish it"), systemImage: "hammer.fill").foregroundStyle(.orange)
             case .ruins:
-                Label("Ruina – aj to patrí k mestu 🌱", systemImage: "leaf.fill").foregroundStyle(.secondary)
+                Label(L("Ruins – part of the town too 🌱"), systemImage: "leaf.fill").foregroundStyle(.secondary)
             }
         }
         .padding()
@@ -161,8 +161,6 @@ struct BuildingSheet: View {
     private var sheetSprite: String {
         building.state == .ruins ? "o-ruin-\(building.placement.size)" : building.buildingId
     }
-
-    private func formatted(_ k: NightKey) -> String { "\(k.day). \(k.month). \(k.year)" }
 }
 
 enum TownStats {
