@@ -19,7 +19,7 @@ struct ExtrasTests {
     }
 
     func store() -> ModelContainer {
-        try! ModelContainer(for: NightRecord.self, UserProgress.self,
+        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
                             configurations: ModelConfiguration(isStoredInMemoryOnly: true))
     }
 
@@ -54,11 +54,14 @@ struct ExtrasTests {
         #expect(m.townName == "My Town" && m.customTownName == nil)
         m.language = .sk
         #expect(m.townName == "Moje mesto")
-        m.renameTown("   Zajačikovo   ")
-        #expect(m.townName == "Zajačikovo")
-        m.renameTown(String(repeating: "x", count: 50))
+        #expect(m.renameCost() == .free(.firstNaming))
+        #expect(m.renameTown("   Zajačikovo   ") == .renamed)                 // first naming: free
+        #expect(m.townName == "Zajačikovo" && m.renameTown("Zajačikovo") == .unchanged)
+        #expect(m.renameCost() == .free(.typoFix))
+        m.renameTown(String(repeating: "x", count: 50))                    // within 10 min: free
         #expect(m.townName.count == AppModel.townNameMaxLength)
         m.renameTown("Zajačikovo")
+        #expect(m.coinsSpent == 0)
         let (again, _) = model(c, at: date(1, 12))                       // stored in the database
         #expect(again.townName == "Zajačikovo")
         // backup round trip
@@ -147,5 +150,35 @@ struct ExtrasTests {
         #expect(Haptics.lastResult != "–")
         let (m, _) = model(store(), at: date(1, 12))
         render(NavigationStack { VibrationTestView() }, m)
+    }
+
+    // MARK: limits (owner 2026-09-30)
+
+    @Test func renamingIsFreeOnceAYearOtherwiseItCosts5000Coins() throws {
+        let c = store()
+        let (m, clock) = model(c, at: date(1, 12))
+        m.renameTown("Zajačikovo")                                         // first naming
+        clock.now += 3600
+        #expect(m.renameCost() == .free(.yearly))
+        #expect(m.renameTown("Líščikovo") == .renamed)                     // the yearly free one
+        #expect(m.nextFreeRename != nil && m.coinsSpent == 0)
+        clock.now += 3600
+        #expect(m.renameCost() == .paid(5000))
+        #expect(m.renameTown("Ježkovo") == .notEnoughCoins && m.townName == "Líščikovo")
+        #expect(RenameTownAlert.costText(.paid(5000), coins: 1200, nextFree: m.nextFreeRename).contains("800"))   // "3,800"
+        for d in 1...60 { night(m, clock, day: d) }                        // earn ≥ 5 000 🪙
+        let before = m.coins
+        #expect(before >= 5000 && m.renameTown("Ježkovo") == .renamed)
+        #expect(m.coins == before - 5000 && m.coinsSpent == 5000 && m.spends().first?.reason == "rename-town")
+        // the spend survives a backup
+        let data = try m.makeBackup().encoded()
+        let (other, _) = model(store(), at: date(1, 12))
+        try other.restore(BackupFile.decode(data))
+        #expect(other.coinsSpent == 5000 && other.townName == "Ježkovo" && other.renameCost(at: clock.now) == .free(.typoFix))
+        for cost in [RenamePolicy.Cost.free(.firstNaming), .free(.typoFix), .free(.yearly), .paid(5000)] {
+            #expect(!RenameTownAlert.costText(cost, coins: 9000, nextFree: nil).isEmpty)
+        }
+        render(SettingsView(), m)
+        render(TownTab().renameTownAlert(isPresented: .constant(true)), m)
     }
 }

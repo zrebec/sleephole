@@ -24,7 +24,7 @@ struct AppModelTests {
     }
 
     func harness(at now: Date, container: ModelContainer? = nil) -> Harness {
-        let c = container ?? (try! ModelContainer(for: NightRecord.self, UserProgress.self,
+        let c = container ?? (try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
                                                    configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
         let clock = FakeClock(now)
         var s = AppSettings()

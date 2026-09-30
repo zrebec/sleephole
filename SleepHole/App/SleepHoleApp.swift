@@ -9,7 +9,7 @@ struct SleepHoleApp: App {
     @State private var model: AppModel
 
     init() {
-        let container = try! ModelContainer(for: NightRecord.self, UserProgress.self)
+        let container = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self)
         let sprites = SpriteLibrary.loadFromBundle()
         self.container = container
         _sprites = State(initialValue: sprites)

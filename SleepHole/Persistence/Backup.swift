@@ -18,6 +18,26 @@ struct BackupFile: Codable, Equatable {
     var language: String? = nil
     /// Town name. Optional → older backups still load.
     var townName: String? = nil
+    // limits (owner 2026-09-30) – all optional, older backups still load
+    var lastRenameAt: Date? = nil
+    var lastFreeRenameAt: Date? = nil
+    var scheduleCalibrationStart: Date? = nil
+    var spends: [Spend]? = nil
+    var scheduleChanges: [Change]? = nil
+
+    struct Spend: Codable, Equatable {
+        var at: Date
+        var amount: Int
+        var reason: String
+    }
+
+    struct Change: Codable, Equatable {
+        var at: Date
+        var from: String
+        var to: String
+        var free: Bool
+        var breakKey: String?
+    }
 
     struct Night: Codable, Equatable {
         var id: String

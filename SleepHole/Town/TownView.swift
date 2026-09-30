@@ -86,7 +86,6 @@ struct TownTab: View {
     @Environment(SpriteLibrary.self) private var sprites
     @State private var selected: Int?
     @State private var renaming = false
-    @State private var nameDraft = ""
 
     var body: some View {
         let snapshot = model.townSnapshot
@@ -103,13 +102,7 @@ struct TownTab: View {
             }
             .navigationTitle(L("Town"))
             .navigationBarTitleDisplayMode(.inline)
-            .alert(L("Town name"), isPresented: $renaming) {
-                TextField(L("My Town"), text: $nameDraft)
-                Button(L("Save")) { model.renameTown(nameDraft) }
-                Button(L("Cancel"), role: .cancel) {}
-            } message: {
-                Text(L("Leave it empty for the default name."))
-            }
+            .renameTownAlert(isPresented: $renaming)
             .sheet(item: Binding(get: { selected.map(SelectedBuilding.init) }, set: { selected = $0?.index })) { sel in
                 if let b = snapshot?.buildings[safe: sel.index] {
                     BuildingSheet(building: b)
@@ -125,7 +118,6 @@ struct TownTab: View {
         let people = snapshot.map { TownStats.population($0, catalog: model.catalog) } ?? 0
         VStack(spacing: 2) {
             Button {
-                nameDraft = model.customTownName ?? ""
                 renaming = true
             } label: {
                 Label { Text(verbatim: model.townName) } icon: { Image(systemName: "pencil").font(.caption) }

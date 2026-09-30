@@ -184,26 +184,48 @@ final class AppModel {
     }
 
     func coinsEarned(for key: NightKey) -> Int? {
-        Economy.ledger(realResults().compactMap(\.result), calendar: calendar).last { $0.key == key }?.coins
+        Economy.ledger(realResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks)
+            .last { $0.key == key }?.coins
     }
 
     /// Everything for the Štatistiky tab.
     var stats: StatsSummary {
         Stats.summary(realResults().compactMap(\.result), today: NightKey(date: clock.now, calendar: calendar),
-                      calendar: calendar)
+                      calendar: calendar, breaks: streakBreaks)
     }
 
-    /// Coin balance 🪙 (replayed from the real nights, naps and achievements; spending comes with the shop).
-    var coins: Int {
-        Economy.earned(realResults().compactMap(\.result), calendar: calendar)
+    /// Coin balance 🪙: earned (replayed from the real nights, naps and achievements) − spent (`CoinSpend`).
+    var coins: Int { coinsEarned - coinsSpent }
+
+    var coinsEarned: Int {
+        Economy.earned(realResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks)
             + napResults().compactMap(\.outcome).reduce(0) { $0 + NapPlan.reward($1) }
             + Achievements.coins(achievements)
     }
 
+    var coinsSpent: Int { spends().reduce(0) { $0 + $1.amount } }
+
+    func spends() -> [CoinSpend] {
+        (try? context.fetch(FetchDescriptor<CoinSpend>(sortBy: [SortDescriptor(\.at)]))) ?? []
+    }
+
+    private func spend(_ amount: Int, reason: String) {
+        context.insert(CoinSpend(at: clock.now, amount: amount, reason: reason))
+        save()
+    }
+
+    /// Schedule changes, oldest first; the ones that were not free reset the streak (`streakBreaks`).
+    func scheduleChanges() -> [ScheduleChange] {
+        (try? context.fetch(FetchDescriptor<ScheduleChange>(sortBy: [SortDescriptor(\.at)]))) ?? []
+    }
+
+    var streakBreaks: [NightKey] { scheduleChanges().compactMap { $0.breakKey.flatMap(NightKey.init) } }
+
     /// Unlocked achievements, oldest first (replayed like the coins – old nights count too).
     var achievements: [Achievements.Unlocked] {
         Achievements.unlocked(results: realResults().compactMap(\.result), naps: napResults().compactMap(\.result),
-                              repairs: townSnapshot?.repairs ?? [], catalog: catalog, calendar: calendar)
+                              repairs: townSnapshot?.repairs ?? [], catalog: catalog, calendar: calendar,
+                              breaks: streakBreaks)
     }
     /// Achievements earned by the night in `shownResult` (result screen).
     private(set) var newAchievements: [Achievement] = []
@@ -213,12 +235,12 @@ final class AppModel {
     /// Weeks (Monday–Sunday evenings) with nights or naps, newest first.
     var journalWeeks: [WeekSummary] {
         WeeklyJournal.weeks(results: realResults().compactMap(\.result), naps: napResults().compactMap(\.result),
-                            calendar: calendar)
+                            calendar: calendar, breaks: streakBreaks)
     }
 
     func journalWeek(monday: NightKey) -> WeekSummary {
         WeeklyJournal.week(monday: monday, results: realResults().compactMap(\.result),
-                           naps: napResults().compactMap(\.result), calendar: calendar)
+                           naps: napResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks)
     }
 
     /// Monday of the week we are in now.
@@ -235,7 +257,7 @@ final class AppModel {
         let results = realResults().compactMap(\.result)
         let lastPossible = window.key.adding(days: -1, calendar: calendar)
         let last = max(results.map(\.key).max() ?? lastPossible, lastPossible)
-        return Progression.currentStreak(results, lastNight: last, calendar: calendar)
+        return Progression.currentStreak(results, lastNight: last, calendar: calendar, breaks: streakBreaks)
     }
 
     /// The town is not stored – it is replayed from the finalized nights (placement is deterministic).
@@ -332,12 +354,43 @@ final class AppModel {
     private(set) var customTownName: String?
     var townName: String { customTownName ?? L("My Town") }
 
-    /// Trimmed, at most 30 characters; empty = back to the default name.
-    func renameTown(_ name: String) {
+    /// What renaming would cost now (owner 2026-09-30: once a year free, otherwise 5 000 🪙).
+    func renameCost(at t: Date? = nil) -> RenamePolicy.Cost {
+        let p = progress()
+        return RenamePolicy.cost(at: t ?? clock.now, hasCustomName: customTownName != nil,
+                                 lastRenameAt: p.lastRenameAt, lastFreeRenameAt: p.lastFreeRenameAt)
+    }
+
+    /// When the yearly free rename is available again (nil = now).
+    var nextFreeRename: Date? { RenamePolicy.nextFree(after: clock.now, lastFreeRenameAt: progress().lastFreeRenameAt) }
+
+    enum RenameResult: Equatable { case renamed, unchanged, notEnoughCoins }
+
+    /// Trimmed, at most 30 characters; empty = back to the default name. Pays for it when it is not free.
+    @discardableResult
+    func renameTown(_ name: String) -> RenameResult {
         let trimmed = String(name.trimmingCharacters(in: .whitespacesAndNewlines).prefix(Self.townNameMaxLength))
-        customTownName = trimmed.isEmpty ? nil : trimmed
-        progress().townName = customTownName
+        let new = trimmed.isEmpty ? nil : trimmed
+        guard new != customTownName else { return .unchanged }
+        let cost = renameCost()
+        let p = progress()
+        switch cost {
+        case .paid(let price):
+            guard coins >= price else { return .notEnoughCoins }
+            spend(price, reason: "rename-town")
+            p.lastRenameAt = clock.now
+        case .free(.yearly):
+            p.lastRenameAt = clock.now
+            p.lastFreeRenameAt = clock.now
+        case .free(.firstNaming):
+            p.lastRenameAt = clock.now                    // opens the 10-min typo window, keeps the yearly one
+        case .free(.typoFix):
+            break                                         // the typo window stays anchored to the rename
+        }
+        customTownName = new
+        p.townName = new
         save()
+        return .renamed
     }
 
     // MARK: - language (stored in the database, `UserProgress.languageRaw`)
@@ -379,7 +432,12 @@ final class AppModel {
         let p = progress()
         return BackupFile(exportedAt: clock.now, settings: settings, onboardingCompletedAt: p.onboardingCompletedAt,
                           firstNightBriefingAt: p.firstNightBriefingAt, nights: records().map(\.backup),
-                          language: p.languageRaw, townName: p.townName)
+                          language: p.languageRaw, townName: p.townName, lastRenameAt: p.lastRenameAt,
+                          lastFreeRenameAt: p.lastFreeRenameAt, scheduleCalibrationStart: p.scheduleCalibrationStart,
+                          spends: spends().map { .init(at: $0.at, amount: $0.amount, reason: $0.reason) },
+                          scheduleChanges: scheduleChanges().map {
+                              .init(at: $0.at, from: $0.from, to: $0.to, free: $0.free, breakKey: $0.breakKey)
+                          })
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
@@ -393,6 +451,16 @@ final class AppModel {
         p.firstNightBriefingAt = b.firstNightBriefingAt
         if let lang = b.language, AppLanguage(rawValue: lang) != nil { p.languageRaw = lang }
         if let name = b.townName { p.townName = name }
+        if let d = b.lastRenameAt { p.lastRenameAt = d }
+        if let d = b.lastFreeRenameAt { p.lastFreeRenameAt = d }
+        if let d = b.scheduleCalibrationStart { p.scheduleCalibrationStart = d }
+        // the backup is the whole truth: an older one (no spends / changes) had none
+        try context.delete(model: CoinSpend.self)
+        for s in b.spends ?? [] { context.insert(CoinSpend(at: s.at, amount: s.amount, reason: s.reason)) }
+        try context.delete(model: ScheduleChange.self)
+        for c in b.scheduleChanges ?? [] {
+            context.insert(ScheduleChange(at: c.at, from: c.from, to: c.to, free: c.free, breakKey: c.breakKey))
+        }
         save()
         settings = b.settings
         loadProgress()
@@ -708,7 +776,8 @@ final class AppModel {
         }
         if !rec.isDebug { writeAutoBackup() }
         lastStreakBonus = rec.isDebug || rec.isNap ? 0
-            : Economy.ledger(realResults().compactMap(\.result), calendar: calendar).last?.streakBonus ?? 0
+            : Economy.ledger(realResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks)
+                .last?.streakBonus ?? 0
         phase = .result
         if servicesEnabled {
             switch result.outcome {

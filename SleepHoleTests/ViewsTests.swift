@@ -19,7 +19,7 @@ struct ViewsTests {
     }
 
     func makeModel(at now: Date, language: AppLanguage = .en) -> (AppModel, FakeClock, ModelContainer) {
-        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let clock = FakeClock(now)
         var s = AppSettings()
         s.wakeCode = "1234"

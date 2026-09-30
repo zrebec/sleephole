@@ -2165,6 +2165,38 @@
         }
       }
     },
+    "Free again on %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free again on %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zadarmo znova %@."
+          }
+        }
+      }
+    },
+    "Free – you can rename your town for free once a year.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Free – you can rename your town for free once a year."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zadarmo – raz za rok môžeš mesto premenovať bezplatne."
+          }
+        }
+      }
+    },
     "From": {
       "localizations": {
         "en": {
@@ -2549,22 +2581,6 @@
         }
       }
     },
-    "Leave it empty for the default name.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Leave it empty for the default name."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nechaj prázdne pre predvolený názov."
-          }
-        }
-      }
-    },
     "Leaving to another app for more than %@ collapses the building.": {
       "localizations": {
         "en": {
@@ -2897,6 +2913,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Moje mesto"
+          }
+        }
+      }
+    },
+    "Naming your town is free.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naming your town is free."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pomenovať mesto je zadarmo."
           }
         }
       }
@@ -3265,6 +3297,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nevadí. Budík zazvoní o %@."
+          }
+        }
+      }
+    },
+    "Not enough coins": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not enough coins"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nemáš dosť mincí"
           }
         }
       }
@@ -3653,6 +3701,22 @@
         }
       }
     },
+    "Rename for %lld 🪙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename for %lld 🪙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premenovať za %lld 🪙"
+          }
+        }
+      }
+    },
     "Rename the town": {
       "localizations": {
         "en": {
@@ -3665,6 +3729,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Premenovať mesto"
+          }
+        }
+      }
+    },
+    "Rename…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename…"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premenovať…"
+          }
+        }
+      }
+    },
+    "Renaming costs %lld 🪙.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renaming costs %lld 🪙."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premenovanie stojí %lld 🪙."
           }
         }
       }
@@ -4133,22 +4229,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Znova ukázať sprievodcu a prvú noc"
-          }
-        }
-      }
-    },
-    "Shown above your town. Leave it empty for the default name.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shown above your town. Leave it empty for the default name."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zobrazí sa nad tvojím mestom. Nechaj prázdne pre predvolený názov."
           }
         }
       }
@@ -5241,6 +5321,22 @@
         }
       }
     },
+    "You can fix a typo for free for 10 minutes after renaming.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can fix a typo for free for 10 minutes after renaming."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preklep môžeš zadarmo opraviť do 10 minút po premenovaní."
+          }
+        }
+      }
+    },
     "You can nap until %@. An alarm rings at the end; a complete nap earns +%lld 🪙.": {
       "localizations": {
         "en": {
@@ -5353,6 +5449,22 @@
         }
       }
     },
+    "You have %lld 🪙 – %lld more needed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have %lld 🪙 – %lld more needed."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máš %1$lld 🪙 – chýba ešte %2$lld."
+          }
+        }
+      }
+    },
     "You have until bedtime + %@ for a podcast or story.": {
       "localizations": {
         "en": {
@@ -5445,6 +5557,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Prvá budova pribudne po prvej noci 🌙"
+          }
+        }
+      }
+    },
+    "Your first name and one rename a year are free, otherwise renaming costs %lld 🪙.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your first name and one rename a year are free, otherwise renaming costs %lld 🪙."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prvé pomenovanie a jedno premenovanie za rok sú zadarmo, inak premenovanie stojí %lld 🪙."
           }
         }
       }
