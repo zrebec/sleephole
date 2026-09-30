@@ -109,6 +109,7 @@ struct GuideView: View {
             .padding(24)
             .padding(.bottom, 40)
         }
+        .scrollBounceBehavior(.basedOnSize)
     }
 
     private func row(_ icon: String, _ text: String) -> some View {

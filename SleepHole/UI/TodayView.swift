@@ -83,6 +83,8 @@ struct HomeView: View {
                 }
                 .padding()
             }
+            // no rubber-band scrolling when everything fits (owner 2026-09-30: "Dnes" could be dragged around)
+            .scrollBounceBehavior(.basedOnSize)
             .sheet(isPresented: $briefing) { FirstNightBriefing() }
         }
         .navigationTitle(L("Today"))
