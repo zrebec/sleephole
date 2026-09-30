@@ -57,7 +57,7 @@ Every night one of the unlocked levels is picked at random, then a building from
 - **Achievements:** 12 of them (first building, 3/7/30 nights in a row, 10/50/100 nights built, first level 2/3 building, first skyscraper, first nap, ruin repaired), each pays +50 🪙 (big ones +200).
 - **Town name** (tap it in the Town header) and a **weekly town journal** in Stats; on Monday morning the result screen shows how the finished week went.
 - **Vibrations** when a night starts, when the phone locks, before the setup ends, with the “Come back!” warning and when you're back in time.
-- **Sleep sounds:** brown, pink and white noise, rain on a tent and rain on a window. They play exactly for the timer (1–60 min or all night), also during a night and with the screen off.
+- **Sleep sounds:** brown, pink and white noise, rain on a tent and rain on a window, and three **sound stories** (cabin in the woods, a cave, the workshop): a quiet bed with random scenes on top – footsteps, an axe, a pickaxe, hammering – different every night. They play exactly for the timer (1–60 min or all night), also during a night and with the screen off.
 - **Backup:** export / import to a file and an automatic backup after every night (Files → On My iPhone → SleepHole).
 - **First-run guide** (6 pages, language picker on the first one). The numbers in it come straight from the rules in the code. Before the first night a “Your first night” checklist appears too. Both are stored in the database.
 - **Two languages:** English (default) and Slovak. The switch is at the top of Settings; the choice is stored in the database and applies immediately, without a restart. Everything is translated, including notifications, building names and the signs painted on buildings.
@@ -77,7 +77,7 @@ SleepHole/Resources/Localizable.xcstrings   every UI text (key = English text, S
 SleepHoleTests/   app tests (hosted, Swift Testing)
 assets/sprites/   190 PNG sprites (+ 9 English sign variants) + catalog.json      assets/audio/  alarms and sounds (CAF)
 tools/render/     Kenney OBJ → isometric sprites (SceneKit), previews, town layout
-tools/audio/      alarm synthesis (numpy)
+tools/audio/      alarm synthesis, rain loops, sound-story samples + beds (numpy)
 tools/i18n/       translation key check (keys.py), adding translations (add.py)
 docs/             PLAN.md (decisions, SK) · IMPLEMENTATION_PLAN.md (for agents, EN) · IMPLEMENTATION_I18N.md · RUN_ON_IPHONE.md
 project.yml       XcodeGen (.xcodeproj is generated, not in git)
@@ -161,5 +161,6 @@ More tools:
 
 - **Graphics and some sounds:** [Kenney](https://kenney.nl) (CC0). Rendered and assembled by our own scripts in `tools/`.
 - **Alarm melodies:** E. Grieg (*Peer Gynt*, 1875) and L. van Beethoven (*Symphony No. 9*, 1824), both public domain. Reveille and Alarm! are original. Everything is synthesised in `tools/audio/make_alarms.py`.
+- **Sound stories:** Kenney's CC0 Impact Sounds, RPG Audio and Foley Sounds, arranged at random by the app (`SleepHole/Night/Stories.swift`); the beds are synthesised (`tools/audio/make_stories.py`).
 - **Rain on a window:** “Rain on Windows, Interior, A” by [InspectorJ](https://freesound.org/s/346642/) (www.jshaw.co.uk), Freesound, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), made into a loop. Rain on a tent and the noises are synthesised (`tools/audio/make_rain.py`, `AudioKeeper`).
 - **Inspiration:** [SleepTown](https://apps.apple.com/app/sleeptown/id1210251567) by Seekrtech.

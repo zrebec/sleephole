@@ -613,6 +613,22 @@
         }
       }
     },
+    "A crackling fire; someone walks through the grass, chops wood and builds a cabin. A different story every night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A crackling fire; someone walks through the grass, chops wood and builds a cabin. A different story every night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Praská oheň; niekto prejde trávou, štiepa drevo a stavia chatu. Každú noc iný príbeh."
+          }
+        }
+      }
+    },
     "A good night rebuilt a ruin.": {
       "localizations": {
         "en": {
@@ -737,6 +753,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pokojný týždeň. Dnes večer je nový začiatok 🌱"
+          }
+        }
+      }
+    },
+    "A small stove and rain on the roof; hammering on an anvil, carving, a visitor at the door. A different story every night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A small stove and rain on the roof; hammering on an anvil, carving, a visitor at the door. A different story every night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malá pec a dážď na streche; kovanie na nákove, vyrezávanie, niekto zaklope na dvere. Každú noc iný príbeh."
           }
         }
       }
@@ -1633,6 +1665,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hlboký, tlmený – ako vzdialený vodopád."
+          }
+        }
+      }
+    },
+    "Deep silence and drips; someone explores a cave and digs with a pickaxe, pebbles fall. A different story every night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deep silence and drips; someone explores a cave and digs with a pickaxe, pebbles fall. A different story every night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hlboké ticho a kvapky; niekto skúma jaskyňu, kope krompáčom a padajú kamienky. Každú noc iný príbeh."
           }
         }
       }
@@ -4169,6 +4217,54 @@
         }
       }
     },
+    "Story: a cave": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Story: a cave"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Príbeh: jaskyňa"
+          }
+        }
+      }
+    },
+    "Story: cabin in the woods": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Story: cabin in the woods"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Príbeh: chata v lese"
+          }
+        }
+      }
+    },
+    "Story: the workshop": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Story: the workshop"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Príbeh: dielňa"
+          }
+        }
+      }
+    },
     "Tap a day to see how that night went.": {
       "localizations": {
         "en": {
@@ -4501,6 +4597,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zvuk sa nespustil: %@"
+          }
+        }
+      }
+    },
+    "The sound stories are made of Kenney's CC0 sounds (Impact Sounds, RPG Audio, Foley Sounds); their fire, wind, cave and rain beds are synthesised.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The sound stories are made of Kenney's CC0 sounds (Impact Sounds, RPG Audio, Foley Sounds); their fire, wind, cave and rain beds are synthesised."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvukové príbehy sú zložené z CC0 zvukov od Kenneyho (Impact Sounds, RPG Audio, Foley Sounds); podklady s ohňom, vetrom, jaskyňou a dažďom sú syntetizované."
           }
         }
       }

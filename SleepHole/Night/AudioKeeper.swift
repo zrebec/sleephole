@@ -1,4 +1,5 @@
 import AVFoundation
+import SleepCore
 import Foundation
 
 /// Keeps the app alive overnight with background audio (UIBackgroundModes = audio) and, later, rings the
@@ -13,6 +14,9 @@ final class AudioKeeper {
         case whiteNoise = "white"
         case rainTent = "rain"            // id kept from the first (synthesised) rain → old settings still load
         case rainWindow = "rain-window"
+        case storyForest = "story-forest"      // sound stories (owner 2026-09-30): a bed + random scenes
+        case storyCave = "story-cave"
+        case storyWorkshop = "story-workshop"
         case silence = "silence"
         var id: String { rawValue }
 
@@ -23,6 +27,9 @@ final class AudioKeeper {
             case .whiteNoise: L("White noise")
             case .rainTent: L("Rain on a tent")
             case .rainWindow: L("Rain on a window")
+            case .storyForest: L("Story: cabin in the woods")
+            case .storyCave: L("Story: a cave")
+            case .storyWorkshop: L("Story: the workshop")
             case .silence: L("Silence")
             }
         }
@@ -32,6 +39,17 @@ final class AudioKeeper {
             switch self {
             case .rainTent: "rain_tent.caf"
             case .rainWindow: "rain_window.caf"
+            case .storyForest, .storyCave, .storyWorkshop: storyWorld.map { "bed_\($0.rawValue).caf" }
+            default: nil
+            }
+        }
+
+        /// Sound stories: the world whose random scenes play over the bed loop.
+        var storyWorld: StoryWorld? {
+            switch self {
+            case .storyForest: .forest
+            case .storyCave: .cave
+            case .storyWorkshop: .workshop
             default: nil
             }
         }
@@ -43,6 +61,9 @@ final class AudioKeeper {
             case .whiteNoise: L("Bright and even – like a fan.")
             case .rainTent: L("Drops tapping on the tent, now and then a big drip from a tree.")
             case .rainWindow: L("Soft rain outside the window (recording by InspectorJ, CC BY 4.0).")
+            case .storyForest: L("A crackling fire; someone walks through the grass, chops wood and builds a cabin. A different story every night.")
+            case .storyCave: L("Deep silence and drips; someone explores a cave and digs with a pickaxe, pebbles fall. A different story every night.")
+            case .storyWorkshop: L("A small stove and rain on the roof; hammering on an anvil, carving, a visitor at the door. A different story every night.")
             case .silence: L("Nothing plays (the app still stays awake at night).")
             }
         }
@@ -71,6 +92,15 @@ final class AudioKeeper {
     private static var loopBuffers: [String: AVAudioPCMBuffer] = [:]
     /// Current sleep-sound level (applies to the generator OR the loop player).
     private var level: Float = 0
+    // sound stories: random one-shots → mixer → reverb → main mixer, over the bed loop
+    private let storyMixer = AVAudioMixerNode()
+    private let storyReverb = AVAudioUnitReverb()
+    private let storyPlayers = (0..<4).map { _ in AVAudioPlayerNode() }
+    private var nextStoryPlayer = 0
+    private var storyTask: Task<Void, Never>?
+    private(set) var storyWorld: StoryWorld?
+    /// Every story sound played (tests / diagnostics).
+    private(set) var storySoundsPlayed = 0
     /// Unit tests: route everything through a silent mixer (nothing audible on the Mac).
     static var muted = false
     /// How many keepers are running (the night + the Settings preview). The shared audio session may only be
@@ -94,6 +124,17 @@ final class AudioKeeper {
         engine.connect(node, to: engine.mainMixerNode, format: mono)
         engine.mainMixerNode.outputVolume = Self.muted ? 0 : 1
         engine.attach(loopPlayer)
+        if storyMixer.engine == nil {
+            [storyMixer, storyReverb].forEach(engine.attach)
+            engine.connect(storyMixer, to: storyReverb, format: nil)
+            engine.connect(storyReverb, to: engine.mainMixerNode, format: nil)
+            if let sample = Self.sample("st_grass_0.caf") {
+                for p in storyPlayers {
+                    engine.attach(p)
+                    engine.connect(p, to: storyMixer, format: sample.format)
+                }
+            }
+        }
         try engine.start()
         source = node
         isRunning = true
@@ -211,9 +252,11 @@ final class AudioKeeper {
         setLevel(ambience == .silence ? 0 : volume)
     }
 
-    /// Generator modes play through the source node, loop modes through `loopPlayer` (seamless .loops).
+    /// Generator modes play through the source node, loop modes through `loopPlayer` (seamless .loops),
+    /// stories additionally run their scene scheduler.
     private func applyMode(_ ambience: Ambience) {
         guard isRunning else { return }
+        if ambience.storyWorld != storyWorld { startStory(ambience.storyWorld) }
         guard let file = ambience.loopFile else {
             if loopFile != nil { loopPlayer.stop(); loopFile = nil }
             return
@@ -226,6 +269,51 @@ final class AudioKeeper {
         loopPlayer.play()
         loopFile = file
     }
+
+    // MARK: sound stories
+
+    private func startStory(_ world: StoryWorld?) {
+        storyTask?.cancel()
+        storyTask = nil
+        storyPlayers.forEach { $0.stop() }
+        storyWorld = world
+        guard let world else { return }
+        switch world {
+        case .forest: storyReverb.loadFactoryPreset(.mediumRoom); storyReverb.wetDryMix = 12
+        case .cave: storyReverb.loadFactoryPreset(.largeChamber); storyReverb.wetDryMix = 45
+        case .workshop: storyReverb.loadFactoryPreset(.smallRoom); storyReverb.wetDryMix = 22
+        }
+        storyTask = Task { [weak self] in
+            var teller = StoryTeller(world: world)
+            var rng = SeededGenerator(seed: UInt64.random(in: 0...UInt64.max))
+            try? await Task.sleep(for: .seconds(Double.random(in: 2...5)))
+            while !Task.isCancelled {
+                let scene = teller.next(using: &rng)
+                let start = Date()
+                for e in scene.events.sorted(by: { $0.at < $1.at }) {
+                    let wait = start.addingTimeInterval(e.at).timeIntervalSinceNow
+                    if wait > 0 { try? await Task.sleep(for: .seconds(wait)) }
+                    guard !Task.isCancelled, let self else { return }
+                    self.playStory(e)
+                }
+                try? await Task.sleep(for: .seconds(scene.pause))
+            }
+        }
+    }
+
+    private func playStory(_ e: StoryEvent) {
+        guard level > 0, let buffer = Self.sample(e.sample), engine.isRunning || ensureRunning() else { return }
+        let p = storyPlayers[nextStoryPlayer]
+        nextStoryPlayer = (nextStoryPlayer + 1) % storyPlayers.count
+        p.volume = e.volume
+        p.pan = e.pan
+        p.scheduleBuffer(buffer, at: nil, options: .interrupts)
+        if !p.isPlaying { p.play() }
+        storySoundsPlayed += 1
+    }
+
+    /// A story sample from the bundle (cached like the loops).
+    static func sample(_ file: String) -> AVAudioPCMBuffer? { loopBuffer(file) }
 
     private static func loopBuffer(_ file: String) -> AVAudioPCMBuffer? {
         if let b = loopBuffers[file] { return b }
@@ -242,6 +330,7 @@ final class AudioKeeper {
         let isLoop = noise.mode.loopFile != nil
         noise.gain = isLoop ? 0 : g
         loopPlayer.volume = isLoop ? g : 0
+        storyMixer.outputVolume = noise.mode.storyWorld != nil ? g : 0
     }
 
     private var fadeTask: Task<Void, Never>?
@@ -289,6 +378,7 @@ final class AudioKeeper {
         observers.removeAll()
         loopPlayer.stop()
         loopFile = nil
+        startStory(nil)
         engine.stop()
         if let source { engine.detach(source) }
         source = nil
@@ -339,7 +429,7 @@ private final class NoiseState: @unchecked Sendable {
                     s = pink(w)
                 case .whiteNoise:
                     s = w * 0.25
-                case .rainTent, .rainWindow, .silence:           // loops play through the player node
+                default:                                         // loops play through the player node
                     s = 0
                 }
                 data[i] = s * g

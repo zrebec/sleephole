@@ -22,6 +22,8 @@ struct CreditsView: View {
                 }
                 Text(L("“Rain on a tent” and all noises are synthesised by SleepHole itself."))
                     .font(.footnote).foregroundStyle(.secondary)
+                Text(L("The sound stories are made of Kenney's CC0 sounds (Impact Sounds, RPG Audio, Foley Sounds); their fire, wind, cave and rain beds are synthesised."))
+                    .font(.footnote).foregroundStyle(.secondary)
             } header: { Text(L("Sleep sounds")) }
 
             Section {
