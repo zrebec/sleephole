@@ -264,6 +264,7 @@ final class AppModel {
             Notifications.scheduleNight(setupEnds: window.setupEnds(start: now, rules: NapPlan.rules), wake: window.wake,
                                         alarmFile: settings.alarmSound.fileName)
         }
+        buzz(.start)
         refresh(now: now)
     }
 
@@ -389,6 +390,7 @@ final class AppModel {
                 phase = .alarm
             } else {
                 phase = .building
+                warnBeforeSetupEnds(rec, now: now)
             }
             return
         }
@@ -429,6 +431,7 @@ final class AppModel {
                                         alarmFile: settings.alarmSound.fileName)
             SoundFX.play("night_start", volume: 0.5)
         }
+        buzz(.start)
         refresh(now: now)
     }
 
@@ -552,6 +555,8 @@ final class AppModel {
 
     private func stopServices() {
         sleepSound = nil
+        isAway = false
+        waitingForReturn = false
         guard servicesEnabled else { return }
         alarmTask?.cancel()
         alarmTask = nil
@@ -592,15 +597,48 @@ final class AppModel {
         save()
         switch kind {
         case .leftApp:
+            isAway = true
             if let graceEnds, date >= graceEnds, !alreadyCollapsed {
                 nudgesSent += 1
+                waitingForReturn = true
+                buzz(.warning)
                 if servicesEnabled { Notifications.nudge(tolerance: rec.rules.accidentalTolerance) }
             }
         case .returned, .locked:
+            isAway = false
             if servicesEnabled { Notifications.cancelNudge() }
+            if waitingForReturn, collapsedAt == nil {
+                buzz(kind == .locked ? .locked : .relief)
+            } else if kind == .locked, date < rec.wake, collapsedAt == nil {
+                buzz(.locked)
+            }
+            waitingForReturn = false
         default:
             break
         }
+    }
+
+    // MARK: - vibrations (owner 2026-09-30, idea XS)
+
+    /// Every vibration requested this app session, in order (diagnostics + tests).
+    private(set) var haptics: [Haptic] = []
+    /// The app is in the background right now (left without locking).
+    private var isAway = false
+    /// A "Come back!" warning was sent and the owner has not returned yet.
+    private var waitingForReturn = false
+    /// The night whose "setup ends in 15 s" vibration was already played.
+    private var setupWarningFor: String?
+
+    private func buzz(_ h: Haptic) {
+        haptics.append(h)
+        if servicesEnabled { Haptics.play(h) }
+    }
+
+    /// Together with the "⏳ 15 s of setup left" notification – but only when the owner is away from SleepHole.
+    private func warnBeforeSetupEnds(_ rec: NightRecord, now: Date) {
+        guard let ends = graceEnds, now >= ends - 15, now < ends, isAway, setupWarningFor != rec.id else { return }
+        setupWarningFor = rec.id
+        buzz(.warning)
     }
 
     private func finalize(_ rec: NightRecord) {

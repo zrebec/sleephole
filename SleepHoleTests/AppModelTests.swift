@@ -123,6 +123,31 @@ struct AppModelTests {
         #expect(h.model.nudgesSent == 2)
     }
 
+    @Test func vibrationsAtTheKeyMomentsOfANight() {
+        let h = harness(at: date(5, 22, 25)); h.model.refresh(); h.model.startNight()
+        #expect(h.model.haptics == [.start])
+        h.clock.now = date(5, 22, 30); h.model.refresh()                 // setup until 22:35, still in the app
+        h.clock.now = date(5, 22, 34) + 50; h.model.refresh()
+        #expect(h.model.haptics == [.start])                              // in the app → no "15 s left" buzz
+        h.model.append(.leftApp)                                          // podcast app
+        h.clock.now += 1; h.model.refresh()
+        h.clock.now += 1; h.model.refresh()                               // only once per night
+        #expect(h.model.haptics == [.start, .warning])
+        h.clock.now = date(5, 22, 35) + 5; h.model.append(.returned)       // back in time, no warning was sent
+        h.clock.now = date(5, 22, 36); h.model.append(.locked)
+        #expect(h.model.haptics == [.start, .warning, .locked])
+        h.clock.now = date(5, 23); h.model.append(.returned)
+        h.model.append(.leftApp)                                          // after the setup → "Come back!"
+        #expect(h.model.haptics.last == .warning && h.model.nudgesSent == 1)
+        h.clock.now += 5; h.model.append(.returned)                       // in time → relief
+        #expect(h.model.haptics.last == .relief)
+        h.clock.now = date(5, 23, 30); h.model.append(.leftApp)
+        h.clock.now += 60; h.model.append(.returned)                      // too late: collapsed, no relief
+        #expect(h.model.collapsedAt != nil && h.model.haptics.last == .warning)
+        h.clock.now = date(5, 23, 40); h.model.append(.locked)            // a collapsed building: no lock buzz
+        #expect(h.model.haptics.last == .warning)
+    }
+
     @Test func collapseIsVisibleLive() {
         let h = harness(at: date(5, 22, 25)); h.model.refresh(); h.model.startNight()
         h.clock.now = date(5, 23); h.model.append(.leftApp)
