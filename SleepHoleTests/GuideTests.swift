@@ -96,7 +96,7 @@ struct GuideTests {
         m.refresh()
         render(GuideView(), m)
         render(GuideView(replay: true), m)
-        render(ScheduleFields(), m)
+        render(ScheduleFields(schedule: .constant(Schedule())), m)
         render(FirstNightBriefing(), m)
         render(HomeView(), m)
         render(RootView(), m)                                             // shows the guide cover

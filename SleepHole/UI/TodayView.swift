@@ -61,6 +61,7 @@ struct HomeView: View {
             let napReason = model.napBlockReason(at: now)
             ScrollView {
                 VStack(spacing: 18) {
+                    if model.showsMonthlySchedulePrompt { MonthlyScheduleCard() }
                     StatusBadges()
                     Text(L("Bedtime \(Fmt.time(w.bedtime)) · wake-up \(Fmt.time(w.wake))"))
                         .font(.title3.bold())
@@ -108,6 +109,30 @@ struct HomeView: View {
         .controlSize(.large)
         .disabled(!enabled)
         if prominent { b.buttonStyle(.borderedProminent) } else { b.buttonStyle(.bordered) }
+    }
+}
+
+/// Days 1–3 of every month (owner 2026-09-30): "does your bedtime still fit?" – changing it is free now.
+struct MonthlyScheduleCard: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        let s = model.settings.schedule
+        VStack(alignment: .leading, spacing: 10) {
+            Text(L("New month 🌙")).font(.headline)
+            Text(L("Do bedtime \(Fmt.time(s.bedtime)) and wake-up \(Fmt.time(s.wake)) still fit you? Until the 3rd you can change them for free."))
+                .font(.subheadline)
+            HStack {
+                Button(L("It fits")) { model.answerMonthlyPrompt(adjust: false) }
+                    .buttonStyle(.bordered)
+                Spacer()
+                Button(L("Adjust")) { model.answerMonthlyPrompt(adjust: true) }
+                    .buttonStyle(.borderedProminent)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.indigo.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
     }
 }
 

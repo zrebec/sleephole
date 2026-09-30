@@ -80,6 +80,8 @@ import Testing
         #expect(Progression.bestStreak(r, calendar: bratislava, breaks: cut) == 5)
         #expect(Progression.currentStreak(r, lastNight: NightKey("2026-10-10")!, calendar: bratislava,
                                           breaks: [NightKey("2026-11-01")!]) == 10)   // a future break: no effect yet
+        #expect(Progression.currentStreak(r, lastNight: NightKey("2026-10-10")!, calendar: bratislava,
+                                          breaks: [NightKey("2026-10-11")!]) == 0)   // changed today: 0 at once
     }
 
     @Test func theStreakBonusAndAchievementsRestartAfterABreak() {

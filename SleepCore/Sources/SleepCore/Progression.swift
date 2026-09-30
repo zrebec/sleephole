@@ -36,7 +36,9 @@ public enum Progression {
         var streak = 0
         var key = lastNight
         let first = results.map(\.key).min() ?? lastNight
-        let earliest = max(first, breaks.filter { $0 <= lastNight }.max() ?? first)
+        // a break for tonight (a change made after the last night) shows 0 at once, not only tomorrow
+        let horizon = lastNight.adding(days: 1, calendar: calendar)
+        let earliest = max(first, breaks.filter { $0 <= horizon }.max() ?? first)
         while key >= earliest {
             switch byKey[key] {
             case .complete: streak += 1

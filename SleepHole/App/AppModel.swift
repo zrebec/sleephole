@@ -345,6 +345,67 @@ final class AppModel {
         firstNightBriefed = p.firstNightBriefingAt != nil
         language = p.languageRaw.flatMap(AppLanguage.init(rawValue:)) ?? .fallback
         customTownName = p.townName
+        if p.scheduleCalibrationStart == nil {             // the free first week starts with the first launch
+            p.scheduleCalibrationStart = clock.now
+            save()
+        }
+        scheduleCalibrationStart = p.scheduleCalibrationStart
+        schedulePromptAnswered = p.schedulePromptMonth
+    }
+
+    // MARK: - schedule changes (owner 2026-09-30: free on days 1–3 of a month + the first week, else the streak)
+
+    private(set) var scheduleCalibrationStart: Date?
+    private(set) var schedulePromptAnswered: String?
+    /// Bumped by "Adjust" on the monthly card → the root view opens Settings.
+    private(set) var settingsRequest = 0
+
+    func scheduleChangeCost(at t: Date? = nil) -> SchedulePolicy.Change {
+        SchedulePolicy.change(at: t ?? clock.now, calibrationStart: scheduleCalibrationStart, calendar: calendar)
+    }
+
+    var nextFreeScheduleChange: Date {
+        SchedulePolicy.nextFreeWindow(after: clock.now, calibrationStart: scheduleCalibrationStart, calendar: calendar)
+    }
+
+    var scheduleCalibrationEnds: Date? {
+        SchedulePolicy.calibrationEnds(after: clock.now, calibrationStart: scheduleCalibrationStart)
+    }
+
+    /// Saves a new schedule. A new bedtime / wake outside the free window resets the 🔥 streak from tonight
+    /// (a `ScheduleChange` with a `breakKey`); the reminder can change any time for free.
+    func applySchedule(_ new: Schedule) {
+        let old = settings.schedule
+        guard new != old, active == nil else { return }
+        if (new.bedtime != old.bedtime || new.wake != old.wake), onboardingDone {
+            let free = scheduleChangeCost() != .resetsStreak
+            context.insert(ScheduleChange(at: clock.now, from: "\(old.bedtime)–\(old.wake)",
+                                          to: "\(new.bedtime)–\(new.wake)", free: free,
+                                          breakKey: free ? nil : SchedulePolicy.streakBreak(changedAt: clock.now,
+                                                                                            calendar: calendar).description))
+            save()
+        }
+        settings.schedule = new
+        refresh()
+    }
+
+    private var monthKey: String {
+        let c = calendar.dateComponents([.year, .month], from: clock.now)
+        return String(format: "%04d-%02d", c.year!, c.month!)
+    }
+
+    /// "New month 🌙 Does your bedtime still fit?" on days 1–3 until answered.
+    var showsMonthlySchedulePrompt: Bool {
+        onboardingDone && active == nil && SchedulePolicy.freeDays.contains(calendar.component(.day, from: clock.now))
+            && schedulePromptAnswered != monthKey
+    }
+
+    /// `adjust` = open Settings to change the schedule.
+    func answerMonthlyPrompt(adjust: Bool) {
+        progress().schedulePromptMonth = monthKey
+        save()
+        schedulePromptAnswered = monthKey
+        if adjust { settingsRequest += 1 }
     }
 
     // MARK: - town name (owner 2026-09-30, idea S; stored in the database)

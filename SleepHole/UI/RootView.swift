@@ -21,6 +21,7 @@ struct RootView: View {
             Tab(L("Settings"), systemImage: "gearshape.fill", value: 3) { SettingsView().id(lang) }
         }
         .environment(\.locale, lang.locale)
+        .onChange(of: model.settingsRequest) { _, _ in tab = 3 }          // "Adjust" on the monthly card
         .fullScreenCover(isPresented: Binding(get: { !model.onboardingDone && !screenshotMode }, set: { _ in })) {
             GuideView().id(lang).environment(\.locale, lang.locale)
         }

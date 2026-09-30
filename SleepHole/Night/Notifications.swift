@@ -24,6 +24,19 @@ enum Notifications {
                                                         repeats: true)
             center.add(UNNotificationRequest(identifier: "reminder-\(i)", content: content, trigger: trigger))
         }
+        scheduleMonthlyCheck(wake: schedule.wake)
+    }
+
+    /// On the 1st of every month, an hour after wake-up: the free window to change the schedule (days 1–3).
+    static func scheduleMonthlyCheck(wake: TimeOfDay) {
+        let total = (wake.hour * 60 + wake.minute + 60) % (24 * 60)
+        let content = UNMutableNotificationContent()
+        content.title = L("New month 🌙")
+        content.body = L("Does your bedtime still fit you? Until the 3rd you can change it for free.")
+        content.sound = .default
+        let trigger = UNCalendarNotificationTrigger(dateMatching: DateComponents(day: 1, hour: total / 60, minute: total % 60),
+                                                    repeats: true)
+        center.add(UNNotificationRequest(identifier: "schedule-month", content: content, trigger: trigger))
     }
 
     /// Scheduled when a night starts: end-of-setup warning + backup alarm (only matters if the app dies).

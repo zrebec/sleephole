@@ -885,6 +885,22 @@
         }
       }
     },
+    "Adjust": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adjust"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upraviť"
+          }
+        }
+      }
+    },
     "After every night a backup is also saved automatically: Files → On My iPhone → SleepHole → %@.": {
       "localizations": {
         "en": {
@@ -1233,6 +1249,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Večierka %1$@ · budíček %2$@"
+          }
+        }
+      }
+    },
+    "Bedtime and wake-up can be changed for free on days 1–3 of every month (next: %@). Changing them now starts your 🔥 streak again. The reminder can change any time.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedtime and wake-up can be changed for free on days 1–3 of every month (next: %@). Changing them now starts your 🔥 streak again. The reminder can change any time."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večierku a budíček môžeš zadarmo zmeniť 1.–3. deň každého mesiaca (najbližšie: %@). Zmena teraz začne tvoju 🔥 sériu odznova. Pripomienku môžeš meniť kedykoľvek."
           }
         }
       }
@@ -1749,6 +1781,22 @@
         }
       }
     },
+    "Days 1–3 of the month: you can change bedtime and wake-up for free now.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Days 1–3 of the month: you can change bedtime and wake-up for free now."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1.–3. deň v mesiaci: večierku a budíček teraz môžeš zmeniť zadarmo."
+          }
+        }
+      }
+    },
     "Deep and soft – like a distant waterfall.": {
       "localizations": {
         "en": {
@@ -1857,6 +1905,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Digitálny"
+          }
+        }
+      }
+    },
+    "Do bedtime %@ and wake-up %@ still fit you? Until the 3rd you can change them for free.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do bedtime %@ and wake-up %@ still fit you? Until the 3rd you can change them for free."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sedí ti ešte večierka %1$@ a budíček %2$@? Do 3. dňa ich môžeš zmeniť zadarmo."
+          }
+        }
+      }
+    },
+    "Does your bedtime still fit you? Until the 3rd you can change it for free.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Does your bedtime still fit you? Until the 3rd you can change it for free."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sedí ti ešte tvoja večierka? Do 3. dňa ju môžeš zmeniť zadarmo."
           }
         }
       }
@@ -2485,6 +2565,22 @@
         }
       }
     },
+    "It fits": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It fits"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sedí"
+          }
+        }
+      }
+    },
     "It's too late to build tonight 🌙 Tomorrow from %@.": {
       "localizations": {
         "en": {
@@ -3093,6 +3189,22 @@
         }
       }
     },
+    "New month 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New month 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nový mesiac 🌙"
+          }
+        }
+      }
+    },
     "New simulation": {
       "localizations": {
         "en": {
@@ -3489,6 +3601,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Otvoriť nastavenia upozornení"
+          }
+        }
+      }
+    },
+    "Outside the free window a new bedtime or wake-up starts your 🔥 streak of %@ again. Your buildings, coins and levels stay. Free changes: from %@, days 1–3 of every month.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outside the free window a new bedtime or wake-up starts your 🔥 streak of %@ again. Your buildings, coins and levels stay. Free changes: from %@, days 1–3 of every month."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mimo bezplatného obdobia začne nová večierka alebo budíček tvoju 🔥 sériu (%1$@) odznova. Budovy, mince aj levely ostanú. Zmena zadarmo: od %2$@, vždy 1.–3. deň v mesiaci."
           }
         }
       }
@@ -4021,6 +4149,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Uložiť"
+          }
+        }
+      }
+    },
+    "Save and start the streak again": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save and start the streak again"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uložiť a začať sériu odznova"
+          }
+        }
+      }
+    },
+    "Save the new schedule?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save the new schedule?"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uložiť nový rozvrh?"
           }
         }
       }
@@ -5433,6 +5593,22 @@
         }
       }
     },
+    "You change your schedule in Settings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You change your schedule in Settings."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozvrh zmeníš v Nastaveniach."
+          }
+        }
+      }
+    },
     "You have %lld seconds, or the building collapses 🏗️": {
       "localizations": {
         "en": {
@@ -5605,6 +5781,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tvoja prvá noc 🌙"
+          }
+        }
+      }
+    },
+    "Your first week: bedtime and wake-up can be changed for free until %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your first week: bedtime and wake-up can be changed for free until %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoj prvý týždeň: večierku a budíček môžeš zadarmo meniť do %@."
           }
         }
       }

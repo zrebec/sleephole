@@ -181,4 +181,55 @@ struct ExtrasTests {
         render(SettingsView(), m)
         render(TownTab().renameTownAlert(isPresented: .constant(true)), m)
     }
+
+    @Test func scheduleChangesAreFreeInTheirWindowsOtherwiseTheStreakStartsAgain() {
+        let (m, clock) = model(store(), at: date(5, 12))                  // calibration: 5.–12. 10.
+        m.completeOnboarding()
+        var s = m.settings.schedule
+        s.bedtime = TimeOfDay(22, 0)
+        #expect(m.scheduleChangeCost() == .free(.calibration) && m.scheduleCalibrationEnds != nil)
+        m.applySchedule(s)                                                 // free: first week
+        #expect(m.scheduleChanges().last?.free == true && m.streakBreaks.isEmpty)
+        s.bedtime = TimeOfDay(22, 30)
+        m.applySchedule(s)
+        for d in 5...14 { night(m, clock, day: d) }
+        clock.now = date(15, 12); m.refresh()
+        #expect(m.streak == 10 && m.scheduleChangeCost() == .resetsStreak)
+        let coins = m.coins
+        s.reminderOffsets = [45]
+        m.applySchedule(s)                                                 // only the reminder: always free
+        #expect(m.streak == 10 && m.settings.schedule.reminderOffsets == [45])
+        s.wake = TimeOfDay(6, 0)
+        m.applySchedule(s)                                                 // outside the window: streak again
+        #expect(m.streak == 0 && m.streakBreaks == [NightKey("2026-10-16")!])
+        #expect(m.coins == coins && m.stats.bestStreak == 10)              // nothing else is taken away
+        #expect(m.nextFreeScheduleChange == cal.date(from: DateComponents(year: 2026, month: 11, day: 1))!)
+        clock.now = date(15, 22, 25); m.refresh(); m.startNight()
+        clock.now = date(16, 6, 1); m.refresh(); m.confirm(code: "1234"); m.acknowledgeResult()
+        #expect(m.streak == 1)
+        m.applySchedule(s)                                                 // unchanged: nothing recorded
+        #expect(m.scheduleChanges().count == 3)
+        for cost in [SchedulePolicy.Change.free(.monthStart), .free(.calibration), .resetsStreak] {
+            #expect(!SettingsView.scheduleRules(cost, nextFree: clock.now, calibrationEnds: clock.now).isEmpty)
+        }
+        render(SettingsView(), m)
+        render(GuideView(replay: true), m)
+    }
+
+    @Test func theMonthlyCardAsksOnDays1to3() {
+        let (m, clock) = model(store(), at: date(15, 12))
+        m.completeOnboarding()
+        #expect(!m.showsMonthlySchedulePrompt)
+        clock.now = cal.date(from: DateComponents(year: 2026, month: 11, day: 2, hour: 9))!
+        #expect(m.showsMonthlySchedulePrompt && m.scheduleChangeCost() == .free(.monthStart))
+        render(TodayView(), m)
+        render(MonthlyScheduleCard(), m)
+        m.answerMonthlyPrompt(adjust: true)
+        #expect(!m.showsMonthlySchedulePrompt && m.settingsRequest == 1)
+        clock.now = cal.date(from: DateComponents(year: 2026, month: 12, day: 1, hour: 9))!
+        #expect(m.showsMonthlySchedulePrompt)                              // next month asks again
+        m.answerMonthlyPrompt(adjust: false)
+        #expect(!m.showsMonthlySchedulePrompt && m.settingsRequest == 1)
+        Notifications.scheduleMonthlyCheck(wake: TimeOfDay(23, 30))        // wraps past midnight
+    }
 }

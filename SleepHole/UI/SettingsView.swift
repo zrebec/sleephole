@@ -10,6 +10,9 @@ struct SettingsView: View {
     @State private var pendingRestore: BackupFile?
     @State private var backupMessage: String?
     @State private var renaming = false
+    /// The schedule being edited (nil = not edited); saved only with "Save" (owner 2026-09-30 limits).
+    @State private var scheduleDraft: Schedule?
+    @State private var confirmSchedule = false
 
     var body: some View {
         @Bindable var model = model
@@ -35,11 +38,36 @@ struct SettingsView: View {
                     Text(L("Your first name and one rename a year are free, otherwise renaming costs \(RenamePolicy.price) 🪙."))
                 }
 
-                Section(L("Schedule")) {
-                    ScheduleFields()
+                Section {
+                    ScheduleFields(schedule: Binding(get: { scheduleDraft ?? model.settings.schedule },
+                                                     set: { scheduleDraft = $0 }))
+                    if let draft = scheduleDraft, draft != model.settings.schedule {
+                        HStack {
+                            Button(L("Cancel")) { scheduleDraft = nil }
+                                .buttonStyle(.borderless)
+                            Spacer()
+                            Button(L("Save")) { saveSchedule(draft) }
+                                .buttonStyle(.borderedProminent)
+                        }
+                    }
                     Button(L("How it works")) { showGuide = true }
+                } header: {
+                    Text(L("Schedule"))
+                } footer: {
+                    Text(Self.scheduleRules(model.scheduleChangeCost(), nextFree: model.nextFreeScheduleChange,
+                                            calibrationEnds: model.scheduleCalibrationEnds))
                 }
                 .disabled(nightRunning)
+                .confirmationDialog(L("Save the new schedule?"), isPresented: $confirmSchedule,
+                                    titleVisibility: .visible) {
+                    Button(L("Save and start the streak again"), role: .destructive) {
+                        if let draft = scheduleDraft { model.applySchedule(draft) }
+                        scheduleDraft = nil
+                    }
+                    Button(L("Cancel"), role: .cancel) {}
+                } message: {
+                    Text(L("Outside the free window a new bedtime or wake-up starts your 🔥 streak of \(Plural.nights(model.streak)) again. Your buildings, coins and levels stay. Free changes: from \(Fmt.fullDate(NightKey(date: model.nextFreeScheduleChange, calendar: .current))), days 1–3 of every month."))
+                }
 
                 Section {
                     Picker(L("Length"), selection: $model.settings.nap.minutes) {
@@ -219,6 +247,30 @@ struct SettingsView: View {
 }
 
 extension SettingsView {
+    /// A new bedtime / wake that costs the streak asks first (only when there is a streak to lose).
+    func saveSchedule(_ draft: Schedule) {
+        let old = model.settings.schedule
+        let timesChanged = draft.bedtime != old.bedtime || draft.wake != old.wake
+        if timesChanged, model.scheduleChangeCost() == .resetsStreak, model.streak > 0 {
+            confirmSchedule = true
+        } else {
+            model.applySchedule(draft)
+            scheduleDraft = nil
+        }
+    }
+
+    static func scheduleRules(_ cost: SchedulePolicy.Change, nextFree: Date, calibrationEnds: Date?) -> String {
+        switch cost {
+        case .free(.monthStart):
+            return L("Days 1–3 of the month: you can change bedtime and wake-up for free now.")
+        case .free(.calibration):
+            let end = calibrationEnds.map { Fmt.fullDate(NightKey(date: $0, calendar: .current)) } ?? ""
+            return L("Your first week: bedtime and wake-up can be changed for free until \(end).")
+        case .resetsStreak:
+            return L("Bedtime and wake-up can be changed for free on days 1–3 of every month (next: \(Fmt.fullDate(NightKey(date: nextFree, calendar: .current)))). Changing them now starts your 🔥 streak again. The reminder can change any time.")
+        }
+    }
+
     func napTime(_ path: WritableKeyPath<NapPlan, TimeOfDay>) -> Binding<Date> {
         Binding {
             let t = model.settings.nap[keyPath: path]

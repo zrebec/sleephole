@@ -135,7 +135,13 @@ struct GuideView: View {
         @Bindable var model = model
         return pageLayout("clock.fill", L("Your schedule")) {
             Text(L("The same time every day is the base of good sleep. You can change it later in Settings."))
-            ScheduleFields().padding().background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            // first run: saved at once (the guide is always free); replayed from Settings: change it there
+            ScheduleFields(schedule: Binding(get: { model.settings.schedule }, set: { model.applySchedule($0) }))
+                .disabled(replay)
+                .padding().background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            if replay {
+                Text(L("You change your schedule in Settings.")).font(.footnote).foregroundStyle(.secondary)
+            }
             Text(L("Nap: \(model.settings.nap.minutes) min, between \(Fmt.time(model.settings.nap.windowStart)) and \(Fmt.time(model.settings.nap.windowEnd)) (change it in Settings)."))
                 .font(.footnote).foregroundStyle(.secondary)
         }
@@ -210,9 +216,10 @@ struct GuideView: View {
     }
 }
 
-/// Bedtime / wake / reminder pickers (shared by the guide and Settings).
+/// Bedtime / wake / reminder pickers (shared by the guide and Settings) – they edit `schedule`, the caller decides
+/// when it is saved (Settings: a draft with "Save", owner 2026-09-30 limits).
 struct ScheduleFields: View {
-    @Environment(AppModel.self) private var model
+    @Binding var schedule: Schedule
 
     var body: some View {
         VStack(spacing: 10) {
@@ -227,19 +234,19 @@ struct ScheduleFields: View {
 
     private func time(_ path: WritableKeyPath<Schedule, TimeOfDay>) -> Binding<Date> {
         Binding {
-            Calendar.current.date(from: DateComponents(hour: model.settings.schedule[keyPath: path].hour,
-                                                       minute: model.settings.schedule[keyPath: path].minute)) ?? Date()
+            Calendar.current.date(from: DateComponents(hour: schedule[keyPath: path].hour,
+                                                       minute: schedule[keyPath: path].minute)) ?? Date()
         } set: { date in
             let c = Calendar.current.dateComponents([.hour, .minute], from: date)
-            model.settings.schedule[keyPath: path] = TimeOfDay(c.hour ?? 0, c.minute ?? 0)
+            schedule[keyPath: path] = TimeOfDay(c.hour ?? 0, c.minute ?? 0)
         }
     }
 
     private var reminder: Binding<Int> {
         Binding {
-            model.settings.schedule.reminderOffsets.first ?? 0
+            schedule.reminderOffsets.first ?? 0
         } set: {
-            model.settings.schedule.reminderOffsets = [$0]
+            schedule.reminderOffsets = [$0]
         }
     }
 }
