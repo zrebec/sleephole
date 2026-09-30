@@ -134,4 +134,18 @@ struct ExtrasTests {
         m.language = .en
         #expect(WeekJournalView.range(one) == "10/5 – 10/11")
     }
+
+    // MARK: vibrations
+
+    @Test func everyVibrationHasAStrongPatternAndATestButton() throws {
+        for h in Haptic.allCases {
+            let pattern = try Haptics.pattern(h)
+            #expect(pattern.duration >= 0.5, "\(h) too short")
+            #expect(!VibrationTestView.title(h).isEmpty)
+            Haptics.play(h)                                   // simulator: no Taptic Engine → the fallback path
+        }
+        #expect(Haptics.lastResult != "–")
+        let (m, _) = model(store(), at: date(1, 12))
+        render(NavigationStack { VibrationTestView() }, m)
+    }
 }

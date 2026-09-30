@@ -1029,6 +1029,22 @@
         }
       }
     },
+    "Back in time": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back in time"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Návrat včas"
+          }
+        }
+      }
+    },
     "Background sound": {
       "localizations": {
         "en": {
@@ -2209,6 +2225,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vstal som"
+          }
+        }
+      }
+    },
+    "If you feel nothing, check on the iPhone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you feel nothing, check on the iPhone"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ak nič necítiš, skontroluj na iPhone"
           }
         }
       }
@@ -3721,6 +3753,54 @@
         }
       }
     },
+    "Settings → Accessibility → Touch → Vibration: on": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings → Accessibility → Touch → Vibration: on"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastavenia → Prístupnosť → Dotyk → Vibrácie: zapnuté"
+          }
+        }
+      }
+    },
+    "Settings → Sounds & Haptics → Haptics: Always Play": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings → Sounds & Haptics → Haptics: Always Play"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastavenia → Zvuky a haptika → Haptika: Vždy prehrávať"
+          }
+        }
+      }
+    },
+    "Settings → Sounds & Haptics → System Haptics: on": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings → Sounds & Haptics → System Haptics: on"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastavenia → Zvuky a haptika → Systémová haptika: zapnutá"
+          }
+        }
+      }
+    },
     "Setup is shortened to 10 s (5 min in the app). After it the building collapses if the app is in the background for more than 10 s. Locking the phone is fine.": {
       "localizations": {
         "en": {
@@ -4005,6 +4085,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stavbu začni do %1$@. Na prípravu (podcast, rozprávka) máš čas do %2$@, potom nechaj SleepHole v popredí a zamkni telefón."
+          }
+        }
+      }
+    },
+    "Start of a night": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start of a night"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Štart noci"
           }
         }
       }
@@ -4393,6 +4489,22 @@
         }
       }
     },
+    "The vibration on lock and the warnings come while SleepHole goes to the background – try them with a quick night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The vibration on lock and the warnings come while SleepHole goes to the background – try them with a quick night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vibrácia pri zamknutí a varovania prichádzajú, keď SleepHole odchádza do pozadia – vyskúšaj ich s rýchlou nocou."
+          }
+        }
+      }
+    },
     "Then come back to SleepHole and lock your phone.": {
       "localizations": {
         "en": {
@@ -4665,6 +4777,22 @@
         }
       }
     },
+    "Vibration test": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vibration test"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test vibrácií"
+          }
+        }
+      }
+    },
     "Wake-up": {
       "localizations": {
         "en": {
@@ -4677,6 +4805,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Budíček"
+          }
+        }
+      }
+    },
+    "Warning (come back)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warning (come back)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Varovanie (vráť sa)"
           }
         }
       }

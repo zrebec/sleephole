@@ -164,6 +164,7 @@ struct SettingsView: View {
                         .disabled(nightRunning)
                     NavigationLink(L("Night journal")) { NightLogView() }
                     NavigationLink(L("Detection test (F2)")) { DetectionTestView() }
+                    NavigationLink(L("Vibration test")) { VibrationTestView() }
                     Button(L("Show the guide and first night again")) { model.resetGuide() }
                         .disabled(nightRunning)
                 }
