@@ -35,6 +35,7 @@ enum Haptics {
         guard supportsHaptics else { throw HapticsError.unsupported }
         let e = try engine ?? CHHapticEngine()
         if engine == nil {
+            e.playsHapticsOnly = true          // never touch the audio session the night's sound lives in
             e.isAutoShutdownEnabled = true
             engine = e
         }

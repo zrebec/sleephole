@@ -73,6 +73,10 @@ final class AudioKeeper {
     private var level: Float = 0
     /// Unit tests: route everything through a silent mixer (nothing audible on the Mac).
     static var muted = false
+    /// How many keepers are running (the night + the Settings preview). The shared audio session may only be
+    /// deactivated when the last one stops – the preview used to deactivate it under a running night, which
+    /// silenced the night for good (owner bug 2026-09-30: no sleep sound could be started any more).
+    private(set) static var runningKeepers = 0
 
     func start(ambience: Ambience, volume: Float) throws {
         stop()
@@ -93,6 +97,7 @@ final class AudioKeeper {
         try engine.start()
         source = node
         isRunning = true
+        Self.runningKeepers += 1
         applyMode(ambience)
         setLevel(ambience == .silence ? 0 : volume)
 
@@ -104,6 +109,14 @@ final class AudioKeeper {
             MainActor.assumeIsolated {
                 self?.onInterruption?(began ? "audio interruption began" : "audio interruption ended")
                 if !began { try? self?.engine.start() }          // resume after a call
+            }
+        })
+        // headphones / Bluetooth / a speaker change stop AVAudioEngine – start it again
+        observers.append(nc.addObserver(forName: .AVAudioEngineConfigurationChange, object: engine,
+                                        queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.onInterruption?("audio configuration change")
+                self?.ensureRunning()
             }
         })
         observers.append(nc.addObserver(forName: AVAudioSession.mediaServicesWereResetNotification, object: nil,
@@ -169,7 +182,30 @@ final class AudioKeeper {
         isAlarmRinging = false
     }
 
+    /// Starts the engine again when iOS (or anything else) stopped it while we are supposed to run.
+    /// Called before every change of the sleep sound, so starting / switching a sound always works.
+    @discardableResult
+    func ensureRunning() -> Bool {
+        guard isRunning else { return false }
+        if engine.isRunning { return true }
+        let session = AVAudioSession.sharedInstance()
+        if !isAlarmRinging { try? session.setCategory(.playback, mode: .default, options: [.mixWithOthers]) }
+        try? session.setActive(true)
+        guard (try? engine.start()) != nil else { return false }
+        let mode = noise.mode
+        loopFile = nil                     // the loop player stopped with the engine → schedule it again
+        applyMode(mode)
+        setLevel(level)
+        return true
+    }
+
+    var isEngineRunning: Bool { engine.isRunning }
+
+    /// Tests: what iOS does on a route change / a deactivated session.
+    func stopEngineForTesting() { engine.stop() }
+
     func setVolume(_ volume: Float, ambience: Ambience) {
+        ensureRunning()
         noise.mode = ambience
         applyMode(ambience)
         setLevel(ambience == .silence ? 0 : volume)
@@ -217,6 +253,7 @@ final class AudioKeeper {
     /// and the sound is silent precisely at the end. The engine keeps running in silence afterwards – it keeps
     /// the app alive (night detection, alarm, background playback with the screen off).
     func sleepTimer(seconds: TimeInterval?, volume: Float) {
+        ensureRunning()
         fadeTask?.cancel()
         setLevel(noise.mode == .silence ? 0 : volume)
         guard let seconds else { sleepSoundEndsAt = nil; return }
@@ -255,8 +292,12 @@ final class AudioKeeper {
         engine.stop()
         if let source { engine.detach(source) }
         source = nil
+        if isRunning { Self.runningKeepers -= 1 }
         isRunning = false
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        // only the last running keeper releases the shared session (never under a running night)
+        if Self.runningKeepers == 0 {
+            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        }
     }
 }
 

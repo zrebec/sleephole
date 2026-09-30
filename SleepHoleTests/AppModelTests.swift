@@ -144,6 +144,23 @@ struct AppModelTests {
         #expect(h.model.collapsedAt != nil && h.model.haptics == [.start, .relief])
     }
 
+    @Test func settingsSwitchTheSleepSoundOfTheRunningNight() {
+        let h = harness(at: date(5, 22, 25))
+        h.model.settings.ambience = .brownNoise
+        h.model.settings.ambienceMinutes = 30
+        h.model.refresh(); h.model.startNight()
+        #expect(h.model.sleepSound?.ambience == .brownNoise && h.model.sleepSound?.endsAt == date(5, 22, 55))
+        #expect(h.model.sleepSoundPlaying)
+        h.model.settings.ambience = .rainTent                               // Settings during the night
+        #expect(h.model.sleepSound?.ambience == .rainTent && h.model.sleepSound?.endsAt == date(5, 22, 55))
+        h.model.stopSleepSound()
+        h.model.settings.ambience = .pinkNoise                              // stopped stays stopped
+        #expect(h.model.sleepSound == nil && !h.model.sleepSoundPlaying)
+        h.model.playSleepSound(.whiteNoise, minutes: nil)
+        h.model.settings.ambience = .silence                                // silence = off
+        #expect(h.model.sleepSound == nil)
+    }
+
     @Test func collapseIsVisibleLive() {
         let h = harness(at: date(5, 22, 25)); h.model.refresh(); h.model.startNight()
         h.clock.now = date(5, 23); h.model.append(.leftApp)

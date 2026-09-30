@@ -88,7 +88,9 @@ struct SettingsView: View {
                         ForEach(AudioKeeper.Ambience.allCases) { Text($0.title).tag($0) }
                     }
                     .pickerStyle(.menu)
-                    .onChange(of: model.settings.ambience) { _, a in preview.switchTo(a, volume: model.settings.volume) }
+                    .onChange(of: model.settings.ambience) { _, a in
+                        if !nightRunning { preview.switchTo(a, volume: model.settings.volume) }
+                    }
                     Picker(L("Play for"), selection: $model.settings.ambienceMinutes) {
                         ForEach(AppSettings.ambienceTimerOptions, id: \.self) { m in
                             Text(AppSettings.timerTitle(m)).tag(m)
@@ -101,17 +103,25 @@ struct SettingsView: View {
                             .onChange(of: model.settings.volume) { _, v in preview.setVolume(v) }
                         Image(systemName: "speaker.wave.3.fill")
                     }
-                    PreviewButtons(playing: preview.playing != nil,
-                                   play: { preview.play(model.settings.ambience, volume: model.settings.volume,
-                                                        seconds: model.settings.ambienceSeconds) },
-                                   stop: { preview.stop() })
-                        .disabled(model.active != nil || model.settings.ambience == .silence)
+                    // during a night ▶ / ■ control the night's own sound (a second player would fight over the
+                    // shared audio session – owner bug 2026-09-30)
+                    PreviewButtons(playing: nightRunning ? model.sleepSoundPlaying : preview.playing != nil,
+                                   play: {
+                                       if nightRunning {
+                                           model.playSleepSound(model.settings.ambience, minutes: model.settings.ambienceMinutes)
+                                       } else {
+                                           preview.play(model.settings.ambience, volume: model.settings.volume,
+                                                        seconds: model.settings.ambienceSeconds)
+                                       }
+                                   },
+                                   stop: { if nightRunning { model.stopSleepSound() } else { preview.stop() } })
+                        .disabled(model.settings.ambience == .silence)
                 } header: {
                     Text(L("Sleep sound")).id("sounds")
                 } footer: {
-                    if let end = preview.endsAt {
+                    if let end = nightRunning ? model.sleepSound?.endsAt : preview.endsAt {
                         Text(L("\(model.settings.ambience.detail) Playing until \(Fmt.time(end))."))
-                    } else if preview.playing != nil {
+                    } else if nightRunning ? model.sleepSoundPlaying : preview.playing != nil {
                         Text(L("\(model.settings.ambience.detail) Playing until you press ■."))
                     } else {
                         Text(model.settings.ambience.detail)
@@ -176,6 +186,7 @@ struct SettingsView: View {
             .navigationTitle(L("Settings"))
             .sheet(isPresented: $showGuide) { GuideView(replay: true) }
             .task { notificationStatus = await Notifications.statusText() }
+            .onChange(of: nightRunning) { _, running in if running { preview.stop() } }   // one player at a time
             .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
                 do {
                     let url = try result.get()

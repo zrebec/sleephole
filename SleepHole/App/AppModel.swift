@@ -31,9 +31,14 @@ final class AppModel {
     var settings: AppSettings {
         didSet {
             settings.save()
+            // during a night, Settings switch the sound that is playing (a stopped sound stays stopped)
+            if active != nil, sleepSoundPlaying,
+               settings.ambience != oldValue.ambience || settings.volume != oldValue.volume {
+                sleepSound = settings.ambience == .silence ? nil : (settings.ambience, sleepSound?.endsAt)
+                if servicesEnabled { audio.setVolume(settings.volume, ambience: settings.ambience) }
+            }
             guard servicesEnabled else { return }
             if settings.schedule != oldValue.schedule { Notifications.scheduleReminders(settings.schedule) }
-            if active != nil { audio.setVolume(settings.volume, ambience: settings.ambience) }
         }
     }
 
@@ -534,8 +539,11 @@ final class AppModel {
 
     // MARK: - sleep sound during the night (owner 2026-09-30: allowed while building – you stay in the app)
 
-    /// The sleep sound started from the night screen: which one and until when (nil end = all night).
+    /// The sleep sound of the running night (from Settings at the start or from the night screen):
+    /// which one and until when (nil end = all night).
     private(set) var sleepSound: (ambience: AudioKeeper.Ambience, endsAt: Date?)?
+
+    var sleepSoundPlaying: Bool { sleepSound.map { $0.endsAt.map { $0 > clock.now } ?? true } ?? false }
 
     func playSleepSound(_ ambience: AudioKeeper.Ambience, minutes: Int?) {
         guard active != nil else { return }
@@ -577,6 +585,9 @@ final class AppModel {
     }
 
     private func startServices(for rec: NightRecord) {
+        if settings.ambience != .silence {                            // the sound from Settings plays from the start
+            sleepSound = (settings.ambience, settings.ambienceSeconds.map { (rec.startedAt ?? clock.now) + $0 })
+        }
         guard servicesEnabled else { return }
         UIApplication.shared.isIdleTimerDisabled = false
         try? audio.start(ambience: settings.ambience, volume: settings.volume)

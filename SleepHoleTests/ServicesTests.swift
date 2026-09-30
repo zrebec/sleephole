@@ -112,6 +112,28 @@ struct ServicesTests {
         }
     }
 
+    /// Owner bug 2026-09-30: after starting a nap no sleep sound could be played – the Settings preview
+    /// deactivated the shared audio session under the running night, and a stopped engine never restarted.
+    @Test func aStoppedEngineStartsAgainAndThePreviewNeverSilencesTheNight() throws {
+        let night = AudioKeeper()
+        try night.start(ambience: .silence, volume: 0.2)
+        let running = AudioKeeper.runningKeepers
+        let preview = SoundPreview()
+        preview.play(.brownNoise, volume: 0.2, seconds: nil)
+        #expect(AudioKeeper.runningKeepers == running + 1)
+        preview.stop()
+        #expect(AudioKeeper.runningKeepers == running && night.isEngineRunning)
+        night.stopEngineForTesting()                                      // what iOS does on a route change
+        #expect(!night.isEngineRunning)
+        night.setVolume(0.2, ambience: .rainWindow)                       // choosing a sound starts it again
+        #expect(night.isEngineRunning && night.isLoopPlaying && night.currentGain == 0.2)
+        night.stopEngineForTesting()
+        night.sleepTimer(seconds: 60, volume: 0.2)
+        #expect(night.isEngineRunning && night.isLoopPlaying)
+        night.stop()
+        #expect(!night.ensureRunning())                                   // a stopped keeper stays stopped
+    }
+
     /// Owner bug 2026-09-30: white → pink did not switch and Stop did not stop.
     @Test func soundPreviewSwitchesLiveAndStops() async {
         let p = SoundPreview()

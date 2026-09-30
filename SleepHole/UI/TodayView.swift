@@ -111,6 +111,19 @@ struct HomeView: View {
 
 // MARK: - night
 
+/// The full-height layout when everything fits; scrolls only when it does not (e.g. with the confirm panel on a
+/// small phone). A plain ScrollView made the night screen narrow and always scrollable (owner 2026-09-30).
+struct FitOrScroll<Content: View>: View {
+    @ViewBuilder let content: (_ scrolling: Bool) -> Content
+
+    var body: some View {
+        ViewThatFits(in: .vertical) {
+            content(false)
+            ScrollView { content(true) }.scrollBounceBehavior(.basedOnSize)
+        }
+    }
+}
+
 struct NightView: View {
     @Environment(AppModel.self) private var model
     @State private var confirmAbandon = false
@@ -122,11 +135,13 @@ struct NightView: View {
             if let rec = model.active {
                 let total = rec.wake.timeIntervalSince(rec.startedAt ?? rec.bedtime)
                 let progress = min(1, max(0, now.timeIntervalSince(rec.startedAt ?? now) / max(1, total)))
-                ScrollView {
-                VStack(spacing: 16) {
+                // morning: the confirm panel needs room → smaller site, so the screen still fits without scrolling
+                let compact = rec.window.canConfirm(at: now)
+                FitOrScroll { scrolling in
+                VStack(spacing: compact ? 12 : 16) {
                     // well below the Dynamic Island – it grows when e.g. a podcast plays (owner 2026-09-30)
-                    Text(Fmt.time(now)).font(.system(size: 64, weight: .thin, design: .rounded))
-                        .padding(.top, 36)
+                    Text(Fmt.time(now)).font(.system(size: compact ? 52 : 64, weight: .thin, design: .rounded))
+                        .padding(.top, compact ? 24 : 36)
                     if let collapsed = model.collapsedAt, collapsed <= now {
                         Text(rec.isNap ? L("Your nap was interrupted 😕") : L("The building collapsed 🧱"))
                             .font(.title2.bold()).foregroundStyle(.orange)
@@ -142,6 +157,8 @@ struct NightView: View {
                         }
                     } else {
                         ConstructionSite(buildingId: rec.buildingId, progress: progress)
+                            .scaleEffect(compact ? 0.6 : 1, anchor: .top)
+                            .frame(height: compact ? 190 : nil, alignment: .top)
                         Text(model.catalog?[rec.buildingId]?.displayName ?? "").font(.headline)
                         if let graceEnds = model.graceEnds, graceEnds > now {
                             let left = Int(graceEnds.timeIntervalSince(now).rounded(.up))
@@ -168,6 +185,7 @@ struct NightView: View {
                     if rec.window.canConfirm(at: now) {
                         ConfirmPanel()
                     }
+                    if !scrolling { Spacer(minLength: 0) }
                     Button(rec.isNap ? L("End nap") : L("Cancel night"), role: .destructive) { confirmAbandon = true }
                         .font(.footnote)
                         .confirmationDialog(rec.isNap ? L("End the nap? It won't earn coins.")
@@ -175,11 +193,10 @@ struct NightView: View {
                                             isPresented: $confirmAbandon, titleVisibility: .visible) {
                             Button(rec.isNap ? L("End") : L("Cancel night"), role: .destructive) { model.abandonNight() }
                         }
-                        .padding(.top, 12)
                 }
+                .frame(maxWidth: .infinity)
                 .padding()
                 }
-                .scrollBounceBehavior(.basedOnSize)
             }
         }
         .background { NightSky() }
@@ -369,6 +386,7 @@ struct ConfirmPanel: View {
             }
             if wrong { Text(L("Wrong code")).font(.footnote).foregroundStyle(.red) }
         }
+        .frame(maxWidth: .infinity)
         .padding()
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
         .onShake { model.confirm() }
@@ -384,7 +402,7 @@ struct ResultView: View {
     var body: some View {
         if let rec = model.shownResult, let outcome = rec.outcome {
             let name = model.catalog?[rec.buildingId]?.displayName ?? L("building")
-            ScrollView {
+            FitOrScroll { _ in
             VStack(spacing: 18) {
                 if rec.isNap {
                     Text(verbatim: outcome == .complete ? "😴" : outcome == .unfinished ? "🥱" : "🧸").font(.system(size: 90))
@@ -436,6 +454,7 @@ struct ResultView: View {
                 Button(L("Continue")) { model.acknowledgeResult() }
                     .buttonStyle(.borderedProminent).controlSize(.large)
             }
+            .frame(maxWidth: .infinity)
             .padding()
             }
             .navigationTitle(rec.isNap ? L("Nap") : L("Night result"))
