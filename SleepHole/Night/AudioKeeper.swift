@@ -16,7 +16,8 @@ final class AudioKeeper {
         case rainWindow = "rain-window"
         case storyForest = "story-forest"      // sound stories (owner 2026-09-30): a bed + random scenes
         case storyCave = "story-cave"
-        case storyWorkshop = "story-workshop"
+        case storyWorkshop = "story-workshop"     // since 2026-09-30 a carpenter's workshop (id kept)
+        case storyJourney = "story-journey"       // the whole night: cabin → workshop → wind → storm → cave lake
         case silence = "silence"
         var id: String { rawValue }
 
@@ -29,7 +30,8 @@ final class AudioKeeper {
             case .rainWindow: L("Rain on a window")
             case .storyForest: L("Story: cabin in the woods")
             case .storyCave: L("Story: a cave")
-            case .storyWorkshop: L("Story: the workshop")
+            case .storyWorkshop: L("Story: carpenter's workshop")
+            case .storyJourney: L("Story: the journey")
             case .silence: L("Silence")
             }
         }
@@ -39,7 +41,7 @@ final class AudioKeeper {
             switch self {
             case .rainTent: "rain_tent.caf"
             case .rainWindow: "rain_window.caf"
-            case .storyForest, .storyCave, .storyWorkshop: storyWorld.map { "bed_\($0.rawValue).caf" }
+            case .storyForest, .storyCave, .storyWorkshop, .storyJourney: storyWorld?.chapters.first?.bed
             default: nil
             }
         }
@@ -50,6 +52,7 @@ final class AudioKeeper {
             case .storyForest: .forest
             case .storyCave: .cave
             case .storyWorkshop: .workshop
+            case .storyJourney: .journey
             default: nil
             }
         }
@@ -61,9 +64,10 @@ final class AudioKeeper {
             case .whiteNoise: L("Bright and even – like a fan.")
             case .rainTent: L("Drops tapping on the tent, now and then a big drip from a tree.")
             case .rainWindow: L("Soft rain outside the window (recording by InspectorJ, CC BY 4.0).")
-            case .storyForest: L("A crackling fire; someone walks through the grass, chops wood and builds a cabin. A different story every night.")
+            case .storyForest: L("A crackling camp fire, crickets and a brook; someone chops wood, the dog potters about, the chickens settle down, an owl calls. A different story every night.")
             case .storyCave: L("Deep silence and drips; someone explores a cave and digs with a pickaxe, pebbles fall. A different story every night.")
-            case .storyWorkshop: L("A small stove and rain on the roof; hammering on an anvil, carving, a visitor at the door. A different story every night.")
+            case .storyWorkshop: L("A stove crackles, crickets outside; sawing, planing, sanding, nails, a broom, a purring cat. A different story every night.")
+            case .storyJourney: L("A whole night's journey: an evening at the cabin, the workshop, the wind rises, a storm and a cave for shelter, an underground lake, and quiet after the rain.")
             case .silence: L("Nothing plays (the app still stays awake at night).")
             }
         }
@@ -87,8 +91,15 @@ final class AudioKeeper {
     private let alarmPlayer = AVAudioPlayerNode()
     private var alarmTask: Task<Void, Never>?
     private(set) var isAlarmRinging = false
-    private let loopPlayer = AVAudioPlayerNode()
+    /// Two players for the bed loops, so a journey can crossfade from one chapter's bed to the next.
+    private let bedPlayers = [AVAudioPlayerNode(), AVAudioPlayerNode()]
+    private var currentBed = 0
+    private var loopPlayer: AVAudioPlayerNode { bedPlayers[currentBed] }
     private var loopFile: String?
+    /// Crossfade between chapter beds: the new bed at `bedFade`, the old one (`fadingBed`) at 1 − `bedFade`.
+    private var bedFade: Float = 1
+    private var fadingBed: AVAudioPlayerNode?
+    private var bedFadeTask: Task<Void, Never>?
     private static var loopBuffers: [String: AVAudioPCMBuffer] = [:]
     /// Current sleep-sound level (applies to the generator OR the loop player).
     private var level: Float = 0
@@ -123,7 +134,7 @@ final class AudioKeeper {
         engine.attach(node)
         engine.connect(node, to: engine.mainMixerNode, format: mono)
         engine.mainMixerNode.outputVolume = Self.muted ? 0 : 1
-        engine.attach(loopPlayer)
+        bedPlayers.filter { $0.engine == nil }.forEach(engine.attach)
         if storyMixer.engine == nil {
             [storyMixer, storyReverb].forEach(engine.attach)
             engine.connect(storyMixer, to: storyReverb, format: nil)
@@ -233,9 +244,12 @@ final class AudioKeeper {
         if !isAlarmRinging { try? session.setCategory(.playback, mode: .default, options: [.mixWithOthers]) }
         try? session.setActive(true)
         guard (try? engine.start()) != nil else { return false }
-        let mode = noise.mode
-        loopFile = nil                     // the loop player stopped with the engine → schedule it again
-        applyMode(mode)
+        // the players stopped with the engine → schedule the current bed again
+        finishBedFade()
+        if let file = loopFile, let buffer = Self.loopBuffer(file) {
+            loopPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
+            loopPlayer.play()
+        }
         setLevel(level)
         return true
     }
@@ -256,12 +270,17 @@ final class AudioKeeper {
     /// stories additionally run their scene scheduler.
     private func applyMode(_ ambience: Ambience) {
         guard isRunning else { return }
-        if ambience.storyWorld != storyWorld { startStory(ambience.storyWorld) }
+        if ambience.storyWorld != storyWorld {
+            startStory(ambience.storyWorld)
+        } else if ambience.storyWorld != nil, loopFile != nil {
+            return                          // same story (e.g. a volume change): keep the current chapter's bed
+        }
         guard let file = ambience.loopFile else {
-            if loopFile != nil { loopPlayer.stop(); loopFile = nil }
+            if loopFile != nil { finishBedFade(); loopPlayer.stop(); loopFile = nil }
             return
         }
         guard file != loopFile, let buffer = Self.loopBuffer(file) else { return }
+        finishBedFade()
         loopPlayer.stop()
         engine.disconnectNodeOutput(loopPlayer)
         engine.connect(loopPlayer, to: engine.mainMixerNode, format: buffer.format)
@@ -270,25 +289,70 @@ final class AudioKeeper {
         loopFile = file
     }
 
+    /// Journey: the next chapter's bed fades in while the old one fades out (`seconds`).
+    func crossfadeBed(to file: String, seconds: TimeInterval = 8) {
+        guard isRunning, file != loopFile, let buffer = Self.loopBuffer(file) else { return }
+        finishBedFade()
+        let old = loopPlayer
+        currentBed = 1 - currentBed
+        loopPlayer.stop()
+        engine.disconnectNodeOutput(loopPlayer)
+        engine.connect(loopPlayer, to: engine.mainMixerNode, format: buffer.format)
+        loopPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
+        loopFile = file
+        fadingBed = old
+        bedFade = 0
+        setLevel(level)
+        loopPlayer.play()
+        bedFadeTask = Task { [weak self] in
+            let steps = 40
+            for k in 1...steps {
+                try? await Task.sleep(for: .seconds(seconds / Double(steps)))
+                guard let self, !Task.isCancelled else { return }
+                self.bedFade = Float(k) / Float(steps)
+                self.setLevel(self.level)
+            }
+            self?.finishBedFade()
+        }
+    }
+
+    private func finishBedFade() {
+        bedFadeTask?.cancel()
+        bedFadeTask = nil
+        fadingBed?.stop()
+        fadingBed = nil
+        bedFade = 1
+        setLevel(level)
+    }
+
     // MARK: sound stories
+
+    /// The chapter the story is in now (a journey moves on every 10–20 min).
+    private(set) var storyChapter: StoryChapter?
+
+    private func enter(_ chapter: StoryChapter) {
+        guard chapter != storyChapter else { return }
+        storyReverb.loadFactoryPreset(chapter.reverb.preset)
+        storyReverb.wetDryMix = chapter.reverb.wet
+        if storyChapter != nil { crossfadeBed(to: chapter.bed) }            // the first bed comes from applyMode
+        storyChapter = chapter
+    }
 
     private func startStory(_ world: StoryWorld?) {
         storyTask?.cancel()
         storyTask = nil
         storyPlayers.forEach { $0.stop() }
         storyWorld = world
+        storyChapter = nil
         guard let world else { return }
-        switch world {
-        case .forest: storyReverb.loadFactoryPreset(.mediumRoom); storyReverb.wetDryMix = 12
-        case .cave: storyReverb.loadFactoryPreset(.largeChamber); storyReverb.wetDryMix = 45
-        case .workshop: storyReverb.loadFactoryPreset(.smallRoom); storyReverb.wetDryMix = 22
-        }
+        enter(world.chapters[0])
         storyTask = Task { [weak self] in
             var teller = StoryTeller(world: world)
             var rng = SeededGenerator(seed: UInt64.random(in: 0...UInt64.max))
             try? await Task.sleep(for: .seconds(Double.random(in: 2...5)))
             while !Task.isCancelled {
                 let scene = teller.next(using: &rng)
+                self?.enter(scene.chapter)
                 let start = Date()
                 for e in scene.events.sorted(by: { $0.at < $1.at }) {
                     let wait = start.addingTimeInterval(e.at).timeIntervalSinceNow
@@ -329,7 +393,8 @@ final class AudioKeeper {
         level = g
         let isLoop = noise.mode.loopFile != nil
         noise.gain = isLoop ? 0 : g
-        loopPlayer.volume = isLoop ? g : 0
+        loopPlayer.volume = isLoop ? g * bedFade : 0
+        fadingBed?.volume = isLoop ? g * (1 - bedFade) : 0
         storyMixer.outputVolume = noise.mode.storyWorld != nil ? g : 0
     }
 
@@ -369,6 +434,7 @@ final class AudioKeeper {
 
     var currentGain: Float { level }
     var isLoopPlaying: Bool { loopFile != nil && loopPlayer.isPlaying }
+    var currentBedFile: String? { loopFile }
     var currentMode: Ambience { noise.mode }
 
     func stop() {
@@ -376,7 +442,8 @@ final class AudioKeeper {
         fadeTask?.cancel()
         observers.forEach(NotificationCenter.default.removeObserver)
         observers.removeAll()
-        loopPlayer.stop()
+        finishBedFade()
+        bedPlayers.forEach { $0.stop() }
         loopFile = nil
         startStory(nil)
         engine.stop()

@@ -67,7 +67,7 @@ Každú noc sa náhodne vyberie jeden z odomknutých levelov a z neho budova. Bu
 - **Úspechy:** 12 (prvá budova, 3/7/30 nocí v rade, 10/50/100 postavených nocí, prvá budova levelu 2/3, prvý mrakodrap, prvý odpočinok, opravená ruina), každý +50 🪙 (veľké +200).
 - **Názov mesta** (ťukni naň v hlavičke Mesta) a **týždenný mestský denník** v Štatistikách; v pondelok ráno ukáže obrazovka výsledku, aký bol uplynulý týždeň.
 - **Vibrácie** pri štarte noci, pri zamknutí telefónu, pred koncom prípravy, pri varovaní „Vráť sa!“ a keď sa včas vrátiš.
-- **Zvuky na zaspávanie:** hnedý, ružový a biely šum, dážď na stan a dážď na okno a tri **zvukové príbehy** (chata v lese, jaskyňa, dielňa): tichý podklad a nad ním náhodné scény – kroky, sekera, krompáč, kladivo – každú noc iné. Hrajú presne podľa časovača (1–60 min alebo celú noc) aj počas stavby a pri vypnutej obrazovke.
+- **Zvuky na zaspávanie:** hnedý, ružový a biely šum, dážď na stan a dážď na okno a štyri **zvukové príbehy** (chata v lese, jaskyňa, stolárska dielňa a celonočné **putovanie** cez šesť kapitol – chata, dielňa, zdvíha sa vietor, búrka a úkryt v jaskyni, podzemné jazero, ticho po daždi): tichý podklad a nad ním náhodné scény – kroky, sekera, píla, krompáč, pes, sova, vzdialené hrmenie – každú noc iné. Hrajú presne podľa časovača (1–60 min alebo celú noc) aj počas stavby a pri vypnutej obrazovke.
 - **Záloha:** export a import do súboru a automatická záloha po každej noci (Súbory → Na mojom iPhone → SleepHole).
 - **Sprievodca pri prvom spustení** (6 stránok). Čísla v ňom sa berú priamo z pravidiel v kóde. Pred prvou nocou sa ukáže aj kontrolný zoznam „Tvoja prvá noc“. Oboje sa zapíše do databázy.
 - **Nastavenia:** večierka, budíček, pripomienka, ranný kód, zvuk v noci a budík s ukážkou, stav povolenia upozornení.
@@ -175,6 +175,6 @@ python3 tools/i18n/keys.py   # po builde: chýbajúce / nepreložené kľúče v
 
 - **Grafika a časť zvukov:** [Kenney](https://kenney.nl) (CC0). Vyrenderované a poskladané vlastnými skriptmi v `tools/`.
 - **Melódie budíkov:** E. Grieg (*Peer Gynt*, 1875) a L. van Beethoven (*9. symfónia*, 1824), obe voľné dielo. Trúbka a Poplach sú vlastné skladby. Všetko je syntetizované v `tools/audio/make_alarms.py`.
-- **Zvukové príbehy:** CC0 zvuky od Kenneyho (Impact Sounds, RPG Audio, Foley Sounds), ktoré appka náhodne skladá do scén (`SleepHole/Night/Stories.swift`); podklady sú syntetizované (`tools/audio/make_stories.py`).
+- **Zvukové príbehy:** CC0 zvuky od Kenneyho (Impact Sounds, RPG Audio, Foley Sounds) a 50 CC0 nahrávok z [Freesound](https://freesound.org) (autori v [`assets/audio/CREDITS-freesound.txt`](assets/audio/CREDITS-freesound.txt); stiahnuté cez `tools/audio/fetch_freesound.py`, nastrihané a zmiešané v `tools/audio/make_stories.py`), ktoré appka náhodne skladá do scén (`SleepHole/Night/Stories.swift`).
 - **Dážď na okno:** „Rain on Windows, Interior, A“ od [InspectorJ](https://freesound.org/s/346642/) (www.jshaw.co.uk), Freesound, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), upravené do slučky. Dážď na stan a šumy sú syntetizované (`tools/audio/make_rain.py`, `AudioKeeper`).
 - **Inšpirácia:** [SleepTown](https://apps.apple.com/app/sleeptown/id1210251567) od Seekrtech.

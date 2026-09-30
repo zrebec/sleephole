@@ -1,0 +1,53 @@
+Sound stories – CC0 recordings from Freesound.org (public domain, credited with thanks).
+Downloaded as high-quality previews via the Freesound API, then cut / mixed by tools/audio/make_stories.py.
+
+bark          396307  "Dog play.WAV" by cribbler  https://freesound.org/people/cribbler/sounds/396307/
+bark          828526  "ANMLDog_Distant Dog Bark, Resediential Area, _JW Audio" by JW_Audio  https://freesound.org/people/JW_Audio/sounds/828526/
+bucket        498572  "A bucket of water with a rag" by 16G_Panska_Veinlich_Jakub  https://freesound.org/people/16G_Panska_Veinlich_Jakub/sounds/498572/
+cavedrips     343742  "cave 01" by rucisko  https://freesound.org/people/rucisko/sounds/343742/
+cavelake      565233  "CaveLakeAmbience.mp3" by blackatomproductions  https://freesound.org/people/blackatomproductions/sounds/565233/
+chicken       479604  "R05-05-Chickens Clucking.wav" by craigsmith  https://freesound.org/people/craigsmith/sounds/479604/
+chicken       823065  "Chicken Clucking" by Filmscore  https://freesound.org/people/Filmscore/sounds/823065/
+crickets      425425  "AMB_Rural_Summer_Night.wav" by AnthonyRamirez  https://freesound.org/people/AnthonyRamirez/sounds/425425/
+dog           189688  "Dog Scratching Itself With Tags Jingling Foley" by Youmenanna  https://freesound.org/people/Youmenanna/sounds/189688/
+dog           724909  "dog panting" by PanFlutist  https://freesound.org/people/PanFlutist/sounds/724909/
+dog           784915  "Dog panting and sniffing" by Primitv094  https://freesound.org/people/Primitv094/sounds/784915/
+fire          588401  "Campfire Close Crackling Sticks.mp3" by FunWithSound  https://freesound.org/people/FunWithSound/sounds/588401/
+floor         590161  "Creaking in Room 11.wav" by Greg_Surr  https://freesound.org/people/Greg_Surr/sounds/590161/
+floor         590164  "Creaking in Room 5.wav" by Greg_Surr  https://freesound.org/people/Greg_Surr/sounds/590164/
+floor         590165  "Creaking in Room 4.wav" by Greg_Surr  https://freesound.org/people/Greg_Surr/sounds/590165/
+floor         590168  "Creaking in Room 7.wav" by Greg_Surr  https://freesound.org/people/Greg_Surr/sounds/590168/
+frogs         380021  "Frog and Insect Sounds" by Zeppo_Knight  https://freesound.org/people/Zeppo_Knight/sounds/380021/
+horse         656661  "horse" by dontwanttobehere  https://freesound.org/people/dontwanttobehere/sounds/656661/
+horse         826753  "Renill de cavall / Horse Neigh" by Salsero_classic  https://freesound.org/people/Salsero_classic/sounds/826753/
+leaves        420404  "Rustle walking by the leaves.wav" by Magdaadga  https://freesound.org/people/Magdaadga/sounds/420404/
+leaves        861414  "Walking on Dry Leaves in Puglia" by bassimat  https://freesound.org/people/bassimat/sounds/861414/
+nail          204946  "Hammering_Wood.wav" by CapsLok  https://freesound.org/people/CapsLok/sounds/204946/
+nail          337814  "hammer v3.wav" by blukotek  https://freesound.org/people/blukotek/sounds/337814/
+nail          540139  "Hitting nails with Hammer.wav" by aidansamuel  https://freesound.org/people/aidansamuel/sounds/540139/
+nail          707525  "Hammer hitting nail.wav" by LiezelDippenaar  https://freesound.org/people/LiezelDippenaar/sounds/707525/
+owl           454842  "HOOT.wav" by thegoosington  https://freesound.org/people/thegoosington/sounds/454842/
+owl           655380  "Tawny Owl" by faxfaxfax  https://freesound.org/people/faxfaxfax/sounds/655380/
+owl           735744  "Bird - Tawny owl, female" by Vrymaa  https://freesound.org/people/Vrymaa/sounds/735744/
+owl           784609  "Birds of Prey - Barred Owl Hooting, Distant" by TheKingOfGeeks360  https://freesound.org/people/TheKingOfGeeks360/sounds/784609/
+plane         847374  "Victor No. 5, Face Planing, Doug Fir" by DeqstersLab  https://freesound.org/people/DeqstersLab/sounds/847374/
+plane         847375  "Wood block plane" by DeqstersLab  https://freesound.org/people/DeqstersLab/sounds/847375/
+purr          364893  "Cat purring" by TiesWijnen  https://freesound.org/people/TiesWijnen/sounds/364893/
+purr          593609  "Purring Cat.wav" by Rehanjo  https://freesound.org/people/Rehanjo/sounds/593609/
+rainforest    523391  "Forest, light rain.wav" by Anya_Media  https://freesound.org/people/Anya_Media/sounds/523391/
+sand          383444  "Construction Sanding Wood Sandpaper" by deleted_user_7146007  https://freesound.org/people/deleted_user_7146007/sounds/383444/
+saw           566037  "deeper saw wood.wav" by Pagey1969  https://freesound.org/people/Pagey1969/sounds/566037/
+saw           566040  "Saw wood 3.wav" by Pagey1969  https://freesound.org/people/Pagey1969/sounds/566040/
+saw           707527  "Hand Saw.wav" by LiezelDippenaar  https://freesound.org/people/LiezelDippenaar/sounds/707527/
+saw           760611  "Hand saw" by SoundsLikeYukon  https://freesound.org/people/SoundsLikeYukon/sounds/760611/
+stream        826884  "Stream 1" by farandjoun  https://freesound.org/people/farandjoun/sounds/826884/
+sweep         118975  "Straw Broom Sweeping Gentle.wav" by esperri  https://freesound.org/people/esperri/sounds/118975/
+sweep         655375  "sweeping with straw broom.wav" by 21100495  https://freesound.org/people/21100495/sounds/655375/
+sweep         792417  "Sweeping" by randbsoundbites  https://freesound.org/people/randbsoundbites/sounds/792417/
+thunder       473864  "DistantThunder.wav" by Kragnour  https://freesound.org/people/Kragnour/sounds/473864/
+thunder       712914  "distant rumbling thunderstorm, ambience" by greyfeather  https://freesound.org/people/greyfeather/sounds/712914/
+thunder       778363  "Distant_Rumbling_Thunder_In_Rain_02" by BlondPanda  https://freesound.org/people/BlondPanda/sounds/778363/
+thunderrain   476796  "distant thunder & light rain 1" by s-light  https://freesound.org/people/s-light/sounds/476796/
+treewind      726217  "Tree creaks" by Sacha.Julien  https://freesound.org/people/Sacha.Julien/sounds/726217/
+wade          369580  "Slow Water Footsteps" by Adielees9  https://freesound.org/people/Adielees9/sounds/369580/
+wolf          503516  "Distant howling pupper" by sandboks  https://freesound.org/people/sandboks/sounds/503516/

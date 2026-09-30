@@ -613,18 +613,18 @@
         }
       }
     },
-    "A crackling fire; someone walks through the grass, chops wood and builds a cabin. A different story every night.": {
+    "A crackling camp fire, crickets and a brook; someone chops wood, the dog potters about, the chickens settle down, an owl calls. A different story every night.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "A crackling fire; someone walks through the grass, chops wood and builds a cabin. A different story every night."
+            "value": "A crackling camp fire, crickets and a brook; someone chops wood, the dog potters about, the chickens settle down, an owl calls. A different story every night."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Praská oheň; niekto prejde trávou, štiepa drevo a stavia chatu. Každú noc iný príbeh."
+            "value": "Praská táborák, svrčky a potôčik; niekto štiepa drevo, pes sa motá okolo, sliepky sa ukladajú, zahúka sova. Každú noc iný príbeh."
           }
         }
       }
@@ -757,18 +757,18 @@
         }
       }
     },
-    "A small stove and rain on the roof; hammering on an anvil, carving, a visitor at the door. A different story every night.": {
+    "A stove crackles, crickets outside; sawing, planing, sanding, nails, a broom, a purring cat. A different story every night.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "A small stove and rain on the roof; hammering on an anvil, carving, a visitor at the door. A different story every night."
+            "value": "A stove crackles, crickets outside; sawing, planing, sanding, nails, a broom, a purring cat. A different story every night."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Malá pec a dážď na streche; kovanie na nákove, vyrezávanie, niekto zaklope na dvere. Každú noc iný príbeh."
+            "value": "Praská pec, vonku svrčky; píla, hoblík, brúsny papier, klince, metla a priadúca mačka. Každú noc iný príbeh."
           }
         }
       }
@@ -785,6 +785,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Radnica, škola, hasiči, polícia alebo nemocnica."
+          }
+        }
+      }
+    },
+    "A whole night's journey: an evening at the cabin, the workshop, the wind rises, a storm and a cave for shelter, an underground lake, and quiet after the rain.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A whole night's journey: an evening at the cabin, the workshop, the wind rises, a storm and a cave for shelter, an underground lake, and quiet after the rain."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Putovanie na celú noc: večer pri chate, dielňa, zdvihne sa vietor, búrka a úkryt v jaskyni, podzemné jazero a ticho po daždi."
           }
         }
       }
@@ -4249,18 +4265,34 @@
         }
       }
     },
-    "Story: the workshop": {
+    "Story: carpenter's workshop": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Story: the workshop"
+            "value": "Story: carpenter's workshop"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Príbeh: dielňa"
+            "value": "Príbeh: stolárska dielňa"
+          }
+        }
+      }
+    },
+    "Story: the journey": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Story: the journey"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Príbeh: putovanie"
           }
         }
       }
@@ -4601,18 +4633,18 @@
         }
       }
     },
-    "The sound stories are made of Kenney's CC0 sounds (Impact Sounds, RPG Audio, Foley Sounds); their fire, wind, cave and rain beds are synthesised.": {
+    "The sound stories are made of Kenney's CC0 sounds (Impact Sounds, RPG Audio, Foley Sounds) and CC0 field recordings from Freesound.org – thank you to their authors (the full list is in the project's CREDITS-freesound.txt).": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The sound stories are made of Kenney's CC0 sounds (Impact Sounds, RPG Audio, Foley Sounds); their fire, wind, cave and rain beds are synthesised."
+            "value": "The sound stories are made of Kenney's CC0 sounds (Impact Sounds, RPG Audio, Foley Sounds) and CC0 field recordings from Freesound.org – thank you to their authors (the full list is in the project's CREDITS-freesound.txt)."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zvukové príbehy sú zložené z CC0 zvukov od Kenneyho (Impact Sounds, RPG Audio, Foley Sounds); podklady s ohňom, vetrom, jaskyňou a dažďom sú syntetizované."
+            "value": "Zvukové príbehy sú zložené z CC0 zvukov od Kenneyho (Impact Sounds, RPG Audio, Foley Sounds) a CC0 nahrávok z Freesound.org – ďakujeme ich autorom (celý zoznam je v projekte v CREDITS-freesound.txt)."
           }
         }
       }

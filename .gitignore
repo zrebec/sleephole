@@ -24,3 +24,7 @@ docs/device-logs/*
 
 # PUBLIC repo: journals pulled from the owner's iPhone contain personal data (sleep log, wake code)
 docs/device-logs/
+
+# Freesound CC0 downloads (raw, re-fetch with tools/audio/fetch_freesound.py; the cut clips are committed)
+assets/freesound/
+__pycache__/

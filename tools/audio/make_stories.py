@@ -4,15 +4,19 @@ the axe, the pickaxe, the first cave and imagine what happens; random, surprisin
 
     python3 tools/audio/make_stories.py        # needs the raw Kenney bundle (git-ignored) + ffmpeg
 
+Also needs the CC0 Freesound recordings (python3 tools/audio/fetch_freesound.py → assets/freesound/, git-ignored).
+
 Writes into assets/audio (bundled at the app root):
-  st_<group>_<n>.caf  one-shot samples from Kenney's CC0 packs (Impact Sounds, RPG Audio, Foley Sounds):
-                      mono 44.1 kHz, trimmed, peak -3 dB. The app arranges them into random "scenes" at runtime
-                      (SleepHole/Night/Stories.swift), so every night sounds different.
-  bed_forest.caf      60 s seamless bed: a crackling camp fire + soft gusts of wind
-  bed_cave.caf        60 s seamless bed: deep cave room tone + distant echoing drips
-  bed_workshop.caf    60 s seamless bed: a small stove fire + gentle rain on the roof
-The beds are synthesised here (Kenney has no ambient loops).
+  st_<group>_<n>.caf  event clips, all mono 44.1 kHz (the app's players need one format):
+                      - one-shots from Kenney's CC0 packs (Impact Sounds, RPG Audio, Foley Sounds), PCM
+                      - clips cut from the Freesound CC0 recordings (saw, plane, owl, dog, thunder …), AAC
+                      The app arranges them into random scenes at runtime (SleepHole/Night/Stories.swift).
+  bed_<chapter>.caf   75 s seamless stereo beds (AAC in CAF) mixed from the Freesound ambiences + a little
+                      synthesis: forest (camp fire, crickets, a brook), workshop (stove, crickets outside),
+                      cave (drips), wind (trees in the wind), storm (rain + distant thunder), lake (cave lake),
+                      after (the rain fades, frogs, crickets).
 """
+import json
 import glob
 import os
 import subprocess
@@ -61,19 +65,22 @@ def decode(path):
     return x.astype(np.float64) / 32768.0
 
 
-def write(name, x, peak_db=-3.0, sr=SR, aac=False, rms_db=None):
+def write(name, x, peak_db=-3.0, sr=SR, aac=False, rms_db=None, channels=2):
     """PCM for the short samples; AAC (in CAF, gapless thanks to its packet table) for the 60 s beds.
     `rms_db`: level the average loudness instead of the peak (beds), with a soft limiter for the crackles."""
     if rms_db is not None:
         x = x / (np.sqrt(np.mean(x ** 2)) + 1e-12) * 10 ** (rms_db / 20)
-        x = np.tanh(x * 1.5) / 1.5
+        x = np.tanh(x * 1.5) / 1.5                          # safety only – sources are tamed before
+        if aac:
+            x *= 0.7                                        # AAC overshoots on sharp clicks → 3 dB headroom
     else:
         x = x / (np.max(np.abs(x)) + 1e-9) * 10 ** (peak_db / 20)
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
         wavfile.write(f.name, sr, (np.clip(x, -1, 1) * 32767).astype(np.int16))
     out = os.path.join(OUT, name)
     if aac:                        # macOS afconvert: AAC in CAF with the priming/padding info → loops cleanly
-        subprocess.run(["afconvert", "-f", "caff", "-d", "aac", "-b", "128000", f.name, out], check=True)
+        rate = "64000" if channels == 1 else "96000"
+        subprocess.run(["afconvert", "-f", "caff", "-d", "aac", "-b", rate, f.name, out], check=True)
     else:
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", f.name, "-c:a", "pcm_s16le", out], check=True)
     os.unlink(f.name)
@@ -104,6 +111,80 @@ def samples():
     return counts
 
 
+# ───────────────────────── Freesound clips ─────────────────────────
+
+FREESOUND = "assets/freesound"
+# group → (mode, length range s, clips per recording). "window" = continuous activity cut into pieces,
+# "split" = separate sounds divided by silence.
+CLIPS = {
+    "saw": ("window", (3, 7), 3), "plane": ("window", (2, 5), 3), "sand": ("window", (3, 6), 3),
+    "nail": ("split", (0.4, 4), 4), "sweep": ("window", (2, 5), 3), "floor": ("split", (0.5, 5), 1),
+    "owl": ("split", (0.4, 5), 3), "dog": ("window", (3, 7), 2), "bark": ("split", (0.2, 2.5), 2),
+    "chicken": ("window", (3, 6), 3), "purr": ("window", (6, 10), 2), "horse": ("split", (1, 6), 2),
+    "wolf": ("window", (5, 12), 1), "wade": ("window", (3, 7), 2), "bucket": ("split", (0.5, 4), 1),
+    "leaves": ("window", (3, 7), 3), "thunder": ("window", (6, 15), 2),
+}
+
+
+def envelope(x, win=0.02):
+    n = int(win * SR)
+    e = np.sqrt(np.convolve(x ** 2, np.ones(n) / n, mode="same"))
+    return e
+
+
+def fade(x, fin, fout):
+    fi, fo = min(len(x) // 3, int(fin * SR)), min(len(x) // 3, int(fout * SR))
+    if fi: x[:fi] *= np.linspace(0, 1, fi)
+    if fo: x[-fo:] *= np.linspace(1, 0, fo)
+    return x
+
+
+def cut(x, mode, lengths, count):
+    env = envelope(x)
+    loud = np.percentile(env, 95)
+    if mode == "split":
+        active = env > loud * 10 ** (-32 / 20)
+        regions, start, gap = [], None, int(0.3 * SR)
+        idx = np.flatnonzero(active)
+        if len(idx) == 0:
+            return []
+        start, last = idx[0], idx[0]
+        for i in idx[1:]:
+            if i - last > gap:
+                regions.append((start, last)); start = i
+            last = i
+        regions.append((start, last))
+        regions = [(a, min(b, a + int(lengths[1] * SR))) for a, b in regions if (b - a) >= lengths[0] * SR]
+        regions.sort(key=lambda r: -np.mean(env[r[0]:r[1]]))
+        return [fade(x[max(0, a - 200):b + int(0.05 * SR)].copy(), 0.005, 0.08) for a, b in regions[:count]]
+    # window: consecutive pieces of random length; keep the lively ones, evenly spread over the recording
+    pieces, t = [], 0
+    while t < len(x) - lengths[0] * SR:
+        n = int(rng.uniform(*lengths) * SR)
+        seg = x[t:t + n]
+        if np.sqrt(np.mean(seg ** 2)) > 0.35 * np.median(env[env > loud * 0.1]):
+            pieces.append(seg)
+        t += n
+    if len(pieces) > count:
+        pieces = [pieces[int(i)] for i in np.linspace(0, len(pieces) - 1, count)]
+    return [fade(p.copy(), 0.03, 0.3) for p in pieces]
+
+
+def freesound_clips():
+    sounds = json.load(open("tools/audio/freesound.json"))["sounds"]
+    counts = {}
+    for sid, info in sounds.items():
+        if info["use"] != "clip":
+            continue
+        group = info["as"]
+        mode, lengths, count = CLIPS[group]
+        for clip in cut(decode(os.path.join(FREESOUND, f"{sid}.ogg")), mode, lengths, count):
+            n = counts.get(group, 0)
+            write(f"st_{group}_{n}.caf", tame(clip, 18), aac=True, rms_db=-22.0, channels=1)
+            counts[group] = n + 1
+    return counts
+
+
 # ───────────────────────── beds ─────────────────────────
 
 def seamless(x, fade_s=3.0, sr=SR):
@@ -126,80 +207,64 @@ def slow_lfo(n, hz_range=(0.03, 0.12), depth=0.6):
     return 1 - depth / 2 + depth / 2 * np.sin(2 * np.pi * f * t + rng.uniform(0, 6.28))
 
 
-def crackle(n, rate, pop_rate, gain=1.0):
-    """Camp-fire crackle: sparse bright clicks + a few deeper pops + a low burning rumble. Stereo."""
-    out = np.zeros((n, 2))
-    for count, (lo, hi), (dmin, dmax), (amin, amax) in (
-            (int(rate * n / SR), (1500, 7000), (0.002, 0.012), (0.05, 0.4)),
-            (int(pop_rate * n / SR), (400, 1600), (0.01, 0.04), (0.2, 0.8))):
-        for _ in range(count):
-            d = int(rng.uniform(dmin, dmax) * SR)
-            click = rng.standard_normal(d) * np.exp(-np.linspace(0, 6, d))
-            click = bandpass(click, lo, hi) * rng.uniform(amin, amax)
-            at = rng.integers(0, n - d)
-            pan = rng.uniform(0.3, 0.7)
-            out[at:at + d, 0] += click * (1 - pan)
-            out[at:at + d, 1] += click * pan
-    rumble = lowpass(np.cumsum(rng.standard_normal((n, 2)), axis=0) * 0.002, 180)
-    rumble -= lowpass(rumble, 20)                                   # no DC drift
-    out += rumble * slow_lfo(n, (0.1, 0.3), 0.5)[:, None] * 0.6
-    return out * gain
-
-
 def wind(n, gain=1.0):
     w = bandpass(rng.standard_normal((n, 2)), 180, 900) * 0.25
     return w * slow_lfo(n, (0.04, 0.09), 0.9)[:, None] * gain
 
 
-def reverb_ir(seconds, decay):
-    m = int(seconds * SR)
-    return rng.standard_normal((m, 2)) * np.exp(-np.linspace(0, decay, m))[:, None] * 0.02
-
-
-def bed_forest(seconds=63.0):
-    n = int(seconds * SR)
-    x = crackle(n, rate=6, pop_rate=0.6) + wind(n, 0.45)
-    return seamless(x)
-
-
-def bed_cave(seconds=63.0):
-    n = int(seconds * SR)
+def cave_tone(n):
     tone = lowpass(np.cumsum(rng.standard_normal((n, 2)), axis=0) * 0.003, 110)
-    tone -= lowpass(tone, 15)
-    air = bandpass(rng.standard_normal((n, 2)), 300, 700) * 0.01 * slow_lfo(n)[:, None]
-    drips = np.zeros((n, 2))
-    t = 1.0
-    while t < seconds - 3:
-        f0 = rng.uniform(1100, 2300)
-        d = int(0.09 * SR)
-        tt = np.arange(d) / SR
-        drop = np.sin(2 * np.pi * (f0 * tt - 2500 * tt ** 2)) * np.exp(-tt * 45) * rng.uniform(0.15, 0.4)
-        at, pan = int(t * SR), rng.uniform(0.1, 0.9)
-        drips[at:at + d, 0] += drop * (1 - pan)
-        drips[at:at + d, 1] += drop * pan
-        t += rng.uniform(3.5, 9.0)
-    ir = reverb_ir(2.8, 7)
-    echoed = np.stack([signal.fftconvolve(drips[:, c], ir[:, c])[:n] for c in range(2)], axis=1)
-    return seamless(tone * 0.8 + air + drips * 0.35 + echoed * 1.2)
+    return tone - lowpass(tone, 15)
 
 
-def bed_workshop(seconds=63.0):
-    n = int(seconds * SR)
-    rain = bandpass(rng.standard_normal((n, 2)), 900, 6000) * 0.05 * slow_lfo(n, (0.02, 0.06), 0.4)[:, None]
-    taps = np.zeros((n, 2))                                         # individual drops on the roof
-    for _ in range(int(9 * seconds)):
-        d = int(0.004 * SR)
-        at, pan = rng.integers(0, n - d), rng.uniform(0, 1)
-        tap = rng.standard_normal(d) * np.exp(-np.linspace(0, 5, d)) * rng.uniform(0.02, 0.08)
-        taps[at:at + d, 0] += tap * (1 - pan)
-        taps[at:at + d, 1] += tap * pan
-    room = lowpass(rng.standard_normal((n, 2)), 250) * 0.02
-    return seamless(crackle(n, rate=3, pop_rate=0.3, gain=0.7) + rain + lowpass(taps, 5000) + room)
+BED_SECONDS = 78.0          # 75 s after the seamless crossfade
+
+
+def tame(x, crest_db=15.0):
+    """Soft-limit the peaks to `crest_db` above the RMS (camp-fire pops, owl hoots) – no hard clipping later."""
+    limit = np.sqrt(np.mean(x ** 2)) * 10 ** (crest_db / 20) + 1e-12
+    return limit * np.tanh(x / limit)
+
+
+def ambience(name, rms_db):
+    """A Freesound ambience (stereo), looped with crossfades to BED_SECONDS, at `rms_db`."""
+    sid = next(k for k, v in json.load(open("tools/audio/freesound.json"))["sounds"].items() if v["as"] == name)
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", os.path.join(FREESOUND, f"{sid}.ogg"), "-ac", "2",
+                        "-ar", str(SR), f.name], check=True)
+        _, x = wavfile.read(f.name)
+    os.unlink(f.name)
+    x = x.astype(np.float64) / 32768.0
+    n, xf = int(BED_SECONDS * SR), int(2.0 * SR)
+    x = x[int(0.5 * SR):-int(0.5 * SR)]                       # no handling noise at the edges
+    out = x
+    while len(out) < n:                                      # crossfade copies until long enough
+        t = np.linspace(0, np.pi / 2, xf)[:, None]
+        out = np.concatenate([out[:-xf], out[-xf:] * np.cos(t) + x[:xf] * np.sin(t), x[xf:]])
+    out = tame(tame(out[:n], 12), 12)                       # twice: the RMS drops after the first pass
+    return out / (np.sqrt(np.mean(out ** 2)) + 1e-12) * 10 ** (rms_db / 20)
+
+
+def beds():
+    n = int(BED_SECONDS * SR)
+    fire = ambience("fire", -24)
+    crickets = ambience("crickets", -30)
+    return {
+        "forest": fire + crickets + ambience("stream", -40) + wind(n, 0.15),
+        "workshop": lowpass(fire, 2500) * 0.7 + lowpass(crickets, 2500) * 0.35 + cave_tone(n) * 0.3,
+        "cave": ambience("cavedrips", -26) + cave_tone(n) * 0.8,
+        "wind": ambience("treewind", -25) + wind(n, 0.6) + crickets * 0.3 + ambience("stream", -40),
+        "storm": ambience("thunderrain", -26) + ambience("rainforest", -28),
+        "lake": ambience("cavelake", -25) + ambience("cavedrips", -34) + cave_tone(n) * 0.5,
+        "after": lowpass(ambience("rainforest", -32), 4000) + ambience("frogs", -34) + crickets * 0.5,
+    }
 
 
 if __name__ == "__main__":
     counts = samples()
-    print("samples:", counts, "total", sum(counts.values()))
-    for name, fn in (("bed_forest.caf", bed_forest), ("bed_cave.caf", bed_cave), ("bed_workshop.caf", bed_workshop)):
-        x = fn()
-        print(write(name, x, aac=True, rms_db=-24.0), f"{len(x) / SR:.1f} s")
+    counts.update(freesound_clips())
+    print("clips:", counts, "total", sum(counts.values()))
+    for old in glob.glob(os.path.join(OUT, "bed_*.caf")):
+        os.unlink(old)
+    for name, x in beds().items():
+        print(write(f"bed_{name}.caf", seamless(x), aac=True, rms_db=-24.0), f"{len(x) / SR:.1f} s")
