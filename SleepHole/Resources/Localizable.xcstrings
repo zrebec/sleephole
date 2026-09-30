@@ -3221,6 +3221,22 @@
         }
       }
     },
+    "Only a few seconds left – come back now 🏗️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only a few seconds left – come back now 🏗️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ostáva už len pár sekúnd – vráť sa hneď 🏗️"
+          }
+        }
+      }
+    },
     "Open SleepHole and confirm you're up.": {
       "localizations": {
         "en": {
@@ -4489,22 +4505,6 @@
         }
       }
     },
-    "The vibration on lock and the warnings come while SleepHole goes to the background – try them with a quick night.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The vibration on lock and the warnings come while SleepHole goes to the background – try them with a quick night."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vibrácia pri zamknutí a varovania prichádzajú, keď SleepHole odchádza do pozadia – vyskúšaj ich s rýchlou nocou."
-          }
-        }
-      }
-    },
     "Then come back to SleepHole and lock your phone.": {
       "localizations": {
         "en": {
@@ -4805,22 +4805,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Budíček"
-          }
-        }
-      }
-    },
-    "Warning (come back)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Warning (come back)"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Varovanie (vráť sa)"
           }
         }
       }
@@ -5541,6 +5525,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "obyčajné domy a bytovky"
+          }
+        }
+      }
+    },
+    "iOS lets apps vibrate only while they are on screen. At night the warnings vibrate through their notification – that needs the settings above and SleepHole allowed in your Focus.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS lets apps vibrate only while they are on screen. At night the warnings vibrate through their notification – that needs the settings above and SleepHole allowed in your Focus."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS dovolí appke vibrovať, len keď je na obrazovke. V noci vibrujú varovania cez svoju notifikáciu – na to treba nastavenia vyššie a SleepHole povolený v Sústredení."
           }
         }
       }

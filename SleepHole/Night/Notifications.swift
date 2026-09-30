@@ -37,10 +37,15 @@ enum Notifications {
     }
 
     /// Sent the moment leaving the app is detected; the owner then has `tolerance` seconds (D15).
+    /// Apps cannot vibrate in the background – the notification's sound is what vibrates the phone, so it is
+    /// sent twice. `.default`, not `.defaultCritical`: critical sounds need an Apple entitlement and stay silent
+    /// without it (owner 2026-09-30: the warning only popped up, no vibration).
     static func nudge(tolerance: TimeInterval) {
-        schedule("nudge", at: Date() + 0.2, title: L("⚠️ Come back to SleepHole!"),
-                 body: L("You have \(Int(tolerance)) seconds, or the building collapses 🏗️"), sound: .defaultCritical,
-                 urgent: true)
+        let title = L("⚠️ Come back to SleepHole!")
+        schedule("nudge", at: Date() + 0.2, title: title,
+                 body: L("You have \(Int(tolerance)) seconds, or the building collapses 🏗️"), sound: .default, urgent: true)
+        schedule("nudge-2", at: Date() + 5, title: title,
+                 body: L("Only a few seconds left – come back now 🏗️"), sound: .default, urgent: true)
     }
 
     /// At the alarm: a silent, time-sensitive notification lights up the lock screen
@@ -50,9 +55,9 @@ enum Notifications {
                  body: L("Shake your phone or enter your code in SleepHole."), sound: nil, urgent: true)
     }
 
-    static func cancelNudge() { cancel(["nudge"]) }
+    static func cancelNudge() { cancel(["nudge", "nudge-2"]) }
     static func cancelBackupAlarm() { cancel(["alarm-backup"]) }
-    static func cancelNight() { cancel(["grace-end", "alarm-backup", "nudge", "alarm-screen"]) }
+    static func cancelNight() { cancel(["grace-end", "alarm-backup", "nudge", "nudge-2", "alarm-screen"]) }
 
     /// "allowed" / "denied" / "not allowed yet" for the Settings screen.
     static func statusText() async -> String {

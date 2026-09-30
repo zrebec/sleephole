@@ -122,8 +122,11 @@ struct NightView: View {
             if let rec = model.active {
                 let total = rec.wake.timeIntervalSince(rec.startedAt ?? rec.bedtime)
                 let progress = min(1, max(0, now.timeIntervalSince(rec.startedAt ?? now) / max(1, total)))
+                ScrollView {
                 VStack(spacing: 16) {
+                    // well below the Dynamic Island – it grows when e.g. a podcast plays (owner 2026-09-30)
                     Text(Fmt.time(now)).font(.system(size: 64, weight: .thin, design: .rounded))
+                        .padding(.top, 36)
                     if let collapsed = model.collapsedAt, collapsed <= now {
                         Text(rec.isNap ? L("Your nap was interrupted 😕") : L("The building collapsed 🧱"))
                             .font(.title2.bold()).foregroundStyle(.orange)
@@ -165,7 +168,6 @@ struct NightView: View {
                     if rec.window.canConfirm(at: now) {
                         ConfirmPanel()
                     }
-                    Spacer()
                     Button(rec.isNap ? L("End nap") : L("Cancel night"), role: .destructive) { confirmAbandon = true }
                         .font(.footnote)
                         .confirmationDialog(rec.isNap ? L("End the nap? It won't earn coins.")
@@ -173,8 +175,11 @@ struct NightView: View {
                                             isPresented: $confirmAbandon, titleVisibility: .visible) {
                             Button(rec.isNap ? L("End") : L("Cancel night"), role: .destructive) { model.abandonNight() }
                         }
+                        .padding(.top, 12)
                 }
                 .padding()
+                }
+                .scrollBounceBehavior(.basedOnSize)
             }
         }
         .background { NightSky() }

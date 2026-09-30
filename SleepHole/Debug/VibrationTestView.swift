@@ -23,7 +23,7 @@ struct VibrationTestView: View {
             } header: {
                 Text(L("If you feel nothing, check on the iPhone"))
             } footer: {
-                Text(L("The vibration on lock and the warnings come while SleepHole goes to the background – try them with a quick night."))
+                Text(L("iOS lets apps vibrate only while they are on screen. At night the warnings vibrate through their notification – that needs the settings above and SleepHole allowed in your Focus."))
             }
         }
         .navigationTitle(L("Vibration test"))
@@ -32,8 +32,6 @@ struct VibrationTestView: View {
     static func title(_ h: Haptic) -> String {
         switch h {
         case .start: L("Start of a night")
-        case .locked: L("Phone locked")
-        case .warning: L("Warning (come back)")
         case .relief: L("Back in time")
         }
     }

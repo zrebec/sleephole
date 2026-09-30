@@ -435,7 +435,6 @@ final class AppModel {
                 phase = .alarm
             } else {
                 phase = .building
-                warnBeforeSetupEnds(rec, now: now)
             }
             return
         }
@@ -602,7 +601,6 @@ final class AppModel {
 
     private func stopServices() {
         sleepSound = nil
-        isAway = false
         waitingForReturn = false
         guard servicesEnabled else { return }
         alarmTask?.cancel()
@@ -644,21 +642,15 @@ final class AppModel {
         save()
         switch kind {
         case .leftApp:
-            isAway = true
+            // no vibration here: the app is in the background now and iOS only lets the notification vibrate
             if let graceEnds, date >= graceEnds, !alreadyCollapsed {
                 nudgesSent += 1
                 waitingForReturn = true
-                buzz(.warning)
                 if servicesEnabled { Notifications.nudge(tolerance: rec.rules.accidentalTolerance) }
             }
         case .returned, .locked:
-            isAway = false
             if servicesEnabled { Notifications.cancelNudge() }
-            if waitingForReturn, collapsedAt == nil {
-                buzz(kind == .locked ? .locked : .relief)
-            } else if kind == .locked, date < rec.wake, collapsedAt == nil {
-                buzz(.locked)
-            }
+            if kind == .returned, waitingForReturn, collapsedAt == nil { buzz(.relief) }
             waitingForReturn = false
         default:
             break
@@ -667,26 +659,18 @@ final class AppModel {
 
     // MARK: - vibrations (owner 2026-09-30, idea XS)
 
-    /// Every vibration requested this app session, in order (diagnostics + tests).
+    /// Every vibration requested this app session, in order (diagnostics + tests). Only in the foreground:
+    /// iOS does not let apps vibrate in the background (owner test 2026-09-30) – there the notifications
+    /// ("⏳ 15 s of setup left", "⚠️ Come back!") vibrate the phone through their sound.
     private(set) var haptics: [Haptic] = []
-    /// The app is in the background right now (left without locking).
-    private var isAway = false
     /// A "Come back!" warning was sent and the owner has not returned yet.
     private var waitingForReturn = false
-    /// The night whose "setup ends in 15 s" vibration was already played.
-    private var setupWarningFor: String?
 
     private func buzz(_ h: Haptic) {
         haptics.append(h)
         if servicesEnabled { Haptics.play(h) }
     }
 
-    /// Together with the "⏳ 15 s of setup left" notification – but only when the owner is away from SleepHole.
-    private func warnBeforeSetupEnds(_ rec: NightRecord, now: Date) {
-        guard let ends = graceEnds, now >= ends - 15, now < ends, isAway, setupWarningFor != rec.id else { return }
-        setupWarningFor = rec.id
-        buzz(.warning)
-    }
 
     private func finalize(_ rec: NightRecord) {
         let before = builtNights
