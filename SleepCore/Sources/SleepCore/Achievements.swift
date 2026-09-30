@@ -34,7 +34,7 @@ public enum Achievements {
     ///   - repairs: nights that repaired a ruin (`TownSnapshot.repairs`)
     /// - Returns: every unlocked achievement with the night that earned it, oldest first.
     public static func unlocked(results: [NightResult], naps: [NightResult] = [], repairs: [NightKey] = [],
-                                catalog: Catalog?, calendar: Calendar) -> [Unlocked] {
+                                catalog: Catalog?, calendar: Calendar, breaks: [NightKey] = []) -> [Unlocked] {
         var found: [Achievement: NightKey] = [:]
         func unlock(_ a: Achievement, _ key: NightKey) { if found[a] == nil { found[a] = key } }
 
@@ -43,6 +43,7 @@ public enum Achievements {
         var prev: NightKey?
         for r in results.sorted(by: { $0.key < $1.key }) {
             if let p = prev, r.key != p, r.key != p.adding(days: 1, calendar: calendar) { run = 0 }
+            if let p = prev, breaks.contains(where: { p < $0 && $0 <= r.key }) { run = 0 }
             prev = r.key
             switch r.outcome {
             case .complete: run += 1

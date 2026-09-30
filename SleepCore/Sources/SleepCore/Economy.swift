@@ -35,12 +35,14 @@ public enum Economy {
 
     /// One entry per result in chronological order, with the streak bonus where it was earned.
     /// Streak semantics as in `Progression`: complete +1, unfinished neutral, ruins/missed/gaps break.
-    public static func ledger(_ results: [NightResult], calendar: Calendar) -> [Entry] {
+    /// `breaks`: nights that start a new streak (a paid schedule change).
+    public static func ledger(_ results: [NightResult], calendar: Calendar, breaks: [NightKey] = []) -> [Entry] {
         var out: [Entry] = []
         var run = 0
         var prev: NightKey?
         for r in results.sorted(by: { $0.key < $1.key }) {
             if let p = prev, r.key != p, r.key != p.adding(days: 1, calendar: calendar) { run = 0 }   // a gap
+            if let p = prev, breaks.contains(where: { p < $0 && $0 <= r.key }) { run = 0 }         // a schedule change
             var bonus = 0
             switch r.outcome {
             case .complete:
@@ -55,7 +57,7 @@ public enum Economy {
         return out
     }
 
-    public static func earned(_ results: [NightResult], calendar: Calendar) -> Int {
-        ledger(results, calendar: calendar).reduce(0) { $0 + $1.coins }
+    public static func earned(_ results: [NightResult], calendar: Calendar, breaks: [NightKey] = []) -> Int {
+        ledger(results, calendar: calendar, breaks: breaks).reduce(0) { $0 + $1.coins }
     }
 }

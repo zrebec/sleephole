@@ -28,12 +28,15 @@ public enum Progression {
 
     /// Consecutive nights ending `.complete`, counted backwards from `lastNight`.
     /// `.unfinished` neither extends nor breaks the streak (gentle); `.ruins`, `.missed` and nights
-    /// without any result break it.
-    public static func currentStreak(_ results: [NightResult], lastNight: NightKey, calendar: Calendar) -> Int {
+    /// without any result break it. `breaks`: nights that start a new streak (a paid schedule change,
+    /// `SchedulePolicy.streakBreak`) – older nights don't count.
+    public static func currentStreak(_ results: [NightResult], lastNight: NightKey, calendar: Calendar,
+                                     breaks: [NightKey] = []) -> Int {
         let byKey = Dictionary(results.map { ($0.key, $0.outcome) }, uniquingKeysWith: { _, b in b })
         var streak = 0
         var key = lastNight
-        let earliest = results.map(\.key).min() ?? lastNight
+        let first = results.map(\.key).min() ?? lastNight
+        let earliest = max(first, breaks.filter { $0 <= lastNight }.max() ?? first)
         while key >= earliest {
             switch byKey[key] {
             case .complete: streak += 1
@@ -45,12 +48,14 @@ public enum Progression {
         return streak
     }
 
-    public static func bestStreak(_ results: [NightResult], calendar: Calendar) -> Int {
+    public static func bestStreak(_ results: [NightResult], calendar: Calendar, breaks: [NightKey] = []) -> Int {
         guard let first = results.map(\.key).min(), let last = results.map(\.key).max() else { return 0 }
         let byKey = Dictionary(results.map { ($0.key, $0.outcome) }, uniquingKeysWith: { _, b in b })
+        let breakSet = Set(breaks)
         var best = 0, run = 0
         var key = first
         while key <= last {
+            if breakSet.contains(key) { run = 0 }
             switch byKey[key] {
             case .complete: run += 1; best = max(best, run)
             case .unfinished: break
