@@ -43,6 +43,8 @@ before doing anything:
   The home screen always shows both "Ísť spať" and "Odpočinok" buttons (disabled outside their windows).
 * UI text **Slovak with correct diacritics**. Code, comments, identifiers, agent docs: **English**.
 * Never rename a shipped sprite id (ids are persisted). Add new ones instead.
+* **The GitHub repo is PUBLIC.** Never commit device logs, the device UDID, the wake code, health or other
+  personal information about the owner. Pulled journals go to `docs/device-logs/` (git-ignored).
 
 ## Commands
 
@@ -71,7 +73,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `tools/render/` | asset pipeline: recipe generator, SceneKit renderer, previews, reference projection |
 | `tools/audio/` | alarm synthesis (`make_alarms.py`), rain loops (`make_rain.py`) |
 | `tools/test_app.sh`, `tools/coverage.sh`, `tools/sim_shot.sh` | app tests + coverage, SleepCore coverage, simulator screenshots |
-| `docs/device-logs/` | journals pulled from the owner's iPhone (real nights) |
+| `docs/device-logs/` | journals pulled from the owner's iPhone – **git-ignored (public repo, personal data)** |
 | `assets/Kenney Game Assets All-in-1 3/` | raw CC0 source bundle, git-ignored, only for re-rendering |
 
 ## About the owner

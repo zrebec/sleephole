@@ -20,12 +20,13 @@
 5. Screenshots: `tools/sim_shot.sh out.png 35 -seedNights 12 -openTab stats|town|settings [-lang en|sk]`
    (add `-lang`). The script always shuts the simulator down – never leave the app running there
    (an alarm would ring on the owner's Mac).
-6. Install on the owner's iPhone ("Bunny 16 Pro", UDID `00008140-001E0D683C31801C`):
+6. Install on the owner's iPhone (find its UDID with `xcrun devicectl list devices` – the physical device;
+   never write the UDID into the repo, it is public):
    ```bash
    export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
    xcodebuild -project SleepHole.xcodeproj -scheme SleepHole -destination 'generic/platform=iOS' \
      -derivedDataPath build/DerivedData -allowProvisioningUpdates build
-   xcrun devicectl device install app --device 00008140-001E0D683C31801C \
+   xcrun devicectl device install app --device <UDID> \
      build/DerivedData/Build/Products/Debug-iphoneos/SleepHole.app
    ```
    Never pass `-clearNights` – the owner's real nights live on the phone. If the phone is locked/unplugged,

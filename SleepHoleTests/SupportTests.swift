@@ -44,7 +44,7 @@ struct SupportTests {
         #expect(try dec.decode(AudioKeeper.Ambience.self, from: Data("\"???\"".utf8)) == .brownNoise)
         for a in AudioKeeper.Ambience.allCases { #expect(!a.title.isEmpty && !a.detail.isEmpty && a.id == a.rawValue) }
         // settings saved by an older build (no timer, Slovak ambience) still load
-        let old = #"{"alarmSound":"alarm_ode","wakeCode":"1356","volume":0.16,"ambience":"Ticho","schedule":{"bedtime":{"hour":21,"minute":0},"wake":{"hour":4,"minute":30},"reminderOffsets":[30]}}"#
+        let old = #"{"alarmSound":"alarm_ode","wakeCode":"0000","volume":0.16,"ambience":"Ticho","schedule":{"bedtime":{"hour":21,"minute":0},"wake":{"hour":4,"minute":30},"reminderOffsets":[30]}}"#
         let s = try dec.decode(AppSettings.self, from: Data(old.utf8))
         #expect(s.ambience == .silence && s.ambienceMinutes == nil && s.alarmSound == .ode)
         #expect(s.napPlan == nil && s.nap == .default)                   // no nap in old settings → default

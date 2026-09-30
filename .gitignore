@@ -21,3 +21,6 @@ tools/render/_*
 docs/device-logs/*
 
 .DS_Store
+
+# PUBLIC repo: journals pulled from the owner's iPhone contain personal data (sleep log, wake code)
+docs/device-logs/
