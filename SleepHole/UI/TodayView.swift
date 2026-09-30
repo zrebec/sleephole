@@ -411,6 +411,7 @@ struct ResultView: View {
                         }
                     }
                 }
+                if !rec.isDebug { NewAchievements(achievements: model.newAchievements) }
                 if outcome == .complete, !rec.isDebug, !rec.isNap { StatusBadges() }
                 if let level = model.levelUp {
                     Label(L("Level \(level) unlocked!"), systemImage: "star.fill")

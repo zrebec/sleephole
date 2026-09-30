@@ -9,6 +9,7 @@ struct SettingsView: View {
     @State private var importing = false
     @State private var pendingRestore: BackupFile?
     @State private var backupMessage: String?
+    @State private var townNameDraft = ""
 
     var body: some View {
         @Bindable var model = model
@@ -20,6 +21,18 @@ struct SettingsView: View {
                     LanguagePicker()
                 } header: {
                     Text(verbatim: "Language · Jazyk")
+                }
+
+                Section {
+                    TextField(L("My Town"), text: $townNameDraft)
+                        .submitLabel(.done)
+                        .onSubmit { model.renameTown(townNameDraft) }
+                        .onAppear { townNameDraft = model.customTownName ?? "" }
+                        .onDisappear { model.renameTown(townNameDraft) }
+                } header: {
+                    Text(L("Town name"))
+                } footer: {
+                    Text(L("Shown above your town. Leave it empty for the default name."))
                 }
 
                 Section(L("Schedule")) {

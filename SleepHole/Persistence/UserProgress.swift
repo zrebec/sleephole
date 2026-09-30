@@ -11,6 +11,8 @@ final class UserProgress {
     var firstNightBriefingAt: Date?
     /// Chosen UI language (`AppLanguage` raw value); nil = never chosen → English (I18N Q1).
     var languageRaw: String?
+    /// The owner's name for the town; nil = the default "My Town".
+    var townName: String?
 
     init() {}
 }

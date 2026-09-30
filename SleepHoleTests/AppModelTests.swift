@@ -244,19 +244,23 @@ struct AppModelTests {
 
     @Test func coinsForRealNightsOnly() {
         let h = harness(at: date(1, 12))
-        playNight(h, day: 1)                                              // complete +100
-        #expect(h.model.coins == 100 && h.model.lastReward == 100)
+        h.clock.now = date(1, 22, 25); h.model.refresh(); h.model.startNight()
+        h.clock.now = date(2, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
+        // complete +100 and the achievement "First building" +50
+        #expect(h.model.coins == 150 && h.model.lastReward == 150 && h.model.newAchievements == [.firstBuilding])
+        h.model.acknowledgeResult()
+        #expect(h.model.newAchievements.isEmpty)
         playNight(h, day: 2, confirmAfterWake: 30 * 60)                   // unfinished +50
-        #expect(h.model.coins == 150)
+        #expect(h.model.coins == 200)
         h.clock.now = date(3, 15)
         h.model.startTestNight(); h.model.startNight()                    // debug: nothing
         h.clock.now += 240; h.model.refresh(); h.model.confirm()
-        #expect(h.model.coins == 150 && h.model.lastReward == 0)
+        #expect(h.model.coins == 200 && h.model.lastReward == 0 && h.model.newAchievements.isEmpty)
         h.model.acknowledgeResult()
         h.model.nextTestNightCounts = true                                // the counted test night pays
         h.model.startTestNight(); h.model.startNight()
         h.clock.now += 240; h.model.refresh(); h.model.confirm()
-        #expect(h.model.coins == 250)
+        #expect(h.model.coins == 300)
     }
 
     @Test func seventhNightPaysTheStreakBonus() {
@@ -264,8 +268,11 @@ struct AppModelTests {
         for d in 1...6 { playNight(h, day: d) }
         h.clock.now = date(7, 22, 25); h.model.refresh(); h.model.startNight()
         h.clock.now = date(8, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
-        #expect(h.model.lastReward == 300 && h.model.lastStreakBonus == 200)
-        #expect(h.model.coins == 900)
+        // 100 + streak bonus 200 + achievements ("7 nights in a row", maybe a random first L2 building)
+        let bonus = h.model.newAchievements.reduce(0) { $0 + $1.reward }
+        #expect(h.model.newAchievements.contains(.streak7) && h.model.lastStreakBonus == 200)
+        #expect(h.model.lastReward == 300 + bonus)
+        #expect(h.model.coins == 7 * 100 + 200 + Achievements.coins(h.model.achievements))
     }
 
     @Test func sleepSoundDuringTheNight() {
@@ -309,7 +316,8 @@ struct AppModelTests {
         #expect(h.model.phase == .alarm)
         #expect(h.model.confirm(code: "1234"))
         #expect(h.model.shownResult?.isNap == true && h.model.shownResult?.outcome == .complete)
-        #expect(h.model.coins == 50 && h.model.lastReward == 50 && h.model.levelUp == nil)
+        #expect(h.model.coins == 100 && h.model.lastReward == 100 && h.model.levelUp == nil)   // + "First nap"
+        #expect(h.model.newAchievements == [.firstNap])
         #expect(h.model.napSummary.count == 1 && h.model.napSummary.coins == 50)
         #expect(h.model.builtNights == 0 && h.model.townSnapshot?.buildings.isEmpty == true && h.model.streak == 0)
         h.model.acknowledgeResult()

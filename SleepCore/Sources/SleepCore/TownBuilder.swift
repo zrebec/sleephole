@@ -23,6 +23,8 @@ public struct TownBuilding: Equatable, Sendable {
 public struct TownSnapshot: Equatable, Sendable {
     public var layout = TownLayout()
     public var buildings: [TownBuilding] = []
+    /// Nights whose complete result repaired an older ruin, in order (→ achievement "Repair").
+    public var repairs: [NightKey] = []
     public init() {}
 }
 
@@ -54,6 +56,7 @@ public enum TownBuilder {
                 }) {
                     town.buildings[i].state = .complete
                     town.buildings[i].repairedLater = true
+                    town.repairs.append(r.key)
                 }
             }
         }

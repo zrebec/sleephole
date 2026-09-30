@@ -57,7 +57,7 @@ struct BackupStatsTests {
         let b = store()
         let (m2, _) = model(b, at: date(9, 12))
         try m2.restore(try BackupFile.decode(data))
-        #expect(m2.records().count == 4 && m2.builtNights == 4 && m2.coins == 400)
+        #expect(m2.records().count == 4 && m2.builtNights == 4 && m2.coins == 400 + 50 + 50)   // + 2 achievements
         #expect(m2.onboardingDone && m2.settings.alarmSound == .ode)
         #expect(m2.townSnapshot?.buildings.map(\.buildingId) == m1.townSnapshot?.buildings.map(\.buildingId))
         #expect(m2.records().first?.log.has(.confirmedByCode) == true)

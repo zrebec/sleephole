@@ -85,6 +85,8 @@ struct TownTab: View {
     @Environment(AppModel.self) private var model
     @Environment(SpriteLibrary.self) private var sprites
     @State private var selected: Int?
+    @State private var renaming = false
+    @State private var nameDraft = ""
 
     var body: some View {
         let snapshot = model.townSnapshot
@@ -101,6 +103,13 @@ struct TownTab: View {
             }
             .navigationTitle(L("Town"))
             .navigationBarTitleDisplayMode(.inline)
+            .alert(L("Town name"), isPresented: $renaming) {
+                TextField(L("My Town"), text: $nameDraft)
+                Button(L("Save")) { model.renameTown(nameDraft) }
+                Button(L("Cancel"), role: .cancel) {}
+            } message: {
+                Text(L("Leave it empty for the default name."))
+            }
             .sheet(item: Binding(get: { selected.map(SelectedBuilding.init) }, set: { selected = $0?.index })) { sel in
                 if let b = snapshot?.buildings[safe: sel.index] {
                     BuildingSheet(building: b)
@@ -114,18 +123,37 @@ struct TownTab: View {
     private func header(_ snapshot: TownSnapshot?) -> some View {
         let count = snapshot?.buildings.filter { $0.state == .complete }.count ?? 0
         let people = snapshot.map { TownStats.population($0, catalog: model.catalog) } ?? 0
-        HStack(spacing: 14) {
-            Label { Text(verbatim: "\(count)") } icon: { Image(systemName: "building.2.fill") }
-            Label { Text(verbatim: "\(people)") } icon: { Image(systemName: "person.2.fill") }
-            Text(verbatim: "🪙 \(model.coins)")
+        VStack(spacing: 2) {
+            Button {
+                nameDraft = model.customTownName ?? ""
+                renaming = true
+            } label: {
+                Label { Text(verbatim: model.townName) } icon: { Image(systemName: "pencil").font(.caption) }
+                    .font(.headline)
+                    .labelStyle(TrailingIconLabelStyle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint(L("Rename the town"))
+            HStack(spacing: 14) {
+                Label { Text(verbatim: "\(count)") } icon: { Image(systemName: "building.2.fill") }
+                Label { Text(verbatim: "\(people)") } icon: { Image(systemName: "person.2.fill") }
+                Text(verbatim: "🪙 \(model.coins)")
+            }
             if (snapshot?.buildings.isEmpty ?? true) {
                 Text(L("Your first building appears after your first night 🌙")).font(.caption)
             }
         }
         .font(.subheadline.bold())
         .padding(.horizontal, 14).padding(.vertical, 8)
-        .background(.ultraThinMaterial, in: Capsule())
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 18))
         .padding(.top, 8)
+    }
+}
+
+/// "My Town ✎" – the pencil after the text.
+struct TrailingIconLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 6) { configuration.title; configuration.icon.foregroundStyle(.secondary) }
     }
 }
 

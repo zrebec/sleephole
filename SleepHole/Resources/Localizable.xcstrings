@@ -469,6 +469,102 @@
         }
       }
     },
+    "10 nights built": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 nights built"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 postavených nocí"
+          }
+        }
+      }
+    },
+    "100 nights built": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "100 nights built"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "100 postavených nocí"
+          }
+        }
+      }
+    },
+    "3 nights in a row": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 nights in a row"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 noci v rade"
+          }
+        }
+      }
+    },
+    "30 nights in a row": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 nights in a row"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 nocí v rade"
+          }
+        }
+      }
+    },
+    "50 nights built": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "50 nights built"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "50 postavených nocí"
+          }
+        }
+      }
+    },
+    "7 nights in a row": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 nights in a row"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 nocí v rade"
+          }
+        }
+      }
+    },
     "A backup can't be restored during a night.": {
       "localizations": {
         "en": {
@@ -485,6 +581,22 @@
         }
       }
     },
+    "A complete afternoon nap.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A complete afternoon nap."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotový popoludňajší odpočinok."
+          }
+        }
+      }
+    },
     "A complete night = %lld 🪙, unfinished = %lld 🪙, and every %lldth complete night in a row adds a +%lld 🪙 bonus. Soon you'll buy buildings with them: house %lld, L2 %lld, L3 %lld, L4 %lld 🪙.": {
       "localizations": {
         "en": {
@@ -497,6 +609,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hotová noc = %1$lld 🪙, rozostavaná = %2$lld 🪙 a každá %3$lld. hotová noc v rade pridá bonus +%4$lld 🪙. Čoskoro si za ne budeš kupovať budovy: dom %5$lld, L2 %6$lld, L3 %7$lld, L4 %8$lld 🪙."
+          }
+        }
+      }
+    },
+    "A good night rebuilt a ruin.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A good night rebuilt a ruin."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dobrá noc opravila ruinu."
+          }
+        }
+      }
+    },
+    "A hundred nights that built something.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A hundred nights that built something."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sto nocí, ktoré niečo postavili."
           }
         }
       }
@@ -533,6 +677,54 @@
         }
       }
     },
+    "A park, museum or library in your town.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A park, museum or library in your town."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Park, múzeum alebo knižnica v tvojom meste."
+          }
+        }
+      }
+    },
+    "A town hall, school, fire station, police or hospital.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A town hall, school, fire station, police or hospital."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Radnica, škola, hasiči, polícia alebo nemocnica."
+          }
+        }
+      }
+    },
+    "A whole week of complete nights in a row.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A whole week of complete nights in a row."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Celý týždeň hotových nocí za sebou."
+          }
+        }
+      }
+    },
     "About": {
       "localizations": {
         "en": {
@@ -545,6 +737,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "O appke"
+          }
+        }
+      }
+    },
+    "Achievements": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Achievements"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Úspechy"
           }
         }
       }
@@ -1009,6 +1217,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stavba prebieha"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zrušiť"
           }
         }
       }
@@ -1493,6 +1717,22 @@
         }
       }
     },
+    "Fifty nights that built something.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fifty nights that built something."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Päťdesiat nocí, ktoré niečo postavili."
+          }
+        }
+      }
+    },
     "Finished later 💪": {
       "localizations": {
         "en": {
@@ -1505,6 +1745,86 @@
           "stringUnit": {
             "state": "translated",
             "value": "Neskôr dostavaná 💪"
+          }
+        }
+      }
+    },
+    "First building": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First building"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prvá budova"
+          }
+        }
+      }
+    },
+    "First level 2 building": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First level 2 building"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prvá budova levelu 2"
+          }
+        }
+      }
+    },
+    "First level 3 building": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First level 3 building"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prvá budova levelu 3"
+          }
+        }
+      }
+    },
+    "First nap": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First nap"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prvý odpočinok"
+          }
+        }
+      }
+    },
+    "First skyscraper": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First skyscraper"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prvý mrakodrap"
           }
         }
       }
@@ -1877,6 +2197,22 @@
         }
       }
     },
+    "Leave it empty for the default name.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leave it empty for the default name."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nechaj prázdne pre predvolený názov."
+          }
+        }
+      }
+    },
     "Leaving to another app for more than %@ collapses the building.": {
       "localizations": {
         "en": {
@@ -2181,6 +2517,22 @@
         }
       }
     },
+    "My Town": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "My Town"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moje mesto"
+          }
+        }
+      }
+    },
     "Nap": {
       "localizations": {
         "en": {
@@ -2289,6 +2641,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odpočinky"
+          }
+        }
+      }
+    },
+    "New achievement!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New achievement!"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nový úspech!"
+          }
+        }
+      }
+    },
+    "New achievements!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New achievements!"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nové úspechy!"
           }
         }
       }
@@ -2837,6 +3221,22 @@
         }
       }
     },
+    "Rename the town": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename the town"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premenovať mesto"
+          }
+        }
+      }
+    },
     "Repaired later 🛠️": {
       "localizations": {
         "en": {
@@ -3033,6 +3433,22 @@
         }
       }
     },
+    "Ruin repaired": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruin repaired"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opravená ruina"
+          }
+        }
+      }
+    },
     "Ruins – part of the town too 🌱": {
       "localizations": {
         "en": {
@@ -3061,6 +3477,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ruina 🧱"
+          }
+        }
+      }
+    },
+    "Save": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uložiť"
           }
         }
       }
@@ -3221,6 +3653,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Znova ukázať sprievodcu a prvú noc"
+          }
+        }
+      }
+    },
+    "Shown above your town. Leave it empty for the default name.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shown above your town. Leave it empty for the default name."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zobrazí sa nad tvojím mestom. Nechaj prázdne pre predvolený názov."
           }
         }
       }
@@ -3429,6 +3877,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ťukni na deň a uvidíš, ako tá noc prebehla."
+          }
+        }
+      }
+    },
+    "Ten nights that built something (complete or unfinished).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ten nights that built something (complete or unfinished)."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desať nocí, ktoré niečo postavili (hotové či rozostavané)."
           }
         }
       }
@@ -3769,6 +4233,38 @@
         }
       }
     },
+    "Thirty complete nights in a row – that's a real habit!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thirty complete nights in a row – that's a real habit!"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tridsať hotových nocí za sebou – to je už naozajstný zvyk!"
+          }
+        }
+      }
+    },
+    "Three complete nights in a row.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Three complete nights in a row."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tri hotové noci za sebou."
+          }
+        }
+      }
+    },
     "To": {
       "localizations": {
         "en": {
@@ -3845,6 +4341,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mesto a levely"
+          }
+        }
+      }
+    },
+    "Town name": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Town name"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Názov mesta"
           }
         }
       }
@@ -4265,6 +4777,22 @@
         }
       }
     },
+    "Your first night that built something.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your first night that built something."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoja prvá noc, ktorá niečo postavila."
+          }
+        }
+      }
+    },
     "Your first night 🌙": {
       "localizations": {
         "en": {
@@ -4325,6 +4853,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Séria začína dnes"
+          }
+        }
+      }
+    },
+    "Your town reaches the sky.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your town reaches the sky."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje mesto siaha do neba."
           }
         }
       }
@@ -4665,6 +5209,22 @@
         }
       }
     },
+    "locked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "locked"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zamknutý"
+          }
+        }
+      }
+    },
     "nap": {
       "localizations": {
         "en": {
@@ -4869,6 +5429,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "rozostavaná"
+          }
+        }
+      }
+    },
+    "unlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "unlocked"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "získaný"
           }
         }
       }

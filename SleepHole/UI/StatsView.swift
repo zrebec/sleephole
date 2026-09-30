@@ -19,7 +19,7 @@ struct StatsView: View {
                         tile("🔥", "\(s.currentStreak)", L("current streak"))
                         tile("🏆", "\(s.bestStreak)", L("best streak"))
                         tile("🏗️", "\(s.builtNights)", L("nights built"))
-                        tile("🪙", "\(s.coins)", L("coins"))
+                        tile("🪙", "\(model.coins)", L("coins"))                  // incl. naps + achievements
                     }
                     card(L("Night calendar")) {
                         CalendarGrid(days: s.calendar, selected: $selectedDay)
@@ -43,6 +43,10 @@ struct StatsView: View {
                         let n = model.napSummary
                         Label(L("\(n.count) complete naps") + " · +\(n.coins) 🪙", systemImage: "bed.double.fill")
                     }
+                    card(L("Achievements") + " \(model.achievements.count)/\(Achievement.allCases.count)") {
+                        AchievementsCard()
+                    }
+                    .id("achievements")
                     card(L("Levels")) {
                         ProgressView(value: Double(s.maxLevel), total: 4) { Text(L("Level \(s.maxLevel) of 4 unlocked")) }
                         if let next = Progression.nightsToNextLevel(built: s.builtNights) {
@@ -51,6 +55,9 @@ struct StatsView: View {
                     }
                 }
                 .padding()
+            }
+            .onAppear {                                   // `-scrollTo achievements` (screenshots)
+                if ProcessInfo.processInfo.arguments.contains("achievements") { proxy.scrollTo("achievements", anchor: .top) }
             }
             .onChange(of: selectedDay) { _, day in
                 if day != nil { withAnimation { proxy.scrollTo("detail", anchor: .top) } }

@@ -188,11 +188,20 @@ final class AppModel {
                       calendar: calendar)
     }
 
-    /// Coin balance 🪙 (replayed from the real nights; spending comes with the building shop).
+    /// Coin balance 🪙 (replayed from the real nights, naps and achievements; spending comes with the shop).
     var coins: Int {
         Economy.earned(realResults().compactMap(\.result), calendar: calendar)
             + napResults().compactMap(\.outcome).reduce(0) { $0 + NapPlan.reward($1) }
+            + Achievements.coins(achievements)
     }
+
+    /// Unlocked achievements, oldest first (replayed like the coins – old nights count too).
+    var achievements: [Achievements.Unlocked] {
+        Achievements.unlocked(results: realResults().compactMap(\.result), naps: napResults().compactMap(\.result),
+                              repairs: townSnapshot?.repairs ?? [], catalog: catalog, calendar: calendar)
+    }
+    /// Achievements earned by the night in `shownResult` (result screen).
+    private(set) var newAchievements: [Achievement] = []
     /// What the night in `shownResult` paid (reward + streak bonus).
     private(set) var lastReward = 0
     private(set) var lastStreakBonus = 0
@@ -289,6 +298,22 @@ final class AppModel {
         onboardingDone = p.onboardingCompletedAt != nil
         firstNightBriefed = p.firstNightBriefingAt != nil
         language = p.languageRaw.flatMap(AppLanguage.init(rawValue:)) ?? .fallback
+        customTownName = p.townName
+    }
+
+    // MARK: - town name (owner 2026-09-30, idea S; stored in the database)
+
+    static let townNameMaxLength = 30
+    /// nil = never named → "My Town" in the current language.
+    private(set) var customTownName: String?
+    var townName: String { customTownName ?? L("My Town") }
+
+    /// Trimmed, at most 30 characters; empty = back to the default name.
+    func renameTown(_ name: String) {
+        let trimmed = String(name.trimmingCharacters(in: .whitespacesAndNewlines).prefix(Self.townNameMaxLength))
+        customTownName = trimmed.isEmpty ? nil : trimmed
+        progress().townName = customTownName
+        save()
     }
 
     // MARK: - language (stored in the database, `UserProgress.languageRaw`)
@@ -330,7 +355,7 @@ final class AppModel {
         let p = progress()
         return BackupFile(exportedAt: clock.now, settings: settings, onboardingCompletedAt: p.onboardingCompletedAt,
                           firstNightBriefingAt: p.firstNightBriefingAt, nights: records().map(\.backup),
-                          language: p.languageRaw)
+                          language: p.languageRaw, townName: p.townName)
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
@@ -343,6 +368,7 @@ final class AppModel {
         p.onboardingCompletedAt = b.onboardingCompletedAt
         p.firstNightBriefingAt = b.firstNightBriefingAt
         if let lang = b.language, AppLanguage(rawValue: lang) != nil { p.languageRaw = lang }
+        if let name = b.townName { p.townName = name }
         save()
         settings = b.settings
         loadProgress()
@@ -455,6 +481,7 @@ final class AppModel {
     func acknowledgeResult() {
         shownResult = nil
         levelUp = nil
+        newAchievements = []
         refresh()
     }
 
@@ -644,6 +671,7 @@ final class AppModel {
     private func finalize(_ rec: NightRecord) {
         let before = builtNights
         let coinsBefore = coins
+        let achievedBefore = Set(achievements.map(\.achievement))
         let log = rec.log
         let result = NightEvaluator.result(for: log, key: log.key, rules: rec.isNap ? NapPlan.rules : rec.rules)
         rec.outcomeRaw = result.outcome.rawValue
@@ -656,6 +684,7 @@ final class AppModel {
         levelUp = rec.isDebug || rec.isNap ? nil : Progression.levelUp(builtBefore: before, builtAfter: builtNights)
         if !rec.isDebug && !rec.isNap { rebuildTown() }
         lastReward = rec.isDebug ? 0 : coins - coinsBefore
+        newAchievements = achievements.map(\.achievement).filter { !achievedBefore.contains($0) }
         if !rec.isDebug { writeAutoBackup() }
         lastStreakBonus = rec.isDebug || rec.isNap ? 0
             : Economy.ledger(realResults().compactMap(\.result), calendar: calendar).last?.streakBonus ?? 0

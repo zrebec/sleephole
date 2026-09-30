@@ -613,10 +613,12 @@ detection log matches reality. **Stop.**
   - [x] **XS vibrations** (`Night/Haptics.swift`, `AppModel.buzz`): start of a night/nap (impact), phone locked while
         building (system vibration – the app is going to the background), "setup ends in 15 s" while away and the
         "Come back!" warning (strong, twice), back in time after a warning (success). `AppModel.haptics` logs them.
-  - [ ] **S achievements + town name:** 12 achievements replayed from the real nights (like coins), small coin
-        bonus (+50, big ones +200), shown on the result screen + a Stats section (locked ones grey). Town name
-        (default "My Town"/"Moje mesto", max 30 chars) editable in the Town header and Settings, stored in the DB +
-        backup.
+  - [x] **S achievements + town name:** 12 achievements (`SleepCore/Achievements.swift`) replayed from the real
+        nights, naps and `TownSnapshot.repairs` (like coins – old nights count too), +50 🪙 each, +200 for 30 in a
+        row / 100 built / first skyscraper; included in `AppModel.coins`; `newAchievements` on the result screen;
+        Stats card (locked ones grey, tap = description). Town name (`UserProgress.townName`, default
+        "My Town"/"Moje mesto", trimmed, max 30 chars) in the Town header (tap → rename) and Settings, in the backup.
+        New UI strings: `python3 tools/i18n/add.py translations.json`.
   - [ ] **M weekly journal:** Mon–Sun summary (nights by outcome, buildings, coins, average start/wake, best
         streak, naps, vs. last week, a warm sentence) as a Stats card with past weeks; on Monday after "I'm up"
         the result screen shows last week's summary.
