@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""Synthesises SleepHole's alarm sounds (all original synthesis; melodies are public domain or our own).
+"""Synthesises SleepHole's alarm sounds (all original synthesis; melodies are public domain or our own), plus the
+alarms made from CC0 Freesound recordings (tools/audio/freesound.json, use = "alarm"; fetch them first with
+tools/audio/fetch_freesound.py – the raw files live in the git-ignored assets/freesound/).
 
     python3 tools/audio/make_alarms.py            # writes assets/audio/alarm_*.caf (via ffmpeg)
 
 Every file is ≤ 29 s so it can also be used as a notification sound (iOS limit 30 s).
 The app loops them for at most 2 minutes (rules.alarmDuration).
 """
+import json
 import os
 import subprocess
 import tempfile
@@ -67,6 +70,9 @@ def tone(freq, dur, kind):
         ph = 2 * np.pi * freq * t
         w = np.sin(ph) + np.sin(3 * ph) / 3 + np.sin(5 * ph) / 5
         return w * env(n, 0.002, release=0.004)
+    if kind == "harp":                         # plucked string: bright attack, long ringing decay
+        w = sum(np.sin(2 * np.pi * freq * k * t) * np.exp(-t * (1.2 + 1.8 * k)) / k for k in range(1, 7))
+        return w * env(n, 0.002, release=0.05)
     if kind == "pad":
         ph = 2 * np.pi * freq * t
         return (np.sin(ph) + 0.3 * np.sin(2 * ph)) * env(n, 0.4, release=0.6)
@@ -204,5 +210,90 @@ def chimes():
     tr.save("chimes", fade_in=2)
 
 
+# 7) Prelúdium – J. S. Bach, Prelude in C major BWV 846 (1722, public domain), harp. Each bar: the 5-note chord
+#    broken as 1-2-3-4-5-3-4-5, twice.
+def bach_prelude():
+    tr = Track(MAX_LEN)
+    bars = [["C4", "E4", "G4", "C5", "E5"], ["C4", "D4", "A4", "D5", "F5"], ["B3", "D4", "G4", "D5", "F5"],
+            ["C4", "E4", "G4", "C5", "E5"], ["C4", "E4", "A4", "E5", "A5"], ["C4", "D4", "F#4", "A4", "D5"],
+            ["B3", "D4", "G4", "D5", "G5"], ["B3", "C4", "E4", "G4", "C5"], ["A3", "C4", "E4", "G4", "C5"],
+            ["D3", "A3", "D4", "F#4", "C5"], ["G3", "B3", "D4", "G4", "B4"], ["G3", "Bb3", "E4", "G4", "C#5"]]
+    t, step, g = 0.3, 0.145, 0.45
+    for bar in bars:
+        for _ in range(2):
+            for i in (0, 1, 2, 3, 4, 2, 3, 4):
+                tr.add(t, tone(note_hz(bar[i]), 1.6, "harp"), g)
+                t += step
+        g = min(1.0, g * 1.08)
+    tr.save("bach", fade_in=2)
+
+
+# ───────────────────────── alarms from CC0 recordings (Freesound) ─────────────────────────
+
+FREESOUND = "assets/freesound"
+
+
+def recording(name):
+    sid = next(k for k, v in json.load(open("tools/audio/freesound.json"))["sounds"].items() if v["as"] == name)
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", os.path.join(FREESOUND, f"{sid}.ogg"), "-ac", "1",
+                        "-ar", str(SR), f.name], check=True)
+        _, x = wavfile.read(f.name)
+    os.unlink(f.name)
+    return x.astype(np.float64) / 32768.0
+
+
+def from_recording(name, x, start=0.0, fade_in=3.0, rise_db=0.0, rms_db=None):
+    """A ≤ 28.5 s excerpt; `rise_db` makes it slowly louder (the app ramps the volume as well); `rms_db` compresses
+    peaky recordings (bird chirps) so they are as loud as the other alarms."""
+    tr = Track(MAX_LEN)
+    x = x[int(start * SR):][: int(MAX_LEN * SR)].copy()
+    if rms_db is not None:
+        x = x / (np.sqrt(np.mean(x ** 2)) + 1e-12) * 10 ** (rms_db / 20)
+        x = 0.9 * np.tanh(x / 0.9)
+    x *= 10 ** (np.linspace(-rise_db, 0, len(x)) / 20)
+    fo = int(1.0 * SR)                                    # soft end: the file loops in the app
+    x[-fo:] *= np.linspace(1, 0, fo)
+    tr.add(0, x)
+    tr.save(name, fade_in=fade_in)
+
+
+# 8) Ranné vtáctvo – a dawn chorus (Synge101, CC0).
+def birds():
+    from_recording("birds", recording("birds"), start=20, fade_in=4, rise_db=6, rms_db=-17)
+
+
+# 9) Spievajúca miska – singing-bowl strikes (s-light, mttvn, CC0) coming closer together and louder.
+def bowl():
+    tr = Track(MAX_LEN)
+    low, high = recording("bowl"), recording("bowl-high")
+    low = low[np.argmax(np.abs(low) > 0.05 * np.max(np.abs(low))):]      # start at the strike
+    high = high[np.argmax(np.abs(high) > 0.05 * np.max(np.abs(high))):]
+    t, gap, g, k = 0.2, 7.0, 0.45, 0
+    while t < MAX_LEN - 1:
+        src = low if k % 2 == 0 else high
+        tr.add(t, src[: int(9 * SR)] * np.exp(-np.arange(min(len(src), int(9 * SR))) / SR / 4), g)
+        t += gap
+        gap = max(2.2, gap * 0.8)
+        g = min(1.0, g * 1.15)
+        k += 1
+    tr.save("bowl", fade_in=0)
+
+
+# 10) Hracia skrinka – a Symphonion music box playing "Klosterglocken" (Lefébure-Wély, public domain;
+#     recording by thulitt, CC0).
+def music_box():
+    from_recording("musicbox", recording("musicbox"), start=0.5, fade_in=2, rise_db=3)
+
+
+# 11) Kalimba – kalimba improvisation (SamuelGremaud, CC0).
+def kalimba():
+    from_recording("kalimba", recording("kalimba"), start=0, fade_in=2, rise_db=4, rms_db=-16)
+
+
 if __name__ == "__main__":
-    morning_mood(); ode_to_joy(); bugle(); alert(); digital(); chimes()
+    import sys
+    only = sys.argv[1:]
+    for fn in (morning_mood, ode_to_joy, bugle, alert, digital, chimes, bach_prelude, birds, bowl, music_box, kalimba):
+        if not only or fn.__name__ in only:
+            fn()

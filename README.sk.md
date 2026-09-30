@@ -49,8 +49,10 @@ Každú noc sa náhodne vyberie jeden z odomknutých levelov a z neho budova. Bu
 - **Mesto (SpriteKit):** izometrická mapa bez hraníc, ktorá rastie od stredu po blokoch 4×4 a sama si dopĺňa cesty. Posúvanie so zotrvačnosťou a zoom dvoma prstami ako v SimCity. Ťuknutím na budovu zistíš, z ktorej noci je a v akom je stave. V hlavičke je počet budov a obyvateľov.
 - **190 izometrických spritov:** z Kenney 3D City Kitov (CC0) vlastným SceneKit rendererom. Budovy L1–L4 s tabuľami v slovenčine aj angličtine (9 budov má EN variant), cesty, lešenie, ruiny, autá a 16-snímkový žeriav.
 - **Dva jazyky:** angličtina (predvolená) a slovenčina. Prepínač je v Nastaveniach (hore) a na prvej stránke sprievodcu, voľba sa uloží do databázy a platí hneď, bez reštartu. Preložené je všetko vrátane upozornení, názvov budov a tabúľ na budovách.
-- **8 budíkov:**
+- **13 budíkov:**
   - jemný pizzicato (predvolený),
+  - Ranné vtáctvo, Spievajúca miska, Hracia skrinka (Symphonion, „Klosterglocken“), Kalimba – CC0 nahrávky,
+  - Prelúdium (Bach, harfa),
   - Ranná nálada (Grieg),
   - Óda na radosť (hracia skrinka),
   - Zvonkohra,
@@ -174,7 +176,8 @@ python3 tools/i18n/keys.py   # po builde: chýbajúce / nepreložené kľúče v
 ## Licencie a poďakovanie
 
 - **Grafika a časť zvukov:** [Kenney](https://kenney.nl) (CC0). Vyrenderované a poskladané vlastnými skriptmi v `tools/`.
-- **Melódie budíkov:** E. Grieg (*Peer Gynt*, 1875) a L. van Beethoven (*9. symfónia*, 1824), obe voľné dielo. Trúbka a Poplach sú vlastné skladby. Všetko je syntetizované v `tools/audio/make_alarms.py`.
+- **Budíky z nahrávok:** Ranné vtáctvo, Spievajúca miska, Hracia skrinka a Kalimba sú CC0 nahrávky z Freesound (autori v `assets/audio/CREDITS-freesound.txt`), upravené v `tools/audio/make_alarms.py`.
+- **Melódie budíkov:** E. Grieg (*Peer Gynt*, 1875), L. van Beethoven (*9. symfónia*, 1824) a J. S. Bach (*Prelúdium C dur*, 1722), všetko voľné dielo. Trúbka a Poplach sú vlastné skladby. Všetko je syntetizované v `tools/audio/make_alarms.py`.
 - **Zvukové príbehy:** CC0 zvuky od Kenneyho (Impact Sounds, RPG Audio, Foley Sounds) a 50 CC0 nahrávok z [Freesound](https://freesound.org) (autori v [`assets/audio/CREDITS-freesound.txt`](assets/audio/CREDITS-freesound.txt); stiahnuté cez `tools/audio/fetch_freesound.py`, nastrihané a zmiešané v `tools/audio/make_stories.py`), ktoré appka náhodne skladá do scén (`SleepHole/Night/Stories.swift`).
 - **Dážď na okno:** „Rain on Windows, Interior, A“ od [InspectorJ](https://freesound.org/s/346642/) (www.jshaw.co.uk), Freesound, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), upravené do slučky. Dážď na stan a šumy sú syntetizované (`tools/audio/make_rain.py`, `AudioKeeper`).
 - **Inšpirácia:** [SleepTown](https://apps.apple.com/app/sleeptown/id1210251567) od Seekrtech.

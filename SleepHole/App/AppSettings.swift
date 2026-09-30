@@ -26,6 +26,11 @@ struct AppSettings: Codable, Equatable {
 
     enum AlarmSound: String, Codable, CaseIterable, Identifiable {
         case gentle = "alarm_gentle"          // default
+        case birds = "alarm_birds"            // CC0 recordings (Freesound) + Bach, owner 2026-09-30
+        case bowl = "alarm_bowl"
+        case musicBox = "alarm_musicbox"
+        case kalimba = "alarm_kalimba"
+        case bach = "alarm_bach"
         case morning = "alarm_morning"
         case ode = "alarm_ode"
         case chimes = "alarm_chimes"
@@ -40,6 +45,11 @@ struct AppSettings: Codable, Equatable {
         var title: String {
             switch self {
             case .gentle: L("Gentle")
+            case .birds: L("Dawn chorus")
+            case .bowl: L("Singing bowl")
+            case .musicBox: L("Music box")
+            case .kalimba: L("Kalimba")
+            case .bach: L("Prelude")
             case .morning: L("Morning Mood")
             case .ode: L("Ode to Joy")
             case .chimes: L("Chimes")
@@ -53,6 +63,11 @@ struct AppSettings: Codable, Equatable {
         var detail: String {
             switch self {
             case .gentle: L("Pizzicato, slowly getting louder.")
+            case .birds: L("Birds singing at dawn, slowly getting louder.")
+            case .bowl: L("A Tibetan singing bowl, the strikes come closer together.")
+            case .musicBox: L("An old Symphonion music box – “Klosterglocken”.")
+            case .kalimba: L("A gentle kalimba melody.")
+            case .bach: L("Bach – Prelude in C major, harp.")
             case .morning: L("Grieg – Peer Gynt, flute.")
             case .ode: L("Beethoven – music box.")
             case .chimes: L("Rising bells.")
@@ -66,7 +81,8 @@ struct AppSettings: Codable, Equatable {
         /// Seconds to ramp from quiet to full volume; 0 = full blast immediately.
         var rampSeconds: Double {
             switch self {
-            case .gentle, .retro: 60
+            case .gentle, .retro, .birds: 60
+            case .bowl, .musicBox, .kalimba, .bach: 45
             case .morning, .ode: 45
             case .chimes: 30
             case .bugle: 10

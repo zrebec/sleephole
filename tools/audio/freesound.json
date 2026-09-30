@@ -1,58 +1,225 @@
 {
-  "_comment": "CC0 recordings from Freesound.org used by the sound stories (tools/audio/fetch_freesound.py downloads them, make_stories.py cuts and mixes them). bed = long ambience for the chapter beds, clip = cut into short event clips.",
+  "_comment": "CC0 recordings from Freesound.org (tools/audio/fetch_freesound.py downloads them). bed = long ambience for the story chapter beds, clip = cut into story event clips (make_stories.py), alarm = alarm sound (make_alarms.py).",
   "sounds": {
-    "588401": {"use": "bed", "as": "fire"},
-    "425425": {"use": "bed", "as": "crickets"},
-    "380021": {"use": "bed", "as": "frogs"},
-    "826884": {"use": "bed", "as": "stream"},
-    "726217": {"use": "bed", "as": "treewind"},
-    "523391": {"use": "bed", "as": "rainforest"},
-    "476796": {"use": "bed", "as": "thunderrain"},
-    "343742": {"use": "bed", "as": "cavedrips"},
-    "565233": {"use": "bed", "as": "cavelake"},
-
-    "566037": {"use": "clip", "as": "saw"},
-    "566040": {"use": "clip", "as": "saw"},
-    "707527": {"use": "clip", "as": "saw"},
-    "760611": {"use": "clip", "as": "saw"},
-    "847374": {"use": "clip", "as": "plane"},
-    "847375": {"use": "clip", "as": "plane"},
-    "383444": {"use": "clip", "as": "sand"},
-    "707525": {"use": "clip", "as": "nail"},
-    "540139": {"use": "clip", "as": "nail"},
-    "204946": {"use": "clip", "as": "nail"},
-    "337814": {"use": "clip", "as": "nail"},
-    "792417": {"use": "clip", "as": "sweep"},
-    "655375": {"use": "clip", "as": "sweep"},
-    "118975": {"use": "clip", "as": "sweep"},
-    "590161": {"use": "clip", "as": "floor"},
-    "590164": {"use": "clip", "as": "floor"},
-    "590165": {"use": "clip", "as": "floor"},
-    "590168": {"use": "clip", "as": "floor"},
-
-    "735744": {"use": "clip", "as": "owl"},
-    "655380": {"use": "clip", "as": "owl"},
-    "454842": {"use": "clip", "as": "owl"},
-    "784609": {"use": "clip", "as": "owl"},
-    "724909": {"use": "clip", "as": "dog"},
-    "189688": {"use": "clip", "as": "dog"},
-    "784915": {"use": "clip", "as": "dog"},
-    "828526": {"use": "clip", "as": "bark"},
-    "396307": {"use": "clip", "as": "bark"},
-    "823065": {"use": "clip", "as": "chicken"},
-    "479604": {"use": "clip", "as": "chicken"},
-    "364893": {"use": "clip", "as": "purr"},
-    "593609": {"use": "clip", "as": "purr"},
-    "656661": {"use": "clip", "as": "horse"},
-    "826753": {"use": "clip", "as": "horse"},
-    "503516": {"use": "clip", "as": "wolf"},
-
-    "369580": {"use": "clip", "as": "wade"},
-    "498572": {"use": "clip", "as": "bucket"},
-    "420404": {"use": "clip", "as": "leaves"},
-    "861414": {"use": "clip", "as": "leaves"},
-    "473864": {"use": "clip", "as": "thunder"},
-    "712914": {"use": "clip", "as": "thunder"},
-    "778363": {"use": "clip", "as": "thunder"}
+    "588401": {
+      "use": "bed",
+      "as": "fire"
+    },
+    "425425": {
+      "use": "bed",
+      "as": "crickets"
+    },
+    "380021": {
+      "use": "bed",
+      "as": "frogs"
+    },
+    "826884": {
+      "use": "bed",
+      "as": "stream"
+    },
+    "726217": {
+      "use": "bed",
+      "as": "treewind"
+    },
+    "523391": {
+      "use": "bed",
+      "as": "rainforest"
+    },
+    "476796": {
+      "use": "bed",
+      "as": "thunderrain"
+    },
+    "343742": {
+      "use": "bed",
+      "as": "cavedrips"
+    },
+    "565233": {
+      "use": "bed",
+      "as": "cavelake"
+    },
+    "566037": {
+      "use": "clip",
+      "as": "saw"
+    },
+    "566040": {
+      "use": "clip",
+      "as": "saw"
+    },
+    "707527": {
+      "use": "clip",
+      "as": "saw"
+    },
+    "760611": {
+      "use": "clip",
+      "as": "saw"
+    },
+    "847374": {
+      "use": "clip",
+      "as": "plane"
+    },
+    "847375": {
+      "use": "clip",
+      "as": "plane"
+    },
+    "383444": {
+      "use": "clip",
+      "as": "sand"
+    },
+    "707525": {
+      "use": "clip",
+      "as": "nail"
+    },
+    "540139": {
+      "use": "clip",
+      "as": "nail"
+    },
+    "204946": {
+      "use": "clip",
+      "as": "nail"
+    },
+    "337814": {
+      "use": "clip",
+      "as": "nail"
+    },
+    "792417": {
+      "use": "clip",
+      "as": "sweep"
+    },
+    "655375": {
+      "use": "clip",
+      "as": "sweep"
+    },
+    "118975": {
+      "use": "clip",
+      "as": "sweep"
+    },
+    "590161": {
+      "use": "clip",
+      "as": "floor"
+    },
+    "590164": {
+      "use": "clip",
+      "as": "floor"
+    },
+    "590165": {
+      "use": "clip",
+      "as": "floor"
+    },
+    "590168": {
+      "use": "clip",
+      "as": "floor"
+    },
+    "735744": {
+      "use": "clip",
+      "as": "owl"
+    },
+    "655380": {
+      "use": "clip",
+      "as": "owl"
+    },
+    "454842": {
+      "use": "clip",
+      "as": "owl"
+    },
+    "784609": {
+      "use": "clip",
+      "as": "owl"
+    },
+    "724909": {
+      "use": "clip",
+      "as": "dog"
+    },
+    "189688": {
+      "use": "clip",
+      "as": "dog"
+    },
+    "784915": {
+      "use": "clip",
+      "as": "dog"
+    },
+    "828526": {
+      "use": "clip",
+      "as": "bark"
+    },
+    "396307": {
+      "use": "clip",
+      "as": "bark"
+    },
+    "823065": {
+      "use": "clip",
+      "as": "chicken"
+    },
+    "479604": {
+      "use": "clip",
+      "as": "chicken"
+    },
+    "364893": {
+      "use": "clip",
+      "as": "purr"
+    },
+    "593609": {
+      "use": "clip",
+      "as": "purr"
+    },
+    "656661": {
+      "use": "clip",
+      "as": "horse"
+    },
+    "826753": {
+      "use": "clip",
+      "as": "horse"
+    },
+    "503516": {
+      "use": "clip",
+      "as": "wolf"
+    },
+    "369580": {
+      "use": "clip",
+      "as": "wade"
+    },
+    "498572": {
+      "use": "clip",
+      "as": "bucket"
+    },
+    "420404": {
+      "use": "clip",
+      "as": "leaves"
+    },
+    "861414": {
+      "use": "clip",
+      "as": "leaves"
+    },
+    "473864": {
+      "use": "clip",
+      "as": "thunder"
+    },
+    "712914": {
+      "use": "clip",
+      "as": "thunder"
+    },
+    "778363": {
+      "use": "clip",
+      "as": "thunder"
+    },
+    "611453": {
+      "use": "alarm",
+      "as": "birds"
+    },
+    "415135": {
+      "use": "alarm",
+      "as": "bowl"
+    },
+    "535950": {
+      "use": "alarm",
+      "as": "bowl-high"
+    },
+    "150024": {
+      "use": "alarm",
+      "as": "musicbox"
+    },
+    "517644": {
+      "use": "alarm",
+      "as": "kalimba"
+    }
   }
 }

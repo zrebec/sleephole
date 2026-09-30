@@ -29,7 +29,10 @@ struct CreditsView: View {
             Section {
                 Text(L("“Morning Mood” – Edvard Grieg, Peer Gynt (1875)"))
                 Text(L("“Ode to Joy” – Ludwig van Beethoven, Symphony No. 9 (1824)"))
-                Text(L("Both pieces are in the public domain, re-synthesised for SleepHole. “Reveille” and “Alarm!” are original."))
+                Text(L("“Prelude” – Johann Sebastian Bach, Prelude in C major BWV 846 (1722)"))
+                Text(L("These pieces are in the public domain, re-synthesised for SleepHole. “Reveille” and “Alarm!” are original."))
+                    .font(.footnote).foregroundStyle(.secondary)
+                Text(L("“Dawn chorus”, “Singing bowl”, “Music box” (“Klosterglocken” by Louis Lefébure-Wély, public domain) and “Kalimba” are CC0 recordings from Freesound.org."))   // i18n-ignore (a French name)
                     .font(.footnote).foregroundStyle(.secondary)
             } header: { Text(L("Alarm music")) }
 

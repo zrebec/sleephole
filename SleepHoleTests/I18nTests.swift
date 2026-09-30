@@ -125,7 +125,7 @@ struct I18nTests {
 
     @Test func soundsHaveDifferentTitlesInBothLanguages() {
         for lang in AppLanguage.allCases where lang != .en {
-            for s in AppSettings.AlarmSound.allCases where s != .retro {     // "Retro" is the same word
+            for s in AppSettings.AlarmSound.allCases where s != .retro && s != .kalimba {   // the same word in SK
                 Lang.current = .en; let en = (s.title, s.detail)
                 Lang.current = lang; let other = (s.title, s.detail)
                 #expect(!en.0.isEmpty && !other.0.isEmpty && en.0 != other.0 && en.1 != other.1)

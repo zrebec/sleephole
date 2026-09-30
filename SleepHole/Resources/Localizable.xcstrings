@@ -565,6 +565,22 @@
         }
       }
     },
+    "A Tibetan singing bowl, the strikes come closer together.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A Tibetan singing bowl, the strikes come closer together."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tibetská spievajúca miska, údery sa postupne zhusťujú."
+          }
+        }
+      }
+    },
     "A backup can't be restored during a night.": {
       "localizations": {
         "en": {
@@ -625,6 +641,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Praská táborák, svrčky a potôčik; niekto štiepa drevo, pes sa motá okolo, sliepky sa ukladajú, zahúka sova. Každú noc iný príbeh."
+          }
+        }
+      }
+    },
+    "A gentle kalimba melody.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A gentle kalimba melody."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jemná melódia na kalimbe."
           }
         }
       }
@@ -1013,6 +1045,22 @@
         }
       }
     },
+    "An old Symphonion music box – “Klosterglocken”.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An old Symphonion music box – “Klosterglocken”."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stará hracia skrinka Symphonion – „Klosterglocken“."
+          }
+        }
+      }
+    },
     "Authors": {
       "localizations": {
         "en": {
@@ -1057,6 +1105,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Priemerný štart %1$@ · vstávanie %2$@"
+          }
+        }
+      }
+    },
+    "Bach – Prelude in C major, harp.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bach – Prelude in C major, harp."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bach – Prelúdium C dur, harfa."
           }
         }
       }
@@ -1269,18 +1333,18 @@
         }
       }
     },
-    "Both pieces are in the public domain, re-synthesised for SleepHole. “Reveille” and “Alarm!” are original.": {
+    "Birds singing at dawn, slowly getting louder.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Both pieces are in the public domain, re-synthesised for SleepHole. “Reveille” and “Alarm!” are original."
+            "value": "Birds singing at dawn, slowly getting louder."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Obe skladby sú voľné dielo, v SleepHole nanovo syntetizované. „Budíček“ a „Poplach“ sú vlastné skladby."
+            "value": "Vtáky spievajú na úsvite, pomaly silnie."
           }
         }
       }
@@ -1665,6 +1729,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Poďakovanie"
+          }
+        }
+      }
+    },
+    "Dawn chorus": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dawn chorus"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ranné vtáctvo"
           }
         }
       }
@@ -2389,6 +2469,22 @@
         }
       }
     },
+    "Kalimba": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalimba"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalimba"
+          }
+        }
+      }
+    },
     "Keep a passcode / Face ID on your iPhone – without it the app can't tell when the phone is locked.": {
       "localizations": {
         "en": {
@@ -2769,6 +2865,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ranné potvrdenie"
+          }
+        }
+      }
+    },
+    "Music box": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Music box"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hracia skrinka"
           }
         }
       }
@@ -3429,6 +3541,22 @@
         }
       }
     },
+    "Prelude": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prelude"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prelúdium"
+          }
+        }
+      }
+    },
     "Quick night (4 min, %lld s setup)": {
       "localizations": {
         "en": {
@@ -4037,6 +4165,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ticho"
+          }
+        }
+      }
+    },
+    "Singing bowl": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Singing bowl"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spievajúca miska"
           }
         }
       }
@@ -4661,6 +4805,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Potom sa vráť do SleepHole a zamkni telefón."
+          }
+        }
+      }
+    },
+    "These pieces are in the public domain, re-synthesised for SleepHole. “Reveille” and “Alarm!” are original.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These pieces are in the public domain, re-synthesised for SleepHole. “Reveille” and “Alarm!” are original."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tieto skladby sú voľné dielo, v SleepHole nanovo syntetizované. „Budíček“ a „Poplach“ sú vlastné skladby."
           }
         }
       }
@@ -6041,6 +6201,22 @@
         }
       }
     },
+    "“Dawn chorus”, “Singing bowl”, “Music box” (“Klosterglocken” by Louis Lefébure-Wély, public domain) and “Kalimba” are CC0 recordings from Freesound.org.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“Dawn chorus”, “Singing bowl”, “Music box” (“Klosterglocken” by Louis Lefébure-Wély, public domain) and “Kalimba” are CC0 recordings from Freesound.org."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Ranné vtáctvo“, „Spievajúca miska“, „Hracia skrinka“ („Klosterglocken“ od Louisa Lefébure-Wélyho, voľné dielo) a „Kalimba“ sú CC0 nahrávky z Freesound.org."
+          }
+        }
+      }
+    },
     "“Morning Mood” – Edvard Grieg, Peer Gynt (1875)": {
       "localizations": {
         "en": {
@@ -6069,6 +6245,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "„Óda na radosť“ – Ludwig van Beethoven, 9. symfónia (1824)"
+          }
+        }
+      }
+    },
+    "“Prelude” – Johann Sebastian Bach, Prelude in C major BWV 846 (1722)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“Prelude” – Johann Sebastian Bach, Prelude in C major BWV 846 (1722)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Prelúdium“ – Johann Sebastian Bach, Prelúdium C dur BWV 846 (1722)"
           }
         }
       }

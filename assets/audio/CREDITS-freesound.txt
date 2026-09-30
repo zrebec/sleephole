@@ -3,6 +3,9 @@ Downloaded as high-quality previews via the Freesound API, then cut / mixed by t
 
 bark          396307  "Dog play.WAV" by cribbler  https://freesound.org/people/cribbler/sounds/396307/
 bark          828526  "ANMLDog_Distant Dog Bark, Resediential Area, _JW Audio" by JW_Audio  https://freesound.org/people/JW_Audio/sounds/828526/
+birds         611453  "Dawn chorus.wav" by Synge101  https://freesound.org/people/Synge101/sounds/611453/
+bowl          415135  "singing bowl - single strike 1" by s-light  https://freesound.org/people/s-light/sounds/415135/
+bowl-high     535950  "E flat Tibetan singing bowl struck" by mttvn  https://freesound.org/people/mttvn/sounds/535950/
 bucket        498572  "A bucket of water with a rag" by 16G_Panska_Veinlich_Jakub  https://freesound.org/people/16G_Panska_Veinlich_Jakub/sounds/498572/
 cavedrips     343742  "cave 01" by rucisko  https://freesound.org/people/rucisko/sounds/343742/
 cavelake      565233  "CaveLakeAmbience.mp3" by blackatomproductions  https://freesound.org/people/blackatomproductions/sounds/565233/
@@ -20,8 +23,10 @@ floor         590168  "Creaking in Room 7.wav" by Greg_Surr  https://freesound.o
 frogs         380021  "Frog and Insect Sounds" by Zeppo_Knight  https://freesound.org/people/Zeppo_Knight/sounds/380021/
 horse         656661  "horse" by dontwanttobehere  https://freesound.org/people/dontwanttobehere/sounds/656661/
 horse         826753  "Renill de cavall / Horse Neigh" by Salsero_classic  https://freesound.org/people/Salsero_classic/sounds/826753/
+kalimba       517644  "KALIMBA - 4" by SamuelGremaud  https://freesound.org/people/SamuelGremaud/sounds/517644/
 leaves        420404  "Rustle walking by the leaves.wav" by Magdaadga  https://freesound.org/people/Magdaadga/sounds/420404/
 leaves        861414  "Walking on Dry Leaves in Puglia" by bassimat  https://freesound.org/people/bassimat/sounds/861414/
+musicbox      150024  "symphonion_klosterglocken.WAV" by thulitt  https://freesound.org/people/thulitt/sounds/150024/
 nail          204946  "Hammering_Wood.wav" by CapsLok  https://freesound.org/people/CapsLok/sounds/204946/
 nail          337814  "hammer v3.wav" by blukotek  https://freesound.org/people/blukotek/sounds/337814/
 nail          540139  "Hitting nails with Hammer.wav" by aidansamuel  https://freesound.org/people/aidansamuel/sounds/540139/

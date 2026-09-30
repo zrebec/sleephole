@@ -49,7 +49,7 @@ Every night one of the unlocked levels is picked at random, then a building from
 - **Night screen:** a night sky with twinkling stars, the building rising from the bottom on its building site, an animated tower crane and a “breathing” *Building in progress* label.
 - **Town (SpriteKit):** a borderless isometric map that grows from the centre in 4×4 blocks and fills in its own roads. Panning with inertia and pinch zoom like SimCity. Tap a building to see which night it's from and its state. The header shows buildings and population.
 - **190 isometric sprites** rendered from Kenney 3D City Kits (CC0) by our own SceneKit renderer. Buildings L1–L4 with signs in Slovak and English (9 buildings have an EN variant), roads, scaffolding, ruins, cars and a 16-frame crane.
-- **8 alarms:** Gentle pizzicato (default), Morning Mood (Grieg), Ode to Joy (music box), Chimes, Retro, Reveille (trumpet), Digital, Alarm! (aggressive). Gentle ones get louder slowly, aggressive ones play at full volume at once.
+- **13 alarms:** Gentle pizzicato (default), Dawn chorus, Singing bowl, Music box (a Symphonion playing “Klosterglocken”), Kalimba, Prelude (Bach), Morning Mood (Grieg), Ode to Joy (music box), Chimes, Retro, Reveille (trumpet), Digital, Alarm! (aggressive). Gentle ones get louder slowly, aggressive ones play at full volume at once.
 - **Today:** always two buttons, **🌙 Go to sleep** and **😴 Nap**. Outside their windows they're disabled and explain why.
 - **🔥 Streak** of complete nights and **🪙 coins** (nights, streak bonus, naps).
 - **Stats:** streak, night calendar with the story of each night, average start and wake-up, regularity, chart, naps, levels.
@@ -160,7 +160,8 @@ More tools:
 ## Licences and thanks
 
 - **Graphics and some sounds:** [Kenney](https://kenney.nl) (CC0). Rendered and assembled by our own scripts in `tools/`.
-- **Alarm melodies:** E. Grieg (*Peer Gynt*, 1875) and L. van Beethoven (*Symphony No. 9*, 1824), both public domain. Reveille and Alarm! are original. Everything is synthesised in `tools/audio/make_alarms.py`.
+- **Alarms from recordings:** Dawn chorus, Singing bowl, Music box and Kalimba are CC0 recordings from Freesound (authors in `assets/audio/CREDITS-freesound.txt`), made into alarms by `tools/audio/make_alarms.py`.
+- **Alarm melodies:** E. Grieg (*Peer Gynt*, 1875), L. van Beethoven (*Symphony No. 9*, 1824) and J. S. Bach (*Prelude in C major*, 1722), all public domain. Reveille and Alarm! are original. Everything is synthesised in `tools/audio/make_alarms.py`.
 - **Sound stories:** Kenney's CC0 Impact Sounds, RPG Audio and Foley Sounds plus 50 CC0 field recordings from [Freesound](https://freesound.org) (authors in [`assets/audio/CREDITS-freesound.txt`](assets/audio/CREDITS-freesound.txt); fetched with `tools/audio/fetch_freesound.py`, cut and mixed by `tools/audio/make_stories.py`), arranged at random by the app (`SleepHole/Night/Stories.swift`).
 - **Rain on a window:** “Rain on Windows, Interior, A” by [InspectorJ](https://freesound.org/s/346642/) (www.jshaw.co.uk), Freesound, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), made into a loop. Rain on a tent and the noises are synthesised (`tools/audio/make_rain.py`, `AudioKeeper`).
 - **Inspiration:** [SleepTown](https://apps.apple.com/app/sleeptown/id1210251567) by Seekrtech.
