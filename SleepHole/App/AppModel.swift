@@ -59,6 +59,8 @@ final class AppModel {
     ///   -bedtime HH:MM -wake HH:MM    set the schedule
     ///   -ambience silence|brown       set the night sound
     ///   -startTestNight               immediately start a 4-min debug night (screenshots in the simulator)
+    ///   -startNap                     screenshots: open the nap window around now and start a nap
+    ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
     ///   -openTab town                 start on the Mesto tab
     ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
@@ -67,6 +69,8 @@ final class AppModel {
     ///   -thenTab 1|island|abandon|pause   4 s after launch: select a tab / tap the Today island / cancel the
     ///                                 running night and close its result / start a pause once the setup is over
     ///   -expiresIn HOURS              pretend the provisioning profile runs out then (AppExpiry)
+    ///   -mute                         silence every sound (alarm, effects) – for screenshots of a night's end
+    ///   -buddy awake|asleep           force the sleep buddy's state (screenshots)
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
                                      args: [String] = ProcessInfo.processInfo.arguments) {
         func value(_ flag: String) -> String? {
@@ -80,10 +84,20 @@ final class AppModel {
             try? context.delete(model: NightRecord.self)
             try? context.save()
         }
+        if args.contains("-mute") { AudioKeeper.muted = true }          // screenshots: no alarm on the Mac's speakers
         if let t = time(value("-bedtime")) { settings.schedule.bedtime = t }
         if let t = time(value("-wake")) { settings.schedule.wake = t }
-        if let a = value("-ambience") { settings.ambience = AudioKeeper.Ambience(rawValue: a) ?? .brownNoise }
+        if let a = value("-ambience") {
+            settings.ambience = AudioKeeper.Ambience(rawValue: a) ?? .brownNoise
+            settings.playsAtStart = true                    // an explicit choice also switches "play at the start" on
+        }
         if let t = value("-theme").flatMap(AppTheme.init(rawValue:)) { settings.theme = t }
+        if args.contains("-startNap") {                     // the nap window opens an hour ago and closes in an hour
+            let cal = Calendar.current
+            func tod(_ d: Date) -> TimeOfDay { TimeOfDay(cal.component(.hour, from: d), cal.component(.minute, from: d)) }
+            settings.nap.windowStart = tod(Date().addingTimeInterval(-3600))
+            settings.nap.windowEnd = tod(Date().addingTimeInterval(3600))
+        }
         #if targetEnvironment(simulator)
         if let n = value("-seedNights").flatMap(Int.init), let catalog = SpriteLibrary.loadFromBundle().catalog {
             try? context.delete(model: NightRecord.self)
@@ -141,9 +155,12 @@ final class AppModel {
         refresh()
         guard servicesEnabled else { return }
         if ProcessInfo.processInfo.arguments.contains("-startTestNight"), active == nil {
-            startTestNight()
+            let a = ProcessInfo.processInfo.arguments
+            let minutes = a.firstIndex(of: "-testNightMinutes").flatMap { a.indices.contains($0 + 1) ? Double(a[$0 + 1]) : nil }
+            startTestNight(minutes: minutes ?? 4)
             startNight()
         }
+        if ProcessInfo.processInfo.arguments.contains("-startNap"), active == nil { startNap() }
         ticker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.refresh() }
         }
@@ -739,10 +756,15 @@ final class AppModel {
 
     var sleepSoundPlaying: Bool { sleepSound.map { $0.endsAt.map { $0 > clock.now } ?? true } ?? false }
 
+    /// ▶ during a night or nap: plays the sound, remembers the sound + minutes and switches "play when the night
+    /// starts" back on (a pressed ■ is forgiven, bug B19).
     func playSleepSound(_ ambience: AudioKeeper.Ambience, minutes: Int?) {
         guard active != nil else { return }
-        settings.ambience = ambience
-        settings.ambienceMinutes = minutes
+        var s = settings
+        s.ambience = ambience
+        s.ambienceMinutes = minutes
+        if ambience != .silence { s.playsAtStart = true }
+        settings = s
         let seconds = minutes.map { Double($0) * 60 }
         sleepSound = ambience == .silence ? nil : (ambience, seconds.map { clock.now + $0 })
         guard servicesEnabled else { return }
@@ -750,12 +772,35 @@ final class AppModel {
         audio.sleepTimer(seconds: seconds, volume: settings.volume)
     }
 
+    /// ■ during a night or nap: silences the sound and remembers it – the next night / nap starts silent while
+    /// the chosen sound and minutes stay for ▶ (bug B19). A timer that simply ran out is not a stop.
     func stopSleepSound() {
         sleepSound = nil
+        if active != nil { settings.playsAtStart = false }
         if servicesEnabled { audio.silenceNow() }
     }
 
     // MARK: - live info for the UI
+
+    /// Dev aid: `-buddy awake|asleep` forces the sleep buddy's state (screenshots).
+    static let forcedBuddyState: BuddyState? = {
+        let a = ProcessInfo.processInfo.arguments
+        guard let i = a.firstIndex(of: "-buddy"), a.indices.contains(i + 1) else { return nil }
+        switch a[i + 1] {
+        case "awake": return .awake
+        case "asleep": return .asleep
+        default: return nil
+        }
+    }()
+
+    /// What the sleep buddy does now (plan P2): awake on Today; during a night or a nap only in the setup, in a pause
+    /// and from the alarm on; asleep otherwise – a collapsed night too (the cat never judges).
+    func buddyState(at t: Date? = nil) -> BuddyState {
+        if let forced = Self.forcedBuddyState { return forced }
+        let now = t ?? clock.now
+        return Buddy.state(at: now, running: active != nil, setupEnds: graceEnds, pauseEnds: pauseEnds(at: now),
+                           wake: active?.wake)
+    }
 
     var collapsedAt: Date? {
         active.flatMap { NightEvaluator.collapsedAt($0.log, rules: $0.isNap ? NapPlan.rules : $0.rules) }
@@ -779,13 +824,16 @@ final class AppModel {
     }
 
     private func startServices(for rec: NightRecord) {
-        if settings.ambience != .silence {                            // the sound from Settings plays from the start
-            sleepSound = (settings.ambience, settings.ambienceSeconds.map { (rec.startedAt ?? clock.now) + $0 })
+        // the sound from Settings plays from the start – unless the owner stopped it during an earlier night
+        // (B19): then the engine still starts (it keeps the app alive) but silent, and there is no sleep timer
+        let ambience: AudioKeeper.Ambience = settings.playsAtStart ? settings.ambience : .silence
+        if ambience != .silence {
+            sleepSound = (ambience, settings.ambienceSeconds.map { (rec.startedAt ?? clock.now) + $0 })
         }
         guard servicesEnabled else { return }
         UIApplication.shared.isIdleTimerDisabled = false
-        try? audio.start(ambience: settings.ambience, volume: settings.volume)
-        if let total = settings.ambienceSeconds {                     // sleep timer from the start of the night
+        try? audio.start(ambience: ambience, volume: settings.volume)
+        if ambience != .silence, let total = settings.ambienceSeconds {   // sleep timer from the start of the night
             let elapsed = clock.now.timeIntervalSince(rec.startedAt ?? clock.now)
             audio.sleepTimer(seconds: max(0, total - elapsed), volume: settings.volume)
         }

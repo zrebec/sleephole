@@ -84,7 +84,7 @@ struct HomeView: View {
                     TownIslandView(crane: canSleep)
                         .frame(height: 210)
                         .overlay(alignment: .bottomTrailing) {
-                            SleepingBuddy().frame(width: 140, height: 120).offset(x: 10, y: 34)
+                            BuddyView(state: model.buddyState(at: now), cloud: true).frame(width: 132).offset(x: 4, y: 14)
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
@@ -242,8 +242,9 @@ struct NightView: View {
                             .font(.title2.bold()).foregroundStyle(.orange)
                         Text(L("No worries. The alarm rings at \(Fmt.time(rec.wake))."))
                             .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                        BuddyView(state: .asleep).frame(width: 130)         // the cat never judges
                     } else if rec.isNap {
-                        NapResting(progress: progress)
+                        NapResting(progress: progress, buddy: model.buddyState(at: now))
                         if let graceEnds = model.graceEnds, graceEnds > now {
                             Text(L("Setup: \(Int(graceEnds.timeIntervalSince(now).rounded(.up))) s left for a story or sound"))
                                 .font(.callout).foregroundStyle(.yellow)
@@ -252,7 +253,8 @@ struct NightView: View {
                         }
                     } else {
                         let pauseEnds = model.pauseEnds(at: now)
-                        ConstructionSite(buildingId: rec.buildingId, progress: progress, resting: pauseEnds != nil)
+                        ConstructionSite(buildingId: rec.buildingId, progress: progress, resting: pauseEnds != nil,
+                                         buddy: model.buddyState(at: now))
                             .scaleEffect(compact ? 0.6 : 1, anchor: .top)
                             .frame(height: compact ? 190 : nil, alignment: .top)
                         Text(model.catalog?[rec.buildingId]?.displayName ?? "").font(.headline)
@@ -334,24 +336,23 @@ struct NightView: View {
     }
 }
 
-/// Nap screen: a sleepy, breathing "zZz" moon and the time left.
+/// Nap screen: the sleep buddy (it sleeps with you, wakes for the setup and the alarm) and the time left.
 struct NapResting: View {
     let progress: Double
+    var buddy: BuddyState = .asleep
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var dimmed = false
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 0.05)) { ctx in
-            let t = ctx.date.timeIntervalSinceReferenceDate
-            let breath = (1 + sin(t * 2 * .pi / 5)) / 2
-            VStack(spacing: 14) {
-                ZStack(alignment: .topTrailing) {
-                    Text(verbatim: "🌙").font(.system(size: 110)).scaleEffect(0.96 + 0.06 * breath)
-                    Text(verbatim: "z Z z").font(.title.bold()).foregroundStyle(.white.opacity(0.4 + 0.6 * breath))
-                        .offset(x: 20, y: -10 - 8 * breath)
+        VStack(spacing: 14) {
+            BuddyView(state: buddy).frame(width: 170)
+            Text(L("Nap")).font(.headline).foregroundStyle(.yellow)
+                .opacity(dimmed ? 0.5 : 1)
+                .onAppear {                                  // a slow implicit pulse – no timeline
+                    guard !reduceMotion else { return }
+                    withAnimation(.easeInOut(duration: Motion.t(2.5)).repeatForever(autoreverses: true)) { dimmed = true }
                 }
-                .frame(height: 170)
-                Text(L("Nap")).font(.headline).foregroundStyle(.yellow).opacity(0.5 + 0.5 * breath)
-                ProgressView(value: progress).tint(.yellow.opacity(0.8)).frame(maxWidth: 200)
-            }
+            ProgressView(value: progress).tint(.yellow.opacity(0.8)).frame(maxWidth: 200)
         }
     }
 }
@@ -364,7 +365,12 @@ struct ConstructionSite: View {
     let progress: Double
     /// A pause is on (D17): the crane stands still.
     var resting = false
+    /// The sleep buddy beside the site (nil = none). It sits OUTSIDE the timeline below, so the 20 fps crane
+    /// does not re-draw it, and it scales with the site in the compact morning layout.
+    var buddy: BuddyState?
     static let frames = 16
+    static let stageSize = CGSize(width: 320, height: 260)
+    static let buddyWidth: CGFloat = 104
     static let frameDuration = 0.22          // one slewing cycle ≈ 3.5 s
 
     private var siteId: String {
@@ -392,16 +398,16 @@ struct ConstructionSite: View {
                             .resizable()
                             .scaledToFit()
                             .frame(height: 250)
-                            .offset(x: 45)
+                            .offset(x: 45 + shift)
                     }
                     BuildingImage(id: siteId, maxHeight: 110)       // building site under the building
                         .frame(width: 190)
-                        .offset(x: -40, y: 6)
+                        .offset(x: -40 + shift, y: 6)
                     BuildingImage(id: buildingId, progress: shownProgress, maxHeight: 150)
                         .frame(width: 190)
-                        .offset(x: -40, y: -4)
+                        .offset(x: -40 + shift, y: -4)
                 }
-                .frame(width: 320, height: 260)
+                .frame(width: Self.stageSize.width, height: Self.stageSize.height)
                 Text(resting ? L("Pause – the crane is resting 🌙") : L("Building in progress"))
                     .font(.headline)
                     .foregroundStyle(.yellow)
@@ -413,7 +419,22 @@ struct ConstructionSite: View {
             }
             .frame(maxWidth: .infinity)
         }
+        .overlay {
+            // the buddy stands at the bottom-left of the stage, in front of the site's empty corner
+            if let buddy {
+                GeometryReader { g in
+                    let left = (g.size.width - Self.stageSize.width) / 2
+                    let h = Self.buddyWidth / BuddyView.aspect
+                    BuddyView(state: buddy)
+                        .frame(width: Self.buddyWidth)
+                        .position(x: left - 24 + Self.buddyWidth / 2, y: Self.stageSize.height + 4 - h / 2)
+                }
+            }
+        }
     }
+
+    /// With the buddy the building and the crane move right to make room for it.
+    private var shift: CGFloat { buddy == nil ? 0 : 28 }
 }
 
 /// Calm night background: deep blue gradient with a few softly twinkling stars.
@@ -464,7 +485,7 @@ struct SleepSoundSheet: View {
                     ForEach(AppSettings.ambienceTimerOptions, id: \.self) { Text(AppSettings.timerTitle($0)).tag($0) }
                 }
                 .pickerStyle(.menu)
-                PreviewButtons(playing: model.sleepSound != nil,
+                PreviewButtons(playing: model.sleepSoundPlaying,
                                play: { model.playSleepSound(ambience, minutes: minutes); dismiss() },
                                stop: { model.stopSleepSound() })
             }
@@ -472,7 +493,7 @@ struct SleepSoundSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 ambience = model.settings.ambience == .silence ? .brownNoise : model.settings.ambience
-                minutes = model.settings.ambienceMinutes ?? 15
+                minutes = model.settings.ambienceMinutes             // the last choice, also "All night" (B19)
             }
         }
         .preferredColorScheme(.dark)
@@ -482,14 +503,25 @@ struct SleepSoundSheet: View {
 // MARK: - alarm
 
 struct AlarmView: View {
+    @Environment(AppModel.self) private var model
+
     var body: some View {
-        VStack(spacing: 24) {
-            Text(L("Good morning ☀️")).font(.largeTitle.bold())
-            ConfirmPanel()
-            Spacer()
+        // the awake cat greets the owner – left out when it does not fit (small phone, number pad up)
+        ViewThatFits(in: .vertical) {
+            content(withBuddy: true)
+            content(withBuddy: false)
         }
         .padding()
         .preferredColorScheme(.dark)
+    }
+
+    private func content(withBuddy: Bool) -> some View {
+        VStack(spacing: withBuddy ? 12 : 24) {
+            Text(L("Good morning ☀️")).font(.largeTitle.bold())
+            if withBuddy { BuddyView(state: model.buddyState()).frame(width: 150) }
+            ConfirmPanel()
+            Spacer()
+        }
     }
 }
 

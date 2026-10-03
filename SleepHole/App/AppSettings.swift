@@ -9,6 +9,14 @@ struct AppSettings: Codable, Equatable {
     var volume: Float = 0.15
     /// Sleep timer for the night sound: nil = all night.
     var ambienceMinutes: Int?
+    /// Set when the owner stopped the sleep sound during a night or nap (bug B19): the next night / nap then starts
+    /// silent, the chosen sound and duration stay. nil = on. Optional so settings saved by older builds still load.
+    var ambienceOff: Bool?
+    /// Settings switch "Play when the night starts" (on = `ambienceOff` is nil).
+    var playsAtStart: Bool {
+        get { ambienceOff != true }
+        set { ambienceOff = newValue ? nil : true }
+    }
     /// Afternoon rest. Optional in the JSON so settings saved by older builds still load.
     var napPlan: NapPlan?
     var nap: NapPlan {

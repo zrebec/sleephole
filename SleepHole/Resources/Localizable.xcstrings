@@ -4405,6 +4405,22 @@
         }
       }
     },
+    "Play when the night starts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play when the night starts"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spustiť na začiatku noci"
+          }
+        }
+      }
+    },
     "Pop": {
       "localizations": {
         "en": {
@@ -5541,6 +5557,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zastaviť"
+          }
+        }
+      }
+    },
+    "Stopping the sound during a night switches this off; pressing ▶ during a night switches it on again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stopping the sound during a night switches this off; pressing ▶ during a night switches it on again."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keď počas noci zvuk zastavíš, tento prepínač sa vypne; keď počas noci stlačíš ▶, zapne sa znova."
           }
         }
       }
@@ -6901,6 +6933,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dnešný odpočinok už bol 😴"
+          }
+        }
+      }
+    },
+    "Your cat is looking at you": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your cat is looking at you"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoja mačka sa na teba pozerá"
           }
         }
       }

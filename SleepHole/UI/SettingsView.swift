@@ -138,6 +138,8 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.menu)
+                    Toggle(L("Play when the night starts"), isOn: $model.settings.playsAtStart)
+                        .disabled(model.settings.ambience == .silence)
                     HStack {
                         Image(systemName: "speaker.fill")
                         Slider(value: $model.settings.volume, in: 0...0.6)
@@ -160,12 +162,15 @@ struct SettingsView: View {
                 } header: {
                     Text(L("Sleep sound")).id("sounds")
                 } footer: {
-                    if let end = nightRunning ? model.sleepSound?.endsAt : preview.endsAt {
-                        Text(L("\(model.settings.ambience.detail) Playing until \(Fmt.time(end))."))
-                    } else if nightRunning ? model.sleepSoundPlaying : preview.playing != nil {
-                        Text(L("\(model.settings.ambience.detail) Playing until you press ■."))
-                    } else {
-                        Text(model.settings.ambience.detail)
+                    VStack(alignment: .leading, spacing: 6) {
+                        if let end = nightRunning ? model.sleepSound?.endsAt : preview.endsAt {
+                            Text(L("\(model.settings.ambience.detail) Playing until \(Fmt.time(end))."))
+                        } else if nightRunning ? model.sleepSoundPlaying : preview.playing != nil {
+                            Text(L("\(model.settings.ambience.detail) Playing until you press ■."))
+                        } else {
+                            Text(model.settings.ambience.detail)
+                        }
+                        Text(L("Stopping the sound during a night switches this off; pressing ▶ during a night switches it on again."))
                     }
                 }
 
