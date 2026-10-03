@@ -21,9 +21,13 @@ then answer. Remove items here when they are done.
    from the profile's creation (2026-09-29), NOT from the last install. After that the app does not launch until a
    build with a fresh profile is installed. The app now warns by itself (Today card 48 h ahead, notifications 24 h
    and 3 h ahead, the date in Settings → About) – still remind the owner and offer to renew it.
-1. **Owner tests the night pause** (built 2026-10-03): "🌙 Pause" on the night screen after the setup; and checks the
-   remaining bug backlog (plan §11a: B7–B16 are open, B1–B6 + B9 are fixed).
-2. **Sleep buddy (plan A, step 2)** – the pet sleeps with you on the night screen (today only a static cat on Today).
+1. **Ask for the result of the owner's pause test** (night 2026-10-03 → 04): "🌙 Pause" on the night screen after
+   the setup (built 2026-10-03). Record the answer in the verification board (plan §0a). Open bugs in plan §11a:
+   B7, B8, B10–B16, B19.
+2. **Sleep buddy (phase P2, plan §10) + the sleep-sound fix B19** – built 2026-10-03 (the cat faces the owner:
+   awake on Today, asleep with a slow "z Z z" during a night / nap, awake in the setup, a pause and from the alarm
+   on). Check the P2 section: is it installed on the iPhone yet, and has the owner tested it? Ask him for the verdict
+   and move the rows in plan §0a.
 3. **City + real sun & moon (S–M, owner 2026-10-02):** Settings → city with autocomplete (label on its own row, the
    field on the row below – long names), a black ✕ after the field turns into a green ✓ once the city is verified
    (debounced ~500 ms check). MapKit `MKLocalSearchCompleter` + `MKLocalSearch` – no location permission, no
@@ -32,8 +36,29 @@ then answer. Remove items here when they are done.
    lunar position/phase, unit-tested). Without a city the sky keeps following the schedule.
 4. Then the owner picks plan A / B / C (`docs/NAVRH-ZVIERATKA.md`, 5 open questions at the end).
 
+## ⚠️ WHO DOES WHAT – OWNER'S RULE (2026-10-03) – IMPORTANT
+
+**CLAUDE OPUS (THE MAIN SESSION) PLANS, ANALYSES AND REVIEWS. IT DOES NOT WRITE THE IMPLEMENTATION ITSELF.
+EVERY IMPLEMENTATION TASK IS HANDED TO A SUBAGENT THAT RUNS ON CLAUDE SONNET 5.5 (`model: "sonnet"`) –
+THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
+
+* **Opus (main session):** reads the plan, analyses, designs, asks the owner, splits the work into small tasks,
+  writes each task's brief, reviews what comes back (diff, test output, screenshots), keeps the plan and this file
+  up to date, talks to the owner in Slovak.
+* **Sonnet 5.5 subagents (workers):** code, tests, UI strings, asset renders, builds, simulator screenshots – one
+  small, self-contained task per subagent.
+* **A brief must stand on its own** (a worker has no memory of the conversation): the goal, the files to touch, the
+  acceptance criteria, the commands to run (`swift test`, `tools/test_app.sh`, `python3 tools/i18n/keys.py`), and
+  "read `AGENTS.md` first – the hard rules apply to you too".
+* **Workers never commit, never push and never install on the iPhone.** Opus checks the result (tests green, i18n
+  0 missing) before it tells the owner that something is done.
+* Keeping `docs/IMPLEMENTATION_PLAN.md` and `AGENTS.md` current is planning work – Opus does it itself.
+
 ## How to work
 
+* **Verification board (plan §0a):** what the owner **confirmed** on the iPhone 🟢, what only **ran** there 📱 and
+  what is checked **only by tests / the simulator** 🖥. When the owner confirms or rejects something, move the row
+  the same day – "built" is not "confirmed".
 * **Find the current phase:** the first row in §0 of the plan that is not ✅. Work **only** on that phase,
   task by task, ticking `- [x]` in the plan as you go.
 * **Checkpoint protocol:** when the phase's acceptance criteria are met, STOP. Update §0 (status) and §12
@@ -58,10 +83,10 @@ then answer. Remove items here when they are done.
 * Free **Personal Team** signing: no HealthKit, AlarmKit, iCloud, push until phase F6.
 * Night rules **R3** (plan D15 + findings 2026-09-29/30): start only bedtime −10…+5 min; setup until
   max(start, bedtime) + 5 min; after it, leaving the app → warning after ~3 s and 10 s to return (and at most
-  30 s out of the app per night in total – see "Away budget"), else the
-  building collapses (calls excused); screen off is fine, the app must stay in the foreground; confirm by shake
-  or wake code from wake −30 min; complete only while the alarm rings (2 min), unfinished until +60 min. Tone is **cute and never cruel** — no shaming
-  copy, ambiguity is resolved in the owner's favour.
+  30 s out of the app per night in total – see "Away budget"), else the building collapses (calls excused);
+  screen off is fine, the app must stay in the foreground; confirm by shake or wake code from wake −30 min;
+  complete only while the alarm rings (2 min), unfinished until +60 min. Tone is **cute and never cruel** — no
+  shaming copy, ambiguity is resolved in the owner's favour.
 * Levels: nights 1–5 → L1, 6–15 → L1–L2, 16–30 → L1–L3, 31+ → L1–L4 (plan §5.5).
 * Coins 🪙 (owner 2026-10-02): complete night by building level L1 100 / L2 120 / L3 150 / L4 200, unfinished half,
   +30 for a complete night without a pause, every 7th complete night in a row +200; nap 50 / 25.
@@ -88,23 +113,6 @@ then answer. Remove items here when they are done.
 * **Away budget (owner 2026-10-03):** outside pauses and calls, all trips out of the app after the setup share **30 s
   per night** (`SleepRules.awayBudget`); one trip is still limited to 3 s notice + 10 s. Nights stored before
   2026-10-03 (`NightRecord.pauses == nil`) keep the old rules and get no +30. The **R&D centre** idea is still OPEN.
-* **Decorative animations** are paced by `Motion.pace` (owner: slower) and must never block the UI (a tap skips them).
-  Building prices (shop, next): L1 100, L2 200, L3 400, L4 1000.
-* Nap "Odpočinok" (plan D16): 30/60 min, only in its window (default 13:00–15:00), once a day, never builds.
-  The home screen always shows both "Ísť spať" and "Odpočinok" buttons (disabled outside their windows).
-* UI languages: **English (default) + Slovak** (in-app switch stored in SwiftData `UserProgress.languageRaw`).
-  **Every UI string goes through `L("English key")`** (never a bare `Text("…")` literal); the Slovak text (correct
-  diacritics) goes into `SleepHole/Resources/Localizable.xcstrings`. Dates/times via `Fmt`. After adding strings:
-  build, then `python3 tools/i18n/keys.py` must report 0 missing / 0 without sk. `I18nTests` fails on any Slovak
-  literal left in `SleepHole/`. Code, comments, identifiers, agent docs: **English**.
-* Limits (owner 2026-09-30, plan LIM): renaming the town – first naming free, typo fix 10 min, 1× per 365 days free,
-  else **5 000 🪙**; bedtime / wake changes free on **days 1–3 of every month** and in the **first 7 days**, else
-  the 🔥 streak starts again (nothing else is taken away). Coins = earned − spent (`CoinSpend`), never negative.
-* Never rename a shipped sprite id (ids are persisted). Add new ones instead.
-* **Night pause (owner 2026-10-02, plan D17, not implemented yet):** an intentional "🌙 Pause" button on the night
-  screen, 10 min each; the 1st pause of a night is free, the 2nd costs 50 🪙, the 3rd 100, the 4th 150 (+50 each);
-  a night with no pause pays **+30 🪙** ("undisturbed night", so up to 130 per night); the building stays complete.
-  Goal: a pause must never turn into a habit. The **R&D centre** idea (buy/develop every building) is still OPEN.
 * **The GitHub repo is PUBLIC.** Never commit device logs, the device UDID, the wake code, health or other
   personal information about the owner. Pulled journals go to `docs/device-logs/` (git-ignored).
 
@@ -134,8 +142,9 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `tools/i18n/keys.py` | compares the keys extracted from `L(...)` (build output) with the String Catalog |
 | `project.yml` | XcodeGen spec (created in F0) |
 | `assets/sprites/` | 174 rendered isometric sprites + `catalog.json` (ship in the app) |
+| `assets/buddy/` | the sleep buddy's four frames (source of the `buddy-cat-*` imagesets in `Assets.xcassets`), NOT part of the town catalog |
 | `assets/audio/` | alarm loops + sound effects, CAF (ship in the app) |
-| `tools/render/` | asset pipeline: recipe generator, SceneKit renderer, previews, reference projection |
+| `tools/render/` | asset pipeline: recipe generator, SceneKit renderer, previews, reference projection; buddy: `buddy_recipes()` in `make_recipes.py`, `buddy_cat_obj.py`, `buddy_finish.py` |
 | `tools/audio/` | alarm synthesis (`make_alarms.py`), rain loops (`make_rain.py`), UI sound effects `fx_*.caf` (`make_sfx.py`) |
 | `tools/test_app.sh`, `tools/coverage.sh`, `tools/sim_shot.sh` | app tests + coverage, SleepCore coverage, simulator screenshots |
 | `docs/device-logs/` | journals pulled from the owner's iPhone – **git-ignored (public repo, personal data)** |

@@ -17,13 +17,13 @@
 | F0 | Tooling + empty app on the iPhone | ✅ done (2026-09-29) | app icon launches on owner's iPhone |
 | F1 | `SleepCore` domain package + tests | ✅ done (2026-09-29), rules revised by owner → R2 | `swift test` green, owner reads rules summary |
 | F2 | Night loop without town graphics | ✅ done (2026-09-30, first real night complete) | 2–3 real nights, detection verified |
-| F3 | Town rendering (SpriteKit) | 🟡 built + installed 2026-09-29 (owner asked for a surprise – no details were told), awaiting first real nights | town shows all past nights |
+| F3 | Town rendering (SpriteKit) | ✅ accepted by the owner 2026-10-03 (pan, two zoom levels, tap-to-inspect: "works first time"); the growth animation is still open, not blocking | town shows all past nights |
 | F4 | Progression, level-ups, statistics, backup | 🟡 stats/backup/level-up/ruin repair done 2026-09-30; vibrations, achievements, town name, weekly journal done; shop next | one week of use |
-| I18N | English (default) + Slovak, in-app switch stored in SQLite | ✅ done (2026-09-30), installed on the owner's iPhone | owner switches the language in Settings and checks both |
+| I18N | English (default) + Slovak, in-app switch stored in SQLite | ✅ done (2026-09-30), **confirmed by the owner 2026-10-03** ("works great", survives an app and a phone restart) | owner switches the language in Settings and checks both |
 | LIM | Limits: town rename 1×/year (else 5 000 🪙), schedule change free on days 1–3 / first week (else streak reset) | ✅ done (2026-09-30), installed | owner tests rename + schedule change |
-| UI | Look & feel: living sky, Today island, glass cards, micro-animations; UI-2: theme, splash/WOW, sounds, voice | 🟡 built + installed 2026-10-02, awaiting owner | owner: "it looks nice now" |
-| P1 | Night pause (D17) + away budget 30 s/night + alarm safety + expiry warning (B1–B6, B9) | 🟡 built + installed 2026-10-03, awaiting owner | owner uses a pause in a real night |
-| P2 | Sleep buddy on the night screen (plan A step 2) | ⬜ | owner sleeps with the buddy |
+| UI | Look & feel: living sky, Today island, glass cards, micro-animations; UI-2: theme, splash/WOW, sounds, voice | 🟡 built + installed 2026-10-02; theme switch and voice confirmed 2026-10-03 (the owner keeps the voice off – he does not like it); the overall look still awaits his verdict | owner: "it looks nice now" |
+| P1 | Night pause (D17) + away budget 30 s/night + alarm safety + expiry warning (B1–B6, B9) | 🟡 built + installed 2026-10-03; the alarm in silent mode confirmed 2026-10-03; owner tests the pause in the night 2026-10-03 → 04 | owner uses a pause in a real night |
+| P2 | Sleep buddy: awake / asleep cat that faces the owner (plan A step 2, spec in §10 P2) + bug B19 | 🟡 built 2026-10-03 (all tests green, simulator screenshots checked); **not installed on the iPhone yet** – waits for the owner's OK | owner sleeps with the buddy |
 | SKY | City in Settings + real sun/moon on a semicircle (see AGENTS "FIRST THING") | ⬜ S–M | owner picks his city, sees the true sun/moon |
 | F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo | "I like looking at it" |
 | F6 | *(optional, paid account)* HealthKit, AlarmKit, TestFlight | ⬜ later | owner decides to pay |
@@ -31,6 +31,103 @@
 
 **Rule:** work on the first phase that is not ✅, do only that phase, then stop and hand over to the
 owner (see AGENTS.md "Checkpoint protocol"). Tick sub-tasks (`- [x]`) in this file as you finish them.
+F4 and UI stay 🟡 only because they wait for the owner's time with the app (a week of use / his verdict on the look) –
+they do not block P2. **What is really verified, feature by feature, is in §0a.**
+
+## 0a. Verification board (owner request 2026-10-03 – keep it current)
+
+"Built" is not "confirmed". Three levels, per feature:
+
+* 🟢 **confirmed by the owner** on the iPhone (his words or his test result are on record – date in brackets)
+* 📱 **ran on the iPhone** (seen in the app data pulled from the phone for the audit of 2026-10-03, or in the findings log), but
+  the owner's explicit OK is not on record
+* 🖥 **tests / simulator only** – installed on the phone, never exercised there
+
+When the owner confirms or rejects something, move the row the same day. Automated state on 2026-10-03 (evening):
+SleepCore 141 tests green; app 119 tests, 92.46 % line coverage.
+
+### Night and nap
+| | Feature | Evidence |
+|---|---|---|
+| 🟢 | Lock vs. leaving the app (detection) | device log #2, all scenarios (2026-09-29) |
+| 🟢 | App survives a whole night, podcast during the setup | podcast test (2026-09-29) + the real nights since |
+| 🟢 | Whole night: start → setup → alarm → confirm → building | F2 ✅; real nights since 2026-09-30 |
+| 🟢 | Collapse after leaving the app once the setup is over | owner's quick nights (2026-09-29) |
+| 🟢 | "Come back!" warning (two notifications) | owner (2026-10-03) |
+| 🟢 | Phone call is excused | device log #2 (2026-09-29) |
+| 🟢 | In-app alarm, also with the ringer switched off (silent mode) | owner (2026-10-03): "the alarm works with the ringer off" |
+| 📱 | Confirm by wake code and by shake | both used on the phone |
+| 📱 | Longer setup after an early start | owner's request 2026-09-30, in use since |
+| 📱 | Nap 30 / 60 min | used on the phone |
+| 📱 | Guide + first-night checklist | done on the phone |
+| 📱 | Vibration at the start and on a return in time | owner's test 2026-09-30 (nothing vibrates in the background – iOS) |
+| 🖥 | Outcome "unfinished" (confirm after the alarm stopped) | not happened on the phone since rules R3 |
+| 🖥 | Night pause (D17) | **owner tests in the night 2026-10-03 → 04** |
+| 🖥 | Away budget 30 s per night + its counter | installed 2026-10-03 |
+| 🖥 | Safer alarm (B1 retry, B3 five backup notifications) | installed 2026-10-03 |
+| 🖥 | Screen checks ignore the unlock after the alarm (B9) | installed 2026-10-03 |
+
+### Town
+| | Feature | Evidence |
+|---|---|---|
+| 🟢 | A good night adds its building to the town | owner's test (2026-09-29) |
+| 🟢 | Town map: pan, two zoom levels, tap shows the building's details | owner (2026-10-03): "works first time" |
+| 📱 | Town as a floating island over the sky, header card | on the phone since 2026-10-02, part of the UI verdict |
+| 📱 | Today island | seen by the owner (he reported the 4th-house bug) |
+| 📱 | Fix: the sleeping cat no longer stays over the Town tab | owner (2026-10-03): "not any more, hopefully OK" |
+| 🖥 | Fix: island keeps its road and size after the 4th house | installed 2026-10-03, not checked by the owner yet |
+| 🖥 | Scaffold, ruins, flowers after 7 days, ruin repair, finishing an unfinished building | never happened on the phone |
+| 🖥 | Lit streets, L2–L4 buildings | L2 unlocks with building night 6 (not reached yet) |
+| 🖥 | English signs on buildings | the owner uses Slovak |
+
+### Coins, progress, statistics
+| | Feature | Evidence |
+|---|---|---|
+| 🟢 | Coins 🪙 and streak 🔥 | owner (2026-10-03): streaks work, coins add up correctly |
+| 📱 | Statistics: calendar, night story, averages, chart | run on his nights since 2026-09-30 |
+| 📱 | Achievements + town name | in use on the phone |
+| 📱 | Free schedule change + the monthly card (days 1–3) | both used on the phone |
+| 🖥 | Rename dialog (free / typo fix / 5 000 🪙) | never used on the phone – a phone test would spend the yearly free rename |
+| 🖥 | Paid schedule change (streak starts again) | never used on the phone |
+| 🖥 | Jokers 🛡️ + fix B6 | never used on the phone – a phone test would spend the month's joker |
+| 🖥 | Coin spending (`CoinSpend`) | never used on the phone |
+| 🖥 | +30 🪙 for a night without a pause | first possible in the night 2026-10-03 → 04 |
+| 🖥 | Coins 120 / 150 / 200 for L2–L4, +200 for every 7th night in a row | not reached yet |
+| 🖥 | Level unlocks + the level-up celebration | first at building night 6 |
+| 🖥 | Finished-week card of the weekly journal | first after the night 2026-10-04 → 05 |
+| 🖥 | Regularity = start − bedtime (B5) | installed 2026-10-03 |
+
+### Sound
+| | Feature | Evidence |
+|---|---|---|
+| 🟢 | Voice (works) | owner (2026-10-03): works, he does not like it and keeps it switched off |
+| 📱 | Sleep sounds + exact timer | owner (2026-10-03): works, but a stop was not remembered (B19) |
+| 🖥 | B19 fix: a stop is remembered, switch "Play when the night starts" | built 2026-10-03, not installed yet |
+| 📱 | Sound stories | in use on the phone |
+| 📱 | Sound effects, good-night splash, WOW of a finished building | quick nights on 2026-10-02 |
+| 🖥 | The 5 newer alarms (birds, bowl, music box, kalimba, Bach) | no record of a phone test |
+| 🖥 | The "journey" story (chapters through the night) | no record of a phone test |
+
+### Look, texts, language
+| | Feature | Evidence |
+|---|---|---|
+| 🟢 | English + Slovak with the in-app switch | owner (2026-10-03): works great, survives an app and a phone restart |
+| 🟢 | Theme System / Light / Dark | owner (2026-10-03): accepted, switching works perfectly |
+| 📱 | Living sky, glass cards, micro-animations | awaiting "it looks nice now" |
+| 📱 | Slower animations (`Motion.pace`) | built after his remark of 2026-10-02 |
+| 🖥 | Sleep buddy (P2): awake cat on Today, asleep / awake on the night, nap and alarm screens | built 2026-10-03, not installed yet (replaces the old sleeping cat) |
+| 🖥 | "The app stops launching soon" card + the date in Settings (B2) | shows by itself from 2026-10-04 14:23 |
+
+### Data, backup, tooling
+| | Feature | Evidence |
+|---|---|---|
+| 🟢 | The app runs on the owner's iPhone | F0 ✅ |
+| 📱 | Automatic backup after a real night | the backup file was on the phone at the audit |
+| 📱 | Install over the cable + pulling the app's data | used for the audit |
+| 🖥 | Manual backup export / import | no record of use on the phone |
+| 🖥 | Store migration to the version with pauses | checked on a copy of the owner's store in the simulator |
+
+---
 
 ---
 
@@ -614,7 +711,7 @@ detection log matches reality. **Stop.**
 - [x] Štatistiky screen (§9) with Swift Charts
 - [x] JSON backup export/import; 7-day expiry reminder notification
 - [x] **Ruin repair** (owner request): a later good night can rebuild a ruin (decide: replaces the new building, or a bonus like the unfinished→complete rule)
-- [ ] Maybe a per-night cap on total time away (tolerance is per trip today) – ask the owner
+- [x] Per-night cap on total time away – done as the away budget (30 s per night, B4, 2026-10-03)
 - See `README.md` → „Čo nás čaká“ for the owner-facing roadmap and the XS→XXL idea list
 - **Owner extras (2026-09-30, answers recorded):** one commit per step, agent commits (no push).
   - [x] **XS vibrations** (`Night/Haptics.swift`, Core Haptics, `AppModel.buzz`): start of a night/nap and back in
@@ -711,6 +808,75 @@ Not done: symbol effects on the tab icons (system tab bar, little gain). Night s
       placeholders). Rendered at town scale with our renderer: `docs/previews/animals_in_town.png`,
       `docs/previews/animals_cube_pets.png` (scratch recipes, not in the catalog yet) – for F5 (living town).
 **Accept:** owner tests jokers + the slower WOW. **Stop.**
+
+### P2 — Sleep buddy (owner's spec 2026-10-03) – 🟡 built 2026-10-03, awaiting the install + the owner's test
+**Owner's words:** the buddy must be turned with its head towards me. When I am up, the cat's head is raised and it
+looks at me. When I nap or sleep, its head is down, its eyes are closed and it makes "zzz" in a slow animation loop.
+
+**Facts that shape it** (analysis 2026-10-03, see §12): the Cube Pets cat is ONE cube – head and body in one mesh
+(`body`, ears included) + `tail` + four `leg-*` + a flat front detail (`Group`). So "head up / head down" is a pose
+of the whole cat. The eyes are flat orange polygons on the front face (z = 0.63 in model units: x ±0.12…0.46,
+y 0.71…1.06, dark pupils inside) → closed eyes = a fur-coloured eyelid plate + a thin dark lash line in front of
+each eye, added by our renderer (no model editing). Today's `buddy-cat` image is turned away and is not in the render
+pipeline (B16).
+
+**Design (confirmed by the owner 2026-10-03):**
+* **Sprites** (SceneKit pipeline, cat on the Nature Kit camp bed, face towards the camera, all frames on one canvas
+  like the crane): `buddy-cat-awake` (sitting, tilted back ≈ 12°, eyes open), `buddy-cat-blink` (same pose, eyes
+  closed), `buddy-cat-mid` (half-way down), `buddy-cat-asleep` (legs tucked, body on the bed, face lowered ≈ 10°,
+  eyes closed, tail down). Renderer: `Part` gets `pitch` / `roll` and a `pose` per OBJ group, eyelid boxes attached to
+  the body. Recipes live in `make_recipes.py` (own output folder, NOT in the town catalog – the picker must never
+  see them). Preview: `docs/previews/buddy_poses.png`.
+* **Rule in SleepCore** (pure, tested): `Buddy.state(...) -> .awake | .asleep`.
+* **View** `BuddyView(state:)` replaces `SleepingBuddy`: awake = slow breathing + a blink every few seconds;
+  asleep = slower breathing + the slow "z Z z" loop; a change of state plays awake → mid → asleep (or back) paced by
+  `Motion.pace`; Reduce Motion = still frames. Implicit repeating animations, no 20 fps timeline (B8).
+* **Where (owner's answer):** Today (where the cat is now), the night screen (beside the construction site), the nap
+  screen (instead of the 🌙 emoji).
+* **When awake (owner's answer: "it reacts to me"):** always on Today; during a night or a nap only in the setup,
+  during a pause and from the alarm on (wake time reached, alarm screen included). Asleep otherwise – also when the
+  owner unlocks the phone at night to check the clock, and after a collapse (the cat never judges).
+* **B19 goes into the same build (owner's answer):** a stop is remembered – the next night starts silent, ▶ plays the
+  last chosen sound again; Settings show it as a switch "play at the start of the night".
+
+**Tasks** (Opus plans and reviews, Sonnet 5.5 workers build – AGENTS.md "WHO DOES WHAT"):
+- [x] W1 assets (2026-10-03): four frames 617×637 on one canvas in `assets/buddy/` (`buddy-cat-awake / -blink /
+      -mid / -asleep`), preview `docs/previews/buddy_poses.png`; cat yaw 45° (face square to the camera) on the
+      Nature Kit bed; recipes in `make_recipes.py` → `buddy_recipes()` → `tools/render/buddy_recipes.json` (the
+      town's `recipes.json` and `assets/sprites` are untouched). Re-render: see the docstring of `buddy_recipes()`
+- [x] W2 (2026-10-03): SleepCore `Buddy.state(at:running:setupEnds:pauseEnds:wake:)` + `BuddyTests`; app
+      `UI/BuddyView.swift` (`BuddyView(state:cloud:)` – no timeline: implicit repeating animations, a blink every
+      4–7 s, crossfades awake → mid → asleep of `Motion.t(0.45)` per step, paused off-screen / in the background,
+      Reduce Motion = still frames), `AppModel.buddyState(at:)`; imagesets `buddy-cat-awake / -blink / -mid /
+      -asleep` (the old `buddy-cat` and `SleepingBuddy` are gone; `buddy_finish.py` copies re-renders into them).
+      Placement: Today 132 pt on its cloud at the island's bottom-right; night 104 pt left of the construction site
+      (site + crane moved 28 pt right; ≈ 62 pt in the compact morning layout); nap 170 pt instead of the 🌙; collapsed
+      night / nap 130 pt asleep under the texts; alarm screen 150 pt awake (dropped by `ViewThatFits` on a phone
+      too small). `NapResting` lost its 20 fps timeline (B8). Screenshots in `build/shots/` (git-ignored)
+- [x] W3 bug B19 (sleep sound remembered) – built 2026-10-03: `AppSettings.ambienceOff` (optional, nil = on) /
+      `playsAtStart`; ■ during a night or nap switches it off, ▶ during a night switches it on, a timer that ran out
+      changes nothing; Settings switch "Play when the night starts"; the night sheet shows the stored duration
+      (it showed 15 min for "All night"); `SleepSoundMemoryTests` (8 tests), app 111 tests green
+- [x] Opus review (2026-10-03): diffs read, screenshots checked, SleepCore 141 tests, app 119 tests / 92.46 %,
+      `keys.py` 497 keys / 0 missing / 0 without sk; `assets/sprites` and `recipes.json` untouched
+- [ ] Install on the iPhone – only with the owner's OK and outside his nap window and night (the install also
+      renews the provisioning profile that runs out on 2026-10-06 14:23)
+- [ ] Owner's check on the phone → move the rows in §0a
+
+**Owner's feedback after the build (2026-10-03 evening) – changes the Today screen, NOT decided in detail yet:**
+* Decided: Today no longer shows the *active* town – next to the island the cat looks small and a tap on it
+  always opens the Town tab. The town keeps its own tab; nights keep building the town.
+* Wanted: a tap on the cat = a small interaction with sounds (for the moments when the app has nothing to do:
+  no coins to earn, too early for bed, the nap done or outside its window).
+* Under discussion: the buddy as an **equal partner of the town**; the owner also floated "taking care of the
+  buddy" as a new task but is unsure ("two different changes get mixed in my head"). Opus's analysis in the chat
+  of 2026-10-03: (1) buddy as the hero of Today + petting = presentation only, small, recommended now;
+  (2) buddy's mood derived from data the app already has (last night, streak, regularity) = no new duties,
+  recommended next; (3) care with needs that decay (feeding …) = a second game with duties, clashes with the
+  owner's own rule "no obligations, no punishments" (`NAVRH-ZVIERATKA.md` §2) and with the open coin economy →
+  not now. Town = the long memory of the nights, buddy = how today feels. **Wait for the owner's answer before
+  building; nothing of P2 is installed on the iPhone yet.**
+**Accept:** the owner sees the cat look at him on Today and sleep with him through a night. **Stop.**
 
 ### F5 — Living town
 > Owner 2026-10-02: town + **Cube Pets** (no forest); animals reflect **regularity** and **undisturbed nights**,
@@ -825,8 +991,9 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | B13 | L | XS | A counted test night enters the averages / regularity with its daytime start | exclude `bonus-` records from time stats |
 | B14 | L | XS | `.audioResumed` is also logged for route changes (headphones) → noisy night journal | separate event kind |
 | B15 | L | S | The guide does not mention jokers; first Town view shows a tiny town in a big meadow; night-detail header hides under the nav bar after the auto-scroll; glass tab bar refracts the text under it | texts + insets |
-| B16 | L | S | Tooling: `keys.py --prune` reformats the whole catalog; `buddy-cat` is not in the render pipeline; launch args match bare words (`town`) | fix the tools |
+| B16 | L | S | Tooling: `keys.py --prune` reformats the whole catalog; ~~`buddy-cat` is not in the render pipeline~~ (done with P2: `buddy_recipes()`); launch args match bare words (`town`); `test_app.sh` prints a stray "unable to find utility simctl" | fix the tools |
 | B17 | – | – | Not detectable by design (no Screen Time API): Notification / Control Center over the app, replying from a banner or the lock screen | document only |
+| ✅ B19 | M | – | Sleep sound is not remembered (owner 2026-10-03): after he stops the sound during a night, the next night starts the story again – neither "stopped" nor the sound picked in the night's sheet is stored | persist the night sheet's choice (sound + minutes) into `AppSettings` and a separate "off" flag, so the next night starts silent while ▶ still plays the last sound; test in `AppModelTests` – **fixed 2026-10-03** (see P2, W3), the owner checks it with the P2 build |
 | ✅ B18 | H (process) | – | ~70 files had been changed since the last commit (2026-09-30) | done 2026-10-03: 12 commits on `main` (whole files only – what shares files went into one commit); the owner pushes |
 
 **Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
@@ -885,6 +1052,10 @@ screen checks.
 | 2026-10-02 | **Sleeping buddy (first taste of plan A, no rules):** Today shows a Cube Pets cat asleep on a Nature Kit camp bed, turned away (Cube Pets have no closed eyes), on a little cloud with breathing + "z Z z" (`SleepingBuddy`, asset `buddy-cat` in Assets.xcassets – rendered from a scratch recipe: bed rot 90 scale 1.6, cat pos (0.05, 0.27, 0) rot 135 scale 0.24; move it into `make_recipes.py` when the pets get their own catalog ids). A `Canvas` inside that ZStack got a zero size – plain `Ellipse` views instead. **Owner bug fixed:** the nap result showed a small 16:9 patch of sky with black bars – a `.background` on a `Group` is sized per child; `TodayView` now gives the Group a full-screen frame first. |
 | 2026-10-03 | **Audit + two owner bugs.** (1) Cat over the Town: an ANIMATED TabView selection change (`withAnimation { tab = 1 }`) leaves the tab view half-switched – never animate `tab`. (2) Island: see `islandWindow`. Device data is pulled with `devicectl device copy from … --domain-type appDataContainer` into the git-ignored `docs/device-logs/` (what the nights showed stays out of this public file). The provisioning profile lasts 7 days from its CREATION (`security cms -D -i SleepHole.app/embedded.mobileprovision`), reinstalling does not extend it. New dev args `-screenshot`, `-theme`, `-thenTab 1|island|abandon`; `STORE=<pulled folder> tools/sim_shot.sh` runs the simulator on the owner's real store. Verified: the theme override survives the night screen's `preferredColorScheme(.dark)`. SleepCore 125 tests, app 96 tests / 93.0 %. Bug backlog → §11a. |
 | 2026-10-03 | **Pause (D17) + audit fixes B1–B6, B9 built.** SleepCore: `PausePolicy` (10 min, price 0/50/100…, +30 undisturbed bonus), event `.pauseStarted` (a pause is a fixed window `[t, t + 10 min]`, away time inside it is subtracted like a call), `SleepRules.awayBudget` (30 s per night, per trip still 13 s; `NightEvaluator.allowance` tells the warning how many seconds are really left), `NightResult.pauses` (nil = a night from before the pause: old rules, no bonus – older nights keep their coins and their story) and `.bedtime`. App: `NightRecord.pauses: Int?` (new optional attribute – the owner's real store opened fine in the simulator, the migration is automatic), pause button + countdown + resting crane on the night screen, "Out of the app tonight: 12 s of 30 s", notifications `pause-soon` / `pause-over` only while away, result line "+30 for a night without a pause". Test nights never pay for a pause. Dev args: `-thenTab pause`, `-expiresIn HOURS`. A quick night's setup lasts until bedtime (+60 s) + 20 s = 80 s – wait ≥ 90 s before a screenshot of the pause button. SleepCore 136 tests, app 103 tests / 92.4 %. |
+| 2026-10-03 | **Owner's confirmations + the verification board (§0a).** Confirmed on the iPhone: the "Come back!" warning, the town map (pan, two zoom levels, tap), coins and streak, the language switch (survives restarts), the theme switch, the voice (works; he keeps it off), the alarm with the ringer switched off. F3 accepted. New bug B19 (sleep sound: stop / night choice not remembered). What the pulled app data showed is summarised only as "used / never used on the phone" in §0a (public repo – no details of the nights here). **Way of working changed (AGENTS.md "WHO DOES WHAT"): Opus plans / analyses / reviews, Sonnet 5.5 subagents implement.** |
+| 2026-10-03 | **Cube Pets have named parts and animations** (corrects `NAVRH-ZVIERATKA.md`, "no animations"): `animal-cat` = `body` (the cube is head and body in one, ears included), `Group` (a flat detail on the front face), `tail`, four `leg-*`; the OBJ keeps them as `g` groups, the GLB adds 8 node animations (static, idle, walk, run, eat, dance, gesture-positive / -negative – rotations of body, tail and legs only). There is no separate head and no closed-eye variant – a pose (legs tucked, body lowered / tilted) and closed eyes have to be made in our renderer. |
+| 2026-10-03 | **Buddy render (P2, W1).** ModelIO does NOT keep OBJ `g` groups as nodes: the cat loads as ONE node with one geometry of 7 elements (submeshes named `<group>_colormap`, all sharing one vertex source, so every bounding box equals the whole cat's). The renderer now re-splits such a node per element when a part uses a pose. New optional recipe fields: `Part.pitch / roll / pivot`, `Part.pose` (group name or `leg-*` wildcard → hidden / move / rot / scale / pivot), `Part.children` + `attach`, `Part.chamfer / center`, `Recipe.bounds` (shared canvas for animation frames), `src: "@path"` (repo-relative OBJ). Closed eyes: a flat fur-coloured lid does not match (the face has a vertical fur gradient and smooth normals) → `tools/render/buddy_cat_obj.py` writes a cat OBJ whose eye polygons take the face's gradient UVs (`build/buddy/`, git-ignored) + four thin dark lash boxes. Old recipes render as before (differences ≤ 10 px = the same GPU noise two runs of the old renderer show). |
+| 2026-10-03 | **P2 buddy in the app + B19.** Built by three Sonnet workers, reviewed by Opus. Lessons: a hosted test window's scene phase is `.background`, so views that pause in the background need an override to be tested (`\.buddyAnimates`); a nested `RunLoop.run` starves SwiftUI `.task`s in the hosted tests → animation tests are `async` and wait with `Task.sleep`; restarting a running `repeatForever` animation with new parameters needs a step back to rest first; two crossfade steps in one update collapse (1 → 0 → 1 = no change) → a 50 ms frame break between the steps. New dev launch args: `-buddy awake|asleep`, `-testNightMinutes N` (the normal, non-compact night layout), `-startNap`, `-mute` (**without `-mute` a test night's alarm rings on the Mac's speakers**). `tools/test_app.sh` prints "unable to find utility simctl" once during the run although the simulator does shut down (tooling, B16). B19: `stopSleepSound()` never stored anything – see P2 W3. |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |

@@ -9,4 +9,6 @@
   sandbox disabled — inside the sandbox ModelIO silently loads empty models.
 * Xcode-dependent commands (`xcodebuild`, simulator) need Xcode installed (owner task in F0); `swift test`
   for `SleepCore` works with the Command Line Tools alone.
-* Don't spawn subagents unless the owner asks; phases are small enough to do inline.
+* **Opus plans, Sonnet builds (owner 2026-10-03, see AGENTS.md "WHO DOES WHAT"):** the main session (Claude Opus)
+  analyses, plans and reviews; implementation tasks go to subagents started with the Agent tool and
+  `model: "sonnet"` (Claude Sonnet 5.5). This replaces the old "don't spawn subagents" rule.
