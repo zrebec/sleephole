@@ -18,6 +18,17 @@
 //   * a 1x1 tile diamond is TILE_W = PPU*sqrt(2) px wide and TILE_W/2 px tall
 //   * anchor = normalized position (SpriteKit convention, y from bottom) of the world
 //     origin (footprint centre on the ground) inside the PNG
+//
+// Posing (all optional, used by the sleep buddy – see make_recipes.py `buddy_recipes`):
+//   * Part.pitch / roll / pivot: tilt the whole part about X / Z through `pivot` (model units, before `scale`).
+//     Positive pitch leans the model's +y towards +z (a +z-facing model looks down), negative tilts it back.
+//   * Part.pose: per OBJ group transforms (`hidden`, `move`, `rot` about `pivot`), keyed by group name or a
+//     `prefix*` wildcard. ModelIO merges an OBJ into ONE mesh with one submesh per group (named
+//     "<group>_<material>"), so a part with `pose` / attached children is split into one node per submesh.
+//   * Part.children: nested parts placed in the parent's model space (follow its tilt); `attach` = a group name
+//     the child is glued to (it follows that group's pose).
+//   * Recipe.bounds: extra world-space box [x0,y0,z0,x1,y1,z1] included in the canvas, so several frames of one
+//     animation get the identical canvas + anchor.
 
 import AppKit
 import Foundation
@@ -40,6 +51,22 @@ struct Part: Codable {
     var pos: [Double]?             // x, y, z (world units, y up)
     var rot: Double?               // rotation around Y in degrees
     var scale: Double?
+    var pitch: Double?             // tilt around X in degrees (about `pivot`), applied inside `rot`
+    var roll: Double?              // tilt around Z in degrees (about `pivot`)
+    var pivot: [Double]?           // pitch/roll pivot in model units (default the model origin)
+    var pose: [String: Pose]?      // OBJ group name (or "prefix*") -> transform
+    var children: [Part]?          // nested parts in this part's model space
+    var attach: String?            // child only: glue to this OBJ group of the parent (follows its pose)
+    var chamfer: Double?           // box: chamfer radius (default min(h/2, 0.01))
+    var center: Bool?              // box: centred on pos instead of sitting on pos.y
+}
+
+struct Pose: Codable {
+    var hidden: Bool?
+    var move: [Double]?            // offset in model units
+    var rot: [Double]?             // degrees about x, y, z through `pivot`
+    var scale: [Double]?           // per-axis scale about `pivot` (applied before `rot`)
+    var pivot: [Double]?           // model units
 }
 
 struct Sign: Codable {
@@ -65,6 +92,7 @@ struct Recipe: Codable {
     var signs: [Sign]?
     var shadow: Bool?              // default true
     var connects: String?          // roads only: open edges, subset of "NESW"
+    var bounds: [Double]?          // extra world box [x0,y0,z0,x1,y1,z1] to include in the canvas
 }
 
 struct CatalogEntry: Codable {
@@ -103,11 +131,17 @@ func color(_ hex: String) -> NSColor {
                    blue: CGFloat(v & 0xff) / 255, alpha: 1)
 }
 
+func objURL(_ src: String) -> URL {
+    src.hasPrefix("@") ? URL(fileURLWithPath: String(src.dropFirst()) + ".obj")
+                       : kenney3D.appendingPathComponent(src + ".obj")
+}
+
 var modelCache: [String: SCNNode] = [:]
 
 func loadModel(_ src: String) -> SCNNode {
     if let cached = modelCache[src] { return cached.clone() }
-    let url = kenney3D.appendingPathComponent(src + ".obj")
+    // "@path" = relative to the repo root (generated variants, e.g. build/buddy/…), otherwise the Kenney bundle
+    let url = objURL(src)
     guard FileManager.default.fileExists(atPath: url.path) else {
         fatalError("missing model: \(url.path)")
     }
@@ -126,6 +160,131 @@ func loadModel(_ src: String) -> SCNNode {
     }
     modelCache[src] = node
     return node.clone()
+}
+
+/// Bounding box of the vertices one geometry element (= one OBJ group) actually uses.
+func elementBounds(_ g: SCNGeometry, _ e: SCNGeometryElement) -> (SCNVector3, SCNVector3)? {
+    guard let src = g.sources(for: .vertex).first, src.bytesPerComponent == 4, e.bytesPerIndex > 0 else { return nil }
+    var lo = SIMD3<Float>(repeating: .infinity), hi = SIMD3<Float>(repeating: -.infinity)
+    let idxCount = e.data.count / e.bytesPerIndex
+    e.data.withUnsafeBytes { ib in
+        src.data.withUnsafeBytes { vb in
+            for k in 0..<idxCount {
+                var idx = 0
+                for b in 0..<e.bytesPerIndex { idx |= Int(ib[k * e.bytesPerIndex + b]) << (8 * b) }
+                let off = src.dataOffset + idx * src.dataStride
+                let v = SIMD3<Float>(vb.loadUnaligned(fromByteOffset: off, as: Float.self),
+                                     vb.loadUnaligned(fromByteOffset: off + 4, as: Float.self),
+                                     vb.loadUnaligned(fromByteOffset: off + 8, as: Float.self))
+                lo = simd_min(lo, v); hi = simd_max(hi, v)
+            }
+        }
+    }
+    return (SCNVector3(lo.x, lo.y, lo.z), SCNVector3(hi.x, hi.y, hi.z))
+}
+
+/// ModelIO merges an OBJ into one mesh with one submesh per OBJ group ("<group>_<material>"). Re-split the
+/// loaded node into one child node per submesh, named after the group, so groups can be posed separately.
+/// Returns the group nodes.
+func splitGroups(_ src: String, _ node: SCNNode) -> [SCNNode] {
+    var names: [String] = []
+    for o in MDLAsset(url: objURL(src)).childObjects(of: MDLMesh.self) {
+        for case let s as MDLSubmesh in (o as! MDLMesh).submeshes ?? [] {
+            var name = s.name
+            if let m = s.material?.name, name.hasSuffix("_" + m) { name = String(name.dropLast(m.count + 1)) }
+            names.append(name)
+        }
+    }
+    var targets: [SCNNode] = []
+    node.enumerateHierarchy { n, _ in if n.geometry != nil { targets.append(n) } }
+    var groups: [SCNNode] = []
+    for n in targets {
+        guard let g = n.geometry, g.elements.count == names.count, g.materials.count == names.count else {
+            fatalError("splitGroups \(src): \(n.geometry?.elements.count ?? 0) elements vs \(names.count) groups")
+        }
+        for (i, name) in names.enumerated() {
+            let part = SCNGeometry(sources: g.sources, elements: [g.elements[i]])
+            part.materials = [g.materials[i]]
+            let c = SCNNode(geometry: part); c.name = name
+            if let bb = elementBounds(g, g.elements[i]) { c.boundingBox = bb }   // sources are shared: bbox of THIS group
+            n.addChildNode(c)
+            groups.append(c)
+        }
+        n.geometry = nil
+    }
+    return groups
+}
+
+func vec(_ a: [Double]?) -> SCNVector3 { SCNVector3(a?[0] ?? 0, a?[1] ?? 0, a?[2] ?? 0) }
+
+/// Wraps `content` so it is rotated/moved about `pivot` (done with a holder node instead of SCNNode.pivot, so
+/// bounding boxes and world transforms stay trivially correct). Returns (holder, inner): children glued to the
+/// pre-pose model space of `content` go into `inner`.
+func pivoted(_ content: SCNNode, pivot: [Double]?, move: [Double]?, eulerDeg: [Double]?,
+             scale: [Double]? = nil) -> (SCNNode, SCNNode) {
+    let holder = SCNNode(), inner = SCNNode()
+    if let k = scale { holder.scale = SCNVector3(k[0], k[1], k[2]) }
+    let p = pivot ?? [0, 0, 0], m = move ?? [0, 0, 0], e = eulerDeg ?? [0, 0, 0]
+    holder.position = SCNVector3(p[0] + m[0], p[1] + m[1], p[2] + m[2])
+    holder.eulerAngles = SCNVector3(e[0] * .pi / 180, e[1] * .pi / 180, e[2] * .pi / 180)
+    inner.position = SCNVector3(-p[0], -p[1], -p[2])
+    inner.addChildNode(content)
+    holder.addChildNode(inner)
+    return (holder, inner)
+}
+
+/// Builds one part (recursively its children) as a node carrying pos / yaw / scale.
+func buildPart(_ p: Part, _ id: String) -> SCNNode {
+    let model: SCNNode              // the model / box node in the part's model space
+    var groups: [SCNNode] = []
+    if let src = p.src {
+        model = loadModel(src)
+        if p.pose != nil || (p.children ?? []).contains(where: { $0.attach != nil }) { groups = splitGroups(src, model) }
+        if let tex = p.texture { retexture(model, kenney3D.appendingPathComponent(tex)) }
+    } else if let b = p.box {
+        let g = SCNBox(width: b[0], height: b[1], length: b[2], chamferRadius: p.chamfer ?? min(b[1] / 2, 0.01))
+        g.firstMaterial?.diffuse.contents = color(p.color ?? "#888888")
+        g.firstMaterial?.lightingModel = .lambert
+        let inner = SCNNode(geometry: g); inner.position.y = (p.center ?? false) ? 0 : CGFloat(b[1] / 2)
+        model = SCNNode(); model.addChildNode(inner)
+    } else { fatalError("part needs src or box in \(id)") }
+
+    // per-group poses: wildcard keys first, exact names after (so an exact key overrides a "leg-*")
+    var holders: [String: SCNNode] = [:]       // group name -> `inner` node children glue to
+    for key in (p.pose ?? [:]).keys.sorted(by: { ($0.hasSuffix("*") ? 0 : 1, $0) < ($1.hasSuffix("*") ? 0 : 1, $1) }) {
+        let po = p.pose![key]!
+        let hits = groups.filter { key.hasSuffix("*") ? $0.name!.hasPrefix(String(key.dropLast())) : $0.name == key }
+        if hits.isEmpty { fatalError("pose key '\(key)' matches no group in \(id)") }
+        for g in hits {
+            if po.hidden == true { g.isHidden = true }
+            guard po.move != nil || po.rot != nil || po.scale != nil, let parent = g.parent else { continue }
+            let (holder, inner) = pivoted(g, pivot: po.pivot, move: po.move, eulerDeg: po.rot, scale: po.scale)
+            parent.addChildNode(holder)
+            holders[g.name!] = inner
+        }
+    }
+
+    // children (e.g. eyelids) – in model space, optionally glued to a group (follows its pose)
+    for c in p.children ?? [] {
+        var host: SCNNode = model
+        if let a = c.attach {
+            guard let g = groups.first(where: { $0.name == a }) else { fatalError("attach '\(a)' matches no group in \(id)") }
+            host = holders[a] ?? g
+        }
+        host.addChildNode(buildPart(c, id))
+    }
+
+    // whole-part tilt, then the usual position / yaw / scale
+    var node = model
+    if p.pitch != nil || p.roll != nil {
+        let holder = pivoted(model, pivot: p.pivot, move: nil, eulerDeg: [p.pitch ?? 0, 0, p.roll ?? 0]).0
+        node = SCNNode(); node.addChildNode(holder)
+    }
+    node.position = vec(p.pos)
+    node.eulerAngles.y = CGFloat((p.rot ?? 0) * .pi / 180)
+    let s = p.scale ?? 1
+    node.scale = SCNVector3(s, s, s)
+    return node
 }
 
 var textureCache: [URL: NSImage] = [:]
@@ -188,7 +347,7 @@ let LIGHT_DIR: SIMD3<Double> = {
 func worldBox(_ node: SCNNode) -> (SIMD3<Double>, SIMD3<Double>) {
     var lo = SIMD3<Double>(repeating: .infinity), hi = SIMD3<Double>(repeating: -.infinity)
     node.enumerateHierarchy { n, _ in
-        guard n.geometry != nil else { return }
+        guard n.geometry != nil, !n.isHidden else { return }
         let (a, b) = n.boundingBox
         for x in [a.x, b.x] { for y in [a.y, b.y] { for z in [a.z, b.z] {
             let p = n.convertPosition(SCNVector3(x, y, z), to: nil)
@@ -222,23 +381,8 @@ for r in recipes where onlyId == nil || r.id == onlyId {
     scene.rootNode.addChildNode(content)
     var signHost: SCNNode?         // auto signs go on the first model part (not on plates/boxes)
     for p in r.parts {
-        let n: SCNNode
-        if let src = p.src {
-            n = loadModel(src)
-            if let tex = p.texture { retexture(n, kenney3D.appendingPathComponent(tex)) }
-            if signHost == nil { signHost = n }
-        } else if let b = p.box {
-            let g = SCNBox(width: b[0], height: b[1], length: b[2], chamferRadius: min(b[1] / 2, 0.01))
-            g.firstMaterial?.diffuse.contents = color(p.color ?? "#888888")
-            g.firstMaterial?.lightingModel = .lambert
-            let inner = SCNNode(geometry: g); inner.position.y = CGFloat(b[1] / 2)
-            n = SCNNode(); n.addChildNode(inner)
-        } else { fatalError("part needs src or box in \(r.id)") }
-        let pos = p.pos ?? [0, 0, 0]
-        n.position = SCNVector3(pos[0], pos[1], pos[2])
-        n.eulerAngles.y = CGFloat((p.rot ?? 0) * .pi / 180)
-        let s = p.scale ?? 1
-        n.scale = SCNVector3(s, s, s)
+        let n = buildPart(p, r.id)
+        if p.src != nil, signHost == nil { signHost = n }
         content.addChildNode(n)
     }
     func placedSign(_ s: Sign, english: Bool) -> SCNNode {
@@ -259,6 +403,9 @@ for r in recipes where onlyId == nil || r.id == onlyId {
     var (lo, hi) = worldBox(content)
     let fw = Double(r.footprint[0]) / 2, fd = Double(r.footprint[1]) / 2
     lo = simd_min(lo, SIMD3(-fw, 0, -fd)); hi = simd_max(hi, SIMD3(fw, 0, fd))
+    if let b = r.bounds {   // frames of one animation share one canvas
+        lo = simd_min(lo, SIMD3(b[0], b[1], b[2])); hi = simd_max(hi, SIMD3(b[3], b[4], b[5]))
+    }
     var pts: [SIMD3<Double>] = []
     for x in [lo.x, hi.x] { for y in [lo.y, hi.y] { for z in [lo.z, hi.z] { pts.append(SIMD3(x, y, z)) }}}
     if r.shadow ?? true {   // where the top corners' shadows land on the ground

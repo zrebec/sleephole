@@ -1,0 +1,82 @@
+[
+  {
+    "anchor": [
+      0.3891,
+      0.1985
+    ],
+    "file": "buddy-cat-awake.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "buddy-cat-awake",
+    "kind": "buddy",
+    "level": 0,
+    "nameEN": "Sleep buddy – awake",
+    "nameSK": "Spací kamarát",
+    "size": [
+      617,
+      637
+    ]
+  },
+  {
+    "anchor": [
+      0.3891,
+      0.1985
+    ],
+    "file": "buddy-cat-blink.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "buddy-cat-blink",
+    "kind": "buddy",
+    "level": 0,
+    "nameEN": "Sleep buddy – blink",
+    "nameSK": "Spací kamarát",
+    "size": [
+      617,
+      637
+    ]
+  },
+  {
+    "anchor": [
+      0.3891,
+      0.1985
+    ],
+    "file": "buddy-cat-mid.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "buddy-cat-mid",
+    "kind": "buddy",
+    "level": 0,
+    "nameEN": "Sleep buddy – drowsy",
+    "nameSK": "Spací kamarát",
+    "size": [
+      617,
+      637
+    ]
+  },
+  {
+    "anchor": [
+      0.3891,
+      0.1985
+    ],
+    "file": "buddy-cat-asleep.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "buddy-cat-asleep",
+    "kind": "buddy",
+    "level": 0,
+    "nameEN": "Sleep buddy – asleep",
+    "nameSK": "Spací kamarát",
+    "size": [
+      617,
+      637
+    ]
+  }
+]

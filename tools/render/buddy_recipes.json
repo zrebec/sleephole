@@ -1,0 +1,552 @@
+[
+ {
+  "id": "buddy-cat-awake",
+  "level": 0,
+  "kind": "buddy",
+  "nameSK": "Spací kamarát",
+  "nameEN": "Sleep buddy – awake",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Nature Kit/Models/OBJ format/bed",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 3.7
+   },
+   {
+    "src": "Cube Pets/Models/OBJ format/animal-cat",
+    "pos": [
+     0.0,
+     0.8769,
+     0.296
+    ],
+    "rot": 45,
+    "scale": 1.1,
+    "pose": {
+     "body": {
+      "rot": [
+       -14,
+       0,
+       0
+      ],
+      "pivot": [
+       0,
+       0.18,
+       -0.62
+      ]
+     },
+     "leg-front-*": {
+      "scale": [
+       1,
+       1.5,
+       1
+      ],
+      "pivot": [
+       0,
+       0,
+       0
+      ]
+     },
+     "tail": {
+      "rot": [
+       0,
+       0,
+       -8
+      ],
+      "pivot": [
+       0,
+       0.7,
+       -0.6
+      ],
+      "move": [
+       0,
+       0,
+       0
+      ]
+     }
+    }
+   }
+  ],
+  "bounds": [
+   -3.0,
+   0,
+   -3.0,
+   3.0,
+   3.0,
+   3.0
+  ]
+ },
+ {
+  "id": "buddy-cat-blink",
+  "level": 0,
+  "kind": "buddy",
+  "nameSK": "Spací kamarát",
+  "nameEN": "Sleep buddy – blink",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Nature Kit/Models/OBJ format/bed",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 3.7
+   },
+   {
+    "src": "@build/buddy/animal-cat-closed",
+    "pos": [
+     0.0,
+     0.8769,
+     0.296
+    ],
+    "rot": 45,
+    "scale": 1.1,
+    "pose": {
+     "body": {
+      "rot": [
+       -14,
+       0,
+       0
+      ],
+      "pivot": [
+       0,
+       0.18,
+       -0.62
+      ]
+     },
+     "leg-front-*": {
+      "scale": [
+       1,
+       1.5,
+       1
+      ],
+      "pivot": [
+       0,
+       0,
+       0
+      ]
+     },
+     "tail": {
+      "rot": [
+       0,
+       0,
+       -8
+      ],
+      "pivot": [
+       0,
+       0.7,
+       -0.6
+      ],
+      "move": [
+       0,
+       0,
+       0
+      ]
+     }
+    },
+    "children": [
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       -0.352,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": -13
+     },
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       -0.188,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": 13
+     },
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       0.188,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": -13
+     },
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       0.352,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": 13
+     }
+    ]
+   }
+  ],
+  "bounds": [
+   -3.0,
+   0,
+   -3.0,
+   3.0,
+   3.0,
+   3.0
+  ]
+ },
+ {
+  "id": "buddy-cat-mid",
+  "level": 0,
+  "kind": "buddy",
+  "nameSK": "Spací kamarát",
+  "nameEN": "Sleep buddy – drowsy",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Nature Kit/Models/OBJ format/bed",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 3.7
+   },
+   {
+    "src": "@build/buddy/animal-cat-closed",
+    "pos": [
+     0.0,
+     0.7779,
+     0.296
+    ],
+    "rot": 45,
+    "scale": 1.1,
+    "pose": {
+     "body": {
+      "rot": [
+       0,
+       0,
+       0
+      ],
+      "pivot": [
+       0,
+       0.18,
+       -0.62
+      ]
+     },
+     "leg-front-*": {
+      "scale": [
+       1,
+       0.5,
+       1
+      ],
+      "pivot": [
+       0,
+       0,
+       0
+      ],
+      "move": [
+       0,
+       0.09,
+       0
+      ]
+     },
+     "leg-back-*": {
+      "hidden": true
+     },
+     "tail": {
+      "rot": [
+       0,
+       20,
+       55
+      ],
+      "pivot": [
+       0,
+       0.7,
+       -0.6
+      ],
+      "move": [
+       0,
+       0,
+       0
+      ]
+     }
+    },
+    "children": [
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       -0.352,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": -13
+     },
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       -0.188,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": 13
+     },
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       0.188,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": -13
+     },
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       0.352,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": 13
+     }
+    ]
+   }
+  ],
+  "bounds": [
+   -3.0,
+   0,
+   -3.0,
+   3.0,
+   3.0,
+   3.0
+  ]
+ },
+ {
+  "id": "buddy-cat-asleep",
+  "level": 0,
+  "kind": "buddy",
+  "nameSK": "Spací kamarát",
+  "nameEN": "Sleep buddy – asleep",
+  "footprint": [
+   1,
+   1
+  ],
+  "parts": [
+   {
+    "src": "Nature Kit/Models/OBJ format/bed",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 3.7
+   },
+   {
+    "src": "@build/buddy/animal-cat-closed",
+    "pos": [
+     0.0,
+     0.6789,
+     0.296
+    ],
+    "rot": 45,
+    "scale": 1.1,
+    "pose": {
+     "body": {
+      "rot": [
+       14,
+       0,
+       0
+      ],
+      "pivot": [
+       0,
+       0.18,
+       0.62
+      ],
+      "scale": [
+       1.04,
+       0.93,
+       1.04
+      ]
+     },
+     "leg-*": {
+      "hidden": true
+     },
+     "tail": {
+      "rot": [
+       0,
+       45,
+       -90
+      ],
+      "pivot": [
+       0,
+       0.7,
+       -0.6
+      ],
+      "move": [
+       0.0,
+       -0.5,
+       0.0
+      ]
+     }
+    },
+    "children": [
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       -0.352,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": -13
+     },
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       -0.188,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": 13
+     },
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       0.188,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": -13
+     },
+     {
+      "box": [
+       0.17,
+       0.045,
+       0.012
+      ],
+      "color": "#3d3f4b",
+      "pos": [
+       0.352,
+       0.848,
+       0.645
+      ],
+      "center": true,
+      "chamfer": 0,
+      "attach": "body",
+      "roll": 13
+     }
+    ]
+   }
+  ],
+  "bounds": [
+   -3.0,
+   0,
+   -3.0,
+   3.0,
+   3.0,
+   3.0
+  ]
+ }
+]
