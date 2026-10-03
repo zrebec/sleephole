@@ -62,3 +62,30 @@ import Testing
         #expect(Buddy.state(at: at(2026, 9, 29, 3), running: true, setupEnds: nil, pauseEnds: nil, wake: nil) == .asleep)
     }
 }
+
+/// The tap reactions of the awake buddy (plan P2b): purr → arched back → wink → purr …
+@Suite struct BuddyReactionTests {
+    @Test func theCycleIsPurrArchWink() {
+        #expect(BuddyReaction.purr.next == .arch)
+        #expect(BuddyReaction.arch.next == .wink)
+        #expect(BuddyReaction.wink.next == .purr)
+    }
+
+    @Test func threeStepsReturnToTheStart() {
+        for start in BuddyReaction.allCases {
+            #expect(start.next.next.next == start)
+            #expect(start.next != start)
+        }
+    }
+
+    @Test func everyReactionIsInTheCycleOnce() {
+        var seen: [BuddyReaction] = []
+        var r = BuddyReaction.purr
+        for _ in BuddyReaction.allCases {
+            seen.append(r)
+            r = r.next
+        }
+        #expect(seen == [.purr, .arch, .wink])
+        #expect(Set(seen.map { "\($0)" }).count == BuddyReaction.allCases.count)
+    }
+}

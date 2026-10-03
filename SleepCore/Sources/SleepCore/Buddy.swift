@@ -6,6 +6,23 @@ public enum BuddyState: Equatable, Sendable {
     case asleep
 }
 
+/// What the awake buddy does when the owner pets it (plan P2b): the taps cycle purr → arched back → wink → purr …
+/// Pure presentation – no rules, no coins, nothing is stored; the UI keeps the position in the cycle for a session.
+public enum BuddyReaction: CaseIterable, Sendable, Equatable {
+    case purr
+    case arch
+    case wink
+
+    /// The reaction of the next tap.
+    public var next: BuddyReaction {
+        switch self {
+        case .purr: .arch
+        case .arch: .wink
+        case .wink: .purr
+        }
+    }
+}
+
 /// The rule behind the sleep buddy (owner 2026-10-03, plan P2: "it reacts to me"). Pure – the UI only draws it.
 ///
 /// * Nothing is running (Today): always awake.
