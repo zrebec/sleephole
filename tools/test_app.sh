@@ -11,5 +11,5 @@ xcodebuild test -project SleepHole.xcodeproj -scheme SleepHole -destination "pla
   | grep -E "error:|✘|Test run|TEST (SUCCEEDED|FAILED)"
 xcrun xccov view --report --only-targets build/tests.xcresult 2>/dev/null
 xcrun xccov view --report build/tests.xcresult 2>/dev/null | grep -E "^\s+[A-Za-z]+\.swift" | sort -k2 -t'%' 
-/Applications/Xcode.app/Contents/Developer/usr/bin/simctl shutdown "$SIM" 2>/dev/null
+xcrun simctl shutdown "$SIM" 2>/dev/null
 exit 0
