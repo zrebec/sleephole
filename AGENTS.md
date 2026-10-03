@@ -40,6 +40,11 @@ then answer. Remove items here when they are done.
   (findings), then give the owner a short summary **in Slovak**: what was done, how to test it on the
   iPhone (exact steps), what the next phase will be. Do not start the next phase until the owner says so.
 * **The owner commits.** Never `git commit`/`push` unless explicitly asked. Keep changes small and focused.
+  When he asks for commits: whole files only (no partial staging), one commit per topic where the files allow it,
+  otherwise one commit that describes every topic; he pushes.
+* **Long sessions:** before the owner clears the context he runs the `session-handoff` skill (installed at user
+  level, `~/.claude/skills/session-handoff`) – a chat-only summary the next session starts from. The plan below
+  stays the source of truth; the handoff only carries what is not written down yet.
 * **Tests first for logic.** All rules live in the `SleepCore` Swift package and are unit-tested
   (`cd SleepCore && swift test`). UI/system code stays thin.
 * If something in the plan is wrong or impossible, don't silently diverge: write it into §12, propose the

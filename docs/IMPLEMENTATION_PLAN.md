@@ -827,7 +827,7 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | B15 | L | S | The guide does not mention jokers; first Town view shows a tiny town in a big meadow; night-detail header hides under the nav bar after the auto-scroll; glass tab bar refracts the text under it | texts + insets |
 | B16 | L | S | Tooling: `keys.py --prune` reformats the whole catalog; `buddy-cat` is not in the render pipeline; launch args match bare words (`town`) | fix the tools |
 | B17 | – | – | Not detectable by design (no Screen Time API): Notification / Control Center over the app, replying from a banner or the lock screen | document only |
-| B18 | H (process) | S | ~60 files changed since the last commit (2026-09-30): UI, jokers, effects, audit fixes | owner commits in a few logical commits |
+| ✅ B18 | H (process) | – | ~70 files had been changed since the last commit (2026-09-30) | done 2026-10-03: 12 commits on `main` (whole files only – what shares files went into one commit); the owner pushes |
 
 **Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
 only when `AudioKeeper.ringAlarm` reports that the sound plays (it no longer calls `play()` on a stopped engine);
