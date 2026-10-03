@@ -5,8 +5,8 @@ the identical pixel size and the bed sits at exactly the same pixel in every fra
 frames the same canvas through `bounds`), rewrites <dir>/catalog.json (file, size, anchor) and builds the preview
 sheet docs/previews/buddy_poses.png.
 
-Last step: copies the four frames into the app's asset catalog (SleepHole/Resources/Assets.xcassets/<id>.imageset,
-scale 2x), so a re-render updates the app.
+Last step: copies the eight frames into the app's asset catalog (SleepHole/Resources/Assets.xcassets/<id>.imageset,
+scale 2x; a missing imageset folder is created), so a re-render updates the app.
 
 usage (from the repo root):
     python3 tools/render/buddy_finish.py assets/buddy [docs/previews/buddy_poses.png]
@@ -18,7 +18,9 @@ import sys
 
 from PIL import Image, ImageDraw, ImageFont
 
-ORDER = ["buddy-cat-awake", "buddy-cat-blink", "buddy-cat-mid", "buddy-cat-asleep"]
+ORDER = ["buddy-cat-awake", "buddy-cat-blink", "buddy-cat-happy", "buddy-cat-wink",
+         "buddy-cat-arch-1", "buddy-cat-arch-2", "buddy-cat-mid", "buddy-cat-asleep"]
+COLUMNS = 4                                              # preview sheet: 4 columns x 2 rows per background
 MARGIN = 8
 IMAGESETS = "SleepHole/Resources/Assets.xcassets"      # relative to the repo root (the script runs from there)
 
@@ -59,19 +61,21 @@ def main():
     cell_w = 400
     cell_h = round(nh * cell_w / nw)
     pad, label_h = 20, 36
-    band_h = label_h + cell_h + pad
+    row_h = label_h + cell_h + pad
+    rows = -(-len(ORDER) // COLUMNS)
+    band_h = rows * row_h
     try:
         font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 22)
     except OSError:
         font = ImageFont.load_default()
     resample = getattr(Image, "Resampling", Image).LANCZOS
-    img = Image.new("RGB", (pad + len(ORDER) * (cell_w + pad), 2 * band_h), "#0b1030")
+    img = Image.new("RGB", (pad + COLUMNS * (cell_w + pad), 2 * band_h), "#0b1030")
     d = ImageDraw.Draw(img)
-    for row, (bg, fg) in enumerate((("#0b1030", "#e8ecff"), ("#bfe3ff", "#0b1030"))):
-        y = row * band_h
-        d.rectangle([0, y, img.width, y + band_h], fill=bg)
-        for c, i in enumerate(ORDER):
-            x = pad + c * (cell_w + pad)
+    for band, (bg, fg) in enumerate((("#0b1030", "#e8ecff"), ("#bfe3ff", "#0b1030"))):
+        d.rectangle([0, band * band_h, img.width, (band + 1) * band_h], fill=bg)
+        for n, i in enumerate(ORDER):
+            x = pad + (n % COLUMNS) * (cell_w + pad)
+            y = band * band_h + (n // COLUMNS) * row_h
             small = Image.open(os.path.join(root, i + ".png")).resize((cell_w, cell_h), resample)
             img.paste(small, (x, y + label_h), small)
             d.text((x + 4, y + 8), i, fill=fg, font=font)
@@ -82,7 +86,8 @@ def main():
 
 
 def install_imagesets(root):
-    """Copies <root>/<id>.png into <IMAGESETS>/<id>.imageset (+ Contents.json, 2x) for every frame."""
+    """Copies <root>/<id>.png into <IMAGESETS>/<id>.imageset (+ Contents.json, 2x) for every frame; creates the
+    folder when it does not exist yet."""
     if not os.path.isdir(IMAGESETS):
         print(f"{IMAGESETS} not found (run from the repo root) - app asset catalog not updated")
         return

@@ -1,8 +1,8 @@
 [
   {
     "anchor": [
-      0.3891,
-      0.1985
+      0.3592,
+      0.1661
     ],
     "file": "buddy-cat-awake.png",
     "footprint": [
@@ -15,14 +15,14 @@
     "nameEN": "Sleep buddy – awake",
     "nameSK": "Spací kamarát",
     "size": [
-      617,
-      637
+      860,
+      974
     ]
   },
   {
     "anchor": [
-      0.3891,
-      0.1985
+      0.3592,
+      0.1661
     ],
     "file": "buddy-cat-blink.png",
     "footprint": [
@@ -35,14 +35,94 @@
     "nameEN": "Sleep buddy – blink",
     "nameSK": "Spací kamarát",
     "size": [
-      617,
-      637
+      860,
+      974
     ]
   },
   {
     "anchor": [
-      0.3891,
-      0.1985
+      0.3592,
+      0.1661
+    ],
+    "file": "buddy-cat-happy.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "buddy-cat-happy",
+    "kind": "buddy",
+    "level": 0,
+    "nameEN": "Sleep buddy – happy",
+    "nameSK": "Spací kamarát",
+    "size": [
+      860,
+      974
+    ]
+  },
+  {
+    "anchor": [
+      0.3592,
+      0.1661
+    ],
+    "file": "buddy-cat-wink.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "buddy-cat-wink",
+    "kind": "buddy",
+    "level": 0,
+    "nameEN": "Sleep buddy – wink",
+    "nameSK": "Spací kamarát",
+    "size": [
+      860,
+      974
+    ]
+  },
+  {
+    "anchor": [
+      0.3592,
+      0.1661
+    ],
+    "file": "buddy-cat-arch-1.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "buddy-cat-arch-1",
+    "kind": "buddy",
+    "level": 0,
+    "nameEN": "Sleep buddy – arching",
+    "nameSK": "Spací kamarát",
+    "size": [
+      860,
+      974
+    ]
+  },
+  {
+    "anchor": [
+      0.3592,
+      0.1661
+    ],
+    "file": "buddy-cat-arch-2.png",
+    "footprint": [
+      1,
+      1
+    ],
+    "id": "buddy-cat-arch-2",
+    "kind": "buddy",
+    "level": 0,
+    "nameEN": "Sleep buddy – arched",
+    "nameSK": "Spací kamarát",
+    "size": [
+      860,
+      974
+    ]
+  },
+  {
+    "anchor": [
+      0.3592,
+      0.1661
     ],
     "file": "buddy-cat-mid.png",
     "footprint": [
@@ -55,14 +135,14 @@
     "nameEN": "Sleep buddy – drowsy",
     "nameSK": "Spací kamarát",
     "size": [
-      617,
-      637
+      860,
+      974
     ]
   },
   {
     "anchor": [
-      0.3891,
-      0.1985
+      0.3592,
+      0.1661
     ],
     "file": "buddy-cat-asleep.png",
     "footprint": [
@@ -75,8 +155,8 @@
     "nameEN": "Sleep buddy – asleep",
     "nameSK": "Spací kamarát",
     "size": [
-      617,
-      637
+      860,
+      974
     ]
   }
 ]
