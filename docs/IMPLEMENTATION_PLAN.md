@@ -21,7 +21,11 @@
 | F4 | Progression, level-ups, statistics, backup | 🟡 stats/backup/level-up/ruin repair done 2026-09-30; vibrations, achievements, town name, weekly journal done; shop next | one week of use |
 | I18N | English (default) + Slovak, in-app switch stored in SQLite | ✅ done (2026-09-30), installed on the owner's iPhone | owner switches the language in Settings and checks both |
 | LIM | Limits: town rename 1×/year (else 5 000 🪙), schedule change free on days 1–3 / first week (else streak reset) | ✅ done (2026-09-30), installed | owner tests rename + schedule change |
-| F5 | Living town (day/night, lamps, cars) | ⬜ todo | "I like looking at it" |
+| UI | Look & feel: living sky, Today island, glass cards, micro-animations; UI-2: theme, splash/WOW, sounds, voice | 🟡 built + installed 2026-10-02, awaiting owner | owner: "it looks nice now" |
+| P1 | Night pause (D17) + away budget 30 s/night + alarm safety + expiry warning (B1–B6, B9) | 🟡 built + installed 2026-10-03, awaiting owner | owner uses a pause in a real night |
+| P2 | Sleep buddy on the night screen (plan A step 2) | ⬜ | owner sleeps with the buddy |
+| SKY | City in Settings + real sun/moon on a semicircle (see AGENTS "FIRST THING") | ⬜ S–M | owner picks his city, sees the true sun/moon |
+| F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo | "I like looking at it" |
 | F6 | *(optional, paid account)* HealthKit, AlarmKit, TestFlight | ⬜ later | owner decides to pay |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
 
@@ -57,6 +61,8 @@ leaving the app. Tone: cute, warm, **never cruel**.
 | D13 | **Level unlocks** (owner, 2026-09-29): first 5 building nights only L1; next 10 → L1+L2; next 15 → L1–L3; from then on (the "next 20" and beyond) → L1–L4, i.e. everything. One random building per night. |
 | D14 | UI language **Slovak** (with correct diacritics). Code, comments, docs for agents: English. **Superseded 2026-09-30:** English (default) + Slovak, see `docs/IMPLEMENTATION_I18N.md`; every UI string via `L("English key")`. |
 | D16 | **Nap ("Odpočinok", owner 2026-09-30):** 30 or 60 min only; start only inside the nap window (default 13:00–15:00, inclusive – starting at 15:00 with 60 min lasts until 16:00); once per day; same detection rules as a night with a 2-min setup (`NapPlan.rules`); alarm at the end, confirm only when it is over (`earlyConfirmOverride = 0`); complete +50 🪙, cut short +25 🪙; never builds, never changes streaks/levels/stats of nights; stored as `NightRecord(isNap: true, id "nap-<date>")`. The home screen always shows BOTH buttons ("🌙 Ísť spať", "😴 Odpočinok"), disabled outside their windows with a reason. |
+| D17 | **Night pause (owner 2026-10-02, built 2026-10-03):** intentional "🌙 Pause" button, 10 min per pause; 1st per night free, 2nd 50 🪙, 3rd 100, 4th 150 (+50 each); no pause in a night → +30 🪙; the building stays complete. Never turn a pause into a habit. |
+| D18 | **Jokers 🛡️ (owner 2026-10-02, built):** one per calendar month: bronze 1 night (free, also automatic like Duolingo's streak freeze), silver 3 nights 1 000 🪙, gold 7 nights 5 000 🪙; a switched-on joker starts tonight, or last night if it went wrong ("repair"). Protected nights → `Outcome.excused` (streak waits, nothing built, no coins). Coins per complete night by level: 100 / 120 / 150 / 200, unfinished half. |
 | D15 | **Night rules R2** (owner, 2026-09-29, supersedes the graded away-time of D4): start possible **only from bedtime − 10 min until bedtime + 5 min** (owner: critical; later = missed night); after starting, **5 min setup grace** in which the app may be in the background (podcast, bedtime story); after that **any user-initiated background collapses the building** like SleepTown (10 s accidental tolerance – agent's choice); screen off / locked is fine but the app must stay in the foreground; **phone calls are system-forced → excused**; killed by the system → owner's favour, but avoid it (background audio). Finish ("Vstal som") earliest **wake − 30 min**, by **shaking or typing a wake code** (code visible in Settings). The **alarm rings at most 2 min**. Confirm ≤ wake+15 → complete, ≤ wake+60 → unfinished, later → ruins. |
 
 ---
@@ -652,9 +658,68 @@ achievements stay).
       monthly card), i18n EN+SK, docs.
 **Accept:** owner renames (free, typo fix, paid), changes the schedule inside / outside the window. **Stop.**
 
+### UI — Look & feel (owner 2026-10-02: "interesting features, very plain design")
+Owner decisions: living sky background, Today hero = floating island, **keep iOS 18 deployment target**
+(every iOS 26 glass call needs an `if #available(iOS 26, *)` fallback), own phase before F5.
+Findings that shaped it: no Blender/Codex and no new Kenney purchase needed (the All-in-1 bundle already holds
+every Kenney pack; our SceneKit pipeline renders the 3D kits); Kenney "Background Elements" are flat 2D and
+clash with the low-poly look → the sky is drawn in code (vector-sharp on every display, tiny, animatable);
+Kenney "Particle Pack" (CC0, in the bundle) may supply glow/sparkle textures. iOS 27 SDK adds almost nothing
+visual to SwiftUI (`.navigationTransition(.crossFade)`, a tabs picker style) – the visual language is iOS 26
+Liquid Glass.
+- [x] `SkyPhase` in SleepCore (pure, tested): time + bedtime/wake → dawn / day / dusk / night + blend 0…1
+      (dusk = bedtime −90…0 min, dawn = wake −30…+60 min); F5 reuses it for the town tint
+- [x] `LivingSky` view (replaces/extends `NightSky`): gradient per phase (`MeshGradient` on iOS 18+), sun/moon arc,
+      2–3 parallax cloud layers drifting slowly, stars fade in at dusk; `TimelineView` at low rate, paused when
+      the scene is not active; Reduce Motion → static
+- [x] Sky behind Today, Stats, Settings (`.scrollContentBackground(.hidden)` on Form), navigation bars transparent
+- [x] `GlassCard` modifier: `.glassEffect(.regular, in: RoundedRectangle(cornerRadius: 20))` on iOS 26, otherwise
+      `.ultraThinMaterial`; replace the scattered `.thinMaterial` / tinted backgrounds; primary buttons
+      `.glassProminent` (fallback `.borderedProminent`); disabled buttons keep contrast on the sky
+- [x] Today hero `TownIsland`: floating isometric plate (grass + soil edge) with the latest building + 2–4 trees
+      from existing sprites, slow bob; evening start window → crane on the plate; tap → Town tab
+- [x] Micro-animations: `.contentTransition(.numericText())` for coins/streak, `symbolEffect` on tab/status icons,
+      press scale on big buttons, coin "pop" on the result screen, staggered card appear in Stats
+- [x] Town tab: sky instead of the flat meadow edge + navigation bar over the map (header on glass)
+- [x] Screenshots light/dark + EN/SK, i18n check, tests green
+Done (2026-10-02): SleepCore `Sky.state` (SkyTests) + `TownRender.island` / `groundDiamond`; app `UI/Theme.swift`
+(`LivingSky`, `SkyPalette` light/dark, `glassCard`/`glassCapsule`/`glassButton`, `appearIn`, `popIn`, `IslandEdge`),
+`Town/TownIslandView.swift` (Canvas, crane in the start window, tap → Town tab via `AppModel.showTown`).
+Not done: symbol effects on the tab icons (system tab bar, little gain). Night screen keeps its own `NightSky`.
+**Accept:** owner says the app looks nice on the iPhone. **Stop.**
+
+#### UI-2 (owner 2026-10-02, same day)
+- [x] Settings → "Appearance & sounds": theme System / Light / Dark (`AppSettings.themeRaw` optional, applied to every
+      window via `overrideUserInterfaceStyle` – `preferredColorScheme(nil)` does not reliably return to the system),
+      sound effects on/off, voice on/off (both stored as optional "off" flags, old settings load)
+- [x] `tools/audio/make_sfx.py` → `fx_sleep` (music-box lullaby), `fx_wow` (arpeggio + chord + twinkles), `fx_sparkle`,
+      `fx_whoosh`, `fx_pop` (synthesised), `fx_coins` (Kenney RPG Audio, CC0)
+- [x] `Voice` (AVSpeechSynthesizer, best installed voice for EN / SK): good night / nap / building finished / nap done
+- [x] `GoodNightSplash` after "Go to sleep" / "Nap" (also quick + test nights), WOW on a finished building
+      (`SunRays`, `dropIn`, `SparkleBurst`, 4 s confetti, fanfare → coins → voice), island tap pop
+- [x] Developer → "Sound effects test" (every effect, voice line and animation)
+**Accept:** owner tests a quick night today (splash, sound, voice, WOW). **Stop.**
+
+#### UI-3 (owner 2026-10-02, afternoon)
+- [x] All decorative animations slower: `Motion.pace` = 1.6 (durations/delays ×, speeds ÷); the splash is skipped by a tap
+- [x] Confetti 5 s on a finished building, `DustPuff` when it lands, more lasting twinkles
+- [x] Coins by level (`Economy.completeReward`, catalog threaded through ledger / stats / journal), guide text updated
+- [x] Jokers (D18): SleepCore `Jokers.swift` (+ `JokersTests`), `Outcome.excused`, app `JokerRecord` (SwiftData, backup),
+      `AppModel.coreResults()` = joker-protected results used by every rule, `JokerCard` on Today + `JokerSheet`,
+      calendar colour + night detail note
+- [x] Kenney animals reviewed: **Cube Pets** (24 cute cube animals, CC0) and Prototype Kit dog/horse/bison (untextured
+      placeholders). Rendered at town scale with our renderer: `docs/previews/animals_in_town.png`,
+      `docs/previews/animals_cube_pets.png` (scratch recipes, not in the catalog yet) – for F5 (living town).
+**Accept:** owner tests jokers + the slower WOW. **Stop.**
+
 ### F5 — Living town
+> Owner 2026-10-02: town + **Cube Pets** (no forest); animals reflect **regularity** and **undisturbed nights**,
+> light taps only, plus a **sleep buddy** on the night screen. Three plans (A recommended: pause → sleep buddy →
+> residents → album → living town) in [`docs/NAVRH-ZVIERATKA.md`](NAVRH-ZVIERATKA.md) (Slovak) – owner picks one.
 - [ ] Day/night tint, lamp glows, window glints
 - [ ] Cars on roads, population counter
+- [ ] Cube Pets residents (move-in rules by streak / regularity / undisturbed nights, wander near home, tap = card +
+      pet), sleep buddy (renderer needs a model tilt for the lying pose)
 **Accept:** owner enjoys looking at it. **Stop.**
 
 ### F6 — Paid Apple Developer Program *(only when the owner decides)*
@@ -670,6 +735,26 @@ entitlement), TestFlight, drop the expiry reminder.
 - [x] **Coins earned (2026-09-30):** `Economy` in SleepCore (complete 100, unfinished 50, ruins 0, every 7th
       complete night in a row +200; replayed from real nights like the town). Shown on Dnes (🪙 next to 🔥), in the
       town header and on the result screen. Debug nights pay nothing; the "counts for the town" test night pays.
+- [x] **Night pause – built 2026-10-03 (owner 2026-10-02, D17):** "🌙 Pause" button on the night screen,
+      10 min per pause; 1st pause of a night free, then 50 / 100 / 150 🪙 … (+50 each, charged at the start, only if
+      the coins are there – coins never go negative); a night with no pause +30 🪙 ("undisturbed night", max 130/night);
+      the building stays complete; pauses show in the night story + weekly journal. Owner's reason: it must not become
+      a habit ("I won't buy L2 buildings, I'll spend it on answering Telegram").
+      History of the decision: a trip to the bathroom + 10 min of reading should not collapse the
+      building. Options: (a) 1 free break per night up to 10 min; (b) a 70-min pool per 7 days; (c) 10 🪙 per minute
+      (a 10-min break = a whole night's 100 🪙, ~3 000 of ~5 300 🪙 a month → too harsh). Agent recommendation: an
+      intentional "🌙 Pause" button on the night screen, 1 free per night (10 min), +20 🪙 for an undisturbed night,
+      a 2nd pause 50 🪙 flat, the building stays complete. Implementation sketch: `NightEventKind.pauseStarted/
+      pauseEnded`, the evaluator ignores away time inside a pause ≤ 10 min, the warning flow starts after it;
+      `Economy` gets the bonus / spend. Owner decides first.
+- [ ] **R&D centre (owner idea 2026-10-02, OPEN):** start with ~300 🪙, every building (also L1) must be bought /
+      "developed" before nights can build it, so coins compete between pauses and growth. Risk: one building per
+      level → a monotonous town. Agent ideas (chat 2026-10-02): research *blueprint packs* (3–5 variants at once)
+      instead of single buildings; L1 starter pack free; higher-level buildings pay more per night (e.g. L1 100,
+      L2 120, L3 150, L4 200) so research is an investment with a return; "first of its kind" +50 🪙 and a
+      collection book; the picker needs ≥ 4 researched buildings per level (the "last 3 never repeat" rule).
+- [ ] **Live weather (idea):** needs a coarse location (Approximate Location, When In Use) or a town typed once;
+      Open-Meteo works without the paid account, WeatherKit needs F6. The sky would add rain/snow/clouds.
 - [ ] **Building shop (next):** prices L1 100, L2 200, L3 400, L4 1000 (`Economy.price`). Owner's intent: you spend
       a long time in villages/suburbs before a block of flats, police comes much later. Open: when to choose
       (at "Začať stavbu"?), what if coins are short (proposal: a free random L1), pay on start or on completion,
@@ -715,6 +800,43 @@ entitlement), TestFlight, drop the expiry reminder.
 
 ---
 
+## 11a. Bug backlog – audit of 2026-10-03 (owner request: "analyse the whole project, list the bugs")
+
+Sources: full code read, the owner's data pulled from the iPhone (`docs/device-logs/2026-10-03-audit/`,
+git-ignored – no personal details in this public file), simulator runs with that store (`STORE=… tools/sim_shot.sh … -screenshot`).
+Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic. Cost: XS ≤ 15 min, S ≤ 1 h, M = one session.
+
+| # | Sev. | Cost | Bug | Fix idea |
+|---|---|---|---|---|
+| ✅ | M | – | Sleeping cat stayed on screen over the Town tab: `withAnimation { tab = 1 }` (island tap) left the TabView half-switched; in the simulator the tab did not switch at all | fixed: plain `tab = 1` |
+| ✅ | M | – | Today island lost its road and looked smaller after the 4th house (3×3 window centred on the newest building) | fixed: `TownRender.islandWindow` = occupied lots of the newest block + the streets they touch |
+| ✅ B1 | H | – | `AppModel.ringAlarm` cancels the backup-alarm notification before the in-app alarm is known to play; `AudioKeeper.ringAlarm` can return silently, and `alarmPlayer.play()` on an engine that could not start (phone call / another alarm at wake time) raises an Obj-C exception → crash → no alarm at all | cancel the backup only after `isAlarmRinging && engine.isRunning`; guard the play |
+| ✅ B2 | H | – | The 7-day expiry reminder (§6.4 `expiry`, ticked in F4) does not exist in code. The profile runs out 7 days after its CREATION, e.g. 2026-10-06 14:23 for the current one | read `ExpirationDate` from `embedded.mobileprovision`, notify 24 h + 3 h before, show the date in Settings |
+| ✅ B3 | H | – | If iOS kills the app at night, the only alarm is ONE notification (≤ 30 s sound, silent in silent mode / Focus) | chain 4–5 backup notifications 30 s apart now; AlarmKit in F6 |
+| ✅ B4 | M | – | Trip tolerance is per trip: several trips of 6–7 s within a minute pass, while one 12 s trip is 1 s from a collapse | with the pause (D17): one budget of seconds per night instead of 13 s per trip |
+| ✅ B5 | M | – | "Regularity" = spread of clock times, so moving the bedtime by half an hour (a free schedule change) shows ±13 min although every start was within ±3 min of its bedtime. Matters for the animal rules | measure start − bedtime (bedtime into `NightResult`) |
+| ✅ B6 | M | – | Jokers: the automatic bronze uses up the month, so the morning after the first missed night silver / gold are blocked ("already used") – exactly the holiday case | allow a manual joker that starts on the auto-bronze night to replace it |
+| B7 | M | S | Contrast: disabled "Go to sleep" / "Nap" text is barely readable on glass, secondary captions are weak in dark mode, the sun sits right behind the large titles "Dnes" / "Nastavenia" | own disabled style, captions `.primary.opacity`, keep sun/moon out of the title zone |
+| B8 | L | S | Battery / speed (measured: `@Observable` does NOT notify on equal assignments, so the 1 s `refresh()` is harmless): the Today island redraws all its sprites in a `Canvas` 20×/s only to bob 4 pt, plus sky, buddy and flame timelines; `coins` / `streak` / `stats` replay the whole history with several SwiftData fetches on every access; Settings encodes the whole backup for `ShareLink` on every render (each slider tick) | static island + `.offset` animation, cache derived values per data version, lazy backup export |
+| ✅ B9 | L | – | "Screen checks" counts the unlock after the alarm as a check | ignore unlocks after `alarmFired` |
+| B10 | L | XS | A nap cannot be ended early: waking a few minutes before the end means waiting for the alarm | product decision: allow confirming in the last ~20 % |
+| B11 | L | XS | Confirming up to 30 min early cancels the alarm; falling asleep again = no alarm | product decision: keep the alarm armed until wake unless dismissed |
+| B12 | L | XS | Restore: a backup without a town name / language keeps the current ones ("the backup is the whole truth" otherwise) | assign nil too |
+| B13 | L | XS | A counted test night enters the averages / regularity with its daytime start | exclude `bonus-` records from time stats |
+| B14 | L | XS | `.audioResumed` is also logged for route changes (headphones) → noisy night journal | separate event kind |
+| B15 | L | S | The guide does not mention jokers; first Town view shows a tiny town in a big meadow; night-detail header hides under the nav bar after the auto-scroll; glass tab bar refracts the text under it | texts + insets |
+| B16 | L | S | Tooling: `keys.py --prune` reformats the whole catalog; `buddy-cat` is not in the render pipeline; launch args match bare words (`town`) | fix the tools |
+| B17 | – | – | Not detectable by design (no Screen Time API): Notification / Control Center over the app, replying from a banner or the lock screen | document only |
+| B18 | H (process) | S | ~60 files changed since the last commit (2026-09-30): UI, jokers, effects, audit fixes | owner commits in a few logical commits |
+
+**Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
+only when `AudioKeeper.ringAlarm` reports that the sound plays (it no longer calls `play()` on a stopped engine);
+B2 `AppExpiry` (reads `ExpirationDate` from `embedded.mobileprovision`) → Today card 48 h ahead, notifications 24 h /
+3 h ahead, the date in Settings → About; B3 five backup notifications (wake + 30 … 150 s); B4 + D17 the pause and
+`SleepRules.awayBudget` = 30 s per night; B5 `Stats.regularity` = spread of start − bedtime (`NightResult.bedtime`);
+B6 a silver / gold joker that starts on the automatic bronze's night replaces it; B9 unlocks after the alarm are no
+screen checks.
+
 ## 12. Findings log (append-only; agents write here what they learned on the device)
 | Date | Finding |
 |---|---|
@@ -756,6 +878,13 @@ entitlement), TestFlight, drop the expiry reminder.
 | 2026-09-30 | **Stories v2 – chapters + the journey** (owner answers: chapters in order, carpentry workshop, night nature + animals + water + weather, CC0 only). 50 CC0 recordings via the official Freesound API (`tools/audio/freesound.json` manifest, `fetch_freesound.py`, key in `~/.freesound_key` – never in the repo; raw OGG previews in git-ignored `assets/freesound/`, authors in `assets/audio/CREDITS-freesound.txt`). `make_stories.py` cuts 78 clips (window / split-by-silence, `tame()` soft limiter, all mono 44.1 kHz so the 4 story players share one format; AAC 64k) and mixes 7 chapter beds (75 s, AAC 96k, −27 dB RMS, 3 dB headroom – AAC overshoots on camp-fire clicks). Swift: `StoryChapter` (bed, weighted scenes, opening scene, reverb, pauses), `StoryWorld.journey` = cabin → carpentry → wind → storm → lake → after (10–20 min each, sleepy long pauses at the end); `AudioKeeper` crossfades the beds with two players (`crossfadeBed`, 8 s) and keeps the chapter's bed on volume changes / engine restarts. Ambience ids unchanged (`story-workshop` is now the carpentry), new `story-journey`. |
 | 2026-09-30 | **5 new alarms, App-Store-safe** (owner wants to publish one day): Zedge is NOT safe (user uploads, personal-use licence) → CC0 Freesound recordings (manifest `use: "alarm"`: dawn chorus, singing bowls, a Symphonion music box playing the public-domain "Klosterglocken", kalimba) + Bach's Prelude in C (public domain, own harp synthesis). `make_alarms.py` renders them (≤ 28.5 s mono PCM CAF – notification sounds must be ≤ 30 s and PCM; `python3 tools/audio/make_alarms.py birds bowl …` renders only the named ones so the old alarms stay byte-identical); peaky recordings are compressed to the loudness of the others (`rms_db`). `AlarmSound` raw values = file names (persisted, never rename). |
 | 2026-09-30 | **LIM done.** SleepCore `RenamePolicy` / `SchedulePolicy` (Limits.swift) + `breaks: [NightKey]` in `Progression.currentStreak/bestStreak`, `Economy.ledger/earned`, `Achievements.unlocked`, `Stats.summary`, `WeeklyJournal` – a break is the night key after the change day; `currentStreak` also honours a break for tonight (lastNight + 1) so the streak shows 0 immediately. App: SwiftData `CoinSpend` (coins = earned − spent) + `ScheduleChange` (breakKey only when not free); `UserProgress.lastRenameAt` (anchor; a typo fix does not move it – otherwise endless free edits), `lastFreeRenameAt`, `scheduleCalibrationStart` (set on the first launch with LIM – for the owner 2026-09-30), `schedulePromptMonth`. New ModelContainer types must be registered in `SleepHoleApp` AND every test container. Rename only via `RenameTownAlert` (cost in the message, button disabled when short); Settings schedule = draft + "Save" + confirmation (only when a streak > 0 would be lost); guide first run applies directly (free, not recorded before onboarding), replayed guide shows it read-only. Monthly card (`showsMonthlySchedulePrompt`, days 1–3) + repeating notification `schedule-month` on the 1st at wake + 1 h (re-scheduled with the reminders). Numbers in `L()` get grouping ("5 000" / "5,000"). |
+| 2026-10-02 | **Design review (owner: "plain design")**: Today is a white page with two grey disabled buttons, Stats/Settings stock system look, Town has a white nav bar over a flat green field. Kenney purchase pointless (All-in-1 has everything), Blender not needed (SceneKit pipeline), Kenney 2D backgrounds clash with low-poly 3D. Plan: phase UI (living sky + Today island + glass + micro-animations), iOS 18 target kept with iOS 26 glass behind `#available`. |
+| 2026-10-02 | **Phase UI built.** Sky follows the owner's schedule (`Sky.state`: dawn wake −30…+60 min, dusk bedtime −90…0, short days split in the middle, DST-safe). Light mode keeps a light sky even at night (black text stays readable), dark mode keeps a deep one – the system appearance is respected, never forced (only the night screen stays dark). Town: transparent `SKView` (`allowsTransparency`) over `LivingSky`, a meadow diamond under the tiles hides seams between road and grass sprites (they showed the sky), brown soil faces make it a floating island; the nav bar is hidden (the header card names the town, the sun sat under the title). Pitfalls: a long `.random(using:)` tuple closure hit "unable to type-check in reasonable time" → plain loops; writing `Localizable.xcstrings` with `json.dump` reformats the whole file (8 000-line diff) → insert entries as text. `tools/sim_shot.sh` takes `APPEARANCE=dark`, the app `-skyTime HH:MM`. `tools/test_app.sh` now really shuts the simulator down. SleepCore 111 tests, app 93 tests / 92.9 %. |
+| 2026-10-02 | **UI-2:** theme / effects / voice settings, splash + WOW, 6 new `fx_*` sounds, voice. Gotchas: `String Catalog` here is written as `"key": {` (no space before the colon) – insert new entries as text in sorted position (scratch helper; `json.dump` reformats 8 000 lines); sound-test titles must be literal `L("…")` or `keys.py` cannot see them. App 93 tests / 91.2 %. |
+| 2026-10-02 | **UI-3:** jokers + level rewards + slower animations. Bug caught by the app tests: a counted test night can share its NightKey with a real night – `Jokers.apply` first merged results by key and lost one (coins); it now keeps every result and only adds/replaces protected keys (`resultsSharingAKeyAreAllKept`). `tools/i18n/keys.py --prune` rewrites the whole catalog formatting – remove unused keys as text instead. `swift test` with the Command Line Tools sometimes fails with "TestingMacros plugin not found" → run it with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`. SleepCore 123 tests, app 96 tests / 93.0 %. |
+| 2026-10-02 | **Sleeping buddy (first taste of plan A, no rules):** Today shows a Cube Pets cat asleep on a Nature Kit camp bed, turned away (Cube Pets have no closed eyes), on a little cloud with breathing + "z Z z" (`SleepingBuddy`, asset `buddy-cat` in Assets.xcassets – rendered from a scratch recipe: bed rot 90 scale 1.6, cat pos (0.05, 0.27, 0) rot 135 scale 0.24; move it into `make_recipes.py` when the pets get their own catalog ids). A `Canvas` inside that ZStack got a zero size – plain `Ellipse` views instead. **Owner bug fixed:** the nap result showed a small 16:9 patch of sky with black bars – a `.background` on a `Group` is sized per child; `TodayView` now gives the Group a full-screen frame first. |
+| 2026-10-03 | **Audit + two owner bugs.** (1) Cat over the Town: an ANIMATED TabView selection change (`withAnimation { tab = 1 }`) leaves the tab view half-switched – never animate `tab`. (2) Island: see `islandWindow`. Device data is pulled with `devicectl device copy from … --domain-type appDataContainer` into the git-ignored `docs/device-logs/` (what the nights showed stays out of this public file). The provisioning profile lasts 7 days from its CREATION (`security cms -D -i SleepHole.app/embedded.mobileprovision`), reinstalling does not extend it. New dev args `-screenshot`, `-theme`, `-thenTab 1|island|abandon`; `STORE=<pulled folder> tools/sim_shot.sh` runs the simulator on the owner's real store. Verified: the theme override survives the night screen's `preferredColorScheme(.dark)`. SleepCore 125 tests, app 96 tests / 93.0 %. Bug backlog → §11a. |
+| 2026-10-03 | **Pause (D17) + audit fixes B1–B6, B9 built.** SleepCore: `PausePolicy` (10 min, price 0/50/100…, +30 undisturbed bonus), event `.pauseStarted` (a pause is a fixed window `[t, t + 10 min]`, away time inside it is subtracted like a call), `SleepRules.awayBudget` (30 s per night, per trip still 13 s; `NightEvaluator.allowance` tells the warning how many seconds are really left), `NightResult.pauses` (nil = a night from before the pause: old rules, no bonus – older nights keep their coins and their story) and `.bedtime`. App: `NightRecord.pauses: Int?` (new optional attribute – the owner's real store opened fine in the simulator, the migration is automatic), pause button + countdown + resting crane on the night screen, "Out of the app tonight: 12 s of 30 s", notifications `pause-soon` / `pause-over` only while away, result line "+30 for a night without a pause". Test nights never pay for a pause. Dev args: `-thenTab pause`, `-expiresIn HOURS`. A quick night's setup lasts until bedtime (+60 s) + 20 s = 80 s – wait ≥ 90 s before a screenshot of the pause button. SleepCore 136 tests, app 103 tests / 92.4 %. |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |

@@ -45,13 +45,16 @@ Every night one of the unlocked levels is picked at random, then a building from
 
 ## What already exists
 
-- **The whole night:** start window, setup time, lock / app-switch detection, the “Come back” warning, call tolerance, alarm, confirmation by shaking or code, a result with sound.
+- **The whole night:** start window, setup time, lock / app-switch detection, the “Come back” warning, call tolerance, a **🌙 pause** (10 min, first one free), alarm with a chain of backup notifications, confirmation by shaking or code, a result with sound.
 - **Night screen:** a night sky with twinkling stars, the building rising from the bottom on its building site, an animated tower crane and a “breathing” *Building in progress* label.
 - **Town (SpriteKit):** a borderless isometric map that grows from the centre in 4×4 blocks and fills in its own roads. Panning with inertia and pinch zoom like SimCity. Tap a building to see which night it's from and its state. The header shows buildings and population.
 - **190 isometric sprites** rendered from Kenney 3D City Kits (CC0) by our own SceneKit renderer. Buildings L1–L4 with signs in Slovak and English (9 buildings have an EN variant), roads, scaffolding, ruins, cars and a 16-frame crane.
 - **13 alarms:** Gentle pizzicato (default), Dawn chorus, Singing bowl, Music box (a Symphonion playing “Klosterglocken”), Kalimba, Prelude (Bach), Morning Mood (Grieg), Ode to Joy (music box), Chimes, Retro, Reveille (trumpet), Digital, Alarm! (aggressive). Gentle ones get louder slowly, aggressive ones play at full volume at once.
-- **Today:** always two buttons, **🌙 Go to sleep** and **😴 Nap**. Outside their windows they're disabled and explain why.
-- **🔥 Streak** of complete nights and **🪙 coins** (nights, streak bonus, naps).
+- **Today:** always two buttons, **🌙 Go to sleep** and **😴 Nap**. Outside their windows they're disabled and explain why. Above them floats a little **island cut out of your own town** around the newest building (a crane stands on it when you can start building; tap it to open the town).
+- **Living sky** behind every tab, drawn in code: it follows *your* schedule – dawn around wake-up, a blue day with drifting clouds, sunset before bedtime, stars and the moon at night. Content sits on **Liquid Glass** cards (iOS 26; frosted glass on older systems). The town floats on the same sky as a big island.
+- **Animations and sounds:** a *Good night* splash with bursting stars when a night or nap starts, a music-box lullaby and a friendly **synthesised voice** (“Good night! Your building starts now.”); when a building is finished, the **WOW** – golden rays, the building drops in, twinkles burst, confetti, a fanfare, coins and “Good morning! Your building is finished.” Cards slide in, numbers roll. Settings → **Appearance & sounds:** theme (System / Light / Dark), sound effects and voice on/off; Developer → *Sound effects test* plays everything.
+- **🔥 Streak** of complete nights and **🪙 coins**: a complete night pays by the level of its building (L1 100, L2 120, L3 150, L4 200; unfinished half), plus the streak bonus and naps.
+- **Jokers 🛡️** for illness or holidays, one a month: 🥉 bronze 1 night (free – used by itself when you miss a night), 🥈 silver 3 nights (1 000 🪙), 🥇 gold 7 nights (5 000 🪙). The streak waits; protected nights build nothing and pay nothing.
 - **Stats:** streak, night calendar with the story of each night, average start and wake-up, regularity, chart, naps, levels.
 - **Level-up celebration** with confetti, **ruin repair** by a good night.
 - **Achievements:** 12 of them (first building, 3/7/30 nights in a row, 10/50/100 nights built, first level 2/3 building, first skyscraper, first nap, ruin repaired), each pays +50 🪙 (big ones +200).
@@ -119,6 +122,8 @@ More tools:
 | F3 | town (SpriteKit) | ✅ built, ⏳ waiting for real nights |
 | F4 | levels, stats, backup, coins, nap | ✅ mostly, ⏳ building shop |
 | I18N | English + Slovak | ✅ |
+| UI | living sky, glass, island, animations, sounds, theme, jokers, coins by level | ✅ built, ⏳ owner testing |
+| P1 | night pause, 30 s away budget, safer alarm, expiry warning | ✅ built, ⏳ owner testing |
 | F5 | living town | ⬜ |
 | F6 | paid Apple account | ⬜ next |
 | F7 | new buildings | ⬜ |
@@ -134,6 +139,46 @@ More tools:
   - later HealthKit and Apple Watch (sleep verification, a vibrating alarm on the wrist),
   - TestFlight.
 
+**Night pause – built 2026-10-03**
+
+- A **🌙 Pause** button on the night screen (once the setup is over): 10 minutes away from the app without
+  collapsing the building. The crane rests, the screen counts down, and a notification calls you back a minute
+  before the end.
+- The **1st pause of a night is free**, the 2nd costs **50 🪙**, the 3rd **100**, the 4th **150** … (+50 each).
+- A night **without any pause pays +30 🪙** (“undisturbed night”), so a perfect night earns up to 130 🪙.
+- The building stays complete. The point: a pause is for the bathroom, not for a habit of checking messages.
+- Outside a pause, all trips out of the app share **30 seconds per night** (a single trip still gets a warning and
+  10 s to come back) – many short hops no longer slip through.
+
+How we got there – the three ideas that were on the table:
+
+| | Idea | Easy to explain? | Cost | Risk |
+|---|---|---|---|---|
+| a | **1 break per night, up to 10 min, free** | ✅ one sentence | nothing | becomes a nightly habit of “10 minutes on the phone” |
+| b | **a pool of 70 min per 7 days** | ❌ needs a counter and a window | nothing | spend it all on Monday → anxious rest of the week; harder to enforce |
+| c | **pay per minute, 10 🪙/min** | ✅ | a 10-min break = 100 🪙 = a whole night's reward | about 3 000 of the ~5 300 🪙 a month can go on breaks – it feels like a fine, not cute |
+
+Monthly income for comparison: 30 complete nights × 100 + 4 streak bonuses × 200 + 30 naps × 50 ≈ **5 300 🪙**.
+
+**Agent's original recommendation** (the owner raised the bonus to +30 and made every extra pause 50 🪙 dearer):
+1. **One free “🌙 Pause” per night, up to 10 min.** It is started with a button on the night screen *before* you
+   leave the app, so it's always intentional (an accidental exit still follows the normal rules). While paused, the
+   crane rests; after 10 min the usual “Come back!” warning starts.
+2. **A night without a pause pays a small bonus** (e.g. +20 🪙 “undisturbed night”) – a reward for not needing it
+   instead of a fine for needing it.
+3. **A second pause costs a flat 50 🪙** (only if you have them) – a clear price, never more than half a night.
+4. The building stays **complete** after a pause – never cruel.
+
+Option b is left out: hard to explain and it creates “budget anxiety” in the middle of the week.
+
+**R&D centre (idea, open):** you start with ~300 🪙 and have to *develop* every building, even level 1 ones, before
+nights can build it – so coins have a purpose beyond pauses. Open problem: someone develops one building per level
+and gets a monotonous town. Ideas to solve it are in the plan backlog.
+
+**Live weather (idea):** rain, snow or clouds in the sky need the place you live, but no tracking: either one
+approximate location (iOS “Approximate Location”, When In Use) or simply typing the town once in Settings. Data:
+Open-Meteo (free, no key) works today; Apple WeatherKit needs the paid account (F6).
+
 **Building shop for 🪙**
 - Prices: house 100, L2 200, L3 400, L4 1000. You stay “in the village” longer; the police arrive only after weeks.
 - Still to decide: when a building is chosen, when coins are charged, and what happens if there aren't enough.
@@ -141,6 +186,8 @@ More tools:
 **F5: living town**
 - Day and night by the real time, glowing lamps and windows.
 - Little cars driving on the roads, a growing population.
+- Animals: Kenney's **Cube Pets** (dogs, cats, chicks, bunnies, cows …) walking around – preview in
+  `docs/previews/animals_in_town.png`.
 
 **F7: more buildings**
 - Mainly L3: post office, church, hotel, stadium, railway station, cinema, swimming pool.
