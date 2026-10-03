@@ -25,7 +25,7 @@
 | P1 | Night pause (D17) + away budget 30 s/night + alarm safety + expiry warning (B1–B6, B9) | 🟡 built + installed 2026-10-03; the alarm in silent mode confirmed 2026-10-03; owner tests the pause in the night 2026-10-03 → 04 | owner uses a pause in a real night |
 | P2 | Sleep buddy: awake / asleep cat that faces the owner (plan A step 2, spec in §10 P2) + bug B19 | 🟡 built, committed and **installed on the iPhone 2026-10-03 20:40** (one build with P2b), awaiting the owner | owner sleeps with the buddy |
 | P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | 🟡 built, committed and **installed on the iPhone 2026-10-03 20:40**, awaiting the owner (sounds + haptics can only be judged on the phone) | owner pets the cat on Today |
-| SKY | City in Settings + real sun/moon on a semicircle (see AGENTS "FIRST THING") | ⬜ S–M | owner picks his city, sees the true sun/moon |
+| SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 owner asked for it on 2026-10-03 evening ("it shows a sunset while it is long dark"); being built by Sonnet workers overnight, NOT to be installed without his OK | owner picks his city, sees the true sun/moon |
 | F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo | "I like looking at it" |
 | F6 | *(optional, paid account)* HealthKit, AlarmKit, TestFlight | ⬜ later | owner decides to pay |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
@@ -978,6 +978,50 @@ Sound effects test.
 - [ ] Owner's check on the phone → move the rows in §0a
 **Accept:** on Today the owner sees only the cat; three taps give purr, arched back, wink; the Town tab is unchanged.
 **Stop.**
+
+### SKY — City in Settings + the real sun and moon (owner 2026-10-02 / 2026-10-03) – 🟡 being built
+**Why:** the sky follows the owner's schedule (dusk = the 90 min before bedtime), so at 20:45 it showed a sunset
+while the real sun had set at 18:28. **Owner's spec (2026-10-02):** Settings → city with autocomplete – the label on
+its own row, the field on the row below (long names); after the field a black ✕ that turns into a green ✓ once the
+city is verified (checked ≈ 500 ms after the typing stops); Apple Maps search (`MKLocalSearchCompleter` +
+`MKLocalSearch`) – **no location permission, no tracking**; Today: the sun or the moon on a **semicircle** at its true
+position for that city (also a rough clock); brightness and colour of the sky from the real altitude of the sun;
+pure maths in SleepCore, unit-tested; **without a city the sky keeps following the schedule.** The night screen keeps
+its own always-dark `NightSky`.
+
+**Design (Opus):**
+* `SleepCore/Astro.swift` (new, pure): `GeoPoint` (latitude / longitude in degrees, north / east positive);
+  `Astro.sun(at:from:)` and `Astro.moon(at:from:)` → altitude + azimuth in degrees (geometric, the moon topocentric);
+  `Astro.moonPhase(at:)` → illuminated fraction 0…1 + waxing; `Astro.sunArc(at:from:)` / `moonArc(at:from:)` → the
+  last rising and the next setting around `t` when the body is up (horizons −0.833° / +0.125°), nil when it is down
+  or never rises / sets (polar day and night). Accuracy wanted: sun ≤ 0.3° and ≤ 3 min, moon ≤ 1.5° and ≤ 10 min,
+  phase ≤ 0.03.
+* `Sky.state(at:place:)` returns the same `SkyState` the views already draw, from the sun's altitude `a`:
+  `daylight` = smoothstep((a + 6) / 12); `glow` = sin(π (a + 6) / 12) inside −6°…+6°, else 0; `phase` = day (a ≥ 6°),
+  night (a ≤ −6°), otherwise dawn while the sun rises and dusk while it sets. New fields with defaults (old callers and
+  tests keep working): `body` = `.sun` (sun above its horizon) / `.moon` (sun down, moon up) / `.none`, and `moon`
+  (illuminated fraction + which side is lit; the southern hemisphere mirrors it). `arc` = the fraction of the way
+  from rising to setting, 0…1 left to right; 0.5 when there is no rising / setting.
+* App: `AppSettings.city` (optional `SkyCity { name, latitude, longitude }` – old settings and backups load);
+  `CitySearch` protocol (`MapKitCitySearch` in the app, a fake in the tests; never `CLLocationManager`);
+  Settings section "Sky"; `LivingSky` uses the real state when a city is set (computed at most once a minute – it
+  is asked 20× a second) and the schedule otherwise; Today draws the body on a true semicircle (centre x = middle of
+  the screen, centre y ≈ 310 pt, radius ≈ 150 pt, a faint dotted arc) that never crosses the large title; the other
+  screens keep their flat arc but use the real body / phase; the moon is drawn with its real phase; nothing is drawn
+  when both are down.
+* Reference values for the tests come from an independent source (PyEphem): `tools/astro/reference.py`.
+
+**Tasks:**
+- [x] W1 (2026-10-03) – SleepCore `Astro.swift` (sun: NOAA / Meeus low precision; moon: Astronomical Almanac
+      low-precision series + topocentric correction; phase from the real elongation; rising / setting by a 5-min
+      search + bisection) and `Sky.state(at:place:)`, `SkyBody`, `MoonLook`. Worst errors against PyEphem: sun
+      0.01°, moon 0.3° (azimuth 1.4° near the zenith), phase 0.002, sunrise / sunset a few seconds, moonrise /
+      moonset < 4 min. 177 SleepCore tests. One call ≈ 60 µs – the app still caches it per minute
+- [ ] W2 – app: `AppSettings.city`, city search, Settings section, real sky + semicircle + moon phase, strings, tests,
+      screenshots (Sonnet), after W1
+- [ ] Opus: review, all tests + `keys.py`, plan §0 / §0a / §12
+- [ ] Install on the iPhone – only with the owner's OK, outside his nap window and night
+**Accept:** the owner types his city, sees ✓, and Today shows the sun / moon where they really are. **Stop.**
 
 ### F5 — Living town
 > Owner 2026-10-02: town + **Cube Pets** (no forest); animals reflect **regularity** and **undisturbed nights**,
