@@ -42,7 +42,7 @@ public enum Progression {
         while key >= earliest {
             switch byKey[key] {
             case .complete: streak += 1
-            case .unfinished: break
+            case .unfinished, .excused: break
             default: return streak
             }
             key = key.adding(days: -1, calendar: calendar)
@@ -60,7 +60,7 @@ public enum Progression {
             if breakSet.contains(key) { run = 0 }
             switch byKey[key] {
             case .complete: run += 1; best = max(best, run)
-            case .unfinished: break
+            case .unfinished, .excused: break
             default: run = 0
             }
             key = key.adding(days: 1, calendar: calendar)

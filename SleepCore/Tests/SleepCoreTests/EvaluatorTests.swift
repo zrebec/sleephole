@@ -121,6 +121,7 @@ import Testing
     @Test func customRules() {
         var rules = SleepRules()
         rules.accidentalTolerance = 10 * 60
+        rules.awayBudget = nil                               // the tolerance alone decides
         let l = log([(0, .started), (100, .leftApp), (105, .returned), (wakeMin + 1, .confirmed)])
         #expect(NightEvaluator.evaluate(l, rules: rules) == .complete)
         #expect(NightEvaluator.evaluate(l) == .ruins)

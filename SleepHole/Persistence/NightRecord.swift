@@ -22,6 +22,9 @@ final class NightRecord {
     var startedAt: Date?
     var confirmedAt: Date?
     var finalizedAt: Date?
+    /// Night pauses (D17) used. nil = a night from before the pause existed (2026-10-03): it keeps the old rules
+    /// (13 s per trip, no budget per night) and gets no "undisturbed night" bonus.
+    var pauses: Int?
 
     /// `idPrefix`: "bonus" for a test night that counts for the town (one-shot, owner request) –
     /// a unique id so it never collides with the real night of the same date.
@@ -38,6 +41,7 @@ final class NightRecord {
         self.buildingId = buildingId
         self.eventsData = (try? JSONEncoder().encode([NightEvent]())) ?? Data()
         self.setupGrace = setupGrace
+        self.pauses = 0
     }
 
     var window: NightWindow {
@@ -47,6 +51,7 @@ final class NightRecord {
     var rules: SleepRules {
         var r = SleepRules()
         r.setupGrace = setupGrace
+        if pauses == nil { r.awayBudget = nil }
         return r
     }
 
@@ -61,6 +66,7 @@ final class NightRecord {
         eventsData = (try? JSONEncoder().encode(l.events)) ?? eventsData
         if kind == .started { startedAt = startedAt ?? date }
         if kind == .confirmed { confirmedAt = confirmedAt ?? date }
+        if kind == .pauseStarted { pauses = (pauses ?? 0) + 1 }
     }
 
     var outcome: Outcome? { outcomeRaw.flatMap(Outcome.init(rawValue:)) }
@@ -69,6 +75,6 @@ final class NightRecord {
     var result: NightResult? {
         guard let outcome else { return nil }
         return NightResult(key: window.key, outcome: outcome, buildingId: buildingId, awaySeconds: awaySeconds,
-                           startedAt: startedAt, confirmedAt: confirmedAt)
+                           startedAt: startedAt, confirmedAt: confirmedAt, pauses: pauses, bedtime: bedtime)
     }
 }

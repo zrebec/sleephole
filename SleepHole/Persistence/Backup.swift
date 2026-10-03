@@ -24,6 +24,13 @@ struct BackupFile: Codable, Equatable {
     var scheduleCalibrationStart: Date? = nil
     var spends: [Spend]? = nil
     var scheduleChanges: [Change]? = nil
+    var jokers: [Joker]? = nil
+
+    struct Joker: Codable, Equatable {
+        var at: Date
+        var tier: String
+        var firstNight: String
+    }
 
     struct Spend: Codable, Equatable {
         var at: Date
@@ -54,6 +61,7 @@ struct BackupFile: Codable, Equatable {
         var startedAt: Date?
         var confirmedAt: Date?
         var finalizedAt: Date?
+        var pauses: Int? = nil          // nil in backups from before the pause (2026-10-03) = old rules
     }
 
     static let fileName = "SleepHole-zaloha.json"
@@ -81,7 +89,7 @@ extension NightRecord {
         BackupFile.Night(id: id, keyString: keyString, isDebug: isDebug, isNap: isNap, bedtime: bedtime, wake: wake,
                          buildingId: buildingId, events: log.events, setupGrace: setupGrace, outcomeRaw: outcomeRaw,
                          awaySeconds: awaySeconds, startedAt: startedAt, confirmedAt: confirmedAt,
-                         finalizedAt: finalizedAt)
+                         finalizedAt: finalizedAt, pauses: pauses)
     }
 
     convenience init(backup n: BackupFile.Night) {
@@ -95,6 +103,7 @@ extension NightRecord {
         startedAt = n.startedAt
         confirmedAt = n.confirmedAt
         finalizedAt = n.finalizedAt
+        pauses = n.pauses
     }
 }
 

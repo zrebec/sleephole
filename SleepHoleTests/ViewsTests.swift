@@ -19,7 +19,7 @@ struct ViewsTests {
     }
 
     func makeModel(at now: Date, language: AppLanguage = .en) -> (AppModel, FakeClock, ModelContainer) {
-        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
         let clock = FakeClock(now)
         var s = AppSettings()
         s.wakeCode = "1234"
@@ -102,5 +102,44 @@ struct ViewsTests {
         render(NightSky(), m)
         render(LevelInfo(), m)
         render(NavigationStack { CreditsView() }, m)
+    }
+
+    @Test(arguments: AppLanguage.allCases) func effectsAndJokers(language: AppLanguage) {
+        let (m, clock, _) = makeModel(at: date(5, 12), language: language)
+        render(JokerCard(), m)
+        render(JokerSheet(), m)
+        m.useJoker(.bronze)
+        render(JokerCard(), m)                                      // active joker
+        render(JokerSheet(), m)                                     // "Used" list, blocked tiers
+        render(GoodNightSplash(nap: false) {}, m)
+        render(GoodNightSplash(nap: true) {}, m)
+        render(ZStack { SunRays(); DustPuff(); SparkleBurst() }.frame(width: 340, height: 300), m)
+        render(NavigationStack { SoundEffectsTestView() }, m)
+        render(TownIslandView(crane: true).frame(height: 210), m)
+        render(LivingSky(), m)
+        clock.now = date(6, 22, 25); m.refresh()
+        render(LivingSky(), m)                                      // dusk palette
+        for theme in AppTheme.allCases { m.settings.theme = theme; theme.apply() }
+        #expect(m.settings.theme == .dark)
+    }
+
+    @Test(arguments: AppLanguage.allCases) func pauseAndExpiry(language: AppLanguage) {
+        let (m, clock, _) = makeModel(at: date(5, 22, 25), language: language)
+        m.refresh(); m.startNight()
+        clock.now = date(6, 1, 0); m.refresh()
+        render(TodayView(), m)                                      // "Pause · free"
+        m.startPause()
+        render(TodayView(), m)                                      // pause running, the crane rests
+        clock.now = date(6, 1, 20); m.append(.leftApp); clock.now += 9; m.append(.returned)
+        render(TodayView(), m)                                      // "Out of the app tonight: 9 s of 30 s", 2nd pause too dear
+        clock.now = date(6, 6, 31); m.refresh(); m.confirm(code: "1234")
+        render(TodayView(), m)                                      // result without the no-pause bonus
+        m.acknowledgeResult()
+        render(NightDetail(key: NightKey(year: 2026, month: 10, day: 6)), m)      // 🌙 Pauses: 1×
+        render(JournalCard(), m)                                    // "Night pauses: 1"
+        render(ExpiryCard(expiry: clock.now + 20 * 3600, now: clock.now), m)
+        render(ExpiryCard(expiry: clock.now + 600, now: clock.now), m)
+        #expect(NightView.countdown(588) == "9:48" && NightView.countdown(-3) == "0:00")
+        #expect(!GuideText.pause.isEmpty && !GuideText.night.isEmpty)
     }
 }

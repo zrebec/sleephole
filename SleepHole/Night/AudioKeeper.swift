@@ -192,12 +192,16 @@ final class AudioKeeper {
 
     /// Rings `file` in a loop, volume ramping 0.3 → 1.0 over `ramp` s (0 = full volume at once), for at
     /// most `maxDuration` (D15: 2 min). The ambience is muted meanwhile. `onStop` fires when it stops on its own.
+    /// Returns whether the alarm really rings: false when the sound can't start (the file is missing, a phone
+    /// call or another app's alarm holds the audio) – the caller keeps the backup notifications then and tries
+    /// again (audit 2026-10-03, B1: `play()` on an engine that is not running raises an exception).
+    @discardableResult
     func ringAlarm(file: String, ramp: TimeInterval, maxDuration: TimeInterval,
-                   onStop: @escaping @MainActor () -> Void) {
+                   onStop: @escaping @MainActor () -> Void) -> Bool {
         guard !isAlarmRinging, let url = Bundle.main.url(forResource: file, withExtension: nil),
               let audioFile = try? AVAudioFile(forReading: url),
               let buffer = AVAudioPCMBuffer(pcmFormat: audioFile.processingFormat,
-                                            frameCapacity: AVAudioFrameCount(audioFile.length)) else { return }
+                                            frameCapacity: AVAudioFrameCount(audioFile.length)) else { return false }
         try? audioFile.read(into: buffer)
         if !isRunning { try? start(ambience: .silence, volume: 0) }
         // the alarm must win: switch to a non-mixable session (interrupts a podcast still playing)
@@ -209,6 +213,7 @@ final class AudioKeeper {
         }
         engine.connect(alarmPlayer, to: engine.mainMixerNode, format: buffer.format)
         if !engine.isRunning { try? engine.start() }
+        guard engine.isRunning else { return false }
         alarmPlayer.volume = ramp > 0 ? 0.3 : 1
         alarmPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
         alarmPlayer.play()
@@ -225,6 +230,7 @@ final class AudioKeeper {
             self.stopAlarm()
             onStop()
         }
+        return true
     }
 
     func stopAlarm() {

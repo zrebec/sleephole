@@ -47,7 +47,7 @@ public enum Achievements {
             prev = r.key
             switch r.outcome {
             case .complete: run += 1
-            case .unfinished: break
+            case .unfinished, .excused: break
             case .ruins, .missed: run = 0
             }
             for (n, a) in [(3, Achievement.streak3), (7, .streak7), (30, .streak30)] where run >= n { unlock(a, r.key) }

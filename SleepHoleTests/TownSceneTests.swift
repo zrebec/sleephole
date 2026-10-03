@@ -38,8 +38,9 @@ struct TownSceneTests {
     @Test func everySpriteBecomesANode() {
         let (_, m) = town(10)          // the 10th night is unfinished and nothing finishes it later
         let (_, scene) = presented(m)
-        let nodes = scene.children.filter { !($0 is SKCameraNode) }
+        let nodes = scene.children.filter { !($0 is SKCameraNode) && !($0 is SKShapeNode) }
         #expect(nodes.count == m.sprites.count)
+        #expect(scene.children.filter { $0 is SKShapeNode }.count == 3)        // meadow + two soil faces (island)
         #expect(nodes.contains { $0 is SKCropNode })                         // unfinished building
     }
 

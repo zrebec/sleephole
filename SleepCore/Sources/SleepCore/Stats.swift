@@ -34,7 +34,8 @@ public struct NightPoint: Equatable, Sendable {
 
 public enum Stats {
     public static func summary(_ results: [NightResult], today: NightKey, calendar: Calendar,
-                               window: Int = 14, calendarDays: Int = 35, breaks: [NightKey] = []) -> StatsSummary {
+                               window: Int = 14, calendarDays: Int = 35, breaks: [NightKey] = [],
+                               catalog: Catalog? = nil) -> StatsSummary {
         let sorted = results.sorted { $0.key < $1.key }
         let lastPossible = today.adding(days: -1, calendar: calendar)
         let last = max(sorted.last?.key ?? lastPossible, lastPossible)
@@ -57,13 +58,29 @@ public enum Stats {
             bestStreak: Progression.bestStreak(sorted, calendar: calendar, breaks: breaks),
             builtNights: built,
             completeNights: sorted.filter { $0.outcome == .complete }.count,
-            coins: Economy.earned(sorted, calendar: calendar, breaks: breaks),
+            coins: Economy.earned(sorted, calendar: calendar, breaks: breaks, catalog: catalog),
             maxLevel: Progression.unlockedMaxLevel(builtBefore: built),
             averageStart: circularMean(starts).map(timeOfDay),
             averageWake: circularMean(wakes).map(timeOfDay),
-            regularityMinutes: circularStd(starts),
+            regularityMinutes: regularity(recent, calendar: calendar),
             calendar: days,
             series: Array(series))
+    }
+
+    /// How regular the build starts are: the standard deviation, in minutes, of "start − that night's bedtime"
+    /// (2026-10-03: moving the bedtime by half an hour looked like ±13 min although every start was
+    /// within 3 min of its bedtime). Nights without a stored bedtime fall back to the spread of clock times.
+    static func regularity(_ results: [NightResult], calendar: Calendar) -> Double? {
+        let offsets = results.compactMap { r in
+            r.startedAt.flatMap { start in r.bedtime.map { start.timeIntervalSince($0) / 60 } }
+        }
+        let started = results.filter { $0.startedAt != nil }.count
+        guard offsets.count == started else {
+            return circularStd(results.compactMap { $0.startedAt.map { minutesOfDay($0, calendar) } })
+        }
+        guard offsets.count >= 2 else { return nil }
+        let mean = offsets.reduce(0, +) / Double(offsets.count)
+        return (offsets.map { ($0 - mean) * ($0 - mean) }.reduce(0, +) / Double(offsets.count)).squareRoot()
     }
 
     static func minutesOfDay(_ d: Date, _ calendar: Calendar) -> Double {

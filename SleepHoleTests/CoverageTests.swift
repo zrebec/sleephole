@@ -14,7 +14,7 @@ struct CoverageTests {
     init() { AudioKeeper.muted = true }
 
     func container() -> ModelContainer {
-        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
     }
 
     @Test func launchArgumentsConfigureAndSeed() {

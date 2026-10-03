@@ -44,9 +44,44 @@ enum Notifications {
         // owner 2026-09-30: warn 15 s before the setup time runs out
         schedule("grace-end", at: setupEnds - 15, title: L("⏳ 15 s of setup left"),
                  body: L("Come back to SleepHole and lock your phone 🌙"), sound: .default, urgent: true)
-        schedule("alarm-backup", at: wake + 30, title: L("Good morning ☀️"),
-                 body: L("Open SleepHole and confirm you're up."),
-                 sound: UNNotificationSound(named: UNNotificationSoundName(alarmFile)), urgent: true)
+        // One notification sounds for at most 30 s and only once – if the app died at night that was the whole
+        // alarm. A chain keeps ringing for ~2.5 min (audit 2026-10-03, B3). The app cancels them all as soon as
+        // its own alarm really rings.
+        for (i, offset) in backupAlarmOffsets.enumerated() {
+            schedule(backupAlarmIds[i], at: wake + offset, title: L("Good morning ☀️"),
+                     body: L("Open SleepHole and confirm you're up."),
+                     sound: UNNotificationSound(named: UNNotificationSoundName(alarmFile)), urgent: true)
+        }
+    }
+
+    static let backupAlarmOffsets: [TimeInterval] = [30, 60, 90, 120, 150]
+    static let backupAlarmIds = ["alarm-backup"] + (2...backupAlarmOffsets.count).map { "alarm-backup-\($0)" }
+
+    /// Leaving the app during a pause (D17) is free until `end`: remind a minute before and when it is over.
+    static func pauseEnding(at end: Date) {
+        if end.timeIntervalSinceNow > 75 {
+            schedule("pause-soon", at: end - 60, title: L("⏳ The pause ends in a minute"),
+                     body: L("Come back to SleepHole and lock your phone 🌙"), sound: .default, urgent: true)
+        }
+        schedule("pause-over", at: end, title: L("⚠️ The pause is over – come back!"),
+                 body: L("Come back to SleepHole now, or the building collapses 🏗️"), sound: .default, urgent: true)
+    }
+
+    static func cancelPauseNotices() { cancel(["pause-soon", "pause-over"]) }
+
+    /// Free Personal Team signing: the app stops launching when its provisioning profile runs out (`AppExpiry`).
+    /// Warn a day and three hours before (audit 2026-10-03, B2).
+    static func scheduleExpiry(_ expiry: Date?) {
+        center.removePendingNotificationRequests(withIdentifiers: ["expiry-1", "expiry-2"])
+        guard let expiry else { return }
+        let when = L("\(Fmt.dayMonth(NightKey(date: expiry, calendar: .current))) at \(Fmt.time(expiry))")
+        let body = L("The free signature ends on \(when). Connect your iPhone to the Mac and run SleepHole from Xcode – your data stays.")
+        for (id, lead, title) in [("expiry-1", 24.0, L("SleepHole stops working tomorrow")),
+                                  ("expiry-2", 3.0, L("SleepHole stops working in 3 hours"))] {
+            let at = expiry - lead * 3600
+            guard at > Date() else { continue }
+            schedule(id, at: at, title: title, body: body, sound: .default, urgent: true)
+        }
     }
 
     /// Sent the moment leaving the app is detected; the owner then has `tolerance` seconds (D15).
@@ -57,8 +92,11 @@ enum Notifications {
         let title = L("⚠️ Come back to SleepHole!")
         schedule("nudge", at: Date() + 0.2, title: title,
                  body: L("You have \(Int(tolerance)) seconds, or the building collapses 🏗️"), sound: .default, urgent: true)
-        schedule("nudge-2", at: Date() + 5, title: title,
-                 body: L("Only a few seconds left – come back now 🏗️"), sound: .default, urgent: true)
+        // the second one only when there is time for it (the night's budget may leave just a few seconds)
+        if tolerance > 6 {
+            schedule("nudge-2", at: Date() + 5, title: title,
+                     body: L("Only a few seconds left – come back now 🏗️"), sound: .default, urgent: true)
+        }
     }
 
     /// At the alarm: a silent, time-sensitive notification lights up the lock screen
@@ -69,8 +107,10 @@ enum Notifications {
     }
 
     static func cancelNudge() { cancel(["nudge", "nudge-2"]) }
-    static func cancelBackupAlarm() { cancel(["alarm-backup"]) }
-    static func cancelNight() { cancel(["grace-end", "alarm-backup", "nudge", "nudge-2", "alarm-screen"]) }
+    static func cancelBackupAlarm() { cancel(backupAlarmIds) }
+    static func cancelNight() {
+        cancel(["grace-end", "nudge", "nudge-2", "alarm-screen", "pause-soon", "pause-over"] + backupAlarmIds)
+    }
 
     /// "allowed" / "denied" / "not allowed yet" for the Settings screen.
     static func statusText() async -> String {

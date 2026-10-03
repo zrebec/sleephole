@@ -16,7 +16,7 @@ struct I18nTests {
     init() { AudioKeeper.muted = true }
 
     func store() -> ModelContainer {
-        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
+        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
                             configurations: ModelConfiguration(isStoredInMemoryOnly: true))
     }
 

@@ -18,6 +18,8 @@ public enum NightEventKind: String, Codable, Sendable {
     case confirmedByShake  // diagnostics: how "Vstal som" was done (logged right before `.confirmed`)
     case confirmedByCode
     case audioResumed
+    /// "🌙 Pause" tapped (owner 2026-10-02, D17): for `PausePolicy.duration` the owner may leave the app.
+    case pauseStarted
 }
 
 public struct NightEvent: Codable, Equatable, Sendable {
@@ -52,6 +54,10 @@ public struct NightLog: Codable, Equatable, Sendable {
     public func has(_ kind: NightEventKind) -> Bool { events.contains { $0.kind == kind } }
     public var startedAt: Date? { first(.started)?.at }
     public var confirmedAt: Date? { first(.confirmed)?.at }
+    /// When each pause of the night started, oldest first.
+    public var pauseStarts: [Date] { sortedEvents.filter { $0.kind == .pauseStarted }.map(\.at) }
+    /// The pause windows (each lasts `PausePolicy.duration` – leaving the app is free inside them).
+    public var pauseIntervals: [(Date, Date)] { pauseStarts.map { ($0, $0 + PausePolicy.duration) } }
 }
 
 public enum Outcome: String, Codable, Sendable, CaseIterable {
@@ -59,6 +65,9 @@ public enum Outcome: String, Codable, Sendable, CaseIterable {
     case unfinished    // Rozostavaná
     case ruins         // Ruina
     case missed        // stavba nezačala
+    /// Protected by a joker 🛡️ (owner 2026-10-02): the streak neither grows nor breaks, no building, no coins.
+    /// Never produced by the evaluator – `Jokers.protect` turns missed / ruined nights into it.
+    case excused
 
     /// Did this night produce a building (counts toward level unlocks)?
     public var isBuildNight: Bool { self == .complete || self == .unfinished }
@@ -72,14 +81,22 @@ public struct NightResult: Codable, Equatable, Sendable {
     public let awaySeconds: TimeInterval
     public let startedAt: Date?
     public let confirmedAt: Date?
+    /// Pauses used that night. nil = a night from before the pause existed (2026-10-03): it gets no
+    /// "undisturbed night" bonus and keeps the old per-trip tolerance.
+    public let pauses: Int?
+    /// The night's bedtime – the regularity is measured as start − bedtime, so a changed schedule does not
+    /// look like irregular sleep.
+    public let bedtime: Date?
 
     public init(key: NightKey, outcome: Outcome, buildingId: String?, awaySeconds: TimeInterval = 0,
-                startedAt: Date? = nil, confirmedAt: Date? = nil) {
+                startedAt: Date? = nil, confirmedAt: Date? = nil, pauses: Int? = nil, bedtime: Date? = nil) {
         self.key = key
         self.outcome = outcome
         self.buildingId = buildingId
         self.awaySeconds = awaySeconds
         self.startedAt = startedAt
         self.confirmedAt = confirmedAt
+        self.pauses = pauses
+        self.bedtime = bedtime
     }
 }

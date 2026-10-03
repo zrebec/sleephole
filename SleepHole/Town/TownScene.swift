@@ -20,7 +20,7 @@ final class TownScene: SKScene {
         super.init(size: size)
         scaleMode = .resizeFill
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        backgroundColor = UIColor(red: 0.42, green: 0.64, blue: 0.36, alpha: 1)     // meadow beyond the map
+        backgroundColor = .clear                // the town floats on the living sky (phase UI)
         addChild(cameraNode)
         camera = cameraNode
         cameraNode.setScale(2.2)
@@ -54,6 +54,7 @@ final class TownScene: SKScene {
             node.zPosition = CGFloat(s.zPosition)
             addChild(node)
         }
+        addSoilEdge(model)
         if firstShow {
             needsFit = true
             fitIfPossible()
@@ -63,6 +64,30 @@ final class TownScene: SKScene {
             }
         }
         clampCamera()
+    }
+
+    /// The brown soil under the town's ground diamond – the town is a floating island on the sky (phase UI).
+    private func addSoilEdge(_ model: TownRenderModel) {
+        let d = TownRender.groundDiamond(model.sprites)
+        let depth = 180.0
+        func p(_ s: ScenePoint, down: Double = 0) -> CGPoint { CGPoint(x: s.x, y: s.y - down) }
+        let faces: [([CGPoint], UIColor)] = [
+            // meadow under the tiles: no sky shines through the seams between road and grass sprites
+            ([p(d.top), p(d.right), p(d.bottom), p(d.left)], UIColor(IslandEdge.meadow)),
+            ([p(d.left), p(d.bottom), p(d.bottom, down: depth), p(d.left, down: depth * 0.55)], UIColor(IslandEdge.leftSoil)),
+            ([p(d.bottom), p(d.right), p(d.right, down: depth * 0.55), p(d.bottom, down: depth)], UIColor(IslandEdge.rightSoil)),
+        ]
+        for (points, color) in faces {
+            let path = CGMutablePath()
+            path.addLines(between: points)
+            path.closeSubpath()
+            let node = SKShapeNode(path: path)
+            node.fillColor = color
+            node.strokeColor = color
+            node.zPosition = -2_000_000
+            node.lineWidth = 2
+            addChild(node)
+        }
     }
 
     /// First look: the whole town fits on screen (capped so a big town is not microscopic).

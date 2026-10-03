@@ -40,4 +40,21 @@ import Testing
         #expect(s.currentStreak == 0 && s.coins == 0 && s.averageStart == nil && s.regularityMinutes == nil)
         #expect(s.calendar.allSatisfy { $0.outcome == nil } && s.series.isEmpty)
     }
+
+    /// Three nights with one bedtime, then a bedtime half an hour later (a free schedule change). Every start is
+    /// within a few minutes of its own bedtime → regular, although the clock times are 30 min apart.
+    @Test func regularityIsMeasuredAgainstEachNightsBedtime() {
+        func r(_ day: Int, bed: (Int, Int), start: (Int, Int, Int)) -> NightResult {
+            NightResult(key: NightKey(year: 2026, month: 10, day: day + 1), outcome: .complete, buildingId: nil,
+                        startedAt: at(2026, 10, day, start.0, start.1, start.2), bedtime: at(2026, 10, day, bed.0, bed.1))
+        }
+        let nights = [r(1, bed: (22, 0), start: (21, 57, 0)), r(2, bed: (22, 0), start: (21, 55, 0)),
+                      r(3, bed: (22, 0), start: (22, 2, 0)), r(4, bed: (22, 30), start: (22, 27, 0))]
+        let s = Stats.summary(nights, today: NightKey(year: 2026, month: 10, day: 5), calendar: bratislava)
+        #expect(s.regularityMinutes! > 2 && s.regularityMinutes! < 3.5)                  // ±3 min, not ±13
+        // results without a bedtime (old code paths) still give the spread of clock times
+        let old = nights.map { NightResult(key: $0.key, outcome: .complete, buildingId: nil, startedAt: $0.startedAt) }
+        let o = Stats.summary(old, today: NightKey(year: 2026, month: 10, day: 5), calendar: bratislava)
+        #expect(o.regularityMinutes! > 10)
+    }
 }

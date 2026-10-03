@@ -19,7 +19,10 @@ enum GuideText {
         L("For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus \(Plural.minutes(rules.setupGrace)) – start earlier, get more time. We'll warn you 15 s before it ends; then come back to SleepHole.")
     }
     static var night: String {
-        L("You can turn the screen off, but SleepHole must stay open. If you switch to another app for more than \(Plural.seconds(rules.accidentalTolerance)), the building collapses.")
+        L("You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and \(Plural.seconds(rules.accidentalTolerance)) to come back – and only \(Plural.seconds(rules.awayBudget ?? 0)) per night in total. Longer than that and the building collapses.")
+    }
+    static var pause: String {
+        L("Need the bathroom or a few minutes on your phone? Tap 🌙 Pause on the night screen: \(Plural.minutes(PausePolicy.duration)) outside SleepHole. The first pause of a night is free, each further one costs \(PausePolicy.priceStep) 🪙 more. A night without any pause pays +\(PausePolicy.undisturbedBonus) 🪙.")
     }
     static var calls: String { L("Phone calls don't count – just come back to the app after the call.") }
     static var nap: String {
@@ -152,6 +155,7 @@ struct GuideView: View {
             row("clock.badge.checkmark", GuideText.startWindow)
             row("headphones", GuideText.setup)
             row("lock.iphone", GuideText.night)
+            row("moon.zzz.fill", GuideText.pause)
             row("phone.fill", GuideText.calls)
             row("bed.double.fill", GuideText.nap)
             row("bell.badge", L("If you leave the app, you'll get a “Come back to SleepHole” alert."))
@@ -184,7 +188,7 @@ struct GuideView: View {
                 }
             }
             Text(L("Coins 🪙")).font(.headline)
-            Text(L("A complete night = \(Economy.reward(.complete)) 🪙, unfinished = \(Economy.reward(.unfinished)) 🪙, and every \(Economy.streakBonusEvery)th complete night in a row adds a +\(Economy.streakBonus) 🪙 bonus. Soon you'll buy buildings with them: house \(Economy.price(level: 1)), L2 \(Economy.price(level: 2)), L3 \(Economy.price(level: 3)), L4 \(Economy.price(level: 4)) 🪙."))
+            Text(L("A complete night = \(Economy.completeReward(level: 1)) 🪙, and more for higher levels (L2 \(Economy.completeReward(level: 2)), L3 \(Economy.completeReward(level: 3)), L4 \(Economy.completeReward(level: 4)) 🪙); unfinished = half. Every \(Economy.streakBonusEvery)th complete night in a row adds a +\(Economy.streakBonus) 🪙 bonus."))
                 .foregroundStyle(.secondary)
         }
     }

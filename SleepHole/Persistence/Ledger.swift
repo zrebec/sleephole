@@ -1,4 +1,5 @@
 import Foundation
+import SleepCore
 import SwiftData
 
 /// Coins spent (owner 2026-09-30: renaming the town; the building shop later). The balance is
@@ -37,5 +38,27 @@ final class ScheduleChange {
         self.to = to
         self.free = free
         self.breakKey = breakKey
+    }
+}
+
+/// A joker 🛡️ the owner switched on (owner 2026-10-02). The automatic bronze ones are not stored – they are
+/// replayed from the nights (`Jokers.apply`), like the town and the coins.
+@Model
+final class JokerRecord {
+    @Attribute(.unique) var id: String = UUID().uuidString
+    var at: Date
+    var tierRaw: String
+    /// NightKey string of the first protected night.
+    var firstNight: String
+
+    init(at: Date, tier: JokerTier, firstNight: NightKey) {
+        self.at = at
+        self.tierRaw = tier.rawValue
+        self.firstNight = firstNight.description
+    }
+
+    var use: JokerUse? {
+        guard let tier = JokerTier(rawValue: tierRaw), let key = NightKey(firstNight) else { return nil }
+        return JokerUse(tier: tier, firstNight: key)
     }
 }

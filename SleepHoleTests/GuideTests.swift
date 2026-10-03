@@ -26,7 +26,7 @@ struct GuideTests {
     }
 
     func store() -> ModelContainer {
-        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
+        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
                             configurations: ModelConfiguration(isStoredInMemoryOnly: true))
     }
 

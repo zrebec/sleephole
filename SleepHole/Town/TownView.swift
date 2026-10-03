@@ -14,6 +14,8 @@ struct TownSpriteView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> SKView {
         let view = SKView()
+        view.allowsTransparency = true          // the living sky shows around the floating town
+        view.backgroundColor = .clear
         view.ignoresSiblingOrder = false
         view.preferredFramesPerSecond = 60
         let scene = TownScene(size: CGSize(width: 400, height: 800))
@@ -92,6 +94,7 @@ struct TownTab: View {
         let render = model.townRender
         NavigationStack {
             ZStack(alignment: .top) {
+                LivingSky()
                 if let render {
                     TownSpriteView(model: render, focus: model.townFocus, version: model.townVersion,
                                    imageProvider: { sprites.image(for: $0) },
@@ -101,7 +104,7 @@ struct TownTab: View {
                 header(snapshot)
             }
             .navigationTitle(L("Town"))
-            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)          // the header card already names the town
             .renameTownAlert(isPresented: $renaming)
             .sheet(item: Binding(get: { selected.map(SelectedBuilding.init) }, set: { selected = $0?.index })) { sel in
                 if let b = snapshot?.buildings[safe: sel.index] {
@@ -137,7 +140,7 @@ struct TownTab: View {
         }
         .font(.subheadline.bold())
         .padding(.horizontal, 14).padding(.vertical, 8)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 18))
+        .glassCard(cornerRadius: 18)
         .padding(.top, 8)
     }
 }

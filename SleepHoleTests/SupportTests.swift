@@ -52,6 +52,18 @@ struct SupportTests {
         withNap.nap.minutes = 60
         #expect(try dec.decode(AppSettings.self, from: JSONEncoder().encode(withNap)).nap.minutes == 60)
         #expect(AppSettings.ambienceTimerOptions.contains(nil) && AppSettings.ambienceTimerOptions.contains(1))
+        // appearance + sounds (phase UI-2): old settings → system theme, effects and voice on
+        #expect(s.theme == .system && s.soundEffects && s.voice)
+        var styled = s
+        styled.theme = .dark
+        styled.soundEffects = false
+        styled.voice = false
+        let back = try dec.decode(AppSettings.self, from: JSONEncoder().encode(styled))
+        #expect(back.theme == .dark && !back.soundEffects && !back.voice)
+        styled.voice = true
+        #expect(styled.voiceOff == nil)                                  // "on" is stored as nothing
+        #expect(AppTheme.dark.style == .dark && AppTheme.system.style == .unspecified && AppTheme.light.style == .light)
+        for t in AppTheme.allCases { #expect(!t.title.isEmpty) }
     }
 
     @Test func nightRecordKeepsItsLog() {

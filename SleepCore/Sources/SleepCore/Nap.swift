@@ -46,7 +46,7 @@ public struct NapPlan: Codable, Equatable, Sendable {
         switch outcome {
         case .complete: 50
         case .unfinished: 25
-        case .ruins, .missed: 0
+        case .ruins, .missed, .excused: 0
         }
     }
 }

@@ -18,7 +18,7 @@ struct BackupStatsTests {
     }
 
     func store() -> ModelContainer {
-        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
+        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
                             configurations: ModelConfiguration(isStoredInMemoryOnly: true))
     }
 
@@ -57,7 +57,7 @@ struct BackupStatsTests {
         let b = store()
         let (m2, _) = model(b, at: date(9, 12))
         try m2.restore(try BackupFile.decode(data))
-        #expect(m2.records().count == 4 && m2.builtNights == 4 && m2.coins == 400 + 50 + 50)   // + 2 achievements
+        #expect(m2.records().count == 4 && m2.builtNights == 4 && m2.coins == 400 + 4 * 30 + 50 + 50)   // + no-pause bonuses + 2 achievements
         #expect(m2.onboardingDone && m2.settings.alarmSound == .ode)
         #expect(m2.townSnapshot?.buildings.map(\.buildingId) == m1.townSnapshot?.buildings.map(\.buildingId))
         #expect(m2.records().first?.log.has(.confirmedByCode) == true)
@@ -89,7 +89,7 @@ struct BackupStatsTests {
         for d in 1...5 { night(m, clock, day: d) }                        // 5th night → level 2
         #expect(m.levelUp == nil)                                         // acknowledged
         let s = m.stats
-        #expect(s.builtNights == 5 && s.coins == 500 && s.maxLevel == 2 && s.currentStreak == 5)
+        #expect(s.builtNights == 5 && s.coins == 500 + 5 * 30 && s.maxLevel == 2 && s.currentStreak == 5)
         #expect(s.averageStart == TimeOfDay(22, 25) && s.averageWake == TimeOfDay(6, 31))   // started 22:25, confirmed 6:31
         render(StatsView(), m)
         render(CalendarGrid(days: s.calendar), m)
@@ -130,7 +130,7 @@ struct BackupStatsTests {
         let k2 = NightKey("2026-10-02")!, k3 = NightKey("2026-10-03")!, k9 = NightKey("2026-10-09")!
         #expect(m.nightRecord(for: k2) != nil && m.nightRecord(for: k9) == nil)
         #expect(m.napRecord(before: k3)?.isNap == true && m.napRecord(before: k2) == nil)
-        #expect(m.townBuilding(for: k2)?.state == .complete && m.coinsEarned(for: k2) == 100)
+        #expect(m.townBuilding(for: k2)?.state == .complete && m.coinsEarned(for: k2) == 130)
         let r = NightReport(log: m.nightRecord(for: k2)!.log)
         #expect(r.setupTrips.count == 1 && r.screenChecks.count == 1 && r.confirmMethod == .code)
         for k in [k2, k3, k9] { render(NightDetail(key: k), m) }

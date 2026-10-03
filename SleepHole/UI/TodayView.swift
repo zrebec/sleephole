@@ -4,6 +4,8 @@ import SwiftUI
 /// "Dnes" – driven by `AppModel.phase` (plan §9).
 struct TodayView: View {
     @Environment(AppModel.self) private var model
+    /// The "Good night" splash after "Go to sleep" / "Nap" (true = nap).
+    @State private var splash: Bool?
 
     var body: some View {
         NavigationStack {
@@ -15,7 +17,22 @@ struct TodayView: View {
                 case .result: ResultView()
                 }
             }
-            .animation(.default, value: model.phase)
+            .animation(.easeInOut(duration: 0.35 * Motion.pace), value: model.phase)
+            // full screen: a background on a Group is sized to each child's content (owner bug 2026-10-02: the nap
+            // result showed a small 16:9 patch of sky with black bars) – the night screen covers it with its NightSky
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background { LivingSky() }
+            .overlay {
+                if let nap = splash {
+                    GoodNightSplash(nap: nap) { withAnimation { splash = nil } }
+                }
+            }
+            .onChange(of: model.phase) { old, new in
+                // only a fresh start – not a night resumed at launch
+                guard new == .building, old == .canStart || old == .idle, let rec = model.active,
+                      let started = rec.startedAt, Date().timeIntervalSince(started) < 5 else { return }
+                splash = rec.isNap
+            }
         }
     }
 }
@@ -60,27 +77,51 @@ struct HomeView: View {
             let canSleep = model.phase == .canStart
             let napReason = model.napBlockReason(at: now)
             ScrollView {
-                VStack(spacing: 18) {
-                    if model.showsMonthlySchedulePrompt { MonthlyScheduleCard() }
-                    StatusBadges()
-                    Text(L("Bedtime \(Fmt.time(w.bedtime)) · wake-up \(Fmt.time(w.wake))"))
-                        .font(.title3.bold())
+                VStack(spacing: 16) {
+                    if let expiry = AppExpiry.date, AppExpiry.isSoon(at: now) { ExpiryCard(expiry: expiry, now: now) }
+                    if model.showsMonthlySchedulePrompt { MonthlyScheduleCard().appearIn(delay: 0) }
+                    StatusBadges().appearIn(delay: 0.05)
+                    TownIslandView(crane: canSleep)
+                        .frame(height: 210)
+                        .overlay(alignment: .bottomTrailing) {
+                            SleepingBuddy().frame(width: 140, height: 120).offset(x: 10, y: 34)
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            model.fx("fx_pop", volume: 0.6)
+                            model.showTown()
+                        }
+                        .appearIn(delay: 0.1)
 
-                    actionButton(L("🌙 Go to sleep"), enabled: canSleep, prominent: true) {
-                        if model.needsFirstNightBriefing { briefing = true } else { model.startNight() }
+                    VStack(spacing: 12) {
+                        Text(L("Bedtime \(Fmt.time(w.bedtime)) · wake-up \(Fmt.time(w.wake))"))
+                            .font(.title3.bold())
+                        actionButton(L("🌙 Go to sleep"), enabled: canSleep, prominent: true) {
+                            if model.needsFirstNightBriefing { briefing = true } else { model.startNight() }
+                        }
+                        Text(sleepCaption(canSleep: canSleep, now: now, w: w))
+                            .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
                     }
-                    Text(sleepCaption(canSleep: canSleep, now: now, w: w))
-                        .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                    .padding()
+                    .glassCard(cornerRadius: 28)
+                    .appearIn(delay: 0.15)
 
-                    actionButton(L("😴 Nap (\(model.settings.nap.minutes) min)"), enabled: napReason == nil,
-                                 prominent: false) { model.startNap() }
-                    Text(napReason ?? L("You can nap until \(Fmt.time(model.settings.nap.windowEnd)). An alarm rings at the end; a complete nap earns +\(NapPlan.reward(.complete)) 🪙."))
-                        .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                    VStack(spacing: 12) {
+                        actionButton(L("😴 Nap (\(model.settings.nap.minutes) min)"), enabled: napReason == nil,
+                                     prominent: false) { model.startNap() }
+                        Text(napReason ?? L("You can nap until \(Fmt.time(model.settings.nap.windowEnd)). An alarm rings at the end; a complete nap earns +\(NapPlan.reward(.complete)) 🪙."))
+                            .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                    }
+                    .padding()
+                    .glassCard(cornerRadius: 28)
+                    .appearIn(delay: 0.2)
+
+                    JokerCard().appearIn(delay: 0.25)
 
                     if model.debugWindow != nil {
                         Button(L("Cancel quick night"), role: .cancel) { model.cancelFastNight() }.font(.footnote)
                     }
-                    LevelInfo()
+                    LevelInfo().appearIn(delay: 0.3)
                 }
                 .padding()
             }
@@ -108,7 +149,7 @@ struct HomeView: View {
         }
         .controlSize(.large)
         .disabled(!enabled)
-        if prominent { b.buttonStyle(.borderedProminent) } else { b.buttonStyle(.bordered) }
+        b.glassButton(prominent: prominent).tint(prominent ? .indigo : .teal)
     }
 }
 
@@ -132,7 +173,27 @@ struct MonthlyScheduleCard: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.indigo.opacity(0.12), in: RoundedRectangle(cornerRadius: 16))
+        .glassCard(tint: .indigo)
+    }
+}
+
+/// Free signing: the app stops launching when its profile runs out (audit 2026-10-03, B2). Shown 48 h ahead.
+struct ExpiryCard: View {
+    let expiry: Date
+    let now: Date
+
+    var body: some View {
+        let hours = max(0, Int(expiry.timeIntervalSince(now) / 3600))
+        VStack(alignment: .leading, spacing: 6) {
+            Label(hours >= 1 ? L("SleepHole stops working in \(hours) h") : L("SleepHole stops working within the hour"),
+                  systemImage: "exclamationmark.triangle.fill")
+                .font(.headline)
+            Text(L("The free signature ends on \(Fmt.dayMonth(NightKey(date: expiry, calendar: .current))) at \(Fmt.time(expiry)). Connect your iPhone to the Mac and run SleepHole from Xcode – your town, nights and coins stay."))
+                .font(.subheadline)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassCard(tint: .orange)
     }
 }
 
@@ -155,6 +216,13 @@ struct NightView: View {
     @Environment(AppModel.self) private var model
     @State private var confirmAbandon = false
     @State private var soundSheet = false
+    @State private var confirmPause = false
+
+    /// "9:41" left of a pause.
+    static func countdown(_ seconds: TimeInterval) -> String {
+        let s = max(0, Int(seconds.rounded(.up)))
+        return String(format: "%d:%02d", s / 60, s % 60)
+    }
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { ctx in
@@ -183,7 +251,8 @@ struct NightView: View {
                             Text(L("Lock your phone and have a nice rest 🧸")).font(.callout).foregroundStyle(.secondary)
                         }
                     } else {
-                        ConstructionSite(buildingId: rec.buildingId, progress: progress)
+                        let pauseEnds = model.pauseEnds(at: now)
+                        ConstructionSite(buildingId: rec.buildingId, progress: progress, resting: pauseEnds != nil)
                             .scaleEffect(compact ? 0.6 : 1, anchor: .top)
                             .frame(height: compact ? 190 : nil, alignment: .top)
                         Text(model.catalog?[rec.buildingId]?.displayName ?? "").font(.headline)
@@ -192,8 +261,15 @@ struct NightView: View {
                             Text(left >= 60 ? L("Setup until \(Fmt.time(graceEnds)) (\(Plural.minutes(Double(left))) left)")
                                             : L("Setup: \(left) s left for a podcast or story"))
                                 .font(.callout).foregroundStyle(.yellow)
+                        } else if let pauseEnds {
+                            Text(L("Pause: \(Self.countdown(pauseEnds.timeIntervalSince(now))) left – you can leave SleepHole now"))
+                                .font(.callout).foregroundStyle(.yellow).multilineTextAlignment(.center)
                         } else {
                             Text(L("Lock your phone and good night 🌙")).font(.callout).foregroundStyle(.secondary)
+                            if let use = model.awayBudgetUse(at: now), use.used >= 1 {
+                                Text(L("Out of the app tonight: \(Int(use.used)) s of \(Int(use.budget)) s"))
+                                    .font(.footnote).foregroundStyle(.secondary)
+                            }
                         }
                     }
                     Text(L("Alarm at \(Fmt.time(rec.wake))")).font(.footnote).foregroundStyle(.secondary)
@@ -209,6 +285,7 @@ struct NightView: View {
                     .sheet(isPresented: $soundSheet) {
                         SleepSoundSheet().presentationDetents([.height(330)])
                     }
+                    pauseButton(now: now)
                     if rec.window.canConfirm(at: now) {
                         ConfirmPanel()
                     }
@@ -228,6 +305,32 @@ struct NightView: View {
         }
         .background { NightSky() }
         .preferredColorScheme(.dark)
+    }
+
+    /// "🌙 Pause" (D17): shown once the setup is over; the first pause of a night is free, the next ones cost coins.
+    @ViewBuilder
+    private func pauseButton(now: Date) -> some View {
+        let block = model.pauseBlock(at: now)
+        let price = model.nextPausePrice
+        switch block {
+        case .nap?, .collapsed?, .setup?, .running?:
+            EmptyView()
+        case .notEnoughCoins(let missing)?:
+            Text(L("🌙 Next pause: \(price) 🪙 (\(missing) 🪙 short)")).font(.footnote).foregroundStyle(.secondary)
+        case nil:
+            Button { confirmPause = true } label: {
+                Label(price > 0 ? L("Pause · \(price) 🪙") : L("Pause · free"), systemImage: "moon.zzz.fill")
+            }
+            .buttonStyle(.bordered)
+            .confirmationDialog(L("Start a pause?"), isPresented: $confirmPause, titleVisibility: .visible) {
+                Button(price > 0 ? L("Start the pause for \(price) 🪙") : L("Start the pause")) { model.startPause() }
+                Button(L("Cancel"), role: .cancel) {}
+            } message: {
+                Text(price > 0
+                     ? L("For \(Plural.minutes(PausePolicy.duration)) you can leave SleepHole. This pause costs \(price) 🪙.")
+                     : L("For \(Plural.minutes(PausePolicy.duration)) you can leave SleepHole. The first pause of a night is free – a night without any pause pays +\(PausePolicy.undisturbedBonus) 🪙."))
+            }
+        }
     }
 }
 
@@ -259,6 +362,8 @@ struct ConstructionSite: View {
     @Environment(SpriteLibrary.self) private var sprites
     let buildingId: String
     let progress: Double
+    /// A pause is on (D17): the crane stands still.
+    var resting = false
     static let frames = 16
     static let frameDuration = 0.22          // one slewing cycle ≈ 3.5 s
 
@@ -277,7 +382,7 @@ struct ConstructionSite: View {
     var body: some View {
         TimelineView(.animation(minimumInterval: 0.05)) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
-            let frame = Int(t / Self.frameDuration) % Self.frames
+            let frame = resting ? 0 : Int(t / Self.frameDuration) % Self.frames
             let breath = (1 + sin(t * 2 * .pi / 4)) / 2            // 0…1, 4 s period
             VStack(spacing: 14) {
                 // Stage: the crane's mast stands behind the building's right side; the pair is centred.
@@ -297,7 +402,7 @@ struct ConstructionSite: View {
                         .offset(x: -40, y: -4)
                 }
                 .frame(width: 320, height: 260)
-                Text(L("Building in progress"))
+                Text(resting ? L("Pause – the crane is resting 🌙") : L("Building in progress"))
                     .font(.headline)
                     .foregroundStyle(.yellow)
                     .opacity(0.45 + 0.55 * breath)
@@ -415,7 +520,7 @@ struct ConfirmPanel: View {
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .glassCard()
         .onShake { model.confirm() }
     }
 }
@@ -425,6 +530,8 @@ struct ConfirmPanel: View {
 struct ResultView: View {
     @Environment(AppModel.self) private var model
     @State private var celebrationClosed = false
+    @State private var confetti = true
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         if let rec = model.shownResult, let outcome = rec.outcome {
@@ -433,6 +540,7 @@ struct ResultView: View {
             VStack(spacing: 18) {
                 if rec.isNap {
                     Text(verbatim: outcome == .complete ? "😴" : outcome == .unfinished ? "🥱" : "🧸").font(.system(size: 90))
+                        .popIn(delay: 0.1)
                     Text(outcome == .complete ? L("Nap complete!") : outcome == .unfinished ? L("Nap cut short")
                          : L("Nap didn't work out")).font(.largeTitle.bold())
                     Text(outcome == .complete ? L("Well rested 💙") : L("No worries, again tomorrow 🌱"))
@@ -440,14 +548,21 @@ struct ResultView: View {
                 } else {
                 switch outcome {
                 case .complete:
-                    BuildingImage(id: rec.buildingId)
-                    Text(L("Done! 🎉")).font(.largeTitle.bold())
-                    Text(L("You built: \(name)")).font(.title3)
+                    // the WOW (owner 2026-10-02): rays, the building lands, twinkles burst, then the coins pop
+                    ZStack {
+                        SunRays().frame(width: 340, height: 340)
+                        DustPuff(delay: Motion.landing).frame(width: 340, height: 260)
+                        BuildingImage(id: rec.buildingId).dropIn(delay: 0.15)
+                        SparkleBurst(delay: Motion.landing + 0.1).frame(width: 340, height: 300)
+                    }
+                    .frame(height: 260)
+                    Text(L("Done! 🎉")).font(.largeTitle.bold()).popIn(delay: 0.6)
+                    Text(L("You built: \(name)")).font(.title3).appearIn(delay: 0.8)
                 case .unfinished:
                     BuildingImage(id: rec.buildingId, progress: 0.6)
                     Text(L("Unfinished 🚧")).font(.largeTitle.bold())
                     Text(L("\(name) is waiting – your next good night will finish it.")).multilineTextAlignment(.center)
-                case .ruins, .missed:
+                case .ruins, .missed, .excused:
                     BuildingImage(id: (model.catalog?[rec.buildingId]?.footprint.first ?? 1) == 2 ? "o-ruin-2" : "o-ruin-1")
                     Text(L("Not this time")).font(.largeTitle.bold())
                     Text(L("That's part of the town too – new chance tomorrow 🌱")).multilineTextAlignment(.center)
@@ -456,8 +571,13 @@ struct ResultView: View {
                 if !rec.isDebug, model.lastReward > 0 {
                     VStack(spacing: 2) {
                         Text(verbatim: "+\(model.lastReward) 🪙").font(.title.bold()).foregroundStyle(.yellow)
+                            .popIn(delay: 0.5)
                         if model.lastStreakBonus > 0 {
                             Text(L("including a +\(model.lastStreakBonus) bonus for \(Economy.streakBonusEvery) nights in a row 🔥"))
+                                .font(.footnote).foregroundStyle(.secondary)
+                        }
+                        if model.lastUndisturbedBonus > 0 {
+                            Text(L("including +\(model.lastUndisturbedBonus) for a night without a pause 🌙"))
                                 .font(.footnote).foregroundStyle(.secondary)
                         }
                     }
@@ -470,12 +590,13 @@ struct ResultView: View {
                                         previous: model.journalWeek(monday: week.monday.adding(days: -7, calendar: .current)))
                     }
                     .padding(12)
-                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
+                    .glassCard()
                 }
                 if outcome == .complete, !rec.isDebug, !rec.isNap { StatusBadges() }
                 if let level = model.levelUp {
                     Label(L("Level \(level) unlocked!"), systemImage: "star.fill")
                         .font(.headline).foregroundStyle(.yellow)
+                        .symbolEffect(.bounce, options: .repeat(3))
                 }
                 if rec.isDebug { Text(L("(quick test night – doesn't count for the town)")).font(.caption).foregroundStyle(.secondary) }
                 Button(L("Continue")) { model.acknowledgeResult() }
@@ -485,6 +606,16 @@ struct ResultView: View {
             .padding()
             }
             .navigationTitle(rec.isNap ? L("Nap") : L("Night result"))
+            .background {
+                // a few seconds of confetti for a finished building (the level-up card has its own)
+                if outcome == .complete, !rec.isNap, model.levelUp == nil, confetti, !reduceMotion {
+                    ConfettiView().ignoresSafeArea().allowsHitTesting(false).transition(.opacity)
+                        .task {
+                            try? await Task.sleep(for: .seconds(5))           // owner 2026-10-02: 5 s
+                            withAnimation(.easeOut(duration: 1.5)) { confetti = false }
+                        }
+                }
+            }
             .overlay {
                 if let level = model.levelUp, !celebrationClosed {
                     ZStack {

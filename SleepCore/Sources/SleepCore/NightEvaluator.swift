@@ -16,12 +16,16 @@ public struct SleepRules: Codable, Equatable, Sendable {
     public var noticeDelay: TimeInterval = 3
     /// The alarm rings at most this long.
     public var alarmDuration: TimeInterval = 2 * 60
+    /// All trips out of the app after the setup (outside pauses and calls) share this budget of seconds per
+    /// night (2026-10-03: several trips of 6–7 s within a minute used to pass). A single trip is still
+    /// limited to `noticeDelay + accidentalTolerance`. nil = no budget (nights from before 2026-10-03).
+    public var awayBudget: TimeInterval? = 30
     public init() {}
 }
 
 public enum NightEvaluator {
     /// Intervals the owner spent OUTSIDE the app with the phone unlocked, clipped to [start, wake],
-    /// minus phone calls (system-forced, excused). Plan §5.3.
+    /// minus phone calls (system-forced, excused) and pauses (D17). Plan §5.3.
     public static func awayIntervals(_ log: NightLog) -> [(Date, Date)] {
         guard let start = log.startedAt else { return [] }
         let end = log.window.wake
@@ -49,7 +53,8 @@ public enum NightEvaluator {
         return away
             .map { (max($0.0, start), min($0.1, end)) }
             .filter { $0.0 < $0.1 }
-            .flatMap { subtract(calls, from: $0) }
+            .flatMap { subtract(calls + log.pauseIntervals, from: $0) }
+            .sorted { $0.0 < $1.0 }
     }
 
     public static func awaySeconds(_ log: NightLog) -> TimeInterval {
@@ -61,12 +66,37 @@ public enum NightEvaluator {
     public static func collapsedAt(_ log: NightLog, rules: SleepRules = SleepRules()) -> Date? {
         guard let start = log.startedAt else { return nil }
         let graceEnd = log.window.setupEnds(start: start, rules: rules)
+        var used: TimeInterval = 0                       // seconds away after the setup so far
         for (a, b) in awayIntervals(log) {
             let from = max(a, graceEnd)
-            let allowed = rules.accidentalTolerance + rules.noticeDelay
+            guard b > from else { continue }
+            let allowed = allowance(rules, used: used)
             if b.timeIntervalSince(from) > allowed { return from + allowed }
+            used += b.timeIntervalSince(from)
         }
         return nil
+    }
+
+    /// How long one more trip may last: the per-trip tolerance, cut by what is left of the night's budget.
+    static func allowance(_ rules: SleepRules, used: TimeInterval) -> TimeInterval {
+        let perTrip = rules.accidentalTolerance + rules.noticeDelay
+        return rules.awayBudget.map { min(perTrip, max(0, $0 - used)) } ?? perTrip
+    }
+
+    /// Seconds spent out of the app after the setup, before `t` (outside pauses and calls) – what the night's
+    /// budget is charged with.
+    public static func awayAfterSetup(_ log: NightLog, rules: SleepRules = SleepRules(), until t: Date) -> TimeInterval {
+        guard let start = log.startedAt else { return 0 }
+        let graceEnd = log.window.setupEnds(start: start, rules: rules)
+        return awayIntervals(log).reduce(0) { sum, i in
+            let (from, to) = (max(i.0, graceEnd), min(i.1, t))
+            return sum + max(0, to.timeIntervalSince(from))
+        }
+    }
+
+    /// How long a trip that starts at `t` may last before the building collapses (for the "Come back" warning).
+    public static func allowance(_ log: NightLog, rules: SleepRules = SleepRules(), at t: Date) -> TimeInterval {
+        allowance(rules, used: awayAfterSetup(log, rules: rules, until: t))
     }
 
     /// Outcome (owner rules of 2026-09-29):
@@ -95,7 +125,8 @@ public enum NightEvaluator {
     public static func result(for log: NightLog?, key: NightKey, rules: SleepRules = SleepRules()) -> NightResult {
         NightResult(key: key, outcome: evaluate(log, rules: rules), buildingId: log?.buildingId,
                     awaySeconds: log.map(awaySeconds) ?? 0,
-                    startedAt: log?.startedAt, confirmedAt: log?.confirmedAt)
+                    startedAt: log?.startedAt, confirmedAt: log?.confirmedAt,
+                    pauses: rules.awayBudget == nil ? nil : log?.pauseStarts.count, bedtime: log?.window.bedtime)
     }
 }
 

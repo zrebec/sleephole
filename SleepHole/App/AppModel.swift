@@ -62,6 +62,11 @@ final class AppModel {
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
     ///   -openTab town                 start on the Mesto tab
     ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
+    ///   -theme system|light|dark      set the appearance (Settings → Theme)
+    ///   -screenshot                   no permission alert, no first-run guide (use with a pulled store, tools/sim_shot.sh)
+    ///   -thenTab 1|island|abandon|pause   4 s after launch: select a tab / tap the Today island / cancel the
+    ///                                 running night and close its result / start a pause once the setup is over
+    ///   -expiresIn HOURS              pretend the provisioning profile runs out then (AppExpiry)
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
                                      args: [String] = ProcessInfo.processInfo.arguments) {
         func value(_ flag: String) -> String? {
@@ -78,6 +83,7 @@ final class AppModel {
         if let t = time(value("-bedtime")) { settings.schedule.bedtime = t }
         if let t = time(value("-wake")) { settings.schedule.wake = t }
         if let a = value("-ambience") { settings.ambience = AudioKeeper.Ambience(rawValue: a) ?? .brownNoise }
+        if let t = value("-theme").flatMap(AppTheme.init(rawValue:)) { settings.theme = t }
         #if targetEnvironment(simulator)
         if let n = value("-seedNights").flatMap(Int.init), let catalog = SpriteLibrary.loadFromBundle().catalog {
             try? context.delete(model: NightRecord.self)
@@ -154,6 +160,48 @@ final class AppModel {
         records().filter { !$0.isDebug && !$0.isNap && $0.isFinalized }
     }
 
+    /// The real results as every rule sees them: nights protected by a joker are `.excused` (owner 2026-10-02).
+    func coreResults() -> [NightResult] { jokerState.results }
+
+    /// Jokers in effect (switched on + automatic bronze) and the protected results.
+    var jokerState: (results: [NightResult], uses: [JokerUse]) {
+        Jokers.apply(results: realResults().compactMap(\.result), manual: jokerRecords().compactMap(\.use),
+                     lastNight: window.key.adding(days: -1, calendar: calendar), calendar: calendar,
+                     breaks: streakBreaks)
+    }
+
+    func jokerRecords() -> [JokerRecord] {
+        (try? context.fetch(FetchDescriptor<JokerRecord>(sortBy: [SortDescriptor(\.at)]))) ?? []
+    }
+
+    /// The night a joker switched on now would start with (last night if it went wrong, else tonight).
+    var jokerFirstNight: NightKey {
+        let last = window.key.adding(days: -1, calendar: calendar)
+        return Jokers.firstNight(tonight: window.key, lastNightResult: coreResults().last { $0.key == last },
+                                 calendar: calendar)
+    }
+
+    func jokerBlock(_ tier: JokerTier) -> Jokers.Block? {
+        Jokers.block(tier, firstNight: jokerFirstNight, uses: jokerState.uses, coins: coins)
+    }
+
+    /// The joker protecting tonight or a night around now, if any (shown on Today).
+    var activeJoker: JokerUse? {
+        let tonight = window.key
+        return jokerState.uses.last {
+            $0.covers(tonight, calendar: calendar) || $0.covers(tonight.adding(days: -1, calendar: calendar), calendar: calendar)
+        }
+    }
+
+    func useJoker(_ tier: JokerTier) {
+        guard jokerBlock(tier) == nil else { return }
+        if tier.price > 0 { spend(tier.price, reason: "joker-\(tier.rawValue)") }
+        context.insert(JokerRecord(at: clock.now, tier: tier, firstNight: jokerFirstNight))
+        save()
+        rebuildTown()
+        refresh()
+    }
+
     /// Naps for the stats: how many complete ones and the coins they paid.
     var napSummary: (count: Int, coins: Int) {
         let outcomes = napResults().compactMap(\.outcome)
@@ -184,21 +232,21 @@ final class AppModel {
     }
 
     func coinsEarned(for key: NightKey) -> Int? {
-        Economy.ledger(realResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks)
+        Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
             .last { $0.key == key }?.coins
     }
 
     /// Everything for the Štatistiky tab.
     var stats: StatsSummary {
-        Stats.summary(realResults().compactMap(\.result), today: NightKey(date: clock.now, calendar: calendar),
-                      calendar: calendar, breaks: streakBreaks)
+        Stats.summary(coreResults(), today: NightKey(date: clock.now, calendar: calendar),
+                      calendar: calendar, breaks: streakBreaks, catalog: catalog)
     }
 
     /// Coin balance 🪙: earned (replayed from the real nights, naps and achievements) − spent (`CoinSpend`).
     var coins: Int { coinsEarned - coinsSpent }
 
     var coinsEarned: Int {
-        Economy.earned(realResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks)
+        Economy.earned(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
             + napResults().compactMap(\.outcome).reduce(0) { $0 + NapPlan.reward($1) }
             + Achievements.coins(achievements)
     }
@@ -223,7 +271,7 @@ final class AppModel {
 
     /// Unlocked achievements, oldest first (replayed like the coins – old nights count too).
     var achievements: [Achievements.Unlocked] {
-        Achievements.unlocked(results: realResults().compactMap(\.result), naps: napResults().compactMap(\.result),
+        Achievements.unlocked(results: coreResults(), naps: napResults().compactMap(\.result),
                               repairs: townSnapshot?.repairs ?? [], catalog: catalog, calendar: calendar,
                               breaks: streakBreaks)
     }
@@ -234,13 +282,14 @@ final class AppModel {
 
     /// Weeks (Monday–Sunday evenings) with nights or naps, newest first.
     var journalWeeks: [WeekSummary] {
-        WeeklyJournal.weeks(results: realResults().compactMap(\.result), naps: napResults().compactMap(\.result),
-                            calendar: calendar, breaks: streakBreaks)
+        WeeklyJournal.weeks(results: coreResults(), naps: napResults().compactMap(\.result),
+                            calendar: calendar, breaks: streakBreaks, catalog: catalog)
     }
 
     func journalWeek(monday: NightKey) -> WeekSummary {
-        WeeklyJournal.week(monday: monday, results: realResults().compactMap(\.result),
-                           naps: napResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks)
+        WeeklyJournal.week(monday: monday, results: coreResults(),
+                           naps: napResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks,
+                           catalog: catalog)
     }
 
     /// Monday of the week we are in now.
@@ -251,10 +300,12 @@ final class AppModel {
     /// What the night in `shownResult` paid (reward + streak bonus).
     private(set) var lastReward = 0
     private(set) var lastStreakBonus = 0
+    /// +30 when the night in `shownResult` was complete without a pause.
+    private(set) var lastUndisturbedBonus = 0
 
     /// Current 🔥 streak: complete nights in a row up to the most recent night that could be finished.
     var streak: Int {
-        let results = realResults().compactMap(\.result)
+        let results = coreResults()
         let lastPossible = window.key.adding(days: -1, calendar: calendar)
         let last = max(results.map(\.key).max() ?? lastPossible, lastPossible)
         return Progression.currentStreak(results, lastNight: last, calendar: calendar, breaks: streakBreaks)
@@ -265,7 +316,7 @@ final class AppModel {
 
     private func buildSnapshot() -> TownSnapshot {
         guard let catalog else { return TownSnapshot() }
-        return TownBuilder.build(results: realResults().compactMap(\.result), catalog: catalog)
+        return TownBuilder.build(results: coreResults(), catalog: catalog)
     }
 
     // MARK: - town (observed by the Mesto tab)
@@ -319,6 +370,8 @@ final class AppModel {
             Notifications.scheduleNight(setupEnds: window.setupEnds(start: now, rules: NapPlan.rules), wake: window.wake,
                                         alarmFile: settings.alarmSound.fileName)
         }
+        fx("fx_sleep", volume: 0.6)
+        say(.napStart, after: Motion.t(1.4))
         buzz(.start)
         refresh(now: now)
     }
@@ -359,6 +412,9 @@ final class AppModel {
     private(set) var schedulePromptAnswered: String?
     /// Bumped by "Adjust" on the monthly card → the root view opens Settings.
     private(set) var settingsRequest = 0
+    /// Bumped when the Today island is tapped → RootView switches to the Town tab.
+    private(set) var townRequest = 0
+    func showTown() { townRequest += 1 }
 
     func scheduleChangeCost(at t: Date? = nil) -> SchedulePolicy.Change {
         SchedulePolicy.change(at: t ?? clock.now, calibrationStart: scheduleCalibrationStart, calendar: calendar)
@@ -498,7 +554,8 @@ final class AppModel {
                           spends: spends().map { .init(at: $0.at, amount: $0.amount, reason: $0.reason) },
                           scheduleChanges: scheduleChanges().map {
                               .init(at: $0.at, from: $0.from, to: $0.to, free: $0.free, breakKey: $0.breakKey)
-                          })
+                          },
+                          jokers: jokerRecords().map { .init(at: $0.at, tier: $0.tierRaw, firstNight: $0.firstNight) })
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
@@ -521,6 +578,12 @@ final class AppModel {
         try context.delete(model: ScheduleChange.self)
         for c in b.scheduleChanges ?? [] {
             context.insert(ScheduleChange(at: c.at, from: c.from, to: c.to, free: c.free, breakKey: c.breakKey))
+        }
+        try context.delete(model: JokerRecord.self)
+        for j in b.jokers ?? [] {
+            guard let tier = JokerTier(rawValue: j.tier), let key = NightKey(j.firstNight) else { continue }
+            let r = JokerRecord(at: j.at, tier: tier, firstNight: key)
+            context.insert(r)
         }
         save()
         settings = b.settings
@@ -565,7 +628,7 @@ final class AppModel {
             if log.confirmedAt != nil || now > log.window.confirmLateUntil {
                 finalize(rec)
             } else if now >= log.window.wake {
-                if !log.has(.alarmFired) { ringAlarm() }
+                if !log.has(.alarmFired) { ringAlarm() } else { startAlarmSound() }
                 phase = .alarm
             } else {
                 phase = .building
@@ -607,8 +670,9 @@ final class AppModel {
         if servicesEnabled {
             Notifications.scheduleNight(setupEnds: rec.window.setupEnds(start: now, rules: rec.rules), wake: rec.wake,
                                         alarmFile: settings.alarmSound.fileName)
-            SoundFX.play("night_start", volume: 0.5)
         }
+        fx("fx_sleep", volume: 0.6)
+        say(.goodNight, after: Motion.t(1.4))
         buzz(.start)
         refresh(now: now)
     }
@@ -632,6 +696,7 @@ final class AppModel {
 
     func acknowledgeResult() {
         shownResult = nil
+        lastUndisturbedBonus = 0
         levelUp = nil
         newAchievements = []
         finishedWeek = nil
@@ -752,18 +817,30 @@ final class AppModel {
     }
 
     private func ringAlarm() {
-        guard let rec = active else { return }
+        guard active != nil else { return }
         append(.alarmFired)
         guard servicesEnabled else { return }
-        Notifications.cancelBackupAlarm()               // the app is alive → the backup is not needed
         Notifications.alarmScreen()                     // light up the lock screen
+        startAlarmSound()
+    }
+
+    /// Starts the in-app alarm, or tries again (called every second while the alarm should ring). The backup
+    /// notifications are cancelled only once the sound really plays: a phone call or another app's alarm at wake
+    /// time can keep our audio from starting, and then they are the alarm (audit 2026-10-03, B1).
+    private func startAlarmSound() {
+        guard servicesEnabled, let rec = active, !rec.log.has(.alarmStopped) else { return }
+        if audio.isAlarmRinging {
+            if audio.isEngineRunning { return }
+            audio.stopAlarm()                           // the engine was stopped under the alarm → ring again
+        }
         // after a kill the alarm may be late: ring only for what is left of the 2 minutes
         let left = rec.rules.alarmDuration - clock.now.timeIntervalSince(rec.wake)
         guard left > 0 else { return }
-        audio.ringAlarm(file: settings.alarmSound.fileName, ramp: settings.alarmSound.rampSeconds,
-                        maxDuration: left) { [weak self] in
+        let ringing = audio.ringAlarm(file: settings.alarmSound.fileName, ramp: settings.alarmSound.rampSeconds,
+                                      maxDuration: left) { [weak self] in
             self?.append(.alarmStopped)
         }
+        if ringing { Notifications.cancelBackupAlarm() }   // the app is alive and audible → no backup needed
     }
 
     /// Appends a night event (from the lifecycle monitor; internal for tests).
@@ -771,6 +848,42 @@ final class AppModel {
 
     /// How many "Vráť sa" warnings were sent this app session (diagnostics + tests).
     private(set) var nudgesSent = 0
+    /// The seconds the last warning promised (10, or less when the night's budget is nearly used up).
+    private(set) var lastNudgeSeconds = 0
+
+    // MARK: - night pause (owner 2026-10-02, D17)
+
+    /// The end of the pause that is on now, if any.
+    func pauseEnds(at t: Date? = nil) -> Date? {
+        active.flatMap { PausePolicy.activeUntil($0.log, at: t ?? clock.now) }
+    }
+
+    /// Price of the next pause tonight: the first is free, then 50, 100, 150 … (test nights never pay).
+    var nextPausePrice: Int {
+        guard let rec = active, !rec.isDebug else { return 0 }
+        return PausePolicy.price(number: (rec.pauses ?? 0) + 1)
+    }
+
+    /// Why a pause can't be started now (nil = it can).
+    func pauseBlock(at t: Date? = nil) -> PausePolicy.Block? {
+        guard let rec = active else { return .collapsed }
+        return PausePolicy.block(rec.log, rules: rec.rules, at: t ?? clock.now, coins: rec.isDebug ? .max : coins,
+                                 isNap: rec.isNap)
+    }
+
+    /// Seconds spent out of the app tonight after the setup (outside pauses and calls) and the night's budget.
+    func awayBudgetUse(at t: Date? = nil) -> (used: TimeInterval, budget: TimeInterval)? {
+        guard let rec = active, let budget = rec.rules.awayBudget else { return nil }
+        return (NightEvaluator.awayAfterSetup(rec.log, rules: rec.rules, until: t ?? clock.now), budget)
+    }
+
+    func startPause() {
+        guard let rec = active, pauseBlock() == nil else { return }
+        let price = nextPausePrice
+        if price > 0 { spend(price, reason: "pause-\(rec.keyString)") }
+        append(.pauseStarted)
+        fx("fx_pop", volume: 0.5)
+    }
 
     func append(_ kind: NightEventKind, at date: Date) {
         guard let rec = active else { return }
@@ -783,13 +896,23 @@ final class AppModel {
         switch kind {
         case .leftApp:
             // no vibration here: the app is in the background now and iOS only lets the notification vibrate
-            if let graceEnds, date >= graceEnds, !alreadyCollapsed {
+            if let pauseEnds = PausePolicy.activeUntil(rec.log, at: date) {
+                // inside a pause (D17) leaving is free – only remind when it is about to end
+                if servicesEnabled { Notifications.pauseEnding(at: pauseEnds) }
+            } else if let graceEnds, date >= graceEnds, !alreadyCollapsed {
+                // what is left for this trip: 13 s, or less when the night's budget is nearly used up
+                let left = NightEvaluator.allowance(rec.log, rules: rec.rules, at: date) - rec.rules.noticeDelay
+                guard left >= 1 else { break }                // the warning would come too late
                 nudgesSent += 1
+                lastNudgeSeconds = Int(left)
                 waitingForReturn = true
-                if servicesEnabled { Notifications.nudge(tolerance: rec.rules.accidentalTolerance) }
+                if servicesEnabled { Notifications.nudge(tolerance: left) }
             }
         case .returned, .locked:
-            if servicesEnabled { Notifications.cancelNudge() }
+            if servicesEnabled {
+                Notifications.cancelNudge()
+                Notifications.cancelPauseNotices()
+            }
             if kind == .returned, waitingForReturn, collapsedAt == nil { buzz(.relief) }
             waitingForReturn = false
         default:
@@ -809,6 +932,26 @@ final class AppModel {
     private func buzz(_ h: Haptic) {
         haptics.append(h)
         if servicesEnabled { Haptics.play(h) }
+    }
+
+    /// Sound effect (Settings → Sound effects); `after` seconds late so effects can follow an animation.
+    func fx(_ name: String, volume: Float = 0.8, after: Double = 0) {
+        guard servicesEnabled, settings.soundEffects else { return }
+        guard after > 0 else { return SoundFX.play(name, volume: volume) }
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(after))
+            SoundFX.play(name, volume: volume)
+        }
+    }
+
+    /// The friendly voice (Settings → Voice).
+    func say(_ line: Voice.Line, after: Double = 0) {
+        guard servicesEnabled, settings.voice else { return }
+        let text = line.text
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(after))
+            Voice.say(text)
+        }
     }
 
 
@@ -836,17 +979,26 @@ final class AppModel {
                 .map(journalWeek(monday:)).flatMap { $0.nights > 0 ? $0 : nil }
         }
         if !rec.isDebug { writeAutoBackup() }
-        lastStreakBonus = rec.isDebug || rec.isNap ? 0
-            : Economy.ledger(realResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks)
-                .last?.streakBonus ?? 0
+        let entry = rec.isDebug || rec.isNap ? nil
+            : Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
+                .last { $0.key.description == rec.keyString }
+        lastStreakBonus = entry?.streakBonus ?? 0
+        lastUndisturbedBonus = entry?.undisturbedBonus ?? 0
         phase = .result
         if servicesEnabled {
             switch result.outcome {
-            case .complete: SoundFX.play("building_done")
-            case .unfinished: SoundFX.play("building_unfinished")
-            default: SoundFX.play("building_ruin")
+            case .complete where rec.isNap:
+                fx("fx_sparkle")
+                say(.napDone, after: Motion.t(1.2))
+            case .complete:                                  // the WOW (phase UI-2): fanfare, coins, voice
+                fx("fx_wow")
+                fx("fx_coins", after: Motion.t(1.1))
+                say(.buildingDone, after: Motion.t(2.4))
+            case .unfinished: fx("building_unfinished")
+            default: fx("building_ruin")
             }
-            if levelUp != nil { SoundFX.play("level_up") }
+            if levelUp != nil { fx("level_up", after: Motion.t(3.2)) }
+            if !newAchievements.isEmpty { fx("fx_sparkle", after: Motion.t(1.8)) }
         }
     }
 

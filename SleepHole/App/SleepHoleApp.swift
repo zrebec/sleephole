@@ -9,7 +9,7 @@ struct SleepHoleApp: App {
     @State private var model: AppModel
 
     init() {
-        let container = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self)
+        let container = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self)
         let sprites = SpriteLibrary.loadFromBundle()
         self.container = container
         _sprites = State(initialValue: sprites)
@@ -33,11 +33,13 @@ struct SleepHoleApp: App {
                 .task {
                     // screenshot mode (-startTestNight) must not be covered by the permission alert
                     let args = ProcessInfo.processInfo.arguments
-                    guard !args.contains("-startTestNight"), !args.contains("-seedNights") else { return }
+                    guard !args.contains("-startTestNight"), !args.contains("-seedNights"),
+                          !args.contains("-screenshot") else { return }
                     // before the guide is done, the guide asks for the permission at the right moment
                     guard model.onboardingDone else { return }
                     if await Notifications.requestAuthorization() {
                         Notifications.scheduleReminders(model.settings.schedule)
+                        Notifications.scheduleExpiry(AppExpiry.date)
                     }
                 }
                 .onChange(of: scenePhase) { _, phase in if phase == .active { model.refresh() } }

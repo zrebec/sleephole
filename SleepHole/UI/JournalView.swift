@@ -45,6 +45,7 @@ struct WeekJournalView: View {
                 }
                 Text(L("Best streak: \(week.bestStreak) 🔥")).font(.subheadline)
                 if week.completeNaps > 0 { Text(L("Complete naps: \(week.completeNaps) 😴")).font(.subheadline) }
+                if week.pauses > 0 { Text(L("Night pauses: \(week.pauses) 🌙")).font(.subheadline) }
                 if let p = previous, p.nights > 0 {
                     Text(L("Complete nights last week: \(p.complete)")).font(.footnote).foregroundStyle(.secondary)
                 }

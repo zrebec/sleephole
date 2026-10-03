@@ -24,7 +24,7 @@ struct AppModelTests {
     }
 
     func harness(at now: Date, container: ModelContainer? = nil) -> Harness {
-        let c = container ?? (try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
+        let c = container ?? (try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
                                                    configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
         let clock = FakeClock(now)
         var s = AppSettings()
@@ -259,21 +259,22 @@ struct AppModelTests {
         let h = harness(at: date(1, 12))
         h.clock.now = date(1, 22, 25); h.model.refresh(); h.model.startNight()
         h.clock.now = date(2, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
-        // complete +100 and the achievement "First building" +50
-        #expect(h.model.coins == 150 && h.model.lastReward == 150 && h.model.newAchievements == [.firstBuilding])
+        // complete +100, no pause +30 and the achievement "First building" +50
+        #expect(h.model.coins == 180 && h.model.lastReward == 180 && h.model.newAchievements == [.firstBuilding])
+        #expect(h.model.lastUndisturbedBonus == 30)
         h.model.acknowledgeResult()
         #expect(h.model.newAchievements.isEmpty)
-        playNight(h, day: 2, confirmAfterWake: 30 * 60)                   // unfinished +50
-        #expect(h.model.coins == 200)
+        playNight(h, day: 2, confirmAfterWake: 30 * 60)                   // unfinished +50 (no bonus)
+        #expect(h.model.coins == 230)
         h.clock.now = date(3, 15)
         h.model.startTestNight(); h.model.startNight()                    // debug: nothing
         h.clock.now += 240; h.model.refresh(); h.model.confirm()
-        #expect(h.model.coins == 200 && h.model.lastReward == 0 && h.model.newAchievements.isEmpty)
+        #expect(h.model.coins == 230 && h.model.lastReward == 0 && h.model.newAchievements.isEmpty)
         h.model.acknowledgeResult()
         h.model.nextTestNightCounts = true                                // the counted test night pays
         h.model.startTestNight(); h.model.startNight()
         h.clock.now += 240; h.model.refresh(); h.model.confirm()
-        #expect(h.model.coins == 300)
+        #expect(h.model.coins == 360)                                     // +100 +30
     }
 
     @Test func seventhNightPaysTheStreakBonus() {
@@ -284,8 +285,11 @@ struct AppModelTests {
         // 100 + streak bonus 200 + achievements ("7 nights in a row", maybe a random first L2 building)
         let bonus = h.model.newAchievements.reduce(0) { $0 + $1.reward }
         #expect(h.model.newAchievements.contains(.streak7) && h.model.lastStreakBonus == 200)
-        #expect(h.model.lastReward == 300 + bonus)
-        #expect(h.model.coins == 7 * 100 + 200 + Achievements.coins(h.model.achievements))
+        // the 7th night may already build level 2 (pays 120)
+        let level = catalog[h.model.shownResult!.buildingId]!.level
+        #expect(h.model.lastReward == Economy.completeReward(level: level) + 200 + bonus + PausePolicy.undisturbedBonus)
+        let nights = h.model.coreResults().reduce(0) { $0 + Economy.reward($1.outcome, level: catalog[$1.buildingId ?? ""]?.level ?? 1) }
+        #expect(h.model.coins == nights + 7 * PausePolicy.undisturbedBonus + 200 + Achievements.coins(h.model.achievements))
     }
 
     @Test func sleepSoundDuringTheNight() {
@@ -359,5 +363,152 @@ struct AppModelTests {
         let h = harness(at: date(5, 12))
         h.model.settings.alarmSound = .alert
         #expect(AppSettings.load().alarmSound == .alert)
+    }
+
+    // MARK: jokers (owner 2026-10-02)
+
+    @Test func automaticBronzeKeepsTheStreakAfterAMissedNight() {
+        let h = harness(at: date(5, 12))
+        playNight(h, day: 5)
+        playNight(h, day: 6)
+        // the night 7→8 is missed (the app is not used), back on 8→9
+        playNight(h, day: 8)
+        h.clock.now = date(9, 12); h.model.refresh()
+        #expect(h.model.streak == 3)
+        #expect(h.model.jokerState.uses.map(\.tier) == [.bronze] && h.model.jokerState.uses[0].automatic)
+        #expect(h.model.jokerBlock(.silver) == .alreadyUsedThisMonth)
+        #expect(h.model.coreResults().contains { $0.outcome == .excused })
+        let excused = h.model.coreResults().first { $0.outcome == .excused }!.key
+        #expect(h.model.coinsEarned(for: excused) == 0)                    // the protected night pays nothing
+    }
+
+    @Test func aGoldJokerCostsCoinsAndProtectsAHoliday() {
+        let h = harness(at: date(5, 12))
+        for d in 2...6 { playNight(h, day: d) }
+        h.clock.now = date(7, 12); h.model.refresh()
+        let poor = h.model.coins
+        #expect(h.model.jokerBlock(.silver) == .notEnoughCoins(missing: 1000 - poor))
+        for d in 7...12 { playNight(h, day: d) }                            // 11 nights + a 7-night bonus
+        h.clock.now = date(13, 12); h.model.refresh()
+        let before = h.model.coins
+        #expect(before >= 1000 && before < 5000)
+        #expect(h.model.jokerBlock(.gold) == .notEnoughCoins(missing: 5000 - before))
+        #expect(h.model.jokerBlock(.silver) == nil)
+        #expect(h.model.jokerFirstNight == NightKey(date: date(14, 6, 30), calendar: cal))    // tonight
+        h.model.useJoker(.silver)
+        #expect(h.model.coins == before - 1000 && h.model.spends().last?.reason == "joker-silver")
+        #expect(h.model.activeJoker?.tier == .silver)
+        h.clock.now = date(16, 12); h.model.refresh()                     // three nights away (keys 14–16)
+        #expect(h.model.streak == 11)
+        #expect(h.model.jokerBlock(.bronze) == .alreadyUsedThisMonth)
+        // a backup keeps the joker
+        let b = h.model.makeBackup()
+        #expect(b.jokers?.count == 1)
+        let other = harness(at: date(16, 12))
+        try? other.model.restore(b)
+        #expect(other.model.streak == 11)
+    }
+
+    // MARK: night pause + budget (D17, audit B4)
+
+    @Test func aPauseLetsYouLeaveForTenMinutes() {
+        let h = harness(at: date(5, 12))
+        h.clock.now = date(5, 22, 25); h.model.refresh(); h.model.startNight()
+        #expect(h.model.pauseBlock() == .setup(until: date(5, 22, 35)))
+        h.model.startPause()                                               // ignored during the setup
+        #expect(h.model.pauseEnds() == nil)
+        h.clock.now = date(6, 2, 0)
+        #expect(h.model.pauseBlock() == nil && h.model.nextPausePrice == 0)
+        h.model.startPause()
+        #expect(h.model.pauseEnds() == date(6, 2, 10) && h.model.active?.pauses == 1)
+        #expect(h.model.pauseBlock() == .running(until: date(6, 2, 10)))
+        h.clock.now = date(6, 2, 1); h.model.append(.leftApp)
+        #expect(h.model.nudgesSent == 0)                                   // no "come back" inside a pause
+        h.clock.now = date(6, 2, 9); h.model.append(.returned)
+        #expect(h.model.collapsedAt == nil && h.model.awayBudgetUse()?.used == 0)
+        h.clock.now = date(6, 2, 30)
+        #expect(h.model.nextPausePrice == 50)                              // the second one costs
+        let coinsBefore = h.model.coins
+        #expect(h.model.pauseBlock() == .notEnoughCoins(missing: 50 - coinsBefore))
+        h.clock.now = date(6, 6, 31); h.model.refresh()
+        #expect(h.model.confirm(code: "1234"))
+        #expect(h.model.shownResult?.outcome == .complete && h.model.shownResult?.result?.pauses == 1)
+        #expect(h.model.lastUndisturbedBonus == 0 && h.model.lastReward == 100 + 50)       // no +30; +50 first building
+        #expect(NightReport(log: h.model.shownResult!.log).pauses.count == 1)
+    }
+
+    @Test func theSecondPauseCostsFiftyCoins() {
+        let h = harness(at: date(1, 12))
+        for d in 1...2 { playNight(h, day: d) }                            // 2 × 130 + achievements
+        h.clock.now = date(3, 22, 25); h.model.refresh(); h.model.startNight()
+        h.clock.now = date(4, 1, 0); h.model.startPause()
+        h.clock.now = date(4, 3, 0)
+        let before = h.model.coins
+        h.model.startPause()
+        #expect(h.model.coins == before - 50 && h.model.spends().last?.reason.hasPrefix("pause-") == true)
+        #expect(h.model.active?.pauses == 2)
+        h.clock.now = date(4, 4, 0)
+        #expect(h.model.nextPausePrice == 100)
+    }
+
+    @Test func shortTripsShareOneBudgetPerNight() {
+        let h = harness(at: date(5, 12))
+        h.clock.now = date(5, 22, 25); h.model.refresh(); h.model.startNight()
+        for i in 0..<2 {                                                   // 2 × 12 s = 24 s of 30 s
+            h.clock.now = date(6, 1, i); h.model.append(.leftApp)
+            #expect(h.model.lastNudgeSeconds == 10)
+            h.clock.now += 12; h.model.append(.returned)
+        }
+        #expect(h.model.nudgesSent == 2 && h.model.collapsedAt == nil)
+        #expect(h.model.awayBudgetUse()?.used == 24 && h.model.awayBudgetUse()?.budget == 30)
+        h.clock.now = date(6, 1, 10); h.model.append(.leftApp)             // only 6 s left → the warning says 3 s
+        #expect(h.model.nudgesSent == 3 && h.model.lastNudgeSeconds == 3)
+        h.clock.now += 8; h.model.append(.returned)
+        #expect(h.model.collapsedAt == date(6, 1, 10) + 6)
+    }
+
+    @Test func nightsFromBeforeThePauseKeepTheOldRules() {
+        let h = harness(at: date(5, 12))
+        h.clock.now = date(5, 22, 25); h.model.refresh(); h.model.startNight()
+        let rec = h.model.active!
+        rec.pauses = nil                                                   // as stored by an older build
+        #expect(rec.rules.awayBudget == nil)
+        for i in 0..<5 {                                                   // five short trips in a row
+            h.clock.now = date(6, 1, i); h.model.append(.leftApp)
+            h.clock.now += 7; h.model.append(.returned)
+        }
+        #expect(h.model.collapsedAt == nil && h.model.awayBudgetUse() == nil)
+        h.clock.now = date(6, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
+        #expect(h.model.shownResult?.outcome == .complete)
+        #expect(h.model.lastUndisturbedBonus == 0 && h.model.shownResult?.result?.pauses == nil)
+        // a backup keeps "old night" (nil) and "new night without a pause" (0) apart
+        let b = h.model.makeBackup()
+        #expect(b.nights.first?.pauses == nil)
+        let decoded = try? BackupFile.decode(try! b.encoded())
+        #expect(decoded?.nights.first?.pauses == nil)
+    }
+
+    // MARK: alarm safety + expiry (audit B1–B3)
+
+    @Test func backupAlarmIsAChainOfNotifications() {
+        #expect(Notifications.backupAlarmOffsets == [30, 60, 90, 120, 150])
+        #expect(Notifications.backupAlarmIds == ["alarm-backup", "alarm-backup-2", "alarm-backup-3", "alarm-backup-4", "alarm-backup-5"])
+    }
+
+    @Test func expiryIsReadFromTheProvisioningProfile() throws {
+        let plist = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0"><dict>
+        <key>CreationDate</key><date>2026-09-29T12:23:43Z</date>
+        <key>ExpirationDate</key><date>2026-10-06T12:23:43Z</date>
+        </dict></plist>
+        """
+        // a real profile wraps the plist in a signed binary envelope
+        let blob = Data([0x30, 0x82, 0x1F, 0x00]) + Data(plist.utf8) + Data([0xA0, 0x82, 0x0B, 0x77])
+        let expiry = try #require(AppExpiry.expirationDate(inProvision: blob))
+        #expect(expiry == ISO8601DateFormatter().date(from: "2026-10-06T12:23:43Z"))
+        #expect(AppExpiry.expirationDate(inProvision: Data("garbage".utf8)) == nil)
+        #expect(AppExpiry.date == nil && !AppExpiry.isSoon(at: Date()))      // the simulator has no profile
     }
 }

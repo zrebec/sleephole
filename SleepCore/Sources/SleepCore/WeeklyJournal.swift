@@ -18,6 +18,8 @@ public struct WeekSummary: Equatable, Sendable {
     /// Longest run of complete nights inside the week.
     public let bestStreak: Int
     public let completeNaps: Int
+    /// Night pauses (D17) used this week – shown gently, never as a reproach.
+    public var pauses = 0
 
     public var nights: Int { complete + unfinished + ruins }
     public var built: Int { complete + unfinished }
@@ -36,8 +38,8 @@ public enum WeeklyJournal {
 
     /// All weeks with at least one night or nap, newest first.
     public static func weeks(results: [NightResult], naps: [NightResult] = [], calendar: Calendar,
-                             breaks: [NightKey] = []) -> [WeekSummary] {
-        let ledger = Economy.ledger(results, calendar: calendar, breaks: breaks)
+                             breaks: [NightKey] = [], catalog: Catalog? = nil) -> [WeekSummary] {
+        let ledger = Economy.ledger(results, calendar: calendar, breaks: breaks, catalog: catalog)
         var mondays = Set(results.map { monday(of: evening(of: $0.key, calendar: calendar), calendar: calendar) })
         mondays.formUnion(naps.map { monday(of: $0.key, calendar: calendar) })
         return mondays.sorted(by: >).map { m in
@@ -47,8 +49,9 @@ public enum WeeklyJournal {
 
     /// One week (may be empty).
     public static func week(monday: NightKey, results: [NightResult], naps: [NightResult] = [],
-                            calendar: Calendar, breaks: [NightKey] = []) -> WeekSummary {
-        summary(monday: monday, results: results, ledger: Economy.ledger(results, calendar: calendar, breaks: breaks),
+                            calendar: Calendar, breaks: [NightKey] = [], catalog: Catalog? = nil) -> WeekSummary {
+        summary(monday: monday, results: results,
+                ledger: Economy.ledger(results, calendar: calendar, breaks: breaks, catalog: catalog),
                 naps: naps,
                 calendar: calendar)
     }
@@ -67,7 +70,7 @@ public enum WeeklyJournal {
             prev = r.key
             switch r.outcome {
             case .complete: run += 1; best = max(best, run)
-            case .unfinished: break
+            case .unfinished, .excused: break
             case .ruins, .missed: run = 0
             }
         }
@@ -84,7 +87,8 @@ public enum WeeklyJournal {
             averageStart: Stats.circularMean(starts).map(Stats.timeOfDay),
             averageWake: Stats.circularMean(wakes).map(Stats.timeOfDay),
             bestStreak: best,
-            completeNaps: weekNaps.filter { $0.outcome == .complete }.count)
+            completeNaps: weekNaps.filter { $0.outcome == .complete }.count,
+            pauses: nights.reduce(0) { $0 + ($1.pauses ?? 0) })
     }
 
     /// The finished week to celebrate on the result screen of the night `key`, if this is the first result

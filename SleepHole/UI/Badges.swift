@@ -21,7 +21,7 @@ struct StreakBadge: View {
                 }
             }
             .padding(.horizontal, 14).padding(.vertical, 8)
-            .background(.orange.opacity(n > 0 ? 0.18 : 0.08), in: Capsule())
+            .glassCapsule(tint: n > 0 ? .orange : nil)
         }
     }
 }
@@ -34,9 +34,11 @@ struct CoinBadge: View {
         HStack(spacing: 6) {
             Text(verbatim: "🪙").font(.system(size: 26))
             Text(verbatim: "\(model.coins)").font(.headline.monospacedDigit())
+                .contentTransition(.numericText(value: Double(model.coins)))
+                .animation(.snappy, value: model.coins)
         }
         .padding(.horizontal, 14).padding(.vertical, 8)
-        .background(.yellow.opacity(0.16), in: Capsule())
+        .glassCapsule(tint: .yellow)
         .accessibilityLabel(L("Coins: \(model.coins)"))
     }
 }

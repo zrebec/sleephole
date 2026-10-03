@@ -27,6 +27,19 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    Picker(L("Theme"), selection: $model.settings.theme) {
+                        ForEach(AppTheme.allCases) { Text($0.title).tag($0) }
+                    }
+                    .pickerStyle(.segmented)
+                    Toggle(L("Sound effects"), isOn: $model.settings.soundEffects)
+                    Toggle(L("Voice (good night, good morning)"), isOn: $model.settings.voice)
+                } header: {
+                    Text(L("Appearance & sounds"))
+                } footer: {
+                    Text(L("System follows the iPhone's light / dark setting. The night screen is always dark."))
+                }
+
+                Section {
                     HStack {
                         Text(verbatim: model.townName)
                         Spacer()
@@ -189,8 +202,22 @@ struct SettingsView: View {
                     Text(L("After every night a backup is also saved automatically: Files → On My iPhone → SleepHole → \(BackupFile.fileName)."))
                 }
 
-                Section(L("About")) {
+                Section {
                     NavigationLink(L("Credits")) { CreditsView() }
+                    if let expiry = AppExpiry.date {
+                        HStack {
+                            Text(L("The app works until"))
+                            Spacer()
+                            Text(L("\(Fmt.dayMonth(NightKey(date: expiry, calendar: .current))) at \(Fmt.time(expiry))"))
+                                .foregroundStyle(AppExpiry.isSoon(at: Date()) ? .orange : .secondary)
+                        }
+                    }
+                } header: {
+                    Text(L("About"))
+                } footer: {
+                    if AppExpiry.date != nil {
+                        Text(L("Free signing lasts 7 days. Before it ends, connect your iPhone to the Mac and run SleepHole from Xcode – your data stays. You'll get a reminder a day and 3 hours ahead."))
+                    }
                 }
 
                 Section(L("Developer")) {
@@ -203,6 +230,7 @@ struct SettingsView: View {
                     NavigationLink(L("Night journal")) { NightLogView() }
                     NavigationLink(L("Detection test (F2)")) { DetectionTestView() }
                     NavigationLink(L("Vibration test")) { VibrationTestView() }
+                    NavigationLink(L("Sound effects test")) { SoundEffectsTestView() }
                     Button(L("Show the guide and first night again")) { model.resetGuide() }
                         .disabled(nightRunning)
                 }
@@ -211,6 +239,7 @@ struct SettingsView: View {
                 if ProcessInfo.processInfo.arguments.contains("sounds") { proxy.scrollTo("sounds", anchor: .top) }
             }
             }
+            .skyBackground()
             .navigationTitle(L("Settings"))
             .renameTownAlert(isPresented: $renaming)
             .sheet(isPresented: $showGuide) { GuideView(replay: true) }
@@ -353,6 +382,55 @@ private struct GlassCircle: ViewModifier {
             content.glassEffect(.regular.interactive(), in: .circle)
         } else {
             content.background(.thinMaterial, in: Circle())
+        }
+    }
+}
+
+/// Developer: play every effect and voice line (phase UI-2), so the owner can judge them without a night.
+struct SoundEffectsTestView: View {
+    @Environment(AppModel.self) private var model
+    @State private var showSplash: Bool?
+    @State private var showWow = false
+
+    private var effects: [(file: String, title: String)] {
+        [("fx_sleep", L("Go to sleep")), ("fx_wow", L("Building finished (WOW)")), ("fx_coins", L("Coins")),
+         ("fx_sparkle", L("Sparkle")), ("fx_whoosh", L("Whoosh")), ("fx_pop", L("Pop")),
+         ("level_up", L("Level up")), ("building_unfinished", L("Unfinished")), ("building_ruin", L("Ruins"))]
+    }
+
+    var body: some View {
+        List {
+            Section(L("Effects")) {
+                ForEach(effects, id: \.file) { e in
+                    Button { SoundFX.play(e.file) } label: {
+                        Label(e.title, systemImage: "speaker.wave.2.fill")
+                    }
+                }
+            }
+            Section(L("Voice")) {
+                ForEach(Array(Voice.Line.allCases.enumerated()), id: \.offset) { _, line in
+                    Button { Voice.say(line.text) } label: { Label(line.text, systemImage: "person.wave.2.fill") }
+                }
+            }
+            Section(L("Animations")) {
+                Button(L("Good night splash")) { showSplash = false; SoundFX.play("fx_sleep", volume: 0.6) }
+                Button(L("Nap splash")) { showSplash = true; SoundFX.play("fx_sleep", volume: 0.6) }
+                Button(L("Building finished (WOW)")) {
+                    showWow = true
+                    SoundFX.play("fx_wow")
+                }
+            }
+        }
+        .navigationTitle(L("Sound effects test"))
+        .overlay { if let nap = showSplash { GoodNightSplash(nap: nap) { showSplash = nil } } }
+        .sheet(isPresented: $showWow) {
+            ZStack {
+                SunRays().frame(width: 340, height: 340)
+                DustPuff(delay: Motion.landing).frame(width: 340, height: 260)
+                BuildingImage(id: "l1-house-a-a").dropIn(delay: 0.15)
+                SparkleBurst(delay: Motion.landing + 0.1).frame(width: 340, height: 300)
+            }
+            .presentationDetents([.medium])
         }
     }
 }

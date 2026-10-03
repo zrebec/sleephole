@@ -19,7 +19,7 @@ struct ExtrasTests {
     }
 
     func store() -> ModelContainer {
-        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
+        try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
                             configurations: ModelConfiguration(isStoredInMemoryOnly: true))
     }
 
@@ -86,7 +86,7 @@ struct ExtrasTests {
         render(ResultView(), m)
         m.acknowledgeResult()
         #expect(m.achievements.map(\.achievement) == [.firstBuilding, .streak3])
-        #expect(m.coins == 300 + 100)
+        #expect(m.coins == 300 + 3 * 30 + 100)
         render(StatsView(), m)
         render(AchievementsCard(), m)
         render(NewAchievements(achievements: Achievement.allCases), m)

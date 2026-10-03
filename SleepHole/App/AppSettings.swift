@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import SleepCore
 
 /// Everything the owner can set. Persisted as JSON in UserDefaults.
@@ -21,6 +22,22 @@ struct AppSettings: Codable, Equatable {
         minutes.map { $0 == 1 ? L("1 min (test)") : L("\($0) min") } ?? L("All night")
     }
     var alarmSound: AlarmSound = .gentle
+    /// Appearance + sounds (owner 2026-10-02). Optional in the JSON so settings saved by older builds still load.
+    var themeRaw: AppTheme?
+    var theme: AppTheme {
+        get { themeRaw ?? .system }
+        set { themeRaw = newValue }
+    }
+    var soundEffectsOff: Bool?
+    var soundEffects: Bool {
+        get { soundEffectsOff != true }
+        set { soundEffectsOff = newValue ? nil : true }
+    }
+    var voiceOff: Bool?
+    var voice: Bool {
+        get { voiceOff != true }
+        set { voiceOff = newValue ? nil : true }
+    }
     /// Typed on the alarm screen as an alternative to shaking (D15).
     var wakeCode: String = AppSettings.randomCode()
 
@@ -103,5 +120,41 @@ struct AppSettings: Codable, Equatable {
 
     func save() {
         if let data = try? JSONEncoder().encode(self) { UserDefaults.standard.set(data, forKey: Self.key) }
+    }
+}
+
+/// Light / dark / follow the iPhone. Applied to every window (`overrideUserInterfaceStyle`) – SwiftUI's
+/// `preferredColorScheme(nil)` does not reliably go back to the system appearance.
+enum AppTheme: String, Codable, CaseIterable, Identifiable {
+    case system, light, dark
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .system: L("System")
+        case .light: L("Light")
+        case .dark: L("Dark")
+        }
+    }
+
+    var style: UIUserInterfaceStyle {
+        switch self {
+        case .system: .unspecified
+        case .light: .light
+        case .dark: .dark
+        }
+    }
+
+    @MainActor
+    func apply() {
+        for scene in UIApplication.shared.connectedScenes {
+            guard let windows = (scene as? UIWindowScene)?.windows else { continue }
+            for window in windows where window.overrideUserInterfaceStyle != style {
+                UIView.transition(with: window, duration: 0.35, options: .transitionCrossDissolve) {
+                    window.overrideUserInterfaceStyle = self.style
+                }
+            }
+        }
     }
 }

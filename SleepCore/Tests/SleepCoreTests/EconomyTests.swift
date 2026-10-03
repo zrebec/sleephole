@@ -18,7 +18,19 @@ import Testing
 
     @Test func rewardsByOutcome() {
         #expect(Economy.reward(.complete) == 100 && Economy.reward(.unfinished) == 50)
-        #expect(Economy.reward(.ruins) == 0 && Economy.reward(.missed) == 0)
+        #expect(Economy.reward(.ruins) == 0 && Economy.reward(.missed) == 0 && Economy.reward(.excused) == 0)
+    }
+
+    @Test func higherLevelsPayMore() {                         // owner 2026-10-02
+        #expect((1...4).map { Economy.reward(.complete, level: $0) } == [100, 120, 150, 200])
+        #expect((1...4).map { Economy.reward(.unfinished, level: $0) } == [50, 60, 75, 100])
+        let catalog = try! loadRealCatalog()
+        let k = NightKey("2026-10-01")!
+        let r = [NightResult(key: k, outcome: .complete, buildingId: "l1-house-a-0"),
+                 NightResult(key: k.adding(days: 1, calendar: bratislava), outcome: .complete, buildingId: "l3-police"),
+                 NightResult(key: k.adding(days: 2, calendar: bratislava), outcome: .unfinished, buildingId: "l2-park-small")]
+        #expect(Economy.earned(r, calendar: bratislava, catalog: catalog) == 100 + 150 + 60)
+        #expect(Economy.earned(r, calendar: bratislava) == 100 + 100 + 50)          // no catalog → level 1
         #expect(Economy.earned(results([.complete, .unfinished, .ruins]), calendar: bratislava) == 150)
     }
 

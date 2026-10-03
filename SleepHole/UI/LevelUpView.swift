@@ -17,7 +17,7 @@ struct ConfettiView: View {
 
     var body: some View {
         TimelineView(.animation) { ctx in
-            let t = ctx.date.timeIntervalSince(start)
+            let t = ctx.date.timeIntervalSince(start) / Motion.pace
             Canvas { gc, size in
                 for p in Self.pieces {
                     let y = ((p.phase + t * p.speed).truncatingRemainder(dividingBy: 1.1) - 0.05) * size.height

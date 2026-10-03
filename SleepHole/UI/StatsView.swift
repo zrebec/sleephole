@@ -16,10 +16,10 @@ struct StatsView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                        tile("🔥", "\(s.currentStreak)", L("current streak"))
-                        tile("🏆", "\(s.bestStreak)", L("best streak"))
-                        tile("🏗️", "\(s.builtNights)", L("nights built"))
-                        tile("🪙", "\(model.coins)", L("coins"))                  // incl. naps + achievements
+                        tile("🔥", s.currentStreak, L("current streak")).appearIn(delay: 0)
+                        tile("🏆", s.bestStreak, L("best streak")).appearIn(delay: 0.05)
+                        tile("🏗️", s.builtNights, L("nights built")).appearIn(delay: 0.1)
+                        tile("🪙", model.coins, L("coins")).appearIn(delay: 0.15)          // incl. naps + achievements
                     }
                     card(L("Night calendar")) {
                         CalendarGrid(days: s.calendar, selected: $selectedDay)
@@ -58,6 +58,7 @@ struct StatsView: View {
                 }
                 .padding()
             }
+            .skyBackground()
             .onAppear {                                   // `-scrollTo journal|achievements` (screenshots)
                 let args = ProcessInfo.processInfo.arguments
                 for id in ["journal", "achievements"] where args.contains(id) { proxy.scrollTo(id, anchor: .top) }
@@ -71,15 +72,17 @@ struct StatsView: View {
         }
     }
 
-    private func tile(_ icon: String, _ value: String, _ label: String) -> some View {
+    private func tile(_ icon: String, _ value: Int, _ label: String) -> some View {
         VStack(spacing: 4) {
             Text(icon).font(.title)
-            Text(verbatim: value).font(.title.bold().monospacedDigit())
+            Text(verbatim: "\(value)").font(.title.bold().monospacedDigit())
+                .contentTransition(.numericText(value: Double(value)))
+                .animation(.snappy, value: value)
             Text(label).font(.caption).foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .glassCard()
     }
 
     private func card<C: View>(_ title: String, @ViewBuilder content: () -> C) -> some View {
@@ -89,7 +92,8 @@ struct StatsView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .glassCard()
+        .appearIn(delay: 0.2)
     }
 
     private func metric(_ label: String, _ value: String) -> some View {
@@ -123,6 +127,7 @@ struct CalendarGrid: View {
         case .complete: .green
         case .unfinished: .orange
         case .ruins: .gray
+        case .excused: .indigo.opacity(0.55)                     // protected by a joker 🛡️
         case .missed, .none: .gray.opacity(0.15)
         }
     }
@@ -147,6 +152,7 @@ struct CalendarGrid: View {
             }
             HStack(spacing: 12) {
                 legend(.green, L("complete")); legend(.orange, L("unfinished")); legend(.gray, L("ruins"))
+                legend(.indigo.opacity(0.55), L("joker 🛡️"))
             }
             .font(.caption2)
         }
@@ -208,6 +214,10 @@ struct NightDetail: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(L("Night of \(Fmt.fullDate(key))")).font(.headline)
+            if model.coreResults().contains(where: { $0.key == key && $0.outcome == .excused }) {
+                Label(L("Protected by a joker 🛡️ – your streak waited for you."), systemImage: "shield.fill")
+                    .font(.subheadline).foregroundStyle(.indigo)
+            }
             if let rec = model.nightRecord(for: key), let outcome = rec.outcome {
                 let r = NightReport(log: rec.log, rules: rec.rules)
                 building(outcome: outcome)
@@ -220,6 +230,7 @@ struct NightDetail: View {
                 row("☀️", L("Got up"), r.confirmedAt.map { Fmt.timeSec($0) + (r.confirmMethod.map { $0 == .code ? L(" (code)") : L(" (shake)") } ?? "") })
                 trips(L("Trips during setup (until \(r.setupEnds.map(Fmt.time) ?? "–"))"), r.setupTrips, ok: true)
                 trips(L("Trips after setup"), r.nightTrips, ok: false)
+                if !r.pauses.isEmpty { chips(L("🌙 Pauses: \(r.pauses.count)×"), r.pauses) }
                 chips(L("👀 Screen checks: \(r.screenChecks.count)×"), r.screenChecks)
                 if !r.calls.isEmpty { trips(L("📞 Calls"), r.calls, ok: true) }
                 if !r.relaunches.isEmpty { chips(L("🔄 The app restarted"), r.relaunches) }
@@ -272,7 +283,9 @@ struct NightDetail: View {
                 HStack {
                     Text(Fmt.timeSec(t.start)).monospacedDigit()
                     Text(verbatim: "→ \(Self.duration(t.duration))")
-                        .foregroundStyle(ok ? Color.secondary : (t.duration ?? .infinity) > 13 ? .orange : .secondary)
+                        .foregroundStyle(ok || t.duringPause ? Color.secondary
+                                         : (t.duration ?? .infinity) > 13 ? .orange : .secondary)
+                    if t.duringPause { Text(verbatim: "🌙") }
                 }
                 .font(.caption)
             }
