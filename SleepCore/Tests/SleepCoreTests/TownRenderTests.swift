@@ -157,4 +157,56 @@ import Testing
         #expect(m.buildingCount == 150)
         #expect(m.sprites.count < 3000)
     }
+
+    // MARK: island (Today hero)
+
+    @Test func emptyTownIslandIsNineGrassTiles() {
+        let (t, m) = model([])
+        let island = TownRender.island(m, town: t)
+        #expect(island.sprites.count == 9)
+        #expect(island.sprites.allSatisfy { $0.layer == .ground })
+        // corners of the 3×3 diamond around (0,0): 1.5 tiles from the centre
+        #expect(island.top == ScenePoint(x: 0, y: 192) && island.bottom == ScenePoint(x: 0, y: -192))
+        #expect(island.left == ScenePoint(x: -384, y: 0) && island.right == ScenePoint(x: 384, y: 0))
+    }
+
+    /// Four level-1 buildings fill the 2×2 quadrant at the central crossroad (bug report 2026-10-03).
+    @Test func islandShowsTheBuiltQuadrantWithItsRoads() {
+        let houses: [(String, Outcome)] = (0..<4).map { _ in ("l1-house-a-0", .complete) }
+        for n in 1...4 {                                     // the same window after every one of the 4 nights
+            let (t, m) = model(Array(houses.prefix(n)))
+            let window = TownRender.islandWindow(t)
+            #expect(window.cols == -2...0 && window.rows == -2...0)
+            let island = TownRender.island(m, town: t)
+            #expect(island.sprites.filter { $0.buildingIndex != nil }.count == n)
+            #expect(island.sprites.filter { $0.layer == .road }.count == 5)          // the L of the two streets
+            #expect(island.sprites.map(\.zPosition) == island.sprites.map(\.zPosition).sorted())   // draw order kept
+        }
+    }
+
+    @Test func islandZoomsOutAndKeepsEveryBuildingOfTheBlock() {
+        let items: [(String, Outcome)] = (0..<5).map { _ in ("l1-house-a-0", .complete) }
+        let (t, m) = model(items)
+        let window = TownRender.islandWindow(t)
+        #expect(window.cols == -2...0 && window.rows == -3...0)            // the 5th house opens the next quadrant
+        let island = TownRender.island(m, town: t)
+        #expect(island.sprites.filter { $0.buildingIndex != nil }.count == 5)
+        #expect(island.sprites.count < m.sprites.count)
+        #expect(island.bounds.contains(island.top) && island.bounds.contains(island.bottom))
+        let whole = TownRender.groundDiamond(m.sprites)             // the whole town is a bigger diamond
+        #expect(whole.left.x < island.left.x && whole.right.x > island.right.x && whole.bottom.y < island.bottom.y)
+        // corners follow the window: 3 columns × 4 rows
+        #expect(island.top == IsoProjection.scenePoint(x: -2.5, z: -3.5))
+        #expect(island.bottom == IsoProjection.scenePoint(x: 0.5, z: 0.5))
+    }
+
+    @Test func islandFollowsTheNewestBlock() {
+        // 16 houses fill the first block, the 17th starts the next one → the island shows that block
+        let items: [(String, Outcome)] = (0..<17).map { _ in ("l1-house-a-0", .complete) }
+        let (t, m) = model(items)
+        let island = TownRender.island(m, town: t)
+        #expect(island.sprites.filter { $0.buildingIndex != nil }.map(\.buildingIndex) == [16])
+        let w = TownRender.islandWindow(t)
+        #expect(w.cols.count == 3 && w.rows.count == 3)
+    }
 }
