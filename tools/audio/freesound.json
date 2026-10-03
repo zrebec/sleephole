@@ -1,5 +1,5 @@
 {
-  "_comment": "CC0 recordings from Freesound.org (tools/audio/fetch_freesound.py downloads them). bed = long ambience for the story chapter beds, clip = cut into story event clips (make_stories.py), alarm = alarm sound (make_alarms.py).",
+  "_comment": "CC0 recordings from Freesound.org (tools/audio/fetch_freesound.py downloads them). bed = long ambience for the story chapter beds, clip = cut into story event clips (make_stories.py), alarm = alarm sound (make_alarms.py), fx = cut into a short UI sound effect (make_sfx.py: the buddy's purr and meow).",
   "sounds": {
     "588401": {
       "use": "bed",
@@ -220,6 +220,14 @@
     "517644": {
       "use": "alarm",
       "as": "kalimba"
+    },
+    "326295": {
+      "use": "fx",
+      "as": "purr"
+    },
+    "262312": {
+      "use": "fx",
+      "as": "meow"
     }
   }
 }

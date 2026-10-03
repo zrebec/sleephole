@@ -36,9 +36,10 @@ def main():
         lines.append(f"{info['as']:<12} {sid:>7}  \"{meta['name']}\" by {meta['username']}  {meta['url']}")
         print(lines[-1])
     with open(CREDITS, "w") as f:
-        f.write("Sound stories – CC0 recordings from Freesound.org (public domain, credited with thanks).\n"
+        f.write("Sound stories, alarms and sound effects – CC0 recordings from Freesound.org (public domain, "
+                "credited with thanks).\n"
                 "Downloaded as high-quality previews via the Freesound API, then cut / mixed by "
-                "tools/audio/make_stories.py.\n\n")
+                "tools/audio/make_stories.py, make_alarms.py and make_sfx.py.\n\n")
         f.write("\n".join(sorted(lines)) + "\n")
     print(len(lines), "sounds →", RAW)
 

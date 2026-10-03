@@ -1,5 +1,5 @@
-Sound stories – CC0 recordings from Freesound.org (public domain, credited with thanks).
-Downloaded as high-quality previews via the Freesound API, then cut / mixed by tools/audio/make_stories.py.
+Sound stories, alarms and sound effects – CC0 recordings from Freesound.org (public domain, credited with thanks).
+Downloaded as high-quality previews via the Freesound API, then cut / mixed by tools/audio/make_stories.py, make_alarms.py and make_sfx.py.
 
 bark          396307  "Dog play.WAV" by cribbler  https://freesound.org/people/cribbler/sounds/396307/
 bark          828526  "ANMLDog_Distant Dog Bark, Resediential Area, _JW Audio" by JW_Audio  https://freesound.org/people/JW_Audio/sounds/828526/
@@ -26,6 +26,7 @@ horse         826753  "Renill de cavall / Horse Neigh" by Salsero_classic  https
 kalimba       517644  "KALIMBA - 4" by SamuelGremaud  https://freesound.org/people/SamuelGremaud/sounds/517644/
 leaves        420404  "Rustle walking by the leaves.wav" by Magdaadga  https://freesound.org/people/Magdaadga/sounds/420404/
 leaves        861414  "Walking on Dry Leaves in Puglia" by bassimat  https://freesound.org/people/bassimat/sounds/861414/
+meow          262312  "Cat Meow1.wav" by steffcaffrey  https://freesound.org/people/steffcaffrey/sounds/262312/
 musicbox      150024  "symphonion_klosterglocken.WAV" by thulitt  https://freesound.org/people/thulitt/sounds/150024/
 nail          204946  "Hammering_Wood.wav" by CapsLok  https://freesound.org/people/CapsLok/sounds/204946/
 nail          337814  "hammer v3.wav" by blukotek  https://freesound.org/people/blukotek/sounds/337814/
@@ -37,6 +38,7 @@ owl           735744  "Bird - Tawny owl, female" by Vrymaa  https://freesound.or
 owl           784609  "Birds of Prey - Barred Owl Hooting, Distant" by TheKingOfGeeks360  https://freesound.org/people/TheKingOfGeeks360/sounds/784609/
 plane         847374  "Victor No. 5, Face Planing, Doug Fir" by DeqstersLab  https://freesound.org/people/DeqstersLab/sounds/847374/
 plane         847375  "Wood block plane" by DeqstersLab  https://freesound.org/people/DeqstersLab/sounds/847375/
+purr          326295  "cat purring 2.wav" by blukotek  https://freesound.org/people/blukotek/sounds/326295/
 purr          364893  "Cat purring" by TiesWijnen  https://freesound.org/people/TiesWijnen/sounds/364893/
 purr          593609  "Purring Cat.wav" by Rehanjo  https://freesound.org/people/Rehanjo/sounds/593609/
 rainforest    523391  "Forest, light rain.wav" by Anya_Media  https://freesound.org/people/Anya_Media/sounds/523391/

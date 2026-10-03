@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 """Short sound effects for phase UI-2 (owner 2026-10-02: "more animations, WOW when a house is finished, more
 sounds, a sound when going to sleep"). All synthesised here except the coins (Kenney RPG Audio, CC0 – needs the raw
-bundle, see AGENTS.md).
+bundle, see AGENTS.md) and the buddy's purr and meow (phase P2b: CC0 Freesound recordings listed in
+tools/audio/freesound.json with use = "fx"; fetch them first with tools/audio/fetch_freesound.py – the raw files live
+in the git-ignored assets/freesound/).
 
     python3 tools/audio/make_sfx.py              # writes assets/audio/fx_*.caf
     python3 tools/audio/make_sfx.py wow sleep    # only the named ones (the others stay byte-identical)
+    python3 tools/audio/make_sfx.py purr meow    # the petting sounds
 """
+import json
 import os
 import subprocess
 import sys
 import tempfile
 
 import numpy as np
+from scipy import signal
 from scipy.io import wavfile
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -20,6 +25,7 @@ from make_alarms import env, note_hz, tone  # noqa: E402
 SR = 44100
 OUT = "assets/audio"
 KENNEY = "assets/Kenney Game Assets All-in-1 3/Audio"
+FREESOUND = "assets/freesound"
 rng = np.random.default_rng(2026)
 
 
@@ -108,7 +114,57 @@ def coins():
     return x.astype(np.float64) / 32768
 
 
-ALL = {"sleep": sleep, "wow": wow, "sparkle": sparkle, "whoosh": whoosh, "pop": pop, "coins": coins}
+def freesound_fx(name):
+    """The CC0 Freesound recording listed in freesound.json as use = "fx", as = `name`, decoded to mono 44.1 kHz.
+    (Looked up by `use` as well – the label "purr" also belongs to two story clips.)"""
+    sounds = json.load(open("tools/audio/freesound.json"))["sounds"]
+    sid = next(k for k, v in sounds.items() if v["use"] == "fx" and v["as"] == name)
+    with tempfile.NamedTemporaryFile(suffix=".wav") as f:
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", os.path.join(FREESOUND, f"{sid}.ogg"), "-ac", "1",
+                        "-ar", str(SR), f.name], check=True)
+        _, x = wavfile.read(f.name)
+    return x.astype(np.float64) / 32768
+
+
+def cut(x, start, length, fade_in, fade_out):
+    """`length` seconds from `start`, with smooth (half-cosine) fades."""
+    x = x[int(start * SR):int((start + length) * SR)].copy()
+    fi, fo = int(fade_in * SR), int(fade_out * SR)
+    x[:fi] *= 0.5 - 0.5 * np.cos(np.pi * np.arange(fi) / fi)
+    x[-fo:] *= 0.5 + 0.5 * np.cos(np.pi * np.arange(fo) / fo)
+    return x
+
+
+# Freesound 326295 "cat purring 2.wav" (blukotek, CC0): ZOOM H2, 14.7 s, a clean purr with a breath cycle of ≈ 2.6 s.
+# Analysis: pulse train at 25.2 Hz (envelope autocorrelation 0.84), no clipping (peak 0.61), no events in the window
+# (loudest 20 ms frame ≤ 4 dB above the median), gaps between the pulses 37 dB deep (low noise floor), nothing above
+# 2 kHz. Most of the power is below 200 Hz (an iPhone speaker cannot play that), but the pulses are broadband: the
+# part above 200 Hz alone is −21 dBFS RMS after the peak is normalised to −3 dB – the loudest of six CC0 candidates.
+# 2.5 s … 4.5 s is one breath: the dip before the swell → the loud inhale → the softer tail (under the fade-out).
+PURR_START, PURR_LENGTH = 2.5, 2.0
+
+
+def purr():
+    """Petting the cat: ≈ 2 s of a close, clean purr (CC0 recording), fade in 0.15 s, fade out 0.4 s."""
+    x = freesound_fx("purr")
+    x = signal.sosfiltfilt(signal.butter(2, 70, "high", fs=SR, output="sos"), x)   # rumble the speaker cannot play
+    return cut(x, PURR_START, PURR_LENGTH, 0.15, 0.4)
+
+
+# Freesound 262312 "Cat Meow1.wav" (steffcaffrey, CC0): a male cat's happy greeting, Zoom H4, mono 44.1 kHz.
+# Analysis: ONE tonal event 0.035 … 0.505 s, fundamental 640–720 Hz (voicing 0.99), peak 0.44 (no clipping), the
+# room before / after is ≈ 45 dB below the meow. The cut starts 15 ms before the onset (so the 20 ms fade-in keeps
+# the attack) and ends just after the tail.
+MEOW_START, MEOW_LENGTH = 0.015, 0.53
+
+
+def meow():
+    """A short, friendly "mrrp" (CC0 recording), ≈ 0.5 s, fade in 20 ms, fade out 80 ms."""
+    return cut(freesound_fx("meow"), MEOW_START, MEOW_LENGTH, 0.02, 0.08)
+
+
+ALL = {"sleep": sleep, "wow": wow, "sparkle": sparkle, "whoosh": whoosh, "pop": pop, "coins": coins,
+       "purr": purr, "meow": meow}
 
 if __name__ == "__main__":
     for name in sys.argv[1:] or ALL:
