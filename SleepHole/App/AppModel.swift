@@ -66,11 +66,12 @@ final class AppModel {
     ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
     ///   -theme system|light|dark      set the appearance (Settings → Theme)
     ///   -screenshot                   no permission alert, no first-run guide (use with a pulled store, tools/sim_shot.sh)
-    ///   -thenTab 1|island|abandon|pause   4 s after launch: select a tab / tap the Today island / cancel the
+    ///   -thenTab 1|island|abandon|pause   4 s after launch: select a tab / open the Town tab / cancel the
     ///                                 running night and close its result / start a pause once the setup is over
     ///   -expiresIn HOURS              pretend the provisioning profile runs out then (AppExpiry)
     ///   -mute                         silence every sound (alarm, effects) – for screenshots of a night's end
     ///   -buddy awake|asleep           force the sleep buddy's state (screenshots)
+    ///   -buddyReaction purr|arch|wink show that tap reaction's hold frame (hearts / sparkle too) on Today (screenshots)
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
                                      args: [String] = ProcessInfo.processInfo.arguments) {
         func value(_ flag: String) -> String? {
@@ -429,7 +430,7 @@ final class AppModel {
     private(set) var schedulePromptAnswered: String?
     /// Bumped by "Adjust" on the monthly card → the root view opens Settings.
     private(set) var settingsRequest = 0
-    /// Bumped when the Today island is tapped → RootView switches to the Town tab.
+    /// Bumped to open the Town tab (the Today island did it; `-thenTab island` still does) → RootView switches to it.
     private(set) var townRequest = 0
     func showTown() { townRequest += 1 }
 
@@ -792,6 +793,41 @@ final class AppModel {
         default: return nil
         }
     }()
+
+    /// Dev aid: `-buddyReaction purr|arch|wink` shows that reaction's hold frame on Today (screenshots).
+    static let forcedBuddyReaction: BuddyReaction? = {
+        let a = ProcessInfo.processInfo.arguments
+        guard let i = a.firstIndex(of: "-buddyReaction"), a.indices.contains(i + 1) else { return nil }
+        switch a[i + 1] {
+        case "purr": return .purr
+        case "arch": return .arch
+        case "wink": return .wink
+        default: return nil
+        }
+    }()
+
+    /// The reaction the next tap on the cat gives (plan P2b). Session state only – never stored, never in a backup.
+    @ObservationIgnored private var nextBuddyReaction = BuddyReaction.purr
+
+    /// The owner pets the cat on Today: returns this tap's reaction (purr → arched back → wink → purr …) and plays its
+    /// sound and vibration. Presentation only – no coins, no rules, nothing is saved.
+    @discardableResult
+    func petBuddy() -> BuddyReaction {
+        let reaction = nextBuddyReaction
+        nextBuddyReaction = reaction.next
+        switch reaction {
+        case .purr:
+            fx("fx_purr", volume: 0.9)
+            buzz(.purr)
+        case .arch:
+            fx("fx_meow", volume: 0.45)
+            buzz(.pet)
+        case .wink:
+            fx("fx_sparkle", volume: 0.4)
+            buzz(.pet)
+        }
+        return reaction
+    }
 
     /// What the sleep buddy does now (plan P2): awake on Today; during a night or a nap only in the setup, in a pause
     /// and from the alarm on; asleep otherwise – a collapsed night too (the cat never judges).

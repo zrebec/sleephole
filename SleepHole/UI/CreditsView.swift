@@ -27,6 +27,15 @@ struct CreditsView: View {
             } header: { Text(L("Sleep sounds")) }
 
             Section {
+                Text(verbatim: "“cat purring 2.wav” – blukotek, Freesound.org")
+                Link(destination: URL(string: "https://freesound.org/s/326295/")!) { Text(verbatim: "freesound.org/s/326295") }
+                Text(verbatim: "“Cat Meow1.wav” – steffcaffrey, Freesound.org")
+                Link(destination: URL(string: "https://freesound.org/s/262312/")!) { Text(verbatim: "freesound.org/s/262312") }
+                Text(L("Both are CC0 recordings (trimmed and faded). They are the purr and the meow when you pet the cat."))
+                    .font(.footnote).foregroundStyle(.secondary)
+            } header: { Text(L("Cat sounds")) }
+
+            Section {
                 Text(L("“Morning Mood” – Edvard Grieg, Peer Gynt (1875)"))
                 Text(L("“Ode to Joy” – Ludwig van Beethoven, Symphony No. 9 (1824)"))
                 Text(L("“Prelude” – Johann Sebastian Bach, Prelude in C major BWV 846 (1722)"))

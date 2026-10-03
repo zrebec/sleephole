@@ -511,4 +511,34 @@ struct AppModelTests {
         #expect(AppExpiry.expirationDate(inProvision: Data("garbage".utf8)) == nil)
         #expect(AppExpiry.date == nil && !AppExpiry.isSoon(at: Date()))      // the simulator has no profile
     }
+
+    // MARK: petting the cat (plan P2b)
+
+    @Test func pettingTheCatCyclesPurrArchWinkAndVibratesAccordingly() throws {
+        let h = harness(at: date(5, 12))
+        #expect(h.model.petBuddy() == .purr)
+        #expect(h.model.petBuddy() == .arch)
+        #expect(h.model.petBuddy() == .wink)
+        #expect(h.model.petBuddy() == .purr)
+        #expect(h.model.haptics == [.purr, .pet, .pet, .purr])
+        h.model.petBuddy()                                                  // the result may be ignored
+        #expect(h.model.haptics.count == 5)
+    }
+
+    /// Presentation only: no coins, no rules, nothing stored in the settings or the backup, a new session starts at purr.
+    @Test func pettingTheCatStoresNothingAndCostsNothing() throws {
+        let h = harness(at: date(5, 12))
+        let coins = h.model.coins
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .sortedKeys                              // dictionaries must not reorder
+        let backup = try encoder.encode(h.model.makeBackup())
+        let settings = h.model.settings
+        for _ in 0..<7 { h.model.petBuddy() }
+        #expect(h.model.coins == coins)
+        #expect(try encoder.encode(h.model.makeBackup()) == backup)
+        #expect(h.model.settings == settings)
+        #expect(h.model.phase == .idle && h.model.active == nil)
+        let next = harness(at: date(5, 12), container: h.container)       // "a new session": the same store, a new model
+        #expect(next.model.petBuddy() == .purr)
+    }
 }

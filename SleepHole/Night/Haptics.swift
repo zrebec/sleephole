@@ -7,6 +7,8 @@ import UIKit
 enum Haptic: Equatable, CaseIterable {
     case start      // "Go to sleep" / "Nap" tapped
     case relief     // came back in time after a "Come back!" warning – "phew"
+    case purr       // petting the cat on Today (plan P2b): a soft rumble with gentle pulses, ~1.2 s
+    case pet        // petting the cat: one light tap (arched back, wink)
 }
 
 /// Core Haptics with strong, long patterns (the first version – an unprepared UIKit impact – was barely noticeable).
@@ -27,7 +29,7 @@ enum Haptics {
             lastResult = "Core Haptics ✗ \(error.localizedDescription) → UIKit"
             let g = UINotificationFeedbackGenerator()
             g.prepare()
-            g.notificationOccurred(h == .start ? .warning : .success)
+            g.notificationOccurred(h == .start ? .warning : .success)       // .pet / .purr too: a soft "success"
         }
     }
 
@@ -59,9 +61,20 @@ enum Haptics {
                 CHHapticEventParameter(parameterID: .hapticIntensity, value: i),
                 CHHapticEventParameter(parameterID: .hapticSharpness, value: sharp)], relativeTime: t, duration: d)
         }
+        /// A light, round transient (petting).
+        func soft(_ t: TimeInterval, _ i: Float) -> CHHapticEvent {
+            CHHapticEvent(eventType: .hapticTransient, parameters: [
+                CHHapticEventParameter(parameterID: .hapticIntensity, value: i),
+                CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.2)], relativeTime: t)
+        }
         let events: [CHHapticEvent] = switch h {
         case .start: [tap(0), tap(0.15), buzz(0.3, 0.45, 0.9, sharp: 0.5)]
         case .relief: [tap(0, sharp: 0.4), tap(0.2, sharp: 0.4), buzz(0.4, 0.3, 0.6, sharp: 0.2)]
+        case .purr:
+            // a continuous low rumble, with a few gentle pulses on top so it feels like purring
+            [buzz(0, 1.2, 0.45, sharp: 0.1)]
+                + [0.1, 0.35, 0.6, 0.85, 1.1].map { soft($0, 0.3) }
+        case .pet: [soft(0, 0.6)]
         }
         return try CHHapticPattern(events: events, parameters: [])
     }

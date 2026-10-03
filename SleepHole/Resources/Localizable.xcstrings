@@ -1541,6 +1541,22 @@
         }
       }
     },
+    "Both are CC0 recordings (trimmed and faded). They are the purr and the meow when you pet the cat.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both are CC0 recordings (trimmed and faded). They are the purr and the meow when you pet the cat."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obe sú nahrávky CC0 (orezané, so zjemneným začiatkom a koncom). Počuješ ich, keď mačku hladkáš: pradenie a mňau."
+          }
+        }
+      }
+    },
     "Bright and even – like a fan.": {
       "localizations": {
         "en": {
@@ -1729,6 +1745,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zrušiť dnešnú noc? Budova sa zmení na ruinu."
+          }
+        }
+      }
+    },
+    "Cat sounds": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cat sounds"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuky mačky"
           }
         }
       }
@@ -3461,6 +3493,22 @@
         }
       }
     },
+    "Meow": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meow"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mňau"
+          }
+        }
+      }
+    },
     "Morning": {
       "localizations": {
         "en": {
@@ -4309,6 +4357,22 @@
         }
       }
     },
+    "Petting the cat": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Petting the cat"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohladkanie mačky"
+          }
+        }
+      }
+    },
     "Phone calls don't count – just come back to the app after the call.": {
       "localizations": {
         "en": {
@@ -4481,6 +4545,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ochráni %@"
+          }
+        }
+      }
+    },
+    "Purr": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Purr"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pradenie"
           }
         }
       }
@@ -5733,6 +5813,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ťukni na deň a uvidíš, ako tá noc prebehla."
+          }
+        }
+      }
+    },
+    "Tap the cat": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap the cat"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ťukni na mačku"
+          }
+        }
+      }
+    },
+    "Tap to pet your cat": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to pet your cat"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ťukni a pohladkaj mačku"
           }
         }
       }

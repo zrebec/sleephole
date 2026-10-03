@@ -143,13 +143,24 @@ struct ExtrasTests {
     @Test func everyVibrationHasAStrongPatternAndATestButton() throws {
         for h in Haptic.allCases {
             let pattern = try Haptics.pattern(h)
-            #expect(pattern.duration >= 0.5, "\(h) too short")
+            #expect(pattern.duration >= (h == .pet ? 0 : 0.5), "\(h) too short")      // .pet: one light tap
             #expect(!VibrationTestView.title(h).isEmpty)
             Haptics.play(h)                                   // simulator: no Taptic Engine → the fallback path
         }
         #expect(Haptics.lastResult != "–")
         let (m, _) = model(store(), at: date(1, 12))
         render(NavigationStack { VibrationTestView() }, m)
+    }
+
+    /// The petting vibrations (plan P2b): a soft rumble of ~1.2 s with gentle pulses, and ONE light tap.
+    @Test func purrAndPetPatternsAreSoft() throws {
+        let purr = try Haptics.pattern(.purr)
+        #expect(purr.duration >= 1.1 && purr.duration <= 1.4)
+        let pet = try Haptics.pattern(.pet)
+        #expect(pet.duration < 0.5)
+        #expect(Haptic.allCases.count == 4)
+        #expect(VibrationTestView.title(.purr) != VibrationTestView.title(.pet))
+        #expect(VibrationTestView.title(.purr) == "Purr" && VibrationTestView.title(.pet) == "Petting the cat")
     }
 
     // MARK: limits (owner 2026-09-30)

@@ -115,12 +115,45 @@ struct BuddyStateTests {
     // MARK: assets
 
     @Test func everyFrameIsInTheAssetCatalogOnOneCanvas() {
-        let sizes = ["awake", "blink", "mid", "asleep"].map { UIImage(named: "buddy-cat-\($0)")?.size }
-        #expect(sizes.allSatisfy { $0 != nil })
-        #expect(Set(sizes.compactMap { $0 }.map { "\($0.width)x\($0.height)" }).count == 1)    // the bed never jumps
-        let size = sizes[0]!
-        #expect(abs(size.width / size.height - BuddyView.aspect) < 0.001)
+        let images = BuddyView.Pose.allCases.map { UIImage(named: $0.imageName) }
+        #expect(images.count == 8 && images.allSatisfy { $0 != nil })
+        let sizes = images.compactMap { $0?.size }
+        #expect(Set(sizes.map { "\($0.width)x\($0.height)" }).count == 1)             // the bed never jumps
+        let pixels = images.compactMap { $0?.cgImage }.map { CGSize(width: $0.width, height: $0.height) }
+        #expect(pixels.allSatisfy { $0 == BuddyView.canvas })                         // 860 × 974 px
+        #expect(abs(sizes[0].width / sizes[0].height - BuddyView.aspect) < 0.001)
         #expect(UIImage(named: ["buddy", "cat"].joined(separator: "-")) == nil)       // the old turned-away cat is gone
+    }
+
+    /// Fraction of the canvas height that is empty above the drawing (rows whose alpha is ≤ 8 / 255).
+    func emptyTop(_ image: UIImage) -> Double {
+        let cg = image.cgImage!
+        let (w, h) = (cg.width, cg.height)
+        var data = [UInt8](repeating: 0, count: w * h * 4)
+        let ctx = CGContext(data: &data, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
+                            space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+        ctx.draw(cg, in: CGRect(x: 0, y: 0, width: w, height: h))
+        for row in 0..<h where (0..<w).contains(where: { data[(row * w + $0) * 4 + 3] > 8 }) {
+            return Double(row) / Double(h)
+        }
+        return 1
+    }
+
+    /// `headroom` is the empty top of every frame except the two arched backs – only those draw above the layout box.
+    @Test func headroomIsTheEmptyTopOfTheFramesThatAreNotArched() {
+        for pose in BuddyView.Pose.allCases {
+            let top = emptyTop(UIImage(named: pose.imageName)!)
+            if pose == .arch1 || pose == .arch2 {
+                #expect(top < BuddyView.headroom - 0.05, "\(pose) must use the headroom")
+            } else {
+                #expect(top >= BuddyView.headroom - 0.002, "\(pose) reaches above the layout box")
+                if [.awake, .blink, .happy, .wink].contains(pose) {         // the standing frames define the headroom
+                    #expect(top < BuddyView.headroom + 0.01, "\(pose) leaves unused room above")
+                }
+            }
+        }
+        #expect(abs(BuddyView.boxAspect - BuddyView.canvas.width / (BuddyView.canvas.height * (1 - BuddyView.headroom))) < 1e-9)
+        #expect(BuddyView.boxAspect > BuddyView.aspect)                              // the box is shorter than the canvas
     }
 
     // MARK: rendering
@@ -174,6 +207,249 @@ struct BuddyStateTests {
         render(TodayView().environment(m))                                  // nap, resting: asleep cat
         m.append(.leftApp); clock.now += 30; m.append(.returned)
         render(TodayView().environment(m))                                  // interrupted nap: asleep cat
+    }
+}
+
+
+// MARK: - tap reactions (plan P2b)
+
+@MainActor
+struct BuddyReactionViewTests {
+    let sprites = SpriteLibrary.loadFromBundle()
+    let cal = Calendar.current
+
+    init() { AudioKeeper.muted = true }
+
+    func date(_ d: Int, _ h: Int) -> Date {
+        cal.date(from: DateComponents(year: 2026, month: 10, day: d, hour: h))!
+    }
+
+    func makeModel() -> (AppModel, ModelContainer) {
+        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
+                                    JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        var s = AppSettings()
+        s.wakeCode = "1234"
+        let m = AppModel(context: c.mainContext, catalog: sprites.catalog, clock: FakeClock(date(5, 12)), settings: s,
+                         servicesEnabled: false)
+        return (m, c)
+    }
+
+    /// Hosts a view in a window (hide it when done). Hosted windows are in a background scene, so `animates` forces the
+    /// buddy's animations on / off.
+    func host<V: View>(_ view: V, animates: Bool?, probe: BuddyProbe) -> (UIHostingController<AnyView>, UIWindow) {
+        let root = AnyView(view.environment(sprites).environment(\.buddyAnimates, animates).environment(\.buddyProbe, probe))
+        let host = UIHostingController(rootView: root)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 402, height: 874))
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        return (host, window)
+    }
+
+    /// Waits without blocking the main actor (the views' tasks only run while the test awaits), nudging layout.
+    func pump(_ host: UIViewController, for seconds: TimeInterval) async {
+        let end = Date() + seconds
+        while Date() < end {
+            try? await Task.sleep(for: .milliseconds(30))
+            host.view.setNeedsLayout()
+            host.view.layoutIfNeeded()
+        }
+    }
+
+    // MARK: static timelines
+
+    @Test(arguments: BuddyReaction.allCases) func everyTimelineStartsAndEndsAwakeAndIsShort(r: BuddyReaction) {
+        let t = BuddyView.timeline(r)
+        #expect(t.start == .awake && t.end == .awake)
+        #expect(!t.steps.isEmpty && t.steps.dropLast().allSatisfy { $0.pose != .awake })   // awake only at the very end
+        #expect(t.steps.allSatisfy { $0.fade > 0 && $0.hold >= 0 })
+        #expect(t.duration > 0.5 && t.duration < 3)
+        #expect(t.pacedDuration < 3 * Motion.pace)
+        #expect(abs(t.pacedDuration - t.duration * Motion.pace) < 1e-9)
+    }
+
+    @Test func theTimelinesAreWhatTheOwnerAsked() {
+        let purr = BuddyView.timeline(.purr)
+        #expect(purr.steps.map(\.pose) == [.happy, .awake])
+        #expect(purr.steps[0].fade == 0.15 && purr.steps[0].hold == 1.8 && purr.steps[0].wobble)
+        #expect(purr.steps[1].fade == 0.2)
+        let arch = BuddyView.timeline(.arch)
+        #expect(arch.steps.map(\.pose) == [.arch1, .arch2, .arch1, .awake])
+        #expect(arch.steps.map(\.fade) == [0.2, 0.2, 0.2, 0.2])
+        #expect(arch.steps[1].hold == 0.8 && arch.steps.filter { $0.wobble }.isEmpty)
+        let wink = BuddyView.timeline(.wink)
+        #expect(wink.steps.map(\.pose) == [.wink, .awake])
+        #expect(wink.steps[0].fade == 0.12 && wink.steps[0].hold == 0.7 && wink.steps[1].fade == 0.15)
+        #expect(purr.holdPose == .happy && arch.holdPose == .arch2 && wink.holdPose == .wink)
+    }
+
+    // MARK: rendering
+
+    @Test(arguments: BuddyReaction.allCases) func rendersEveryReactionsHoldFrame(r: BuddyReaction) {
+        let probe = BuddyProbe()
+        let (host, window) = host(BuddyView(state: .awake, cloud: true, onPet: { nil }, hold: r).frame(width: 250),
+                                  animates: nil, probe: probe)
+        host.view.setNeedsLayout()
+        host.view.layoutIfNeeded()
+        RunLoop.main.run(until: Date() + 0.1)
+        window.isHidden = true
+    }
+
+    @Test func aTappableBuddyAndAPlainOneRender() {
+        let probe = BuddyProbe()
+        let (host, window) = host(VStack {
+            BuddyView(state: .awake, cloud: true, onPet: { .purr }).frame(width: 250)
+            BuddyView(state: .asleep, onPet: { .arch }).frame(width: 150)
+            BuddyView(state: .awake).frame(width: 150)
+        }, animates: nil, probe: probe)
+        host.view.setNeedsLayout()
+        host.view.layoutIfNeeded()
+        RunLoop.main.run(until: Date() + 0.1)
+        window.isHidden = true
+    }
+
+    // MARK: taps
+
+    /// Three taps give purr → arched back → wink, a fourth starts again; taps during a reaction are ignored; the
+    /// model plays each reaction's vibration; the frames follow the timelines.
+    @Test func tapsCycleThroughTheThreeReactions() async {
+        let (m, _container) = makeModel()
+        _ = _container
+        let probe = BuddyProbe()
+        let (host, window) = host(BuddyView(state: .awake, cloud: true, onPet: { m.petBuddy() }).frame(width: 250),
+                                  animates: true, probe: probe)
+        await pump(host, for: 0.4)
+        #expect(probe.tap != nil)
+
+        probe.tap?()
+        probe.tap?()                                                       // during the reaction: ignored
+        probe.tap?()
+        await pump(host, for: 0.2)
+        #expect(probe.reaction == .purr && m.haptics == [.purr])
+        await pump(host, for: BuddyView.timeline(.purr).pacedDuration + 0.4)
+        #expect(probe.reaction == nil)
+        #expect(probe.poses == [.happy, .awake])
+
+        probe.tap?()
+        await pump(host, for: 0.2)
+        #expect(probe.reaction == .arch && m.haptics == [.purr, .pet])
+        await pump(host, for: BuddyView.timeline(.arch).pacedDuration + 0.4)
+        #expect(probe.reaction == nil)
+        #expect(probe.poses == [.happy, .awake, .arch1, .arch2, .arch1, .awake])
+
+        probe.tap?()
+        await pump(host, for: 0.2)
+        #expect(probe.reaction == .wink && m.haptics == [.purr, .pet, .pet])
+        await pump(host, for: BuddyView.timeline(.wink).pacedDuration + 0.4)
+        #expect(probe.reaction == nil)
+        #expect(probe.poses.suffix(2) == [.wink, .awake])
+
+        probe.tap?()
+        await pump(host, for: 0.2)
+        #expect(probe.reaction == .purr && m.haptics == [.purr, .pet, .pet, .purr])   // the cycle starts again
+        #expect(probe.reactions == [.purr, .arch, .wink, .purr])
+        window.isHidden = true
+    }
+
+    /// Reduce Motion / no animations: the frames swap without crossfades and are still shown for their time.
+    @Test func withoutAnimationsTheFramesSwapAndAreHeldForTheirTime() async {
+        var queue: [BuddyReaction] = [.wink, .arch]
+        var calls = 0
+        let probe = BuddyProbe()
+        let (host, window) = host(BuddyView(state: .awake, onPet: { calls += 1; return queue.isEmpty ? nil : queue.removeFirst() })
+            .frame(width: 250), animates: false, probe: probe)
+        await pump(host, for: 0.3)
+        probe.tap?()
+        await pump(host, for: 0.2)
+        #expect(probe.reaction == .wink && probe.poses == [.wink])         // straight to the hold frame
+        await pump(host, for: BuddyView.timeline(.wink).pacedDuration + 0.4)
+        #expect(probe.reaction == nil && probe.poses == [.wink, .awake])
+        probe.tap?()
+        await pump(host, for: 0.2)
+        #expect(probe.reaction == .arch && calls == 2)
+        await pump(host, for: BuddyView.timeline(.arch).pacedDuration + 0.4)
+        #expect(probe.reaction == nil && probe.poses == [.wink, .awake, .arch1, .arch2, .arch1, .awake])
+        window.isHidden = true
+    }
+
+    /// A tap while the cat sleeps or changes state is ignored (`onPet` is not called); falling asleep during a
+    /// reaction cancels it and the normal transition runs.
+    @Test func onlyAnAwakeRestingCatIsPetted() async {
+        final class Box { var state = BuddyState.awake }
+        struct Wrapper: View {
+            let box: Box
+            let onPet: () -> BuddyReaction?
+            @State private var state = BuddyState.awake
+            var body: some View {
+                BuddyView(state: state, onPet: onPet).frame(width: 200)
+                    .task {
+                        while !Task.isCancelled {
+                            state = box.state
+                            try? await Task.sleep(for: .milliseconds(30))
+                        }
+                    }
+            }
+        }
+        let box = Box()
+        var calls = 0
+        let probe = BuddyProbe()
+        let (host, window) = host(Wrapper(box: box, onPet: { calls += 1; return .purr }), animates: true, probe: probe)
+        await pump(host, for: 0.4)
+        probe.tap?()
+        await pump(host, for: 0.5)
+        #expect(calls == 1 && probe.reaction == .purr)
+
+        box.state = .asleep                                                // falls asleep during the purr
+        await pump(host, for: 0.3)
+        #expect(probe.reaction == nil)                                     // cancelled
+        await pump(host, for: BuddyView.stepDuration * 2 + 0.6)
+        #expect(probe.poses.last == .asleep)                               // the normal awake → mid → asleep ran
+        probe.tap?()
+        #expect(calls == 1)                                                // asleep: ignored
+
+        box.state = .awake
+        await pump(host, for: 0.25)                                        // in the transition
+        probe.tap?()
+        #expect(calls == 1)
+        await pump(host, for: BuddyView.stepDuration * 2 + 0.6)
+        #expect(probe.poses.last == .awake)
+        probe.tap?()                                                       // resting awake again
+        #expect(calls == 2)
+        window.isHidden = true
+    }
+
+    @Test func aNilAnswerPlaysNothing() async {
+        let probe = BuddyProbe()
+        let (host, window) = host(BuddyView(state: .awake, onPet: { nil }).frame(width: 200), animates: true, probe: probe)
+        await pump(host, for: 0.3)
+        probe.tap?()
+        await pump(host, for: 0.3)
+        #expect(probe.reaction == nil && probe.poses.isEmpty)
+        window.isHidden = true
+    }
+
+    @Test func aPlainBuddyIsNotTappable() async {
+        let probe = BuddyProbe()
+        let (host, window) = host(BuddyView(state: .awake).frame(width: 200), animates: true, probe: probe)
+        await pump(host, for: 0.3)
+        probe.tap?()
+        await pump(host, for: 0.3)
+        #expect(probe.reaction == nil && probe.poses.isEmpty)               // no onPet: the tap does nothing
+        window.isHidden = true
+    }
+
+    /// Today: the cat is the hero and a tap pets it – the Town tab is no longer opened from there.
+    @Test func todayShowsTheCatAndATapPetsIt() async {
+        let (m, _container) = makeModel()
+        _ = _container
+        let probe = BuddyProbe()
+        let (host, window) = host(HomeView().environment(m), animates: true, probe: probe)
+        await pump(host, for: 0.6)
+        #expect(probe.tap != nil)
+        probe.tap?()
+        await pump(host, for: 0.2)
+        #expect(probe.reaction == .purr && m.haptics == [.purr])
+        #expect(m.townRequest == 0)                                        // the old island's tap opened the Town tab
+        window.isHidden = true
     }
 }
 

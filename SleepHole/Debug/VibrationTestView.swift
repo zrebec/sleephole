@@ -33,6 +33,8 @@ struct VibrationTestView: View {
         switch h {
         case .start: L("Start of a night")
         case .relief: L("Back in time")
+        case .purr: L("Purr")
+        case .pet: L("Petting the cat")
         }
     }
 }

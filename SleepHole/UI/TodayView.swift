@@ -69,6 +69,8 @@ struct BuildingImage: View {
 struct HomeView: View {
     @Environment(AppModel.self) private var model
     @State private var briefing = false
+    /// The hero cat: 62 % of the screen width (250 pt on a 402 pt wide phone), at most this wide.
+    static let buddyMaxWidth: CGFloat = 260
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 30)) { ctx in
@@ -81,16 +83,15 @@ struct HomeView: View {
                     if let expiry = AppExpiry.date, AppExpiry.isSoon(at: now) { ExpiryCard(expiry: expiry, now: now) }
                     if model.showsMonthlySchedulePrompt { MonthlyScheduleCard().appearIn(delay: 0) }
                     StatusBadges().appearIn(delay: 0.05)
-                    TownIslandView(crane: canSleep)
-                        .frame(height: 210)
-                        .overlay(alignment: .bottomTrailing) {
-                            BuddyView(state: model.buddyState(at: now), cloud: true).frame(width: 132).offset(x: 4, y: 14)
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            model.fx("fx_pop", volume: 0.6)
-                            model.showTown()
-                        }
+                    // the hero (plan P2b): only the cat – the town has its own tab. A tap pets it (purr, arched back, wink).
+                    // Centred on cat + bed (the canvas is not centred on them); the arch's tail reaches above the box,
+                    // the cloud below it.
+                    BuddyView.centred(
+                        BuddyView(state: model.buddyState(at: now), cloud: true, onPet: { model.petBuddy() },
+                                  hold: AppModel.forcedBuddyReaction)
+                            .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.62) })
+                        .padding(.top, 40)
+                        .padding(.bottom, 22)
                         .appearIn(delay: 0.1)
 
                     VStack(spacing: 12) {
@@ -242,7 +243,7 @@ struct NightView: View {
                             .font(.title2.bold()).foregroundStyle(.orange)
                         Text(L("No worries. The alarm rings at \(Fmt.time(rec.wake))."))
                             .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
-                        BuddyView(state: .asleep).frame(width: 130)         // the cat never judges
+                        BuddyView(state: .asleep).frame(width: 138)         // the cat never judges
                     } else if rec.isNap {
                         NapResting(progress: progress, buddy: model.buddyState(at: now))
                         if let graceEnds = model.graceEnds, graceEnds > now {
@@ -345,7 +346,7 @@ struct NapResting: View {
 
     var body: some View {
         VStack(spacing: 14) {
-            BuddyView(state: buddy).frame(width: 170)
+            BuddyView(state: buddy).frame(width: 180)
             Text(L("Nap")).font(.headline).foregroundStyle(.yellow)
                 .opacity(dimmed ? 0.5 : 1)
                 .onAppear {                                  // a slow implicit pulse – no timeline
@@ -370,7 +371,7 @@ struct ConstructionSite: View {
     var buddy: BuddyState?
     static let frames = 16
     static let stageSize = CGSize(width: 320, height: 260)
-    static let buddyWidth: CGFloat = 104
+    static let buddyWidth: CGFloat = 110
     static let frameDuration = 0.22          // one slewing cycle ≈ 3.5 s
 
     private var siteId: String {
@@ -424,7 +425,7 @@ struct ConstructionSite: View {
             if let buddy {
                 GeometryReader { g in
                     let left = (g.size.width - Self.stageSize.width) / 2
-                    let h = Self.buddyWidth / BuddyView.aspect
+                    let h = Self.buddyWidth / BuddyView.boxAspect
                     BuddyView(state: buddy)
                         .frame(width: Self.buddyWidth)
                         .position(x: left - 24 + Self.buddyWidth / 2, y: Self.stageSize.height + 4 - h / 2)
@@ -518,7 +519,7 @@ struct AlarmView: View {
     private func content(withBuddy: Bool) -> some View {
         VStack(spacing: withBuddy ? 12 : 24) {
             Text(L("Good morning ☀️")).font(.largeTitle.bold())
-            if withBuddy { BuddyView(state: model.buddyState()).frame(width: 150) }
+            if withBuddy { BuddyView(state: model.buddyState()).frame(width: 159) }
             ConfirmPanel()
             Spacer()
         }

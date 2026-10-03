@@ -13,6 +13,8 @@ struct SettingsView: View {
     /// The schedule being edited (nil = not edited); saved only with "Save" (owner 2026-09-30 limits).
     @State private var scheduleDraft: Schedule?
     @State private var confirmSchedule = false
+    /// Dev aid: `-openSoundTest` opens Developer → Sound effects test at once (screenshots; `-scrollTo cat` shows the cat).
+    @State private var soundTest = ProcessInfo.processInfo.arguments.contains("-openSoundTest")
 
     var body: some View {
         @Bindable var model = model
@@ -246,6 +248,7 @@ struct SettingsView: View {
             }
             .skyBackground()
             .navigationTitle(L("Settings"))
+            .navigationDestination(isPresented: $soundTest) { SoundEffectsTestView() }
             .renameTownAlert(isPresented: $renaming)
             .sheet(isPresented: $showGuide) { GuideView(replay: true) }
             .task { notificationStatus = await Notifications.statusText() }
@@ -400,10 +403,12 @@ struct SoundEffectsTestView: View {
     private var effects: [(file: String, title: String)] {
         [("fx_sleep", L("Go to sleep")), ("fx_wow", L("Building finished (WOW)")), ("fx_coins", L("Coins")),
          ("fx_sparkle", L("Sparkle")), ("fx_whoosh", L("Whoosh")), ("fx_pop", L("Pop")),
+         ("fx_purr", L("Purr")), ("fx_meow", L("Meow")),
          ("level_up", L("Level up")), ("building_unfinished", L("Unfinished")), ("building_ruin", L("Ruins"))]
     }
 
     var body: some View {
+        ScrollViewReader { proxy in
         List {
             Section(L("Effects")) {
                 ForEach(effects, id: \.file) { e in
@@ -424,7 +429,20 @@ struct SoundEffectsTestView: View {
                     showWow = true
                     SoundFX.play("fx_wow")
                 }
+                // the Today cat: tap it for purr → arched back → wink (sound + vibration + frames)
+                VStack(spacing: 8) {
+                    Text(L("Tap the cat")).font(.footnote).foregroundStyle(.secondary)
+                    BuddyView.centred(BuddyView(state: .awake, onPet: { model.petBuddy() }).frame(width: 180))
+                        .padding(.top, 34)           // room for the arched back's tail
+                        .padding(.bottom, 8)
+                }
+                .frame(maxWidth: .infinity)
+                .id("cat")
             }
+        }
+        .onAppear {                                       // `-scrollTo cat` (screenshots)
+            if ProcessInfo.processInfo.arguments.contains("cat") { proxy.scrollTo("cat", anchor: .center) }
+        }
         }
         .navigationTitle(L("Sound effects test"))
         .overlay { if let nap = showSplash { GoodNightSplash(nap: nap) { showSplash = nil } } }
