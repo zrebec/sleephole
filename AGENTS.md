@@ -17,17 +17,19 @@ before doing anything:
 Whatever the owner's first message is (even just "Ahoj"), **start your reply by listing this agenda in Slovak**,
 then answer. Remove items here when they are done.
 
-0. ⚠️ **The provisioning profile on the iPhone expires on 2026-10-06 at 14:23 (Bratislava time)** – the 7 days run
-   from the profile's creation (2026-09-29), NOT from the last install. After that the app does not launch until a
-   build with a fresh profile is installed. The app now warns by itself (Today card 48 h ahead, notifications 24 h
-   and 3 h ahead, the date in Settings → About) – still remind the owner and offer to renew it.
-1. **Ask for the result of the owner's pause test** (night 2026-10-03 → 04): "🌙 Pause" on the night screen after
-   the setup (built 2026-10-03). Record the answer in the verification board (plan §0a). Open bugs in plan §11a:
-   B7, B8, B10–B16, B19.
-2. **Sleep buddy (phase P2, plan §10) + the sleep-sound fix B19** – built 2026-10-03 (the cat faces the owner:
-   awake on Today, asleep with a slow "z Z z" during a night / nap, awake in the setup, a pause and from the alarm
-   on). Check the P2 section: is it installed on the iPhone yet, and has the owner tested it? Ask him for the verdict
-   and move the rows in plan §0a.
+0. **Signing profile:** the build installed on 2026-10-03 carries a fresh profile that is valid until **2027-10-03**
+   (365 days, not 7 – the team now behaves like a paid Apple Developer Program team). Ask the owner to confirm that
+   his paid membership is active; if yes, phase F6 can be planned (plan §12, 2026-10-03). Until he decides, do not
+   use paid-only APIs. Remove this item once he has answered.
+1. **Ask for the results of the owner's tests** (night 2026-10-03 → 04): "🌙 Pause" on the night screen after the
+   setup, the cat beside the construction site, the sleep sound's stop being remembered (B19, fixed), and the
+   cat on Today (purr, arched back, wink – sounds and vibrations). Record the answers in the verification board
+   (plan §0a). Open bugs in plan §11a: B7, B8, B10–B16.
+2. **Sleep buddy (phases P2 + P2b, plan §10) + the sleep-sound fix B19** – P2 built 2026-10-03 (the cat faces the
+   owner: awake on Today, asleep with a slow "z Z z" during a night / nap, awake in the setup, a pause and from the
+   alarm on). P2b (owner's decision the same evening, built the same evening): Today shows ONLY the cat – no town
+   there any more – and three tap reactions (purr, arched back, wink). Both are committed and installed on the iPhone
+   (2026-10-03 20:40); they wait for the owner's verdict – then move the rows in plan §0a and close P2 / P2b.
 3. **City + real sun & moon (S–M, owner 2026-10-02):** Settings → city with autocomplete (label on its own row, the
    field on the row below – long names), a black ✕ after the field turns into a green ✓ once the city is verified
    (debounced ~500 ms check). MapKit `MKLocalSearchCompleter` + `MKLocalSearch` – no location permission, no

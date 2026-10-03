@@ -23,7 +23,8 @@
 | LIM | Limits: town rename 1×/year (else 5 000 🪙), schedule change free on days 1–3 / first week (else streak reset) | ✅ done (2026-09-30), installed | owner tests rename + schedule change |
 | UI | Look & feel: living sky, Today island, glass cards, micro-animations; UI-2: theme, splash/WOW, sounds, voice | 🟡 built + installed 2026-10-02; theme switch and voice confirmed 2026-10-03 (the owner keeps the voice off – he does not like it); the overall look still awaits his verdict | owner: "it looks nice now" |
 | P1 | Night pause (D17) + away budget 30 s/night + alarm safety + expiry warning (B1–B6, B9) | 🟡 built + installed 2026-10-03; the alarm in silent mode confirmed 2026-10-03; owner tests the pause in the night 2026-10-03 → 04 | owner uses a pause in a real night |
-| P2 | Sleep buddy: awake / asleep cat that faces the owner (plan A step 2, spec in §10 P2) + bug B19 | 🟡 built 2026-10-03 (all tests green, simulator screenshots checked); **not installed on the iPhone yet** – waits for the owner's OK | owner sleeps with the buddy |
+| P2 | Sleep buddy: awake / asleep cat that faces the owner (plan A step 2, spec in §10 P2) + bug B19 | 🟡 built, committed and **installed on the iPhone 2026-10-03 20:40** (one build with P2b), awaiting the owner | owner sleeps with the buddy |
+| P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | 🟡 built, committed and **installed on the iPhone 2026-10-03 20:40**, awaiting the owner (sounds + haptics can only be judged on the phone) | owner pets the cat on Today |
 | SKY | City in Settings + real sun/moon on a semicircle (see AGENTS "FIRST THING") | ⬜ S–M | owner picks his city, sees the true sun/moon |
 | F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo | "I like looking at it" |
 | F6 | *(optional, paid account)* HealthKit, AlarmKit, TestFlight | ⬜ later | owner decides to pay |
@@ -44,7 +45,7 @@ they do not block P2. **What is really verified, feature by feature, is in §0a.
 * 🖥 **tests / simulator only** – installed on the phone, never exercised there
 
 When the owner confirms or rejects something, move the row the same day. Automated state on 2026-10-03 (evening):
-SleepCore 141 tests green; app 119 tests, 92.46 % line coverage.
+SleepCore 144 tests green; app 133 tests, 92.63 % line coverage.
 
 ### Night and nap
 | | Feature | Evidence |
@@ -102,7 +103,7 @@ SleepCore 141 tests green; app 119 tests, 92.46 % line coverage.
 |---|---|---|
 | 🟢 | Voice (works) | owner (2026-10-03): works, he does not like it and keeps it switched off |
 | 📱 | Sleep sounds + exact timer | owner (2026-10-03): works, but a stop was not remembered (B19) |
-| 🖥 | B19 fix: a stop is remembered, switch "Play when the night starts" | built 2026-10-03, not installed yet |
+| 🖥 | B19 fix: a stop is remembered, switch "Play when the night starts" | installed 2026-10-03 evening |
 | 📱 | Sound stories | in use on the phone |
 | 📱 | Sound effects, good-night splash, WOW of a finished building | quick nights on 2026-10-02 |
 | 🖥 | The 5 newer alarms (birds, bowl, music box, kalimba, Bach) | no record of a phone test |
@@ -115,8 +116,9 @@ SleepCore 141 tests green; app 119 tests, 92.46 % line coverage.
 | 🟢 | Theme System / Light / Dark | owner (2026-10-03): accepted, switching works perfectly |
 | 📱 | Living sky, glass cards, micro-animations | awaiting "it looks nice now" |
 | 📱 | Slower animations (`Motion.pace`) | built after his remark of 2026-10-02 |
-| 🖥 | Sleep buddy (P2): awake cat on Today, asleep / awake on the night, nap and alarm screens | built 2026-10-03, not installed yet (replaces the old sleeping cat) |
-| 🖥 | "The app stops launching soon" card + the date in Settings (B2) | shows by itself from 2026-10-04 14:23 |
+| 🖥 | Sleep buddy (P2): asleep / awake cat on the night, nap and alarm screens | installed 2026-10-03 evening |
+| 🖥 | Today = only the cat (no town there), three tap reactions: purr, arched back, wink (P2b) | installed 2026-10-03 evening; sounds and haptics can only be judged on the phone |
+| 🖥 | "The app stops launching soon" card + the date in Settings (B2) | the profile now runs until 2027-10-03, so the card will not show by itself – Settings → About must show the new date; the card can be checked with `-expiresIn HOURS` in the simulator |
 
 ### Data, backup, tooling
 | | Feature | Evidence |
@@ -809,7 +811,7 @@ Not done: symbol effects on the tab icons (system tab bar, little gain). Night s
       `docs/previews/animals_cube_pets.png` (scratch recipes, not in the catalog yet) – for F5 (living town).
 **Accept:** owner tests jokers + the slower WOW. **Stop.**
 
-### P2 — Sleep buddy (owner's spec 2026-10-03) – 🟡 built 2026-10-03, awaiting the install + the owner's test
+### P2 — Sleep buddy (owner's spec 2026-10-03) – 🟡 installed 2026-10-03 (with P2b), awaiting the owner's test
 **Owner's words:** the buddy must be turned with its head towards me. When I am up, the cat's head is raised and it
 looks at me. When I nap or sleep, its head is down, its eyes are closed and it makes "zzz" in a slow animation loop.
 
@@ -859,24 +861,123 @@ pipeline (B16).
       (it showed 15 min for "All night"); `SleepSoundMemoryTests` (8 tests), app 111 tests green
 - [x] Opus review (2026-10-03): diffs read, screenshots checked, SleepCore 141 tests, app 119 tests / 92.46 %,
       `keys.py` 497 keys / 0 missing / 0 without sk; `assets/sprites` and `recipes.json` untouched
-- [ ] Install on the iPhone – only with the owner's OK and outside his nap window and night (the install also
-      renews the provisioning profile that runs out on 2026-10-06 14:23)
+- [x] Installed on the iPhone 2026-10-03 20:40 together with P2b (see there)
 - [ ] Owner's check on the phone → move the rows in §0a
 
-**Owner's feedback after the build (2026-10-03 evening) – changes the Today screen, NOT decided in detail yet:**
-* Decided: Today no longer shows the *active* town – next to the island the cat looks small and a tap on it
-  always opens the Town tab. The town keeps its own tab; nights keep building the town.
-* Wanted: a tap on the cat = a small interaction with sounds (for the moments when the app has nothing to do:
-  no coins to earn, too early for bed, the nap done or outside its window).
-* Under discussion: the buddy as an **equal partner of the town**; the owner also floated "taking care of the
-  buddy" as a new task but is unsure ("two different changes get mixed in my head"). Opus's analysis in the chat
-  of 2026-10-03: (1) buddy as the hero of Today + petting = presentation only, small, recommended now;
-  (2) buddy's mood derived from data the app already has (last night, streak, regularity) = no new duties,
-  recommended next; (3) care with needs that decay (feeding …) = a second game with duties, clashes with the
-  owner's own rule "no obligations, no punishments" (`NAVRH-ZVIERATKA.md` §2) and with the open coin economy →
-  not now. Town = the long memory of the nights, buddy = how today feels. **Wait for the owner's answer before
-  building; nothing of P2 is installed on the iPhone yet.**
-**Accept:** the owner sees the cat look at him on Today and sleep with him through a night. **Stop.**
+**Owner's feedback after the build (2026-10-03 evening):** Today must not show the town any more (next to the
+island the cat looks small and a tap always opened the Town tab) → phase **P2b** below. He also floated "taking care
+of the buddy" as a new task; Opus's analysis (chat 2026-10-03), kept here so the idea is not lost:
+(1) buddy as the hero of Today + petting = presentation only → P2b, now; (2) the buddy's mood derived from data the
+app already has (last night, streak, regularity) = no new duties → a good next step; (3) care with needs that decay
+(feeding …) = a second game with duties, clashes with the owner's own rule "no obligations, no punishments"
+(`NAVRH-ZVIERATKA.md` §2) and with the still-open coin economy → not now. Town = the long memory of the nights,
+buddy = how today feels.
+
+### P2b — The buddy is the hero of Today + three tap reactions (owner 2026-10-03 evening) – 🟡 installed 2026-10-03, awaiting the owner
+**Owner's decisions (do not re-litigate):**
+* The town has its own tab ("Town"). **Today shows no town / island any more** – only the cat with its interaction.
+  Nights keep building the town exactly as before. No chip, no thumbnail, no crane on Today – the enabled
+  "Go to sleep" button is the signal that building can start.
+* The cat on Today reacts to taps – at least three reactions, in this order, then again from the start:
+  1. **purr** – a CC0 "murrr" sound;
+  2. **arched back** ("mačací chrbát") – needs new renders;
+  3. **wink** with one eye (or similar). The details were left to Opus (below).
+* No rules, no coins, no duties: petting is only a small joy for the moments when the app has nothing to do.
+* Way of working: Opus writes this plan, splits it into tasks for Sonnet 5.5 workers, reviews and tests.
+
+**Reactions (Opus's design):**
+| # | Reaction | Frames (crossfades) | Extra | Sound | Haptic |
+|---|---|---|---|---|---|
+| 1 | `purr` ≈ 2.2 s | awake → `happy` (hold ≈ 1.8 s, tiny wobble ±2°, scale 1.03) → awake | 3 small hearts float up from the head | `fx_purr` | `.purr` – a soft rumble |
+| 2 | `arch` ≈ 1.8 s | awake → `arch-1` → `arch-2` (hold ≈ 0.8 s) → `arch-1` → awake | – | `fx_meow` (a short "mrrp") at the start | `.pet` – one light tap |
+| 3 | `wink` ≈ 1.2 s | awake → `wink` (hold ≈ 0.7 s) → awake | one sparkle next to the closed eye | `fx_sparkle` (exists), quiet | `.pet` |
+
+Rules of the reactions: only on Today and only while the cat is awake; a tap during a running reaction or during
+the awake ↔ asleep transition is ignored; no blink during a reaction; a change to asleep cancels the reaction;
+Reduce Motion = frames swap without crossfade and without wobble / hearts / sparkle, sound and haptic still play;
+sounds follow Settings → Sound effects (`AppModel.fx`); effects use the `.ambient` audio session, so the iPhone's
+silent switch mutes the purr (the haptic still plays). The night, nap and alarm screens get NO tap reactions.
+
+**Assets (worker A – `tools/render/`, `assets/buddy/`, the `buddy-cat-*` imagesets):** eight frames on ONE canvas,
+rendered ≈ 1.3× larger than today (the hero is ≈ 250 pt wide → the canvas should be 800–860 px wide):
+the four existing ones re-rendered (`awake`, `blink`, `mid`, `asleep` – same poses) plus
+* `buddy-cat-happy` – the awake pose, both eyes closed as happy arcs "^ ^" (lash halves tilted the other way than
+  the sleepy "︶", ≈ 20–25°), body a touch squashed (x 1.03, y 0.97);
+* `buddy-cat-arch-1` / `-arch-2` – half / full "arched back": the cube raised on stretched legs (all four),
+  slightly taller and narrower, rear higher than the front (pitch forward ≈ 6–10°), tail straight up and thicker;
+  eyes open; must read as "a cat arching its back" and differ from `awake` at a glance;
+* `buddy-cat-wink` – the awake pose, ONE eye (the cat's left = +x) closed with a happy arc, the other open, the
+  cube rolled ≈ 6–8° towards the closed eye. Needs a one-eye variant of the generated OBJ (`buddy_cat_obj.py`).
+`buddy_finish.py` handles all eight (common crop, catalog, preview sheet, imagesets). The worker reports the canvas
+size and the normalized positions of: the eyes (awake), the cube's top-right corner (asleep, origin of "z Z z"),
+the head's top centre (awake, origin of the hearts), the bed's ground contact (the cloud).
+
+**Sounds (worker S – `tools/audio/`, `assets/audio/`):** `fx_purr.caf` (≈ 2 s of a close, clean purr, fade in 0.15 s,
+fade out 0.4 s) and `fx_meow.caf` (one short soft meow / "mrrp", ≤ 0.9 s) from **CC0** Freesound recordings through
+the existing pipeline: ids in `tools/audio/freesound.json` with `"use": "fx"`, download by `fetch_freesound.py`
+(refuses anything that is not CC0; key in `~/.freesound_key`, never printed or committed), cut in `make_sfx.py`
+(`purr()`, `meow()`, same `write()` as the other effects – mono 44.1 kHz PCM CAF, peak −3 dB), credits in
+`assets/audio/CREDITS-freesound.txt` and in the app's Credits screen if it lists sounds. Nobody in the pipeline can
+listen, so candidates are chosen by description / tags / rating and checked by analysis (purr: amplitude modulation
+around 20–30 Hz, no clipping, quiet background; meow: one tonal event). Fallback when nothing suitable is CC0: a
+synthesised purr in `make_sfx.py` (say so in the report). The owner judges the sounds in Settings → Developer →
+Sound effects test.
+
+**App (worker APP – after A and S):**
+* SleepCore `Buddy.swift`: `public enum BuddyReaction: CaseIterable, Sendable { case purr, arch, wink }` +
+  `var next: BuddyReaction` (purr → arch → wink → purr) + tests in `BuddyTests`.
+* `Haptics.swift`: new cases `.purr` (soft rumble ≈ 1.2 s: continuous, intensity ≈ 0.45, sharpness ≈ 0.1, with a few
+  gentle pulses) and `.pet` (one light transient); every `switch` over `Haptic` handles them (also
+  `VibrationTestView.title`, the UIKit fallback); strings EN + SK.
+* `AppModel`: `@discardableResult func petBuddy() -> BuddyReaction` – returns the next reaction of the cycle (session
+  state only, starts with purr, never persisted), plays its sound through `fx(...)` and its haptic through `buzz`.
+* `BuddyView`: new frames in `Pose`; an optional `onPet: (() -> BuddyReaction?)?` – when set, the view is tappable
+  (`contentShape` = the cat's frame) and a tap while resting awake calls it and plays the reaction's frame timeline
+  (a static, testable description of steps: pose + duration); hearts / sparkle overlays; the canvas-dependent
+  constants (`aspect`, origin of "z Z z", cloud position) follow the new canvas.
+* `HomeView` (`TodayView.swift`): `TownIslandView` and its tap are removed from Today; the hero is
+  `BuddyView(state:cloud: true, onPet: { model.petBuddy() })`, ≈ 250 pt wide, centred, with room for the cloud;
+  the order stays: expiry card, monthly card, badges, **buddy**, sleep card, nap card, joker card, level info.
+  `TownIslandView.swift` and `TownRender.island` stay in the code (unused on Today, still rendered by a test) in
+  case the island returns elsewhere – remove them only when the owner says so.
+* Sound effects test (Settings → Developer): the two new sounds in the list + three buttons that play the reactions
+  on a `BuddyView`.
+* Accessibility: the awake buddy on Today gets the hint EN "Tap to pet her" / SK "Ťukni a pohladkaj ju".
+* Re-check every placement of the buddy after the new canvas (Today, night, compact morning, nap, collapsed,
+  alarm) on screenshots; tests: reaction cycle, `petBuddy` (order, haptics log, nothing persisted), timelines
+  (start and end at `awake`, total durations), rendering of the reactions, Today without the island.
+
+**Tasks:**
+- [x] A – assets (2026-10-03): eight frames on one canvas **860 × 974 px** (`BUDDY["size"] = 1.3`); `lashes(eyes:,
+      style:)` sleepy / happy; `buddy_cat_obj.py` also writes the one-eye `animal-cat-wink.obj`; arch = legs ×2.4 /
+      ×2.9, body + mouth detail raised and pitched 5° / 9°, tail puffed; wink = roll −7°; the mouth detail (`Group`)
+      now follows the body in every pose (it floated at the chin in the first awake / blink frames). Normalized
+      positions on the canvas (x from the left, y from the top): eyes (0.220, 0.463) / (0.384, 0.463), head top
+      centre (0.302, 0.256), asleep cube top-right (0.497, 0.343), bed ground contact (0.359, 0.834); the cube is
+      0.376 of the canvas wide; only `arch-2` uses the top ≈ 15 % of the canvas. A cube cannot bend: the "arched
+      back" reads as standing tall on stretched legs with a puffed tail
+- [x] S – sounds (2026-10-03): `fx_purr.caf` (2.0 s, Freesound 326295 "cat purring 2.wav" by blukotek, CC0; one
+      breath, pulse train 25 Hz, 70 Hz high-pass) and `fx_meow.caf` (0.53 s, Freesound 262312 "Cat Meow1.wav" by
+      steffcaffrey, CC0; a greeting meow, fundamental ≈ 700 Hz – loud once normalised, play it quietly);
+      `make_sfx.py purr meow`; nobody could listen – the owner judges them in the sound effects test
+- [x] APP – app (2026-10-03): SleepCore `BuddyReaction` (+ `next`); `Haptic.purr` / `.pet`; `AppModel.petBuddy()`
+      (session-only cycle, sound + haptic); `BuddyView(state:cloud:onPet:hold:)` – layout box without the canvas's
+      empty top (`headroom` = 159 / 974, only the arch frames reach above it), reactions as data
+      (`BuddyView.timeline(_:)`: purr = happy 1.8 s + hearts, arch = arch1 → arch2 0.8 s → arch1, wink 0.7 s + sparkle;
+      paced totals 3.4 / 2.6 / 1.6 s), taps accepted only while resting awake, `BuddyView.centred(_:)`; Today =
+      the cat ≈ 250 pt wide instead of the island (`TownIslandView` kept in the code, unused); other placements
+      re-tuned (night 110, nap 180, collapsed 138, alarm 159 pt); sound effects test: purr, meow + a tappable cat;
+      Credits: section "Cat sounds"; dev args `-buddyReaction purr|arch|wink`, `-openSoundTest`, `-scrollTo cat`;
+      test hook `\.buddyProbe` (hosted tests cannot tap). Screenshots in `build/shots/p2b/`
+- [x] Opus review (2026-10-03): renders, diff and screenshots checked; SleepCore 144 tests, app 133 tests / 92.63 %,
+      `keys.py` 504 keys / 0 missing / 0 without sk; `assets/sprites` + `recipes.json` untouched; no simulator left on.
+      Not verifiable in the simulator: the real purr / meow, the haptics, the silent switch
+- [x] Installed on the iPhone 2026-10-03 20:40 with the owner's OK (P2 + P2b + B19 in one build); the app's data
+      was pulled first (`docs/device-logs/2026-10-03-before-p2b/`, git-ignored); the app launched and kept running.
+      The build carries a FRESH profile valid until 2027-10-03 – see §12
+- [ ] Owner's check on the phone → move the rows in §0a
+**Accept:** on Today the owner sees only the cat; three taps give purr, arched back, wink; the Town tab is unchanged.
+**Stop.**
 
 ### F5 — Living town
 > Owner 2026-10-02: town + **Cube Pets** (no forest); animals reflect **regularity** and **undisturbed nights**,
@@ -1056,6 +1157,8 @@ screen checks.
 | 2026-10-03 | **Cube Pets have named parts and animations** (corrects `NAVRH-ZVIERATKA.md`, "no animations"): `animal-cat` = `body` (the cube is head and body in one, ears included), `Group` (a flat detail on the front face), `tail`, four `leg-*`; the OBJ keeps them as `g` groups, the GLB adds 8 node animations (static, idle, walk, run, eat, dance, gesture-positive / -negative – rotations of body, tail and legs only). There is no separate head and no closed-eye variant – a pose (legs tucked, body lowered / tilted) and closed eyes have to be made in our renderer. |
 | 2026-10-03 | **Buddy render (P2, W1).** ModelIO does NOT keep OBJ `g` groups as nodes: the cat loads as ONE node with one geometry of 7 elements (submeshes named `<group>_colormap`, all sharing one vertex source, so every bounding box equals the whole cat's). The renderer now re-splits such a node per element when a part uses a pose. New optional recipe fields: `Part.pitch / roll / pivot`, `Part.pose` (group name or `leg-*` wildcard → hidden / move / rot / scale / pivot), `Part.children` + `attach`, `Part.chamfer / center`, `Recipe.bounds` (shared canvas for animation frames), `src: "@path"` (repo-relative OBJ). Closed eyes: a flat fur-coloured lid does not match (the face has a vertical fur gradient and smooth normals) → `tools/render/buddy_cat_obj.py` writes a cat OBJ whose eye polygons take the face's gradient UVs (`build/buddy/`, git-ignored) + four thin dark lash boxes. Old recipes render as before (differences ≤ 10 px = the same GPU noise two runs of the old renderer show). |
 | 2026-10-03 | **P2 buddy in the app + B19.** Built by three Sonnet workers, reviewed by Opus. Lessons: a hosted test window's scene phase is `.background`, so views that pause in the background need an override to be tested (`\.buddyAnimates`); a nested `RunLoop.run` starves SwiftUI `.task`s in the hosted tests → animation tests are `async` and wait with `Task.sleep`; restarting a running `repeatForever` animation with new parameters needs a step back to rest first; two crossfade steps in one update collapse (1 → 0 → 1 = no change) → a 50 ms frame break between the steps. New dev launch args: `-buddy awake|asleep`, `-testNightMinutes N` (the normal, non-compact night layout), `-startNap`, `-mute` (**without `-mute` a test night's alarm rings on the Mac's speakers**). `tools/test_app.sh` prints "unable to find utility simctl" once during the run although the simulator does shut down (tooling, B16). B19: `stopSleepSound()` never stored anything – see P2 W3. |
+| 2026-10-03 | **P2b built** (three Sonnet workers: assets, sounds, app). Lessons: an animation canvas grows with its tallest frame – give the view a layout box without the empty top (`headroom`) and let only the tall frames overflow, otherwise every placement shifts; the canvas is not centred on the character (bed + shadow extend right) → centre on a chosen x (0.37), not on the frame; a purr's energy sits mostly below 200 Hz, which a phone speaker cannot play – judge loudness by the band above 200 Hz; effects play through the `.ambient` session, so the silent switch mutes them (the haptic still plays). |
+| 2026-10-03 | **Install of P2 + P2b and a fresh profile.** `xcodebuild … -allowProvisioningUpdates` keeps signing with the cached profile in `~/Library/Developer/Xcode/UserData/Provisioning Profiles/` as long as it is valid (the first build still carried the profile of 2026-09-29). Moving that file aside and building again made Xcode fetch a new one. **The new profile has `TimeToLive` 365 – it is valid until 2027-10-03**, not for 7 days: the team now behaves like a paid Apple Developer Program team. To confirm with the owner; if so, the 7-day reinstall is history and phase F6 (Time Sensitive notifications, AlarmKit, HealthKit, TestFlight – `docs/TODO-APPLE-DEVELOPER.md` part B) can be planned. Until he decides, the hard rule "no paid-only APIs" stays. Device build + install: `xcodebuild -scheme SleepHole -configuration Debug -destination id=<device> -derivedDataPath build/DerivedData -allowProvisioningUpdates build`, check `security cms -D -i <app>/embedded.mobileprovision` (`ExpirationDate`), then `xcrun devicectl device install app --device <device> <app>`. |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |
