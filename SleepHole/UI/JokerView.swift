@@ -40,14 +40,14 @@ struct JokerCard: View {
                     if let j = model.activeJoker {
                         Text(L("\(j.tier.title) protects your streak")).font(.subheadline.bold())
                         Text(L("Nights \(Fmt.dayMonth(j.firstNight)) – \(Fmt.dayMonth(j.lastNight(calendar: .current)))"))
-                            .font(.caption).foregroundStyle(.secondary)
+                            .font(.caption).cardCaption()
                     } else {
                         Text(L("Ill or on holiday?")).font(.subheadline.bold())
-                        Text(L("A joker protects your 🔥 streak")).font(.caption).foregroundStyle(.secondary)
+                        Text(L("A joker protects your 🔥 streak")).font(.caption).cardCaption()
                     }
                 }
                 Spacer()
-                Image(systemName: "chevron.right").font(.caption).foregroundStyle(.secondary)
+                Image(systemName: "chevron.right").font(.caption).cardCaption()
             }
             .padding(.horizontal, 16).padding(.vertical, 10)
             .contentShape(Rectangle())

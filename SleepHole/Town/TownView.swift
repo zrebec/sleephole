@@ -148,7 +148,7 @@ struct TownTab: View {
 /// "My Town ✎" – the pencil after the text.
 struct TrailingIconLabelStyle: LabelStyle {
     func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: 6) { configuration.title; configuration.icon.foregroundStyle(.secondary) }
+        HStack(spacing: 6) { configuration.title; configuration.icon.cardCaption() }
     }
 }
 

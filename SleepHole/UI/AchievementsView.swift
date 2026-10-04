@@ -71,12 +71,12 @@ struct AchievementsCard: View {
                             Text(verbatim: a.icon).font(.system(size: 34))
                                 .grayscale(key == nil ? 1 : 0).opacity(key == nil ? 0.35 : 1)
                                 .overlay(alignment: .bottomTrailing) {
-                                    if key == nil { Image(systemName: "lock.fill").font(.caption2).foregroundStyle(.secondary) }
+                                    if key == nil { Image(systemName: "lock.fill").font(.caption2).cardCaption() }
                                 }
                             Text(a.title).font(.caption2.weight(.semibold)).multilineTextAlignment(.center)
                                 .lineLimit(2, reservesSpace: true)
                             Text(verbatim: key.map(Fmt.dayMonth) ?? "+\(a.reward) 🪙")
-                                .font(.caption2).foregroundStyle(.secondary)
+                                .font(.caption2).cardCaption()
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 6)
@@ -88,7 +88,7 @@ struct AchievementsCard: View {
                 }
             }
             if let a = selected {
-                Text(verbatim: "\(a.icon) \(a.detail)").font(.footnote).foregroundStyle(.secondary)
+                Text(verbatim: "\(a.icon) \(a.detail)").font(.footnote).cardCaption()
             }
         }
     }
@@ -102,7 +102,7 @@ struct NewAchievements: View {
         if !achievements.isEmpty {
             VStack(spacing: 6) {
                 Text(achievements.count == 1 ? L("New achievement!") : L("New achievements!"))
-                    .font(.headline).foregroundStyle(.yellow)
+                    .font(.headline).foregroundStyle(Color.readableYellow)
                 ForEach(achievements) { a in
                     Text(verbatim: "\(a.icon) \(a.title) · +\(a.reward) 🪙").font(.subheadline)
                 }

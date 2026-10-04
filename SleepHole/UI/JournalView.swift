@@ -30,7 +30,7 @@ struct WeekJournalView: View {
                     count("🚧", week.unfinished, L("unfinished"))
                     count("🧱", week.ruins, L("ruins"))
                     Spacer()
-                    Text(verbatim: "+\(week.coins) 🪙").font(.headline).foregroundStyle(.yellow)
+                    Text(verbatim: "+\(week.coins) 🪙").font(.headline).foregroundStyle(Color.readableYellow)
                 }
                 if !week.buildingIds.isEmpty {
                     Text(L("New buildings: \(week.buildingIds.count)")).font(.subheadline)
@@ -47,7 +47,7 @@ struct WeekJournalView: View {
                 if week.completeNaps > 0 { Text(L("Complete naps: \(week.completeNaps) 😴")).font(.subheadline) }
                 if week.pauses > 0 { Text(L("Night pauses: \(week.pauses) 🌙")).font(.subheadline) }
                 if let p = previous, p.nights > 0 {
-                    Text(L("Complete nights last week: \(p.complete)")).font(.footnote).foregroundStyle(.secondary)
+                    Text(L("Complete nights last week: \(p.complete)")).font(.footnote).cardCaption()
                 }
             }
             Text(Self.sentence(week, previous: previous)).font(.subheadline.italic())
@@ -72,12 +72,12 @@ struct JournalCard: View {
         VStack(alignment: .leading, spacing: 10) {
             Text(L("This week · \(WeekJournalView.range(current))")).font(.subheadline.bold())
             if current.nights == 0 && current.completeNaps == 0 {
-                Text(L("No nights yet this week – tonight can be the first 🌙")).font(.subheadline).foregroundStyle(.secondary)
+                Text(L("No nights yet this week – tonight can be the first 🌙")).font(.subheadline).cardCaption()
             } else {
                 WeekJournalView(week: current, previous: weeks.first { $0.monday == lastMonday }, showTitle: false)
             }
             if !earlier.isEmpty {
-                DisclosureGroup(L("Earlier weeks")) {
+                DisclosureGroup {
                     ForEach(Array(earlier.enumerated()), id: \.element.monday) { i, w in
                         DisclosureGroup {
                             WeekJournalView(week: w, previous: earlier[safe: i + 1], showTitle: false)
@@ -87,7 +87,10 @@ struct JournalCard: View {
                                 .font(.subheadline.monospacedDigit())
                         }
                     }
+                } label: {
+                    Text(L("Earlier weeks"))
                 }
+                .tint(.primary)                       // not the pale accent colour (2.4 : 1 on a light card)
                 .font(.subheadline)
             }
         }

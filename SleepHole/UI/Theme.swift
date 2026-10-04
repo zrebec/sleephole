@@ -102,6 +102,7 @@ struct SkyOverrides: Equatable {
 /// The living sky: gradient that breathes slowly, sun or moon on its arc, twinkling stars, drifting clouds.
 /// Animates only while visible and the app is active; with Reduce Motion it is a still picture.
 /// `semicircle` (Today): with a city set, the body travels a true half circle with a faint dotted track.
+/// `showsBody` false (Stats, Settings – B7): gradient, stars and clouds only, so the sun never sits behind a title.
 struct LivingSky: View {
     @Environment(AppModel.self) private var model
     @Environment(\.colorScheme) private var scheme
@@ -109,8 +110,15 @@ struct LivingSky: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var visible = false
     let semicircle: Bool
+    let showsBody: Bool
 
-    init(semicircle: Bool = false) { self.semicircle = semicircle }
+    init(semicircle: Bool = false, showsBody: Bool = true) {
+        self.semicircle = semicircle
+        self.showsBody = showsBody
+    }
+
+    /// The sky behind the Stats and Settings tabs: no sun or moon (it would shine through the large title).
+    static var backdrop: LivingSky { LivingSky(showsBody: false) }
 
     /// Dev aid: `-skyTime 21:45` pins the sky's time of day (screenshots).
     static let pinnedTime: (Int, Int)? = {
@@ -142,8 +150,8 @@ struct LivingSky: View {
                 gradient(palette, t: t)
                 Canvas { gc, size in
                     SkyDrawing.stars(&gc, size: size, opacity: palette.starOpacity, t: t)
-                    if round { SkyDrawing.track(&gc, size: size, dark: scheme == .dark, daylight: sky.daylight) }
-                    SkyDrawing.sunOrMoon(&gc, size: size, sky: sky, semicircle: round)
+                    if round && showsBody { SkyDrawing.track(&gc, size: size, dark: scheme == .dark, daylight: sky.daylight) }
+                    if showsBody { SkyDrawing.sunOrMoon(&gc, size: size, sky: sky, semicircle: round) }
                     SkyDrawing.clouds(&gc, size: size, palette: palette, t: t)
                 }
             }
@@ -208,14 +216,12 @@ enum SkyDrawing {
 
     // MARK: the body on its way
 
-    /// Today's semicircle: a compact half circle in the free sky to the right of the large title and above the glass
-    /// badges (the body never shines through glass). Centre x = 150 pt left of the right edge, centre y = 180 pt from
-    /// the top, radius 95 pt – less on a narrow screen, so the left end stays right of the title (140 pt from the left
-    /// edge) and the right end 36 pt from the right edge.
-    static let semicircleCentreY: CGFloat = 180
+    /// Today's semicircle spans the screen from left to right (owner 2026-10-04: the sun in the middle means noon –
+    /// never shrink or move it): centre x = the middle of the screen, centre y = 310 pt from the top, radius 150 pt
+    /// (less on a narrow screen, so the ends stay 44 pt from the edges).
+    static let semicircleCentreY: CGFloat = 310
     static func semicircle(width: CGFloat) -> (centre: CGPoint, radius: CGFloat) {
-        let x = width - 150
-        return (CGPoint(x: x, y: semicircleCentreY), min(95, x - 140, width - 36 - x))
+        (CGPoint(x: width / 2, y: semicircleCentreY), min(150, width / 2 - 44))
     }
 
     /// Rises at the left end (arc 0), is at the top at 0.5 and sets at the right end (arc 1).
@@ -224,9 +230,12 @@ enum SkyDrawing {
         return CGPoint(x: c.x - r * cos(.pi * arc), y: c.y - r * sin(.pi * arc))
     }
 
-    /// The other screens' low flat arc; stays above most of the content.
+    /// Today's low flat arc (no city) and the Town tab's: starts right of the large title (140 pt from the left edge,
+    /// B7) and ends 40 pt from the right edge; stays above most of the content.
+    static let flatMargins = (left: CGFloat(140), right: CGFloat(40))
     static func flatPoint(arc: Double, size: CGSize) -> CGPoint {
-        CGPoint(x: 40 + arc * (size.width - 80), y: size.height * (0.22 - 0.13 * sin(arc * .pi)))
+        let (left, right) = flatMargins
+        return CGPoint(x: left + arc * (size.width - left - right), y: size.height * (0.22 - 0.13 * sin(arc * .pi)))
     }
 
     /// The faint dotted half circle the body travels on Today (also a rough clock).
@@ -317,9 +326,10 @@ enum SkyDrawing {
 }
 
 extension View {
-    /// The living sky behind a tab; scroll views and forms show it through.
+    /// The living sky behind a tab, without the sun or moon (B7: never behind a title); scroll views and forms show
+    /// it through.
     func skyBackground() -> some View {
-        scrollContentBackground(.hidden).background { LivingSky() }
+        scrollContentBackground(.hidden).background { LivingSky.backdrop }
     }
 
     /// A Liquid Glass card on iOS 26, frosted material before.
@@ -331,15 +341,12 @@ extension View {
         modifier(GlassCard(shape: Capsule(), tint: tint))
     }
 
-    /// Big action buttons: glass on iOS 26, bordered before.
-    @ViewBuilder
-    func glassButton(prominent: Bool) -> some View {
-        if #available(iOS 26.0, *) {
-            if prominent { buttonStyle(.glassProminent) } else { buttonStyle(.glass) }
-        } else {
-            if prominent { buttonStyle(.borderedProminent) } else { buttonStyle(.bordered) }
-        }
-    }
+    /// Big action buttons: glass on iOS 26, bordered before. Disabled ones get a calm solid look of their own (B7) –
+    /// apply `.disabled(…)` AFTER this modifier, so it can read the environment.
+    func glassButton(prominent: Bool) -> some View { modifier(GlassButton(prominent: prominent)) }
+
+    /// A caption inside a card or capsule: the primary colour at 72 % – `.secondary` is too weak on a light card (B7).
+    func cardCaption() -> some View { foregroundStyle(Color.cardCaption) }
 
     /// Fades + slides in the first time it appears, `delay` seconds late (staggered cards).
     func appearIn(delay: Double) -> some View { modifier(AppearIn(delay: delay)) }
@@ -363,17 +370,100 @@ private struct PopIn: ViewModifier {
     }
 }
 
-private struct GlassCard<S: Shape>: ViewModifier {
+/// What sits under every glass card and capsule (B7, owner 2026-10-03: "on the light sky the transparency bothers quite
+/// a lot"): a calm backing, so the text is equally readable over the day sky, the night sky and a cloud. Fully opaque
+/// with Reduce Transparency (or the dev launch argument `-solidCards`, for screenshots).
+enum CardBacking {
+    static func solidRequested(_ args: [String]) -> Bool { args.contains("-solidCards") }
+    static let solidLaunch = solidRequested(ProcessInfo.processInfo.arguments)
+    /// Fully opaque: the system's Reduce Transparency, or the dev launch argument `-solidCards`.
+    static func isSolid(reduceTransparency: Bool, launchSolid: Bool = solidLaunch) -> Bool {
+        reduceTransparency || launchSolid
+    }
+    static let lightOpacity = 0.78
+    static let darkOpacity = 0.72
+    /// A tint laid over the backing (streak, coins, tinted cards).
+    static let tintOpacity = 0.25
+    static let darkColor = Color(red: 0.07, green: 0.09, blue: 0.18)
+
+    static func color(dark: Bool) -> Color { dark ? darkColor : .white }
+    static func opacity(dark: Bool, solid: Bool) -> Double { solid ? 1 : dark ? darkOpacity : lightOpacity }
+    /// The thin edge line of the backing (the glass draws its own highlight on iOS 26).
+    static func edge(dark: Bool) -> Color { .white.opacity(dark ? 0.12 : 0.35) }
+}
+
+extension Color {
+    /// Captions inside cards.
+    static let cardCaption = Color.primary.opacity(0.72)
+
+    /// Coloured text on a light card or sky (B7): the system yellow / green / orange are only 1.3–2.5 : 1 on white, so
+    /// light mode gets deeper shades; dark mode keeps the system colours.
+    static let readableYellow = adaptive(light: (0.55, 0.37, 0.0), dark: .systemYellow)
+    static let readableGreen = adaptive(light: (0.0, 0.50, 0.20), dark: .systemGreen)
+    static let readableOrange = adaptive(light: (0.74, 0.34, 0.0), dark: .systemOrange)
+
+    private static func adaptive(light: (Double, Double, Double), dark: UIColor) -> Color {
+        Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? dark
+            : UIColor(red: light.0, green: light.1, blue: light.2, alpha: 1) })
+    }
+}
+
+private struct GlassCard<S: InsettableShape>: ViewModifier {
     let shape: S
     let tint: Color?
+    @Environment(\.colorScheme) private var scheme
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     func body(content: Content) -> some View {
-        if #available(iOS 26.0, *) {
-            content.glassEffect(tint.map { .regular.tint($0.opacity(0.35)) } ?? .regular, in: shape)
-        } else {
-            content.background(.ultraThinMaterial, in: shape)
-                .background((tint ?? .clear).opacity(0.15), in: shape)
+        let dark = scheme == .dark
+        let solid = CardBacking.isSolid(reduceTransparency: reduceTransparency)
+        let backing = ZStack {
+            shape.fill(CardBacking.color(dark: dark).opacity(CardBacking.opacity(dark: dark, solid: solid)))
+            if let tint { shape.fill(tint.opacity(CardBacking.tintOpacity)) }
         }
+        if #available(iOS 26.0, *) {
+            content.glassEffect(.regular, in: shape).background { backing }
+        } else {
+            content.background { backing }.overlay { shape.strokeBorder(CardBacking.edge(dark: dark), lineWidth: 1) }
+        }
+    }
+}
+
+/// Big buttons (B7): the system's glass / bordered look while enabled; a plain solid fill and a clearly readable label
+/// while disabled – no glass on glass, and no system dimming (a custom style is not dimmed).
+private struct GlassButton: ViewModifier {
+    let prominent: Bool
+    @Environment(\.isEnabled) private var isEnabled
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if !isEnabled {
+            content.buttonStyle(CalmDisabledButtonStyle())
+        } else if #available(iOS 26.0, *) {
+            if prominent { content.buttonStyle(.glassProminent) } else { content.buttonStyle(.glass) }
+        } else {
+            if prominent { content.buttonStyle(.borderedProminent) } else { content.buttonStyle(.bordered) }
+        }
+    }
+}
+
+/// The disabled big button: black at 7 % (light) / white at 10 % (dark) over the card, the label `.primary` at 55 %.
+struct CalmDisabledButtonStyle: ButtonStyle {
+    @Environment(\.colorScheme) private var scheme
+    @Environment(\.controlSize) private var controlSize
+
+    static let labelOpacity = 0.55
+    static func fill(dark: Bool) -> Color { dark ? .white.opacity(0.10) : .black.opacity(0.07) }
+
+    func makeBody(configuration: Configuration) -> some View {
+        let fill = Self.fill(dark: scheme == .dark)
+        let large = controlSize == .large || controlSize == .extraLarge       // same size as the glass button
+        configuration.label
+            .foregroundStyle(Color.primary.opacity(Self.labelOpacity))
+            .padding(.horizontal, large ? 16 : 14).padding(.vertical, large ? 15.5 : 7)
+            .background {
+                if #available(iOS 26.0, *) { Capsule().fill(fill) } else { RoundedRectangle(cornerRadius: 12).fill(fill) }
+            }
     }
 }
 

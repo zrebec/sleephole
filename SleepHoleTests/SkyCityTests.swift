@@ -336,22 +336,37 @@ struct SkyCityTests {
     func near(_ a: CGPoint, _ x: Double, _ y: Double) -> Bool { abs(a.x - x) < 0.01 && abs(a.y - y) < 0.01 }
 
     @Test func theBodyTravelsATrueSemicircle() {
+        // spans the screen (owner 2026-10-04: the sun in the middle means noon)
         let (c, r) = SkyDrawing.semicircle(width: 402)
-        #expect(c == CGPoint(x: 252, y: 180) && r == 95)                            // right of the title, above the badges
-        #expect(near(SkyDrawing.semicirclePoint(arc: 0, width: 402), 157, 180))      // rises at the left end
-        #expect(near(SkyDrawing.semicirclePoint(arc: 0.5, width: 402), 252, 85))     // top
-        #expect(near(SkyDrawing.semicirclePoint(arc: 1, width: 402), 347, 180))      // sets at the right end
+        #expect(c == CGPoint(x: 201, y: 310) && r == 150)
+        #expect(near(SkyDrawing.semicirclePoint(arc: 0, width: 402), 51, 310))       // rises at the left end
+        #expect(near(SkyDrawing.semicirclePoint(arc: 0.5, width: 402), 201, 160))     // top, in the middle of the screen
+        #expect(near(SkyDrawing.semicirclePoint(arc: 1, width: 402), 351, 310))       // sets at the right end
         for arc in stride(from: 0.0, through: 1.0, by: 0.1) {                        // always on the circle
             let p = SkyDrawing.semicirclePoint(arc: arc, width: 402)
-            #expect(abs(hypot(p.x - 252, p.y - 180) - 95) < 0.001)
+            #expect(abs(hypot(p.x - 201, p.y - 310) - 150) < 0.001)
         }
         let narrow = SkyDrawing.semicircle(width: 320)                               // narrow screen: smaller radius
-        #expect(narrow.centre == CGPoint(x: 170, y: 180) && narrow.radius == 30)
-        #expect(narrow.centre.x - narrow.radius >= 140 && narrow.centre.x + narrow.radius <= 320 - 36)
-        #expect(SkyDrawing.semicircle(width: 440).radius == 95)                      // a wide screen keeps 95 pt
-        // the flat arc of the other screens is what it has always been
-        let flat = SkyDrawing.flatPoint(arc: 0.5, size: CGSize(width: 402, height: 874))
-        #expect(near(flat, 201, 874 * 0.09))
+        #expect(narrow.centre == CGPoint(x: 160, y: 310) && narrow.radius == 116)
+        #expect(narrow.centre.x - narrow.radius == 44 && narrow.centre.x + narrow.radius == 320 - 44)
+        #expect(SkyDrawing.semicircle(width: 440).radius == 150)                     // a wide screen keeps 150 pt
+    }
+
+    @Test func theFlatArcStartsRightOfTheTitle() {
+        // B7: the low flat arc of Today (no city) and the Town tab starts at x = 140 and ends 40 pt from the edge
+        let size = CGSize(width: 402, height: 874)
+        #expect(near(SkyDrawing.flatPoint(arc: 0, size: size), 140, 874 * 0.22))
+        #expect(near(SkyDrawing.flatPoint(arc: 1, size: size), 402 - 40, 874 * 0.22))
+        #expect(near(SkyDrawing.flatPoint(arc: 0.5, size: size), 140 + 0.5 * (402 - 180), 874 * 0.09))
+        for arc in stride(from: 0.0, through: 1.0, by: 0.1) {
+            #expect(SkyDrawing.flatPoint(arc: arc, size: size).x >= 140)
+        }
+    }
+
+    @Test func tabBackdropHasNoSunOrMoon() {
+        // Stats and Settings (`skyBackground()`) draw the sky without the body; Today and Town keep it
+        #expect(!LivingSky.backdrop.showsBody)
+        #expect(LivingSky().showsBody && LivingSky(semicircle: true).showsBody)
     }
 
     @Test func theLitPartOfTheMoon() {
@@ -403,6 +418,7 @@ struct SkyCityTests {
         render(TodayView(), m)                                      // the real sky of the moment, semicircle
         render(LivingSky(semicircle: true), m)
         render(LivingSky(), m)                                      // the flat arc of Stats / Settings / Town
+        render(LivingSky.backdrop, m)                               // Stats / Settings: no sun or moon
         let state = SkyState(phase: body == .sun ? .day : .night, daylight: body == .sun ? 1 : 0, glow: 0, arc: 0.3,
                              body: body, moon: body == .moon ? MoonLook(illuminated: 0.3, litOnRight: true) : nil)
         render(Canvas { gc, size in
@@ -428,5 +444,94 @@ struct SkyCityTests {
             SkyDrawing.sunOrMoon(&gc, size: size, sky: SkyState(phase: .night, daylight: 0, glow: 0, arc: 0.5))   // schedule crescent
         }.frame(width: 402, height: 300), m)
         _ = c
+    }
+
+    // MARK: B7 – contrast and transparency
+
+    @Test func theCardBackingIsCalmAndSolidOnRequest() {
+        #expect(CardBacking.opacity(dark: false, solid: false) == 0.78)
+        #expect(CardBacking.opacity(dark: true, solid: false) == 0.72)
+        #expect(CardBacking.opacity(dark: false, solid: true) == 1 && CardBacking.opacity(dark: true, solid: true) == 1)
+        #expect(CardBacking.tintOpacity == 0.25)
+        #expect(CardBacking.isSolid(reduceTransparency: true, launchSolid: false))      // the system setting
+        #expect(CardBacking.isSolid(reduceTransparency: false, launchSolid: true))      // -solidCards
+        #expect(!CardBacking.isSolid(reduceTransparency: false, launchSolid: false))
+        #expect(CardBacking.solidRequested(["-mute", "-solidCards"]) && !CardBacking.solidRequested(["-mute"]))
+        #expect(CardBacking.color(dark: false) == .white && CardBacking.color(dark: true) == CardBacking.darkColor)
+    }
+
+    @Test func theDisabledButtonKeepsAReadableLabel() {
+        #expect(CalmDisabledButtonStyle.labelOpacity >= 0.55)
+        #expect(CalmDisabledButtonStyle.fill(dark: false) == Color.black.opacity(0.07))
+        #expect(CalmDisabledButtonStyle.fill(dark: true) == Color.white.opacity(0.10))
+    }
+
+    /// The colour of one pixel (0…1 per channel) of a SwiftUI view rendered on a plain background.
+    func pixel(_ view: some View, scheme: ColorScheme, x: Int, y: Int) -> (r: Double, g: Double, b: Double)? {
+        let renderer = ImageRenderer(content: view.environment(\.colorScheme, scheme))
+        renderer.scale = 1
+        guard let cg = renderer.uiImage?.cgImage, x < cg.width, y < cg.height else { return nil }
+        var rgba = [UInt8](repeating: 0, count: 4)
+        let ctx = CGContext(data: &rgba, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+                            space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+        ctx?.draw(cg, in: CGRect(x: -x, y: -(cg.height - 1 - y), width: cg.width, height: cg.height))
+        return (Double(rgba[0]) / 255, Double(rgba[1]) / 255, Double(rgba[2]) / 255)
+    }
+
+    @Test(arguments: [ColorScheme.light, .dark]) func aDisabledGlassButtonDrawsItsCalmFill(scheme: ColorScheme) {
+        func button(enabled: Bool) -> some View {
+            Button {} label: { Text(verbatim: "Go").frame(maxWidth: .infinity).padding(.vertical, 10) }
+                .controlSize(.large)
+                .glassButton(prominent: true)
+                .tint(.indigo)
+                .disabled(!enabled)                             // after the style – the style reads `isEnabled`
+                .frame(width: 300)
+                .background(scheme == .dark ? Color.black : Color.white)
+        }
+        let bg = scheme == .dark ? 0.0 : 1.0
+        // left of the label, inside the capsule: black 7 % on white / white 10 % on black, and never tinted
+        guard let off = pixel(button(enabled: false), scheme: scheme, x: 40, y: 30) else { Issue.record("no image"); return }
+        #expect(abs(off.r - off.b) < 0.02 && abs(off.r - off.g) < 0.02)
+        #expect(abs(off.r - bg) > 0.04 && abs(off.r - bg) < 0.2)
+        if let on = pixel(button(enabled: true), scheme: scheme, x: 40, y: 30) {
+            #expect(abs(on.r - off.r) > 0.01 || abs(on.b - off.b) > 0.01)      // the enabled one looks different
+        }
+    }
+
+    @Test(arguments: [ColorScheme.light, .dark], AppLanguage.allCases) func cardsCapsulesAndButtonsRender(scheme: ColorScheme, language: AppLanguage) {
+        let (m, c) = makeModel(language: language)
+        let sheet = VStack(spacing: 12) {
+            Text(verbatim: "Card").padding().glassCard(cornerRadius: 28)
+            Text(verbatim: "Tinted").padding().glassCard(tint: .indigo)
+            Text(verbatim: "Capsule").padding().glassCapsule(tint: .orange)
+            Text(verbatim: "Caption").cardCaption().padding().glassCapsule()
+            VStack(spacing: 8) {
+                Button {} label: { Text(verbatim: "Go to sleep").frame(maxWidth: .infinity) }
+                    .controlSize(.large).glassButton(prominent: true).tint(.indigo).disabled(false)
+                Button {} label: { Text(verbatim: "Go to sleep").frame(maxWidth: .infinity) }
+                    .controlSize(.large).glassButton(prominent: true).tint(.indigo).disabled(true)
+                Button {} label: { Text(verbatim: "Nap").frame(maxWidth: .infinity) }
+                    .controlSize(.large).glassButton(prominent: false).tint(.teal).disabled(true)
+                Button {} label: { Text(verbatim: "Use") }.glassButton(prominent: true).disabled(true)
+            }
+            .padding().glassCard(cornerRadius: 28)
+        }
+        .padding()
+        render(sheet.environment(\.colorScheme, scheme), m)
+        render(TodayView().environment(\.colorScheme, scheme), m)       // the cards, badges and the disabled buttons
+        render(StatsView().environment(\.colorScheme, scheme), m)
+        render(JokerCard().environment(\.colorScheme, scheme), m)
+        render(LevelInfo().environment(\.colorScheme, scheme), m)
+        render(CalendarGrid(days: []).environment(\.colorScheme, scheme), m)
+        _ = c
+    }
+
+    @Test func calendarNumbersStayReadableOnTheBrightSquaresOfDarkMode() {
+        for o in [Outcome.complete, .unfinished, .ruins] {
+            #expect(CalendarGrid.numberColor(o, dark: true) == .black.opacity(0.78))
+            #expect(CalendarGrid.numberColor(o, dark: false) == .primary.opacity(0.7))
+        }
+        #expect(CalendarGrid.numberColor(.excused, dark: true) == .primary.opacity(0.72))
+        #expect(CalendarGrid.numberColor(nil, dark: true) == .primary.opacity(0.72))
     }
 }

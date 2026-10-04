@@ -17,7 +17,7 @@ struct StreakBadge: View {
                     .opacity(n > 0 ? 1 : 0.5)
                 VStack(alignment: .leading, spacing: 0) {
                     Text(n > 0 ? L("\(n) nights in a row") : L("Your streak starts today")).font(.headline)
-                    Text(n > 0 ? L("keep it going 💪") : L("your first good night lights it")).font(.caption).foregroundStyle(.secondary)
+                    Text(n > 0 ? L("keep it going 💪") : L("your first good night lights it")).font(.caption).cardCaption()
                 }
             }
             .padding(.horizontal, 14).padding(.vertical, 8)
@@ -62,7 +62,7 @@ struct LevelInfo: View {
         VStack(spacing: 4) {
             Text(L("Nights built: \(built) · level \(level) unlocked")).font(.footnote)
             if let next = Progression.nightsToNextLevel(built: built) {
-                Text(L("Level \(next.level) in \(Plural.nights(next.nights))")).font(.footnote).foregroundStyle(.secondary)
+                Text(L("Level \(next.level) in \(Plural.nights(next.nights))")).font(.footnote).cardCaption()
             }
         }
         .padding(.top, 8)

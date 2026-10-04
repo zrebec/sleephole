@@ -101,7 +101,7 @@ struct HomeView: View {
                             if model.needsFirstNightBriefing { briefing = true } else { model.startNight() }
                         }
                         Text(sleepCaption(canSleep: canSleep, now: now, w: w))
-                            .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                            .font(.callout).cardCaption().multilineTextAlignment(.center)
                     }
                     .padding()
                     .glassCard(cornerRadius: 28)
@@ -111,7 +111,7 @@ struct HomeView: View {
                         actionButton(L("😴 Nap (\(model.settings.nap.minutes) min)"), enabled: napReason == nil,
                                      prominent: false) { model.startNap() }
                         Text(napReason ?? L("You can nap until \(Fmt.time(model.settings.nap.windowEnd)). An alarm rings at the end; a complete nap earns +\(NapPlan.reward(.complete)) 🪙."))
-                            .font(.callout).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                            .font(.callout).cardCaption().multilineTextAlignment(.center)
                     }
                     .padding()
                     .glassCard(cornerRadius: 28)
@@ -145,12 +145,14 @@ struct HomeView: View {
 
     @ViewBuilder
     private func actionButton(_ title: String, enabled: Bool, prominent: Bool, action: @escaping () -> Void) -> some View {
-        let b = Button(action: action) {
+        // `.disabled` goes last: the button style reads `isEnabled` to draw its calm disabled look
+        Button(action: action) {
             Text(title).font(.title2.bold()).frame(maxWidth: .infinity).padding(.vertical, 10)
         }
         .controlSize(.large)
+        .glassButton(prominent: prominent)
+        .tint(prominent ? .indigo : .teal)
         .disabled(!enabled)
-        b.glassButton(prominent: prominent).tint(prominent ? .indigo : .teal)
     }
 }
 
@@ -535,7 +537,7 @@ struct ConfirmPanel: View {
     var body: some View {
         VStack(spacing: 12) {
             Label(L("Shake your phone"), systemImage: "iphone.radiowaves.left.and.right").font(.headline)
-            Text(L("or enter the code from Settings")).font(.callout).foregroundStyle(.secondary)
+            Text(L("or enter the code from Settings")).font(.callout).cardCaption()
             HStack {
                 TextField(L("Code"), text: $code)
                     .keyboardType(.numberPad)
@@ -603,15 +605,15 @@ struct ResultView: View {
                 }
                 if !rec.isDebug, model.lastReward > 0 {
                     VStack(spacing: 2) {
-                        Text(verbatim: "+\(model.lastReward) 🪙").font(.title.bold()).foregroundStyle(.yellow)
+                        Text(verbatim: "+\(model.lastReward) 🪙").font(.title.bold()).foregroundStyle(Color.readableYellow)
                             .popIn(delay: 0.5)
                         if model.lastStreakBonus > 0 {
                             Text(L("including a +\(model.lastStreakBonus) bonus for \(Economy.streakBonusEvery) nights in a row 🔥"))
-                                .font(.footnote).foregroundStyle(.secondary)
+                                .font(.footnote).cardCaption()
                         }
                         if model.lastUndisturbedBonus > 0 {
                             Text(L("including +\(model.lastUndisturbedBonus) for a night without a pause 🌙"))
-                                .font(.footnote).foregroundStyle(.secondary)
+                                .font(.footnote).cardCaption()
                         }
                     }
                 }
@@ -628,10 +630,10 @@ struct ResultView: View {
                 if outcome == .complete, !rec.isDebug, !rec.isNap { StatusBadges() }
                 if let level = model.levelUp {
                     Label(L("Level \(level) unlocked!"), systemImage: "star.fill")
-                        .font(.headline).foregroundStyle(.yellow)
+                        .font(.headline).foregroundStyle(Color.readableYellow)
                         .symbolEffect(.bounce, options: .repeat(3))
                 }
-                if rec.isDebug { Text(L("(quick test night – doesn't count for the town)")).font(.caption).foregroundStyle(.secondary) }
+                if rec.isDebug { Text(L("(quick test night – doesn't count for the town)")).font(.caption).cardCaption() }
                 Button(L("Continue")) { model.acknowledgeResult() }
                     .buttonStyle(.borderedProminent).controlSize(.large)
             }

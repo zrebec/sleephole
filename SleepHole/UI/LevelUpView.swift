@@ -47,11 +47,11 @@ struct LevelUpCard: View {
             Text(verbatim: "🎉").font(.system(size: 54))
             Text(L("Level \(level) unlocked!")).font(.largeTitle.bold())
             Text(GuideText.levels[safe: level - 1]?.what ?? "")
-                .multilineTextAlignment(.center).foregroundStyle(.secondary)
+                .multilineTextAlignment(.center).cardCaption()
             HStack(spacing: 6) {
                 ForEach(samples) { BuildingImage(id: $0.id, maxHeight: 90) }
             }
-            Text(L("From tonight these buildings can be built too.")).font(.footnote).foregroundStyle(.secondary)
+            Text(L("From tonight these buildings can be built too.")).font(.footnote).cardCaption()
             Button(L("Great!"), action: onClose).buttonStyle(.borderedProminent).controlSize(.large)
         }
         .padding(24)

@@ -27,7 +27,7 @@ struct StatsView: View {
                             Divider()
                             NightDetail(key: key).id("detail")
                         } else {
-                            Text(L("Tap a day to see how that night went.")).font(.footnote).foregroundStyle(.secondary)
+                            Text(L("Tap a day to see how that night went.")).font(.footnote).cardCaption()
                         }
                     }
                     card(L("Average (last 14 nights)")) {
@@ -52,7 +52,7 @@ struct StatsView: View {
                     card(L("Levels")) {
                         ProgressView(value: Double(s.maxLevel), total: 4) { Text(L("Level \(s.maxLevel) of 4 unlocked")) }
                         if let next = Progression.nightsToNextLevel(built: s.builtNights) {
-                            Text(L("Level \(next.level) in \(Plural.nights(next.nights))")).font(.footnote).foregroundStyle(.secondary)
+                            Text(L("Level \(next.level) in \(Plural.nights(next.nights))")).font(.footnote).cardCaption()
                         }
                     }
                 }
@@ -78,7 +78,7 @@ struct StatsView: View {
             Text(verbatim: "\(value)").font(.title.bold().monospacedDigit())
                 .contentTransition(.numericText(value: Double(value)))
                 .animation(.snappy, value: value)
-            Text(label).font(.caption).foregroundStyle(.secondary)
+            Text(label).font(.caption).cardCaption()
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
@@ -99,7 +99,7 @@ struct StatsView: View {
     private func metric(_ label: String, _ value: String) -> some View {
         VStack(spacing: 2) {
             Text(value).font(.title2.bold().monospacedDigit())
-            Text(label).font(.caption).foregroundStyle(.secondary)
+            Text(label).font(.caption).cardCaption()
         }
         .frame(maxWidth: .infinity)
     }
@@ -107,12 +107,12 @@ struct StatsView: View {
     @ViewBuilder
     private func regularity(_ minutes: Double?) -> some View {
         if let m = minutes {
-            let (text, color): (String, Color) = m <= 15 ? (L("excellent 🌟"), .green) : m <= 30 ? (L("good 👍"), .yellow)
-                : (L("varies – try to start at the same time 🌙"), .orange)
+            let (text, color): (String, Color) = m <= 15 ? (L("excellent 🌟"), Color.readableGreen) : m <= 30 ? (L("good 👍"), Color.readableYellow)
+                : (L("varies – try to start at the same time 🌙"), Color.readableOrange)
             Label(L("Regularity: ±\(Int(m.rounded())) min – \(text)"), systemImage: "metronome.fill")
                 .font(.subheadline).foregroundStyle(color)
         } else {
-            Text(L("You'll see your regularity after 2 nights.")).font(.subheadline).foregroundStyle(.secondary)
+            Text(L("You'll see your regularity after 2 nights.")).font(.subheadline).cardCaption()
         }
     }
 }
@@ -132,6 +132,18 @@ struct CalendarGrid: View {
         }
     }
 
+    /// The day number on its square (B7): dark text on the bright squares of dark mode (white on bright green is
+    /// unreadable there), the primary colour everywhere else.
+    static func numberColor(_ o: Outcome?, dark: Bool) -> Color {
+        guard dark else { return .primary.opacity(0.7) }
+        switch o {
+        case .complete, .unfinished, .ruins: return .black.opacity(0.78)
+        case .excused, .missed, .none: return .primary.opacity(0.72)
+        }
+    }
+
+    @Environment(\.colorScheme) private var scheme
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 7), spacing: 6) {
@@ -142,7 +154,8 @@ struct CalendarGrid: View {
                         RoundedRectangle(cornerRadius: 6)
                             .fill(Self.color(d.outcome))
                             .aspectRatio(1, contentMode: .fit)
-                            .overlay(Text(verbatim: "\(d.key.day)").font(.caption2).foregroundStyle(.primary.opacity(0.7)))
+                            .overlay(Text(verbatim: "\(d.key.day)").font(.caption2)
+                                .foregroundStyle(Self.numberColor(d.outcome, dark: scheme == .dark)))
                             .overlay(RoundedRectangle(cornerRadius: 6)
                                 .stroke(Color.accentColor, lineWidth: selected.wrappedValue == d.key ? 3 : 0))
                     }
@@ -170,7 +183,7 @@ struct NightChart: View {
 
     var body: some View {
         if points.isEmpty {
-            Text(L("The chart fills up after your first nights.")).font(.subheadline).foregroundStyle(.secondary)
+            Text(L("The chart fills up after your first nights.")).font(.subheadline).cardCaption()
         } else {
             let bed = Double((bedtime.bedtime.hour * 60 + bedtime.bedtime.minute + 720) % 1440)
             Chart {
@@ -193,7 +206,7 @@ struct NightChart: View {
             }
             .chartYScale(domain: .automatic(includesZero: false))
             .frame(height: 180)
-            Text(L("Dots = build start, line = bedtime.")).font(.caption).foregroundStyle(.secondary)
+            Text(L("Dots = build start, line = bedtime.")).font(.caption).cardCaption()
         }
     }
 
@@ -239,7 +252,7 @@ struct NightDetail: View {
                 if let coins = model.coinsEarned(for: key) { row("🪙", L("Coins"), "+\(coins)") }
             } else {
                 Label(L("The app didn't run that night – nothing was built."), systemImage: "moon.zzz")
-                    .foregroundStyle(.secondary)
+                    .cardCaption()
             }
             if let nap = model.napRecord(before: key), let o = nap.outcome {
                 Divider()
@@ -261,8 +274,8 @@ struct NightDetail: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(model.catalog?[model.nightRecord(for: key)?.buildingId ?? ""]?.displayName ?? "").font(.headline)
                 Text(outcome == .complete ? L("Complete 🏢") : outcome == .unfinished ? L("Unfinished 🚧") : L("Ruins 🧱"))
-                if b?.repairedLater == true { Text(L("Repaired later 🛠️")).foregroundStyle(.green) }
-                if b?.completedLater == true { Text(L("Finished later 💪")).foregroundStyle(.green) }
+                if b?.repairedLater == true { Text(L("Repaired later 🛠️")).foregroundStyle(Color.readableGreen) }
+                if b?.completedLater == true { Text(L("Finished later 💪")).foregroundStyle(Color.readableGreen) }
             }
         }
     }
@@ -270,7 +283,7 @@ struct NightDetail: View {
     private func row(_ icon: String, _ label: String, _ value: String?) -> some View {
         HStack(alignment: .top) {
             Text(verbatim: icon)
-            Text(label).foregroundStyle(.secondary)
+            Text(label).cardCaption()
             Spacer()
             Text(value ?? "–").monospacedDigit().multilineTextAlignment(.trailing)
         }
@@ -278,13 +291,13 @@ struct NightDetail: View {
 
     private func trips(_ title: String, _ list: [NightReport.Trip], ok: Bool) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(verbatim: "\(title): \(list.count)×").foregroundStyle(.secondary)
+            Text(verbatim: "\(title): \(list.count)×").cardCaption()
             ForEach(Array(list.enumerated()), id: \.offset) { _, t in
                 HStack {
                     Text(Fmt.timeSec(t.start)).monospacedDigit()
                     Text(verbatim: "→ \(Self.duration(t.duration))")
-                        .foregroundStyle(ok || t.duringPause ? Color.secondary
-                                         : (t.duration ?? .infinity) > 13 ? .orange : .secondary)
+                        .foregroundStyle(ok || t.duringPause ? Color.cardCaption
+                                         : (t.duration ?? .infinity) > 13 ? Color.readableOrange : Color.cardCaption)
                     if t.duringPause { Text(verbatim: "🌙") }
                 }
                 .font(.caption)
@@ -294,7 +307,7 @@ struct NightDetail: View {
 
     private func chips(_ title: String, _ dates: [Date]) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(title).foregroundStyle(.secondary)
+            Text(title).cardCaption()
             if !dates.isEmpty {
                 Text(dates.map(Fmt.time).joined(separator: " · "))
                     .font(.caption.monospacedDigit())
