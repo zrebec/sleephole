@@ -80,26 +80,41 @@ private func utc(_ iso: String) -> Date { try! Date(iso, strategy: .iso8601) }
         #expect(abs(s.arc - 0.44) < 0.02)
     }
 
-    @Test func sunsetIsDuskWithGlowAndNoMoonWhenItIsDown() {
-        let s = real("2026-10-03T16:30:00Z")                     // sun at −1.3°, setting; the moon is below too
+    @Test func sunsetIsDuskWithTheMoonAtTheLeftEnd() {
+        let s = real("2026-10-03T16:30:00Z")                     // sun at −1.3°, just set (16:27Z); the real moon is still below
         #expect(s.phase == .dusk)
-        #expect(s.body == .none && s.moon == nil && s.arc == 0.5)
+        #expect(s.body == .moon && s.moon != nil && s.arc < 0.02)
         #expect(s.glow > 0.9)
         #expect(s.daylight > 0.2 && s.daylight < 0.5)
     }
 
-    @Test func darkNightWithNothingInTheSky() {
-        let s = real("2026-10-03T19:00:00Z")                     // sun −26°, the moon rises at 21:00Z
+    @Test func darkNightHasTheMoonAsTheClock() {
+        let s = real("2026-10-03T19:00:00Z")                     // sun −26°, the real moon only rises at 21:00Z
         #expect(s.phase == .night)
         #expect(s.daylight == 0 && s.glow == 0)
-        #expect(s.body == .none && s.moon == nil && s.arc == 0.5)
+        #expect(s.body == .moon && s.moon != nil)
+        #expect(abs(s.arc - 0.205) < 0.02)                        // 2 h 33 min of the 12 h 28 min night
     }
 
-    @Test func beforeSunriseIsDawn() {
-        let s = real("2026-10-03T04:30:00Z")                     // sunrise 04:52Z, the sun is climbing
+    @Test func theMoonIsInTheMiddleAtTheMiddleOfTheNight() {
+        let s = real("2026-10-03T22:40:00Z")                     // sunset 16:27Z … sunrise 04:55Z: the middle is 22:41Z
+        #expect(s.phase == .night && s.body == .moon)
+        #expect(abs(s.arc - 0.5) < 0.03)
+    }
+
+    @Test func beforeSunriseIsDawnAndTheMoonIsAtTheRightEnd() {
+        let s = real("2026-10-04T04:45:00Z")                     // sunrise 04:55Z, the sun is climbing
         #expect(s.phase == .dawn)
         #expect(s.glow > 0 && s.daylight > 0 && s.daylight < 0.5)
-        #expect(s.body != .sun)                                   // the sun is still below its horizon
+        #expect(s.body == .moon && s.moon != nil && s.arc > 0.97)  // the sun is still below its horizon
+    }
+
+    @Test func theMoonHasItsRealPhaseEvenWhenTheRealMoonIsBelowTheHorizon() throws {
+        let t = utc("2026-10-03T19:00:00Z")
+        #expect(Astro.moon(at: t, from: bra).altitude < Astro.moonHorizon)       // it rises at 21:00Z
+        let look = try #require(real("2026-10-03T19:00:00Z").moon)
+        #expect(look == Sky.moonLook(at: t, place: bra))
+        #expect(abs(look.illuminated - Astro.moonPhase(at: t).illuminated) < 1e-9)
     }
 
     @Test func fullMoonNightShowsTheMoonOnItsArc() throws {
@@ -135,17 +150,51 @@ private func utc(_ iso: String) -> Date { try! Date(iso, strategy: .iso8601) }
         #expect(real("2026-10-03T18:00:00Z").phase == .night)
     }
 
-    @Test func bodyIsTheMoonOnlyWhenTheSunIsDownAndTheMoonIsUp() {
+    @Test func bodyIsTheSunWhileItIsUpAndTheMoonOtherwise() {
         let start = utc("2026-10-20T00:00:00Z")
         for i in 0..<288 {                                        // five-minute steps over one day
             let t = start + Double(i) * 300
             let s = Sky.state(at: t, place: bra)
             let sunUp = Astro.sun(at: t, from: bra).altitude > Astro.sunHorizon
-            let moonUp = Astro.moon(at: t, from: bra).altitude > Astro.moonHorizon
-            let expected: SkyBody = sunUp ? .sun : moonUp ? .moon : .none
-            #expect(s.body == expected)
-            #expect((s.moon != nil) == (expected == .moon))
+            #expect(s.body == (sunUp ? .sun : .moon))             // never nothing, whatever the real moon does
+            #expect((s.moon != nil) == !sunUp)
             #expect(s.arc >= 0 && s.arc <= 1)
+        }
+    }
+
+    /// Two days in 10-minute steps: the body is never `.none`, and the sun (by day) and the moon (by night) only ever
+    /// move to the right until the other one takes over.
+    @Test(arguments: [bra, sydney, quito]) func somethingIsAlwaysOnTheArcAndItNeverGoesBackwards(_ place: GeoPoint) {
+        let start = utc("2026-10-03T00:00:00Z")
+        var previous: SkyState?
+        var moons = 0, suns = 0
+        for i in 0...288 {
+            let s = Sky.state(at: start + Double(i) * 600, place: place)
+            #expect(s.body != SkyBody.none)
+            #expect(s.arc >= 0 && s.arc <= 1)
+            if let p = previous, p.body == s.body {
+                #expect(s.arc >= p.arc, "step \(i) \(s.body): \(p.arc) → \(s.arc)")
+            }
+            moons += s.body == .moon ? 1 : 0
+            suns += s.body == .sun ? 1 : 0
+            previous = s
+        }
+        #expect(moons > 0 && suns > 0)                            // both really happened in 48 hours
+    }
+
+    @Test func eachNightStartsAtTheLeftEndAndEndsAtTheRight() {
+        let start = utc("2026-10-03T00:00:00Z")
+        for place in [bra, sydney, quito] {
+            var previous: SkyState?
+            for i in 0...288 {
+                let s = Sky.state(at: start + Double(i) * 600, place: place)
+                if let p = previous, p.body != s.body {
+                    // the hand-over (sun → moon at sunset, moon → sun at sunrise): the old one is at its far end
+                    #expect(p.arc > 0.95, "\(p.body) \(p.arc)")
+                    #expect(s.arc < 0.05, "\(s.body) \(s.arc)")
+                }
+                previous = s
+            }
         }
     }
 
@@ -206,9 +255,17 @@ private func utc(_ iso: String) -> Date { try! Date(iso, strategy: .iso8601) }
         }
     }
 
+    @Test func polarNightHasTheMoonInTheMiddleOfItsArc() {
+        for iso in ["2026-12-21T00:00:00Z", "2026-12-21T10:30:00Z", "2026-12-21T20:00:00Z"] {
+            let s = real(iso, tromso)                             // the sun never rises: no night arc to walk along
+            #expect(s.body == .moon && s.arc == 0.5)
+            #expect(s.moon != nil)
+        }
+    }
+
     @Test func polarNightNoonIsOnlyTwilight() {
         let s = real("2026-12-21T10:30:00Z", tromso)              // the sun peaks at −3° around local noon
-        #expect(s.body != .sun)
+        #expect(s.body == .moon)
         #expect(s.glow > 0.5 && s.daylight < 0.5)
         #expect(s.phase == .dawn || s.phase == .dusk)
     }

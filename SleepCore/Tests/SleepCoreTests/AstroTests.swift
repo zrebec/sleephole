@@ -163,6 +163,57 @@ private let sunDays: [DayRow] = [
         }
     }
 
+    // MARK: the night (sunset → sunrise)
+
+    @Test func nightArcRunsFromSunsetToSunrise() throws {
+        let bra = places["bratislava"]!
+        let arc = try #require(Astro.nightArc(at: utc("2026-10-03T19:00:00Z"), from: bra))
+        #expect(abs(arc.set.timeIntervalSince(utc("2026-10-03T16:26:57Z"))) < 180, "set \(arc.set)")
+        #expect(abs(arc.rise.timeIntervalSince(utc("2026-10-04T04:54:55Z"))) < 180, "rise \(arc.rise)")
+        #expect(arc.set < utc("2026-10-03T19:00:00Z") && utc("2026-10-03T19:00:00Z") < arc.rise)
+    }
+
+    @Test func nightArcIsTheSameFromAnywhereInsideTheNight() throws {
+        let bra = places["bratislava"]!
+        // just after sunset, local midnight, and just before sunrise (after the date line of UTC)
+        let early = try #require(Astro.nightArc(at: utc("2026-10-03T16:30:00Z"), from: bra))
+        let middle = try #require(Astro.nightArc(at: utc("2026-10-03T22:00:00Z"), from: bra))
+        let late = try #require(Astro.nightArc(at: utc("2026-10-04T04:45:00Z"), from: bra))
+        for other in [middle, late] {
+            #expect(abs(early.set.timeIntervalSince(other.set)) < 2 && abs(early.rise.timeIntervalSince(other.rise)) < 2)
+        }
+    }
+
+    @Test func nightArcCrossingsReallyTouchTheHorizon() throws {
+        for (name, instant) in [("bratislava", "2026-10-03T22:00:00Z"), ("sydney", "2026-12-21T12:00:00Z"),
+                                ("quito", "2026-06-21T03:00:00Z")] {
+            let p = places[name]!
+            let arc = try #require(Astro.nightArc(at: utc(instant), from: p))
+            #expect(abs(Astro.sun(at: arc.set, from: p).altitude - Astro.sunHorizon) < 0.02)
+            #expect(abs(Astro.sun(at: arc.rise, from: p).altitude - Astro.sunHorizon) < 0.02)
+            #expect(arc.set < utc(instant) && utc(instant) < arc.rise)
+        }
+    }
+
+    @Test func noNightArcWhileTheSunIsUp() {
+        let bra = places["bratislava"]!
+        #expect(Astro.nightArc(at: utc("2026-10-03T10:00:00Z"), from: bra) == nil)
+        #expect(Astro.nightArc(at: utc("2026-10-03T16:20:00Z"), from: bra) == nil)       // not yet set
+        let tromso = places["tromso"]!
+        for hour in [0, 6, 12, 18, 22] {                          // midnight sun
+            #expect(Astro.nightArc(at: utc("2026-06-21T00:00:00Z") + Double(hour) * 3600, from: tromso) == nil)
+        }
+    }
+
+    @Test func polarNightHasNoNightArc() {
+        let tromso = places["tromso"]!
+        for hour in [0, 6, 12, 18, 22] {                          // the sun never sets, because it never rose
+            let t = utc("2026-12-21T00:00:00Z") + Double(hour) * 3600
+            #expect(Astro.sun(at: t, from: tromso).altitude < Astro.sunHorizon)
+            #expect(Astro.nightArc(at: t, from: tromso) == nil)
+        }
+    }
+
     // MARK: moon phase
 
     @Test(arguments: [

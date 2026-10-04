@@ -5,7 +5,8 @@ public enum SkyPhase: String, Sendable {
     case night, dawn, day, dusk
 }
 
-/// Which body hangs in the sky.
+/// Which body hangs in the sky. `none` draws nothing – the real-sky rule never picks it (a city always shows the sun
+/// or the moon); it stays for the drawing code and the dev launch argument `-skyBody none`.
 public enum SkyBody: String, Sendable {
     case sun, moon, none
 }
@@ -28,11 +29,11 @@ public struct SkyState: Equatable, Sendable {
     public let daylight: Double
     /// 0…1 strength of the sunrise / sunset colours (peaks in the middle of dawn and dusk).
     public let glow: Double
-    /// 0…1 position of the sun (dawn → dusk) or the moon (night) on its arc, left to right.
+    /// 0…1 position of the sun (sunrise → sunset) or the moon (sunset → sunrise, the night's clock) on its arc, left to right.
     public let arc: Double
     /// What to draw on the arc. The schedule-based sky always has one: the sun by day, the moon at night.
     public let body: SkyBody
-    /// The moon's real phase; nil = draw the old decorative crescent.
+    /// The moon's real phase (even when the real moon is below the horizon); nil = draw the old decorative crescent.
     public let moon: MoonLook?
 
     /// `body` nil = what the app has always drawn: the moon at night, the sun otherwise.
@@ -85,7 +86,10 @@ public enum Sky {
     }
 
     /// The sky as it really is above `place`: the colours follow the sun's altitude (civil twilight is the
-    /// dawn / dusk band), the body on the arc is the sun while it is up, else the moon while it is up, else nothing.
+    /// dawn / dusk band). Something is ALWAYS on the arc: the sun from its rising to its setting, and from its
+    /// setting to its rising the moon as the night's clock – it appears at the left end the moment the sun has set
+    /// and reaches the right end at sunrise, drawn with its real phase even when the real moon is below the horizon
+    /// (so the real moon's altitude decides nothing here).
     public static func state(at t: Date, place: GeoPoint) -> SkyState {
         let a = Astro.sun(at: t, from: place).altitude
         let daylight = smooth(min(1, max(0, (a + 6) / 12)))
@@ -103,12 +107,10 @@ public enum Sky {
             let arc = Astro.sunArc(at: t, from: place).map { fraction(t, $0.rise, $0.set) } ?? 0.5
             return SkyState(phase: phase, daylight: daylight, glow: glow, arc: arc, body: .sun, moon: nil)
         }
-        if Astro.moon(at: t, from: place).altitude > Astro.moonHorizon {
-            let arc = Astro.moonArc(at: t, from: place).map { fraction(t, $0.rise, $0.set) } ?? 0.5
-            let look = moonLook(at: t, place: place)
-            return SkyState(phase: phase, daylight: daylight, glow: glow, arc: arc, body: .moon, moon: look)
-        }
-        return SkyState(phase: phase, daylight: daylight, glow: glow, arc: 0.5, body: SkyBody.none, moon: nil)
+        // Polar night (no setting or rising within the window): the moon hangs in the middle.
+        let arc = Astro.nightArc(at: t, from: place).map { fraction(t, $0.set, $0.rise) } ?? 0.5
+        return SkyState(phase: phase, daylight: daylight, glow: glow, arc: arc, body: .moon,
+                        moon: moonLook(at: t, place: place))
     }
 
     /// The lit side of a waxing moon is on the right in the northern hemisphere and on the left in the southern one.

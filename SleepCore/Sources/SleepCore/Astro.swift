@@ -79,6 +79,19 @@ public enum Astro {
         arc(at: t, horizon: moonHorizon) { moon(at: $0, from: p).altitude }
     }
 
+    /// While the sun is DOWN at `t`: its last setting (at or before `t`) and its next rising (after `t`) – the span the
+    /// moon walks along as the night's clock. nil when the sun is up, or when it does not set or rise within the
+    /// search window (polar night).
+    public static func nightArc(at t: Date, from p: GeoPoint) -> (set: Date, rise: Date)? {
+        let altitude: (Date) -> Double = { sun(at: $0, from: p).altitude }
+        guard altitude(t) <= sunHorizon else { return nil }
+        // The same search as `arc`, upside down: the "up" instant is the one below the horizon.
+        let below: (Date) -> Double = { -altitude($0) }
+        guard let set = crossing(from: t, direction: -1, horizon: -sunHorizon, altitude: below),
+              let rise = crossing(from: t, direction: 1, horizon: -sunHorizon, altitude: below) else { return nil }
+        return (set, rise)
+    }
+
     // MARK: - Rising and setting
 
     /// 5-minute steps are shorter than any rise-to-set span we care about; the crossing is then bisected.
