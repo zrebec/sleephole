@@ -189,6 +189,30 @@ struct I18nTests {
         #expect(Fmt.timeSec(d) == "4:30:07")
     }
 
+    /// B20: the expiry read "3. 10. 20:39" for 2027-10-03 – without the year it looks like a date in the past.
+    @Test func theExpiryDateAlwaysShowsItsYear() {
+        let was12h = Fmt.systemUses12h
+        defer { Fmt.systemUses12h = was12h; Lang.current = .en }
+        let expiry = cal.date(from: DateComponents(year: 2027, month: 10, day: 3, hour: 20, minute: 39))!
+        func plain(_ s: String) -> String { s.replacingOccurrences(of: "\u{202F}", with: " ") }
+
+        Lang.current = .sk
+        Fmt.systemUses12h = true                                          // SK ignores the 12 h setting
+        #expect(Fmt.dateTimeWithYear(expiry) == "3. 10. 2027 20:39")
+        #expect(ExpiryCard.message(for: expiry).contains("3. 10. 2027 20:39"))
+        #expect(Notifications.expiryBody(expiry).contains("3. 10. 2027 20:39"))
+
+        Lang.current = .en
+        Fmt.systemUses12h = true
+        #expect(plain(Fmt.dateTimeWithYear(expiry)) == "Oct 3, 2027 at 8:39 PM")
+        Fmt.systemUses12h = false
+        #expect(Fmt.dateTimeWithYear(expiry) == "Oct 3, 2027 at 20:39")
+        for text in [ExpiryCard.message(for: expiry), Notifications.expiryBody(expiry)] {
+            #expect(text.contains("Oct 3, 2027 at 20:39") && text.contains("2027"))
+        }
+        #expect(!Fmt.dateTimeWithYear(expiry).contains("2,027"))          // no grouping separator in the year
+    }
+
     // MARK: backup
 
     @Test func languageRoundTripsThroughTheBackup() throws {

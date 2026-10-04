@@ -292,7 +292,10 @@ struct SkyCityTests {
         var settings = AppSettings()
         settings.city = bratislava
         let night = LivingSky.state(at: utc("2026-10-03T19:00:00Z"), settings: settings, overrides: SkyOverrides())
-        #expect(night.phase == .night && night.body == .none)       // 21:00 local: the moon is not up yet
+        #expect(night.phase == .night && night.body == .moon && night.moon != nil)    // 21:00 local: the moon is the night's clock
+        #expect(abs(night.arc - 0.205) < 0.02)                      // although the real moon only rises at 23:00 local
+        let dusk = LivingSky.state(at: utc("2026-10-03T16:30:00Z"), settings: settings, overrides: SkyOverrides())
+        #expect(dusk.phase == .dusk && dusk.body == .moon && dusk.arc < 0.02)           // just set: at the left end
         let day = LivingSky.state(at: utc("2026-10-03T10:00:00Z"), settings: settings, overrides: SkyOverrides())
         #expect(day.phase == .day && day.body == .sun && abs(day.arc - 0.44) < 0.03)
         let late = LivingSky.state(at: utc("2026-10-03T01:00:00Z"), settings: settings, overrides: SkyOverrides())

@@ -77,13 +77,17 @@ enum Notifications {
 
     static func cancelPauseNotices() { cancel(["pause-soon", "pause-over"]) }
 
+    /// The expiry warnings' text; the date always carries its year.
+    static func expiryBody(_ expiry: Date) -> String {
+        L("The free signature ends on \(Fmt.dateTimeWithYear(expiry)). Connect your iPhone to the Mac and run SleepHole from Xcode – your data stays.")
+    }
+
     /// Free Personal Team signing: the app stops launching when its provisioning profile runs out (`AppExpiry`).
     /// Warn a day and three hours before (audit 2026-10-03, B2).
     static func scheduleExpiry(_ expiry: Date?) {
         center.removePendingNotificationRequests(withIdentifiers: ["expiry-1", "expiry-2"])
         guard let expiry else { return }
-        let when = L("\(Fmt.dayMonth(NightKey(date: expiry, calendar: .current))) at \(Fmt.time(expiry))")
-        let body = L("The free signature ends on \(when). Connect your iPhone to the Mac and run SleepHole from Xcode – your data stays.")
+        let body = expiryBody(expiry)
         for (id, lead, title) in [("expiry-1", 24.0, L("SleepHole stops working tomorrow")),
                                   ("expiry-2", 3.0, L("SleepHole stops working in 3 hours"))] {
             let at = expiry - lead * 3600

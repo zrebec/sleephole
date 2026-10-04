@@ -77,6 +77,13 @@ enum Fmt {
         return date.formatted(.dateTime.year().month(.abbreviated).day().locale(Lang.current.locale))
     }
 
+    /// "3. 10. 2027 20:39" / "Oct 3, 2027 at 8:39 PM" – a moment that can be months away (the app's expiry): the year is
+    /// always there, so it never reads as a date in the past.
+    static func dateTimeWithYear(_ date: Date) -> String {
+        let day = fullDate(NightKey(date: date, calendar: .current)), clock = time(date)
+        return Lang.current == .sk ? "\(day) \(clock)" : L("\(day) at \(clock)")
+    }
+
     nonisolated(unsafe) private static var cache: [String: DateFormatter] = [:]
 
     private static func formatter(seconds: Bool) -> DateFormatter {

@@ -217,7 +217,7 @@ struct SettingsView: View {
                         HStack {
                             Text(L("The app works until"))
                             Spacer()
-                            Text(L("\(Fmt.dayMonth(NightKey(date: expiry, calendar: .current))) at \(Fmt.time(expiry))"))
+                            Text(Fmt.dateTimeWithYear(expiry))
                                 .foregroundStyle(AppExpiry.isSoon(at: Date()) ? .orange : .secondary)
                         }
                     }

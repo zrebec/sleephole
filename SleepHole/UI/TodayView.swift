@@ -185,13 +185,18 @@ struct ExpiryCard: View {
     let expiry: Date
     let now: Date
 
+    /// The card's text; the date always carries its year.
+    static func message(for expiry: Date) -> String {
+        L("The free signature ends on \(Fmt.dateTimeWithYear(expiry)). Connect your iPhone to the Mac and run SleepHole from Xcode – your town, nights and coins stay.")
+    }
+
     var body: some View {
         let hours = max(0, Int(expiry.timeIntervalSince(now) / 3600))
         VStack(alignment: .leading, spacing: 6) {
             Label(hours >= 1 ? L("SleepHole stops working in \(hours) h") : L("SleepHole stops working within the hour"),
                   systemImage: "exclamationmark.triangle.fill")
                 .font(.headline)
-            Text(L("The free signature ends on \(Fmt.dayMonth(NightKey(date: expiry, calendar: .current))) at \(Fmt.time(expiry)). Connect your iPhone to the Mac and run SleepHole from Xcode – your town, nights and coins stay."))
+            Text(Self.message(for: expiry))
                 .font(.subheadline)
         }
         .padding()

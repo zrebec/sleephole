@@ -23,7 +23,7 @@ struct VibrationTestView: View {
             } header: {
                 Text(L("If you feel nothing, check on the iPhone"))
             } footer: {
-                Text(L("iOS lets apps vibrate only while they are on screen. At night the warnings vibrate through their notification – that needs the settings above and SleepHole allowed in your Focus."))
+                Text(L("iOS lets apps vibrate only while they are on screen. At night the warnings vibrate through their notification – that needs the settings above. They are time sensitive, so they arrive during a Focus too – if iOS asks, keep them allowed."))
             }
         }
         .navigationTitle(L("Vibration test"))

@@ -6185,22 +6185,6 @@
         }
       }
     },
-    "The free signature ends on %@ at %@. Connect your iPhone to the Mac and run SleepHole from Xcode – your town, nights and coins stay.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The free signature ends on %@ at %@. Connect your iPhone to the Mac and run SleepHole from Xcode – your town, nights and coins stay."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bezplatný podpis sa končí %1$@ o %2$@. Pripoj iPhone k Macu a spusti SleepHole z Xcode – mesto, noci aj mince zostanú."
-          }
-        }
-      }
-    },
     "The free signature ends on %@. Connect your iPhone to the Mac and run SleepHole from Xcode – your data stays.": {
       "localizations": {
         "en": {
@@ -6213,6 +6197,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bezplatný podpis sa končí %@. Pripoj iPhone k Macu a spusti SleepHole z Xcode – dáta zostanú."
+          }
+        }
+      }
+    },
+    "The free signature ends on %@. Connect your iPhone to the Mac and run SleepHole from Xcode – your town, nights and coins stay.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The free signature ends on %@. Connect your iPhone to the Mac and run SleepHole from Xcode – your town, nights and coins stay."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bezplatný podpis sa končí %@. Pripoj iPhone k Macu a spusti SleepHole z Xcode – mesto, noci aj mince zostanú."
           }
         }
       }
@@ -7705,18 +7705,18 @@
         }
       }
     },
-    "iOS lets apps vibrate only while they are on screen. At night the warnings vibrate through their notification – that needs the settings above and SleepHole allowed in your Focus.": {
+    "iOS lets apps vibrate only while they are on screen. At night the warnings vibrate through their notification – that needs the settings above. They are time sensitive, so they arrive during a Focus too – if iOS asks, keep them allowed.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "iOS lets apps vibrate only while they are on screen. At night the warnings vibrate through their notification – that needs the settings above and SleepHole allowed in your Focus."
+            "value": "iOS lets apps vibrate only while they are on screen. At night the warnings vibrate through their notification – that needs the settings above. They are time sensitive, so they arrive during a Focus too – if iOS asks, keep them allowed."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "iOS dovolí appke vibrovať, len keď je na obrazovke. V noci vibrujú varovania cez svoju notifikáciu – na to treba nastavenia vyššie a SleepHole povolený v Sústredení."
+            "value": "iOS dovolí appke vibrovať, len keď je na obrazovke. V noci vibrujú varovania cez svoju notifikáciu – na to treba nastavenia vyššie. Sú časovo citlivé, takže prídu aj počas Sústredenia – ak sa iOS spýta, nechaj ich povolené."
           }
         }
       }
