@@ -72,6 +72,11 @@ final class AppModel {
     ///   -mute                         silence every sound (alarm, effects) – for screenshots of a night's end
     ///   -buddy awake|asleep           force the sleep buddy's state (screenshots)
     ///   -buddyReaction purr|arch|wink show that tap reaction's hold frame (hearts / sparkle too) on Today (screenshots)
+    ///   -skyCity "Name,lat,lon"       set the city of the real sky for this run (e.g. "Bratislava,48.1486,17.1077")
+    ///   -skyTime HH:MM                pin the sky's time of day; -skyArc 0.3 / -skyBody sun|moon|none / -skyMoon 0.5
+    ///                                 force the drawn arc / body / moon's lit fraction (see `SkyOverrides`)
+    ///   -cityQuery Brat               pre-fill Settings → Sky → city so the real Apple Maps search runs
+    ///   -scrollTo sky                 scroll Settings to the Sky section
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
                                      args: [String] = ProcessInfo.processInfo.arguments) {
         func value(_ flag: String) -> String? {
@@ -93,6 +98,7 @@ final class AppModel {
             settings.playsAtStart = true                    // an explicit choice also switches "play at the start" on
         }
         if let t = value("-theme").flatMap(AppTheme.init(rawValue:)) { settings.theme = t }
+        if let c = value("-skyCity").flatMap(Self.parseCity) { settings.city = c }
         if args.contains("-startNap") {                     // the nap window opens an hour ago and closes in an hour
             let cal = Calendar.current
             func tod(_ d: Date) -> TimeOfDay { TimeOfDay(cal.component(.hour, from: d), cal.component(.minute, from: d)) }
@@ -127,6 +133,16 @@ final class AppModel {
         }
         #endif
         settings.save()
+    }
+
+    /// "Bratislava,48.1486,17.1077" → the city (the name may itself contain commas: the last two parts are the
+    /// coordinates).
+    static func parseCity(_ text: String) -> SkyCity? {
+        let parts = text.split(separator: ",", omittingEmptySubsequences: false).map { $0.trimmingCharacters(in: .whitespaces) }
+        guard parts.count >= 3, let lat = Double(parts[parts.count - 2]), let lon = Double(parts[parts.count - 1]),
+              (-90...90).contains(lat), (-180...180).contains(lon) else { return nil }
+        let name = parts.dropLast(2).joined(separator: ", ")
+        return name.isEmpty ? nil : SkyCity(name: name, latitude: lat, longitude: lon)
     }
 
     static func launchLanguage(args: [String] = ProcessInfo.processInfo.arguments) -> AppLanguage? {

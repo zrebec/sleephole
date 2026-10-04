@@ -41,6 +41,8 @@ struct SettingsView: View {
                     Text(L("System follows the iPhone's light / dark setting. The night screen is always dark."))
                 }
 
+                SkySection()
+
                 Section {
                     HStack {
                         Text(verbatim: model.townName)
@@ -242,8 +244,10 @@ struct SettingsView: View {
                         .disabled(nightRunning)
                 }
             }
-            .onAppear {                                   // `-scrollTo sounds` (screenshots)
-                if ProcessInfo.processInfo.arguments.contains("sounds") { proxy.scrollTo("sounds", anchor: .top) }
+            .onAppear {                                   // `-scrollTo sounds|sky` (screenshots)
+                let args = ProcessInfo.processInfo.arguments
+                if args.contains("sounds") { proxy.scrollTo("sounds", anchor: .top) }
+                if args.contains("sky") { proxy.scrollTo("sky", anchor: .top) }
             }
             }
             .skyBackground()

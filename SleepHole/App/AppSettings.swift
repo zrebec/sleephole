@@ -2,6 +2,15 @@ import Foundation
 import UIKit
 import SleepCore
 
+/// The owner's city for the real sky (Settings → Sky): verified through Apple Maps, stored with its coordinates.
+struct SkyCity: Codable, Equatable {
+    var name: String
+    var latitude: Double
+    var longitude: Double
+
+    var place: GeoPoint { GeoPoint(latitude: latitude, longitude: longitude) }
+}
+
 /// Everything the owner can set. Persisted as JSON in UserDefaults.
 struct AppSettings: Codable, Equatable {
     var schedule = Schedule()
@@ -36,6 +45,9 @@ struct AppSettings: Codable, Equatable {
         get { themeRaw ?? .system }
         set { themeRaw = newValue }
     }
+    /// The city of the real sun and moon on Today (plan SKY). nil = no city: the sky follows the sleep schedule.
+    /// Optional in the JSON (and in backups) so settings saved by older builds still load.
+    var city: SkyCity?
     var soundEffectsOff: Bool?
     var soundEffects: Bool {
         get { soundEffectsOff != true }

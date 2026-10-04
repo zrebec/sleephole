@@ -1781,6 +1781,38 @@
         }
       }
     },
+    "City not verified": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "City not verified"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mesto nie je overené"
+          }
+        }
+      }
+    },
+    "City verified": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "City verified"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mesto overené"
+          }
+        }
+      }
+    },
     "Clear": {
       "localizations": {
         "en": {
@@ -4021,6 +4053,22 @@
         }
       }
     },
+    "No such city found": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No such city found"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Také mesto sa nenašlo"
+          }
+        }
+      }
+    },
     "No worries, again tomorrow 🌱": {
       "localizations": {
         "en": {
@@ -5289,6 +5337,22 @@
         }
       }
     },
+    "Sky": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sky"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obloha"
+          }
+        }
+      }
+    },
     "Sleep sound": {
       "localizations": {
         "en": {
@@ -6201,6 +6265,22 @@
         }
       }
     },
+    "The search uses Apple Maps. SleepHole never asks for your location.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The search uses Apple Maps. SleepHole never asks for your location."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hľadanie ide cez Apple Mapy. SleepHole sa nikdy nepýta na tvoju polohu."
+          }
+        }
+      }
+    },
     "The sound didn't start: %@": {
       "localizations": {
         "en": {
@@ -6393,6 +6473,22 @@
         }
       }
     },
+    "Today shows the real sun and moon for %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today shows the real sun and moon for %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnes ukazuje skutočné slnko a mesiac pre %@."
+          }
+        }
+      }
+    },
     "Total time away: %lld s": {
       "localizations": {
         "en": {
@@ -6517,6 +6613,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Trúbka, rýchlo silnie."
+          }
+        }
+      }
+    },
+    "Type your city and Today shows the real sun and moon. Without a city the sky follows your bedtime.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Type your city and Today shows the real sun and moon. Without a city the sky follows your bedtime."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Napíš svoje mesto a Dnes ukáže skutočné slnko a mesiac. Bez mesta sa obloha riadi tvojou večierkou."
           }
         }
       }
@@ -7065,6 +7177,22 @@
         }
       }
     },
+    "Your city": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your city"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje mesto"
+          }
+        }
+      }
+    },
     "Your code:": {
       "localizations": {
         "en": {
@@ -7493,6 +7621,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "nepodaril sa"
+          }
+        }
+      }
+    },
+    "e.g. Bratislava": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "e.g. Bratislava"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "napr. Bratislava"
           }
         }
       }

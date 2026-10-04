@@ -13,7 +13,8 @@ enum Motion {
 }
 
 // Phase UI (owner 2026-10-02: "interesting features, very plain design"): a living sky behind the tabs, content on
-// glass cards, the Today island. The sky follows the owner's schedule (`Sky.state`), drawn in code – sharp on any
+// glass cards, the Today island. The sky follows the owner's schedule (`Sky.state(at:schedule:calendar:)`) – or, once
+// a city is set in Settings, the real sun and moon above it (`Sky.state(at:place:)`). Drawn in code – sharp on any
 // display, no image assets.
 
 /// Sky colours for one moment: top / horizon, interpolated night ↔ day, warmed by the dawn/dusk glow.
@@ -45,14 +46,71 @@ struct SkyPalette {
     }
 }
 
+/// The real sky above a city, computed at most once a minute (the view asks 20× a second and one call searches the
+/// rising and setting – ≈ 60 µs).
+@MainActor
+enum RealSky {
+    private static var cache: (minute: Int, place: GeoPoint, state: SkyState)?
+    /// How many times the real state was actually computed (tests).
+    private(set) static var computations = 0
+
+    static func state(at date: Date, place: GeoPoint) -> SkyState {
+        let minute = Int((date.timeIntervalSince1970 / 60).rounded(.down))
+        if let c = cache, c.minute == minute, c.place == place { return c.state }
+        let state = Sky.state(at: Date(timeIntervalSince1970: Double(minute) * 60), place: place)
+        cache = (minute, place, state)
+        computations += 1
+        return state
+    }
+
+    static func reset() { cache = nil }
+}
+
+/// Dev aid for screenshots: `-skyArc 0.3`, `-skyBody sun|moon|none`, `-skyMoon 0.5` force the arc, the body and the
+/// moon's illuminated fraction of the drawn state (the colours still follow the time – pin it with `-skyTime`).
+struct SkyOverrides: Equatable {
+    var arc: Double?
+    var body: SkyBody?
+    var moon: Double?
+
+    init(arc: Double? = nil, body: SkyBody? = nil, moon: Double? = nil) {
+        self.arc = arc
+        self.body = body
+        self.moon = moon
+    }
+
+    init(args: [String]) {
+        func value(_ flag: String) -> String? {
+            args.firstIndex(of: flag).flatMap { args.indices.contains($0 + 1) ? args[$0 + 1] : nil }
+        }
+        arc = value("-skyArc").flatMap(Double.init).map { min(1, max(0, $0)) }
+        body = value("-skyBody").flatMap { SkyBody(rawValue: $0) }
+        moon = value("-skyMoon").flatMap(Double.init).map { min(1, max(0, $0)) }
+    }
+
+    static let launch = SkyOverrides(args: ProcessInfo.processInfo.arguments)
+
+    func apply(to s: SkyState) -> SkyState {
+        guard arc != nil || body != nil || moon != nil else { return s }
+        var look = s.moon
+        if let moon { look = MoonLook(illuminated: moon, litOnRight: s.moon?.litOnRight ?? true) }
+        return SkyState(phase: s.phase, daylight: s.daylight, glow: s.glow, arc: arc ?? s.arc,
+                        body: body ?? s.body, moon: look)
+    }
+}
+
 /// The living sky: gradient that breathes slowly, sun or moon on its arc, twinkling stars, drifting clouds.
 /// Animates only while visible and the app is active; with Reduce Motion it is a still picture.
+/// `semicircle` (Today): with a city set, the body travels a true half circle with a faint dotted track.
 struct LivingSky: View {
     @Environment(AppModel.self) private var model
     @Environment(\.colorScheme) private var scheme
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var visible = false
+    let semicircle: Bool
+
+    init(semicircle: Bool = false) { self.semicircle = semicircle }
 
     /// Dev aid: `-skyTime 21:45` pins the sky's time of day (screenshots).
     static let pinnedTime: (Int, Int)? = {
@@ -62,25 +120,30 @@ struct LivingSky: View {
         return p.count == 2 ? (p[0], p[1]) : nil
     }()
 
-    static func state(at date: Date, schedule: Schedule) -> SkyState {
+    /// The sky now: the real one above the city when there is one (cached per minute), else the schedule's.
+    static func state(at date: Date, settings: AppSettings, overrides: SkyOverrides = .launch) -> SkyState {
         var t = date
         if let (h, m) = pinnedTime {
             t = Calendar.current.date(bySettingHour: h, minute: m, second: 0, of: date) ?? date
         }
-        return Sky.state(at: t, schedule: schedule, calendar: .current)
+        let state = settings.city.map { RealSky.state(at: t, place: $0.place) }
+            ?? Sky.state(at: t, schedule: settings.schedule, calendar: .current)
+        return overrides.apply(to: state)
     }
 
     var body: some View {
         let paused = !visible || scenePhase != .active || reduceMotion
         TimelineView(.animation(minimumInterval: 1.0 / 20, paused: paused)) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
-            let sky = Self.state(at: ctx.date, schedule: model.settings.schedule)
+            let sky = Self.state(at: ctx.date, settings: model.settings)
             let palette = SkyPalette(sky, dark: scheme == .dark)
+            let round = semicircle && model.settings.city != nil
             ZStack {
                 gradient(palette, t: t)
                 Canvas { gc, size in
                     SkyDrawing.stars(&gc, size: size, opacity: palette.starOpacity, t: t)
-                    SkyDrawing.sunOrMoon(&gc, size: size, sky: sky)
+                    if round { SkyDrawing.track(&gc, size: size, dark: scheme == .dark, daylight: sky.daylight) }
+                    SkyDrawing.sunOrMoon(&gc, size: size, sky: sky, semicircle: round)
                     SkyDrawing.clouds(&gc, size: size, palette: palette, t: t)
                 }
             }
@@ -143,18 +206,51 @@ enum SkyDrawing {
         }
     }
 
-    /// The sun from dawn to dusk, the moon at night; both travel a low arc from left to right.
-    static func sunOrMoon(_ gc: inout GraphicsContext, size: CGSize, sky: SkyState) {
-        let x = 40 + sky.arc * (size.width - 80)
-        let y = size.height * (0.22 - 0.13 * sin(sky.arc * .pi))     // stays above most of the content
-        if sky.phase == .night {
-            let r = 22.0
-            var moon = gc
-            moon.addFilter(.shadow(color: .white.opacity(0.5), radius: 18))
-            let disc = Path(ellipseIn: CGRect(x: x - r, y: y - r, width: 2 * r, height: 2 * r))
-            let bite = Path(ellipseIn: CGRect(x: x - r + 11, y: y - r - 6, width: 2 * r, height: 2 * r))
-            moon.fill(disc.subtracting(bite), with: .color(Color(red: 1, green: 0.96, blue: 0.82)))
-        } else {
+    // MARK: the body on its way
+
+    /// Today's semicircle: a compact half circle in the free sky to the right of the large title and above the glass
+    /// badges (the body never shines through glass). Centre x = 150 pt left of the right edge, centre y = 180 pt from
+    /// the top, radius 95 pt – less on a narrow screen, so the left end stays right of the title (140 pt from the left
+    /// edge) and the right end 36 pt from the right edge.
+    static let semicircleCentreY: CGFloat = 180
+    static func semicircle(width: CGFloat) -> (centre: CGPoint, radius: CGFloat) {
+        let x = width - 150
+        return (CGPoint(x: x, y: semicircleCentreY), min(95, x - 140, width - 36 - x))
+    }
+
+    /// Rises at the left end (arc 0), is at the top at 0.5 and sets at the right end (arc 1).
+    static func semicirclePoint(arc: Double, width: CGFloat) -> CGPoint {
+        let (c, r) = semicircle(width: width)
+        return CGPoint(x: c.x - r * cos(.pi * arc), y: c.y - r * sin(.pi * arc))
+    }
+
+    /// The other screens' low flat arc; stays above most of the content.
+    static func flatPoint(arc: Double, size: CGSize) -> CGPoint {
+        CGPoint(x: 40 + arc * (size.width - 80), y: size.height * (0.22 - 0.13 * sin(arc * .pi)))
+    }
+
+    /// The faint dotted half circle the body travels on Today (also a rough clock).
+    static func track(_ gc: inout GraphicsContext, size: CGSize, dark: Bool, daylight: Double) {
+        var path = Path()
+        for i in 0...72 {
+            let p = semicirclePoint(arc: Double(i) / 72, width: size.width)
+            if i == 0 { path.move(to: p) } else { path.addLine(to: p) }
+        }
+        // white on a dark or night sky; on the light daytime sky a deep blue stays visible (and faint)
+        let color: Color = dark || daylight < 0.5 ? .white.opacity(0.22 + (dark ? 0 : 0.12))
+            : Color(red: 0.16, green: 0.28, blue: 0.55).opacity(0.26)
+        gc.stroke(path, with: .color(color), style: StrokeStyle(lineWidth: 2.4, lineCap: .round, dash: [0.1, 8]))
+    }
+
+    /// The sun from dawn to dusk or the moon (with its real phase when the sky knows it), nothing when both are
+    /// down; they travel a low flat arc – or Today's semicircle – from left to right.
+    static func sunOrMoon(_ gc: inout GraphicsContext, size: CGSize, sky: SkyState, semicircle: Bool = false) {
+        let p = semicircle ? semicirclePoint(arc: sky.arc, width: size.width) : flatPoint(arc: sky.arc, size: size)
+        switch sky.body {
+        case .none: return
+        case .moon: moon(&gc, at: p, look: sky.moon)
+        case .sun:
+            let (x, y) = (p.x, p.y)
             let r = 26.0, halo = 90.0
             let warm = Color(red: 1, green: 0.78 - 0.18 * sky.glow, blue: 0.40 - 0.15 * sky.glow)
             gc.fill(Path(ellipseIn: CGRect(x: x - halo, y: y - halo, width: 2 * halo, height: 2 * halo)),
@@ -162,6 +258,47 @@ enum SkyDrawing {
                                           center: CGPoint(x: x, y: y), startRadius: r * 0.6, endRadius: halo))
             gc.fill(Path(ellipseIn: CGRect(x: x - r, y: y - r, width: 2 * r, height: 2 * r)), with: .color(warm))
         }
+    }
+
+    static let moonColor = Color(red: 1, green: 0.96, blue: 0.82)
+    static let moonRadius = 22.0
+
+    /// `look` nil = the old schedule sky's decorative crescent.
+    private static func moon(_ gc: inout GraphicsContext, at p: CGPoint, look: MoonLook?) {
+        let r = moonRadius
+        let disc = Path(ellipseIn: CGRect(x: p.x - r, y: p.y - r, width: 2 * r, height: 2 * r))
+        var glowing = gc
+        glowing.addFilter(.shadow(color: .white.opacity(0.5), radius: 18))
+        guard let look else {
+            let bite = Path(ellipseIn: CGRect(x: p.x - r + 11, y: p.y - r - 6, width: 2 * r, height: 2 * r))
+            glowing.fill(disc.subtracting(bite), with: .color(moonColor))
+            return
+        }
+        gc.fill(disc, with: .color(moonColor.opacity(0.12)))           // the dark part hints the round shape
+        guard look.illuminated >= 0.03 else { return }
+        glowing.fill(litPart(centre: p, radius: r, illuminated: look.illuminated, litOnRight: look.litOnRight),
+                     with: .color(moonColor))
+    }
+
+    /// The lit part of the moon: the half disc on the lit side, minus (crescent, < 0.5) or plus (gibbous, > 0.5) a half
+    /// ellipse of x-radius r·|1 − 2·illuminated| – nothing at 0, the half disc at 0.5, the whole disc at 1.
+    static func litPart(centre c: CGPoint, radius r: Double, illuminated f: Double, litOnRight: Bool) -> Path {
+        let side = litOnRight ? 1.0 : -1.0
+        let a = r * abs(1 - 2 * f)
+        let bulge = f < 0.5 ? 1.0 : -1.0              // the terminator bows toward the lit side (crescent) or away
+        let n = 48
+        var path = Path()
+        for i in 0...n {                              // the outer limb on the lit side, top → bottom
+            let t = -Double.pi / 2 + Double.pi * Double(i) / Double(n)
+            let q = CGPoint(x: c.x + side * r * cos(t), y: c.y + r * sin(t))
+            if i == 0 { path.move(to: q) } else { path.addLine(to: q) }
+        }
+        for i in 0...n {                              // the terminator, bottom → top
+            let t = Double.pi / 2 - Double.pi * Double(i) / Double(n)
+            path.addLine(to: CGPoint(x: c.x + side * bulge * a * cos(t), y: c.y + r * sin(t)))
+        }
+        path.closeSubpath()
+        return path
     }
 
     static func clouds(_ gc: inout GraphicsContext, size: CGSize, palette: SkyPalette, t: Double) {

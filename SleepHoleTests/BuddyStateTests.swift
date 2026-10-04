@@ -246,6 +246,8 @@ struct BuddyReactionViewTests {
     }
 
     /// Waits without blocking the main actor (the views' tasks only run while the test awaits), nudging layout.
+    /// Only for "let it run" waits: never wait a FIXED time and then expect an end state – the views' own
+    /// `Task.sleep`s drift when the whole suite runs under load (use `pump(_:until:timeout:)`).
     func pump(_ host: UIViewController, for seconds: TimeInterval) async {
         let end = Date() + seconds
         while Date() < end {
@@ -254,6 +256,23 @@ struct BuddyReactionViewTests {
             host.view.layoutIfNeeded()
         }
     }
+
+    /// Pumps in 30 ms steps until `condition` holds (true) or `timeout` real seconds have passed (false). The timeout
+    /// is only a safety net for a real failure – make it several times what the thing should take.
+    @discardableResult
+    func pump(_ host: UIViewController, until condition: () -> Bool, timeout: TimeInterval = 10) async -> Bool {
+        let end = Date() + timeout
+        while !condition() {
+            if Date() >= end { return false }
+            try? await Task.sleep(for: .milliseconds(30))
+            host.view.setNeedsLayout()
+            host.view.layoutIfNeeded()
+        }
+        return true
+    }
+
+    /// A generous limit for a reaction to play out: several times its paced duration.
+    func limit(_ r: BuddyReaction) -> TimeInterval { BuddyView.timeline(r).pacedDuration * 4 + 4 }
 
     // MARK: static timelines
 
@@ -317,34 +336,34 @@ struct BuddyReactionViewTests {
         let probe = BuddyProbe()
         let (host, window) = host(BuddyView(state: .awake, cloud: true, onPet: { m.petBuddy() }).frame(width: 250),
                                   animates: true, probe: probe)
-        await pump(host, for: 0.4)
+        await pump(host, until: { probe.tap != nil })
         #expect(probe.tap != nil)
 
         probe.tap?()
         probe.tap?()                                                       // during the reaction: ignored
         probe.tap?()
-        await pump(host, for: 0.2)
+        await pump(host, until: { probe.reaction == .purr })
         #expect(probe.reaction == .purr && m.haptics == [.purr])
-        await pump(host, for: BuddyView.timeline(.purr).pacedDuration + 0.4)
+        await pump(host, until: { probe.reaction == nil && probe.poses.count >= 2 }, timeout: limit(.purr))
         #expect(probe.reaction == nil)
         #expect(probe.poses == [.happy, .awake])
 
         probe.tap?()
-        await pump(host, for: 0.2)
+        await pump(host, until: { probe.reaction == .arch })
         #expect(probe.reaction == .arch && m.haptics == [.purr, .pet])
-        await pump(host, for: BuddyView.timeline(.arch).pacedDuration + 0.4)
+        await pump(host, until: { probe.reaction == nil && probe.poses.count >= 6 }, timeout: limit(.arch))
         #expect(probe.reaction == nil)
         #expect(probe.poses == [.happy, .awake, .arch1, .arch2, .arch1, .awake])
 
         probe.tap?()
-        await pump(host, for: 0.2)
+        await pump(host, until: { probe.reaction == .wink })
         #expect(probe.reaction == .wink && m.haptics == [.purr, .pet, .pet])
-        await pump(host, for: BuddyView.timeline(.wink).pacedDuration + 0.4)
+        await pump(host, until: { probe.reaction == nil && probe.poses.count >= 8 }, timeout: limit(.wink))
         #expect(probe.reaction == nil)
         #expect(probe.poses.suffix(2) == [.wink, .awake])
 
         probe.tap?()
-        await pump(host, for: 0.2)
+        await pump(host, until: { probe.reaction == .purr })
         #expect(probe.reaction == .purr && m.haptics == [.purr, .pet, .pet, .purr])   // the cycle starts again
         #expect(probe.reactions == [.purr, .arch, .wink, .purr])
         window.isHidden = true
@@ -357,16 +376,16 @@ struct BuddyReactionViewTests {
         let probe = BuddyProbe()
         let (host, window) = host(BuddyView(state: .awake, onPet: { calls += 1; return queue.isEmpty ? nil : queue.removeFirst() })
             .frame(width: 250), animates: false, probe: probe)
-        await pump(host, for: 0.3)
+        await pump(host, until: { probe.tap != nil })
         probe.tap?()
-        await pump(host, for: 0.2)
+        await pump(host, until: { probe.reaction == .wink && !probe.poses.isEmpty })
         #expect(probe.reaction == .wink && probe.poses == [.wink])         // straight to the hold frame
-        await pump(host, for: BuddyView.timeline(.wink).pacedDuration + 0.4)
+        await pump(host, until: { probe.reaction == nil && probe.poses.count >= 2 }, timeout: limit(.wink))
         #expect(probe.reaction == nil && probe.poses == [.wink, .awake])
         probe.tap?()
-        await pump(host, for: 0.2)
+        await pump(host, until: { probe.reaction == .arch })
         #expect(probe.reaction == .arch && calls == 2)
-        await pump(host, for: BuddyView.timeline(.arch).pacedDuration + 0.4)
+        await pump(host, until: { probe.reaction == nil && probe.poses.count >= 6 }, timeout: limit(.arch))
         #expect(probe.reaction == nil && probe.poses == [.wink, .awake, .arch1, .arch2, .arch1, .awake])
         window.isHidden = true
     }
@@ -393,26 +412,27 @@ struct BuddyReactionViewTests {
         var calls = 0
         let probe = BuddyProbe()
         let (host, window) = host(Wrapper(box: box, onPet: { calls += 1; return .purr }), animates: true, probe: probe)
-        await pump(host, for: 0.4)
+        await pump(host, until: { probe.tap != nil })
         probe.tap?()
-        await pump(host, for: 0.5)
+        await pump(host, until: { probe.reaction == .purr })
         #expect(calls == 1 && probe.reaction == .purr)
 
         box.state = .asleep                                                // falls asleep during the purr
-        await pump(host, for: 0.3)
+        await pump(host, until: { probe.reaction == nil })
         #expect(probe.reaction == nil)                                     // cancelled
-        await pump(host, for: BuddyView.stepDuration * 2 + 0.6)
+        await pump(host, until: { probe.poses.last == .asleep }, timeout: BuddyView.stepDuration * 8 + 4)
         #expect(probe.poses.last == .asleep)                               // the normal awake → mid → asleep ran
         probe.tap?()
         #expect(calls == 1)                                                // asleep: ignored
 
         box.state = .awake
-        await pump(host, for: 0.25)                                        // in the transition
+        await pump(host, until: { probe.poses.last == .mid }, timeout: BuddyView.stepDuration * 8 + 4)   // in the transition
         probe.tap?()
         #expect(calls == 1)
-        await pump(host, for: BuddyView.stepDuration * 2 + 0.6)
+        await pump(host, until: { probe.poses.last == .awake }, timeout: BuddyView.stepDuration * 8 + 4)
         #expect(probe.poses.last == .awake)
-        probe.tap?()                                                       // resting awake again
+        // The last frame is shown ~50 ms before the cat counts as resting again – tap until the tap is accepted.
+        await pump(host, until: { probe.tap?(); return calls == 2 })       // resting awake again
         #expect(calls == 2)
         window.isHidden = true
     }
@@ -420,9 +440,9 @@ struct BuddyReactionViewTests {
     @Test func aNilAnswerPlaysNothing() async {
         let probe = BuddyProbe()
         let (host, window) = host(BuddyView(state: .awake, onPet: { nil }).frame(width: 200), animates: true, probe: probe)
-        await pump(host, for: 0.3)
+        await pump(host, until: { probe.tap != nil })
         probe.tap?()
-        await pump(host, for: 0.3)
+        await pump(host, for: 0.3)                                         // nothing may happen: a fixed wait is right
         #expect(probe.reaction == nil && probe.poses.isEmpty)
         window.isHidden = true
     }
@@ -430,9 +450,9 @@ struct BuddyReactionViewTests {
     @Test func aPlainBuddyIsNotTappable() async {
         let probe = BuddyProbe()
         let (host, window) = host(BuddyView(state: .awake).frame(width: 200), animates: true, probe: probe)
-        await pump(host, for: 0.3)
+        await pump(host, until: { probe.tap != nil })
         probe.tap?()
-        await pump(host, for: 0.3)
+        await pump(host, for: 0.3)                                         // nothing may happen: a fixed wait is right
         #expect(probe.reaction == nil && probe.poses.isEmpty)               // no onPet: the tap does nothing
         window.isHidden = true
     }
@@ -443,10 +463,10 @@ struct BuddyReactionViewTests {
         _ = _container
         let probe = BuddyProbe()
         let (host, window) = host(HomeView().environment(m), animates: true, probe: probe)
-        await pump(host, for: 0.6)
+        await pump(host, until: { probe.tap != nil })
         #expect(probe.tap != nil)
         probe.tap?()
-        await pump(host, for: 0.2)
+        await pump(host, until: { probe.reaction == .purr })
         #expect(probe.reaction == .purr && m.haptics == [.purr])
         #expect(m.townRequest == 0)                                        // the old island's tap opened the Town tab
         window.isHidden = true
