@@ -45,7 +45,7 @@ they do not block P2. **What is really verified, feature by feature, is in §0a.
 * 🖥 **tests / simulator only** – installed on the phone, never exercised there
 
 When the owner confirms or rejects something, move the row the same day. Automated state on 2026-10-03 (evening):
-SleepCore 177 tests green; app 166 tests, 92.54 % line coverage (2026-10-04 evening).
+SleepCore 187 tests green; app 173 tests, 92.53 % line coverage (2026-10-04 19:05).
 
 ### Night and nap
 | | Feature | Evidence |
@@ -1055,7 +1055,8 @@ its own always-dark `NightSky`.
       phone, but it was NOT reviewed, its tests were not written yet and the Apple Maps search was never tried.
       The last reviewed build (20:39, P2 + P2b) is kept at `build/DerivedData/Build/Products/Debug-iphoneos/` for a
       rollback. The final SKY build still has to be reviewed, tested and installed
-- [ ] **Night moon as the night's clock (owner 2026-10-04 evening):** with a city, `Sky.state(at:place:)` never returns
+- [x] **Night moon as the night's clock (owner 2026-10-04 evening; built the same evening – `Astro.nightArc`, 10 new
+      SleepCore tests, screenshots `build/shots/sky/today-night-moon-*.png`; not on the phone yet):** with a city, `Sky.state(at:place:)` never returns
       `.none` – while the sun is down the body is the moon, its `arc` = the fraction of the way from the last sunset
       to the next sunrise (0.5 in a polar night), its look = the real phase. The real moonrise / moonset no longer
       decides whether the moon shows (it left the sky empty after sunset)
@@ -1169,9 +1170,13 @@ possible or is your solution better? Then I leave it at Recommended." (Per-weekd
       tests green, `keys.py` 513 / 0 / 0
 - [x] F6a entitlement: on in `project.yml`; a signed device build with it succeeded on 2026-10-04 18:47 (after the
       owner restarted Xcode)
-- [ ] F6a on the phone + the owner's test: a "Come back!" warning and the bedtime reminder during a Focus
-- [ ] Stale text: `Debug/VibrationTestView.swift` line ≈ 26 still says "allow SleepHole in your Focus"
-- [ ] F6b AlarmKit (Sonnet) – can start now, it needs no paid team
+- [x] F6a on the phone: installed 2026-10-04 19:11 together with the night moon and the B20 fix (a signed build
+      prepared before F6b started; its changes are saved as a patch so they can be committed apart from F6b)
+- [ ] The owner's test: a "Come back!" warning and the bedtime reminder during a Focus
+- [x] Stale text in `Debug/VibrationTestView.swift` reworded (2026-10-04)
+- [ ] F6b AlarmKit (Sonnet) – started 2026-10-04 19:15. NOT for tonight's build: a new alarm path goes onto the
+      phone only in the daytime and is tried with quick nights first (the real AlarmKit code runs on a device only –
+      in the simulator and in tests a stand-in is used so nothing can ring on the Mac)
 **Accept:** the owner swipes the app away during a quick night and the system alarm still wakes him in silent mode;
 "Come back!" arrives during a Focus. **Stop.**
 
@@ -1277,7 +1282,7 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | B16 | L | S | Tooling: `keys.py --prune` reformats the whole catalog; ~~`buddy-cat` is not in the render pipeline~~ (done with P2: `buddy_recipes()`); launch args match bare words (`town`); `test_app.sh` prints a stray "unable to find utility simctl" | fix the tools |
 | B17 | – | – | Not detectable by design (no Screen Time API): Notification / Control Center over the app, replying from a banner or the lock screen | document only |
 | ✅ B19 | M | – | Sleep sound is not remembered (owner 2026-10-03): after he stops the sound during a night, the next night starts the story again – neither "stopped" nor the sound picked in the night's sheet is stored | persist the night sheet's choice (sound + minutes) into `AppSettings` and a separate "off" flag, so the next night starts silent while ▶ still plays the last sound; test in `AppModelTests` – **fixed 2026-10-03** (see P2, W3), the owner checks it with the P2 build |
-| B20 | L | XS | Settings → About shows the app's expiry without the year ("3. 10. 20:39" for 2027-10-03) – it reads as a past date (owner 2026-10-04) | show the year (always, or when it is not the current year) |
+| ✅ B20 | L | – | Settings → About shows the app's expiry without the year ("3. 10. 20:39" for 2027-10-03) – it reads as a past date (owner 2026-10-04) | fixed 2026-10-04: `Fmt.dateTimeWithYear` in Settings → About, the Today expiry card and the expiry notifications. Left over: the card still speaks of a "free signature" and of running the app from Xcode – reword now that the team is paid |
 | ✅ B18 | H (process) | – | ~70 files had been changed since the last commit (2026-09-30) | done 2026-10-03: 12 commits on `main` (whole files only – what shares files went into one commit); the owner pushes |
 
 **Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
