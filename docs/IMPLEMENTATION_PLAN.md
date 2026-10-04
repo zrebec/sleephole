@@ -27,7 +27,7 @@
 | P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | ✅ accepted by the owner 2026-10-04; his remark: the arched back has too few poses – left as it is until we render our own models (F7) | owner pets the cat on Today |
 | SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 built, committed and installed 2026-10-04 17:29 (final build). City search, night sky, sun and moon confirmed by the owner on the interim build; only the final semicircle position (right of the title) still waits for his look | owner picks his city, sees the true sun/moon |
 | F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo | "I like looking at it" |
-| F6 | Paid Apple Developer Program: Time Sensitive notifications, AlarmKit, HealthKit, TestFlight | ⬜ the membership is active (owner 2026-10-04) – phase not planned yet, the owner decides when | owner decides what goes first |
+| F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a built 2026-10-04 (entitlement on, signed device build OK, app 172 tests) – goes onto the phone with the next install; F6b (AlarmKit) is next | the system alarm wakes the owner with the app swiped away |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
 
 **Rule:** work on the first phase that is not ✅, do only that phase, then stop and hand over to the
@@ -45,7 +45,7 @@ they do not block P2. **What is really verified, feature by feature, is in §0a.
 * 🖥 **tests / simulator only** – installed on the phone, never exercised there
 
 When the owner confirms or rejects something, move the row the same day. Automated state on 2026-10-03 (evening):
-SleepCore 177 tests green; app 159 tests, 92.36 % line coverage (2026-10-04).
+SleepCore 177 tests green; app 166 tests, 92.54 % line coverage (2026-10-04 evening).
 
 ### Night and nap
 | | Feature | Evidence |
@@ -114,6 +114,8 @@ SleepCore 177 tests green; app 159 tests, 92.36 % line coverage (2026-10-04).
 |---|---|---|
 | 🟢 | English + Slovak with the in-app switch | owner (2026-10-03): works great, survives an app and a phone restart |
 | 🟢 | Theme System / Light / Dark | owner (2026-10-03): accepted, switching works perfectly |
+| 🟢 | Contrast (B7): solid card backing, readable disabled buttons and captions, calendar numbers in dark mode | owner (2026-10-04): "very good, even the statistics are well visible" |
+| 🟢 | Full-width semicircle restored | installed 2026-10-04 17:37 after the owner rejected the small one |
 | 🟢 | City in Settings: Apple Maps search, ✕ → ✓ (SKY) | owner (2026-10-03, interim build): "it works, Bratislava OK" |
 | 🟢 | Real sky: night after the real sunset (SKY) | owner (2026-10-03, interim build): the night background shows |
 | 🟢 | Sun / moon on the semicircle, the moon's real phase (SKY) | owner (2026-10-04, interim build): "exactly as expected, very satisfied"; the final geometry (right of the title, above the badges) is not installed yet |
@@ -1038,13 +1040,54 @@ its own always-dark `NightSky`.
 - [x] Committed 2026-10-04 at the owner's request; the FINAL build was installed on the iPhone on 2026-10-04 17:29
       (data pulled first to `docs/device-logs/2026-10-04-before-sky/`; the first `devicectl … launch` failed with
       FBSOpenApplicationServiceErrorDomain 1, the second one right after it worked – the app keeps running)
-- [ ] Owner looks at the final semicircle (right of the title) on the phone
+- [x] Owner looked at it (2026-10-04 17:30): **rejected** – "much worse than the original … why isn't it from the
+      left edge to the right? … unacceptable"; "the one installed last night was better". **Owner's decision: the
+      semicircle spans the screen from left to right – the sun in the middle means noon; never shrink or move it.**
+      Geometry restored to centre (width / 2, 310 pt), radius min(150, width / 2 − 44). The sun passing behind the
+      status badges is fine for him (B7's solid card backing covers it cleanly). Lesson: Opus changed a look the
+      owner had already approved, without asking – a confirmed look is changed only on his request
+- [x] Reinstalled with the restored semicircle 2026-10-04 17:37 (built from a git worktree at HEAD + the two-file
+      revert, because B7 was in progress in the main checkout; the same revert is applied there by the B7 worker).
+      `devicectl … launch` fails with "Locked – the device was not unlocked" when the phone's screen is locked:
+      installing works on a locked phone, launching does not
       ⚠️ **Interim install 2026-10-03 21:13 at the owner's explicit request ("install now"):** a frozen copy of the
       working tree as it was at 21:12, while W2 was still working – it compiled, launched and kept running on the
       phone, but it was NOT reviewed, its tests were not written yet and the Apple Maps search was never tried.
       The last reviewed build (20:39, P2 + P2b) is kept at `build/DerivedData/Build/Products/Debug-iphoneos/` for a
       rollback. The final SKY build still has to be reviewed, tested and installed
+- [ ] **Night moon as the night's clock (owner 2026-10-04 evening):** with a city, `Sky.state(at:place:)` never returns
+      `.none` – while the sun is down the body is the moon, its `arc` = the fraction of the way from the last sunset
+      to the next sunrise (0.5 in a polar night), its look = the real phase. The real moonrise / moonset no longer
+      decides whether the moon shows (it left the sky empty after sunset)
 **Accept:** the owner types his city, sees ✓, and Today shows the sun / moon where they really are. **Stop.**
+
+### B7 — Contrast and transparency (bug backlog §11a, owner 2026-10-03: "on the light sky the transparency bothers quite a lot") – ✅ accepted by the owner 2026-10-04; two follow-ups open
+**Owner's standing rule:** contrast must always be guaranteed; he dislikes the iOS 26 see-through look and runs
+his iPhone with reduced transparency. **Design (Opus, 2026-10-04):**
+* Every glass card / capsule gets a **solid backing** under the glass: light mode white at ≈ 0.78, dark mode a deep
+  navy at ≈ 0.72; fully opaque when the system's Reduce Transparency is on. Tinted capsules (streak, coins) keep their
+  tint on top of the backing. The sky stays visible around the cards, not through the text.
+* **Disabled big buttons** ("Go to sleep", "Nap" outside their windows) get their own readable look – a calm solid
+  fill and a label at ≥ 4.5 : 1 – instead of grey glass on grey glass.
+* **Captions inside cards** use `.primary` at ≈ 0.72 opacity instead of `.secondary` (too weak on a light card).
+* **Sun / moon never behind a title:** Stats and Settings draw the sky without the body; Today without a city moves
+  the flat arc right of the title (x from 140 pt). With a city the semicircle stays FULL WIDTH (owner's decision
+  2026-10-04, see SKY) – it passes below the title and behind the status badges, whose solid backing covers it.
+* The night screen (always dark, no cards) and system `Form` rows are untouched.
+- [x] Worker (2026-10-04): `GlassCard` backing (light white 0.78, dark navy 0.72, opaque with Reduce Transparency
+      or `-solidCards`; the glass is kept on top on iOS 26), `GlassButton` + `CalmDisabledButtonStyle` (`.disabled`
+      must come AFTER `.glassButton()` or the modifier cannot see it), `cardCaption()`, readable yellow / green /
+      orange on light cards, dark calendar numbers on the bright squares, `LivingSky(showsBody:)` – Stats and
+      Settings without sun / moon, flat arc from x = 140; the full-width semicircle restored in the main checkout
+- [x] Opus review (2026-10-04): screenshots in `build/shots/b7/` checked (cards, disabled buttons, sun behind the
+      badges, Stats dark); SleepCore 177 tests, app 166 tests / 92.54 %, `keys.py` 513 / 0 / 0
+- [ ] Follow-up, NOT a priority (owner 2026-10-04 evening: "the blue is readable too"): the pale accent colour (selected tab, "Rename…",
+      ≈ 2.4 : 1 on white) and the grey Form headers / footers that sit directly on the sky (≈ 3 : 1 in light mode)
+- [x] Installed 2026-10-04 18:27 (a build of the reviewed state without the F6a entitlement). **Owner's verdict the
+      same evening: "the contrast is very good, even the statistics are well visible"; the calendar numbers in dark
+      mode are readable now.** He wants both open points done next (accent colour, Form headers / footers)
+- [ ] Commit when the owner says so
+**Accept:** the owner reads everything on Today, Stats and the result screen without effort, in light and dark. **Stop.**
 
 ### F5 — Living town
 > Owner 2026-10-02: town + **Cube Pets** (no forest); animals reflect **regularity** and **undisturbed nights**,
@@ -1056,9 +1099,81 @@ its own always-dark `NightSky`.
       pet), sleep buddy (renderer needs a model tilt for the lying pose)
 **Accept:** owner enjoys looking at it. **Stop.**
 
-### F6 — Paid Apple Developer Program *(only when the owner decides)*
-HealthKit sleep analysis (Apple Watch) as a bonus badge "overené hodinkami", AlarmKit alarm (request the
-entitlement), TestFlight, drop the expiry reminder.
+### F6 — Paid Apple Developer Program (owner 2026-10-04: "next phase: F6, analyse it first"; the paid team is confirmed by a signed build)
+**Analysis (Opus, 2026-10-04; sources: the iOS 27 SDK's `AlarmKit.swiftinterface`, Apple's WWDC25 session 230
+"Wake up to the AlarmKit API", the app's `Night/Notifications.swift` and `AppModel.ringAlarm`).**
+
+What the paid team unlocks, by value for this app:
+1. **Time Sensitive notifications** – a standard capability (entitlement
+   `com.apple.developer.usernotifications.time-sensitive`, no approval by Apple): a notification with
+   `interruptionLevel = .timeSensitive` breaks through a Focus. Today every urgent notification is `.active` and the
+   owner must allow SleepHole in each Focus by hand (comment in `Notifications.schedule`). The build with this
+   entitlement is also the technical proof of the paid team (it failed on the free one, finding 2026-09-29).
+2. **AlarmKit** (iOS 26+, the phone runs iOS 27): a system alarm that "breaks through the silent mode and the current
+   focus" and fires even when the app is not running; it also shows on a paired Apple Watch. Needs only
+   `NSAlarmKitUsageDescription` in Info.plist and the user's one-time consent (`AlarmManager.requestAuthorization()`
+   or automatically at the first alarm) – **no special entitlement** (the older note in `PLAN.md` was wrong).
+   API: `AlarmManager.shared.schedule(id:configuration:)` with `.alarm(schedule: .fixed(date), attributes:
+   AlarmAttributes(presentation: AlarmPresentation(alert: .init(title:, stopButton:, secondaryButton:,
+   secondaryButtonBehavior: .custom)), tintColor:), secondaryIntent: <a LiveActivityIntent with openAppWhenRun>,
+   sound: .named("<file in the bundle>"))`; `cancel(id:)`, `stop(id:)`, `alarms`, `authorizationState`. A widget
+   extension is needed only for a countdown / snooze presentation – not for a plain alert.
+3. Later, not now: **HealthKit** (sleep from the Apple Watch as a "verified by the watch" badge), **iCloud** (the
+   automatic backup off the phone), **TestFlight** (installs without the cable), a **Live Activity / widget** (the
+   buddy on the lock screen during a night).
+
+**How AlarmKit fits the alarm we have.** The in-app alarm (background audio keeps the app alive; it rings for 2 min;
+confirming while it rings = complete) stays the main alarm – the rules R3 depend on it. Its weak spot is the case
+"iOS ended the app at night": then only five 30-second notifications ring (B3), silent in silent mode / a Focus.
+→ **AlarmKit replaces that backup**: at the start of a night / nap schedule a system alarm for wake + 30 s with the
+owner's alarm sound; the moment the in-app alarm really rings (the place that cancels the backup notifications today,
+`startAlarmSound`), cancel it; also on confirm / abandon. If the app is dead, the system alarm rings until stopped;
+its second button opens SleepHole on the confirm panel. Outcome rules do not change ("killed by the system → the
+owner's favour"). The five notifications remain only where AlarmKit is unavailable (iOS < 26) or not allowed.
+
+**Proposed phases:**
+* **F6a – Time Sensitive notifications (S):** `SleepHole/SleepHole.entitlements` + `entitlements:` in `project.yml`;
+  `.timeSensitive` for "Come back!" (`nudge`, `nudge-2`), `grace-end`, `pause-soon` / `pause-over`, the backup alarm
+  notifications and `alarm-screen`; everything else stays `.active`; Settings text about Focus updated; tests.
+* **F6b – AlarmKit backup alarm (M):** `NSAlarmKitUsageDescription` (EN + SK); a `SystemAlarm` protocol (AlarmKit
+  behind `#available(iOS 26, *)`, a fake in tests); consent asked at the first night start, its state shown in
+  Settings; schedule / cancel as above for nights and naps; App Intent "Open SleepHole"; device test: start a quick
+  night, swipe the app away, wait for the system alarm in silent mode.
+* **F6c – later:** HealthKit badge, iCloud backup, TestFlight, Live Activity.
+**Owner's answers (2026-10-04):** scope = F6a + F6b now; the bedtime reminder is time sensitive too; the alarm:
+"I want OUR digital alarm to ring for sure – it is great – and it should also ring when the app is not running; maybe
+set the system alarm ~2 min after ours when the night / nap starts, and cancel it when I enter the PIN. Is that
+possible or is your solution better? Then I leave it at Recommended." (Per-weekday schedules: "maybe later, undecided".)
+
+**Final design of the system alarm (Opus – the owner's idea merged with the analysis):**
+1. Start of a night / nap (consent given, iOS 26+): schedule ONE system alarm for **wake + 30 s** with the owner's
+   chosen alarm sound (`.named(<alarm file>)`), title "Good morning ☀️", buttons "Stop" and "Open SleepHole".
+   With AlarmKit scheduled, the five backup notifications are not scheduled.
+2. At the wake time, when the in-app alarm REALLY rings (`startAlarmSound`, where the backup notifications are
+   cancelled today): **move** the system alarm to **wake + 2 min** (= `rules.alarmDuration`, the moment our alarm
+   stops) – so if the owner sleeps through our two minutes, the system alarm takes over and rings until stopped.
+   If the app is dead, nothing moves it and it rings at wake + 30 s.
+3. Confirming the wake-up at or after the wake time (shake or code) **cancels** the system alarm. Cancelling the
+   night / ending the nap cancels it too.
+4. **Early confirm (bug B11 – owner 2026-10-04, after the explanation: "Poisti to" = keep the safety alarm):** confirming before the wake time does not leave the owner without
+   an alarm: the system alarm is moved to the wake time itself and stays as a **safety alarm**; the result screen says
+   so ("Safety alarm at 6:00") with a button to switch it off; it also goes away by itself once it has rung and was
+   stopped.
+5. Stopping the system alarm in the system's own screen does not confirm anything – the outcome rules R3 are
+   unchanged (complete only while OUR alarm rings; killed by the system → the owner's favour).
+6. No consent or iOS < 26 → the five backup notifications as today.
+**Tasks:**
+- [x] F6a code (Sonnet, 2026-10-04): `Notifications.isTimeSensitive(_ id:)` (the night notices `nightIds`, the backup
+      alarm ids and the bedtime reminders `reminder-*`; the monthly check and the expiry warnings stay normal),
+      `content(title:body:sound:urgent:)`, texts in Settings and the guide, `NotificationsTests` (6 tests); app 172
+      tests green, `keys.py` 513 / 0 / 0
+- [x] F6a entitlement: on in `project.yml`; a signed device build with it succeeded on 2026-10-04 18:47 (after the
+      owner restarted Xcode)
+- [ ] F6a on the phone + the owner's test: a "Come back!" warning and the bedtime reminder during a Focus
+- [ ] Stale text: `Debug/VibrationTestView.swift` line ≈ 26 still says "allow SleepHole in your Focus"
+- [ ] F6b AlarmKit (Sonnet) – can start now, it needs no paid team
+**Accept:** the owner swipes the app away during a quick night and the system alarm still wakes him in silent mode;
+"Come back!" arrives during a Focus. **Stop.**
 
 ### Backlog from the owner (2026-09-30) – to discuss / schedule
 - [x] **UI polish (2026-09-30):** bigger fonts on the guide's first page; alarm picker as "Zvonenie budíka" label + full-width
@@ -1150,11 +1265,11 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | ✅ B4 | M | – | Trip tolerance is per trip: several trips of 6–7 s within a minute pass, while one 12 s trip is 1 s from a collapse | with the pause (D17): one budget of seconds per night instead of 13 s per trip |
 | ✅ B5 | M | – | "Regularity" = spread of clock times, so moving the bedtime by half an hour (a free schedule change) shows ±13 min although every start was within ±3 min of its bedtime. Matters for the animal rules | measure start − bedtime (bedtime into `NightResult`) |
 | ✅ B6 | M | – | Jokers: the automatic bronze uses up the month, so the morning after the first missed night silver / gold are blocked ("already used") – exactly the holiday case | allow a manual joker that starts on the auto-bronze night to replace it |
-| B7 | M (owner 2026-10-03: on the LIGHT daytime sky the transparency "bothers quite a lot"; he tones it down himself for now – do this bug soon) | S | Contrast: disabled "Go to sleep" / "Nap" text is barely readable on glass, secondary captions are weak in dark mode, the sun sits right behind the large titles "Dnes" / "Nastavenia" | own disabled style, captions `.primary.opacity`, keep sun/moon out of the title zone |
+| ✅ B7 | M – accepted by the owner 2026-10-04 (two follow-ups in §10 B7) | – | Contrast: disabled "Go to sleep" / "Nap" text is barely readable on glass, secondary captions are weak in dark mode, the sun sits right behind the large titles "Dnes" / "Nastavenia" | own disabled style, captions `.primary.opacity`, keep sun/moon out of the title zone |
 | B8 | L | S | Battery / speed (measured: `@Observable` does NOT notify on equal assignments, so the 1 s `refresh()` is harmless): the Today island redraws all its sprites in a `Canvas` 20×/s only to bob 4 pt, plus sky, buddy and flame timelines; `coins` / `streak` / `stats` replay the whole history with several SwiftData fetches on every access; Settings encodes the whole backup for `ShareLink` on every render (each slider tick) | static island + `.offset` animation, cache derived values per data version, lazy backup export |
 | ✅ B9 | L | – | "Screen checks" counts the unlock after the alarm as a check | ignore unlocks after `alarmFired` |
 | B10 | L | XS | A nap cannot be ended early: waking a few minutes before the end means waiting for the alarm | product decision: allow confirming in the last ~20 % |
-| B11 | L | XS | Confirming up to 30 min early cancels the alarm; falling asleep again = no alarm | product decision: keep the alarm armed until wake unless dismissed |
+| B11 | L | – | Confirming up to 30 min early cancels the alarm; falling asleep again = no alarm | owner 2026-10-04: solved in F6b – after an early confirm a system safety alarm stays armed for the wake time |
 | B12 | L | XS | Restore: a backup without a town name / language keeps the current ones ("the backup is the whole truth" otherwise) | assign nil too |
 | B13 | L | XS | A counted test night enters the averages / regularity with its daytime start | exclude `bonus-` records from time stats |
 | B14 | L | XS | `.audioResumed` is also logged for route changes (headphones) → noisy night journal | separate event kind |
@@ -1162,6 +1277,7 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | B16 | L | S | Tooling: `keys.py --prune` reformats the whole catalog; ~~`buddy-cat` is not in the render pipeline~~ (done with P2: `buddy_recipes()`); launch args match bare words (`town`); `test_app.sh` prints a stray "unable to find utility simctl" | fix the tools |
 | B17 | – | – | Not detectable by design (no Screen Time API): Notification / Control Center over the app, replying from a banner or the lock screen | document only |
 | ✅ B19 | M | – | Sleep sound is not remembered (owner 2026-10-03): after he stops the sound during a night, the next night starts the story again – neither "stopped" nor the sound picked in the night's sheet is stored | persist the night sheet's choice (sound + minutes) into `AppSettings` and a separate "off" flag, so the next night starts silent while ▶ still plays the last sound; test in `AppModelTests` – **fixed 2026-10-03** (see P2, W3), the owner checks it with the P2 build |
+| B20 | L | XS | Settings → About shows the app's expiry without the year ("3. 10. 20:39" for 2027-10-03) – it reads as a past date (owner 2026-10-04) | show the year (always, or when it is not the current year) |
 | ✅ B18 | H (process) | – | ~70 files had been changed since the last commit (2026-09-30) | done 2026-10-03: 12 commits on `main` (whole files only – what shares files went into one commit); the owner pushes |
 
 **Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
@@ -1228,6 +1344,9 @@ screen checks.
 | 2026-10-03 | **Install of P2 + P2b and a fresh profile.** `xcodebuild … -allowProvisioningUpdates` keeps signing with the cached profile in `~/Library/Developer/Xcode/UserData/Provisioning Profiles/` as long as it is valid (the first build still carried the profile of 2026-09-29). Moving that file aside and building again made Xcode fetch a new one. **The new profile has `TimeToLive` 365 – it is valid until 2027-10-03**, not for 7 days: the team now behaves like a paid Apple Developer Program team. To confirm with the owner; if so, the 7-day reinstall is history and phase F6 (Time Sensitive notifications, AlarmKit, HealthKit, TestFlight – `docs/TODO-APPLE-DEVELOPER.md` part B) can be planned. Until he decides, the hard rule "no paid-only APIs" stays. Device build + install: `xcodebuild -scheme SleepHole -configuration Debug -destination id=<device> -derivedDataPath build/DerivedData -allowProvisioningUpdates build`, check `security cms -D -i <app>/embedded.mobileprovision` (`ExpirationDate`), then `xcrun devicectl device install app --device <device> <app>`. |
 | 2026-10-04 | **SKY finished after an interruption.** The MacBook went to sleep on battery during the night (a keep-awake app does not prevent that) and the app worker stalled without a report – its code was complete; a third worker did the leftovers. Lessons: long unattended runs need the charger; view tests that wait a FIXED real time for an animation to end become flaky as the suite grows – poll for the end state with a generous timeout; a body drawn behind glass cards reads as clutter – keep sky decoration in free sky; `MKLocalSearchCompleter` with a `.locality` address filter lists a city's districts but not the city itself, so the completer runs unfiltered and only `MKLocalSearch` (the resolve step) is filtered to localities. |
 | 2026-10-04 | **Owner's verdicts:** the night with the new build went well, the alarm rang in silent mode; the buddy (P2) and its tap reactions (P2b) behave as expected → both accepted (the arched back needs more poses – with our own renders, F7); the real sun and moon behave exactly as expected. The pause was not used that night (he tries it the next one); the sleep-sound stop (B19) was remembered at the nap of 2026-10-04. **Paid Apple Developer Program: active** – the owner received Apple's "Thank you for joining the Apple Developer Program" mail, and the profile of 2026-10-03 is valid for 365 days. The Team ID did not change, so the bundle id and the app's data stay. Xcode's cached account data still calls the team a "Personal Team" (it refreshes in Xcode → Settings → Accounts). Phase F6 can now be planned; the definitive technical proof is the first build with a paid-only capability (Time Sensitive notifications failed on the free team, see 2026-09-29). |
+| 2026-10-04 | **The paid team is NOT confirmed – correction of the entry above.** F6a added the time-sensitive entitlement; the owner's Xcode then refused to build: "Personal development teams, including … do not support the Time Sensitive Notifications capability" and "Provisioning profile … doesn't include the com.apple.developer.usernotifications.time-sensitive entitlement". So team `8V2VSXHQ86` is still treated as a free Personal Team, although the profile fetched on 2026-10-03 is valid for 365 days and Apple sent the welcome mail. Opus's earlier conclusion ("the Team ID did not change, the paid team is active") was an inference from the profile's lifetime and was wrong or premature. Likely causes: the paid membership lives on a separate team with its own Team ID (then `DEVELOPMENT_TEAM` must change and the bundle id may have to be registered again – see `TODO-APPLE-DEVELOPER.md` B), or Xcode's account data needs a refresh (Settings → Accounts, sign out / in). The entitlement is commented out in `project.yml` until the owner reports what Xcode → Settings → Accounts and developer.apple.com → Membership details show; the F6a code stays (without the entitlement iOS treats `.timeSensitive` as an ordinary notification). **Lesson: a capability is proven only by a signed device build with it – not by a mail or a profile's lifetime.** Also: a worker's unfinished project change (`project.yml`) broke the owner's own Xcode build – while workers change the project file, tell the owner not to build from Xcode, or work in a worktree. |
+| 2026-10-04 | **The paid team IS confirmed (18:47).** The owner restarted Xcode; a signed device build with the time-sensitive entitlement then succeeded and its new profile contains `com.apple.developer.usernotifications.time-sensitive` (valid until 2027-10-04). So the Team ID did stay the same – Xcode had only kept the old "Personal Team" account data until its restart. The entitlement is switched on again in `project.yml`. |
+| 2026-10-04 | **Owner's requests in the evening:** (1) the sky must always show something: once the sun has set, the moon appears at the left end of the semicircle and moves along it with real time (he saw neither sun nor moon after sunset – the real moon was still down); (2) Settings → About shows the expiry as "3. 10. 20:39" without the year, which reads as a date in the past → show the year (B20); (3) the contrast follow-ups (accent colour, Form headers) are not a priority – "the blue is readable too". App Store question answered in the chat: an Xcode install lasts as long as its profile (1 year on the paid team), TestFlight builds 90 days, App Store installs do not expire. |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |

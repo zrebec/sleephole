@@ -1,8 +1,9 @@
 # TO-DO: Apple Developer Program (platený účet)
 
-> **Stav 4. 10. 2026:** členstvo je aktívne (prišiel uvítací email od Apple, podpisový profil platí rok). Team ID sa
-> nezmenil, takže bundle id aj dáta appky ostávajú a nič sa neprenášalo. Ostáva časť B od riadku „Time Sensitive“
-> (fáza F6) a potvrdenie zmlúv na developer.apple.com, ak tam nejaké čakajú.
+> **Stav 4. 10. 2026 večer:** členstvo je aktívne a potvrdené podpísaným zostavením s funkciou plateného účtu
+> (upozornenia cez Sústredenie). Team ID sa nezmenil, takže bundle id aj dáta appky ostávajú. Xcode to videl až po
+> reštarte. Profil platí do 4. 10. 2027. Hotové z časti B: Time Sensitive Notifications. Ostáva AlarmKit (fáza F6b),
+> neskôr HealthKit a TestFlight.
 
 Cena: **99 USD / rok** (v eurozóne Apple účtuje približne **99 €** vrátane DPH, presná suma sa ukáže pri platbe).
 Registruješ sa ako **Individual** (fyzická osoba), bez firmy.
@@ -26,7 +27,7 @@ Registruješ sa ako **Individual** (fyzická osoba), bez firmy.
 - [x] Ak Apple nedovolí ponechať bundle id `sk.zrebec.sleephole` (patrí k Personal Teamu),
       použijem nové id a **zálohu vrátim** do nového kontajnera appky (`devicectl device copy to`).
       Dáta sa nestratia.
-- [ ] Zapnem **Time Sensitive Notifications**: upozornenia „Vráť sa“ a budík prebijú Sústredenie.
+- [x] Zapnem **Time Sensitive Notifications**: upozornenia „Vráť sa“ a budík prebijú Sústredenie.
 - [ ] **AlarmKit**: systémový budík, ktorý zazvoní aj po reštarte iOS. Overím, či treba o oprávnenie požiadať Apple (formulár).
 - [ ] **HealthKit** (neskôr): skutočný čas zaspatia a fázy spánku z Apple Watch.
 - [ ] Voliteľne **TestFlight**: inštalácia bez kábla a automatické aktualizácie.

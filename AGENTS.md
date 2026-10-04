@@ -17,12 +17,13 @@ before doing anything:
 Whatever the owner's first message is (even just "Ahoj"), **start your reply by listing this agenda in Slovak**,
 then answer. Remove items here when they are done.
 
-0. **Paid Apple Developer Program is active** (owner 2026-10-04: Apple's welcome mail; the profile on the iPhone is
-   valid until 2027-10-03, so no more 7-day reinstalls). Phase F6 (Time Sensitive notifications, AlarmKit, HealthKit,
-   TestFlight – `docs/TODO-APPLE-DEVELOPER.md` part B) is not planned yet: offer it when the owner asks what is next.
+0. **Paid Apple Developer Program: confirmed** (2026-10-04 18:47 – a signed device build with the time-sensitive
+   entitlement succeeded once Xcode had been restarted; the profile is valid until 2027-10-04, the Team ID stayed
+   `8V2VSXHQ86`). Lesson: a capability is proven only by a signed device build, and Xcode needs a restart to notice
+   a changed team. Next in F6: the AlarmKit system alarm (F6b), then the owner's test during a Focus.
 1. **Ask for the result of the pause test:** the owner did not use the "🌙 Pause" yet and wanted to try it in the
-   night 2026-10-04 → 05. Record the answer in the verification board (plan §0a). Open bugs in plan §11a: B7
-   (contrast – the owner asked for it), B8, B10–B16.
+   night 2026-10-04 → 05. Record the answer in the verification board (plan §0a). Open bugs in plan §11a: B8, B10, B12–B16
+   (B7 contrast is accepted – two follow-ups are listed in plan §10 B7; B11 is solved inside F6b).
 2. **Sleep buddy (P2 + P2b): accepted by the owner 2026-10-04.** His remark: the "arched back" has too few poses –
    leave it until we render our own models (F7).
 3. **City + real sun & moon (phase SKY, plan §10)** – built and reviewed 2026-10-04 (Settings → Sky with the Apple
@@ -76,8 +77,9 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
 * iPhone only, native Swift. No PWA, no Android, no cross-platform frameworks.
 * **No Screen Time APIs** (FamilyControls, ManagedSettings, DeviceActivity). The app never blocks anything;
   it only detects leaving the app.
-* Signing: the owner's **paid Apple Developer Program** team since 2026-10 (same Team ID as before). Paid-only APIs
-  (HealthKit, AlarmKit, Time Sensitive notifications, iCloud, push) still wait for phase F6 – not before the owner starts it.
+* Signing: the owner's **paid Apple Developer Program** team `8V2VSXHQ86` (since 2026-10, proven by a signed build).
+  In use: Time Sensitive notifications (F6a). Other paid-only APIs (HealthKit, iCloud, push) only when the owner
+  asks for them. AlarmKit needs no entitlement.
 * Night rules **R3** (plan D15 + findings 2026-09-29/30): start only bedtime −10…+5 min; setup until
   max(start, bedtime) + 5 min; after it, leaving the app → warning after ~3 s and 10 s to return (and at most
   30 s out of the app per night in total – see "Away budget"), else the building collapses (calls excused);
@@ -103,6 +105,12 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   else **5 000 🪙**; bedtime / wake changes free on **days 1–3 of every month** and in the **first 7 days**, else
   the 🔥 streak starts again (nothing else is taken away). Coins = earned − spent (`CoinSpend`), never negative.
 * Never rename a shipped sprite id (ids are persisted). Add new ones instead.
+* **Sky (owner 2026-10-04):** with a city set, the sun / moon on Today travels a semicircle that spans the screen from
+  left to right (centre in the middle, 310 pt down, radius 150 pt) – the sun in the middle means noon. Never shrink
+  or move it. In general: a look the owner has confirmed is changed only when he asks for it.
+  **Something is always on the semicircle:** from sunrise to sunset the sun (left → right), from sunset to sunrise
+  the moon as the night's clock (it appears at the left end the moment the sun has set and reaches the right end at
+  sunrise), drawn with its real phase – even when the real moon is below the horizon.
 * **Night pause (owner 2026-10-02, plan D17 – built 2026-10-03):** an intentional "🌙 Pause" button on the night
   screen (after the setup, never for a nap), 10 min each; the 1st pause of a night is free, the 2nd costs 50 🪙, the 3rd
   100, the 4th 150 (+50 each, charged at the start, only if the coins are there); a complete night with no pause pays
