@@ -22,12 +22,12 @@
 | I18N | English (default) + Slovak, in-app switch stored in SQLite | ✅ done (2026-09-30), **confirmed by the owner 2026-10-03** ("works great", survives an app and a phone restart) | owner switches the language in Settings and checks both |
 | LIM | Limits: town rename 1×/year (else 5 000 🪙), schedule change free on days 1–3 / first week (else streak reset) | ✅ done (2026-09-30), installed | owner tests rename + schedule change |
 | UI | Look & feel: living sky, Today island, glass cards, micro-animations; UI-2: theme, splash/WOW, sounds, voice | 🟡 built + installed 2026-10-02; theme switch and voice confirmed 2026-10-03 (the owner keeps the voice off – he does not like it); the overall look still awaits his verdict | owner: "it looks nice now" |
-| P1 | Night pause (D17) + away budget 30 s/night + alarm safety + expiry warning (B1–B6, B9) | 🟡 built + installed 2026-10-03; the alarm in silent mode confirmed 2026-10-03; owner tests the pause in the night 2026-10-03 → 04 | owner uses a pause in a real night |
-| P2 | Sleep buddy: awake / asleep cat that faces the owner (plan A step 2, spec in §10 P2) + bug B19 | 🟡 built, committed and **installed on the iPhone 2026-10-03 20:40** (one build with P2b), awaiting the owner | owner sleeps with the buddy |
-| P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | 🟡 built, committed and **installed on the iPhone 2026-10-03 20:40**, awaiting the owner (sounds + haptics can only be judged on the phone) | owner pets the cat on Today |
-| SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 owner asked for it on 2026-10-03 evening ("it shows a sunset while it is long dark"); being built by Sonnet workers overnight, NOT to be installed without his OK | owner picks his city, sees the true sun/moon |
+| P1 | Night pause (D17) + away budget 30 s/night + alarm safety + expiry warning (B1–B6, B9) | 🟡 built + installed 2026-10-03; the alarm in silent mode confirmed; the pause itself not used yet – the owner tries it in the night 2026-10-04 → 05 | owner uses a pause in a real night |
+| P2 | Sleep buddy: awake / asleep cat that faces the owner (plan A step 2, spec in §10 P2) + bug B19 | ✅ accepted by the owner 2026-10-04 ("the cat behaves as expected"; a real night with it) | owner sleeps with the buddy |
+| P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | ✅ accepted by the owner 2026-10-04; his remark: the arched back has too few poses – left as it is until we render our own models (F7) | owner pets the cat on Today |
+| SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 built and reviewed 2026-10-04 (all tests green), UNCOMMITTED; the iPhone runs an interim build of 2026-10-03 21:13 (city search and night sky confirmed by the owner, still the first semicircle geometry) – the final build waits for his OK | owner picks his city, sees the true sun/moon |
 | F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo | "I like looking at it" |
-| F6 | *(optional, paid account)* HealthKit, AlarmKit, TestFlight | ⬜ later | owner decides to pay |
+| F6 | Paid Apple Developer Program: Time Sensitive notifications, AlarmKit, HealthKit, TestFlight | ⬜ the membership is active (owner 2026-10-04) – phase not planned yet, the owner decides when | owner decides what goes first |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
 
 **Rule:** work on the first phase that is not ✅, do only that phase, then stop and hand over to the
@@ -45,7 +45,7 @@ they do not block P2. **What is really verified, feature by feature, is in §0a.
 * 🖥 **tests / simulator only** – installed on the phone, never exercised there
 
 When the owner confirms or rejects something, move the row the same day. Automated state on 2026-10-03 (evening):
-SleepCore 144 tests green; app 133 tests, 92.63 % line coverage.
+SleepCore 177 tests green; app 159 tests, 92.36 % line coverage (2026-10-04).
 
 ### Night and nap
 | | Feature | Evidence |
@@ -56,14 +56,14 @@ SleepCore 144 tests green; app 133 tests, 92.63 % line coverage.
 | 🟢 | Collapse after leaving the app once the setup is over | owner's quick nights (2026-09-29) |
 | 🟢 | "Come back!" warning (two notifications) | owner (2026-10-03) |
 | 🟢 | Phone call is excused | device log #2 (2026-09-29) |
-| 🟢 | In-app alarm, also with the ringer switched off (silent mode) | owner (2026-10-03): "the alarm works with the ringer off" |
+| 🟢 | In-app alarm, also with the ringer switched off (silent mode) | owner (2026-10-03): "the alarm works with the ringer off"; again after a real night (2026-10-04) |
 | 📱 | Confirm by wake code and by shake | both used on the phone |
 | 📱 | Longer setup after an early start | owner's request 2026-09-30, in use since |
 | 📱 | Nap 30 / 60 min | used on the phone |
 | 📱 | Guide + first-night checklist | done on the phone |
 | 📱 | Vibration at the start and on a return in time | owner's test 2026-09-30 (nothing vibrates in the background – iOS) |
 | 🖥 | Outcome "unfinished" (confirm after the alarm stopped) | not happened on the phone since rules R3 |
-| 🖥 | Night pause (D17) | **owner tests in the night 2026-10-03 → 04** |
+| 🖥 | Night pause (D17) | not used in the night 2026-10-03 → 04; the owner tries it in the night 2026-10-04 → 05 |
 | 🖥 | Away budget 30 s per night + its counter | installed 2026-10-03 |
 | 🖥 | Safer alarm (B1 retry, B3 five backup notifications) | installed 2026-10-03 |
 | 🖥 | Screen checks ignore the unlock after the alarm (B9) | installed 2026-10-03 |
@@ -103,7 +103,7 @@ SleepCore 144 tests green; app 133 tests, 92.63 % line coverage.
 |---|---|---|
 | 🟢 | Voice (works) | owner (2026-10-03): works, he does not like it and keeps it switched off |
 | 📱 | Sleep sounds + exact timer | owner (2026-10-03): works, but a stop was not remembered (B19) |
-| 🖥 | B19 fix: a stop is remembered, switch "Play when the night starts" | installed 2026-10-03 evening |
+| 🟢 | B19 fix: a stop is remembered, switch "Play when the night starts" | owner (2026-10-04): the nap after a stop started silent – "hopefully OK" |
 | 📱 | Sound stories | in use on the phone |
 | 📱 | Sound effects, good-night splash, WOW of a finished building | quick nights on 2026-10-02 |
 | 🖥 | The 5 newer alarms (birds, bowl, music box, kalimba, Bach) | no record of a phone test |
@@ -114,10 +114,13 @@ SleepCore 144 tests green; app 133 tests, 92.63 % line coverage.
 |---|---|---|
 | 🟢 | English + Slovak with the in-app switch | owner (2026-10-03): works great, survives an app and a phone restart |
 | 🟢 | Theme System / Light / Dark | owner (2026-10-03): accepted, switching works perfectly |
+| 🟢 | City in Settings: Apple Maps search, ✕ → ✓ (SKY) | owner (2026-10-03, interim build): "it works, Bratislava OK" |
+| 🟢 | Real sky: night after the real sunset (SKY) | owner (2026-10-03, interim build): the night background shows |
+| 🟢 | Sun / moon on the semicircle, the moon's real phase (SKY) | owner (2026-10-04, interim build): "exactly as expected, very satisfied"; the final geometry (right of the title, above the badges) is not installed yet |
 | 📱 | Living sky, glass cards, micro-animations | awaiting "it looks nice now" |
 | 📱 | Slower animations (`Motion.pace`) | built after his remark of 2026-10-02 |
-| 🖥 | Sleep buddy (P2): asleep / awake cat on the night, nap and alarm screens | installed 2026-10-03 evening |
-| 🖥 | Today = only the cat (no town there), three tap reactions: purr, arched back, wink (P2b) | installed 2026-10-03 evening; sounds and haptics can only be judged on the phone |
+| 🟢 | Sleep buddy (P2): asleep / awake cat on the night, nap and alarm screens | owner (2026-10-04): behaves as expected |
+| 🟢 | Today = only the cat (no town there), three tap reactions: purr, arched back, wink (P2b) | owner (2026-10-04): behaves as expected; the arched back has too few poses – revisit with our own renders |
 | 🖥 | "The app stops launching soon" card + the date in Settings (B2) | the profile now runs until 2027-10-03, so the card will not show by itself – Settings → About must show the new date; the card can be checked with `-expiresIn HOURS` in the simulator |
 
 ### Data, backup, tooling
@@ -811,7 +814,7 @@ Not done: symbol effects on the tab icons (system tab bar, little gain). Night s
       `docs/previews/animals_cube_pets.png` (scratch recipes, not in the catalog yet) – for F5 (living town).
 **Accept:** owner tests jokers + the slower WOW. **Stop.**
 
-### P2 — Sleep buddy (owner's spec 2026-10-03) – 🟡 installed 2026-10-03 (with P2b), awaiting the owner's test
+### P2 — Sleep buddy (owner's spec 2026-10-03) – ✅ accepted by the owner 2026-10-04
 **Owner's words:** the buddy must be turned with its head towards me. When I am up, the cat's head is raised and it
 looks at me. When I nap or sleep, its head is down, its eyes are closed and it makes "zzz" in a slow animation loop.
 
@@ -862,7 +865,7 @@ pipeline (B16).
 - [x] Opus review (2026-10-03): diffs read, screenshots checked, SleepCore 141 tests, app 119 tests / 92.46 %,
       `keys.py` 497 keys / 0 missing / 0 without sk; `assets/sprites` and `recipes.json` untouched
 - [x] Installed on the iPhone 2026-10-03 20:40 together with P2b (see there)
-- [ ] Owner's check on the phone → move the rows in §0a
+- [x] Owner's check on the phone (2026-10-04): the cat behaves as expected → rows moved in §0a
 
 **Owner's feedback after the build (2026-10-03 evening):** Today must not show the town any more (next to the
 island the cat looks small and a tap always opened the Town tab) → phase **P2b** below. He also floated "taking care
@@ -873,7 +876,7 @@ app already has (last night, streak, regularity) = no new duties → a good next
 (`NAVRH-ZVIERATKA.md` §2) and with the still-open coin economy → not now. Town = the long memory of the nights,
 buddy = how today feels.
 
-### P2b — The buddy is the hero of Today + three tap reactions (owner 2026-10-03 evening) – 🟡 installed 2026-10-03, awaiting the owner
+### P2b — The buddy is the hero of Today + three tap reactions (owner 2026-10-03 evening) – ✅ accepted by the owner 2026-10-04
 **Owner's decisions (do not re-litigate):**
 * The town has its own tab ("Town"). **Today shows no town / island any more** – only the cat with its interaction.
   Nights keep building the town exactly as before. No chip, no thumbnail, no crane on Today – the enabled
@@ -975,11 +978,11 @@ Sound effects test.
 - [x] Installed on the iPhone 2026-10-03 20:40 with the owner's OK (P2 + P2b + B19 in one build); the app's data
       was pulled first (`docs/device-logs/2026-10-03-before-p2b/`, git-ignored); the app launched and kept running.
       The build carries a FRESH profile valid until 2027-10-03 – see §12
-- [ ] Owner's check on the phone → move the rows in §0a
+- [x] Owner's check on the phone (2026-10-04): the cat behaves as expected → rows moved in §0a
 **Accept:** on Today the owner sees only the cat; three taps give purr, arched back, wink; the Town tab is unchanged.
 **Stop.**
 
-### SKY — City in Settings + the real sun and moon (owner 2026-10-02 / 2026-10-03) – 🟡 being built
+### SKY — City in Settings + the real sun and moon (owner 2026-10-02 / 2026-10-03) – 🟡 built, final build not installed yet
 **Why:** the sky follows the owner's schedule (dusk = the 90 min before bedtime), so at 20:45 it showed a sunset
 while the real sun had set at 18:28. **Owner's spec (2026-10-02):** Settings → city with autocomplete – the label on
 its own row, the field on the row below (long names); after the field a black ✕ that turns into a green ✓ once the
@@ -1017,10 +1020,27 @@ its own always-dark `NightSky`.
       search + bisection) and `Sky.state(at:place:)`, `SkyBody`, `MoonLook`. Worst errors against PyEphem: sun
       0.01°, moon 0.3° (azimuth 1.4° near the zenith), phase 0.002, sunrise / sunset a few seconds, moonrise /
       moonset < 4 min. 177 SleepCore tests. One call ≈ 60 µs – the app still caches it per minute
-- [ ] W2 – app: `AppSettings.city`, city search, Settings section, real sky + semicircle + moon phase, strings, tests,
-      screenshots (Sonnet), after W1
-- [ ] Opus: review, all tests + `keys.py`, plan §0 / §0a / §12
-- [ ] Install on the iPhone – only with the owner's OK, outside his nap window and night
+- [x] W2 – app (2026-10-03 night): `SkyCity` + `AppSettings.city`; `App/CitySearch.swift` (`CitySearch`,
+      `CityField` – the field's logic without views, `MapKitCitySearch`: completer WITHOUT an address filter – with
+      `.locality` it lists a city's districts but not the city itself – and `MKLocalSearch` filtered to localities);
+      `UI/SkySection.swift` (Settings → Sky); `RealSky` (per-minute cache), `SkyOverrides` (dev args `-skyCity`,
+      `-skyArc`, `-skyBody`, `-skyMoon`, `-cityQuery`, `-scrollTo sky`), `LivingSky(semicircle:)`,
+      `SkyDrawing.track / semicirclePoint / litPart` (the moon's real phase); `SkyCityTests` (26 tests). The worker
+      stalled before reporting (the Mac went to sleep on battery); Opus reviewed the code on 2026-10-04
+- [x] W3 – leftovers (2026-10-04): the buddy animation tests waited a fixed real time and failed under the bigger
+      test run → `pump(host, until:timeout:)` polls for the end state (test file only); fresh Settings screenshots
+      (the simulator reaches Apple Maps: "Brat" → Bratislava, its districts, the region); **new semicircle
+      geometry** – centre (width − 150, 180 pt), radius min(95, …): a compact half circle in the free sky right of
+      the title, above the badges (with centre y 310 / radius 150 the body sat half behind the glass badges for much
+      of the day); only at the two ends the disc dips behind the badges' top edge, like a horizon
+- [x] Opus review (2026-10-04): code read, screenshots checked (`build/shots/sky/`); SleepCore 177 tests, app 159
+      tests / 92.36 % (five green runs in a row), `keys.py` 513 keys / 0 missing / 0 without sk; no location API
+- [x] Committed 2026-10-04 at the owner's request; the FINAL build goes onto the iPhone the same afternoon (his OK)
+      ⚠️ **Interim install 2026-10-03 21:13 at the owner's explicit request ("install now"):** a frozen copy of the
+      working tree as it was at 21:12, while W2 was still working – it compiled, launched and kept running on the
+      phone, but it was NOT reviewed, its tests were not written yet and the Apple Maps search was never tried.
+      The last reviewed build (20:39, P2 + P2b) is kept at `build/DerivedData/Build/Products/Debug-iphoneos/` for a
+      rollback. The final SKY build still has to be reviewed, tested and installed
 **Accept:** the owner types his city, sees ✓, and Today shows the sun / moon where they really are. **Stop.**
 
 ### F5 — Living town
@@ -1127,7 +1147,7 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | ✅ B4 | M | – | Trip tolerance is per trip: several trips of 6–7 s within a minute pass, while one 12 s trip is 1 s from a collapse | with the pause (D17): one budget of seconds per night instead of 13 s per trip |
 | ✅ B5 | M | – | "Regularity" = spread of clock times, so moving the bedtime by half an hour (a free schedule change) shows ±13 min although every start was within ±3 min of its bedtime. Matters for the animal rules | measure start − bedtime (bedtime into `NightResult`) |
 | ✅ B6 | M | – | Jokers: the automatic bronze uses up the month, so the morning after the first missed night silver / gold are blocked ("already used") – exactly the holiday case | allow a manual joker that starts on the auto-bronze night to replace it |
-| B7 | M | S | Contrast: disabled "Go to sleep" / "Nap" text is barely readable on glass, secondary captions are weak in dark mode, the sun sits right behind the large titles "Dnes" / "Nastavenia" | own disabled style, captions `.primary.opacity`, keep sun/moon out of the title zone |
+| B7 | M (owner 2026-10-03: on the LIGHT daytime sky the transparency "bothers quite a lot"; he tones it down himself for now – do this bug soon) | S | Contrast: disabled "Go to sleep" / "Nap" text is barely readable on glass, secondary captions are weak in dark mode, the sun sits right behind the large titles "Dnes" / "Nastavenia" | own disabled style, captions `.primary.opacity`, keep sun/moon out of the title zone |
 | B8 | L | S | Battery / speed (measured: `@Observable` does NOT notify on equal assignments, so the 1 s `refresh()` is harmless): the Today island redraws all its sprites in a `Canvas` 20×/s only to bob 4 pt, plus sky, buddy and flame timelines; `coins` / `streak` / `stats` replay the whole history with several SwiftData fetches on every access; Settings encodes the whole backup for `ShareLink` on every render (each slider tick) | static island + `.offset` animation, cache derived values per data version, lazy backup export |
 | ✅ B9 | L | – | "Screen checks" counts the unlock after the alarm as a check | ignore unlocks after `alarmFired` |
 | B10 | L | XS | A nap cannot be ended early: waking a few minutes before the end means waiting for the alarm | product decision: allow confirming in the last ~20 % |
@@ -1203,6 +1223,8 @@ screen checks.
 | 2026-10-03 | **P2 buddy in the app + B19.** Built by three Sonnet workers, reviewed by Opus. Lessons: a hosted test window's scene phase is `.background`, so views that pause in the background need an override to be tested (`\.buddyAnimates`); a nested `RunLoop.run` starves SwiftUI `.task`s in the hosted tests → animation tests are `async` and wait with `Task.sleep`; restarting a running `repeatForever` animation with new parameters needs a step back to rest first; two crossfade steps in one update collapse (1 → 0 → 1 = no change) → a 50 ms frame break between the steps. New dev launch args: `-buddy awake|asleep`, `-testNightMinutes N` (the normal, non-compact night layout), `-startNap`, `-mute` (**without `-mute` a test night's alarm rings on the Mac's speakers**). `tools/test_app.sh` prints "unable to find utility simctl" once during the run although the simulator does shut down (tooling, B16). B19: `stopSleepSound()` never stored anything – see P2 W3. |
 | 2026-10-03 | **P2b built** (three Sonnet workers: assets, sounds, app). Lessons: an animation canvas grows with its tallest frame – give the view a layout box without the empty top (`headroom`) and let only the tall frames overflow, otherwise every placement shifts; the canvas is not centred on the character (bed + shadow extend right) → centre on a chosen x (0.37), not on the frame; a purr's energy sits mostly below 200 Hz, which a phone speaker cannot play – judge loudness by the band above 200 Hz; effects play through the `.ambient` session, so the silent switch mutes them (the haptic still plays). |
 | 2026-10-03 | **Install of P2 + P2b and a fresh profile.** `xcodebuild … -allowProvisioningUpdates` keeps signing with the cached profile in `~/Library/Developer/Xcode/UserData/Provisioning Profiles/` as long as it is valid (the first build still carried the profile of 2026-09-29). Moving that file aside and building again made Xcode fetch a new one. **The new profile has `TimeToLive` 365 – it is valid until 2027-10-03**, not for 7 days: the team now behaves like a paid Apple Developer Program team. To confirm with the owner; if so, the 7-day reinstall is history and phase F6 (Time Sensitive notifications, AlarmKit, HealthKit, TestFlight – `docs/TODO-APPLE-DEVELOPER.md` part B) can be planned. Until he decides, the hard rule "no paid-only APIs" stays. Device build + install: `xcodebuild -scheme SleepHole -configuration Debug -destination id=<device> -derivedDataPath build/DerivedData -allowProvisioningUpdates build`, check `security cms -D -i <app>/embedded.mobileprovision` (`ExpirationDate`), then `xcrun devicectl device install app --device <device> <app>`. |
+| 2026-10-04 | **SKY finished after an interruption.** The MacBook went to sleep on battery during the night (a keep-awake app does not prevent that) and the app worker stalled without a report – its code was complete; a third worker did the leftovers. Lessons: long unattended runs need the charger; view tests that wait a FIXED real time for an animation to end become flaky as the suite grows – poll for the end state with a generous timeout; a body drawn behind glass cards reads as clutter – keep sky decoration in free sky; `MKLocalSearchCompleter` with a `.locality` address filter lists a city's districts but not the city itself, so the completer runs unfiltered and only `MKLocalSearch` (the resolve step) is filtered to localities. |
+| 2026-10-04 | **Owner's verdicts:** the night with the new build went well, the alarm rang in silent mode; the buddy (P2) and its tap reactions (P2b) behave as expected → both accepted (the arched back needs more poses – with our own renders, F7); the real sun and moon behave exactly as expected. The pause was not used that night (he tries it the next one); the sleep-sound stop (B19) was remembered at the nap of 2026-10-04. **Paid Apple Developer Program: active** – the owner received Apple's "Thank you for joining the Apple Developer Program" mail, and the profile of 2026-10-03 is valid for 365 days. The Team ID did not change, so the bundle id and the app's data stay. Xcode's cached account data still calls the team a "Personal Team" (it refreshes in Xcode → Settings → Accounts). Phase F6 can now be planned; the definitive technical proof is the first build with a paid-only capability (Time Sensitive notifications failed on the free team, see 2026-09-29). |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |

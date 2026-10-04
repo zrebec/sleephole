@@ -1,25 +1,29 @@
 # TO-DO: Apple Developer Program (platený účet)
 
+> **Stav 4. 10. 2026:** členstvo je aktívne (prišiel uvítací email od Apple, podpisový profil platí rok). Team ID sa
+> nezmenil, takže bundle id aj dáta appky ostávajú a nič sa neprenášalo. Ostáva časť B od riadku „Time Sensitive“
+> (fáza F6) a potvrdenie zmlúv na developer.apple.com, ak tam nejaké čakajú.
+
 Cena: **99 USD / rok** (v eurozóne Apple účtuje približne **99 €** vrátane DPH, presná suma sa ukáže pri platbe).
 Registruješ sa ako **Individual** (fyzická osoba), bez firmy.
 
 ## A. Registrácia (ty, asi 15 minút, potom čakanie)
-- [ ] Na iPhone si nainštaluj z App Storu appku **Apple Developer**.
+- [x] Na iPhone si nainštaluj z App Storu appku **Apple Developer**.
       Najrýchlejšia cesta: registrácia aj overenie totožnosti prebehnú priamo v telefóne.
-- [ ] Skontroluj, že Apple ID má zapnuté **dvojfaktorové overenie**
+- [x] Skontroluj, že Apple ID má zapnuté **dvojfaktorové overenie**
       (Nastavenia → tvoje meno → Prihlásenie a zabezpečenie).
-- [ ] V appke Apple Developer: **Účet → Zaregistrovať sa** (Enroll now) → **Individual**.
-- [ ] Vyplň **skutočné meno a adresu**, rovnaké ako v doklade (Apple ich kontroluje).
-- [ ] Ak si to Apple vypýta, **naskenuj občiansky preukaz** (fotka dokladu a tváre).
-- [ ] **Zaplať** kartou priamo v appke. Platba je cez Apple ID.
-- [ ] Počkaj na email **„Welcome to the Apple Developer Program“**. Zvyčajne príde do 24–48 h, niekedy do pár hodín.
+- [x] V appke Apple Developer: **Účet → Zaregistrovať sa** (Enroll now) → **Individual**.
+- [x] Vyplň **skutočné meno a adresu**, rovnaké ako v doklade (Apple ich kontroluje).
+- [x] Ak si to Apple vypýta, **naskenuj občiansky preukaz** (fotka dokladu a tváre).
+- [x] **Zaplať** kartou priamo v appke. Platba je cez Apple ID.
+- [x] Počkaj na email **„Welcome to the Apple Developer Program“**. Zvyčajne príde do 24–48 h, niekedy do pár hodín.
 - [ ] Na [developer.apple.com/account](https://developer.apple.com/account) sa prihlás a **potvrď zmluvy** (Agreements), ak nejaké čakajú.
-- [ ] Pošli mi **Team ID** (10 znakov). Nájdeš ho v developer.apple.com → Membership details.
+- [x] Pošli mi **Team ID** (10 znakov). Nájdeš ho v developer.apple.com → Membership details.
 
 ## B. Prepnutie projektu (ja, keď bude účet aktívny)
-- [ ] **Záloha dát z telefónu** (denník nocí, mesto, nastavenia) cez `devicectl`, ešte pred prepnutím.
-- [ ] Nový `DEVELOPMENT_TEAM` do `project.yml`. Xcode vytvorí profil na **1 rok**.
-- [ ] Ak Apple nedovolí ponechať bundle id `sk.zrebec.sleephole` (patrí k Personal Teamu),
+- [x] **Záloha dát z telefónu** (denník nocí, mesto, nastavenia) cez `devicectl`, ešte pred prepnutím.
+- [x] Nový `DEVELOPMENT_TEAM` do `project.yml`. Xcode vytvorí profil na **1 rok**.
+- [x] Ak Apple nedovolí ponechať bundle id `sk.zrebec.sleephole` (patrí k Personal Teamu),
       použijem nové id a **zálohu vrátim** do nového kontajnera appky (`devicectl device copy to`).
       Dáta sa nestratia.
 - [ ] Zapnem **Time Sensitive Notifications**: upozornenia „Vráť sa“ a budík prebijú Sústredenie.
