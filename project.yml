@@ -44,12 +44,18 @@ targets:
         # the automatic backup in Documents is visible in Files → On My iPhone → SleepHole
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
+    # F6a: time-sensitive notifications break through a Focus – a capability of the paid team. Proven by a signed
+    # device build on 2026-10-04 (before Xcode was restarted it still treated the team as a Personal Team).
+    entitlements:
+      path: SleepHole/SleepHole.entitlements
+      properties:
+        com.apple.developer.usernotifications.time-sensitive: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: sk.zrebec.sleephole
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_STYLE: Automatic
-        DEVELOPMENT_TEAM: 8V2VSXHQ86   # owner's Personal Team
+        DEVELOPMENT_TEAM: 8V2VSXHQ86   # the owner's Apple Developer Program team (paid since 2026-10; the Team ID stayed the same)
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         ENABLE_PREVIEWS: YES

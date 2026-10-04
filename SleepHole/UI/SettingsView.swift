@@ -125,7 +125,7 @@ struct SettingsView: View {
                         }
                     }
                 } footer: {
-                    Text(L("Without notifications you won't get the “Come back” warning or the backup alarm. If you use a Focus (Sleep, Do Not Disturb), allow SleepHole in it."))
+                    Text(L("Without notifications you won't get the “Come back” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed."))
                 }
 
                 Section {

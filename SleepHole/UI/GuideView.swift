@@ -208,7 +208,7 @@ struct GuideView: View {
                 .font(.footnote).foregroundStyle(.secondary)
             row("key.fill", L("Keep a passcode / Face ID on your iPhone – without it the app can't tell when the phone is locked."))
             row("battery.100.bolt", L("Keep your phone on the charger overnight."))
-            row("moon.zzz.fill", L("The SleepHole alarm also rings in Do Not Disturb or Sleep focus. To get the “Come back” warning too, allow SleepHole: Settings → Focus → Sleep (and Do Not Disturb) → Apps → Add."))
+            row("moon.zzz.fill", L("The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “Come back” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed."))
             row("speaker.wave.2.fill", L("The alarm rings even in silent mode. Pick the sound in Settings."))
             row("arrow.down.circle", L("iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – only the backup notification. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing."))
             row("arrow.clockwise", L("The free version of the app expires after 7 days – run it again from Xcode then. Your data stays."))

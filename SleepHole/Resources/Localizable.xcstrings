@@ -5977,18 +5977,18 @@
         }
       }
     },
-    "The SleepHole alarm also rings in Do Not Disturb or Sleep focus. To get the “Come back” warning too, allow SleepHole: Settings → Focus → Sleep (and Do Not Disturb) → Apps → Add.": {
+    "The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “Come back” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The SleepHole alarm also rings in Do Not Disturb or Sleep focus. To get the “Come back” warning too, allow SleepHole: Settings → Focus → Sleep (and Do Not Disturb) → Apps → Add."
+            "value": "The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “Come back” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Budík SleepHole zvoní aj v režime Nerušiť či Spánok. Aby prišlo aj varovanie „Vráť sa“, pridaj SleepHole do povolených appiek: Nastavenia → Sústredenie → Spánok (a Nerušiť) → Appky → Pridať."
+            "value": "Budík SleepHole zvoní aj v režime Nerušiť či Spánok a príde tam aj varovanie „Vráť sa“. Ak sa iOS spýta na časovo citlivé upozornenia od SleepHole, nechaj ich povolené."
           }
         }
       }
@@ -6889,18 +6889,18 @@
         }
       }
     },
-    "Without notifications you won't get the “Come back” warning or the backup alarm. If you use a Focus (Sleep, Do Not Disturb), allow SleepHole in it.": {
+    "Without notifications you won't get the “Come back” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Without notifications you won't get the “Come back” warning or the backup alarm. If you use a Focus (Sleep, Do Not Disturb), allow SleepHole in it."
+            "value": "Without notifications you won't get the “Come back” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bez upozornení nepríde varovanie „Vráť sa“ ani záložný budík. Ak máš zapnuté Sústredenie (Spánok, Nerušiť), povoľ v ňom SleepHole."
+            "value": "Bez upozornení nedostaneš varovanie „Vráť sa“ ani záložný budík. Upozornenia SleepHole sú časovo citlivé – prídu aj počas Sústredenia (Spánok, Nerušiť). Ak sa iOS spýta, nechaj ich povolené."
           }
         }
       }
