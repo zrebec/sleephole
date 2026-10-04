@@ -25,7 +25,7 @@
 | P1 | Night pause (D17) + away budget 30 s/night + alarm safety + expiry warning (B1–B6, B9) | 🟡 built + installed 2026-10-03; the alarm in silent mode confirmed; the pause itself not used yet – the owner tries it in the night 2026-10-04 → 05 | owner uses a pause in a real night |
 | P2 | Sleep buddy: awake / asleep cat that faces the owner (plan A step 2, spec in §10 P2) + bug B19 | ✅ accepted by the owner 2026-10-04 ("the cat behaves as expected"; a real night with it) | owner sleeps with the buddy |
 | P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | ✅ accepted by the owner 2026-10-04; his remark: the arched back has too few poses – left as it is until we render our own models (F7) | owner pets the cat on Today |
-| SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 built and reviewed 2026-10-04 (all tests green), UNCOMMITTED; the iPhone runs an interim build of 2026-10-03 21:13 (city search and night sky confirmed by the owner, still the first semicircle geometry) – the final build waits for his OK | owner picks his city, sees the true sun/moon |
+| SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 built, committed and installed 2026-10-04 17:29 (final build). City search, night sky, sun and moon confirmed by the owner on the interim build; only the final semicircle position (right of the title) still waits for his look | owner picks his city, sees the true sun/moon |
 | F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo | "I like looking at it" |
 | F6 | Paid Apple Developer Program: Time Sensitive notifications, AlarmKit, HealthKit, TestFlight | ⬜ the membership is active (owner 2026-10-04) – phase not planned yet, the owner decides when | owner decides what goes first |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
@@ -1035,7 +1035,10 @@ its own always-dark `NightSky`.
       of the day); only at the two ends the disc dips behind the badges' top edge, like a horizon
 - [x] Opus review (2026-10-04): code read, screenshots checked (`build/shots/sky/`); SleepCore 177 tests, app 159
       tests / 92.36 % (five green runs in a row), `keys.py` 513 keys / 0 missing / 0 without sk; no location API
-- [x] Committed 2026-10-04 at the owner's request; the FINAL build goes onto the iPhone the same afternoon (his OK)
+- [x] Committed 2026-10-04 at the owner's request; the FINAL build was installed on the iPhone on 2026-10-04 17:29
+      (data pulled first to `docs/device-logs/2026-10-04-before-sky/`; the first `devicectl … launch` failed with
+      FBSOpenApplicationServiceErrorDomain 1, the second one right after it worked – the app keeps running)
+- [ ] Owner looks at the final semicircle (right of the title) on the phone
       ⚠️ **Interim install 2026-10-03 21:13 at the owner's explicit request ("install now"):** a frozen copy of the
       working tree as it was at 21:12, while W2 was still working – it compiled, launched and kept running on the
       phone, but it was NOT reviewed, its tests were not written yet and the Apple Maps search was never tried.

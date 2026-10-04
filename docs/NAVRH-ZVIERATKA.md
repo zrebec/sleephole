@@ -2,6 +2,20 @@
 
 *Návrh na večerné čítanie · 2. 10. 2026 · napísal Claude pre majiteľa appky*
 
+> **Stav 4. 10. 2026 – čo sa od napísania zmenilo** (zvyšok dokumentu je pôvodný text z 2. 10.)
+>
+> - **Pauza** (krok 1 plánu A) je postavená a nainštalovaná, čaká na tvoj test v noci.
+> - **Spáč** (krok 2) je hotový a prijatý, ale inak, než sa tu píše: je to **mačka ako hlavná postava obrazovky
+>   Dnes** (mesto tam už nie je, má svoju záložku). Na ťuknutie pradie, spraví mačací chrbát a žmurkne. V noci a pri
+>   odpočinku spí pri stavenisku, počas prípravy, pauzy a od budíka bdie. Výber iného zvieratka zatiaľ nie je.
+> - **Cube Pets:** v jednom z formátov majú jednoduché animácie (chôdza, beh, jedenie, tanec). Nemajú zavreté oči ani
+>   samostatnú hlavu, takže pózy si renderujeme sami.
+> - **Otázka 2** (nerušená noc) je rozhodnutá: hotová noc bez pauzy, +30 🪙. **Otázka 3** (prvý spáč): zatiaľ mačka.
+> - **Na výber ostáva:** obyvatelia v meste a album (kroky 3–4), živé mesto (krok 5), ročné obdobia, a z plánu B
+>   nálada mesta, ranné noviny a želania. Nová možnosť z 3. 10.: **nálada mačky podľa toho, ako si spal**
+>   (bez povinností a bez trestov). Starostlivosť s potrebami (kŕmenie) som neodporučil.
+> - **Platený Apple účet je aktívny.** Systémový budík z plánu C (krok 4) sa preto rieši teraz ako fáza F6.
+
 ---
 
 ## 1. Kde sme dnes
