@@ -29,6 +29,9 @@ public struct Placement: Codable, Equatable, Sendable {
 ///
 /// Every cell with `col % 5 == 0 || row % 5 == 0` is road → blocks of 4×4 lots = four 2×2 quadrants.
 /// Blocks are filled one by one in a square spiral around the centre; 2×2 buildings never straddle a road.
+///
+/// Streets come first (SimCity style): the 20 road cells around every started block are drawn, plus the ring of
+/// the next, still empty block in spiral order – so the player sees where the town is going to grow.
 public struct TownLayout: Codable, Equatable, Sendable {
     public static let blockPitch = 5
     public private(set) var placements: [Placement] = []
@@ -109,8 +112,19 @@ public struct TownLayout: Codable, Equatable, Sendable {
 
     // MARK: roads
 
-    /// Road cells that are drawn: every road cell touching (8-neighbourhood) an occupied lot.
-    public var drawnRoads: Set<Cell> {
+    /// The 20 road cells around a block: `col` in `5bx...5bx+5` and `row` in `5by...5by+5`, roads only.
+    static func ring(of block: Cell) -> Set<Cell> {
+        var out = Set<Cell>()
+        for col in block.col * blockPitch...(block.col + 1) * blockPitch {
+            for row in block.row * blockPitch...(block.row + 1) * blockPitch where isRoad(Cell(col, row)) {
+                out.insert(Cell(col, row))
+            }
+        }
+        return out
+    }
+
+    /// Road cells touching (8-neighbourhood) an occupied lot – the streets that really have houses on them.
+    public var builtRoads: Set<Cell> {
         var roads = Set<Cell>()
         for cell in occupied {
             for dc in -1...1 {
@@ -123,18 +137,40 @@ public struct TownLayout: Codable, Equatable, Sendable {
         return roads
     }
 
+    /// Road cells that are drawn: the street rings of all started blocks (blocks holding an occupied lot) plus the
+    /// ring of the frontier block – the first block in spiral order without any occupied lot. Streets are always
+    /// one block ahead of the houses, also in an empty town.
+    public var drawnRoads: Set<Cell> {
+        let taken = occupied
+        let started = Set(taken.map { Self.block($0) })
+        var roads = Set<Cell>()
+        for block in started { roads.formUnion(Self.ring(of: block)) }
+        search: for k in 1...10_000 {
+            for block in Self.blocks(ring: k) where !started.contains(block) {
+                roads.formUnion(Self.ring(of: block))
+                break search
+            }
+        }
+        return roads
+    }
+
+    /// Straight road cells of the drawn streets that touch an occupied lot (the lights stay next to houses).
+    private var lightableCells: Set<Cell> {
+        Self.straightCells(in: drawnRoads).intersection(builtRoads)
+    }
+
     /// Lights up to `count` unlit straight road cells nearest to the centre ("Osvetlená ulica", §7.3).
     /// Returns the upgraded cells (empty if there is nothing to light).
     @discardableResult
     public mutating func upgradeStreets(count: Int = 4) -> [Cell] {
-        let picked = Array(Self.straightCells(in: drawnRoads).subtracting(litRoads)
+        let picked = Array(lightableCells.subtracting(litRoads)
             .sorted { ($0.col * $0.col + $0.row * $0.row, $0.col, $0.row) < ($1.col * $1.col + $1.row * $1.row, $1.col, $1.row) }
             .prefix(count))
         litRoads.formUnion(picked)
         return picked
     }
 
-    public var canUpgradeStreets: Bool { !Self.straightCells(in: drawnRoads).subtracting(litRoads).isEmpty }
+    public var canUpgradeStreets: Bool { !lightableCells.subtracting(litRoads).isEmpty }
 
     static func straightCells(in roads: Set<Cell>) -> Set<Cell> {
         roads.filter { let m = RoadTiles.mask(at: $0, roads: roads); return m == "EW" || m == "NS" }

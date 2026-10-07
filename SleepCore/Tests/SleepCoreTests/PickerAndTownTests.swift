@@ -118,6 +118,71 @@ import Testing
         }
     }
 
+    // MARK: roads first (streets are drawn one block ahead of the houses)
+
+    @Test func emptyTownDrawsTheFirstBlocksRing() {
+        let town = TownLayout()
+        let ring = TownLayout.ring(of: TownLayout.blocks(ring: 1)[0])
+        #expect(TownLayout.blocks(ring: 1)[0] == Cell(-1, -1))
+        #expect(ring.count == 20)
+        #expect(town.drawnRoads == ring)
+        #expect(town.builtRoads.isEmpty)
+        #expect(ring.allSatisfy { TownLayout.isRoad($0) })
+    }
+
+    @Test func oneHouseOutlinesItsBlockAndTheNextOne() {
+        var town = TownLayout()
+        town.place(catalog["l1-house-a-0"]!)
+        let spiral = TownLayout.blocks(ring: 1)
+        let roads = town.drawnRoads
+        #expect(roads == TownLayout.ring(of: spiral[0]).union(TownLayout.ring(of: spiral[1])))
+        #expect(town.builtRoads.isSubset(of: roads))
+    }
+
+    @Test func frontierMovesOnWhenABlockIsFull() {
+        var town = TownLayout()
+        for _ in 0..<6 { town.place(catalog["l1-house-a-0"]!) }
+        for _ in 0..<2 { town.place(catalog["l3-police"]!) }
+        let spiral = TownLayout.blocks(ring: 1)
+        #expect(town.placements.allSatisfy { TownLayout.block($0.origin) == Cell(-1, -1) })
+        #expect(town.drawnRoads == TownLayout.ring(of: spiral[0]).union(TownLayout.ring(of: Cell(0, -1))))
+        let p = town.place(catalog["l3-police"]!)
+        #expect(TownLayout.block(p.origin) == Cell(0, -1))
+        #expect(town.drawnRoads == TownLayout.ring(of: spiral[0]).union(TownLayout.ring(of: Cell(0, -1)))
+            .union(TownLayout.ring(of: Cell(0, 0))))
+    }
+
+    @Test func drawnRoadsOnlyGrowAndCoverBuiltRoads() {
+        var town = TownLayout()
+        var rng = SeededGenerator(seed: 5)
+        var history: [String] = []
+        var previous = town.drawnRoads
+        for n in 0..<60 {
+            let e = BuildingPicker.pick(maxLevel: Progression.unlockedMaxLevel(builtBefore: n), catalog: catalog,
+                                        history: history, canUpgradeStreets: town.canUpgradeStreets, rng: &rng)
+            if e.kind == .roadLit { town.upgradeStreets() } else { town.place(e) }
+            history.append(e.id)
+            let now = town.drawnRoads
+            #expect(previous.isSubset(of: now), "a ring disappeared at night \(n)")
+            #expect(town.builtRoads.isSubset(of: now))
+            previous = now
+        }
+    }
+
+    @Test func lightsStayNextToHousesOnStraightStreets() {
+        var town = grownTown(nights: 40)
+        let taken = town.occupied
+        for _ in 0..<30 { town.upgradeStreets() }
+        let roads = town.drawnRoads
+        #expect(!town.litRoads.isEmpty)
+        for cell in town.litRoads {
+            let touches = (-1...1).contains { dc in (-1...1).contains { dr in taken.contains(cell.offset(dc, dr)) } }
+            let mask = RoadTiles.mask(at: cell, roads: roads)
+            #expect(touches, "lit \(cell) touches no house")
+            #expect(mask == "EW" || mask == "NS", "lit \(cell) is \(mask)")
+        }
+    }
+
     @Test func roadMasks() {
         let roads: Set<Cell> = [Cell(0, 0), Cell(1, 0), Cell(2, 0), Cell(0, 1)]
         #expect(RoadTiles.mask(at: Cell(1, 0), roads: roads) == "EW")

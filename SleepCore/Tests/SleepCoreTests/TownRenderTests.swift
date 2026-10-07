@@ -87,11 +87,12 @@ import Testing
                                     calendar: bratislava))
     }
 
-    @Test func emptyTownIsAGrassPatch() {
+    @Test func emptyTownIsAnOutlinedEmptyBlock() {
         let (_, m) = model([])
         #expect(m.buildingCount == 0)
-        #expect(m.sprites.allSatisfy { $0.layer == .ground })
-        #expect(m.sprites.count == 25)                               // 5×5 around the origin
+        #expect(m.sprites.allSatisfy { $0.layer != .object })
+        #expect(m.sprites.filter { $0.layer == .road }.count == 20)  // the ring of the first block (-5…0)²
+        #expect(m.sprites.count == 100)                              // 6×6 cells of the ring + 2 tiles of grass around
     }
 
     @Test func layersAreOrderedGroundRoadObject() {
@@ -164,7 +165,8 @@ import Testing
         let (t, m) = model([])
         let island = TownRender.island(m, town: t)
         #expect(island.sprites.count == 9)
-        #expect(island.sprites.allSatisfy { $0.layer == .ground })
+        #expect(island.sprites.allSatisfy { $0.layer != .object })
+        #expect(island.sprites.filter { $0.layer == .road }.count == 3)     // the corner of the first block's ring
         // corners of the 3×3 diamond around (0,0): 1.5 tiles from the centre
         #expect(island.top == ScenePoint(x: 0, y: 192) && island.bottom == ScenePoint(x: 0, y: -192))
         #expect(island.left == ScenePoint(x: -384, y: 0) && island.right == ScenePoint(x: 384, y: 0))
