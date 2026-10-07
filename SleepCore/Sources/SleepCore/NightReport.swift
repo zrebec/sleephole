@@ -8,6 +8,8 @@ public struct NightReport: Equatable, Sendable {
         public let end: Date?
         /// The trip started inside a pause (D17) – it is free.
         public var duringPause = false
+        /// The owner closed the app during this trip (R4: swiped it away; it ends when the app is opened again).
+        public var closedApp = false
         public var duration: TimeInterval? { end.map { $0.timeIntervalSince(start) } }
     }
 
@@ -28,7 +30,8 @@ public struct NightReport: Equatable, Sendable {
     /// Phone unlocks while the app sat in the background (Face ID + swipe up) – e.g. to check the time.
     public let screenChecks: [Date]
     public let calls: [Trip]
-    /// Cold launches during the night (the app had been killed).
+    /// Cold launches during the night (the app had been killed). Not the ones that merely opened an app the owner
+    /// had closed – the trip of that closure tells the story.
     public let relaunches: [Date]
     public let collapsedAt: Date?
     public let abandonedAt: Date?
@@ -49,18 +52,34 @@ public struct NightReport: Equatable, Sendable {
 
         var trips: [Trip] = [], calls: [Trip] = []
         var awaySince: Date?, callSince: Date?
+        var closed = false                      // the open trip includes the owner closing the app
+        var relaunches: [Date] = []
         for e in events {
             switch e.kind {
             case .leftApp: awaySince = awaySince ?? e.at
+            case .closedByOwner:
+                awaySince = awaySince ?? e.at
+                closed = true
             case .returned, .locked, .confirmed:
-                if let s = awaySince { trips.append(Trip(start: s, end: e.at)); awaySince = nil }
-            case .appLaunched: if let s = awaySince { trips.append(Trip(start: s, end: nil)); awaySince = nil }
+                if let s = awaySince { trips.append(Trip(start: s, end: e.at, closedApp: closed)); awaySince = nil }
+                closed = false
+            case .appLaunched:
+                if let s = awaySince {          // reopened after a closure: the trip ends here; any other death: unknown
+                    // (opened only after the night was over = never came back during it)
+                    trips.append(Trip(start: s, end: closed && e.at <= log.window.wake ? e.at : nil, closedApp: closed))
+                    awaySince = nil
+                }
+                if !closed { relaunches.append(e.at) }
+                closed = false
+            case .restartExcused:               // a phone restart is no trip (the owner's favour); the relaunch shows it
+                awaySince = nil
+                closed = false
             case .callStarted: callSince = callSince ?? e.at
             case .callEnded: if let s = callSince { calls.append(Trip(start: s, end: e.at)); callSince = nil }
             default: break
             }
         }
-        if let s = awaySince { trips.append(Trip(start: s, end: nil)) }
+        if let s = awaySince { trips.append(Trip(start: s, end: nil, closedApp: closed)) }
         if let s = callSince { calls.append(Trip(start: s, end: nil)) }
         let setupEnd = setupEnds ?? .distantPast
         let pauseWindows = log.pauseIntervals
@@ -76,7 +95,7 @@ public struct NightReport: Equatable, Sendable {
         // unlocking the phone after the alarm to confirm is not a "check" (owner data 2026-10-03)
         let checksEnd = min(end, alarmFiredAt ?? .distantFuture)
         screenChecks = events.filter { $0.kind == .unlocked && $0.at > (start ?? .distantPast) && $0.at < checksEnd }.map(\.at)
-        relaunches = events.filter { $0.kind == .appLaunched }.map(\.at)
+        self.relaunches = relaunches
         collapsedAt = NightEvaluator.collapsedAt(log, rules: rules)
     }
 }

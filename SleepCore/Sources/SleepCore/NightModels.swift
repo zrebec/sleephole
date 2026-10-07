@@ -20,6 +20,13 @@ public enum NightEventKind: String, Codable, Sendable {
     case audioResumed
     /// "🌙 Pause" tapped (owner 2026-10-02, D17): for `PausePolicy.duration` the owner may leave the app.
     case pauseStarted
+    /// iOS told the RUNNING app that it is being terminated (`willTerminate`: the owner swiped it away in the app
+    /// switcher, or the phone restarts / shuts down). Owner 2026-10-04, R4: closing the app counts as leaving it, from
+    /// this moment until the next `.appLaunched`. A kill without this notice (iOS, a crash) stays "unknown → favour".
+    case closedByOwner
+    /// Logged at the relaunch right before `.appLaunched` when the phone has booted since the `.closedByOwner`: it was
+    /// a restart / shutdown, not the owner – the closure is excused.
+    case restartExcused
 }
 
 public struct NightEvent: Codable, Equatable, Sendable {
@@ -58,6 +65,21 @@ public struct NightLog: Codable, Equatable, Sendable {
     public var pauseStarts: [Date] { sortedEvents.filter { $0.kind == .pauseStarted }.map(\.at) }
     /// The pause windows (each lasts `PausePolicy.duration` – leaving the app is free inside them).
     public var pauseIntervals: [(Date, Date)] { pauseStarts.map { ($0, $0 + PausePolicy.duration) } }
+
+    /// When the app was closed by its owner and has not been opened again since (nil = no such closure): the last
+    /// `.closedByOwner` that no later `.appLaunched` / `.restartExcused` has answered. Diagnostic events logged
+    /// around the closure do not matter.
+    public var openClosure: Date? {
+        var open: Date?
+        for e in sortedEvents {
+            switch e.kind {
+            case .closedByOwner: open = e.at
+            case .appLaunched, .restartExcused: open = nil
+            default: break
+            }
+        }
+        return open
+    }
 }
 
 public enum Outcome: String, Codable, Sendable, CaseIterable {

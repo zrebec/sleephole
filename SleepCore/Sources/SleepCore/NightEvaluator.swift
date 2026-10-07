@@ -26,20 +26,34 @@ public struct SleepRules: Codable, Equatable, Sendable {
 public enum NightEvaluator {
     /// Intervals the owner spent OUTSIDE the app with the phone unlocked, clipped to [start, wake],
     /// minus phone calls (system-forced, excused) and pauses (D17). Plan §5.3.
+    /// Closing the app (`.closedByOwner`, R4) is leaving it until the next `.appLaunched`; a death WITHOUT that
+    /// notice and a phone restart (`.restartExcused`) are resolved in the owner's favour.
     public static func awayIntervals(_ log: NightLog) -> [(Date, Date)] {
         guard let start = log.startedAt else { return [] }
         let end = log.window.wake
         var away: [(Date, Date)] = [], calls: [(Date, Date)] = []
         var awaySince: Date?, callSince: Date?
+        var closed = false              // the open interval is owned by a closure: the relaunch ends it
         for e in log.sortedEvents {
             switch e.kind {
             case .leftApp:
                 awaySince = awaySince ?? e.at
+            case .closedByOwner:
+                awaySince = awaySince ?? e.at
+                closed = true
             case .returned, .locked, .confirmed:
                 if let s = awaySince { away.append((s, e.at)); awaySince = nil }
+                closed = false
             case .appLaunched:
-                awaySince = nil     // the app was killed – unknown what happened → owner's favour
+                if closed, let s = awaySince {
+                    away.append((s, e.at))      // the owner opened the app again
+                }
+                awaySince = nil     // otherwise the app was killed – unknown what happened → owner's favour
+                closed = false
                 callSince = nil
+            case .restartExcused:
+                awaySince = nil     // the phone restarted: the closure was not the owner's doing
+                closed = false
             case .callStarted:
                 callSince = callSince ?? e.at
             case .callEnded:
@@ -48,7 +62,7 @@ public enum NightEvaluator {
                 break
             }
         }
-        if let s = awaySince { away.append((s, end)) }      // left and never came back
+        if let s = awaySince { away.append((s, end)) }      // left (or closed) and never came back
         if let s = callSince { calls.append((s, end)) }
         return away
             .map { (max($0.0, start), min($0.1, end)) }
