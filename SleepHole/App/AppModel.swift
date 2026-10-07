@@ -76,7 +76,10 @@ final class AppModel {
     ///   -skyTime HH:MM                pin the sky's time of day; -skyArc 0.3 / -skyBody sun|moon|none / -skyMoon 0.5
     ///                                 force the drawn arc / body / moon's lit fraction (see `SkyOverrides`)
     ///   -cityQuery Brat               pre-fill Settings → Sky → city so the real Apple Maps search runs
-    ///   -scrollTo sky                 scroll Settings to the Sky section
+    ///   -scrollTo sky                 scroll Settings to the Sky section (also: sounds, notifications)
+    ///   -systemAlarm allowed|denied|notAsked   SIMULATOR ONLY: pretend that consent for the system alarm (a silent
+    ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
+    ///   -openSystemAlarmTest          with -openTab settings: open Developer → System alarm test at once
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
                                      args: [String] = ProcessInfo.processInfo.arguments) {
         func value(_ flag: String) -> String? {
@@ -153,14 +156,28 @@ final class AppModel {
     let clock: any Clock
     /// false in unit tests: no audio, lifecycle monitor, notifications, timers or sounds.
     let servicesEnabled: Bool
+    /// The system alarm (phase F6b). The default does nothing: only `SleepHoleApp` passes the real one.
+    let systemAlarm: any SystemAlarm
+    private let defaults: UserDefaults
+    /// When the phone last booted – a closure of the app before that was a restart, not the owner (R4). Tests pass a
+    /// fake to simulate a restart.
+    private let bootDate: () -> Date?
 
     init(context: ModelContext, catalog: Catalog?, clock: any Clock = SystemClock(),
-         settings initialSettings: AppSettings? = nil, servicesEnabled: Bool = true) {
+         settings initialSettings: AppSettings? = nil, servicesEnabled: Bool = true,
+         systemAlarm: any SystemAlarm = NoSystemAlarm(), defaults: UserDefaults = .standard,
+         bootDate: @escaping () -> Date? = { DeviceBoot.date() }) {
         self.context = context
         self.container = context.container
         self.catalog = catalog
         self.clock = clock
         self.servicesEnabled = servicesEnabled
+        self.systemAlarm = systemAlarm
+        self.defaults = defaults
+        self.bootDate = bootDate
+        let memory = SystemAlarmMemory(defaults: defaults)
+        systemAlarmAt = memory.at
+        systemAlarmIsSafety = memory.isSafety
         var settings = initialSettings ?? AppSettings.load()
         if initialSettings == nil { Self.applyLaunchArguments(to: &settings, context: context) }
         self.settings = settings
@@ -168,6 +185,7 @@ final class AppModel {
         loadProgress()
         if initialSettings == nil, let lang = Self.launchLanguage() { language = lang }
         resumeActiveNight()
+        tidySystemAlarm(now: clock.now, atLaunch: true)
         rebuildTown()
         refresh()
         guard servicesEnabled else { return }
@@ -400,10 +418,7 @@ final class AppModel {
         save()
         active = rec
         startServices(for: rec)
-        if servicesEnabled {
-            Notifications.scheduleNight(setupEnds: window.setupEnds(start: now, rules: NapPlan.rules), wake: window.wake,
-                                        alarmFile: settings.alarmSound.fileName)
-        }
+        armAlarm(for: rec, setupEnds: window.setupEnds(start: now, rules: NapPlan.rules))
         fx("fx_sleep", volume: 0.6)
         say(.napStart, after: Motion.t(1.4))
         buzz(.start)
@@ -669,6 +684,7 @@ final class AppModel {
             }
             return
         }
+        tidySystemAlarm(now: now)
         if shownResult != nil {
             phase = .result
             return
@@ -701,10 +717,7 @@ final class AppModel {
         active = rec
         debugWindow = nil
         startServices(for: rec)
-        if servicesEnabled {
-            Notifications.scheduleNight(setupEnds: rec.window.setupEnds(start: now, rules: rec.rules), wake: rec.wake,
-                                        alarmFile: settings.alarmSound.fileName)
-        }
+        armAlarm(for: rec, setupEnds: rec.window.setupEnds(start: now, rules: rec.rules))
         fx("fx_sleep", volume: 0.6)
         say(.goodNight, after: Motion.t(1.4))
         buzz(.start)
@@ -865,14 +878,209 @@ final class AppModel {
         }
     }
 
+    // MARK: - system alarm (AlarmKit backup, phase F6b)
+
+    /// When the one system alarm is set to ring (nil = none). It is the app's INTENT, written at once; the calls to the
+    /// system run one after another in `systemAlarmQueue`. Persisted: a relaunched app must still know about it.
+    private(set) var systemAlarmAt: Date? {
+        didSet { SystemAlarmMemory(defaults: defaults).at = systemAlarmAt }
+    }
+    /// That alarm is a safety alarm (an early confirmation), not the backup of a running night.
+    private(set) var systemAlarmIsSafety = false {
+        didSet { SystemAlarmMemory(defaults: defaults).isSafety = systemAlarmIsSafety }
+    }
+    /// The five backup notifications are scheduled for the running night – always, also next to the system alarm
+    /// (belt and braces). False once our own alarm really rings (they are cancelled then) and when the night is over.
+    /// Diagnostics + tests.
+    private(set) var backupNotificationsOn = false
+    /// The time the test alarm (Developer → System alarm test) was set for; it is `testAlarmAt` only while it waits.
+    private var testAlarmTime: Date?
+    /// The system alarm was already moved behind our own alarm tonight.
+    @ObservationIgnored private var systemAlarmMoved = false
+    @ObservationIgnored private var systemAlarmQueue: Task<Void, Never>?
+    @ObservationIgnored private var consentTask: Task<Void, Never>?
+
+    /// When the safety alarm rings (nil = none, or its time has passed): the owner confirmed waking up early, and the
+    /// system alarm stays on in case he falls asleep again.
+    var safetyAlarmAt: Date? {
+        guard systemAlarmIsSafety, let at = systemAlarmAt, at > clock.now else { return nil }
+        return at
+    }
+
+    /// "I'm really up": cancels the safety alarm.
+    func switchOffSafetyAlarm() {
+        guard systemAlarmIsSafety else { return }
+        cancelSystemAlarm()
+    }
+
+    // MARK: system alarm test (Settings → Developer → System alarm test)
+
+    /// When the test alarm rings, while it waits (nil = none, or its time has passed).
+    var testAlarmAt: Date? {
+        guard let t = testAlarmTime, safetyAlarmAt == t else { return nil }
+        return t
+    }
+
+    /// The test can be started: nothing runs (a night / nap has its own alarm), the system alarm is allowed, and no
+    /// real safety alarm waits (the test would replace it).
+    var canTestSystemAlarm: Bool {
+        active == nil && systemAlarm.consent == .allowed && (safetyAlarmAt == nil || safetyAlarmAt == testAlarmTime)
+    }
+
+    /// Rings the system alarm `seconds` from now with the chosen alarm sound, so the owner can check AlarmKit in
+    /// seconds, without a night. It is scheduled like a safety alarm: the housekeeping keeps it until its time and then
+    /// forgets it (Today shows it as a safety alarm meanwhile). Returns whether the test was set.
+    @discardableResult
+    func testSystemAlarm(after seconds: TimeInterval = 20) -> Bool {
+        guard canTestSystemAlarm else { return false }
+        let at = clock.now + seconds
+        testAlarmTime = at
+        scheduleSystemAlarm(at: at, safety: true)
+        return true
+    }
+
+    /// Cancels the test alarm while it waits.
+    func cancelTestSystemAlarm() {
+        guard testAlarmAt != nil else { return }
+        cancelSystemAlarm()
+    }
+
+    /// Waits until every system alarm call so far has finished (tests).
+    func systemAlarmIdle() async {
+        await consentTask?.value
+        await systemAlarmQueue?.value
+    }
+
+    /// The calls to the system go one after another: schedule, move and cancel can never overtake each other.
+    private func enqueueSystemAlarm(_ work: @escaping @MainActor () async -> Void) {
+        let previous = systemAlarmQueue
+        systemAlarmQueue = Task { @MainActor in
+            await previous?.value
+            await work()
+        }
+    }
+
+    /// Sets THE system alarm to `date` (replacing the earlier one). When the system does not accept it, the intent goes
+    /// back to what it was.
+    private func scheduleSystemAlarm(at date: Date, safety: Bool = false) {
+        let before = (at: systemAlarmAt, safety: systemAlarmIsSafety)
+        systemAlarmAt = date
+        systemAlarmIsSafety = safety
+        let file = settings.alarmSound.fileName
+        enqueueSystemAlarm { [weak self] in
+            guard let self else { return }
+            let accepted = await self.systemAlarm.schedule(at: date, soundFile: file)
+            if !accepted, self.systemAlarmAt == date {
+                self.systemAlarmAt = before.at
+                self.systemAlarmIsSafety = before.safety
+            }
+        }
+    }
+
+    private func cancelSystemAlarm() {
+        systemAlarmAt = nil
+        systemAlarmIsSafety = false
+        testAlarmTime = nil
+        enqueueSystemAlarm { [weak self] in self?.systemAlarm.cancel() }
+    }
+
+    /// The alarm side of a night / nap that has just started. The five backup notifications are ALWAYS scheduled (belt
+    /// and braces: the system alarm cannot be trusted alone until it has proven itself on the phone). Next to them,
+    /// with the owner's consent, the system alarm (wake + 30 s). Consent not asked yet: ask once, and schedule the
+    /// system alarm when the answer is yes.
+    private func armAlarm(for rec: NightRecord, setupEnds: Date) {
+        systemAlarmMoved = false
+        backupNotificationsOn = true
+        if servicesEnabled {
+            Notifications.scheduleNight(setupEnds: setupEnds, wake: rec.wake, alarmFile: settings.alarmSound.fileName)
+        }
+        switch systemAlarm.consent {
+        case .allowed:
+            scheduleSystemAlarm(at: rec.wake + SystemAlarmPlan.afterWake)
+        case .notAsked:
+            consentTask = Task { @MainActor [weak self] in
+                guard let self else { return }
+                let answer = await self.systemAlarm.requestConsent()
+                // the owner may take a while to answer: the night can be over by then
+                guard answer == .allowed, self.active?.id == rec.id, rec.wake > self.clock.now else { return }
+                self.scheduleSystemAlarm(at: rec.wake + SystemAlarmPlan.afterWake)
+            }
+        case .denied, .unavailable:
+            break
+        }
+    }
+
+    /// Our alarm rings from the wake time for `alarmDuration`: the system alarm moves to the moment ours stops, once.
+    /// A system alarm that is already due (the app was killed and came back late, or the owner opened it while the
+    /// alarm rang) is ringing or has rung: it is stopped – never two alarms at once – and, while time is left of our
+    /// two minutes, set again for the moment ours stops, so it still takes over when the owner sleeps through them.
+    private func moveSystemAlarmBehindOurs() {
+        guard !systemAlarmMoved, let rec = active, !systemAlarmIsSafety, let at = systemAlarmAt else { return }
+        let now = clock.now
+        let target = rec.wake + rec.rules.alarmDuration
+        if at <= now {
+            systemAlarmMoved = true
+            cancelSystemAlarm()                                   // stops a ringing one
+            if target.timeIntervalSince(now) > 1 { scheduleSystemAlarm(at: target) }
+            return
+        }
+        guard at < target else { return }
+        systemAlarmMoved = true
+        scheduleSystemAlarm(at: target)
+    }
+
+    /// A night / nap is over (confirmed, abandoned or expired). Confirmed at or after the wake time, abandoned or
+    /// expired → the system alarm is cancelled. Confirmed EARLY (a night, from wake − 30 min) → it moves to the wake
+    /// time and stays as a safety alarm. Without consent there is no safety alarm.
+    private func settleSystemAlarm(for rec: NightRecord) {
+        systemAlarmMoved = false
+        let early = !rec.isNap && rec.log.confirmedAt.map { $0 < rec.wake } == true
+        if early, systemAlarm.consent == .allowed, rec.wake > clock.now {
+            scheduleSystemAlarm(at: rec.wake, safety: true)
+        } else {
+            cancelSystemAlarm()
+        }
+    }
+
+    /// Housekeeping: while no night / nap runs, a system alarm nobody waits for is cancelled. A safety alarm waits for
+    /// its time; one whose time has passed is only forgotten (it has rung – a ringing alarm is left alone). At launch
+    /// everything left over is cancelled, even what the app does not remember; a night that was running when the app
+    /// was killed keeps its alarm – that is the point of it.
+    private func tidySystemAlarm(now: Date, atLaunch: Bool = false) {
+        guard active == nil else { return }
+        if systemAlarmIsSafety, let at = systemAlarmAt, at > now { return }
+        if !atLaunch {
+            guard let at = systemAlarmAt else { return }
+            if at <= now {
+                systemAlarmAt = nil
+                systemAlarmIsSafety = false
+                return
+            }
+        }
+        cancelSystemAlarm()
+    }
+
     // MARK: - night services
 
+    /// A night / nap was running when the process died: pick it up again. A closure iOS announced before the death
+    /// (`.closedByOwner`) is the owner swiping the app away – this launch ends that trip. Unless the phone has booted
+    /// since: then it was a restart and the closure is excused (`.restartExcused`, logged right before `.appLaunched`).
     private func resumeActiveNight() {
         guard let rec = records().first(where: { $0.startedAt != nil && !$0.isFinalized }) else { return }
         active = rec
-        rec.append(.appLaunched, at: clock.now)
+        let now = clock.now
+        let closedAt = rec.log.openClosure
+        let restarted = closedAt.map { c in bootDate().map { $0 > c } ?? false } ?? false
+        if restarted { rec.append(.restartExcused, at: now) }
+        rec.append(.appLaunched, at: now)
         save()
+        if closedAt != nil, servicesEnabled { Notifications.cancelClosed() }       // the owner is back
         startServices(for: rec)
+        // came back in time after a "SleepHole was closed" warning → the same "phew" as after "Come back!"
+        if let c = closedAt, !restarted, now < rec.wake, let graceEnds, c >= graceEnds,
+           PausePolicy.activeUntil(rec.log, at: c) == nil, collapsedAt == nil {
+            buzz(.relief)
+        }
     }
 
     private func startServices(for rec: NightRecord) {
@@ -893,6 +1101,7 @@ final class AppModel {
             self?.append(text.hasSuffix("began") ? .audioInterrupted : .audioResumed)
         }
         monitor.onEvent = { [weak self] kind, date in self?.append(kind, at: date) }
+        monitor.onTerminate = { [weak self] in self?.appWillTerminate() }
         monitor.start()
         alarmTask?.cancel()
         let wake = rec.wake
@@ -907,11 +1116,13 @@ final class AppModel {
     private func stopServices() {
         sleepSound = nil
         waitingForReturn = false
+        backupNotificationsOn = false                       // cancelled with the night's other notifications below
         guard servicesEnabled else { return }
         alarmTask?.cancel()
         alarmTask = nil
         monitor.stop()
         monitor.onEvent = nil
+        monitor.onTerminate = nil
         audio.stop()
         Notifications.cancelNight()
     }
@@ -940,7 +1151,28 @@ final class AppModel {
                                       maxDuration: left) { [weak self] in
             self?.append(.alarmStopped)
         }
-        if ringing { Notifications.cancelBackupAlarm() }   // the app is alive and audible → no backup needed
+        if ringing { alarmSoundStarted() }
+    }
+
+    /// Our own alarm really sounds (called by `startAlarmSound`; a seam for tests, which have no audio). The app is
+    /// alive and audible → the backup notifications are cancelled; and the system alarm moves behind our two minutes,
+    /// so it takes over when the owner sleeps through them.
+    func alarmSoundStarted() {
+        if servicesEnabled { Notifications.cancelBackupAlarm() }
+        backupNotificationsOn = false
+        moveSystemAlarmBehindOurs()
+    }
+
+    /// iOS tells the running app that it is being terminated (`LifecycleMonitor.onTerminate`). Owner 2026-10-04, R4:
+    /// SleepHole swiped away in the app switcher during a night / nap counts as leaving the app, from now until it is
+    /// opened again – a swipe delivers this notice, a kill by iOS (memory) or a crash does not. A phone restart delivers
+    /// it too; the next launch tells the two apart by the boot time (`resumeActiveNight`). After the wake time, or
+    /// with nothing running, closing the app is just closing it.
+    /// `append` stores the event synchronously (`context.save()`) before it returns – the process is about to die –
+    /// and sends the warning, exactly where leaving the app would.
+    func appWillTerminate() {
+        guard let rec = active, clock.now < rec.wake else { return }
+        append(.closedByOwner)
     }
 
     /// Appends a night event (from the lifecycle monitor; internal for tests).
@@ -994,7 +1226,7 @@ final class AppModel {
         rec.append(kind, at: date)
         save()
         switch kind {
-        case .leftApp:
+        case .leftApp, .closedByOwner:
             // no vibration here: the app is in the background now and iOS only lets the notification vibrate
             if let pauseEnds = PausePolicy.activeUntil(rec.log, at: date) {
                 // inside a pause (D17) leaving is free – only remind when it is about to end
@@ -1005,8 +1237,13 @@ final class AppModel {
                 guard left >= 1 else { break }                // the warning would come too late
                 nudgesSent += 1
                 lastNudgeSeconds = Int(left)
-                waitingForReturn = true
-                if servicesEnabled { Notifications.nudge(tolerance: left) }
+                if kind == .closedByOwner {
+                    // the process dies now: the notice is all that is left, and the relaunch ends the trip
+                    if servicesEnabled { Notifications.closed(tolerance: left) }
+                } else {
+                    waitingForReturn = true
+                    if servicesEnabled { Notifications.nudge(tolerance: left) }
+                }
             }
         case .returned, .locked:
             if servicesEnabled {
@@ -1067,6 +1304,7 @@ final class AppModel {
         save()
         stopServices()
         active = nil
+        settleSystemAlarm(for: rec)
         shownResult = rec
         levelUp = rec.isDebug || rec.isNap ? nil : Progression.levelUp(builtBefore: before, builtAfter: builtNights)
         if !rec.isDebug && !rec.isNap { rebuildTown() }

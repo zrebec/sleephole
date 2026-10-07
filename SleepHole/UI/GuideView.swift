@@ -20,6 +20,7 @@ enum GuideText {
     }
     static var night: String {
         L("You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and \(Plural.seconds(rules.accidentalTolerance)) to come back – and only \(Plural.seconds(rules.awayBudget ?? 0)) per night in total. Longer than that and the building collapses.")
+            + " " + L("Closing SleepHole (swiping it away) counts like leaving it.")
     }
     static var pause: String {
         L("Need the bathroom or a few minutes on your phone? Tap 🌙 Pause on the night screen: \(Plural.minutes(PausePolicy.duration)) outside SleepHole. The first pause of a night is free, each further one costs \(PausePolicy.priceStep) 🪙 more. A night without any pause pays +\(PausePolicy.undisturbedBonus) 🪙.")
@@ -210,8 +211,8 @@ struct GuideView: View {
             row("battery.100.bolt", L("Keep your phone on the charger overnight."))
             row("moon.zzz.fill", L("The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “Come back” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed."))
             row("speaker.wave.2.fill", L("The alarm rings even in silent mode. Pick the sound in Settings."))
-            row("arrow.down.circle", L("iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – only the backup notification. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing."))
-            row("arrow.clockwise", L("The free version of the app expires after 7 days – run it again from Xcode then. Your data stays."))
+            row("arrow.down.circle", L("iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – the system alarm (if you allowed it) and the backup notifications ring instead. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing."))
+            row("arrow.clockwise", L("SleepHole's signature runs out after a while – then connect your iPhone to the Mac and install SleepHole again. Your data stays."))
         }
         .task {
             let settings = await UNUserNotificationCenter.current().notificationSettings()

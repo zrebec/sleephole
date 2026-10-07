@@ -549,6 +549,22 @@
         }
       }
     },
+    "1. Tap “Ring in 20 seconds”.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. Tap “Ring in 20 seconds”."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. Ťukni na „Zazvoniť o 20 sekúnd“."
+          }
+        }
+      }
+    },
     "10 nights built": {
       "localizations": {
         "en": {
@@ -581,6 +597,22 @@
         }
       }
     },
+    "2. Lock the phone, or swipe SleepHole away.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2. Lock the phone, or swipe SleepHole away."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2. Zamkni telefón alebo zavri SleepHole potiahnutím."
+          }
+        }
+      }
+    },
     "3 nights in a row": {
       "localizations": {
         "en": {
@@ -597,6 +629,22 @@
         }
       }
     },
+    "3. The system alarm must ring – in silent mode and during a Focus too – with your alarm sound.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3. The system alarm must ring – in silent mode and during a Focus too – with your alarm sound."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3. Systémový budík musí zazvoniť – aj v tichom režime a počas Sústredenia – tvojím zvukom budíka."
+          }
+        }
+      }
+    },
     "30 nights in a row": {
       "localizations": {
         "en": {
@@ -609,6 +657,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "30 nocí v rade"
+          }
+        }
+      }
+    },
+    "4. “Stop” silences it; “Open SleepHole” opens the app.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "4. “Stop” silences it; “Open SleepHole” opens the app."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "4. „Stop“ ho stíši, „Otvoriť SleepHole“ otvorí appku."
           }
         }
       }
@@ -1153,6 +1217,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Celú noc"
+          }
+        }
+      }
+    },
+    "Allow": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Allow"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Povoliť"
           }
         }
       }
@@ -1733,6 +1813,22 @@
         }
       }
     },
+    "Cancel the test alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel the test alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zrušiť skúšobný budík"
+          }
+        }
+      }
+    },
     "Cancel tonight? The building will turn into ruins.": {
       "localizations": {
         "en": {
@@ -1841,6 +1937,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zavrieť"
+          }
+        }
+      }
+    },
+    "Closing SleepHole (swiping it away) counts like leaving it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Closing SleepHole (swiping it away) counts like leaving it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zavretie SleepHole (potiahnutím preč) sa počíta ako odchod z appky."
           }
         }
       }
@@ -2629,22 +2741,6 @@
         }
       }
     },
-    "Free signing lasts 7 days. Before it ends, connect your iPhone to the Mac and run SleepHole from Xcode – your data stays. You'll get a reminder a day and 3 hours ahead.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Free signing lasts 7 days. Before it ends, connect your iPhone to the Mac and run SleepHole from Xcode – your data stays. You'll get a reminder a day and 3 hours ahead."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bezplatný podpis platí 7 dní. Pred jeho koncom pripoj iPhone k Macu a spusti SleepHole z Xcode – dáta zostanú. Deň a 3 hodiny vopred dostaneš pripomienku."
-          }
-        }
-      }
-    },
     "Free – you can rename your town for free once a year.": {
       "localizations": {
         "en": {
@@ -2961,6 +3057,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ako to funguje"
+          }
+        }
+      }
+    },
+    "I'm really up – switch it off": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I'm really up – switch it off"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Som naozaj hore – vypnúť"
           }
         }
       }
@@ -3781,6 +3893,22 @@
         }
       }
     },
+    "Needs iOS 26": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Needs iOS 26"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vyžaduje iOS 26"
+          }
+        }
+      }
+    },
     "New achievement!": {
       "localizations": {
         "en": {
@@ -4101,6 +4229,38 @@
         }
       }
     },
+    "Not allowed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not allowed"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nepovolený"
+          }
+        }
+      }
+    },
+    "Not asked yet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not asked yet"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatiaľ nepovolený"
+          }
+        }
+      }
+    },
     "Not enough coins": {
       "localizations": {
         "en": {
@@ -4245,6 +4405,22 @@
         }
       }
     },
+    "On": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapnutý"
+          }
+        }
+      }
+    },
     "One joker a month keeps your 🔥 streak while you are ill or away: the streak waits – it neither breaks nor grows. Protected nights build nothing and pay no coins; a good night still counts as usual.": {
       "localizations": {
         "en": {
@@ -4277,6 +4453,22 @@
         }
       }
     },
+    "Open SleepHole": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open SleepHole"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otvoriť SleepHole"
+          }
+        }
+      }
+    },
     "Open SleepHole and confirm you're up.": {
       "localizations": {
         "en": {
@@ -4289,6 +4481,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Otvor SleepHole a potvrď vstávanie."
+          }
+        }
+      }
+    },
+    "Open it within %lld seconds, or the building collapses 🏗️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open it within %lld seconds, or the building collapses 🏗️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otvor ju do %lld sekúnd, inak sa stavba zrúti 🏗️"
           }
         }
       }
@@ -4953,6 +5161,22 @@
         }
       }
     },
+    "Ring in 20 seconds": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ring in 20 seconds"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zazvoniť o 20 sekúnd"
+          }
+        }
+      }
+    },
     "Rising bells.": {
       "localizations": {
         "en": {
@@ -5029,6 +5253,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ruina 🧱"
+          }
+        }
+      }
+    },
+    "Safety alarm at %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Safety alarm at %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poistný budík o %@"
           }
         }
       }
@@ -5465,6 +5705,54 @@
         }
       }
     },
+    "SleepHole's signature ends on %@. Connect your iPhone to the Mac and install SleepHole again – your town, nights and coins stay.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole's signature ends on %@. Connect your iPhone to the Mac and install SleepHole again – your town, nights and coins stay."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podpis appky SleepHole sa končí %@. Pripoj iPhone k Macu a nainštaluj SleepHole znova – mesto, noci aj mince zostanú."
+          }
+        }
+      }
+    },
+    "SleepHole's signature runs out after a while – then connect your iPhone to the Mac and install SleepHole again. Your data stays.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole's signature runs out after a while – then connect your iPhone to the Mac and install SleepHole again. Your data stays."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podpis appky SleepHole po čase vyprší – vtedy pripoj iPhone k Macu a nainštaluj SleepHole znova. Dáta zostanú."
+          }
+        }
+      }
+    },
+    "SleepHole's signature runs out at the date above. Before then, connect your iPhone to the Mac and install SleepHole again – your data stays. You'll get a reminder a day and 3 hours ahead.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole's signature runs out at the date above. Before then, connect your iPhone to the Mac and install SleepHole again – your data stays. You'll get a reminder a day and 3 hours ahead."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podpis appky SleepHole vyprší v čase uvedenom vyššie. Do vtedy pripoj iPhone k Macu a nainštaluj SleepHole znova – dáta zostanú. Deň a 3 hodiny vopred dostaneš pripomienku."
+          }
+        }
+      }
+    },
     "SleepTown by Seekrtech – the game that showed sleep can build a town.": {
       "localizations": {
         "en": {
@@ -5849,6 +6137,38 @@
         }
       }
     },
+    "System alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systémový budík"
+          }
+        }
+      }
+    },
+    "System alarm test": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "System alarm test"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test systémového budíka"
+          }
+        }
+      }
+    },
     "System follows the iPhone's light / dark setting. The night screen is always dark.": {
       "localizations": {
         "en": {
@@ -5925,6 +6245,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Desať nocí, ktoré niečo postavili (hotové či rozostavané)."
+          }
+        }
+      }
+    },
+    "Test alarm set for %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test alarm set for %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skúšobný budík je nastavený na %@"
           }
         }
       }
@@ -6185,54 +6521,6 @@
         }
       }
     },
-    "The free signature ends on %@. Connect your iPhone to the Mac and run SleepHole from Xcode – your data stays.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The free signature ends on %@. Connect your iPhone to the Mac and run SleepHole from Xcode – your data stays."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bezplatný podpis sa končí %@. Pripoj iPhone k Macu a spusti SleepHole z Xcode – dáta zostanú."
-          }
-        }
-      }
-    },
-    "The free signature ends on %@. Connect your iPhone to the Mac and run SleepHole from Xcode – your town, nights and coins stay.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The free signature ends on %@. Connect your iPhone to the Mac and run SleepHole from Xcode – your town, nights and coins stay."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bezplatný podpis sa končí %@. Pripoj iPhone k Macu a spusti SleepHole z Xcode – mesto, noci aj mince zostanú."
-          }
-        }
-      }
-    },
-    "The free version of the app expires after 7 days – run it again from Xcode then. Your data stays.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The free version of the app expires after 7 days – run it again from Xcode then. Your data stays."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bezplatná verzia appky vyprší po 7 dňoch – vtedy ju treba znova spustiť z Xcode. Dáta zostanú."
-          }
-        }
-      }
-    },
     "The goal is simple: go to bed and get up at the same time every day. 💙": {
       "localizations": {
         "en": {
@@ -6309,6 +6597,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zvukové príbehy sú zložené z CC0 zvukov od Kenneyho (Impact Sounds, RPG Audio, Foley Sounds) a CC0 nahrávok z Freesound.org – ďakujeme ich autorom (celý zoznam je v projekte v CREDITS-freesound.txt)."
+          }
+        }
+      }
+    },
+    "The system alarm is a second backup next to the backup notifications: it rings in silent mode and during a Focus even if iOS has closed SleepHole – 30 s after your wake time, or when SleepHole's own alarm stops after 2 minutes.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The system alarm is a second backup next to the backup notifications: it rings in silent mode and during a Focus even if iOS has closed SleepHole – 30 s after your wake time, or when SleepHole's own alarm stops after 2 minutes."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systémový budík je ďalšia záloha popri záložných upozorneniach: zvoní aj v tichom režime a počas Sústredenia, aj keď iOS appku SleepHole ukončil – 30 s po budíčku, alebo keď po 2 minútach stíchne vlastný budík SleepHole."
           }
         }
       }
@@ -6453,6 +6757,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Do"
+          }
+        }
+      }
+    },
+    "To allow it, open iOS Settings → SleepHole.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To allow it, open iOS Settings → SleepHole."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Povoliť ho môžeš v Nastaveniach iOS → SleepHole."
           }
         }
       }
@@ -6857,6 +7177,22 @@
         }
       }
     },
+    "While it waits, Today shows it as a safety alarm – switching that off cancels the test too.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "While it waits, Today shows it as a safety alarm – switching that off cancels the test too."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kým čaká, Dnes ho ukazuje ako poistný budík – jeho vypnutie zruší aj skúšku."
+          }
+        }
+      }
+    },
     "White noise": {
       "localizations": {
         "en": {
@@ -7061,6 +7397,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rozvrh zmeníš v Nastaveniach."
+          }
+        }
+      }
+    },
+    "You confirmed early – the alarm stays on in case you fall asleep again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You confirmed early – the alarm stays on in case you fall asleep again."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Potvrdil si skôr – budík ostáva zapnutý, keby si znova zaspal."
           }
         }
       }
@@ -7481,6 +7833,22 @@
         }
       }
     },
+    "closed the app": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "closed the app"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zavretá appka"
+          }
+        }
+      }
+    },
     "coins": {
       "localizations": {
         "en": {
@@ -7721,18 +8089,18 @@
         }
       }
     },
-    "iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – only the backup notification. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing.": {
+    "iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – the system alarm (if you allowed it) and the backup notifications ring instead. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – only the backup notification. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing."
+            "value": "iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – the system alarm (if you allowed it) and the backup notifications ring instead. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "iOS si v noci môže sám nainštalovať aktualizáciu a reštartovať telefón. Stavbe to neublíži (počíta sa v tvoj prospech), ale budík z appky vtedy nezazvoní – ozve sa len záložné upozornenie. Pokojnejšie spanie: Nastavenia → Všeobecné → Aktualizácia softvéru → Automatické aktualizácie → vypni inštaláciu."
+            "value": "iOS si v noci môže sám nainštalovať aktualizáciu a reštartovať telefón. Stavbe to neublíži (počíta sa v tvoj prospech), ale budík z appky vtedy nezazvoní – zazvoní systémový budík (ak si ho povolil) a záložné upozornenia. Pokojnejšie spanie: Nastavenia → Všeobecné → Aktualizácia softvéru → Automatické aktualizácie → vypni inštaláciu."
           }
         }
       }
@@ -8245,6 +8613,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "⚠️ Vráť sa do SleepHole!"
+          }
+        }
+      }
+    },
+    "⚠️ SleepHole was closed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ SleepHole was closed"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ SleepHole sa zavrela"
           }
         }
       }

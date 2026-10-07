@@ -16,6 +16,10 @@ import UIKit
 final class LifecycleMonitor {
     var onEvent: ((NightEventKind, Date) -> Void)?
     var onRaw: ((String) -> Void)?
+    /// iOS tells the running app that it is about to be terminated: swiped away in the app switcher (owner 2026-10-04,
+    /// R4: that counts as leaving the app) or the phone restarts / shuts down. Called synchronously on the main
+    /// thread – the process dies right after, so whatever must survive has to be saved before this returns.
+    var onTerminate: (() -> Void)?
 
     static let decisionDelay: Duration = .seconds(3)      // lock signals arrive ~1.6 s after background (device log)
     static let unlockReturnWindow: Duration = .seconds(5)  // lockstate=0 fires on swipe-up; the app is active ~0.8 s later (device log #2)
@@ -34,8 +38,8 @@ final class LifecycleMonitor {
         guard !isRunning else { return }
         isRunning = true
         let nc = NotificationCenter.default
-        func observe(_ name: Notification.Name, _ handler: @escaping @MainActor () -> Void) {
-            tokens.append(nc.addObserver(forName: name, object: nil, queue: .main) { _ in
+        func observe(_ name: Notification.Name, queue: OperationQueue? = .main, _ handler: @escaping @MainActor () -> Void) {
+            tokens.append(nc.addObserver(forName: name, object: nil, queue: queue) { _ in
                 MainActor.assumeIsolated { handler() }
             })
         }
@@ -49,7 +53,12 @@ final class LifecycleMonitor {
         observe(UIApplication.protectedDataDidBecomeAvailableNotification) { [weak self] in
             self?.raw("protectedDataDidBecomeAvailable")
         }
-        observe(UIApplication.willTerminateNotification) { [weak self] in self?.raw("willTerminate") }
+        // `queue: nil` = the block runs in place, on the posting (main) thread, before the notification returns: a hop
+        // to the main queue could come too late – the process is about to die
+        observe(UIApplication.willTerminateNotification, queue: nil) { [weak self] in
+            self?.raw("willTerminate")
+            self?.onTerminate?()
+        }
 
         DarwinNotifications.shared.observe(["com.apple.springboard.lockcomplete",
                                             "com.apple.springboard.lockstate",

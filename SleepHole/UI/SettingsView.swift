@@ -5,6 +5,9 @@ struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @State private var showGuide = false
     @State private var notificationStatus = "…"
+    /// The system alarm's consent (phase F6b); read when the screen opens and after every change.
+    @State private var alarmConsent: SystemAlarmConsent = .unavailable
+    @Environment(\.scenePhase) private var scenePhase
     @State private var preview = SoundPreview()
     @State private var importing = false
     @State private var pendingRestore: BackupFile?
@@ -15,6 +18,8 @@ struct SettingsView: View {
     @State private var confirmSchedule = false
     /// Dev aid: `-openSoundTest` opens Developer → Sound effects test at once (screenshots; `-scrollTo cat` shows the cat).
     @State private var soundTest = ProcessInfo.processInfo.arguments.contains("-openSoundTest")
+    /// Dev aid: `-openSystemAlarmTest` opens Developer → System alarm test at once (screenshots).
+    @State private var systemAlarmTest = ProcessInfo.processInfo.arguments.contains("-openSystemAlarmTest")
 
     var body: some View {
         @Bindable var model = model
@@ -119,13 +124,31 @@ struct SettingsView: View {
                         Spacer()
                         Text(notificationStatus).foregroundStyle(.secondary)
                     }
+                    .id("notifications")
                     Button(L("Open notification settings")) {
                         if let url = URL(string: UIApplication.openNotificationSettingsURLString) {
                             UIApplication.shared.open(url)
                         }
                     }
+                    HStack {
+                        Text(L("System alarm"))
+                        Spacer()
+                        Text(alarmConsent.title).foregroundStyle(.secondary)
+                    }
+                    if alarmConsent == .notAsked {
+                        Button(L("Allow")) {
+                            Task { alarmConsent = await model.systemAlarm.requestConsent() }
+                        }
+                    }
+                    if alarmConsent == .denied {
+                        Text(L("To allow it, open iOS Settings → SleepHole."))
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
                 } footer: {
-                    Text(L("Without notifications you won't get the “Come back” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed."))
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(L("Without notifications you won't get the “Come back” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed."))
+                        Text(L("The system alarm is a second backup next to the backup notifications: it rings in silent mode and during a Focus even if iOS has closed SleepHole – 30 s after your wake time, or when SleepHole's own alarm stops after 2 minutes."))
+                    }
                 }
 
                 Section {
@@ -225,7 +248,7 @@ struct SettingsView: View {
                     Text(L("About"))
                 } footer: {
                     if AppExpiry.date != nil {
-                        Text(L("Free signing lasts 7 days. Before it ends, connect your iPhone to the Mac and run SleepHole from Xcode – your data stays. You'll get a reminder a day and 3 hours ahead."))
+                        Text(L("SleepHole's signature runs out at the date above. Before then, connect your iPhone to the Mac and install SleepHole again – your data stays. You'll get a reminder a day and 3 hours ahead."))
                     }
                 }
 
@@ -240,6 +263,7 @@ struct SettingsView: View {
                     NavigationLink(L("Detection test (F2)")) { DetectionTestView() }
                     NavigationLink(L("Vibration test")) { VibrationTestView() }
                     NavigationLink(L("Sound effects test")) { SoundEffectsTestView() }
+                    NavigationLink(L("System alarm test")) { SystemAlarmTestView() }
                     Button(L("Show the guide and first night again")) { model.resetGuide() }
                         .disabled(nightRunning)
                 }
@@ -248,14 +272,25 @@ struct SettingsView: View {
                 let args = ProcessInfo.processInfo.arguments
                 if args.contains("sounds") { proxy.scrollTo("sounds", anchor: .top) }
                 if args.contains("sky") { proxy.scrollTo("sky", anchor: .top) }
+                if args.contains("notifications") { proxy.scrollTo("notifications", anchor: .top) }
             }
             }
             .skyBackground()
             .navigationTitle(L("Settings"))
             .navigationDestination(isPresented: $soundTest) { SoundEffectsTestView() }
+            .navigationDestination(isPresented: $systemAlarmTest) { SystemAlarmTestView() }
             .renameTownAlert(isPresented: $renaming)
             .sheet(isPresented: $showGuide) { GuideView(replay: true) }
-            .task { notificationStatus = await Notifications.statusText() }
+            .task {
+                notificationStatus = await Notifications.statusText()
+                alarmConsent = model.systemAlarm.consent
+            }
+            // back from iOS Settings: the answers there may have changed
+            .onChange(of: scenePhase) { _, phase in
+                guard phase == .active else { return }
+                alarmConsent = model.systemAlarm.consent
+                Task { notificationStatus = await Notifications.statusText() }
+            }
             .onChange(of: nightRunning) { _, running in if running { preview.stop() } }   // one player at a time
             .fileImporter(isPresented: $importing, allowedContentTypes: [.json]) { result in
                 do {

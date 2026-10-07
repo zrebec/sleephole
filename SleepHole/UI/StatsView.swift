@@ -298,6 +298,7 @@ struct NightDetail: View {
                     Text(verbatim: "→ \(Self.duration(t.duration))")
                         .foregroundStyle(ok || t.duringPause ? Color.cardCaption
                                          : (t.duration ?? .infinity) > 13 ? Color.readableOrange : Color.cardCaption)
+                    if t.closedApp { Text(verbatim: "· \(L("closed the app"))").foregroundStyle(Color.cardCaption) }
                     if t.duringPause { Text(verbatim: "🌙") }
                 }
                 .font(.caption)

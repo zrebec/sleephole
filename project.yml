@@ -44,6 +44,8 @@ targets:
         # the automatic backup in Documents is visible in Files → On My iPhone → SleepHole
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
+        # F6b: the system alarm (AlarmKit) asks the owner once; the Slovak text is in Resources/InfoPlist.xcstrings
+        NSAlarmKitUsageDescription: SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night.
     # F6a: time-sensitive notifications break through a Focus – a capability of the paid team. Proven by a signed
     # device build on 2026-10-04 (before Xcode was restarted it still treated the team as a Personal Team).
     entitlements:

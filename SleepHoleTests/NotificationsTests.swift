@@ -17,7 +17,7 @@ struct NotificationsTests {
     }
 
     @Test func nightNoticesAreTimeSensitive() {
-        for id in ["grace-end", "nudge", "nudge-2", "pause-soon", "pause-over", "alarm-screen"] {
+        for id in ["grace-end", "nudge", "nudge-2", "closed", "closed-2", "pause-soon", "pause-over", "alarm-screen"] {
             #expect(Notifications.isTimeSensitive(id), "\(id)")
         }
     }
@@ -31,7 +31,7 @@ struct NotificationsTests {
     }
 
     @Test func nightIdsAreExactlyTheTimeSensitiveNightNotices() {
-        let expected = Set(["grace-end", "nudge", "nudge-2", "pause-soon", "pause-over", "alarm-screen"]
+        let expected = Set(["grace-end", "nudge", "nudge-2", "closed", "closed-2", "pause-soon", "pause-over", "alarm-screen"]
                            + Notifications.backupAlarmIds)
         #expect(Set(Notifications.nightIds) == expected)   // cancelNight() cancels all of them, nothing else
         #expect(Notifications.nightIds.count == expected.count)

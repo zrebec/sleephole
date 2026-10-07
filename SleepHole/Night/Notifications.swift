@@ -47,7 +47,9 @@ enum Notifications {
                 sound: .default, urgent: isTimeSensitive(monthlyCheckId))
     }
 
-    /// Scheduled when a night starts: end-of-setup warning + backup alarm (only matters if the app dies).
+    /// Scheduled when a night starts: end-of-setup warning + backup alarm (only matters if the app dies). The five
+    /// backup notifications are ALWAYS scheduled – also next to the system alarm (AlarmKit, phase F6b), which must
+    /// not be the only thing between the owner and a missed morning until it has proven itself on the phone.
     static func scheduleNight(setupEnds: Date, wake: Date, alarmFile: String) {
         // owner 2026-09-30: warn 15 s before the setup time runs out
         schedule("grace-end", at: setupEnds - 15, title: L("⏳ 15 s of setup left"),
@@ -79,10 +81,10 @@ enum Notifications {
 
     /// The expiry warnings' text; the date always carries its year.
     static func expiryBody(_ expiry: Date) -> String {
-        L("The free signature ends on \(Fmt.dateTimeWithYear(expiry)). Connect your iPhone to the Mac and run SleepHole from Xcode – your data stays.")
+        L("SleepHole's signature ends on \(Fmt.dateTimeWithYear(expiry)). Connect your iPhone to the Mac and install SleepHole again – your town, nights and coins stay.")
     }
 
-    /// Free Personal Team signing: the app stops launching when its provisioning profile runs out (`AppExpiry`).
+    /// The app stops launching when its provisioning profile runs out (`AppExpiry`).
     /// Warn a day and three hours before (audit 2026-10-03, B2).
     static func scheduleExpiry(_ expiry: Date?) {
         center.removePendingNotificationRequests(withIdentifiers: ["expiry-1", "expiry-2"])
@@ -111,6 +113,20 @@ enum Notifications {
         }
     }
 
+    /// Sent the moment iOS says SleepHole is being closed during a night or nap (R4, owner 2026-10-04: swiping the app
+    /// away counts as leaving it): the owner has `tolerance` seconds to open it again. Like `nudge`, twice. Scheduled in
+    /// the last moments of the process – the notification centre keeps it, so it still arrives. A restart of the phone
+    /// sends the same notice; the relaunch cancels these and recognises the restart by the boot time.
+    static func closed(tolerance: TimeInterval) {
+        let title = L("⚠️ SleepHole was closed")
+        schedule("closed", at: Date() + 0.2, title: title,
+                 body: L("Open it within \(Int(tolerance)) seconds, or the building collapses 🏗️"), sound: .default)
+        if tolerance > 6 {
+            schedule("closed-2", at: Date() + 5, title: title,
+                     body: L("Only a few seconds left – come back now 🏗️"), sound: .default)
+        }
+    }
+
     /// At the alarm: a silent, time-sensitive notification lights up the lock screen
     /// (apps cannot switch the screen on themselves). The sound comes from the app.
     static func alarmScreen() {
@@ -119,6 +135,7 @@ enum Notifications {
     }
 
     static func cancelNudge() { cancel(["nudge", "nudge-2"]) }
+    static func cancelClosed() { cancel(["closed", "closed-2"]) }
     static func cancelBackupAlarm() { cancel(backupAlarmIds) }
     static func cancelNight() { cancel(nightIds) }
 
@@ -138,9 +155,10 @@ enum Notifications {
 
     // MARK: Time-sensitive rule (phase F6a, entitlement `com.apple.developer.usernotifications.time-sensitive`)
 
-    /// The ids of the night's notifications: the end-of-setup warning, "Come back!", the pause notices, the screen
-    /// light-up and the backup alarm chain.
-    static let nightIds = ["grace-end", "nudge", "nudge-2", "alarm-screen", "pause-soon", "pause-over"] + backupAlarmIds
+    /// The ids of the night's notifications: the end-of-setup warning, "Come back!", "SleepHole was closed", the pause
+    /// notices, the screen light-up and the backup alarm chain.
+    static let nightIds = ["grace-end", "nudge", "nudge-2", "closed", "closed-2", "alarm-screen", "pause-soon", "pause-over"]
+        + backupAlarmIds
 
     /// Time sensitive = breaks through a Focus (Sleep, Do Not Disturb): everything of the night, plus the bedtime
     /// reminders. The monthly check and the app-expiry warnings stay normal.

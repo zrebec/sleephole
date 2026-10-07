@@ -81,6 +81,7 @@ struct HomeView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     if let expiry = AppExpiry.date, AppExpiry.isSoon(at: now) { ExpiryCard(expiry: expiry, now: now) }
+                    if let at = model.safetyAlarmAt, at > now { SafetyAlarmCard(at: at) }
                     if model.showsMonthlySchedulePrompt { MonthlyScheduleCard().appearIn(delay: 0) }
                     StatusBadges().appearIn(delay: 0.05)
                     // the hero (plan P2b): only the cat – the town has its own tab. A tap pets it (purr, arched back, wink).
@@ -180,15 +181,13 @@ struct MonthlyScheduleCard: View {
     }
 }
 
-/// Free signing: the app stops launching when its profile runs out (audit 2026-10-03, B2). Shown 48 h ahead.
+/// The app stops launching when its provisioning profile runs out (audit 2026-10-03, B2). Shown 48 h ahead.
 struct ExpiryCard: View {
     let expiry: Date
     let now: Date
 
-    /// The card's text; the date always carries its year.
-    static func message(for expiry: Date) -> String {
-        L("The free signature ends on \(Fmt.dateTimeWithYear(expiry)). Connect your iPhone to the Mac and run SleepHole from Xcode – your town, nights and coins stay.")
-    }
+    /// The card's text (the same as the notifications'); the date always carries its year.
+    static func message(for expiry: Date) -> String { Notifications.expiryBody(expiry) }
 
     var body: some View {
         let hours = max(0, Int(expiry.timeIntervalSince(now) / 3600))
@@ -202,6 +201,27 @@ struct ExpiryCard: View {
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassCard(tint: .orange)
+    }
+}
+
+/// After an early "I'm up" (phase F6b, bug B11): the system alarm stays on at the wake time in case the owner falls
+/// asleep again – until he switches it off. Shown on Today and on the result screen.
+struct SafetyAlarmCard: View {
+    @Environment(AppModel.self) private var model
+    let at: Date
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label(L("Safety alarm at \(Fmt.time(at))"), systemImage: "alarm.fill")
+                .font(.headline)
+            Text(L("You confirmed early – the alarm stays on in case you fall asleep again."))
+                .font(.subheadline).cardCaption()
+            Button(L("I'm really up – switch it off")) { model.switchOffSafetyAlarm() }
+                .buttonStyle(.bordered)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassCard(tint: .indigo)
     }
 }
 
@@ -639,6 +659,7 @@ struct ResultView: View {
                         .symbolEffect(.bounce, options: .repeat(3))
                 }
                 if rec.isDebug { Text(L("(quick test night – doesn't count for the town)")).font(.caption).cardCaption() }
+                if let at = model.safetyAlarmAt { SafetyAlarmCard(at: at) }
                 Button(L("Continue")) { model.acknowledgeResult() }
                     .buttonStyle(.borderedProminent).controlSize(.large)
             }
