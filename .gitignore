@@ -28,3 +28,6 @@ docs/device-logs/
 # Freesound CC0 downloads (raw, re-fetch with tools/audio/fetch_freesound.py; the cut clips are committed)
 assets/freesound/
 __pycache__/
+
+# Claude Code worktrees of parallel workers (full copies of the repo)
+.claude/worktrees/
