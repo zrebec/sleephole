@@ -27,7 +27,8 @@
 | P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | ✅ accepted by the owner 2026-10-04; his remark: the arched back has too few poses – left as it is until we render our own models (F7) | owner pets the cat on Today |
 | SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 built, committed and installed 2026-10-04 17:29 (final build). City search, night sky, sun and moon confirmed by the owner on the interim build; only the final semicircle position (right of the title) still waits for his look | owner picks his city, sees the true sun/moon |
 | F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo | "I like looking at it" |
-| F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a built 2026-10-04 (entitlement on, signed device build OK, app 172 tests) – goes onto the phone with the next install; F6b (AlarmKit) is next | the system alarm wakes the owner with the app swiped away |
+| R4 | Closing the app during a night counts as leaving it (the owner's loophole finding 2026-10-04, spec in §10 R4) | 🟡 built and checked 2026-10-06 (tests green), committed 2026-10-07, not on the phone – a rule change: prove it with quick nights before a real night | swiping the app away and using the phone collapses the building |
+| F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a on the phone since 2026-10-04 19:11 (owner's Focus test pending); F6b (AlarmKit) built and reviewed 2026-10-04 evening, installed by the owner himself ≈ 20:00 – it rang with the app swiped away; committed 2026-10-07; his remaining checks are listed in §10 F6 | the system alarm wakes the owner with the app swiped away |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
 
 **Rule:** work on the first phase that is not ✅, do only that phase, then stop and hand over to the
@@ -45,7 +46,7 @@ they do not block P2. **What is really verified, feature by feature, is in §0a.
 * 🖥 **tests / simulator only** – installed on the phone, never exercised there
 
 When the owner confirms or rejects something, move the row the same day. Automated state on 2026-10-03 (evening):
-SleepCore 187 tests green; app 173 tests, 92.53 % line coverage (2026-10-04 19:05).
+SleepCore 207 tests green; app 232 tests, 92.34 % line coverage (2026-10-06 19:35).
 
 ### Night and nap
 | | Feature | Evidence |
@@ -1100,6 +1101,49 @@ his iPhone with reduced transparency. **Design (Opus, 2026-10-04):**
       pet), sleep buddy (renderer needs a model tilt for the lying pose)
 **Accept:** owner enjoys looking at it. **Stop.**
 
+### R4 — Closing the app counts as leaving it (owner 2026-10-04 evening) – 🟡 built 2026-10-06, not on the phone yet
+**The owner's finding:** with the system alarm, swiping SleepHole away after the setup became an attractive
+loophole: nothing warns, nothing collapses, the alarm still rings, and in the morning the building is complete –
+because the evaluator treats a relaunch (`.appLaunched`) as "the app was killed – unknown what happened → the
+owner's favour". **His decision: "it must not be built if I cheated."**
+
+**Design (Opus):** iOS tells a RUNNING app when it is being terminated (`UIApplication.willTerminateNotification` –
+SleepHole runs all night thanks to the background audio; `LifecycleMonitor` already observes it, only as a raw log
+line). A swipe in the app switcher delivers it; a kill by iOS for memory, or a crash, does not.
+* **Rule:** the app closed while a night / nap runs = leaving the app from that moment until it is opened again –
+  the same tolerance as any trip: an immediate warning notification ("SleepHole was closed – open it within N s"),
+  10 s to return, counted into the night's 30 s away budget; pauses and the setup time excuse it like any trip.
+* **Still the owner's favour:** the app killed by iOS (no termination notice), and a phone restart / shutdown (the
+  notice arrives then too – recognised afterwards because the phone's boot time is later than the notice).
+* SleepCore: new events `.closedByOwner` (opens an away interval like `.leftApp`; it ends at the next
+  `.appLaunched`) and `.restartExcused` (cancels the interval of the `.closedByOwner` before it); `.appLaunched`
+  keeps wiping an interval that was opened by `.leftApp` (unknown death → favour); the night story names the
+  closure. App: on the termination notice during a running night → append the event, save, schedule the warning(s);
+  at the relaunch → compare the boot time (`sysctl kern.boottime`), append `.restartExcused` when the phone had
+  restarted, cancel the warnings.
+* **To prove on the phone** (quick nights): swipe away and stay away → collapsed; swipe away and reopen within 10 s →
+  the building stands; a real restart of the phone → the building stands.
+* Same build: when our own alarm starts while the system alarm is already ringing (the app was reopened at the wake
+  time), stop the system alarm and arm a new one for wake + alarmDuration – no two alarms at once.
+- [x] Worker (Sonnet, 2026-10-06): SleepCore `NightEventKind.closedByOwner` / `.restartExcused`,
+      `NightEvaluator.awayIntervals` (a closure owns the open interval; `.appLaunched` ends it, `.restartExcused`
+      drops it; a death without the notice stays in the owner's favour), `NightLog.openClosure`,
+      `NightReport.Trip.closedApp`, `ClosureTests` (20); app: `LifecycleMonitor.onTerminate` (observed with
+      `queue: nil` – a hop to the main queue could come too late), `AppModel.appWillTerminate()` (only before the
+      wake time; the event is saved synchronously), the closure warning `closed` / `closed-2` (time sensitive),
+      `Night/DeviceBoot.swift` (`kern.boottime`), `.restartExcused` at the relaunch, the relief haptic, the guide
+      sentence, "closed the app" in the night story; the system alarm that is already ringing is stopped and
+      re-armed for wake + alarmDuration when our alarm starts
+- [x] Opus check (2026-10-06 19:35): SleepCore 207 tests, app 232 tests / 92.34 %, `keys.py` 537 / 0 / 0, the
+      generic device build compiles
+- [ ] Install (the owner's OK; not right before a real night unless he tests it first) and prove on the phone with
+      quick nights: (1) swipe away, reopen within ≈ 8 s → the building stands, a "phew" haptic; (2) swipe away and
+      stay away → the warning "SleepHole was closed" arrives (scheduled while the process dies – the least certain
+      part), the building collapses, the night story says "closed the app"; (3) restart the phone during a quick
+      night → the building stands; (4) reopen the app while the system alarm rings → only one alarm rings
+**Accept:** closing the app and using the phone collapses the building; an honest slip (reopened in time) and a
+phone restart do not. **Stop.**
+
 ### F6 — Paid Apple Developer Program (owner 2026-10-04: "next phase: F6, analyse it first"; the paid team is confirmed by a signed build)
 **Analysis (Opus, 2026-10-04; sources: the iOS 27 SDK's `AlarmKit.swiftinterface`, Apple's WWDC25 session 230
 "Wake up to the AlarmKit API", the app's `Night/Notifications.swift` and `AppModel.ringAlarm`).**
@@ -1174,9 +1218,39 @@ possible or is your solution better? Then I leave it at Recommended." (Per-weekd
       prepared before F6b started; its changes are saved as a patch so they can be committed apart from F6b)
 - [ ] The owner's test: a "Come back!" warning and the bedtime reminder during a Focus
 - [x] Stale text in `Debug/VibrationTestView.swift` reworded (2026-10-04)
-- [ ] F6b AlarmKit (Sonnet) – started 2026-10-04 19:15. NOT for tonight's build: a new alarm path goes onto the
-      phone only in the daytime and is tried with quick nights first (the real AlarmKit code runs on a device only –
-      in the simulator and in tests a stand-in is used so nothing can ring on the Mac)
+- [x] F6b AlarmKit (Sonnet, 2026-10-04 19:15–19:35): `Night/SystemAlarm.swift` – `SystemAlarm` protocol,
+      `AlarmKitSystemAlarm` (one alarm, its UUID in UserDefaults; a new alarm is set before the old one is ended;
+      `cancel()` stops a ringing and cancels a waiting one; on iOS 26.1+ `AlarmPresentation.Alert(title:
+      secondaryButton:secondaryButtonBehavior:)` – the initializer with a stop button is deprecated there),
+      `OpenSleepHoleIntent`, `NoSystemAlarm`, `SimulatedSystemAlarm` (`-systemAlarm allowed|denied|notAsked`),
+      `SystemAlarms.forLaunch` (the real AlarmKit only on a device, never in the simulator, under tests or with
+      `-mute`), `SystemAlarmMemory`; `AppModel`: `armAlarm`, `moveSystemAlarmBehindOurs` (seam
+      `alarmSoundStarted()`), `settleSystemAlarm`, `tidySystemAlarm`, `safetyAlarmAt` / `switchOffSafetyAlarm()`, a
+      serial queue for the AlarmKit calls; `SafetyAlarmCard` on Today and the result screen; Settings row "System
+      alarm"; `NSAlarmKitUsageDescription` (EN in `project.yml`, SK in `Resources/InfoPlist.xcstrings`); expiry /
+      signature texts no longer say "free" or "from Xcode". Opus review: the code read against the SDK interface;
+      SleepCore 187, app 196 tests / 92.13 %, `keys.py` 524 / 0 / 0, generic device build OK
+- [x] F6b follow-up (Sonnet, 2026-10-04 19:40–19:53) – Opus's decision after the review: **the five backup
+      notifications are ALWAYS scheduled, also next to the system alarm** (the AlarmKit path cannot be tested before
+      it is on the phone – a night must never depend on it alone; this replaces point 1 of the design above, "not
+      scheduled"; they are cancelled when our own alarm really rings, as before). Developer → "System alarm test"
+      (`Debug/SystemAlarmTestView.swift`, `AppModel.testSystemAlarm(after:)` / `cancelTestSystemAlarm()`; the test
+      alarm is kept like a safety alarm, so Today shows the safety card while it waits; refused during a night / nap
+      and while a real safety alarm waits). Opus check: SleepCore 187, app 206 tests / 92.15 %, `keys.py`
+      533 / 0 / 0, the generic device build compiles the AlarmKit branch
+- [x] **The owner installed the F6b build himself from Xcode and tried it (2026-10-04 ≈ 20:00–20:10):** quick
+      night, the app swiped away after the setup → the system alarm rang at the wake time + 30 s with a button
+      that opens SleepHole (he also saw a button he calls "snooze" – to verify what the system shows as its own
+      stop control); "Open SleepHole" → code → "I'm up" → complete night. Observation: after opening the app
+      **two alarms rang at once** (ours started for the rest of its 2 minutes while the system alarm was still
+      alerting) → when our alarm starts and a system alarm is alerting, stop it and arm a new one for wake +
+      alarmDuration. **His finding: swiping the app away is a loophole** – see "R4" below
+- [ ] Remaining owner's checks (the build is on the phone): (1) Settings → System alarm →
+      Allow; (2) Developer → System alarm test: lock the phone / swipe the app away → it rings in silent mode with
+      his alarm sound, "Stop" and "Open SleepHole" work; (3) a quick night with the app swiped away → rings at
+      wake + 30 s; (4) a quick night with the app alive → our alarm 2 min, then the system alarm; a confirm cancels
+      it; (5) an early confirm → the "Safety alarm" card, it rings at the wake time, the button switches it off;
+      (6) the consent alert during the setup does not count as leaving the app
 **Accept:** the owner swipes the app away during a quick night and the system alarm still wakes him in silent mode;
 "Come back!" arrives during a Focus. **Stop.**
 

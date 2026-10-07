@@ -17,10 +17,13 @@ before doing anything:
 Whatever the owner's first message is (even just "Ahoj"), **start your reply by listing this agenda in Slovak**,
 then answer. Remove items here when they are done.
 
-0. **Paid Apple Developer Program: confirmed** (2026-10-04 18:47 – a signed device build with the time-sensitive
-   entitlement succeeded once Xcode had been restarted; the profile is valid until 2027-10-04, the Team ID stayed
-   `8V2VSXHQ86`). Lesson: a capability is proven only by a signed device build, and Xcode needs a restart to notice
-   a changed team. Next in F6: the AlarmKit system alarm (F6b), then the owner's test during a Focus.
+0. **Two things wait for the owner's phone tests (plan §10 F6 and R4):**
+   * **System alarm (F6b, AlarmKit):** the owner installed that build himself on 2026-10-04 and it worked with the app
+     swiped away (it rang, "Open SleepHole" → code → complete night). Still to check: the Developer → System alarm
+     test, the safety alarm after an early confirm, and what the system's own stop button says (he saw "snooze").
+   * **R4 – closing the app counts as leaving it** (built 2026-10-06, NOT on the phone): a rule change – install it
+     with his OK and prove it with quick nights before a real night (the checklist is in plan §10 R4).
+   Both are committed (2026-10-07; the owner pushes) – neither is confirmed on the phone yet.
 1. **Ask for the result of the pause test:** the owner did not use the "🌙 Pause" yet and wanted to try it in the
    night 2026-10-04 → 05. Record the answer in the verification board (plan §0a). Open bugs in plan §11a: B8, B10, B12–B16
    (B7 contrast is accepted – two follow-ups are listed in plan §10 B7; B11 is solved inside F6b).
@@ -86,6 +89,9 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   screen off is fine, the app must stay in the foreground; confirm by shake or wake code from wake −30 min;
   complete only while the alarm rings (2 min), unfinished until +60 min. Tone is **cute and never cruel** — no
   shaming copy, ambiguity is resolved in the owner's favour.
+  **Closing the app (swiping it away) during a night or nap counts as leaving it** (owner 2026-10-04, plan R4) –
+  an immediate warning, the same tolerance; the app killed by iOS itself and a restart of the phone stay in the
+  owner's favour.
 * Levels: nights 1–5 → L1, 6–15 → L1–L2, 16–30 → L1–L3, 31+ → L1–L4 (plan §5.5).
 * Coins 🪙 (owner 2026-10-02): complete night by building level L1 100 / L2 120 / L3 150 / L4 200, unfinished half,
   +30 for a complete night without a pause, every 7th complete night in a row +200; nap 50 / 25.
