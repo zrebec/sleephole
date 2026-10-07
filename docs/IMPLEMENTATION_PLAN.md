@@ -27,7 +27,7 @@
 | P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | ✅ accepted by the owner 2026-10-04; his remark: the arched back has too few poses – left as it is until we render our own models (F7) | owner pets the cat on Today |
 | SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 built, committed and installed 2026-10-04 17:29 (final build). City search, night sky, sun and moon confirmed by the owner on the interim build; only the final semicircle position (right of the title) still waits for his look | owner picks his city, sees the true sun/moon |
 | F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo – its first part runs as phase TOWN-W (next row) | "I like looking at it" |
-| TOWN-W | The town grows and has weather (owner 2026-10-07, spec in §10 TOWN-W): 0b warning when Time Sensitive Notifications are off, 1 roads first, 2 weather on Today (WeatherKit) → checkpoint A; 3 rain and snow in the town → B; 4 day and night in the town → C | 🟡 plan approved 2026-10-07; steps 0b, 1 and 2 in work | the owner sees the outlined empty block, the temperature on Today, rain / snow and the dark town at night |
+| TOWN-W | The town grows and has weather (owner 2026-10-07, spec in §10 TOWN-W): 0b warning when Time Sensitive Notifications are off, 1 roads first, 2 weather on Today (WeatherKit) → checkpoint A; 3 rain and snow in the town → B; 4 day and night in the town → C | 🟡 steps 1 (roads first) and 2 (weather badge on Today) built, reviewed and merged 2026-10-07; the owner ran them from Xcode the same day (15:03): no weather badge – Apple refuses the WeatherKit token (B23, owner checks the App Services tab); roads not judged yet; next: step 0b, then checkpoint A | the owner sees the outlined empty block, the temperature on Today, rain / snow and the dark town at night |
 | R4 | Closing the app during a night counts as leaving it (the owner's loophole finding 2026-10-04, spec in §10 R4) | 🟡 committed and installed by the owner 2026-10-07 07:44; his quick nights the same morning (journal pulled): closed + reopened in time → the building stands ✅, a phone restart → the building stands ✅, the notices arrive with the app closed ✅. Still to prove: closed and STAYED away → collapse; only one alarm when the app is reopened while the system alarm rings | swiping the app away and using the phone collapses the building |
 | F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a on the phone since 2026-10-04 19:11 – the owner's Focus test of 2026-10-07 brought no warning because Time Sensitive Notifications were switched off in iOS (his finding the same day) → B21 closed, the app gets a warning for it (TOWN-W step 0b); not re-tested with the switch on; F6b (AlarmKit) built and reviewed 2026-10-04 evening, installed by the owner himself ≈ 20:00 – it rang with the app swiped away; committed 2026-10-07; his remaining checks are listed in §10 F6 | the system alarm wakes the owner with the app swiped away |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
@@ -48,7 +48,7 @@ they do not block P2. **What is really verified, feature by feature, is in §0a.
 * ❌ **failed on the phone** – a bug is open (§11a)
 
 When the owner confirms or rejects something, move the row the same day. Automated state on 2026-10-03 (evening):
-SleepCore 207 tests green; app 232 tests, 92.34 % line coverage (2026-10-06 19:35).
+SleepCore 220 tests green; app 246 tests, 92.01 % line coverage (2026-10-07, roads first + weather merged).
 
 ### Night and nap
 | | Feature | Evidence |
@@ -89,6 +89,9 @@ SleepCore 207 tests green; app 232 tests, 92.34 % line coverage (2026-10-06 19:3
 | 📱 | L2 buildings | two stand in the owner's town (journal pulled 2026-10-07) |
 | 🖥 | Lit streets, L3–L4 buildings | not reached yet |
 | 🖥 | English signs on buildings | the owner uses Slovak |
+| 🖥 | Roads first: the street ring of every started block + one empty block ahead (TOWN-W step 1) | tests + simulator screenshots of his real town 2026-10-07; not on the phone yet |
+| ❌ | Weather badge on Today (TOWN-W step 2) | owner 2026-10-07 (his own Xcode build of 15:03): no badge – Apple refuses the WeatherKit token (`WDSJWTAuthenticatorServiceListener.Errors Code=2`), bug B23; the badge itself is checked only in the simulator with a simulated value |
+| 📱 | Settings → Developer → Weather test (TOWN-W step 2) | owner 2026-10-07: he read "Last error" from it on the phone; the simulation there not tried on the phone yet |
 
 ### Coins, progress, statistics
 | | Feature | Evidence |
@@ -582,10 +585,18 @@ Inside a block: 1×1 buildings fill quadrants FRONT-first (SE, NE, SW, NW – ne
             2×2 buildings take whole free quadrants BACK-first (NW, SW, NE, SE). They meet in the middle.
             (First version used 3×3 blocks + ring-by-ring lot order → 2×2s could not fit and the town
              sprawled to radius 19 after 100 nights; now 14, see §12.)
-Road visibility: a road cell is drawn iff it touches (8-neighbourhood) an occupied cell.
+Road visibility – ROADS FIRST (owner 2026-10-07, TOWN-W step 1; before: only road cells touching a building):
+            a block's street ring = the 20 road cells around it (`TownLayout.ring(of:)`).
+            Drawn (`drawnRoads`) = the rings of every started block (≥ 1 occupied lot) + the ring of the
+            frontier block = the first block in spiral order with no occupied lot. Streets are always one
+            block ahead of the houses, also in an empty town (it shows the first ring). Rings never
+            disappear. Nothing about roads is stored – the town is replayed from the nights.
+            `builtRoads` = the old rule (road cells touching an occupied lot, 8-neighbourhood).
 Road sprite: mask of drawn N/E/S/W neighbours → catalog entry with that `connects`
              (lit cells → l2-road-lit-we / -ns; empty mask → crossroad fallback). `RoadTiles.swift`.
-Street upgrade: the 4 unlit straight road cells nearest the centre become lit.
+Street upgrade: the 4 unlit straight cells of the drawn streets that touch a building
+             (`straightCells(in: drawnRoads) ∩ builtRoads`), nearest the centre, become lit –
+             lamps stay next to houses, never on the empty block ahead.
 ```
 Preview of the real logic: `DUMP_TOWN=… swift test --filter dumpTown` + `tools/render/layout_preview.py`
 → `docs/previews/layout_60_nights.png`.
@@ -1110,7 +1121,7 @@ his iPhone with reduced transparency. **Design (Opus, 2026-10-04):**
       pet), sleep buddy (renderer needs a model tilt for the lying pose)
 **Accept:** owner enjoys looking at it. **Stop.**
 
-### TOWN-W — The town grows and has weather (owner 2026-10-07) – 🟡 plan approved, steps 0b–2 in work
+### TOWN-W — The town grows and has weather (owner 2026-10-07) – 🟡 steps 1 and 2 built 2026-10-07 (not on the phone), next: step 0b → checkpoint A
 > Owner 2026-10-07: "now I want to spend some time on the town". His order: check the shutdown notice (done, §12),
 > roads first ("so the player knows the town will really grow"), WeatherKit ("for now – maybe better stations
 > later"), rain and snow in the town ("but it has to be testable"), and at the end daylight by day and a dark town
@@ -1118,6 +1129,12 @@ his iPhone with reduced transparency. **Design (Opus, 2026-10-04):**
 > **checkpoint A = steps 0b + 1 + 2**, then B (step 3), then C (step 4); a warning when Time Sensitive Notifications
 > are off: **yes, in Settings and on Today**. Each step = one Sonnet worker; at most two run at a time (8 GB Mac):
 > one in the main tree, one in a git worktree with its own simulator (`SIM=…`), merged back file by file.
+> **Sessions (owner 2026-10-07, later): one step = one session.** When a step is reviewed, merged and written into
+> this plan, Opus itself runs the `session-handoff` skill and stops; the next step starts in a clean context from
+> that handoff. Steps 1 and 2 were started together (two parallel workers), so their handoff comes once both are
+> in. No handoff while a worker is still running – its report reaches only the session that started it. A worker
+> in the main tree also writes its final report into `build/handoff/` (git-ignored); a worktree worker cannot
+> write outside its worktree, so its report exists only in the session – write what matters into this plan.
 
 **Step 0b – Time Sensitive Notifications are off (follow-up of B21)**
 - [ ] `Notifications`: read `UNNotificationSettings.timeSensitiveSetting`; `AppModel` refreshes the state at launch
@@ -1132,40 +1149,77 @@ Rule: a block's street ring = the 20 road cells around it; every started block (
 the first EMPTY block in spiral order has its ring too (exactly one block always waits); lit streets stay next to
 houses – only a straight cell that touches an occupied lot can be lit. Placement (`nextOrigin`, `place`) does not
 change; nothing about roads is stored (the town is replayed from the nights).
-- [ ] `TownLayout`: `ring(of:)`, `builtRoads` (the old rule), `drawnRoads` (rings of the started blocks ∪ the
+- [x] `TownLayout`: `ring(of:)`, `builtRoads` (the old rule), `drawnRoads` (rings of the started blocks ∪ the
       frontier ring), `upgradeStreets` / `canUpgradeStreets` on `straightCells(in: drawnRoads) ∩ builtRoads`
-- [ ] Tests: empty town = the first ring; one house = its ring + the next block's ring; the owner's shape (6 small
+      (a private `lightableCells`); `TownRender` untouched – built and reviewed 2026-10-07
+- [x] Tests: empty town = the first ring; one house = its ring + the next block's ring; the owner's shape (6 small
       + 2 big buildings in one block) → the frontier is the next spiral block and moves on when a building lands
-      there; rings never disappear; lamps only next to houses
-- [ ] Screenshots before / after: the owner's real town (Today, Town), an empty town, 3 nights
-- [ ] §7.1 of this plan updated once the code is in
+      there; rings never disappear (60 nights); lamps only next to houses. Two render tests changed with the rule:
+      the empty town is now 100 sprites, 20 of them road (was a 5×5 meadow); the empty island keeps 9 tiles, 3 road
+- [x] Screenshots before / after reviewed: the owner's real town (the outlined empty block to the right of his
+      full one, T-junctions join cleanly), an empty town (one street loop on the meadow), 3 nights
+- [x] §7.1 of this plan updated
+- [ ] **Open for the owner at checkpoint A – the first look of the Town tab:** the camera's fit is capped at
+      scale 4.5 (`TownScene.fitIfPossible`, "a big town is not microscopic"), and it centres on the whole drawn
+      area. With two blocks the left end of his block's street loop and the right end of the empty block are off
+      screen until he pans (one block used to fit, only the grass was cut). Offer: raise the cap to ≈ 5.7 (both
+      loops fit, buildings ≈ 27 % smaller) or leave it. Nothing was changed – the town's look is his to decide
+- [ ] Leftover: the test `emptyTownIslandIsNineGrassTiles` should be renamed (3 of its 9 tiles are road now)
 
-**Step 2 – Weather on Today (WeatherKit; the owner's OK for the paid capability 2026-10-07)**
-- [ ] SleepCore `Weather.swift`: `WeatherKind` (clear, cloudy, fog, rain, thunder, snow), `WeatherNow` (temperature
-      °C, kind, intensity, cloud cover, `snowOnGround`, observed at), `WeatherRules` (Apple condition string → kind;
-      refresh after 30 min at the earliest; a value older than 90 min is not shown; "snow lies" from 48 h of hourly
-      values: it snowed and it has not been warmer than +2 °C since, or it snows now) – with tests
-- [ ] App `SleepHole/Weather/`: `WeatherSource` protocol + `WeatherKitSource`, `NoWeather`, `SimulatedWeather`;
-      `WeatherSources.forLaunch` (pattern `SystemAlarms.forLaunch`: tests and screenshots never touch the network);
-      the source is replaceable (the owner may want better local forecasts later, e.g. MET Norway / Yr)
-- [ ] `WeatherStore` (`@Observable`): last value, last error, cache in UserDefaults (not in the settings, not in
-      backups); refresh when the app becomes active and on Today; never during a night / nap
-- [ ] Today's title: no city → "Today"; a city and a fresh value → "Today · 14° 🌧"; offline / stale → "Today".
-      A noon screenshot (`-skyTime 12:00`) must show that the title does not run into the sun on the semicircle –
-      else the value moves into a badge under the title
-- [ ] Attribution (Apple's rule): the Apple Weather mark + the legal link to the other data sources in
-      Settings → Sky and in Credits
-- [ ] Developer → "Weather test": live value, time, last error, and a simulation switch (live / clear / cloudy /
-      fog / rain / heavy rain / thunder / snow, temperature, snow on the ground); launch arguments `-weather`,
-      `-weatherTemp`, `-weatherSnowCover`
-- [ ] `project.yml`: entitlement `com.apple.developer.weatherkit`
-- [ ] **Owner (once, ≈ 5 min):** developer.apple.com → Identifiers → `sk.zrebec.sleephole` → tick WeatherKit on
-      the **App Services** tab AND on the **Capabilities** tab
+**Step 2 – Weather on Today (WeatherKit; the owner's OK for the paid capability 2026-10-07)** – built, reviewed
+and merged 2026-10-07 (tests / simulator only). On the merged tree: SleepCore 220 tests, app 246 tests (92.01 %),
+i18n 572 keys / 0 missing / 0 without sk / 0 unused.
+- [x] SleepCore `Weather.swift`: `WeatherKind` (clear, cloudy, fog, rain, thunder, snow), `WeatherNow` (temperature
+      °C, kind, intensity, cloud cover, `isDaylight`, `snowOnGround`, observed at), `WeatherHour`, `WeatherRules`
+      (Apple condition string → kind + intensity for all 34 SDK cases – an app test fails when a new SDK adds one;
+      refresh after 30 min at the earliest, retry 5 min after a failure; a value older than 90 min is not shown;
+      "snow lies": it snows now, or ≥ 5 mm fell since the last hour above +2 °C and it is not above +2 °C now) –
+      with tests
+- [x] App `SleepHole/Weather/`: `WeatherSource` protocol + `WeatherKitSource`, `NoWeather`, `SimulatedWeather`;
+      `WeatherSources.forLaunch` (tests → none, `-weather …` → simulated, a real device → WeatherKit, the simulator
+      → none). The source is replaceable (the owner may want better local forecasts later, e.g. MET Norway / Yr).
+      WeatherKit is asked twice: `.current`, then `.hourly` for the past 48 h inside `try?` – a failing hourly part
+      never loses the temperature, the snow rule then falls back to "it snows now"
+- [x] `WeatherStore` (`@Observable`, `AppModel.weather`): last value, last error, cache in UserDefaults
+      (`weather.cache`: the value, its coordinates, the time – not in the settings, not in backups); a changed city
+      drops the old value at once; refresh on Today every minute (rate-limited by the rules), when the app becomes
+      active and when the city changes; never during a night / nap
+- [x] **Today: a badge top right, NOT in the title (changed in review).** At noon "Dnes · -12° 🌨️" covered the sun
+      on the semicircle, and neither the title nor the semicircle may change. The title stays "Today"; the value is
+      one navigation-bar item top right ("14° 🌧️", `.todayWeather()` in `WeatherUI.swift`), no item at all without
+      a city or with a stale value. The emoji's day / night follows the sky at display time, not the cached value.
+      °F only where the region measures that way. Screenshots at 08:00, noon, 17:30 and at night (light and dark):
+      it never touches the title, the sun or the moon
+- [x] Attribution (Apple's rule): the Apple logo + "Weather" and the link "Other data sources"
+      (`https://developer.apple.com/weatherkit/data-source-attribution/`) in Settings → Sky (only with a city) and in
+      Credits. For a later App Store release: Apple wants the mark where the data is shown or easy to reach from
+      there – Settings is one tab away; a tap on the badge could show it
+- [x] Developer → "Weather test" (`-openWeatherTest`): source, city, past hourly values, the shown value, last
+      success / failure / error, "Refresh now", and the simulation (live / clear / cloudy / fog / rain / heavy rain /
+      thunder / snow, temperature, snow on the ground). The simulation lives in memory only – it ends when it is set
+      back to Live or the app restarts (a stored one could show fake weather for days). It needs a city. Launch
+      arguments `-weather`, `-weatherTemp`, `-weatherSnowCover`
+- [x] `project.yml`: entitlement `com.apple.developer.weatherkit` (+ the regenerated `SleepHole.entitlements`)
+- [x] **Owner:** WeatherKit ticked for the App ID `sk.zrebec.sleephole` on developer.apple.com (asked for: the
+      **App Services** tab AND the **Capabilities** tab) – his word 2026-10-07; the first live value on the phone
+      (Developer → Weather test) proves it
+- [ ] **Unverified until the phone:** the live WeatherKit call (the first device build also proves the capability –
+      a missing one shows as a signing error in Xcode or as "Last error" in Weather test), and whether `.hourly`
+      returns PAST hours ("Past hourly values" in Weather test; 0 there = the snow rule only knows "it snows now")
+- [ ] **B23 – first phone run 2026-10-07 (owner's Xcode build of 15:03): no badge, "Last error" =
+      `WeatherDaemon.WDSJWTAuthenticatorServiceListener.Errors Code=2`.** Checked from the Mac: the signed app and
+      its profile (created 2026-10-07 12:20) carry `com.apple.developer.weatherkit`, a city is set, the phone's
+      `weather.cache` is empty – so the Capabilities tab is proven and the code asked; Apple's WeatherKit service
+      refuses to issue the token. **Owner:** developer.apple.com → Identifiers → `sk.zrebec.sleephole` → the
+      **App Services** tab → WeatherKit ticked → Save; then wait (30 min up to the next morning) and press
+      "Refresh now" in Weather test – no new build is needed. Still Code=2 the next day → decide with the owner:
+      a second `WeatherSource` (Open-Meteo / MET Norway, no Apple account involved) – see §12, 2026-10-07
 
-**Checkpoint A (owner, on the phone):** Town – the outlined empty block next to his full one; Today – the
-temperature in the title, just "Today" without a city; Developer → Weather test – a live value or the error text;
-switching Time Sensitive Notifications off shows the card on Today and the row in Settings, switching them on hides
-both. **Stop.**
+**Checkpoint A (owner, on the phone):** Town – the outlined empty block next to his full one, and his word on the
+first look (both blocks do not fit the screen until he pans – step 1, open item); Today – the temperature badge top
+right, nothing there without a city, the title and the sun / moon as before; Developer → Weather test – a live
+value or the error text, "Past hourly values", and a simulated kind shows on Today at once; switching Time
+Sensitive Notifications off shows the card on Today and the row in Settings, switching them on hides both. **Stop.**
 
 **Step 3 – Rain and snow in the town** (after checkpoint A)
 - [ ] `TownScene.setWeather(...)`: particles as children of the camera node (they stay on screen while panning and
@@ -1462,6 +1516,7 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | ✅ B20 | L | – | Settings → About shows the app's expiry without the year ("3. 10. 20:39" for 2027-10-03) – it reads as a past date (owner 2026-10-04) | fixed 2026-10-04: `Fmt.dateTimeWithYear` in Settings → About, the Today expiry card and the expiry notifications. Left over: the card still speaks of a "free signature" and of running the app from Xcode – reword now that the team is paid |
 | ✅ B21 | – | – | No warning during a Focus (owner 2026-10-07: Sleep and Do Not Disturb – "Come back!" never arrived and the building collapsed after 13 s) | not a bug in the app: Time Sensitive Notifications were switched off in iOS (owner, same day); the code marks the night's notices `.timeSensitive` and the build carries the entitlement. Follow-up he asked for: the app warns while the switch is off (§10 TOWN-W step 0b). Not re-tested with the switch on |
 | B22 | L | XS | In a quick night the wake code could not be entered before the alarm (owner 2026-10-07, "does not matter – Cancel night is there"), although `NightWindow.canConfirm` is true from wake − 30 min, i.e. for the whole quick night | reproduce in the simulator first |
+| B23 | M | – | No weather badge on the phone: Apple's WeatherKit service refuses the token (`WDSJWTAuthenticatorServiceListener.Errors Code=2`, owner 2026-10-07). The build, its profile and the city are fine (§12, 2026-10-07) | not in the code so far: the owner checks the **App Services** tab of the App ID and waits; still refused the next day → a second `WeatherSource` (§10 TOWN-W step 2) |
 | ✅ B18 | H (process) | – | ~70 files had been changed since the last commit (2026-09-30) | done 2026-10-03: 12 commits on `main` (whole files only – what shares files went into one commit); the owner pushes |
 
 **Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
@@ -1533,6 +1588,8 @@ screen checks.
 | 2026-10-04 | **Owner's requests in the evening:** (1) the sky must always show something: once the sun has set, the moon appears at the left end of the semicircle and moves along it with real time (he saw neither sun nor moon after sunset – the real moon was still down); (2) Settings → About shows the expiry as "3. 10. 20:39" without the year, which reads as a date in the past → show the year (B20); (3) the contrast follow-ups (accent colour, Form headers) are not a priority – "the blue is readable too". App Store question answered in the chat: an Xcode install lasts as long as its profile (1 year on the paid team), TestFlight builds 90 days, App Store installs do not expire. |
 | 2026-10-07 | **R4 and the Focus on the phone (owner's three quick nights, journal pulled into the git-ignored `docs/device-logs/`).** F6b + R4 are committed (three commits) and the owner installed the build himself (07:44). The journal agrees with every observation of his. (1) **A phone shutdown delivered NO termination notice:** no `.closedByOwner` was logged, the relaunch was a plain `.appLaunched` → excused as an unknown death (the owner's favour). The building stands as designed, but the `.restartExcused` / boot-time path has not run on a device yet. (2) A swipe in the app switcher after the setup logged `.closedByOwner`; the relaunch 4 s later ended the trip, the building stands. (3) A closure DURING the setup is free; the owner came back right after the "15 s of setup left" notice. (4) **No warning during a Focus** (Sleep, Do Not Disturb): the trips of 17 s are in the journal, the building collapsed at 13 s → bug B21; the installed build does carry the time-sensitive entitlement. (5) `devicectl … --device` accepts the device's NAME – no UDID is needed in commands. (6) `swift test` with the Command Line Tools fails ("plugin for module 'TestingMacros' not found") – always run it with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`. The owner turns to the TOWN next: roads first (F5 list) and the weather on Today (backlog). |
 | 2026-10-07 | **B21 closed, the shutdown notice checked, the town roadmap (owner, later the same day).** (1) B21: the owner had Time Sensitive Notifications switched off in iOS – no bug in the app; he wants a warning in the app (TOWN-W step 0b). The app can read only its own switch (`UNNotificationSettings.timeSensitiveSetting`), not the per-Focus one. Not re-tested with the switch on. (2) Shutdown: `willTerminateNotification` is posted when iOS ends the app in an orderly way (a swipe in the app switcher); at a power-off the system just kills the processes and Apple promises no notice there – so the missing `.closedByOwner` of this morning is expected. Both paths end the same (an unknown death is excused; with a notice the boot time decides). Open: one test does not show whether it is always like that, and the journal keeps no raw lifecycle signals during a real night (`ProbeLog` is filled only by the Developer detection test). Nothing to change. (3) WeatherKit facts checked against the SDK and Apple's pages: `CurrentWeather` / `HourWeather` carry `temperature`, `condition`, `cloudCover`, `isDaylight`, and the hourly `snowfallAmount` (iOS 18+, our deployment target); 500 000 calls a month are included in the membership; the App ID needs WeatherKit ticked on the App Services tab AND on the Capabilities tab; Apple's forecast blends NOAA, ECCC, DWD, Met Office / ECMWF, JMA and Météo-France (no SHMÚ, no MET Norway) – hence the replaceable `WeatherSource`. (4) This Mac has 8 cores and 8 GB RAM → at most two workers build at the same time; the iPhone 17 simulator has the same point size as the 16 Pro. (5) Owner's idea: robotic announcer lines in the style of the game M.A.X. ("Construction complete") – the original recordings cannot go into this public repo or into any build for others; our own synthesised lines can (backlog). |
+| 2026-10-07 | **TOWN-W steps 1 and 2 built (two parallel Sonnet workers, reviewed by Opus).** (1) Roads first: `drawnRoads` = the rings of the started blocks + the frontier ring; the lighting pool is `straightCells(in: drawnRoads) ∩ builtRoads`. An intersection cell that used to be "straight" at a corner can be a junction now, so a replayed town may get its lamps on slightly different cells (the owner's town has no lit street yet). The Town tab's first look is capped at camera scale 4.5 and centres on the whole drawn area – with the block ahead the two street loops no longer fit a 402 pt screen (both fit at ≈ 5.7); left for the owner to judge on the phone. (2) Weather: the SDK's `WeatherCondition` has 34 cases, all mapped; `snowfallAmount` is a length (converted to mm); the attribution URL `weatherkit.apple.com/legal-attribution.html` only redirects (308) to `developer.apple.com/weatherkit/data-source-attribution/`, which is used. The title with the weather in it covered the noon sun (worst: "Dnes · -12° 🌨️") → the value is a navigation-bar item top right; on iOS 26+ the system gives it its own capsule, and an item with empty content would leave an EMPTY capsule, so the item is built only when there is a value. (3) Working notes: the simulator on this Mac is slow under two builds – `tools/sim_shot.sh` needs a wait of 40–75 s, 6–25 s gives white frames; the Agent tool's worktree was branched from `ebf09ed` (two docs commits behind local `main`), merged back with `git apply` of the worktree's diff + copies of the new files (the nine changed files were untouched in the main tree); a worktree worker cannot write outside its worktree (its report could not go to `build/handoff/`); when it finished, the main session's working directory moved into the worktree – commands on the main tree then need `git -C` / absolute paths. `.claude/worktrees/` is git-ignored now. Not verified: anything on a device. |
+| 2026-10-07 | **WeatherKit refuses the app on the phone (B23).** The owner ran the tree with steps 1 + 2 from Xcode (15:03) and saw no weather badge; Weather test → "Last error": `Error Domain=WeatherDaemon.WDSJWTAuthenticatorServiceListener.Errors Code=2 "(null)"`. (1) How it was narrowed down without touching the running app: `codesign -d --entitlements -` on the device build in Xcode's DerivedData and `security cms -D -i embedded.mobileprovision` show the WeatherKit entitlement in the binary and in the profile; `devicectl device copy from … --source Library/Preferences/sk.zrebec.sleephole.plist` shows the settings (a city is set) and no `weather.cache` key = no fetch ever succeeded. The pulled file holds the wake code – read it in the scratchpad and delete it, never into the repo. `devicectl` needs `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` too. (2) What Code=2 means (Apple Developer Forums, threads 837650, 842908, 834574, read 2026-10-07): the WeatherKit service does not issue a token for this App ID. The cause a DTS engineer found most often: the **capability** is on but the **app service** (the second tab of the App ID) is not – also for a developer who was sure he had ticked both. Others: it started to work by itself the next morning; and one App ID stayed refused for weeks with everything correct while a new App ID of the same team worked at once (FB23888627, no fix by September 2026). (3) A new App ID is no way out here – the bundle id carries the owner's town and nights. The fallback is the replaceable `WeatherSource`. (4) The design "no value → no badge" hides a failing source completely; the only place that tells is Developer → Weather test. |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |

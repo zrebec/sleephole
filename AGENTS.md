@@ -26,8 +26,12 @@ then answer. Remove items here when they are done.
      the app is reopened while the system alarm rings.
    * **System alarm (F6b):** it rang with the app swiped away (2026-10-04). Still to check: the Developer → System
      alarm test, the safety alarm after an early confirm, what the system's own stop button says (he saw "snooze").
+   * **Weather (B23):** on the phone since the owner's Xcode run of 2026-10-07 15:03 there is NO weather badge –
+     Apple refuses the WeatherKit token (Code=2). The build and its profile are fine. Ask him: is WeatherKit ticked
+     on the **App Services** tab of the App ID too, and what does Developer → Weather test → "Refresh now" say now?
+     Still refused a day later → propose a second weather source (plan §10 TOWN-W step 2, §12 2026-10-07).
 1. **The pause is still untried:** no night up to 2026-10-06 → 07 used the "🌙 Pause" (journal). Ask only whether he
-   still wants to try it. Open bugs in plan §11a: B8, B10, B12–B16, B22 (B7 contrast is accepted – two
+   still wants to try it. Open bugs in plan §11a: B8, B10, B12–B16, B22, B23 (B7 contrast is accepted – two
    follow-ups are listed in plan §10 B7; B11 is solved inside F6b).
 2. **Sleep buddy (P2 + P2b): accepted by the owner 2026-10-04.** His remark: the "arched back" has too few poses –
    leave it until we render our own models (F7).
@@ -36,11 +40,13 @@ then answer. Remove items here when they are done.
    real phase). Check the SKY task list: is it committed, is the FINAL build on the iPhone (an interim build of
    2026-10-03 21:13 with an older semicircle is / was there), has the owner seen the sun and the moon on the
    semicircle? Next in line after it: bug B7 (contrast / transparency on the light sky – the owner asked for it).
-4. **Phase TOWN-W is running (plan §10 TOWN-W, approved by the owner 2026-10-07):** 0b a warning when Time Sensitive
-   Notifications are off, 1 roads first (always one block ahead), 2 weather on Today (WeatherKit) → **checkpoint A**
-   (the owner ticks WeatherKit for the App ID on developer.apple.com: App Services + Capabilities); then 3 rain and
-   snow in the town → B; 4 day and night in the town → C. Stop at every checkpoint. Waiting ideas: the robotic
-   announcer voice (plan §10 backlog), plan A / B / C (`docs/NAVRH-ZVIERATKA.md`, 5 open questions at the end).
+4. **Phase TOWN-W is running (plan §10 TOWN-W, approved by the owner 2026-10-07):** steps 1 (roads first – always
+   one block ahead) and 2 (weather badge top right on Today, WeatherKit; the owner ticked the capability) are built,
+   reviewed, merged and committed 2026-10-07 – tests / simulator only. **Next:
+   step 0b** (a warning when Time Sensitive Notifications are off) → **checkpoint A** on the phone (plan §10 TOWN-W
+   lists what he checks, incl. the Town tab's first look); then 3 rain and snow in the town → B; 4 day and night in
+   the town → C. Stop at every checkpoint. Waiting ideas: the robotic announcer voice (plan §10 backlog), plan
+   A / B / C (`docs/NAVRH-ZVIERATKA.md`, 5 open questions at the end).
 
 ## ⚠️ WHO DOES WHAT – OWNER'S RULE (2026-10-03) – IMPORTANT
 
@@ -73,9 +79,12 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
 * **The owner commits.** Never `git commit`/`push` unless explicitly asked. Keep changes small and focused.
   When he asks for commits: whole files only (no partial staging), one commit per topic where the files allow it,
   otherwise one commit that describes every topic; he pushes.
-* **Long sessions:** before the owner clears the context he runs the `session-handoff` skill (installed at user
-  level, `~/.claude/skills/session-handoff`) – a chat-only summary the next session starts from. The plan below
-  stays the source of truth; the handoff only carries what is not written down yet.
+* **One step = one session (owner 2026-10-07):** when a step of a multi-step phase is reviewed, merged and written
+  into the plan, Opus itself runs the `session-handoff` skill (user level, `~/.claude/skills/session-handoff`) – a
+  chat-only summary the next session starts from – and stops; the next step starts in a clean context. No handoff
+  while a worker is still running. Use parallel workers inside a step where the files allow it (worktree + its own
+  simulator; this Mac builds at most two at a time). The plan below stays the source of truth; the handoff only
+  carries what is not written down yet.
 * **Tests first for logic.** All rules live in the `SleepCore` Swift package and are unit-tested
   (`cd SleepCore && swift test`). UI/system code stays thin.
 * If something in the plan is wrong or impossible, don't silently diverge: write it into §12, propose the
@@ -164,6 +173,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `assets/audio/` | alarm loops + sound effects, CAF (ship in the app) |
 | `tools/render/` | asset pipeline: recipe generator, SceneKit renderer, previews, reference projection; buddy: `buddy_recipes()` in `make_recipes.py`, `buddy_cat_obj.py`, `buddy_finish.py` |
 | `tools/audio/` | alarm synthesis (`make_alarms.py`), rain loops (`make_rain.py`), UI sound effects `fx_*.caf` (`make_sfx.py`) |
+| `SleepHole/Weather/` | the weather over the owner's city: replaceable `WeatherSource` (WeatherKit / none / simulated), `WeatherStore`, Today's badge; rules in `SleepCore/…/Weather.swift` |
 | `tools/test_app.sh`, `tools/coverage.sh`, `tools/sim_shot.sh` | app tests + coverage, SleepCore coverage, simulator screenshots |
 | `docs/device-logs/` | journals pulled from the owner's iPhone – **git-ignored (public repo, personal data)** |
 | `assets/Kenney Game Assets All-in-1 3/` | raw CC0 source bundle, git-ignored, only for re-rendering |
