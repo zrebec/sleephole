@@ -17,16 +17,18 @@ before doing anything:
 Whatever the owner's first message is (even just "Ahoj"), **start your reply by listing this agenda in Slovak**,
 then answer. Remove items here when they are done.
 
-0. **Two things wait for the owner's phone tests (plan §10 F6 and R4):**
-   * **System alarm (F6b, AlarmKit):** the owner installed that build himself on 2026-10-04 and it worked with the app
-     swiped away (it rang, "Open SleepHole" → code → complete night). Still to check: the Developer → System alarm
-     test, the safety alarm after an early confirm, and what the system's own stop button says (he saw "snooze").
-   * **R4 – closing the app counts as leaving it** (built 2026-10-06, NOT on the phone): a rule change – install it
-     with his OK and prove it with quick nights before a real night (the checklist is in plan §10 R4).
-   Both are committed (2026-10-07; the owner pushes) – neither is confirmed on the phone yet.
-1. **Ask for the result of the pause test:** the owner did not use the "🌙 Pause" yet and wanted to try it in the
-   night 2026-10-04 → 05. Record the answer in the verification board (plan §0a). Open bugs in plan §11a: B8, B10, B12–B16
-   (B7 contrast is accepted – two follow-ups are listed in plan §10 B7; B11 is solved inside F6b).
+0. **Open phone checks (plan §10 F6 and R4, bug B21 in §11a):**
+   * **Time Sensitive Notifications (B21 closed):** the Focus test of 2026-10-07 brought no warning only because the
+     switch was off in iOS. The app gets a warning for it (plan §10 TOWN-W step 0b). Still open: the same Focus test
+     with the switch on.
+   * **R4 – closing the app counts as leaving it:** on the phone since 2026-10-07; reopening in time and a phone
+     restart keep the building (confirmed). Still to prove: swipe away and STAY away → collapse; only one alarm when
+     the app is reopened while the system alarm rings.
+   * **System alarm (F6b):** it rang with the app swiped away (2026-10-04). Still to check: the Developer → System
+     alarm test, the safety alarm after an early confirm, what the system's own stop button says (he saw "snooze").
+1. **The pause is still untried:** no night up to 2026-10-06 → 07 used the "🌙 Pause" (journal). Ask only whether he
+   still wants to try it. Open bugs in plan §11a: B8, B10, B12–B16, B22 (B7 contrast is accepted – two
+   follow-ups are listed in plan §10 B7; B11 is solved inside F6b).
 2. **Sleep buddy (P2 + P2b): accepted by the owner 2026-10-04.** His remark: the "arched back" has too few poses –
    leave it until we render our own models (F7).
 3. **City + real sun & moon (phase SKY, plan §10)** – built and reviewed 2026-10-04 (Settings → Sky with the Apple
@@ -34,7 +36,11 @@ then answer. Remove items here when they are done.
    real phase). Check the SKY task list: is it committed, is the FINAL build on the iPhone (an interim build of
    2026-10-03 21:13 with an older semicircle is / was there), has the owner seen the sun and the moon on the
    semicircle? Next in line after it: bug B7 (contrast / transparency on the light sky – the owner asked for it).
-4. Then the owner picks plan A / B / C (`docs/NAVRH-ZVIERATKA.md`, 5 open questions at the end).
+4. **Phase TOWN-W is running (plan §10 TOWN-W, approved by the owner 2026-10-07):** 0b a warning when Time Sensitive
+   Notifications are off, 1 roads first (always one block ahead), 2 weather on Today (WeatherKit) → **checkpoint A**
+   (the owner ticks WeatherKit for the App ID on developer.apple.com: App Services + Capabilities); then 3 rain and
+   snow in the town → B; 4 day and night in the town → C. Stop at every checkpoint. Waiting ideas: the robotic
+   announcer voice (plan §10 backlog), plan A / B / C (`docs/NAVRH-ZVIERATKA.md`, 5 open questions at the end).
 
 ## ⚠️ WHO DOES WHAT – OWNER'S RULE (2026-10-03) – IMPORTANT
 
@@ -81,7 +87,7 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
 * **No Screen Time APIs** (FamilyControls, ManagedSettings, DeviceActivity). The app never blocks anything;
   it only detects leaving the app.
 * Signing: the owner's **paid Apple Developer Program** team `8V2VSXHQ86` (since 2026-10, proven by a signed build).
-  In use: Time Sensitive notifications (F6a). Other paid-only APIs (HealthKit, iCloud, push) only when the owner
+  In use: Time Sensitive notifications (F6a), WeatherKit (owner's OK 2026-10-07, phase TOWN-W). Other paid-only APIs (HealthKit, iCloud, push) only when the owner
   asks for them. AlarmKit needs no entitlement.
 * Night rules **R3** (plan D15 + findings 2026-09-29/30): start only bedtime −10…+5 min; setup until
   max(start, bedtime) + 5 min; after it, leaving the app → warning after ~3 s and 10 s to return (and at most
@@ -130,7 +136,8 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
 ## Commands
 
 ```bash
-cd SleepCore && swift test                        # domain logic tests (works without Xcode)
+cd SleepCore && DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer swift test   # domain logic tests (the
+                                                  # Command Line Tools alone lack the Testing macros)
 xcodegen generate                                 # regenerate SleepHole.xcodeproj from project.yml
 xcodebuild -scheme SleepHole -destination 'platform=iOS Simulator,name=iPhone 17' build
 # Sprite pipeline (only when assets change; needs the raw Kenney bundle, run OUTSIDE the sandbox):

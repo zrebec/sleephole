@@ -26,9 +26,10 @@
 | P2 | Sleep buddy: awake / asleep cat that faces the owner (plan A step 2, spec in §10 P2) + bug B19 | ✅ accepted by the owner 2026-10-04 ("the cat behaves as expected"; a real night with it) | owner sleeps with the buddy |
 | P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | ✅ accepted by the owner 2026-10-04; his remark: the arched back has too few poses – left as it is until we render our own models (F7) | owner pets the cat on Today |
 | SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 built, committed and installed 2026-10-04 17:29 (final build). City search, night sky, sun and moon confirmed by the owner on the interim build; only the final semicircle position (right of the title) still waits for his look | owner picks his city, sees the true sun/moon |
-| F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo | "I like looking at it" |
-| R4 | Closing the app during a night counts as leaving it (the owner's loophole finding 2026-10-04, spec in §10 R4) | 🟡 built and checked 2026-10-06 (tests green), committed 2026-10-07, not on the phone – a rule change: prove it with quick nights before a real night | swiping the app away and using the phone collapses the building |
-| F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a on the phone since 2026-10-04 19:11 (owner's Focus test pending); F6b (AlarmKit) built and reviewed 2026-10-04 evening, installed by the owner himself ≈ 20:00 – it rang with the app swiped away; committed 2026-10-07; his remaining checks are listed in §10 F6 | the system alarm wakes the owner with the app swiped away |
+| F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo – its first part runs as phase TOWN-W (next row) | "I like looking at it" |
+| TOWN-W | The town grows and has weather (owner 2026-10-07, spec in §10 TOWN-W): 0b warning when Time Sensitive Notifications are off, 1 roads first, 2 weather on Today (WeatherKit) → checkpoint A; 3 rain and snow in the town → B; 4 day and night in the town → C | 🟡 plan approved 2026-10-07; steps 0b, 1 and 2 in work | the owner sees the outlined empty block, the temperature on Today, rain / snow and the dark town at night |
+| R4 | Closing the app during a night counts as leaving it (the owner's loophole finding 2026-10-04, spec in §10 R4) | 🟡 committed and installed by the owner 2026-10-07 07:44; his quick nights the same morning (journal pulled): closed + reopened in time → the building stands ✅, a phone restart → the building stands ✅, the notices arrive with the app closed ✅. Still to prove: closed and STAYED away → collapse; only one alarm when the app is reopened while the system alarm rings | swiping the app away and using the phone collapses the building |
+| F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a on the phone since 2026-10-04 19:11 – the owner's Focus test of 2026-10-07 brought no warning because Time Sensitive Notifications were switched off in iOS (his finding the same day) → B21 closed, the app gets a warning for it (TOWN-W step 0b); not re-tested with the switch on; F6b (AlarmKit) built and reviewed 2026-10-04 evening, installed by the owner himself ≈ 20:00 – it rang with the app swiped away; committed 2026-10-07; his remaining checks are listed in §10 F6 | the system alarm wakes the owner with the app swiped away |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
 
 **Rule:** work on the first phase that is not ✅, do only that phase, then stop and hand over to the
@@ -44,6 +45,7 @@ they do not block P2. **What is really verified, feature by feature, is in §0a.
 * 📱 **ran on the iPhone** (seen in the app data pulled from the phone for the audit of 2026-10-03, or in the findings log), but
   the owner's explicit OK is not on record
 * 🖥 **tests / simulator only** – installed on the phone, never exercised there
+* ❌ **failed on the phone** – a bug is open (§11a)
 
 When the owner confirms or rejects something, move the row the same day. Automated state on 2026-10-03 (evening):
 SleepCore 207 tests green; app 232 tests, 92.34 % line coverage (2026-10-06 19:35).
@@ -64,7 +66,12 @@ SleepCore 207 tests green; app 232 tests, 92.34 % line coverage (2026-10-06 19:3
 | 📱 | Guide + first-night checklist | done on the phone |
 | 📱 | Vibration at the start and on a return in time | owner's test 2026-09-30 (nothing vibrates in the background – iOS) |
 | 🖥 | Outcome "unfinished" (confirm after the alarm stopped) | not happened on the phone since rules R3 |
-| 🖥 | Night pause (D17) | not used in the night 2026-10-03 → 04; the owner tries it in the night 2026-10-04 → 05 |
+| 🟢 | Closing the app and reopening it in time keeps the building (R4) | owner's quick night 2026-10-07; the journal shows the closure and the relaunch a few seconds later |
+| 🟢 | A phone restart during a night keeps the building (R4) | owner's quick night 2026-10-07 (the journal: see §12, 2026-10-07) |
+| 🟢 | Notices arrive with the app closed: "15 s of setup left", "SleepHole was closed" (no Focus) | owner 2026-10-07 |
+| 🖥 | Warnings during a Focus (F6a, time sensitive) | owner 2026-10-07: nothing arrived in Sleep or Do Not Disturb – Time Sensitive Notifications were switched off in iOS (B21 closed); not re-tested with the switch on |
+| 🖥 | Closing the app and staying away collapses the building (R4) | not tried on the phone yet |
+| 🖥 | Night pause (D17) | not used in any night up to 2026-10-06 → 07 (journal pulled 2026-10-07) |
 | 🖥 | Away budget 30 s per night + its counter | installed 2026-10-03 |
 | 🖥 | Safer alarm (B1 retry, B3 five backup notifications) | installed 2026-10-03 |
 | 🖥 | Screen checks ignore the unlock after the alarm (B9) | installed 2026-10-03 |
@@ -79,7 +86,8 @@ SleepCore 207 tests green; app 232 tests, 92.34 % line coverage (2026-10-06 19:3
 | 📱 | Fix: the sleeping cat no longer stays over the Town tab | owner (2026-10-03): "not any more, hopefully OK" |
 | 🖥 | Fix: island keeps its road and size after the 4th house | installed 2026-10-03, not checked by the owner yet |
 | 🖥 | Scaffold, ruins, flowers after 7 days, ruin repair, finishing an unfinished building | never happened on the phone |
-| 🖥 | Lit streets, L2–L4 buildings | L2 unlocks with building night 6 (not reached yet) |
+| 📱 | L2 buildings | two stand in the owner's town (journal pulled 2026-10-07) |
+| 🖥 | Lit streets, L3–L4 buildings | not reached yet |
 | 🖥 | English signs on buildings | the owner uses Slovak |
 
 ### Coins, progress, statistics
@@ -1088,18 +1096,101 @@ his iPhone with reduced transparency. **Design (Opus, 2026-10-04):**
 - [x] Installed 2026-10-04 18:27 (a build of the reviewed state without the F6a entitlement). **Owner's verdict the
       same evening: "the contrast is very good, even the statistics are well visible"; the calendar numbers in dark
       mode are readable now.** He wants both open points done next (accent colour, Form headers / footers)
-- [ ] Commit when the owner says so
+- [x] Committed 2026-10-04 (`964e6ae`)
 **Accept:** the owner reads everything on Today, Stats and the result screen without effort, in light and dark. **Stop.**
 
 ### F5 — Living town
 > Owner 2026-10-02: town + **Cube Pets** (no forest); animals reflect **regularity** and **undisturbed nights**,
 > light taps only, plus a **sleep buddy** on the night screen. Three plans (A recommended: pause → sleep buddy →
 > residents → album → living town) in [`docs/NAVRH-ZVIERATKA.md`](NAVRH-ZVIERATKA.md) (Slovak) – owner picks one.
-- [ ] Day/night tint, lamp glows, window glints
+- [ ] Day/night tint (→ phase TOWN-W step 4), lamp glows, window glints
 - [ ] Cars on roads, population counter
+- [ ] Roads first → phase TOWN-W step 1 (owner's decision 2026-10-07: always one block ahead)
 - [ ] Cube Pets residents (move-in rules by streak / regularity / undisturbed nights, wander near home, tap = card +
       pet), sleep buddy (renderer needs a model tilt for the lying pose)
 **Accept:** owner enjoys looking at it. **Stop.**
+
+### TOWN-W — The town grows and has weather (owner 2026-10-07) – 🟡 plan approved, steps 0b–2 in work
+> Owner 2026-10-07: "now I want to spend some time on the town". His order: check the shutdown notice (done, §12),
+> roads first ("so the player knows the town will really grow"), WeatherKit ("for now – maybe better stations
+> later"), rain and snow in the town ("but it has to be testable"), and at the end daylight by day and a dark town
+> after dark. His decisions the same day: roads **always one block ahead** (also in an empty town); phone tests at
+> **checkpoint A = steps 0b + 1 + 2**, then B (step 3), then C (step 4); a warning when Time Sensitive Notifications
+> are off: **yes, in Settings and on Today**. Each step = one Sonnet worker; at most two run at a time (8 GB Mac):
+> one in the main tree, one in a git worktree with its own simulator (`SIM=…`), merged back file by file.
+
+**Step 0b – Time Sensitive Notifications are off (follow-up of B21)**
+- [ ] `Notifications`: read `UNNotificationSettings.timeSensitiveSetting`; `AppModel` refreshes the state at launch
+      and on every return to the app (injectable in tests – no system calls there)
+- [ ] Settings: a warning row next to the notification status + a button that opens the app's notification settings
+- [ ] Today: a card (pattern `SafetyAlarmCard` / `ExpiryCard`) while the switch is off; the text says that every
+      Focus has its own switch which the app cannot read. Cute, never scary
+- [ ] Tests + `L(...)` strings with Slovak
+
+**Step 1 – Roads first (SleepCore only)**
+Rule: a block's street ring = the 20 road cells around it; every started block (≥ 1 building) has its whole ring;
+the first EMPTY block in spiral order has its ring too (exactly one block always waits); lit streets stay next to
+houses – only a straight cell that touches an occupied lot can be lit. Placement (`nextOrigin`, `place`) does not
+change; nothing about roads is stored (the town is replayed from the nights).
+- [ ] `TownLayout`: `ring(of:)`, `builtRoads` (the old rule), `drawnRoads` (rings of the started blocks ∪ the
+      frontier ring), `upgradeStreets` / `canUpgradeStreets` on `straightCells(in: drawnRoads) ∩ builtRoads`
+- [ ] Tests: empty town = the first ring; one house = its ring + the next block's ring; the owner's shape (6 small
+      + 2 big buildings in one block) → the frontier is the next spiral block and moves on when a building lands
+      there; rings never disappear; lamps only next to houses
+- [ ] Screenshots before / after: the owner's real town (Today, Town), an empty town, 3 nights
+- [ ] §7.1 of this plan updated once the code is in
+
+**Step 2 – Weather on Today (WeatherKit; the owner's OK for the paid capability 2026-10-07)**
+- [ ] SleepCore `Weather.swift`: `WeatherKind` (clear, cloudy, fog, rain, thunder, snow), `WeatherNow` (temperature
+      °C, kind, intensity, cloud cover, `snowOnGround`, observed at), `WeatherRules` (Apple condition string → kind;
+      refresh after 30 min at the earliest; a value older than 90 min is not shown; "snow lies" from 48 h of hourly
+      values: it snowed and it has not been warmer than +2 °C since, or it snows now) – with tests
+- [ ] App `SleepHole/Weather/`: `WeatherSource` protocol + `WeatherKitSource`, `NoWeather`, `SimulatedWeather`;
+      `WeatherSources.forLaunch` (pattern `SystemAlarms.forLaunch`: tests and screenshots never touch the network);
+      the source is replaceable (the owner may want better local forecasts later, e.g. MET Norway / Yr)
+- [ ] `WeatherStore` (`@Observable`): last value, last error, cache in UserDefaults (not in the settings, not in
+      backups); refresh when the app becomes active and on Today; never during a night / nap
+- [ ] Today's title: no city → "Today"; a city and a fresh value → "Today · 14° 🌧"; offline / stale → "Today".
+      A noon screenshot (`-skyTime 12:00`) must show that the title does not run into the sun on the semicircle –
+      else the value moves into a badge under the title
+- [ ] Attribution (Apple's rule): the Apple Weather mark + the legal link to the other data sources in
+      Settings → Sky and in Credits
+- [ ] Developer → "Weather test": live value, time, last error, and a simulation switch (live / clear / cloudy /
+      fog / rain / heavy rain / thunder / snow, temperature, snow on the ground); launch arguments `-weather`,
+      `-weatherTemp`, `-weatherSnowCover`
+- [ ] `project.yml`: entitlement `com.apple.developer.weatherkit`
+- [ ] **Owner (once, ≈ 5 min):** developer.apple.com → Identifiers → `sk.zrebec.sleephole` → tick WeatherKit on
+      the **App Services** tab AND on the **Capabilities** tab
+
+**Checkpoint A (owner, on the phone):** Town – the outlined empty block next to his full one; Today – the
+temperature in the title, just "Today" without a city; Developer → Weather test – a live value or the error text;
+switching Time Sensitive Notifications off shows the card on Today and the row in Settings, switching them on hides
+both. **Stop.**
+
+**Step 3 – Rain and snow in the town** (after checkpoint A)
+- [ ] `TownScene.setWeather(...)`: particles as children of the camera node (they stay on screen while panning and
+      zooming), built in code – rain = slanted streaks, density by intensity; snow = slow flakes; thunder = heavy
+      rain, no flashes
+- [ ] "Snow lies": a white sheet over `TownRender.groundDiamond` between the grass and the roads – a white meadow,
+      cleared roads; roofs stay as they are (snowy roofs need re-rendered sprites – the owner decides after the
+      checkpoint)
+- [ ] The sky over the town is greyer with denser clouds when it is overcast (`LivingSky`); the sun / moon
+      semicircle does not change
+- [ ] Reduce Motion: no particles, the snow sheet stays
+- [ ] Tests in `TownSceneTests`; testable on the phone through Developer → Weather test
+
+**Checkpoint B (owner):** Developer → Weather test → rain / snow / snow on the ground → Town tab. **Stop.**
+
+**Step 4 – Day and night in the town** (after checkpoint B)
+- [ ] SleepCore `TownLight.tint(daylight:glow:overcast:)` with tests: day unchanged, dusk warm, night dark blue
+- [ ] `TownScene.setLight(...)`: every sprite, the island's soil edge and the snow sheet are multiplied by the tint;
+      the source is `LivingSky.state(at:settings:)` (the real sun with a city, the schedule without one), refreshed
+      once a minute – the town is exactly as dark as the sky behind it
+- [ ] Developer → Weather test gets a time-of-day choice (live / day / dusk / night); the simulator keeps `-skyTime`
+- [ ] Lights at night (lamp glows, warm windows – F5 list) are the next proposal after checkpoint C
+
+**Checkpoint C (owner):** the town by day and after dark. **Accept:** the owner likes how the town looks in every
+weather and at night. **Stop.**
 
 ### R4 — Closing the app counts as leaving it (owner 2026-10-04 evening) – 🟡 built 2026-10-06, not on the phone yet
 **The owner's finding:** with the system alarm, swiping SleepHole away after the setup became an attractive
@@ -1136,11 +1227,13 @@ line). A swipe in the app switcher delivers it; a kill by iOS for memory, or a c
       re-armed for wake + alarmDuration when our alarm starts
 - [x] Opus check (2026-10-06 19:35): SleepCore 207 tests, app 232 tests / 92.34 %, `keys.py` 537 / 0 / 0, the
       generic device build compiles
-- [ ] Install (the owner's OK; not right before a real night unless he tests it first) and prove on the phone with
-      quick nights: (1) swipe away, reopen within ≈ 8 s → the building stands, a "phew" haptic; (2) swipe away and
-      stay away → the warning "SleepHole was closed" arrives (scheduled while the process dies – the least certain
-      part), the building collapses, the night story says "closed the app"; (3) restart the phone during a quick
-      night → the building stands; (4) reopen the app while the system alarm rings → only one alarm rings
+- [x] Installed by the owner from Xcode (2026-10-07 07:44) and tried with three quick nights; the journal was pulled
+      and agrees with what he saw: (1) swiped away after the setup, reopened a few seconds later → the building
+      stands ✅; (3) the phone switched off and on after the setup → the building stands ✅; the notices arrive with
+      the app closed ✅ (no Focus)
+- [ ] Still to prove on the phone: (2) swipe away and STAY away → the warning "SleepHole was closed", the building
+      collapses, the night story says "closed the app"; (4) reopen the app while the system alarm rings → only one
+      alarm rings
 **Accept:** closing the app and using the phone collapses the building; an honest slip (reopened in time) and a
 phone restart do not. **Stop.**
 
@@ -1216,7 +1309,9 @@ possible or is your solution better? Then I leave it at Recommended." (Per-weekd
       owner restarted Xcode)
 - [x] F6a on the phone: installed 2026-10-04 19:11 together with the night moon and the B20 fix (a signed build
       prepared before F6b started; its changes are saved as a patch so they can be committed apart from F6b)
-- [ ] The owner's test: a "Come back!" warning and the bedtime reminder during a Focus
+- [ ] The owner's test (2026-10-07): no warning arrived during a Focus (Sleep and Do Not Disturb) – the cause was
+      on the phone: Time Sensitive Notifications were switched off (B21 closed, §11a). Still to do: the same test
+      with the switch on; the bedtime reminder during a Focus
 - [x] Stale text in `Debug/VibrationTestView.swift` reworded (2026-10-04)
 - [x] F6b AlarmKit (Sonnet, 2026-10-04 19:15–19:35): `Night/SystemAlarm.swift` – `SystemAlarm` protocol,
       `AlarmKitSystemAlarm` (one alarm, its UUID in UserDefaults; a new alarm is set before the old one is ended;
@@ -1281,8 +1376,16 @@ possible or is your solution better? Then I leave it at Recommended." (Per-weekd
       instead of single buildings; L1 starter pack free; higher-level buildings pay more per night (e.g. L1 100,
       L2 120, L3 150, L4 200) so research is an investment with a return; "first of its kind" +50 🪙 and a
       collection book; the picker needs ≥ 4 researched buildings per level (the "last 3 never repeat" rule).
-- [ ] **Live weather (idea):** needs a coarse location (Approximate Location, When In Use) or a town typed once;
-      Open-Meteo works without the paid account, WeatherKit needs F6. The sky would add rain/snow/clouds.
+- [ ] **Live weather → phase TOWN-W (steps 2 and 3)** – the owner's OK for WeatherKit 2026-10-07 ("for now; maybe
+      better stations later"): the source is replaceable, candidates for later are MET Norway / Yr and Open-Meteo
+      (both free, no key).
+- [ ] **Robotic announcer voice (owner's idea 2026-10-07):** he likes the computer voice of the game M.A.X.
+      ("Construction complete", "Begin"). The game's recordings belong to its publisher – buying the game gives no
+      right to reuse or redistribute them, so they must never be committed here or shipped in a build for others.
+      Our own lines are fine: (a) on the device – `Voice` (AVSpeechSynthesizer) rendered through AVAudioEngine
+      effects (flat pitch, ring modulation, radio band-pass), English and Slovak, no files; (b) offline in
+      `tools/audio/` – a free synthesiser + our own processing → CAF files. It must be an original voice in that
+      spirit, not a copy of the recordings. Opus recommends (a) first. Waits for the owner.
 - [ ] **Building shop (next):** prices L1 100, L2 200, L3 400, L4 1000 (`Economy.price`). Owner's intent: you spend
       a long time in villages/suburbs before a block of flats, police comes much later. Open: when to choose
       (at "Začať stavbu"?), what if coins are short (proposal: a free random L1), pay on start or on completion,
@@ -1357,6 +1460,8 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | B17 | – | – | Not detectable by design (no Screen Time API): Notification / Control Center over the app, replying from a banner or the lock screen | document only |
 | ✅ B19 | M | – | Sleep sound is not remembered (owner 2026-10-03): after he stops the sound during a night, the next night starts the story again – neither "stopped" nor the sound picked in the night's sheet is stored | persist the night sheet's choice (sound + minutes) into `AppSettings` and a separate "off" flag, so the next night starts silent while ▶ still plays the last sound; test in `AppModelTests` – **fixed 2026-10-03** (see P2, W3), the owner checks it with the P2 build |
 | ✅ B20 | L | – | Settings → About shows the app's expiry without the year ("3. 10. 20:39" for 2027-10-03) – it reads as a past date (owner 2026-10-04) | fixed 2026-10-04: `Fmt.dateTimeWithYear` in Settings → About, the Today expiry card and the expiry notifications. Left over: the card still speaks of a "free signature" and of running the app from Xcode – reword now that the team is paid |
+| ✅ B21 | – | – | No warning during a Focus (owner 2026-10-07: Sleep and Do Not Disturb – "Come back!" never arrived and the building collapsed after 13 s) | not a bug in the app: Time Sensitive Notifications were switched off in iOS (owner, same day); the code marks the night's notices `.timeSensitive` and the build carries the entitlement. Follow-up he asked for: the app warns while the switch is off (§10 TOWN-W step 0b). Not re-tested with the switch on |
+| B22 | L | XS | In a quick night the wake code could not be entered before the alarm (owner 2026-10-07, "does not matter – Cancel night is there"), although `NightWindow.canConfirm` is true from wake − 30 min, i.e. for the whole quick night | reproduce in the simulator first |
 | ✅ B18 | H (process) | – | ~70 files had been changed since the last commit (2026-09-30) | done 2026-10-03: 12 commits on `main` (whole files only – what shares files went into one commit); the owner pushes |
 
 **Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
@@ -1426,6 +1531,8 @@ screen checks.
 | 2026-10-04 | **The paid team is NOT confirmed – correction of the entry above.** F6a added the time-sensitive entitlement; the owner's Xcode then refused to build: "Personal development teams, including … do not support the Time Sensitive Notifications capability" and "Provisioning profile … doesn't include the com.apple.developer.usernotifications.time-sensitive entitlement". So team `8V2VSXHQ86` is still treated as a free Personal Team, although the profile fetched on 2026-10-03 is valid for 365 days and Apple sent the welcome mail. Opus's earlier conclusion ("the Team ID did not change, the paid team is active") was an inference from the profile's lifetime and was wrong or premature. Likely causes: the paid membership lives on a separate team with its own Team ID (then `DEVELOPMENT_TEAM` must change and the bundle id may have to be registered again – see `TODO-APPLE-DEVELOPER.md` B), or Xcode's account data needs a refresh (Settings → Accounts, sign out / in). The entitlement is commented out in `project.yml` until the owner reports what Xcode → Settings → Accounts and developer.apple.com → Membership details show; the F6a code stays (without the entitlement iOS treats `.timeSensitive` as an ordinary notification). **Lesson: a capability is proven only by a signed device build with it – not by a mail or a profile's lifetime.** Also: a worker's unfinished project change (`project.yml`) broke the owner's own Xcode build – while workers change the project file, tell the owner not to build from Xcode, or work in a worktree. |
 | 2026-10-04 | **The paid team IS confirmed (18:47).** The owner restarted Xcode; a signed device build with the time-sensitive entitlement then succeeded and its new profile contains `com.apple.developer.usernotifications.time-sensitive` (valid until 2027-10-04). So the Team ID did stay the same – Xcode had only kept the old "Personal Team" account data until its restart. The entitlement is switched on again in `project.yml`. |
 | 2026-10-04 | **Owner's requests in the evening:** (1) the sky must always show something: once the sun has set, the moon appears at the left end of the semicircle and moves along it with real time (he saw neither sun nor moon after sunset – the real moon was still down); (2) Settings → About shows the expiry as "3. 10. 20:39" without the year, which reads as a date in the past → show the year (B20); (3) the contrast follow-ups (accent colour, Form headers) are not a priority – "the blue is readable too". App Store question answered in the chat: an Xcode install lasts as long as its profile (1 year on the paid team), TestFlight builds 90 days, App Store installs do not expire. |
+| 2026-10-07 | **R4 and the Focus on the phone (owner's three quick nights, journal pulled into the git-ignored `docs/device-logs/`).** F6b + R4 are committed (three commits) and the owner installed the build himself (07:44). The journal agrees with every observation of his. (1) **A phone shutdown delivered NO termination notice:** no `.closedByOwner` was logged, the relaunch was a plain `.appLaunched` → excused as an unknown death (the owner's favour). The building stands as designed, but the `.restartExcused` / boot-time path has not run on a device yet. (2) A swipe in the app switcher after the setup logged `.closedByOwner`; the relaunch 4 s later ended the trip, the building stands. (3) A closure DURING the setup is free; the owner came back right after the "15 s of setup left" notice. (4) **No warning during a Focus** (Sleep, Do Not Disturb): the trips of 17 s are in the journal, the building collapsed at 13 s → bug B21; the installed build does carry the time-sensitive entitlement. (5) `devicectl … --device` accepts the device's NAME – no UDID is needed in commands. (6) `swift test` with the Command Line Tools fails ("plugin for module 'TestingMacros' not found") – always run it with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`. The owner turns to the TOWN next: roads first (F5 list) and the weather on Today (backlog). |
+| 2026-10-07 | **B21 closed, the shutdown notice checked, the town roadmap (owner, later the same day).** (1) B21: the owner had Time Sensitive Notifications switched off in iOS – no bug in the app; he wants a warning in the app (TOWN-W step 0b). The app can read only its own switch (`UNNotificationSettings.timeSensitiveSetting`), not the per-Focus one. Not re-tested with the switch on. (2) Shutdown: `willTerminateNotification` is posted when iOS ends the app in an orderly way (a swipe in the app switcher); at a power-off the system just kills the processes and Apple promises no notice there – so the missing `.closedByOwner` of this morning is expected. Both paths end the same (an unknown death is excused; with a notice the boot time decides). Open: one test does not show whether it is always like that, and the journal keeps no raw lifecycle signals during a real night (`ProbeLog` is filled only by the Developer detection test). Nothing to change. (3) WeatherKit facts checked against the SDK and Apple's pages: `CurrentWeather` / `HourWeather` carry `temperature`, `condition`, `cloudCover`, `isDaylight`, and the hourly `snowfallAmount` (iOS 18+, our deployment target); 500 000 calls a month are included in the membership; the App ID needs WeatherKit ticked on the App Services tab AND on the Capabilities tab; Apple's forecast blends NOAA, ECCC, DWD, Met Office / ECMWF, JMA and Météo-France (no SHMÚ, no MET Norway) – hence the replaceable `WeatherSource`. (4) This Mac has 8 cores and 8 GB RAM → at most two workers build at the same time; the iPhone 17 simulator has the same point size as the 16 Pro. (5) Owner's idea: robotic announcer lines in the style of the game M.A.X. ("Construction complete") – the original recordings cannot go into this public repo or into any build for others; our own synthesised lines can (backlog). |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |
