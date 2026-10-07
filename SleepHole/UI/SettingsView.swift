@@ -20,6 +20,8 @@ struct SettingsView: View {
     @State private var soundTest = ProcessInfo.processInfo.arguments.contains("-openSoundTest")
     /// Dev aid: `-openSystemAlarmTest` opens Developer → System alarm test at once (screenshots).
     @State private var systemAlarmTest = ProcessInfo.processInfo.arguments.contains("-openSystemAlarmTest")
+    /// Dev aid: `-openWeatherTest` opens Developer → Weather test at once (screenshots).
+    @State private var weatherTest = ProcessInfo.processInfo.arguments.contains("-openWeatherTest")
 
     var body: some View {
         @Bindable var model = model
@@ -264,6 +266,7 @@ struct SettingsView: View {
                     NavigationLink(L("Vibration test")) { VibrationTestView() }
                     NavigationLink(L("Sound effects test")) { SoundEffectsTestView() }
                     NavigationLink(L("System alarm test")) { SystemAlarmTestView() }
+                    NavigationLink(L("Weather test")) { WeatherTestView() }
                     Button(L("Show the guide and first night again")) { model.resetGuide() }
                         .disabled(nightRunning)
                 }
@@ -279,6 +282,7 @@ struct SettingsView: View {
             .navigationTitle(L("Settings"))
             .navigationDestination(isPresented: $soundTest) { SoundEffectsTestView() }
             .navigationDestination(isPresented: $systemAlarmTest) { SystemAlarmTestView() }
+            .navigationDestination(isPresented: $weatherTest) { WeatherTestView() }
             .renameTownAlert(isPresented: $renaming)
             .sheet(isPresented: $showGuide) { GuideView(replay: true) }
             .task {

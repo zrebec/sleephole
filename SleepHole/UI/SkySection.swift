@@ -63,6 +63,7 @@ struct SkySection: View {
                     Text(L("Type your city and Today shows the real sun and moon. Without a city the sky follows your bedtime."))
                 }
                 Text(L("The search uses Apple Maps. SleepHole never asks for your location."))
+                if model.settings.city != nil { WeatherAttribution() }   // Apple's WeatherKit rule
             }
         }
         .onAppear {

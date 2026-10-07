@@ -46,6 +46,12 @@ struct CreditsView: View {
             } header: { Text(L("Alarm music")) }
 
             Section {
+                WeatherAttribution()
+                Text(L("The temperature on Today comes from Apple Weather."))
+                    .font(.footnote).foregroundStyle(.secondary)
+            } header: { Text(L("Weather")) }
+
+            Section {
                 Text(L("SleepTown by Seekrtech – the game that showed sleep can build a town."))
             } header: { Text(L("Inspiration")) }
 

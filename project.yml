@@ -52,6 +52,8 @@ targets:
       path: SleepHole/SleepHole.entitlements
       properties:
         com.apple.developer.usernotifications.time-sensitive: true
+        # TOWN-W: the weather on Today (Apple WeatherKit) – the App ID has the capability ticked on developer.apple.com
+        com.apple.developer.weatherkit: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: sk.zrebec.sleephole

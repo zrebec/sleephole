@@ -132,6 +132,7 @@ struct HomeView: View {
             .sheet(isPresented: $briefing) { FirstNightBriefing() }
         }
         .navigationTitle(L("Today"))
+        .todayWeather()                                   // the weather badge top right + the refresh loop
     }
 
     private func sleepCaption(canSleep: Bool, now: Date, w: NightWindow) -> String {

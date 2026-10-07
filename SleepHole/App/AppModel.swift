@@ -79,6 +79,8 @@ final class AppModel {
     ///   -scrollTo sky                 scroll Settings to the Sky section (also: sounds, notifications)
     ///   -systemAlarm allowed|denied|notAsked   SIMULATOR ONLY: pretend that consent for the system alarm (a silent
     ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
+    ///   -weather clear|cloudy|fog|rain|heavyRain|thunder|snow, -weatherTemp N, -weatherSnowCover   simulate the weather
+    ///                                 for this run (see `WeatherSimulation`); -openWeatherTest opens Developer → Weather test
     ///   -openSystemAlarmTest          with -openTab settings: open Developer → System alarm test at once
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
                                      args: [String] = ProcessInfo.processInfo.arguments) {
@@ -158,6 +160,8 @@ final class AppModel {
     let servicesEnabled: Bool
     /// The system alarm (phase F6b). The default does nothing: only `SleepHoleApp` passes the real one.
     let systemAlarm: any SystemAlarm
+    /// The weather over the owner's city (TOWN-W); `SleepHoleApp` passes the launch's store, the default has no source.
+    let weather: WeatherStore
     private let defaults: UserDefaults
     /// When the phone last booted – a closure of the app before that was a restart, not the owner (R4). Tests pass a
     /// fake to simulate a restart.
@@ -165,7 +169,7 @@ final class AppModel {
 
     init(context: ModelContext, catalog: Catalog?, clock: any Clock = SystemClock(),
          settings initialSettings: AppSettings? = nil, servicesEnabled: Bool = true,
-         systemAlarm: any SystemAlarm = NoSystemAlarm(), defaults: UserDefaults = .standard,
+         systemAlarm: any SystemAlarm = NoSystemAlarm(), weather: WeatherStore? = nil, defaults: UserDefaults = .standard,
          bootDate: @escaping () -> Date? = { DeviceBoot.date() }) {
         self.context = context
         self.container = context.container
@@ -173,6 +177,7 @@ final class AppModel {
         self.clock = clock
         self.servicesEnabled = servicesEnabled
         self.systemAlarm = systemAlarm
+        self.weather = weather ?? WeatherStore(source: NoWeather(), defaults: defaults)
         self.defaults = defaults
         self.bootDate = bootDate
         let memory = SystemAlarmMemory(defaults: defaults)

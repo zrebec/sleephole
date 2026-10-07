@@ -965,6 +965,22 @@
         }
       }
     },
+    "A simulation lasts until you set it back to Live or the app restarts. It needs a city.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A simulation lasts until you set it back to Live or the app restarts. It needs a city."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simulácia trvá, kým ju nevrátiš na Naživo alebo kým sa appka nespustí znova. Potrebuje mesto."
+          }
+        }
+      }
+    },
     "A stove crackles, crickets outside; sawing, planing, sanding, nails, a broom, a purring cat. A different story every night.": {
       "localizations": {
         "en": {
@@ -1877,6 +1893,22 @@
         }
       }
     },
+    "City": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "City"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mesto"
+          }
+        }
+      }
+    },
     "City not verified": {
       "localizations": {
         "en": {
@@ -1953,6 +1985,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zavretie SleepHole (potiahnutím preč) sa počíta ako odchod z appky."
+          }
+        }
+      }
+    },
+    "Cloud cover": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloud cover"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oblačnosť"
+          }
+        }
+      }
+    },
+    "Cloudy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cloudy"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oblačno"
           }
         }
       }
@@ -2177,6 +2241,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ranné vtáctvo"
+          }
+        }
+      }
+    },
+    "Day": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deň"
+          }
+        }
+      }
+    },
+    "Daylight": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daylight"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denné svetlo"
           }
         }
       }
@@ -2661,6 +2757,22 @@
         }
       }
     },
+    "Fog": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fog"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hmla"
+          }
+        }
+      }
+    },
     "For %@ you can leave SleepHole. The first pause of a night is free – a night without any pause pays +%lld 🪙.": {
       "localizations": {
         "en": {
@@ -3029,6 +3141,22 @@
         }
       }
     },
+    "Heavy rain": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heavy rain"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silný dážď"
+          }
+        }
+      }
+    },
     "How a night works": {
       "localizations": {
         "en": {
@@ -3205,6 +3333,22 @@
         }
       }
     },
+    "Intensity": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intensity"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intenzita"
+          }
+        }
+      }
+    },
     "It fits": {
       "localizations": {
         "en": {
@@ -3333,6 +3477,22 @@
         }
       }
     },
+    "Kind": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kind"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Druh"
+          }
+        }
+      }
+    },
     "Language": {
       "localizations": {
         "en": {
@@ -3345,6 +3505,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Jazyk"
+          }
+        }
+      }
+    },
+    "Last error": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last error"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posledná chyba"
+          }
+        }
+      }
+    },
+    "Last failure": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last failure"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posledné zlyhanie"
+          }
+        }
+      }
+    },
+    "Last success": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last success"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posledný úspech"
           }
         }
       }
@@ -3569,6 +3777,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Svetlá"
+          }
+        }
+      }
+    },
+    "Live": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Live"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naživo"
           }
         }
       }
@@ -4165,6 +4389,22 @@
         }
       }
     },
+    "No": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie"
+          }
+        }
+      }
+    },
     "No nights yet this week – tonight can be the first 🌙": {
       "localizations": {
         "en": {
@@ -4225,6 +4465,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nevadí. Budík zazvoní o %@."
+          }
+        }
+      }
+    },
+    "None": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "None"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Žiadne"
           }
         }
       }
@@ -4389,6 +4645,22 @@
         }
       }
     },
+    "Observed at": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Observed at"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Namerané o"
+          }
+        }
+      }
+    },
     "Ode to Joy": {
       "localizations": {
         "en": {
@@ -4517,6 +4789,22 @@
         }
       }
     },
+    "Other data sources": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other data sources"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ďalšie zdroje údajov"
+          }
+        }
+      }
+    },
     "Out of the app tonight: %lld s of %lld s": {
       "localizations": {
         "en": {
@@ -4545,6 +4833,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mimo bezplatného obdobia začne nová večierka alebo budíček tvoju 🔥 sériu (%1$@) odznova. Budovy, mince aj levely ostanú. Zmena zadarmo: od %2$@, vždy 1.–3. deň v mesiaci."
+          }
+        }
+      }
+    },
+    "Past hourly values": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Past hourly values"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hodinové hodnoty z minulosti"
           }
         }
       }
@@ -4837,6 +5141,22 @@
         }
       }
     },
+    "Rain": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rain"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dážď"
+          }
+        }
+      }
+    },
     "Rain on a tent": {
       "localizations": {
         "en": {
@@ -4865,6 +5185,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dážď na okno"
+          }
+        }
+      }
+    },
+    "Refresh now": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh now"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obnoviť teraz"
           }
         }
       }
@@ -5529,6 +5865,22 @@
         }
       }
     },
+    "Shown on Today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shown on Today"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zobrazené na obrazovke Dnes"
+          }
+        }
+      }
+    },
     "Silence": {
       "localizations": {
         "en": {
@@ -5557,6 +5909,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Strieborný žolík"
+          }
+        }
+      }
+    },
+    "Simulation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simulation"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simulácia"
           }
         }
       }
@@ -5769,6 +6137,38 @@
         }
       }
     },
+    "Snow": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snow"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sneh"
+          }
+        }
+      }
+    },
+    "Snow on the ground": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snow on the ground"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sneh na zemi"
+          }
+        }
+      }
+    },
     "Soft rain outside the window (recording by InspectorJ, CC BY 4.0).": {
       "localizations": {
         "en": {
@@ -5829,6 +6229,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Test zvukových efektov"
+          }
+        }
+      }
+    },
+    "Source": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zdroj"
           }
         }
       }
@@ -6233,6 +6649,38 @@
         }
       }
     },
+    "Temperature": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temperature"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplota"
+          }
+        }
+      }
+    },
+    "Temperature: %lld °C": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temperature: %lld °C"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplota: %lld °C"
+          }
+        }
+      }
+    },
     "Ten nights that built something (complete or unfinished).": {
       "localizations": {
         "en": {
@@ -6601,6 +7049,22 @@
         }
       }
     },
+    "The source": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The source"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zdroj údajov"
+          }
+        }
+      }
+    },
     "The system alarm is a second backup next to the backup notifications: it rings in silent mode and during a Focus even if iOS has closed SleepHole – 30 s after your wake time, or when SleepHole's own alarm stops after 2 minutes.": {
       "localizations": {
         "en": {
@@ -6613,6 +7077,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Systémový budík je ďalšia záloha popri záložných upozorneniach: zvoní aj v tichom režime a počas Sústredenia, aj keď iOS appku SleepHole ukončil – 30 s po budíčku, alebo keď po 2 minútach stíchne vlastný budík SleepHole."
+          }
+        }
+      }
+    },
+    "The temperature on Today comes from Apple Weather.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The temperature on Today comes from Apple Weather."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplota na obrazovke Dnes pochádza z Apple Weather."
           }
         }
       }
@@ -6729,6 +7209,22 @@
         }
       }
     },
+    "Thunder": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thunder"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Búrka"
+          }
+        }
+      }
+    },
     "Time for a little rest. I'll wake you up.": {
       "localizations": {
         "en": {
@@ -6789,6 +7285,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dnes"
+          }
+        }
+      }
+    },
+    "Today shows no weather.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today shows no weather."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnes nezobrazuje počasie."
           }
         }
       }
@@ -7097,6 +7609,38 @@
         }
       }
     },
+    "Weather": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weather"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Počasie"
+          }
+        }
+      }
+    },
+    "Weather test": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weather test"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test počasia"
+          }
+        }
+      }
+    },
     "Week of %@": {
       "localizations": {
         "en": {
@@ -7253,6 +7797,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nesprávny kód"
+          }
+        }
+      }
+    },
+    "Yes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yes"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Áno"
           }
         }
       }

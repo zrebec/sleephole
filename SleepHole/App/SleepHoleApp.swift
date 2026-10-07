@@ -16,7 +16,8 @@ struct SleepHoleApp: App {
         // the real system alarm (AlarmKit) only on a real iPhone: the simulator, the tests and `-mute` get a stand-in
         // that cannot ring (see `SystemAlarms.forLaunch`)
         _model = State(initialValue: AppModel(context: container.mainContext, catalog: sprites.catalog,
-                                              systemAlarm: SystemAlarms.forLaunch()))
+                                              systemAlarm: SystemAlarms.forLaunch(),
+                                              weather: WeatherStore.forLaunch()))
     }
     /// Dev aid: launch with `-audioSmokeTest` to start the background audio immediately
     /// (lets agents verify the audio thread in the simulator without tapping through the UI).
