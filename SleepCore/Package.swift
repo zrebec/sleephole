@@ -11,4 +11,4 @@ let package = Package(
         .target(name: "SleepCore"),
         .testTarget(name: "SleepCoreTests", dependencies: ["SleepCore"]),
     ]
-)
+)  
