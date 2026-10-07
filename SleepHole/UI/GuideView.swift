@@ -97,6 +97,7 @@ struct GuideView: View {
         Task {
             // ask for notifications even if the button on the last page was skipped
             if await Notifications.requestAuthorization() { Notifications.scheduleReminders(model.settings.schedule) }
+            await model.refreshTimeSensitive()
         }
     }
 
@@ -197,7 +198,10 @@ struct GuideView: View {
     private var tips: some View {
         pageLayout("checklist", L("Notifications and tips")) {
             Button {
-                Task { notificationsAllowed = await Notifications.requestAuthorization() }
+                Task {
+                    notificationsAllowed = await Notifications.requestAuthorization()
+                    await model.refreshTimeSensitive()
+                }
             } label: {
                 Label(notificationsAllowed == true ? L("Notifications allowed ✓") : L("Allow notifications"),
                       systemImage: "bell.fill")

@@ -127,6 +127,19 @@ struct SettingsView: View {
                         Text(notificationStatus).foregroundStyle(.secondary)
                     }
                     .id("notifications")
+                    if model.timeSensitiveOff {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Label {
+                                Text(L("Time Sensitive Notifications are off"))
+                            } icon: {
+                                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+                            }
+                            Text(L("During a Focus (Sleep, Do Not Disturb) the “Come back” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙"))
+                                .font(.footnote).foregroundStyle(.secondary)
+                            Text(L("Each Focus also has its own switch for time sensitive notifications – SleepHole can't see that one."))
+                                .font(.footnote).foregroundStyle(.secondary)
+                        }
+                    }
                     Button(L("Open notification settings")) {
                         if let url = URL(string: UIApplication.openNotificationSettingsURLString) {
                             UIApplication.shared.open(url)

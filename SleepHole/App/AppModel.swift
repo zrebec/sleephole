@@ -81,6 +81,7 @@ final class AppModel {
     ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
     ///   -weather clear|cloudy|fog|rain|heavyRain|thunder|snow, -weatherTemp N, -weatherSnowCover   simulate the weather
     ///                                 for this run (see `WeatherSimulation`); -openWeatherTest opens Developer → Weather test
+    ///   -timeSensitive off|on         SIMULATOR ONLY: pretend that iOS's "Time Sensitive Notifications" switch is off / on
     ///   -openSystemAlarmTest          with -openTab settings: open Developer → System alarm test at once
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
                                      args: [String] = ProcessInfo.processInfo.arguments) {
@@ -162,6 +163,12 @@ final class AppModel {
     let systemAlarm: any SystemAlarm
     /// The weather over the owner's city (TOWN-W); `SleepHoleApp` passes the launch's store, the default has no source.
     let weather: WeatherStore
+    /// Asks whether iOS's "Time Sensitive Notifications" switch is off (the default never does – tests stay off the system).
+    private let timeSensitiveCheck: @MainActor () async -> Bool
+    /// True while notifications are allowed but their Time Sensitive switch is off (warning on Today and in Settings).
+    private(set) var timeSensitiveOff = false
+
+    func refreshTimeSensitive() async { timeSensitiveOff = await timeSensitiveCheck() }
     private let defaults: UserDefaults
     /// When the phone last booted – a closure of the app before that was a restart, not the owner (R4). Tests pass a
     /// fake to simulate a restart.
@@ -169,7 +176,8 @@ final class AppModel {
 
     init(context: ModelContext, catalog: Catalog?, clock: any Clock = SystemClock(),
          settings initialSettings: AppSettings? = nil, servicesEnabled: Bool = true,
-         systemAlarm: any SystemAlarm = NoSystemAlarm(), weather: WeatherStore? = nil, defaults: UserDefaults = .standard,
+         systemAlarm: any SystemAlarm = NoSystemAlarm(), weather: WeatherStore? = nil,
+         timeSensitiveCheck: @escaping @MainActor () async -> Bool = { false }, defaults: UserDefaults = .standard,
          bootDate: @escaping () -> Date? = { DeviceBoot.date() }) {
         self.context = context
         self.container = context.container
@@ -178,6 +186,7 @@ final class AppModel {
         self.servicesEnabled = servicesEnabled
         self.systemAlarm = systemAlarm
         self.weather = weather ?? WeatherStore(source: NoWeather(), defaults: defaults)
+        self.timeSensitiveCheck = timeSensitiveCheck
         self.defaults = defaults
         self.bootDate = bootDate
         let memory = SystemAlarmMemory(defaults: defaults)

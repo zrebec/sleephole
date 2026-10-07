@@ -17,7 +17,8 @@ struct SleepHoleApp: App {
         // that cannot ring (see `SystemAlarms.forLaunch`)
         _model = State(initialValue: AppModel(context: container.mainContext, catalog: sprites.catalog,
                                               systemAlarm: SystemAlarms.forLaunch(),
-                                              weather: WeatherStore.forLaunch()))
+                                              weather: WeatherStore.forLaunch(),
+                                              timeSensitiveCheck: Notifications.timeSensitiveCheckForLaunch()))
     }
     /// Dev aid: launch with `-audioSmokeTest` to start the background audio immediately
     /// (lets agents verify the audio thread in the simulator without tapping through the UI).
@@ -35,6 +36,7 @@ struct SleepHoleApp: App {
                 .environment(model)
                 .modelContainer(container)
                 .task {
+                    await model.refreshTimeSensitive()
                     // screenshot mode (-startTestNight) must not be covered by the permission alert
                     let args = ProcessInfo.processInfo.arguments
                     guard !args.contains("-startTestNight"), !args.contains("-seedNights"),
@@ -45,8 +47,13 @@ struct SleepHoleApp: App {
                         Notifications.scheduleReminders(model.settings.schedule)
                         Notifications.scheduleExpiry(AppExpiry.date)
                     }
+                    await model.refreshTimeSensitive()
                 }
-                .onChange(of: scenePhase) { _, phase in if phase == .active { model.refresh() } }
+                .onChange(of: scenePhase) { _, phase in
+                    guard phase == .active else { return }
+                    model.refresh()
+                    Task { await model.refreshTimeSensitive() }
+                }
         }
     }
 }

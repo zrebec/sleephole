@@ -2501,6 +2501,38 @@
         }
       }
     },
+    "During a Focus (Sleep, Do Not Disturb) the “Come back” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "During a Focus (Sleep, Do Not Disturb) the “Come back” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Počas Sústredenia (Spánok, Nerušiť) môžu varovanie „Vráť sa“ aj záložný budík ostať potichu. Zapni ich pre SleepHole v nastaveniach upozornení 🌙"
+          }
+        }
+      }
+    },
+    "Each Focus also has its own switch for time sensitive notifications – SleepHole can't see that one.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Each Focus also has its own switch for time sensitive notifications – SleepHole can't see that one."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každé Sústredenie má aj vlastný prepínač časovo citlivých upozornení – ten SleepHole nevidí."
+          }
+        }
+      }
+    },
     "Earlier weeks": {
       "localizations": {
         "en": {
@@ -7237,6 +7269,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Čas na malý oddych. Zobudím ťa."
+          }
+        }
+      }
+    },
+    "Time Sensitive Notifications are off": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time Sensitive Notifications are off"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Časovo citlivé upozornenia sú vypnuté"
           }
         }
       }

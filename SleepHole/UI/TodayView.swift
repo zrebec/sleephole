@@ -82,6 +82,7 @@ struct HomeView: View {
                 VStack(spacing: 16) {
                     if let expiry = AppExpiry.date, AppExpiry.isSoon(at: now) { ExpiryCard(expiry: expiry, now: now) }
                     if let at = model.safetyAlarmAt, at > now { SafetyAlarmCard(at: at) }
+                    if model.timeSensitiveOff { TimeSensitiveCard() }
                     if model.showsMonthlySchedulePrompt { MonthlyScheduleCard().appearIn(delay: 0) }
                     StatusBadges().appearIn(delay: 0.05)
                     // the hero (plan P2b): only the cat – the town has its own tab. A tap pets it (purr, arched back, wink).
@@ -223,6 +224,30 @@ struct SafetyAlarmCard: View {
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .glassCard(tint: .indigo)
+    }
+}
+
+/// Notifications are allowed but iOS's "Time Sensitive Notifications" switch is off: the warnings could stay silent
+/// during a Focus (TOWN-W step 0b).
+struct TimeSensitiveCard: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label(L("Time Sensitive Notifications are off"), systemImage: "bell.slash.fill")
+                .font(.headline)
+            Text(L("During a Focus (Sleep, Do Not Disturb) the “Come back” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙"))
+                .font(.subheadline)
+            Text(L("Each Focus also has its own switch for time sensitive notifications – SleepHole can't see that one."))
+                .font(.footnote).cardCaption()
+            Button(L("Open notification settings")) {
+                if let url = URL(string: UIApplication.openNotificationSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            }
+            .buttonStyle(.bordered)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .glassCard(tint: .orange)
     }
 }
 

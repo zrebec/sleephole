@@ -10,6 +10,38 @@ enum Notifications {
         (try? await center.requestAuthorization(options: [.alert, .sound, .badge])) ?? false
     }
 
+    // MARK: - the Time Sensitive switch
+
+    /// True only when notifications are allowed but iOS's "Time Sensitive Notifications" switch for the app is off.
+    /// Denied / not asked is covered by the Notifications row, so no second warning is stacked on it.
+    static func timeSensitiveOff(authorization: UNAuthorizationStatus, setting: UNNotificationSetting) -> Bool {
+        switch authorization {
+        case .authorized, .provisional, .ephemeral: return setting == .disabled
+        default: return false
+        }
+    }
+
+    /// Asks the system for the app's own switch (each Focus has another one that no app can read).
+    static func readTimeSensitiveOff() async -> Bool {
+        let s = await center.notificationSettings()
+        return timeSensitiveOff(authorization: s.authorizationStatus, setting: s.timeSensitiveSetting)
+    }
+
+    /// The check for this launch: under test it never touches the system; in the simulator `-timeSensitive off|on`
+    /// pretends the answer (dev aid for screenshots); otherwise the real reader.
+    @MainActor
+    static func timeSensitiveCheckForLaunch(args: [String] = ProcessInfo.processInfo.arguments,
+                                            underTest: Bool = SystemAlarms.isRunningTests) -> @MainActor () async -> Bool {
+        if underTest { return { false } }
+        #if targetEnvironment(simulator)
+        if let i = args.firstIndex(of: "-timeSensitive"), args.indices.contains(i + 1) {
+            let answer = args[i + 1] == "off"
+            return { answer }
+        }
+        #endif
+        return { await readTimeSensitiveOff() }
+    }
+
     /// Daily reminders before bedtime (time sensitive: owner 2026-10-04 – they should reach him in a Focus too).
     static func scheduleReminders(_ schedule: Schedule) {
         let ids = (0..<10).map(reminderId)
