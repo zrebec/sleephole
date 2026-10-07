@@ -18,18 +18,16 @@ Whatever the owner's first message is (even just "Ahoj"), **start your reply by 
 then answer. Remove items here when they are done.
 
 0. **Open phone checks (plan §10 F6 and R4, bug B21 in §11a):**
-   * **Time Sensitive Notifications (B21 closed):** the Focus test of 2026-10-07 brought no warning only because the
-     switch was off in iOS. The app gets a warning for it (plan §10 TOWN-W step 0b). Still open: the same Focus test
-     with the switch on.
+   * **Time Sensitive Notifications – done:** the warning for a switched-off iOS switch works on the phone and the
+     Focus test with the switch on passed (owner 2026-10-07). Nothing open here.
    * **R4 – closing the app counts as leaving it:** on the phone since 2026-10-07; reopening in time and a phone
      restart keep the building (confirmed). Still to prove: swipe away and STAY away → collapse; only one alarm when
      the app is reopened while the system alarm rings.
    * **System alarm (F6b):** it rang with the app swiped away (2026-10-04). Still to check: the Developer → System
      alarm test, the safety alarm after an early confirm, what the system's own stop button says (he saw "snooze").
-   * **Weather (B23):** on the phone since the owner's Xcode run of 2026-10-07 15:03 there is NO weather badge –
-     Apple refuses the WeatherKit token (Code=2). The build and its profile are fine. Ask him: is WeatherKit ticked
-     on the **App Services** tab of the App ID too, and what does Developer → Weather test → "Refresh now" say now?
-     Still refused a day later → propose a second weather source (plan §10 TOWN-W step 2, §12 2026-10-07).
+   * **Weather (B23):** Apple still refuses the WeatherKit token (Code=2, also with the build of 2026-10-07
+     16:37). The owner agreed to a second source, MET Norway (follow-up A2, plan §10 TOWN-W). Ask whether a
+     temperature shows on Today once A2 is on the phone, and now and then what "Refresh now" says for Apple.
 1. **The pause is still untried:** no night up to 2026-10-06 → 07 used the "🌙 Pause" (journal). Ask only whether he
    still wants to try it. Open bugs in plan §11a: B8, B10, B12–B16, B22, B23 (B7 contrast is accepted – two
    follow-ups are listed in plan §10 B7; B11 is solved inside F6b).
@@ -40,13 +38,21 @@ then answer. Remove items here when they are done.
    real phase). Check the SKY task list: is it committed, is the FINAL build on the iPhone (an interim build of
    2026-10-03 21:13 with an older semicircle is / was there), has the owner seen the sun and the moon on the
    semicircle? Next in line after it: bug B7 (contrast / transparency on the light sky – the owner asked for it).
-4. **Phase TOWN-W is running (plan §10 TOWN-W, approved by the owner 2026-10-07):** steps 1 (roads first – always
-   one block ahead) and 2 (weather badge top right on Today, WeatherKit; the owner ticked the capability) are built,
-   reviewed, merged and committed 2026-10-07 – tests / simulator only. **Next:
-   step 0b** (a warning when Time Sensitive Notifications are off) → **checkpoint A** on the phone (plan §10 TOWN-W
-   lists what he checks, incl. the Town tab's first look); then 3 rain and snow in the town → B; 4 day and night in
-   the town → C. Stop at every checkpoint. Waiting ideas: the robotic announcer voice (plan §10 backlog), plan
-   A / B / C (`docs/NAVRH-ZVIERATKA.md`, 5 open questions at the end).
+4. **Phase TOWN-W is running (plan §10 TOWN-W, approved by the owner 2026-10-07):** steps 0b, 1 and 2 are built,
+   committed and on the phone (2026-10-07 16:37). **Checkpoint A passed the same evening** – roads ✓, the warning
+   for the Time Sensitive switch ✓, the Focus test with the switch on ✓; only the weather is still refused by Apple
+   (B23). **In work / next: the three follow-ups he approved** (plan §10 TOWN-W, right under checkpoint A): A1 the
+   card on Today becomes a tappable triangle, A2 a second weather source (MET Norway), A3 the TestFlight
+   preparation – check their boxes and `git status` to see how far they are. After them a short phone check, then
+   3 rain and snow in the town → B; 4 day and night in the town → C. Stop at every checkpoint. Waiting ideas: the
+   robotic announcer voice (plan §10 backlog), plan A / B / C (`docs/NAVRH-ZVIERATKA.md`, 5 open questions at the
+   end).
+5. **TestFlight (owner 2026-10-07 – a friend wants to test; he is new to it, explain in plain steps):** the first
+   build 1.0 (1) was uploaded 2026-10-07 16:27 (the first try failed on Xcode's cloud signing and his accented
+   name – solved with a local Apple Distribution certificate, plan §12). Ask: did Apple's "completed processing"
+   mail (or a mail with problems) arrive, and does he want the friend as an internal or an external tester? Before
+   the next upload: version + build number from `project.yml`, a higher build number, the privacy manifest (plan
+   §10 backlog, first entry).
 
 ## ⚠️ WHO DOES WHAT – OWNER'S RULE (2026-10-03) – IMPORTANT
 

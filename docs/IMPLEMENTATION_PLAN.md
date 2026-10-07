@@ -27,9 +27,9 @@
 | P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | ✅ accepted by the owner 2026-10-04; his remark: the arched back has too few poses – left as it is until we render our own models (F7) | owner pets the cat on Today |
 | SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 built, committed and installed 2026-10-04 17:29 (final build). City search, night sky, sun and moon confirmed by the owner on the interim build; only the final semicircle position (right of the title) still waits for his look | owner picks his city, sees the true sun/moon |
 | F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo – its first part runs as phase TOWN-W (next row) | "I like looking at it" |
-| TOWN-W | The town grows and has weather (owner 2026-10-07, spec in §10 TOWN-W): 0b warning when Time Sensitive Notifications are off, 1 roads first, 2 weather on Today (WeatherKit) → checkpoint A; 3 rain and snow in the town → B; 4 day and night in the town → C | 🟡 steps 1 (roads first) and 2 (weather badge on Today) built, reviewed and merged 2026-10-07; the owner ran them from Xcode the same day (15:03): no weather badge – Apple refuses the WeatherKit token (B23, owner checks the App Services tab); roads not judged yet; next: step 0b, then checkpoint A | the owner sees the outlined empty block, the temperature on Today, rain / snow and the dark town at night |
+| TOWN-W | The town grows and has weather (owner 2026-10-07, spec in §10 TOWN-W): 0b warning when Time Sensitive Notifications are off, 1 roads first, 2 weather on Today (WeatherKit) → checkpoint A; 3 rain and snow in the town → B; 4 day and night in the town → C | 🟡 steps 1 (roads first) and 2 (weather badge on Today) built, reviewed, merged and committed 2026-10-07; the owner ran them from Xcode the same day (15:03): no weather badge – Apple refuses the WeatherKit token (B23, owner checks the App Services tab); roads not judged yet; step 0b (the warning for the Time Sensitive switch) built and reviewed 2026-10-07 afternoon, not committed; the tree with steps 0b + 1 + 2 was installed on the phone by Opus 2026-10-07 16:37 (the owner asked). **Checkpoint A passed the same evening** (roads ✓, the warning ✓, the Focus test with the switch on ✓; the weather still refused). Three follow-ups he approved before step 3: A1 the card on Today becomes a tappable triangle, A2 a second weather source (MET Norway), A3 the TestFlight preparation – see §10 TOWN-W | the owner sees the outlined empty block, the temperature on Today, rain / snow and the dark town at night |
 | R4 | Closing the app during a night counts as leaving it (the owner's loophole finding 2026-10-04, spec in §10 R4) | 🟡 committed and installed by the owner 2026-10-07 07:44; his quick nights the same morning (journal pulled): closed + reopened in time → the building stands ✅, a phone restart → the building stands ✅, the notices arrive with the app closed ✅. Still to prove: closed and STAYED away → collapse; only one alarm when the app is reopened while the system alarm rings | swiping the app away and using the phone collapses the building |
-| F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a on the phone since 2026-10-04 19:11 – the owner's Focus test of 2026-10-07 brought no warning because Time Sensitive Notifications were switched off in iOS (his finding the same day) → B21 closed, the app gets a warning for it (TOWN-W step 0b); not re-tested with the switch on; F6b (AlarmKit) built and reviewed 2026-10-04 evening, installed by the owner himself ≈ 20:00 – it rang with the app swiped away; committed 2026-10-07; his remaining checks are listed in §10 F6 | the system alarm wakes the owner with the app swiped away |
+| F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a on the phone since 2026-10-04 19:11 – the owner's Focus test of 2026-10-07 brought no warning because Time Sensitive Notifications were switched off in iOS (his finding the same day) → B21 closed, the app gets a warning for it (TOWN-W step 0b); **re-tested with the switch on 2026-10-07 evening: the warning arrives in a Focus (owner: "confirmed")**; F6b (AlarmKit) built and reviewed 2026-10-04 evening, installed by the owner himself ≈ 20:00 – it rang with the app swiped away; committed 2026-10-07; his remaining checks are listed in §10 F6 | the system alarm wakes the owner with the app swiped away |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
 
 **Rule:** work on the first phase that is not ✅, do only that phase, then stop and hand over to the
@@ -48,7 +48,7 @@ they do not block P2. **What is really verified, feature by feature, is in §0a.
 * ❌ **failed on the phone** – a bug is open (§11a)
 
 When the owner confirms or rejects something, move the row the same day. Automated state on 2026-10-03 (evening):
-SleepCore 220 tests green; app 246 tests, 92.01 % line coverage (2026-10-07, roads first + weather merged).
+SleepCore 220 tests green; app 250 tests, 91.96 % line coverage (2026-10-07, roads first + weather + step 0b).
 
 ### Night and nap
 | | Feature | Evidence |
@@ -69,7 +69,8 @@ SleepCore 220 tests green; app 246 tests, 92.01 % line coverage (2026-10-07, roa
 | 🟢 | Closing the app and reopening it in time keeps the building (R4) | owner's quick night 2026-10-07; the journal shows the closure and the relaunch a few seconds later |
 | 🟢 | A phone restart during a night keeps the building (R4) | owner's quick night 2026-10-07 (the journal: see §12, 2026-10-07) |
 | 🟢 | Notices arrive with the app closed: "15 s of setup left", "SleepHole was closed" (no Focus) | owner 2026-10-07 |
-| 🖥 | Warnings during a Focus (F6a, time sensitive) | owner 2026-10-07: nothing arrived in Sleep or Do Not Disturb – Time Sensitive Notifications were switched off in iOS (B21 closed); not re-tested with the switch on |
+| 🟢 | Warnings during a Focus (F6a, time sensitive) | owner 2026-10-07 (checkpoint A, the new build): with Time Sensitive Notifications switched on the "Come back" warning arrives during a Focus – "confirmed". In the morning nothing had arrived only because the switch was off (B21 closed) |
+| 🟢 | Warning while Time Sensitive Notifications are off: a card on Today + a row in Settings (TOWN-W step 0b) | owner 2026-10-07 on the phone: switching the iOS switch off shows both, switching it on hides both – "works excellently". His wish: on Today a tappable triangle instead of the tall card (follow-up A1, §10 TOWN-W) |
 | 🖥 | Closing the app and staying away collapses the building (R4) | not tried on the phone yet |
 | 🖥 | Night pause (D17) | not used in any night up to 2026-10-06 → 07 (journal pulled 2026-10-07) |
 | 🖥 | Away budget 30 s per night + its counter | installed 2026-10-03 |
@@ -89,8 +90,8 @@ SleepCore 220 tests green; app 246 tests, 92.01 % line coverage (2026-10-07, roa
 | 📱 | L2 buildings | two stand in the owner's town (journal pulled 2026-10-07) |
 | 🖥 | Lit streets, L3–L4 buildings | not reached yet |
 | 🖥 | English signs on buildings | the owner uses Slovak |
-| 🖥 | Roads first: the street ring of every started block + one empty block ahead (TOWN-W step 1) | tests + simulator screenshots of his real town 2026-10-07; not on the phone yet |
-| ❌ | Weather badge on Today (TOWN-W step 2) | owner 2026-10-07 (his own Xcode build of 15:03): no badge – Apple refuses the WeatherKit token (`WDSJWTAuthenticatorServiceListener.Errors Code=2`), bug B23; the badge itself is checked only in the simulator with a simulated value |
+| 🟢 | Roads first: the street ring of every started block + one empty block ahead (TOWN-W step 1) | owner 2026-10-07 (checkpoint A): he sees the outlined empty block; that both blocks do not fit the screen without panning does not bother him – the camera stays as it is |
+| ❌ | Weather badge on Today (TOWN-W step 2) | owner 2026-10-07 (his own Xcode build of 15:03): no badge – Apple refuses the WeatherKit token (`WDSJWTAuthenticatorServiceListener.Errors Code=2`), bug B23; the badge itself is checked only in the simulator with a simulated value. Still Code=2 after the install of 16:37 ("Refresh now"); the owner agreed to a second source, MET Norway (follow-up A2, §10 TOWN-W) |
 | 📱 | Settings → Developer → Weather test (TOWN-W step 2) | owner 2026-10-07: he read "Last error" from it on the phone; the simulation there not tried on the phone yet |
 
 ### Coins, progress, statistics
@@ -1121,7 +1122,7 @@ his iPhone with reduced transparency. **Design (Opus, 2026-10-04):**
       pet), sleep buddy (renderer needs a model tilt for the lying pose)
 **Accept:** owner enjoys looking at it. **Stop.**
 
-### TOWN-W — The town grows and has weather (owner 2026-10-07) – 🟡 steps 1 and 2 built 2026-10-07 (not on the phone), next: step 0b → checkpoint A
+### TOWN-W — The town grows and has weather (owner 2026-10-07) – 🟡 steps 0b, 1 and 2 built 2026-10-07 (0b not on the phone), next: checkpoint A (the owner)
 > Owner 2026-10-07: "now I want to spend some time on the town". His order: check the shutdown notice (done, §12),
 > roads first ("so the player knows the town will really grow"), WeatherKit ("for now – maybe better stations
 > later"), rain and snow in the town ("but it has to be testable"), and at the end daylight by day and a dark town
@@ -1136,13 +1137,33 @@ his iPhone with reduced transparency. **Design (Opus, 2026-10-04):**
 > in the main tree also writes its final report into `build/handoff/` (git-ignored); a worktree worker cannot
 > write outside its worktree, so its report exists only in the session – write what matters into this plan.
 
-**Step 0b – Time Sensitive Notifications are off (follow-up of B21)**
-- [ ] `Notifications`: read `UNNotificationSettings.timeSensitiveSetting`; `AppModel` refreshes the state at launch
-      and on every return to the app (injectable in tests – no system calls there)
-- [ ] Settings: a warning row next to the notification status + a button that opens the app's notification settings
-- [ ] Today: a card (pattern `SafetyAlarmCard` / `ExpiryCard`) while the switch is off; the text says that every
-      Focus has its own switch which the app cannot read. Cute, never scary
-- [ ] Tests + `L(...)` strings with Slovak
+**Step 0b – Time Sensitive Notifications are off (follow-up of B21)** – built and reviewed 2026-10-07 (one Sonnet
+worker, two rounds; tests / simulator only, not committed). App 250 tests (91.96 %), i18n 575 keys / 0 missing /
+0 without sk / 0 unused.
+- [x] `Notifications`: the pure rule `timeSensitiveOff(authorization:setting:)` – true only when notifications are
+      allowed (authorized / provisional / ephemeral) AND `timeSensitiveSetting == .disabled`; denied / not asked give
+      no second warning (the "Notifications" row already says it), `.notSupported` gives none either.
+      `readTimeSensitiveOff()` asks the centre; `timeSensitiveCheckForLaunch` picks the check (tests → always false
+      and no system call; the simulator's `-timeSensitive off|on` pretends; otherwise the real reader)
+- [x] `AppModel`: init parameter `timeSensitiveCheck` (default `{ false }`), `timeSensitiveOff`,
+      `refreshTimeSensitive()` – called by `SleepHoleApp` at launch and on every return to the app, and after every
+      permission request (launch task, both places in the guide); never from the 1 s `refresh()`
+- [x] Settings: a row under the "Notifications" status – orange triangle, the title in the primary colour (an
+      all-orange title on a white row was ≈ 2 : 1 contrast, changed in review), both sentences as a footnote; the
+      existing "Open notification settings" button below it is the way out (no second button)
+- [x] Today: `TimeSensitiveCard` after `SafetyAlarmCard` (orange glass card, the pattern of `ExpiryCard`) with the
+      same texts and the button; no card → Today is exactly as before
+- [x] Tests (`SleepHoleTests/TimeSensitiveTests.swift`: the rule, the launch check, the model with a fake, the card /
+      Today / Settings rendered light + dark in both languages) + three `L(...)` strings with Slovak
+- [ ] **Unverified until the phone:** the real switch (`readTimeSensitiveOff`) – in the simulator and in tests the
+      answer is always pretended. Screenshots: `build/handoff/step0b/` (git-ignored)
+- [x] **Answered by the owner at checkpoint A (2026-10-07):** the switch works "excellently" in both directions and the Focus test with it on passed. The card: "quite tall, though for this app nearly mandatory" – his idea: only a tappable, unmissable triangle on Today that leads to the app's Settings, where it is explained and from where iOS's settings open (follow-up A1 below). The questions as asked – (1) while the switch is off the card is tall – "Go to sleep" slides
+      below the bottom edge and needs a scroll (it disappears with the switch on). Offer: drop the per-Focus sentence
+      from the card and keep it in Settings only. (2) The app says "Časovo citlivé upozornenia" (its own word for
+      notifications everywhere); the Slovak iOS may name the switch differently – ask what his phone shows. (3) The
+      button on the light card is the accent blue on a near-white pill, the same `.bordered` look as on the safety
+      alarm card (the owner on 2026-10-04: "the blue is readable too") – left as it is. Points (2) and (3) were not
+      answered; (3) disappears with the card
 
 **Step 1 – Roads first (SleepCore only)**
 Rule: a block's street ring = the 20 road cells around it; every started block (≥ 1 building) has its whole ring;
@@ -1159,7 +1180,7 @@ change; nothing about roads is stored (the town is replayed from the nights).
 - [x] Screenshots before / after reviewed: the owner's real town (the outlined empty block to the right of his
       full one, T-junctions join cleanly), an empty town (one street loop on the meadow), 3 nights
 - [x] §7.1 of this plan updated
-- [ ] **Open for the owner at checkpoint A – the first look of the Town tab:** the camera's fit is capped at
+- [x] **Closed by the owner at checkpoint A (2026-10-07): it does not bother him, nothing changes.** It was – the first look of the Town tab: the camera's fit is capped at
       scale 4.5 (`TownScene.fitIfPossible`, "a big town is not microscopic"), and it centres on the whole drawn
       area. With two blocks the left end of his block's street loop and the right end of the empty block are off
       screen until he pans (one block used to fit, only the grass was cut). Offer: raise the cap to ≈ 5.7 (both
@@ -1219,7 +1240,26 @@ i18n 572 keys / 0 missing / 0 without sk / 0 unused.
 first look (both blocks do not fit the screen until he pans – step 1, open item); Today – the temperature badge top
 right, nothing there without a city, the title and the sun / moon as before; Developer → Weather test – a live
 value or the error text, "Past hourly values", and a simulated kind shows on Today at once; switching Time
-Sensitive Notifications off shows the card on Today and the row in Settings, switching them on hides both. **Stop.**
+Sensitive Notifications off (iOS Settings → Notifications → SleepHole) shows the card on Today and the row in
+Settings as soon as he is back in the app, switching them on hides both; his word on the three open points of
+step 0b. With the switch ON: the Focus test again (leave the app during a night in Sleep / Do Not Disturb → the
+"Come back" warning must arrive). **Stop.**
+
+**Checkpoint A – result (owner 2026-10-07, the build installed 16:37):** the outlined block is there and the
+first look does not bother him; the warning appears and disappears with the iOS switch ("works excellently", "big
+praise"); with the switch on the "Come back" warning arrives during a Focus; the weather is still refused by
+Apple (Code=2). **Follow-ups he approved, before step 3:**
+- [ ] **A1 – Today: a triangle instead of the card.** The tall `TimeSensitiveCard` goes; while the switch is off
+      Today shows one tappable orange warning triangle (a navigation-bar item top left, the mirror of the weather
+      badge – nothing on Today moves, the semicircle and the title stay). A tap opens the app's Settings tab at the
+      notifications section (the row with the explanation and the "Open notification settings" button stays)
+- [ ] **A2 – a second weather source: MET Norway** (Locationforecast 2.0, no account, needs an identifying
+      User-Agent and a credit). Used when WeatherKit fails; the store remembers which provider gave the shown
+      value, the credit in Settings → Sky / Credits follows it, Weather test shows it. No past hours there → the
+      "snow lies" rule only knows "it snows now" with this source (to revisit in step 3)
+- [ ] **A3 – TestFlight preparation:** `Info.plist` takes version and build from `project.yml` (1.0, next build
+      2 – every upload needs a higher one), `PrivacyInfo.xcprivacy` with the reasons for the APIs the app really
+      uses. The Developer section stays visible for now (the owner has not decided)
 
 **Step 3 – Rain and snow in the town** (after checkpoint A)
 - [ ] `TownScene.setWeather(...)`: particles as children of the camera node (they stay on screen while panning and
@@ -1404,6 +1444,25 @@ possible or is your solution better? Then I leave it at Recommended." (Per-weekd
 "Come back!" arrives during a Focus. **Stop.**
 
 ### Backlog from the owner (2026-09-30) – to discuss / schedule
+- [ ] **TestFlight (owner asked 2026-10-07: "how do I put the app on TestFlight, to send somebody a mail?")** –
+      answered in the chat, nothing built in the app. State of the project checked the same day: the built app is
+      version 1.0 (1) (`Info.plist` carries the literal, `MARKETING_VERSION` 0.1.0 in `project.yml` is not used),
+      `ITSAppUsesNonExemptEncryption = false` and the icon set exist; **missing: `PrivacyInfo.xcprivacy`** (the app
+      reads UserDefaults and the boot time – both need a declared reason); the Settings → Developer section is in
+      every build (no `#if DEBUG`) – a tester would see the quick nights and test screens; the Darwin lock signals
+      `com.apple.springboard.*` (`LifecycleMonitor`) are undocumented and the silent background audio keeps the app
+      alive – both can be questioned by Beta App Review, which only EXTERNAL testers need (internal testers = people
+      in his App Store Connect team, no review). Uploading a build is the owner's step (Xcode → Archive → Distribute).
+      **First upload 2026-10-07 16:13 refused: ITMS-90035 "Invalid Signature"** – cause found (§12, same day): Xcode's
+      cloud signing writes the owner's accented name into the signature's requirement in another Unicode form than
+      the certificate has. Way out: a LOCAL Apple Distribution certificate (Xcode → Settings → Accounts → Manage
+      Certificates → + → Apple Distribution), then Distribute again; fallback: re-sign the exported IPA with plain
+      `codesign` and upload it with Transporter. **Second try 16:24 with the local certificate: upload accepted**, build
+      1.0 (1) is at App Store Connect (state "processing" at 16:28; whether processing ends clean is not known –
+      Apple mails the owner). Next for a tester: the owner picks internal (friend joins his App Store Connect team,
+      no review) or external (mail / link, Beta App Review first). Before the NEXT upload: a worker makes
+      `Info.plist` take version and build from `project.yml` and raises the build number (every upload needs a
+      higher one), adds the privacy manifest; the Developer section – the owner decides
 - [x] **UI polish (2026-09-30):** bigger fonts on the guide's first page; alarm picker as "Zvonenie budíka" label + full-width
       picker below (long names wrapped the row); preview Play/Stop as round Liquid Glass icon buttons
       (▶ / ■, `.buttonStyle(.glass)` on iOS 26, `.bordered` + `.circle` fallback), left-aligned next to each other
@@ -1590,6 +1649,9 @@ screen checks.
 | 2026-10-07 | **B21 closed, the shutdown notice checked, the town roadmap (owner, later the same day).** (1) B21: the owner had Time Sensitive Notifications switched off in iOS – no bug in the app; he wants a warning in the app (TOWN-W step 0b). The app can read only its own switch (`UNNotificationSettings.timeSensitiveSetting`), not the per-Focus one. Not re-tested with the switch on. (2) Shutdown: `willTerminateNotification` is posted when iOS ends the app in an orderly way (a swipe in the app switcher); at a power-off the system just kills the processes and Apple promises no notice there – so the missing `.closedByOwner` of this morning is expected. Both paths end the same (an unknown death is excused; with a notice the boot time decides). Open: one test does not show whether it is always like that, and the journal keeps no raw lifecycle signals during a real night (`ProbeLog` is filled only by the Developer detection test). Nothing to change. (3) WeatherKit facts checked against the SDK and Apple's pages: `CurrentWeather` / `HourWeather` carry `temperature`, `condition`, `cloudCover`, `isDaylight`, and the hourly `snowfallAmount` (iOS 18+, our deployment target); 500 000 calls a month are included in the membership; the App ID needs WeatherKit ticked on the App Services tab AND on the Capabilities tab; Apple's forecast blends NOAA, ECCC, DWD, Met Office / ECMWF, JMA and Météo-France (no SHMÚ, no MET Norway) – hence the replaceable `WeatherSource`. (4) This Mac has 8 cores and 8 GB RAM → at most two workers build at the same time; the iPhone 17 simulator has the same point size as the 16 Pro. (5) Owner's idea: robotic announcer lines in the style of the game M.A.X. ("Construction complete") – the original recordings cannot go into this public repo or into any build for others; our own synthesised lines can (backlog). |
 | 2026-10-07 | **TOWN-W steps 1 and 2 built (two parallel Sonnet workers, reviewed by Opus).** (1) Roads first: `drawnRoads` = the rings of the started blocks + the frontier ring; the lighting pool is `straightCells(in: drawnRoads) ∩ builtRoads`. An intersection cell that used to be "straight" at a corner can be a junction now, so a replayed town may get its lamps on slightly different cells (the owner's town has no lit street yet). The Town tab's first look is capped at camera scale 4.5 and centres on the whole drawn area – with the block ahead the two street loops no longer fit a 402 pt screen (both fit at ≈ 5.7); left for the owner to judge on the phone. (2) Weather: the SDK's `WeatherCondition` has 34 cases, all mapped; `snowfallAmount` is a length (converted to mm); the attribution URL `weatherkit.apple.com/legal-attribution.html` only redirects (308) to `developer.apple.com/weatherkit/data-source-attribution/`, which is used. The title with the weather in it covered the noon sun (worst: "Dnes · -12° 🌨️") → the value is a navigation-bar item top right; on iOS 26+ the system gives it its own capsule, and an item with empty content would leave an EMPTY capsule, so the item is built only when there is a value. (3) Working notes: the simulator on this Mac is slow under two builds – `tools/sim_shot.sh` needs a wait of 40–75 s, 6–25 s gives white frames; the Agent tool's worktree was branched from `ebf09ed` (two docs commits behind local `main`), merged back with `git apply` of the worktree's diff + copies of the new files (the nine changed files were untouched in the main tree); a worktree worker cannot write outside its worktree (its report could not go to `build/handoff/`); when it finished, the main session's working directory moved into the worktree – commands on the main tree then need `git -C` / absolute paths. `.claude/worktrees/` is git-ignored now. Not verified: anything on a device. |
 | 2026-10-07 | **WeatherKit refuses the app on the phone (B23).** The owner ran the tree with steps 1 + 2 from Xcode (15:03) and saw no weather badge; Weather test → "Last error": `Error Domain=WeatherDaemon.WDSJWTAuthenticatorServiceListener.Errors Code=2 "(null)"`. (1) How it was narrowed down without touching the running app: `codesign -d --entitlements -` on the device build in Xcode's DerivedData and `security cms -D -i embedded.mobileprovision` show the WeatherKit entitlement in the binary and in the profile; `devicectl device copy from … --source Library/Preferences/sk.zrebec.sleephole.plist` shows the settings (a city is set) and no `weather.cache` key = no fetch ever succeeded. The pulled file holds the wake code – read it in the scratchpad and delete it, never into the repo. `devicectl` needs `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` too. (2) What Code=2 means (Apple Developer Forums, threads 837650, 842908, 834574, read 2026-10-07): the WeatherKit service does not issue a token for this App ID. The cause a DTS engineer found most often: the **capability** is on but the **app service** (the second tab of the App ID) is not – also for a developer who was sure he had ticked both. Others: it started to work by itself the next morning; and one App ID stayed refused for weeks with everything correct while a new App ID of the same team worked at once (FB23888627, no fix by September 2026). (3) A new App ID is no way out here – the bundle id carries the owner's town and nights. The fallback is the replaceable `WeatherSource`. (4) The design "no value → no badge" hides a failing source completely; the only place that tells is Developer → Weather test. |
+| 2026-10-07 | **TOWN-W step 0b built (one Sonnet worker, reviewed by Opus in two rounds); steps 1 + 2 committed (five commits, the owner pushes).** (1) An app can read its own switch only together with the permission: the warning shows when notifications are allowed and `timeSensitiveSetting` is `.disabled`. (2) Review catches: the worker's screenshot named "light" was a DARK one (white title, deep sky) – the picture, not the file name, is the evidence; a `Label` coloured `.orange` as a whole puts orange text on a white Form row (≈ 2 : 1) – colour only the icon. (3) `tools/sim_shot.sh` sets the appearance right after `simctl boot`; twice that did not take and the shot came out dark although light was asked for. Opus repeated both Today shots (`-timeSensitive off` and `on`, no `-theme`): both light – the card has nothing to do with it. For a shot that must be light or dark, add `-theme light|dark`. (4) New dev argument `-timeSensitive off|on` (simulator only). (5) The owner asked about TestFlight – see the backlog entry in §10. |
+| 2026-10-07 | **TestFlight upload refused with ITMS-90035 "Invalid Signature … is not properly signed" – an Xcode cloud-signing bug with an accented name, not the project.** The owner archived (Release, Xcode 27.0 / 27A266a) and chose Distribute App; the upload itself completed and App Store Connect then failed the build. How it was found, all on the Mac: the distribution logs are in the user's temp folder (`getconf DARWIN_USER_TEMP_DIR` → `SleepHole_<date>.xcdistributionlogs/`, the error in `IDEDistribution.standard.log` / `ContentDelivery.log`, the codesign calls in `IDEDistributionPipeline.log`), and the exported app is still next to them in `XcodeDistPipeline.~~~*/Root/Payload/`. There: `codesign --verify` says "valid on disk" but **"does not satisfy its designated Requirement"**; `codesign -d -r-` shows the requirement `certificate leaf[subject.CN] = 0x…` with the name's accented letter as a plain letter + a combining accent (decomposed), while the certificate's CN holds the single precomposed letter – a byte comparison, so it fails. Every other clause passes (Apple anchor, identifier, team, distribution leaf), the profile ("iOS Team Store Provisioning Profile", WeatherKit + time sensitive, `beta-reports-active`) is right. Why: with no Apple Distribution identity in the keychain Xcode uses a cloud-managed certificate (`DISTRIBUTION_MANAGED`); for that it signs ad hoc with an explicit `--requirements` text built from the certificate's name and pastes Apple's remote signature in (`codesign -e --edit-cms`) – the name gets decomposed on the way into the codesign process. A locally signed build (the archive, development certificate) lets codesign derive the requirement from the certificate itself and is fine. Never write the owner's name into this public repo – the logs and certificates contain it. |
+| 2026-10-07 | **The local Apple Distribution certificate fixed the upload (16:24); the phone got the current tree (16:37).** With an "Apple Distribution" identity in the keychain Xcode signs the export itself (`codesign -f -s <hash>`, no `--requirements`, no remote signature): the exported app "satisfies its Designated Requirement", the log says "Upload succeeded", App Store Connect shows the build upload 1.0 (1) as PROCESSING. The three `90035` entries in that attempt's `ContentDelivery.log` belong to the record of the first try. Device install by Opus on the owner's request: `xcodegen generate`, `xcodebuild … -destination 'platform=iOS,name=<device name>' -derivedDataPath build/DerivedData -allowProvisioningUpdates build`, `xcrun devicectl device install app --device '<device name>' build/DerivedData/Build/Products/Debug-iphoneos/SleepHole.app` – the build carries the WeatherKit and time-sensitive entitlements, its profile runs until 2027-10-07. The owner: the weather still does not arrive (B23 unchanged). |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |
