@@ -25,11 +25,15 @@ final class NightRecord {
     /// Night pauses (D17) used. nil = a night from before the pause existed (2026-10-03): it keeps the old rules
     /// (13 s per trip, no budget per night) and gets no "undisturbed night" bonus.
     var pauses: Int?
+    /// Strict mode as it was when the night started (owner 2026-10-09, "care instead of enforcement"): true = using
+    /// the phone on the lock screen is a trip out of the app, false = gentle (logged, never counted). nil = a night
+    /// from before the switch existed: it keeps today's meaning, strict.
+    var strictLockScreen: Bool?
 
     /// `idPrefix`: "bonus" for a test night that counts for the town (one-shot, owner request) –
     /// a unique id so it never collides with the real night of the same date.
     init(window: NightWindow, buildingId: String, isDebug: Bool, setupGrace: TimeInterval, idPrefix: String? = nil,
-         isNap: Bool = false) {
+         isNap: Bool = false, strictLockScreen: Bool? = nil) {
         self.keyString = window.key.description
         let stamp = Int(Date().timeIntervalSince1970)
         self.isNap = isNap
@@ -42,6 +46,7 @@ final class NightRecord {
         self.eventsData = (try? JSONEncoder().encode([NightEvent]())) ?? Data()
         self.setupGrace = setupGrace
         self.pauses = 0
+        self.strictLockScreen = strictLockScreen
     }
 
     var window: NightWindow {
@@ -49,9 +54,10 @@ final class NightRecord {
     }
 
     var rules: SleepRules {
-        var r = SleepRules()
+        var r = isNap ? NapPlan.rules : SleepRules()
         r.setupGrace = setupGrace
         if pauses == nil { r.awayBudget = nil }
+        r.lockScreenCollapses = strictLockScreen ?? true
         return r
     }
 

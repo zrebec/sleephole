@@ -78,6 +78,25 @@ struct TimeSensitiveTests {
         window.isHidden = true
     }
 
+    @Test func theWarningTriangleRequestsTheNotificationSettings() {
+        let m = model(container(), check: { true })
+        #expect(m.notificationsRequest == 0)
+        m.showNotificationSettings()
+        m.showNotificationSettings()
+        #expect(m.notificationsRequest == 2)
+    }
+
+    @Test func theNotificationsScrollIsAOneShot() {
+        let m = model(container(), check: { true })
+        #expect(!m.takeNotificationsScroll())
+        m.showNotificationSettings()
+        #expect(m.takeNotificationsScroll())
+        #expect(!m.takeNotificationsScroll())
+        m.showNotificationSettings()
+        #expect(m.takeNotificationsScroll())
+        #expect(!m.takeNotificationsScroll())
+    }
+
     @Test(arguments: AppLanguage.allCases) func theWarningRendersOnTodayAndInSettings(language: AppLanguage) async {
         let c = container()
         let m = model(c, check: { true })
@@ -86,9 +105,17 @@ struct TimeSensitiveTests {
         m.language = language
         defer { m.language = .en }
         for dark in [false, true] {
-            render(TimeSensitiveCard(), m, dark: dark)
             render(TodayView(), m, dark: dark)
             render(SettingsView(), m, dark: dark)
         }
+        m.showNotificationSettings()
+        render(SettingsView(), m, dark: false)         // opened by the request: scrolls to the notifications section
+        // the switch on: no triangle
+        let on = model(c, check: { false })
+        await on.refreshTimeSensitive()
+        #expect(!on.timeSensitiveOff)
+        on.language = language
+        defer { on.language = .en }
+        for dark in [false, true] { render(TodayView(), on, dark: dark) }
     }
 }

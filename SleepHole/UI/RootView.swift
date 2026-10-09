@@ -28,6 +28,7 @@ struct RootView: View {
         // (owner bug 2026-10-03: the sleeping cat of Today stayed on screen over the Town; in the simulator the tab
         // did not switch at all)
         .onChange(of: model.townRequest) { _, _ in tab = 1 }
+        .onChange(of: model.notificationsRequest) { _, _ in tab = 3 }     // the warning triangle on Today (no animation!)
         .onAppear { model.settings.theme.apply() }
         .task {
             // dev aid (see AppModel.applyLaunchArguments): `-thenTab 1|island|abandon`
@@ -41,6 +42,8 @@ struct RootView: View {
                     if case .setup? = model.pauseBlock() { try? await Task.sleep(for: .seconds(1)) } else { break }
                 }
                 model.startPause()
+            } else if a[i + 1] == "warning" {
+                model.showNotificationSettings()
             } else if a[i + 1] == "abandon" {
                 model.abandonNight()
                 try? await Task.sleep(for: .seconds(2))

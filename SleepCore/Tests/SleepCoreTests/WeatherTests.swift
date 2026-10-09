@@ -48,6 +48,42 @@ import Testing
                    snowOnGround: false, observedAt: observed ?? t0)
     }
 
+    @Test func windLevelBoundaries() {
+        let rows: [(Double?, WindLevel)] = [
+            (nil, .calm), (0, .calm), (2.99, .calm), (3, .breeze), (7.99, .breeze), (8, .windy),
+            (13.99, .windy), (14, .gale), (40, .gale),
+        ]
+        for (speed, level) in rows { #expect(WeatherRules.windLevel(speedMS: speed) == level, "\(String(describing: speed))") }
+        #expect(WindLevel.calm < .breeze && WindLevel.windy < .gale && WindLevel.allCases.count == 4)
+        var w = now()
+        #expect(w.windLevel == .calm)
+        w.windSpeedMS = 9
+        #expect(w.windLevel == .windy)
+    }
+
+    @Test func windDirectionLeftOrRight() {
+        #expect(WeatherRules.windBlowsRight(fromDegrees: 270))
+        #expect(WeatherRules.windBlowsRight(fromDegrees: 181) && WeatherRules.windBlowsRight(fromDegrees: 359.9))
+        #expect(!WeatherRules.windBlowsRight(fromDegrees: 90))
+        #expect(!WeatherRules.windBlowsRight(fromDegrees: 0) && !WeatherRules.windBlowsRight(fromDegrees: 180))
+        #expect(!WeatherRules.windBlowsRight(fromDegrees: 360))
+        #expect(WeatherRules.windBlowsRight(fromDegrees: -90))
+        #expect(WeatherRules.windBlowsRight(fromDegrees: nil))
+    }
+
+    @Test func windCodableIsBackwardCompatible() throws {
+        let old = """
+        {"temperatureC":4,"kind":"rain","intensity":0.6,"cloudCover":1,"isDaylight":true,"snowOnGround":false,"observedAt":0}
+        """
+        let decoded = try JSONDecoder().decode(WeatherNow.self, from: Data(old.utf8))
+        #expect(decoded.windSpeedMS == nil && decoded.windFromDegrees == nil)
+        var w = now()
+        w.windSpeedMS = 6.5
+        w.windFromDegrees = 300
+        let back = try JSONDecoder().decode(WeatherNow.self, from: JSONEncoder().encode(w))
+        #expect(back == w && back.windSpeedMS == 6.5 && back.windFromDegrees == 300)
+    }
+
     @Test func freshnessEdge() {
         let w = now()
         #expect(WeatherRules.isFresh(w, at: t0 + WeatherRules.staleAfter - 1))

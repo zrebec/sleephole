@@ -85,7 +85,7 @@ enum Notifications {
     static func scheduleNight(setupEnds: Date, wake: Date, alarmFile: String) {
         // owner 2026-09-30: warn 15 s before the setup time runs out
         schedule("grace-end", at: setupEnds - 15, title: L("⏳ 15 s of setup left"),
-                 body: L("Come back to SleepHole and lock your phone 🌙"), sound: .default)
+                 body: L("Come back to SleepHole and switch the screen off 🌙"), sound: .default)
         // One notification sounds for at most 30 s and only once – if the app died at night that was the whole
         // alarm. A chain keeps ringing for ~2.5 min (audit 2026-10-03, B3). The app cancels them all as soon as
         // its own alarm really rings.
@@ -103,10 +103,10 @@ enum Notifications {
     static func pauseEnding(at end: Date) {
         if end.timeIntervalSinceNow > 75 {
             schedule("pause-soon", at: end - 60, title: L("⏳ The pause ends in a minute"),
-                     body: L("Come back to SleepHole and lock your phone 🌙"), sound: .default)
+                     body: L("Come back to SleepHole and switch the screen off 🌙"), sound: .default)
         }
         schedule("pause-over", at: end, title: L("⚠️ The pause is over – come back!"),
-                 body: L("Come back to SleepHole now, or the building collapses 🏗️"), sound: .default)
+                 body: L("Come back to SleepHole so the building goes on 🏗️"), sound: .default)
     }
 
     static func cancelPauseNotices() { cancel(["pause-soon", "pause-over"]) }
@@ -131,32 +131,64 @@ enum Notifications {
     }
 
     /// Sent the moment leaving the app is detected; the owner then has `tolerance` seconds (D15).
-    /// Apps cannot vibrate in the background – the notification's sound is what vibrates the phone, so it is
-    /// sent twice. `.default`, not `.defaultCritical`: critical sounds need an Apple entitlement and stay silent
-    /// without it (owner 2026-09-30: the warning only popped up, no vibration).
+    /// Exactly ONE notification per trip (owner 2026-10-09: "each one must have its meaning"). Apps cannot vibrate in
+    /// the background – the notification's sound is what vibrates the phone. `.default`, not `.defaultCritical`:
+    /// critical sounds need an Apple entitlement and stay silent without it (owner 2026-09-30).
     static func nudge(tolerance: TimeInterval) {
-        let title = L("⚠️ Come back to SleepHole!")
-        schedule("nudge", at: Date() + 0.2, title: title,
-                 body: L("You have \(Int(tolerance)) seconds, or the building collapses 🏗️"), sound: .default)
-        // the second one only when there is time for it (the night's budget may leave just a few seconds)
-        if tolerance > 6 {
-            schedule("nudge-2", at: Date() + 5, title: title,
-                     body: L("Only a few seconds left – come back now 🏗️"), sound: .default)
-        }
+        schedule("nudge", at: Date() + 0.2, title: L("⚠️ Heads up! SleepHole must stay open"),
+                 body: L("Come back within \(Int(tolerance)) seconds so tonight's building goes on 🏗️"), sound: .default)
     }
 
+    /// The lock-screen variant of `nudge` (same identifier): "come back" would be wrong advice there – unlocking
+    /// needs Face ID or the passcode – the fast, correct reaction is to switch the screen off. One notification only.
+    static func lockScreenNudge(tolerance: TimeInterval) {
+        schedule("nudge", at: Date() + 0.2, title: L("💤 Your phone is off duty now"),
+                 body: L("Switch the screen off within \(Int(tolerance)) seconds so tonight's building goes on 🏗️"), sound: .default)
+    }
+
+    /// Gentle mode (owner 2026-10-09, "care instead of enforcement"): the one calm reminder for using the phone on the
+    /// lock screen. No seconds, no building at stake – the building stays.
+    static func lockScreenReminder() {
+        schedule(lockReminderId, at: Date() + 0.2, title: L("💤 Your phone is off duty now"),
+                 body: L("Switch the screen off and the calm night goes on."), sound: .default)
+    }
+
+    static let lockReminderId = "lock-reminder"
+
+    /// Every warning schedules exactly these identifiers (pure, so it can be tested without the notification centre).
+    static let warningIDs = ["nudge"]
+    static let closedWarningIDs = ["closed"]
+
     /// Sent the moment iOS says SleepHole is being closed during a night or nap (R4, owner 2026-10-04: swiping the app
-    /// away counts as leaving it): the owner has `tolerance` seconds to open it again. Like `nudge`, twice. Scheduled in
+    /// away counts as leaving it): the owner has `tolerance` seconds to open it again. One notification. Scheduled in
     /// the last moments of the process – the notification centre keeps it, so it still arrives. A restart of the phone
     /// sends the same notice; the relaunch cancels these and recognises the restart by the boot time.
     static func closed(tolerance: TimeInterval) {
-        let title = L("⚠️ SleepHole was closed")
-        schedule("closed", at: Date() + 0.2, title: title,
-                 body: L("Open it within \(Int(tolerance)) seconds, or the building collapses 🏗️"), sound: .default)
-        if tolerance > 6 {
-            schedule("closed-2", at: Date() + 5, title: title,
-                     body: L("Only a few seconds left – come back now 🏗️"), sound: .default)
-        }
+        schedule("closed", at: Date() + 0.2, title: L("⚠️ Heads up! SleepHole was closed"),
+                 body: L("Open it within \(Int(tolerance)) seconds so tonight's building goes on 🏗️"), sound: .default)
+    }
+
+    /// "The building collapsed" (owner 2026-10-09: ALWAYS a notice). Scheduled IN ADVANCE when a trip starts, for the moment
+    /// it would exceed its allowance – at that moment the app may be suspended or swiped away. Cancelled (pending only,
+    /// a delivered notice stays) when the trip ends in time or is excused.
+    static func collapsed(isNap: Bool, at date: Date) {
+        let title = isNap ? L("😕 Your nap was interrupted") : L("😢 Tonight's building came down")
+        let body = isNap ? L("It's all right – try again tomorrow 🌙")
+                         : L("Nothing terrible happened. Everything can be repaired – we'll try again tomorrow.")
+        schedule(collapsedId, at: max(date, Date() + 0.2), title: title, body: body, sound: .default)
+    }
+
+    static let collapsedId = "collapsed"
+
+    /// When the collapse notice of a trip starting at `date` should fire, or nil when no trip can collapse the night
+    /// then: inside the setup time, inside a pause, at / after the wake time, after a collapse, or when the trip's
+    /// allowance reaches the wake time (away time is clipped there). With the budget used up the allowance is 0 → `date`.
+    static func collapseNoticeTime(log: NightLog, rules: SleepRules, at date: Date, alreadyCollapsed: Bool) -> Date? {
+        guard !alreadyCollapsed, let start = log.startedAt,
+              date >= log.window.setupEnds(start: start, rules: rules), date < log.window.wake,
+              PausePolicy.activeUntil(log, at: date) == nil else { return nil }
+        let fire = date + NightEvaluator.allowance(log, rules: rules, at: date)
+        return fire < log.window.wake ? fire : nil
     }
 
     /// At the alarm: a silent, time-sensitive notification lights up the lock screen
@@ -166,10 +198,16 @@ enum Notifications {
                  body: L("Shake your phone or enter your code in SleepHole."), sound: nil)
     }
 
-    static func cancelNudge() { cancel(["nudge", "nudge-2"]) }
+    // the "-2" ids are no longer scheduled; they are still cancelled for a notification a previous build left pending
+    static func cancelNudge() { cancel(["nudge", "nudge-2", lockReminderId]) }
     static func cancelClosed() { cancel(["closed", "closed-2"]) }
+    /// Pending only: a collapse notice that was already delivered must stay for the owner to read.
+    static func cancelCollapsed() { center.removePendingNotificationRequests(withIdentifiers: [collapsedId]) }
     static func cancelBackupAlarm() { cancel(backupAlarmIds) }
-    static func cancelNight() { cancel(nightIds) }
+    static func cancelNight() {
+        cancel(nightIds.filter { $0 != collapsedId })
+        cancelCollapsed()
+    }
 
     /// "allowed" / "denied" / "not allowed yet" for the Settings screen.
     static func statusText() async -> String {
@@ -188,9 +226,9 @@ enum Notifications {
     // MARK: Time-sensitive rule (phase F6a, entitlement `com.apple.developer.usernotifications.time-sensitive`)
 
     /// The ids of the night's notifications: the end-of-setup warning, "Come back!", "SleepHole was closed", the pause
-    /// notices, the screen light-up and the backup alarm chain.
-    static let nightIds = ["grace-end", "nudge", "nudge-2", "closed", "closed-2", "alarm-screen", "pause-soon", "pause-over"]
-        + backupAlarmIds
+    /// notices, the collapse notice, the screen light-up and the backup alarm chain.
+    static let nightIds = ["grace-end", "nudge", "nudge-2", "closed", "closed-2", "alarm-screen", "pause-soon", "pause-over", collapsedId,
+                          lockReminderId] + backupAlarmIds
 
     /// Time sensitive = breaks through a Focus (Sleep, Do Not Disturb): everything of the night, plus the bedtime
     /// reminders. The monthly check and the app-expiry warnings stay normal.

@@ -17,6 +17,7 @@ struct SleepHoleApp: App {
         // that cannot ring (see `SystemAlarms.forLaunch`)
         _model = State(initialValue: AppModel(context: container.mainContext, catalog: sprites.catalog,
                                               systemAlarm: SystemAlarms.forLaunch(),
+                                              keepAlive: UIKitKeepAlive(),
                                               weather: WeatherStore.forLaunch(),
                                               timeSensitiveCheck: Notifications.timeSensitiveCheckForLaunch()))
     }
@@ -52,6 +53,7 @@ struct SleepHoleApp: App {
                 .onChange(of: scenePhase) { _, phase in
                     guard phase == .active else { return }
                     model.refresh()
+                    model.appBecameActive()
                     Task { await model.refreshTimeSensitive() }
                 }
         }

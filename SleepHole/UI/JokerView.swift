@@ -58,7 +58,7 @@ struct JokerCard: View {
     }
 }
 
-/// Choose and switch on a joker (owner 2026-10-02): one of any kind per month.
+/// Choose and switch on a joker (owner 2026-10-02): each kind once a month, independently.
 struct JokerSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -69,9 +69,9 @@ struct JokerSheet: View {
         NavigationStack {
             List {
                 Section {
-                    Text(L("One joker a month keeps your 🔥 streak while you are ill or away: the streak waits – it neither breaks nor grows. Protected nights build nothing and pay no coins; a good night still counts as usual."))
+                    Text(L("Jokers keep your 🔥 streak while you are ill or away: the streak waits – it neither breaks nor grows. Each kind can be used once a month: the bronze one is free, the silver and the gold one cost coins. Protected nights build nothing and pay no coins; a good night still counts as usual."))
                         .font(.subheadline)
-                    Text(L("If you miss a night and haven't used a joker this month, the bronze one is used by itself."))
+                    Text(L("If you miss a night and haven't used the bronze joker this month, it is used by itself."))
                         .font(.footnote).foregroundStyle(.secondary)
                 }
                 Section {
@@ -107,7 +107,7 @@ struct JokerSheet: View {
                 }
             } message: {
                 if let tier = confirm {
-                    Text(L("It protects \(Plural.nights(tier.nights)) from \(Fmt.dayMonth(first)). It's your joker for this month."))
+                    Text(L("It protects \(Plural.nights(tier.nights)) from \(Fmt.dayMonth(first)). This kind is used up for this month."))
                 }
             }
         }

@@ -84,6 +84,22 @@ struct ViewsTests {
         render(TodayView(), m)                                      // debug result
     }
 
+    @Test(arguments: AppLanguage.allCases) func theNightScreenWarnsWhenTheBudgetRunsLow(language: AppLanguage) {
+        let (m, clock, _) = makeModel(at: date(5, 12), language: language)
+        clock.now = date(5, 22, 25); m.refresh(); m.startNight()
+        for i in 0..<2 {                                            // 24 s of 30 s: low
+            clock.now = date(6, 1, i); m.append(.leftApp)
+            clock.now += 12; m.append(.returned)
+        }
+        #expect(m.awayBudgetState() == .low)
+        render(TodayView(), m)
+        clock.now = date(6, 1, 5); m.append(.leftApp)
+        clock.now += 8; m.append(.returned)                         // 32 s: used up
+        #expect(m.awayBudgetState() == .spent)
+        render(TodayView(), m)
+        #expect(!L("Tonight's \(30) s out of the app are used up – please stay with SleepHole now: one more trip and tonight's building comes down 🌙").isEmpty)
+    }
+
     @Test(arguments: AppLanguage.allCases) func settingsTownRootAndDebugScreens(language: AppLanguage) {
         let (m, clock, _) = makeModel(at: date(5, 12), language: language)
         render(SettingsView(), m)

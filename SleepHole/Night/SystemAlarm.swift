@@ -3,6 +3,7 @@ import AlarmKit
 import AppIntents
 import Foundation
 import SwiftUI
+import UIKit
 
 // The system alarm (phase F6b): an AlarmKit alarm that rings in silent mode and during a Focus even when iOS has
 // closed the app at night. It is the BACKUP of the in-app alarm, which stays THE alarm (the night rules R3 depend on
@@ -26,8 +27,16 @@ protocol SystemAlarm: AnyObject {
     func requestConsent() async -> SystemAlarmConsent
     /// Schedules THE one system alarm (replacing an earlier one). Returns false when it could not be scheduled.
     @discardableResult func schedule(at date: Date, soundFile: String) async -> Bool
-    /// Cancels a scheduled alarm and stops a ringing one.
+    /// Cancels a scheduled alarm and stops a ringing one (every alarm of the app, the lock-screen warning too).
     func cancel()
+    /// The lock-screen warning (B25/B26): a SEPARATE alarm that rings at once, so it can be heard over the Camera on the
+    /// lock screen. It never touches THE alarm above. Returns false when it could not be set.
+    /// The title carries the `seconds` the owner has left (the number the notification shows too).
+    @discardableResult func ringWarning(soundFile: String, seconds: Int) async -> Bool
+    /// Stops / cancels ONLY the warning alarm (ringing or still waiting).
+    func stopWarning()
+    /// Stops every alarm of the app that is ringing right now; alarms that still wait are left alone.
+    func stopRinging()
 }
 
 extension SystemAlarmConsent {
@@ -56,6 +65,9 @@ final class NoSystemAlarm: SystemAlarm {
     func requestConsent() async -> SystemAlarmConsent { .unavailable }
     func schedule(at date: Date, soundFile: String) async -> Bool { false }
     func cancel() {}
+    func ringWarning(soundFile: String, seconds: Int) async -> Bool { false }
+    func stopWarning() {}
+    func stopRinging() {}
 }
 
 /// Dev aid for screenshots in the simulator (`-systemAlarm allowed|denied|notAsked`): reports a consent and remembers a
@@ -90,6 +102,9 @@ final class SimulatedSystemAlarm: SystemAlarm {
     }
 
     func cancel() { scheduledAt = nil }
+    func ringWarning(soundFile: String, seconds: Int) async -> Bool { false }
+    func stopWarning() {}
+    func stopRinging() {}
 }
 
 // MARK: - which one the app runs with
@@ -159,6 +174,9 @@ struct SleepHoleAlarmMetadata: AlarmMetadata {}
 final class AlarmKitSystemAlarm: SystemAlarm {
     private let defaults: UserDefaults
     private static let idKey = "systemAlarm.id"
+    private static let warningIDKey = "systemAlarm.warningID"
+    /// AlarmKit needs a date in the future: the warning is scheduled this far ahead.
+    static let warningLead: TimeInterval = 1.5
 
     init(defaults: UserDefaults = .standard) { self.defaults = defaults }
 
@@ -167,6 +185,14 @@ final class AlarmKitSystemAlarm: SystemAlarm {
         get { defaults.string(forKey: Self.idKey).flatMap(UUID.init(uuidString:)) }
         set {
             if let newValue { defaults.set(newValue.uuidString, forKey: Self.idKey) } else { defaults.removeObject(forKey: Self.idKey) }
+        }
+    }
+
+    /// The id of the lock-screen warning alarm, kept under its own key (it is never THE alarm).
+    private var warningID: UUID? {
+        get { defaults.string(forKey: Self.warningIDKey).flatMap(UUID.init(uuidString:)) }
+        set {
+            if let newValue { defaults.set(newValue.uuidString, forKey: Self.warningIDKey) } else { defaults.removeObject(forKey: Self.warningIDKey) }
         }
     }
 
@@ -209,6 +235,35 @@ final class AlarmKitSystemAlarm: SystemAlarm {
         for alarm in alarms { Self.end(alarm) }
         if let id = storedID, !alarms.contains(where: { $0.id == id }) { Self.end(id: id) }   // fired and gone, or not listed
         storedID = nil
+        warningID = nil
+    }
+
+    func ringWarning(soundFile: String, seconds: Int) async -> Bool {
+        guard #available(iOS 26.0, *), consent == .allowed else { return false }
+        if let previous = warningID { Self.end(id: previous) }
+        let id = UUID()
+        do {
+            try await Self.submitWarning(id: id, at: Date().addingTimeInterval(Self.warningLead), soundFile: soundFile,
+                                           seconds: seconds)
+        } catch {
+            warningID = nil
+            return false
+        }
+        warningID = id
+        return true
+    }
+
+    func stopWarning() {
+        guard #available(iOS 26.0, *), let id = warningID else { return }
+        Self.end(id: id)
+        warningID = nil
+    }
+
+    func stopRinging() {
+        guard #available(iOS 26.0, *) else { return }
+        for alarm in (try? AlarmManager.shared.alarms) ?? [] where alarm.state == .alerting {
+            try? AlarmManager.shared.stop(id: alarm.id)
+        }
     }
 
     // MARK: AlarmKit calls
@@ -223,6 +278,25 @@ final class AlarmKitSystemAlarm: SystemAlarm {
             schedule: .fixed(date), attributes: attributes, secondaryIntent: OpenSleepHoleIntent(),
             sound: .named(soundFile))
         _ = try await AlarmManager.shared.schedule(id: id, configuration: configuration)
+    }
+
+    /// The lock-screen warning: `.fixed` a moment from now, only the system's stop control (no "Open SleepHole": opening
+    /// the app from the lock screen needs Face ID / the passcode, the wrong advice here), no secondary intent.
+    @available(iOS 26.0, *)
+    private nonisolated static func submitWarning(id: UUID, at date: Date, soundFile: String, seconds: Int) async throws {
+        let attributes = AlarmAttributes<SleepHoleAlarmMetadata>(
+            presentation: AlarmPresentation(alert: warningAlert(seconds: seconds)), tintColor: .orange)
+        let configuration = AlarmManager.AlarmConfiguration<SleepHoleAlarmMetadata>.alarm(
+            schedule: .fixed(date), attributes: attributes, sound: .named(soundFile))
+        _ = try await AlarmManager.shared.schedule(id: id, configuration: configuration)
+    }
+
+    @available(iOS 26.0, *)
+    private nonisolated static func warningAlert(seconds: Int) -> AlarmPresentation.Alert {
+        let title = LocalizedStringResource("Your phone is off duty – switch the screen off within \(seconds) seconds")
+        if #available(iOS 26.1, *) { return AlarmPresentation.Alert(title: title) }
+        let stop = AlarmButton(text: LocalizedStringResource("Stop"), textColor: .white, systemImageName: "stop.circle")
+        return AlarmPresentation.Alert(title: title, stopButton: stop)
     }
 
     /// "Good morning ☀️" with the Stop button (the system's own on iOS 26.1+) and "Open SleepHole".
@@ -248,5 +322,35 @@ final class AlarmKitSystemAlarm: SystemAlarm {
     private static func end(id: UUID) {
         try? AlarmManager.shared.stop(id: id)
         try? AlarmManager.shared.cancel(id: id)
+    }
+}
+
+// MARK: - keeping the app alive (B28)
+
+/// A background task for the time the lock-screen warning alarm rings: the alarm takes our audio session away and iOS
+/// would suspend the app, so the warning's deadline could never run. A seam so tests can count begin / end.
+@MainActor
+protocol KeepAlive: AnyObject {
+    /// Starts the task; `onExpire` runs when iOS takes the time away (the owner of the token must then call `end`).
+    func begin(name: String, onExpire: @escaping @MainActor () -> Void) -> Int
+    func end(_ token: Int)
+}
+
+/// The default (tests, previews): keeps nothing alive.
+@MainActor
+final class NoKeepAlive: KeepAlive {
+    func begin(name: String, onExpire: @escaping @MainActor () -> Void) -> Int { 0 }
+    func end(_ token: Int) {}
+}
+
+/// The real thing: a UIKit background task.
+@MainActor
+final class UIKitKeepAlive: KeepAlive {
+    func begin(name: String, onExpire: @escaping @MainActor () -> Void) -> Int {
+        UIApplication.shared.beginBackgroundTask(withName: name) { Task { @MainActor in onExpire() } }.rawValue
+    }
+
+    func end(_ token: Int) {
+        UIApplication.shared.endBackgroundTask(UIBackgroundTaskIdentifier(rawValue: token))
     }
 }

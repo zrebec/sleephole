@@ -46,8 +46,9 @@ struct CreditsView: View {
             } header: { Text(L("Alarm music")) }
 
             Section {
-                WeatherAttribution()
-                Text(L("The temperature on Today comes from Apple Weather."))
+                WeatherAttribution(provider: .apple)
+                WeatherAttribution(provider: .metNorway)
+                Text(L("The temperature on Today comes from Apple Weather or, when that is not available, from MET Norway."))
                     .font(.footnote).foregroundStyle(.secondary)
             } header: { Text(L("Weather")) }
 

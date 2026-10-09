@@ -19,8 +19,9 @@ enum GuideText {
         L("For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus \(Plural.minutes(rules.setupGrace)) – start earlier, get more time. We'll warn you 15 s before it ends; then come back to SleepHole.")
     }
     static var night: String {
-        L("You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and \(Plural.seconds(rules.accidentalTolerance)) to come back – and only \(Plural.seconds(rules.awayBudget ?? 0)) per night in total. Longer than that and the building collapses.")
+        L("You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and \(Plural.seconds(rules.accidentalTolerance)) to come back. All such trips share \(Plural.seconds(rules.awayBudget ?? 0)) per night – when they are used up, the night screen tells you, and leaving again collapses the building.")
             + " " + L("Closing SleepHole (swiping it away) counts like leaving it.")
+            + " " + L("SleepHole also notices when you use the phone on the lock screen (camera, replies, widgets) – even without unlocking it. It reminds you gently and the building stays. With Strict mode on (Settings), the phone rings after 8 to 12 seconds and the building comes down if the screen stays on – switching the screen off silences it.")
     }
     static var pause: String {
         L("Need the bathroom or a few minutes on your phone? Tap 🌙 Pause on the night screen: \(Plural.minutes(PausePolicy.duration)) outside SleepHole. The first pause of a night is free, each further one costs \(PausePolicy.priceStep) 🪙 more. A night without any pause pays +\(PausePolicy.undisturbedBonus) 🪙.")
@@ -160,7 +161,7 @@ struct GuideView: View {
             row("moon.zzz.fill", GuideText.pause)
             row("phone.fill", GuideText.calls)
             row("bed.double.fill", GuideText.nap)
-            row("bell.badge", L("If you leave the app, you'll get a “Come back to SleepHole” alert."))
+            row("bell.badge", L("If you leave the app, you'll get a “SleepHole must stay open” alert."))
         }
     }
 
@@ -209,11 +210,11 @@ struct GuideView: View {
             }
             .buttonStyle(.borderedProminent)
             .disabled(notificationsAllowed == true)
-            Text(L("They remind you of bedtime, warn you before the building collapses and act as a backup alarm."))
+            Text(L("They remind you of bedtime, tell you in time when tonight's building needs you, and act as a backup alarm."))
                 .font(.footnote).foregroundStyle(.secondary)
             row("key.fill", L("Keep a passcode / Face ID on your iPhone – without it the app can't tell when the phone is locked."))
             row("battery.100.bolt", L("Keep your phone on the charger overnight."))
-            row("moon.zzz.fill", L("The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “Come back” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed."))
+            row("moon.zzz.fill", L("The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “SleepHole must stay open” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed."))
             row("speaker.wave.2.fill", L("The alarm rings even in silent mode. Pick the sound in Settings."))
             row("arrow.down.circle", L("iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – the system alarm (if you allowed it) and the backup notifications ring instead. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing."))
             row("arrow.clockwise", L("SleepHole's signature runs out after a while – then connect your iPhone to the Mac and install SleepHole again. Your data stays."))
@@ -273,7 +274,7 @@ struct FirstNightBriefing: View {
                     Label(L("Then come back to SleepHole and lock your phone."), systemImage: "lock.iphone")
                     Label(L("Keep your phone on the charger."), systemImage: "battery.100.bolt")
                     Label(L("Alarm at \(Fmt.time(model.window.wake)) – shake your phone or enter code \(model.settings.wakeCode)."), systemImage: "alarm.fill")
-                    Label(L("Leaving to another app for more than \(Plural.seconds(GuideText.rules.accidentalTolerance)) collapses the building."), systemImage: "exclamationmark.triangle.fill")
+                    Label(L("Stay with SleepHole – after more than \(Plural.seconds(GuideText.rules.accidentalTolerance)) in another app tonight's building comes down."), systemImage: "exclamationmark.triangle.fill")
                 } footer: {
                     Text(L("You'll only see this before your first night. The rules are in Settings → How it works."))
                 }

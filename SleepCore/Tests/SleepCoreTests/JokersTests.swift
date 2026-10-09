@@ -82,34 +82,79 @@ import Testing
     }
 
     @Test func futureNightsAreNeverTouched() {
-        let gold = JokerUse(tier: .gold, firstNight: key(3))
+        let gold = JokerUse(tier: .gold, firstNight: key(2))
         let out = apply(results([(1, .complete)]), manual: [gold], last: 4).results
-        #expect(out.map(\.key) == [key(1), key(3), key(4)])
+        #expect(out.map(\.key) == [key(1), key(2), key(3), key(4)])
     }
 
     @Test func blockingRules() {
         let used = [JokerUse(tier: .bronze, firstNight: key(4), automatic: true)]
-        #expect(Jokers.block(.silver, firstNight: key(20), uses: used, coins: 9999) == .alreadyUsedThisMonth)
-        #expect(Jokers.block(.silver, firstNight: NightKey("2026-11-02")!, uses: used, coins: 400) == .notEnoughCoins(missing: 600))
+        #expect(Jokers.block(.bronze, firstNight: key(20), uses: used, coins: 0) == .alreadyUsedThisMonth)
+        #expect(Jokers.block(.silver, firstNight: key(20), uses: used, coins: 9999) == nil)       // other kind is free
+        #expect(Jokers.block(.silver, firstNight: key(20), uses: used, coins: 400) == .notEnoughCoins(missing: 600))
+        #expect(Jokers.block(.gold, firstNight: key(20), uses: used, coins: 100) == .notEnoughCoins(missing: 4900))
         #expect(Jokers.block(.bronze, firstNight: NightKey("2026-11-02")!, uses: used, coins: 0) == nil)
+        let silver = [JokerUse(tier: .silver, firstNight: key(4))]
+        #expect(Jokers.block(.silver, firstNight: key(20), uses: silver, coins: 9999) == .alreadyUsedThisMonth)   // two silvers
+        #expect(Jokers.block(.gold, firstNight: key(20), uses: silver, coins: 9999) == nil)
+        #expect(Jokers.block(.bronze, firstNight: key(20), uses: silver, coins: 0) == nil)
     }
 
-    /// Owner bug 2026-10-03: the first missed night of a holiday used the automatic bronze, so the morning after
-    /// silver / gold were refused. A bigger joker that starts on that very night replaces the bronze.
-    @Test func aHolidayJokerReplacesTheAutomaticBronze() {
-        // complete 1–3, the night of the 4th missed → automatic bronze; on the 5th the owner switches gold on
+    @Test func eachKindOncePerMonthIndependently() {
+        // 1–3 complete, 4 missed → automatic bronze; silver bought later for 10–12 → both in effect
+        let r = results([(1, .complete), (2, .complete), (3, .complete), (5, .complete), (13, .complete)])
+        let silver = JokerUse(tier: .silver, firstNight: key(10))
+        let (out, uses) = apply(r, manual: [silver], last: 13)
+        #expect(uses.map(\.tier) == [.bronze, .silver] && uses[0].automatic)
+        #expect([4, 10, 11, 12].allSatisfy { d in out.first { $0.key == key(d) }?.outcome == .excused })
+    }
+
+    @Test func aSilverDoesNotUseUpTheAutomaticBronze() {
+        // silver 3–5 first, then night 8 is missed (outside it) → the automatic bronze still comes
+        let r = results([(1, .complete), (2, .complete), (6, .complete), (7, .complete), (9, .complete)])
+        let silver = JokerUse(tier: .silver, firstNight: key(3))
+        let (out, uses) = apply(r, manual: [silver], last: 9)
+        #expect(uses == [silver, JokerUse(tier: .bronze, firstNight: key(8), automatic: true)].sorted { $0.firstNight < $1.firstNight })
+        #expect(out.first { $0.key == key(8) }?.outcome == .excused)
+        #expect(Progression.currentStreak(out, lastNight: key(9), calendar: bratislava) == 5)
+    }
+
+    @Test func aManualBronzeAndTheAutomaticOneExcludeEachOther() {
+        // manual bronze on 4; the missed night 6 gets no second bronze → the streak breaks there
+        let r = results([(1, .complete), (2, .complete), (3, .complete), (5, .complete), (7, .complete)])
+        let bronze = JokerUse(tier: .bronze, firstNight: key(4))
+        let (out, uses) = apply(r, manual: [bronze], last: 7)
+        #expect(uses == [bronze])
+        #expect(out.first { $0.key == key(6) } == nil)
+        #expect(Jokers.block(.bronze, firstNight: key(6), uses: uses, coins: 0) == .alreadyUsedThisMonth)
+        // the other way round: the automatic bronze blocks a manual one that month
+        let auto = apply(results([(1, .complete), (2, .complete), (3, .complete)]), last: 4).uses
+        #expect(Jokers.block(.bronze, firstNight: key(8), uses: auto, coins: 0) == .alreadyUsedThisMonth)
+    }
+
+    @Test func aManualJokerAlreadyCoveringANightSpendsNoBronze() {
+        let r = results([(1, .complete), (2, .complete), (5, .complete)])
+        let silver = JokerUse(tier: .silver, firstNight: key(3))
+        #expect(apply(r, manual: [silver], last: 5).uses == [silver])
+    }
+
+    /// Owner bug 2026-10-03 (rule of 2026-10-09: each kind once a month): the holiday gold may start on the night
+    /// the automatic bronze saved; that night is then covered by the gold and the bronze is free again.
+    @Test func aHolidayJokerStartingOnTheBronzeNightFreesTheBronze() {
         let r = results([(1, .complete), (2, .complete), (3, .complete)])
         let auto = apply(r, last: 4).uses
         #expect(auto == [JokerUse(tier: .bronze, firstNight: key(4), automatic: true)])
         #expect(Jokers.block(.gold, firstNight: key(4), uses: auto, coins: 5000) == nil)
+        #expect(Jokers.block(.gold, firstNight: key(6), uses: auto, coins: 5000) == nil)
         #expect(Jokers.block(.silver, firstNight: key(4), uses: auto, coins: 0) == .notEnoughCoins(missing: 1000))
         #expect(Jokers.block(.bronze, firstNight: key(4), uses: auto, coins: 0) == .alreadyUsedThisMonth)
-        #expect(Jokers.block(.gold, firstNight: key(6), uses: auto, coins: 5000) == .alreadyUsedThisMonth)   // not that night
-        // with the gold one switched on, the bronze is gone and the whole week is protected
+        // gold from the 4th (7 nights → 10th), back on the 11th, a later night (13th) missed
         let gold = JokerUse(tier: .gold, firstNight: key(4))
-        let (out, uses) = apply(r + results([(11, .complete)]), manual: [gold], last: 11)
-        #expect(uses == [gold])
-        #expect(Progression.currentStreak(out, lastNight: key(11), calendar: bratislava) == 4)
+        let r2 = r + results([(11, .complete), (12, .complete), (14, .complete)])
+        let (out, uses) = apply(r2, manual: [gold], last: 14)
+        #expect((4...10).allSatisfy { d in out.first { $0.key == key(d) }?.outcome == .excused })
+        #expect(uses == [gold, JokerUse(tier: .bronze, firstNight: key(13), automatic: true)])
+        #expect(Progression.currentStreak(out, lastNight: key(14), calendar: bratislava) == 6)
     }
 
     @Test func firstNightRepairsLastNightOrStartsTonight() {

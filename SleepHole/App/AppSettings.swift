@@ -26,6 +26,14 @@ struct AppSettings: Codable, Equatable {
         get { ambienceOff != true }
         set { ambienceOff = newValue ? nil : true }
     }
+    /// Strict mode (owner 2026-10-09): using the phone on the lock screen at night rings a loud warning and can bring
+    /// the building down. nil = off (gentle). Optional so settings saved by older builds still load. The mode is
+    /// copied into every night / nap when it starts (`NightRecord.strictLockScreen`).
+    var strictModeOn: Bool?
+    var strictMode: Bool {
+        get { strictModeOn == true }
+        set { strictModeOn = newValue ? true : nil }
+    }
     /// Afternoon rest. Optional in the JSON so settings saved by older builds still load.
     var napPlan: NapPlan?
     var nap: NapPlan {

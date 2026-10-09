@@ -54,6 +54,7 @@
 | D14 | Jazyk | UI po slovensky, kód a dokumentácia pre agentov po anglicky. |
 | D15 | Pravidlá noci R3 | pozri §4 (štart −10/+5 min, príprava do večierky + 5 min, varovanie a 10 s na návrat, hotová iba počas zvonenia budíka). |
 | D16 | Odpočinok (nap) | Popoludní **30 alebo 60 min** (iné hodnoty nie), iba v okne (predvolene **13:00–15:00**, nastaviteľné), **raz denne**. Štart presne o 15:00 so 60 min = do 16:00. Rovnaké pravidlá ako v noci (appka v popredí, zamknutý telefón), príprava 2 min, na konci budík. **Budovu nestavia**, nemení sériu ani levely, **+50 🪙** hotový / **+25 🪙** skrátený, zapíše sa do denníka a štatistík. Na obrazovke Dnes sú **stále obe tlačidlá** „Ísť spať“ a „Odpočinok“, mimo okna neaktívne s vysvetlením. |
+| D19 | Pre koho (vlastník 2026-10-09) | **Appka pre mnohých používateľov, smer App Store.** Jednorazová platba, žiadne nákupy v appke, o používateľoch sa nezbierajú žiadne dáta (všetko zostáva v telefóne; HealthKit a podobné sa iba čítajú lokálne). Pravidlá sa nenavrhujú podľa toho, čo používa vlastník – musia sedieť každému. Čokoľvek s režimami sústredenia je voliteľné v nastaveniach. Podvádzať nesmie byť ľahké. |
 
 ---
 
@@ -182,7 +183,7 @@ Voliteľne neskôr: Apple Watch appka (budík vibráciou na zápästí), widget 
 | iOS appku v noci ukončí napriek audio | budík nezazvoní | záložná notifikácia so zvukom, telefón na nabíjačke; v F6 AlarmKit |
 | 7-dňová expirácia (zadarmo) | otravné, appka ráno nenaštartuje | pripomienka v appke „o 2 dni expiruje“, JSON záloha; F6 to rieši úplne |
 | Budík v tichom režime zlyhá | zaspíš | v F2 otestovať s prepínačom ticha; do overenia mať aj systémový budík |
-| App Store (ak by išla von) | – | nie je cieľ. Keby áno: background audio musí byť reálne využité (ambient ho je), AlarmKit namiesto hacku |
+| App Store – **je cieľ (vlastník 2026-10-09)** | appka pre mnohých používateľov | jednorazová platba, žiadne nákupy v appke, **žiadne dáta o používateľoch**; pravidlá musia platiť pre každého, nie iba pre vlastníka. Riziká pri schvaľovaní: zvuk na pozadí musí byť reálne využitý (tichá slučka je sporná), nedokumentované signály zámku / obrazovky, vývojárska sekcia v nastaveniach |
 
 ## Zdroje
 - [SleepTown – App Store](https://apps.apple.com/us/app/sleeptown/id1210251567), [AppBrain (verzia 3.4.1, 10/2023)](https://www.appbrain.com/app/sleeptown/seekrtech.sleep), [recenzia Luxia Le](https://luxiale.com/2025/09/17/sleeptown-full-review/)

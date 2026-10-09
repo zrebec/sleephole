@@ -1317,6 +1317,22 @@
         }
       }
     },
+    "Answered by": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Answered by"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpovedal zdroj"
+          }
+        }
+      }
+    },
     "Appearance & sounds": {
       "localizations": {
         "en": {
@@ -1653,6 +1669,22 @@
         }
       }
     },
+    "Breeze": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Breeze"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vánok"
+          }
+        }
+      }
+    },
     "Bright and even – like a fan.": {
       "localizations": {
         "en": {
@@ -1781,6 +1813,22 @@
         }
       }
     },
+    "Calm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bezvetrie"
+          }
+        }
+      }
+    },
     "Cancel": {
       "localizations": {
         "en": {
@@ -1845,18 +1893,18 @@
         }
       }
     },
-    "Cancel tonight? The building will turn into ruins.": {
+    "End tonight early? The building stays as a ruin – a good night repairs it later 🛠️": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cancel tonight? The building will turn into ruins."
+            "value": "End tonight early? The building stays as a ruin – a good night repairs it later 🛠️"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zrušiť dnešnú noc? Budova sa zmení na ruinu."
+            "value": "Ukončiť dnešnú noc skôr? Budova zostane ako ruina – neskôr ju opraví dobrá noc 🛠️"
           }
         }
       }
@@ -2085,34 +2133,34 @@
         }
       }
     },
-    "Come back to SleepHole and lock your phone 🌙": {
+    "Come back to SleepHole and switch the screen off 🌙": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Come back to SleepHole and lock your phone 🌙"
+            "value": "Come back to SleepHole and switch the screen off 🌙"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vráť sa do SleepHole a zamkni telefón 🌙"
+            "value": "Vráť sa do SleepHole a zhasni obrazovku 🌙"
           }
         }
       }
     },
-    "Come back to SleepHole now, or the building collapses 🏗️": {
+    "Come back to SleepHole so the building goes on 🏗️": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Come back to SleepHole now, or the building collapses 🏗️"
+            "value": "Come back to SleepHole so the building goes on 🏗️"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vráť sa teraz do SleepHole, inak sa stavba zrúti 🏗️"
+            "value": "Vráť sa do SleepHole, nech stavba pokračuje 🏗️"
           }
         }
       }
@@ -2501,18 +2549,18 @@
         }
       }
     },
-    "During a Focus (Sleep, Do Not Disturb) the “Come back” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙": {
+    "During a Focus (Sleep, Do Not Disturb) the “SleepHole must stay open” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "During a Focus (Sleep, Do Not Disturb) the “Come back” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙"
+            "value": "During a Focus (Sleep, Do Not Disturb) the “SleepHole must stay open” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Počas Sústredenia (Spánok, Nerušiť) môžu varovanie „Vráť sa“ aj záložný budík ostať potichu. Zapni ich pre SleepHole v nastaveniach upozornení 🌙"
+            "value": "Počas Sústredenia (Spánok, Nerušiť) môžu varovanie „SleepHole musí zostať otvorená“ aj záložný budík ostať potichu. Zapni ich pre SleepHole v nastaveniach upozornení 🌙"
           }
         }
       }
@@ -2933,6 +2981,22 @@
         }
       }
     },
+    "Gale": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gale"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Víchor"
+          }
+        }
+      }
+    },
     "Generate a new code": {
       "localizations": {
         "en": {
@@ -3269,34 +3333,18 @@
         }
       }
     },
-    "If you leave the app, you'll get a “Come back to SleepHole” alert.": {
+    "If you miss a night and haven't used the bronze joker this month, it is used by itself.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "If you leave the app, you'll get a “Come back to SleepHole” alert."
+            "value": "If you miss a night and haven't used the bronze joker this month, it is used by itself."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ak odídeš z appky, príde upozornenie „Vráť sa do SleepHole“."
-          }
-        }
-      }
-    },
-    "If you miss a night and haven't used a joker this month, the bronze one is used by itself.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "If you miss a night and haven't used a joker this month, the bronze one is used by itself."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ak vynecháš noc a tento mesiac si ešte žolíka nepoužil, bronzový sa použije sám."
+            "value": "Ak vynecháš noc a bronzového žolíka si tento mesiac ešte nepoužil, použije sa sám."
           }
         }
       }
@@ -3397,18 +3445,18 @@
         }
       }
     },
-    "It protects %@ from %@. It's your joker for this month.": {
+    "It protects %@ from %@. This kind is used up for this month.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "It protects %@ from %@. It's your joker for this month."
+            "value": "It protects %@ from %@. This kind is used up for this month."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ochráni %1$@ od %2$@. Je to tvoj žolík na tento mesiac."
+            "value": "Ochráni %1$@ od %2$@. Tento druh je na tento mesiac minutý."
           }
         }
       }
@@ -3589,18 +3637,18 @@
         }
       }
     },
-    "Leaving to another app for more than %@ collapses the building.": {
+    "Stay with SleepHole – after more than %@ in another app tonight's building comes down.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Leaving to another app for more than %@ collapses the building."
+            "value": "Stay with SleepHole – after more than %@ in another app tonight's building comes down."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Odchod do inej appky na viac ako %@ stavbu zrúti."
+            "value": "Zostaň so SleepHole – po viac ako %@ v inej appke dnešná stavba spadne."
           }
         }
       }
@@ -3793,6 +3841,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Licencia CC BY 4.0 – upravené (orezané, zmiešané do slučky). Použité ako „Dážď na okno“."
+          }
+        }
+      }
+    },
+    "Licence and credit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Licence and credit"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Licencia"
           }
         }
       }
@@ -4597,6 +4661,22 @@
         }
       }
     },
+    "Note": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Note"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poznámka"
+          }
+        }
+      }
+    },
     "Nothing plays (the app still stays awake at night).": {
       "localizations": {
         "en": {
@@ -4725,34 +4805,18 @@
         }
       }
     },
-    "One joker a month keeps your 🔥 streak while you are ill or away: the streak waits – it neither breaks nor grows. Protected nights build nothing and pay no coins; a good night still counts as usual.": {
+    "Jokers keep your 🔥 streak while you are ill or away: the streak waits – it neither breaks nor grows. Each kind can be used once a month: the bronze one is free, the silver and the gold one cost coins. Protected nights build nothing and pay no coins; a good night still counts as usual.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "One joker a month keeps your 🔥 streak while you are ill or away: the streak waits – it neither breaks nor grows. Protected nights build nothing and pay no coins; a good night still counts as usual."
+            "value": "Jokers keep your 🔥 streak while you are ill or away: the streak waits – it neither breaks nor grows. Each kind can be used once a month: the bronze one is free, the silver and the gold one cost coins. Protected nights build nothing and pay no coins; a good night still counts as usual."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jeden žolík za mesiac ochráni tvoju 🔥 sériu, keď si chorý alebo preč: séria počká – nepreruší sa ani nenarastie. Chránené noci nič nestavajú a neplatia mince; dobrá noc sa aj tak počíta ako zvyčajne."
-          }
-        }
-      }
-    },
-    "Only a few seconds left – come back now 🏗️": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Only a few seconds left – come back now 🏗️"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ostáva už len pár sekúnd – vráť sa hneď 🏗️"
+            "value": "Žolíky ochránia tvoju 🔥 sériu, keď si chorý alebo preč: séria počká – nepreruší sa ani nenarastie. Každý druh môžeš použiť raz za mesiac: bronzový je zadarmo, strieborný a zlatý stoja mince. Chránené noci nič nestavajú a neplatia mince; dobrá noc sa aj tak počíta ako zvyčajne."
           }
         }
       }
@@ -4785,22 +4849,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Otvor SleepHole a potvrď vstávanie."
-          }
-        }
-      }
-    },
-    "Open it within %lld seconds, or the building collapses 🏗️": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open it within %lld seconds, or the building collapses 🏗️"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Otvor ju do %lld sekúnd, inak sa stavba zrúti 🏗️"
           }
         }
       }
@@ -4849,6 +4897,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mimo appky dnes v noci: %1$lld s z %2$lld s"
+          }
+        }
+      }
+    },
+    "Out of the app tonight: %lld s of %lld s – the next trip may be your last 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Out of the app tonight: %lld s of %lld s – the next trip may be your last 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mimo appky dnes v noci: %1$lld s z %2$lld s – ďalší odchod môže byť posledný 🌙"
           }
         }
       }
@@ -5153,6 +5217,86 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pradenie"
+          }
+        }
+      }
+    },
+    "Your phone is off duty – switch the screen off within %lld seconds": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your phone is off duty – switch the screen off within %lld seconds"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefón má voľno – zhasni obrazovku do %lld sekúnd"
+          }
+        }
+      }
+    },
+    "😢 Tonight's building came down": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "😢 Tonight's building came down"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "😢 Dnešná stavba spadla"
+          }
+        }
+      }
+    },
+    "Nothing terrible happened. Everything can be repaired – we'll try again tomorrow.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing terrible happened. Everything can be repaired – we'll try again tomorrow."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nič hrozné sa nestalo. Všetko sa dá opraviť, zajtra to skúsime znovu."
+          }
+        }
+      }
+    },
+    "😕 Your nap was interrupted": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "😕 Your nap was interrupted"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "😕 Odpočinok sa prerušil"
+          }
+        }
+      }
+    },
+    "It's all right – try again tomorrow 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It's all right – try again tomorrow 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nič sa nedeje – skús to zajtra znova 🌙"
           }
         }
       }
@@ -6441,6 +6585,22 @@
         }
       }
     },
+    "Stop the ringing alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop the ringing alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zastaviť zvoniaci budík"
+          }
+        }
+      }
+    },
     "Stopping the sound during a night switches this off; pressing ▶ during a night switches it on again.": {
       "localizations": {
         "en": {
@@ -6793,18 +6953,18 @@
         }
       }
     },
-    "The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “Come back” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed.": {
+    "The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “SleepHole must stay open” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “Come back” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed."
+            "value": "The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “SleepHole must stay open” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Budík SleepHole zvoní aj v režime Nerušiť či Spánok a príde tam aj varovanie „Vráť sa“. Ak sa iOS spýta na časovo citlivé upozornenia od SleepHole, nechaj ich povolené."
+            "value": "Budík SleepHole zvoní aj v režime Nerušiť či Spánok a príde tam aj varovanie „SleepHole musí zostať otvorená“. Ak sa iOS spýta na časovo citlivé upozornenia od SleepHole, nechaj ich povolené."
           }
         }
       }
@@ -7113,18 +7273,18 @@
         }
       }
     },
-    "The temperature on Today comes from Apple Weather.": {
+    "The temperature on Today comes from Apple Weather or, when that is not available, from MET Norway.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The temperature on Today comes from Apple Weather."
+            "value": "The temperature on Today comes from Apple Weather or, when that is not available, from MET Norway."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teplota na obrazovke Dnes pochádza z Apple Weather."
+            "value": "Teplota na obrazovke Dnes pochádza z Apple Weather, a keď nie je dostupné, z MET Norway."
           }
         }
       }
@@ -7177,18 +7337,18 @@
         }
       }
     },
-    "They remind you of bedtime, warn you before the building collapses and act as a backup alarm.": {
+    "They remind you of bedtime, tell you in time when tonight's building needs you, and act as a backup alarm.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "They remind you of bedtime, warn you before the building collapses and act as a backup alarm."
+            "value": "They remind you of bedtime, tell you in time when tonight's building needs you, and act as a backup alarm."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pripomenú večierku, varujú pred zrútením stavby a sú záložným budíkom."
+            "value": "Pripomenú večierku, včas dajú vedieť, keď ťa dnešná stavba potrebuje, a sú záložným budíkom."
           }
         }
       }
@@ -7257,22 +7417,6 @@
         }
       }
     },
-    "Time for a little rest. I'll wake you up.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Time for a little rest. I'll wake you up."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Čas na malý oddych. Zobudím ťa."
-          }
-        }
-      }
-    },
     "Time Sensitive Notifications are off": {
       "localizations": {
         "en": {
@@ -7285,6 +7429,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Časovo citlivé upozornenia sú vypnuté"
+          }
+        }
+      }
+    },
+    "Time for a little rest. I'll wake you up.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time for a little rest. I'll wake you up."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas na malý oddych. Zobudím ťa."
           }
         }
       }
@@ -7365,6 +7525,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dnes ukazuje skutočné slnko a mesiac pre %@."
+          }
+        }
+      }
+    },
+    "Tonight's %lld s out of the app are used up – please stay with SleepHole now: one more trip and tonight's building comes down 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tonight's %lld s out of the app are used up – please stay with SleepHole now: one more trip and tonight's building comes down 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnešných %lld s mimo appky je minutých – ostaň už prosím so SleepHole: ešte jeden odchod a dnešná stavba spadne 🌙"
           }
         }
       }
@@ -7593,6 +7769,22 @@
         }
       }
     },
+    "SleepHole also notices when you use the phone on the lock screen (camera, replies, widgets) – even without unlocking it. It reminds you gently and the building stays. With Strict mode on (Settings), the phone rings after 8 to 12 seconds and the building comes down if the screen stays on – switching the screen off silences it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole also notices when you use the phone on the lock screen (camera, replies, widgets) – even without unlocking it. It reminds you gently and the building stays. With Strict mode on (Settings), the phone rings after 8 to 12 seconds and the building comes down if the screen stays on – switching the screen off silences it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole si všimne aj používanie telefónu na zamknutej obrazovke (fotoaparát, odpovede, widgety) – aj bez odomknutia. Jemne ti to pripomenie a stavba zostáva. So zapnutým Prísnym režimom (Nastavenia) telefón po 8 až 12 sekundách zazvoní a stavba spadne, ak obrazovka zostane svietiť – zhasnutie obrazovky ho utíši."
+          }
+        }
+      }
+    },
     "Vibration test": {
       "localizations": {
         "en": {
@@ -7669,6 +7861,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Počasie"
+          }
+        }
+      }
+    },
+    "Weather data: MET Norway": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weather data: MET Norway"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Údaje o počasí: MET Norway"
           }
         }
       }
@@ -7817,18 +8025,50 @@
         }
       }
     },
-    "Without notifications you won't get the “Come back” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed.": {
+    "Wind": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Without notifications you won't get the “Come back” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed."
+            "value": "Wind"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bez upozornení nedostaneš varovanie „Vráť sa“ ani záložný budík. Upozornenia SleepHole sú časovo citlivé – prídu aj počas Sústredenia (Spánok, Nerušiť). Ak sa iOS spýta, nechaj ich povolené."
+            "value": "Vietor"
+          }
+        }
+      }
+    },
+    "Windy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Windy"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veterno"
+          }
+        }
+      }
+    },
+    "Without notifications you won't get the “SleepHole must stay open” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Without notifications you won't get the “SleepHole must stay open” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez upozornení nedostaneš varovanie „SleepHole musí zostať otvorená“ ani záložný budík. Upozornenia SleepHole sú časovo citlivé – prídu aj počas Sústredenia (Spánok, Nerušiť). Ak sa iOS spýta, nechaj ich povolené."
           }
         }
       }
@@ -7929,18 +8169,18 @@
         }
       }
     },
-    "You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and %@ to come back – and only %@ per night in total. Longer than that and the building collapses.": {
+    "You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and %@ to come back. All such trips share %@ per night – when they are used up, the night screen tells you, and leaving again collapses the building.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and %@ to come back – and only %@ per night in total. Longer than that and the building collapses."
+            "value": "You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and %@ to come back. All such trips share %@ per night – when they are used up, the night screen tells you, and leaving again collapses the building."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Displej môžeš vypnúť, ale SleepHole musí zostať otvorený. Ak prepneš do inej appky, dostaneš upozornenie a %1$@ na návrat – a spolu len %2$@ za noc. Dlhšie a stavba sa zrúti."
+            "value": "Displej môžeš vypnúť, ale SleepHole musí zostať otvorený. Ak prepneš do inej appky, dostaneš upozornenie a %1$@ na návrat. Všetky takéto odchody majú spolu %2$@ za noc – keď sa minú, obrazovka noci ti to povie a ďalší odchod stavbu zrúti."
           }
         }
       }
@@ -8021,22 +8261,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Potvrdil si skôr – budík ostáva zapnutý, keby si znova zaspal."
-          }
-        }
-      }
-    },
-    "You have %lld seconds, or the building collapses 🏗️": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You have %lld seconds, or the building collapses 🏗️"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Máš %lld sekúnd, inak sa stavba zrúti 🏗️"
           }
         }
       }
@@ -8788,7 +9012,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "nepreruš ju 💪"
+            "value": "len tak ďalej 💪"
           }
         }
       }
@@ -9033,6 +9257,22 @@
         }
       }
     },
+    "used the phone on the lock screen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "used the phone on the lock screen"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "používal telefón na zamknutej obrazovke"
+          }
+        }
+      }
+    },
     "varies – try to start at the same time 🌙": {
       "localizations": {
         "en": {
@@ -9209,38 +9449,6 @@
         }
       }
     },
-    "⚠️ Come back to SleepHole!": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⚠️ Come back to SleepHole!"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⚠️ Vráť sa do SleepHole!"
-          }
-        }
-      }
-    },
-    "⚠️ SleepHole was closed": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⚠️ SleepHole was closed"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⚠️ SleepHole sa zavrela"
-          }
-        }
-      }
-    },
     "⚠️ The pause is over – come back!": {
       "localizations": {
         "en": {
@@ -9413,6 +9621,166 @@
           "stringUnit": {
             "state": "translated",
             "value": "🧱 Ruina"
+          }
+        }
+      }
+    },
+    "⚠️ Heads up! SleepHole must stay open": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ Heads up! SleepHole must stay open"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ Pozor! SleepHole musí zostať otvorená"
+          }
+        }
+      }
+    },
+    "Come back within %lld seconds so tonight's building goes on 🏗️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Come back within %lld seconds so tonight's building goes on 🏗️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vráť sa do %lld sekúnd, nech dnešná stavba pokračuje 🏗️"
+          }
+        }
+      }
+    },
+    "💤 Your phone is off duty now": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "💤 Your phone is off duty now"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "💤 Telefón má teraz voľno"
+          }
+        }
+      }
+    },
+    "Switch the screen off and the calm night goes on.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Switch the screen off and the calm night goes on."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zhasni obrazovku a pokojná noc pokračuje."
+          }
+        }
+      }
+    },
+    "Strict mode": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strict mode"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prísny režim"
+          }
+        }
+      }
+    },
+    "Off: when you use the phone on the lock screen at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning there, and tonight's building comes down if the screen stays on.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off: when you use the phone on the lock screen at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning there, and tonight's building comes down if the screen stays on."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vypnutý: keď v noci používaš telefón na zamknutej obrazovke, SleepHole ti to len jemne pripomenie a stavba zostáva. Zapnutý: telefón tam nahlas zazvoní a dnešná stavba spadne, ak obrazovka zostane svietiť."
+          }
+        }
+      }
+    },
+    "Switch the screen off within %lld seconds so tonight's building goes on 🏗️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Switch the screen off within %lld seconds so tonight's building goes on 🏗️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zhasni obrazovku do %lld sekúnd, nech dnešná stavba pokračuje 🏗️"
+          }
+        }
+      }
+    },
+    "⚠️ Heads up! SleepHole was closed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ Heads up! SleepHole was closed"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⚠️ Pozor! SleepHole sa zavrela"
+          }
+        }
+      }
+    },
+    "Open it within %lld seconds so tonight's building goes on 🏗️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open it within %lld seconds so tonight's building goes on 🏗️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otvor ju do %lld sekúnd, nech dnešná stavba pokračuje 🏗️"
+          }
+        }
+      }
+    },
+    "If you leave the app, you'll get a “SleepHole must stay open” alert.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you leave the app, you'll get a “SleepHole must stay open” alert."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ak odídeš z appky, príde upozornenie „SleepHole musí zostať otvorená“."
           }
         }
       }

@@ -14,6 +14,9 @@ final class FakeSystemAlarm: SystemAlarm {
         case schedule(Date, String)
         case cancel
         case requestConsent
+        case ringWarning(String, Int)
+        case stopWarning
+        case stopRinging
     }
 
     var consent: SystemAlarmConsent
@@ -29,6 +32,9 @@ final class FakeSystemAlarm: SystemAlarm {
     var sounds: [String] { events.compactMap { if case .schedule(_, let file) = $0 { file } else { nil } } }
     var cancels: Int { events.filter { $0 == .cancel }.count }
     var requests: Int { events.filter { $0 == .requestConsent }.count }
+    var warningRings: Int { events.filter { if case .ringWarning = $0 { true } else { false } }.count }
+    var warningStops: Int { events.filter { $0 == .stopWarning }.count }
+    var ringingStops: Int { events.filter { $0 == .stopRinging }.count }
     func forgetEvents() { events = [] }
 
     func requestConsent() async -> SystemAlarmConsent {
@@ -43,6 +49,33 @@ final class FakeSystemAlarm: SystemAlarm {
     }
 
     func cancel() { events.append(.cancel) }
+
+    func ringWarning(soundFile: String, seconds: Int) async -> Bool {
+        events.append(.ringWarning(soundFile, seconds))
+        return accepts && consent == .allowed
+    }
+
+    func stopWarning() { events.append(.stopWarning) }
+    func stopRinging() { events.append(.stopRinging) }
+}
+
+/// A keep-alive that counts: the tests check that every begin has its end (B28).
+@MainActor
+final class FakeKeepAlive: KeepAlive {
+    private(set) var began = 0
+    private(set) var ended: [Int] = []
+    private var expire: [Int: @MainActor () -> Void] = [:]
+    var open: Int { began - ended.count }
+
+    func begin(name: String, onExpire: @escaping @MainActor () -> Void) -> Int {
+        began += 1
+        expire[began] = onExpire
+        return began
+    }
+
+    func end(_ token: Int) { ended.append(token) }
+    /// iOS takes the time away from the newest task.
+    func expireLast() { expire[began]?() }
 }
 
 /// Phase F6b: the system alarm behind the in-app alarm, driven by the real AppModel with a FakeClock and a fake alarm.
@@ -658,5 +691,31 @@ struct SystemAlarmTests {
         let h = await harness(consent: .allowed, at: date(5, 12))
         await startTonight(h)
         render(NavigationStack { SystemAlarmTestView() }, h.model)           // the ring button is disabled
+    }
+
+    // MARK: B27 – a ringing system alarm is easy to get rid of
+
+    @Test func openingTheAppWithNoNightSilencesWhatRingsAndKeepsAWaitingSafetyAlarm() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        #expect(h.model.testSystemAlarm(after: 600))                         // a waiting safety-style alarm
+        await h.model.systemAlarmIdle()
+        h.alarm.forgetEvents()
+        h.model.appBecameActive()
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.events == [.stopRinging])                           // nothing cancelled, nothing re-scheduled
+        #expect(h.model.safetyAlarmAt == h.clock.now + 600)
+        h.model.stopRingingSystemAlarms()                                   // the test screen's button
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.ringingStops == 2 && h.alarm.cancels == 0)
+    }
+
+    @Test func openingTheAppDuringANightDoesNotTouchTheAlarms() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.alarm.forgetEvents()
+        h.model.appBecameActive()
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.events.isEmpty)
+        #expect(h.model.systemAlarmAt == wake + 30)
     }
 }

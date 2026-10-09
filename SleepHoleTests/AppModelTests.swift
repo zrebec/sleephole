@@ -213,6 +213,15 @@ struct AppModelTests {
         #expect(h.model.townSnapshot?.buildings.count == 1)
     }
 
+    @Test func aQuickNightSetupEnds15SecondsAfterTheStart() {
+        let h = harness(at: date(5, 15))
+        let t0 = h.clock.now
+        h.model.startTestNight(); h.model.startNight()
+        #expect(h.model.graceEnds == t0 + 15)
+        #expect(h.model.graceEnds! > t0 + 14)                                 // +14 s: still setup
+        #expect(h.model.graceEnds! < t0 + 16)                                 // +16 s: after it
+    }
+
     @Test func cancelFastNightReturnsToIdle() {
         let h = harness(at: date(5, 15))
         h.model.startTestNight()
@@ -376,7 +385,8 @@ struct AppModelTests {
         h.clock.now = date(9, 12); h.model.refresh()
         #expect(h.model.streak == 3)
         #expect(h.model.jokerState.uses.map(\.tier) == [.bronze] && h.model.jokerState.uses[0].automatic)
-        #expect(h.model.jokerBlock(.silver) == .alreadyUsedThisMonth)
+        // each kind once a month: the automatic bronze uses up only the bronze one
+        #expect(h.model.jokerBlock(.bronze) == .alreadyUsedThisMonth && h.model.jokerBlock(.silver) != .alreadyUsedThisMonth)
         #expect(h.model.coreResults().contains { $0.outcome == .excused })
         let excused = h.model.coreResults().first { $0.outcome == .excused }!.key
         #expect(h.model.coinsEarned(for: excused) == 0)                    // the protected night pays nothing
@@ -400,7 +410,8 @@ struct AppModelTests {
         #expect(h.model.activeJoker?.tier == .silver)
         h.clock.now = date(16, 12); h.model.refresh()                     // three nights away (keys 14–16)
         #expect(h.model.streak == 11)
-        #expect(h.model.jokerBlock(.bronze) == .alreadyUsedThisMonth)
+        #expect(h.model.jokerBlock(.silver) == .alreadyUsedThisMonth)       // the silver one is used up, the bronze one is not
+        #expect(h.model.jokerBlock(.bronze) == nil)
         // a backup keeps the joker
         let b = h.model.makeBackup()
         #expect(b.jokers?.count == 1)
@@ -461,10 +472,28 @@ struct AppModelTests {
         }
         #expect(h.model.nudgesSent == 2 && h.model.collapsedAt == nil)
         #expect(h.model.awayBudgetUse()?.used == 24 && h.model.awayBudgetUse()?.budget == 30)
-        h.clock.now = date(6, 1, 10); h.model.append(.leftApp)             // only 6 s left → the warning says 3 s
-        #expect(h.model.nudgesSent == 3 && h.model.lastNudgeSeconds == 3)
+        #expect(h.model.awayBudgetState(at: date(6, 1, 9)) == .low)        // 6 s left: less than one full trip
+        h.clock.now = date(6, 1, 10); h.model.append(.leftApp)             // budget left → a full trip, the full warning
+        #expect(h.model.nudgesSent == 3 && h.model.lastNudgeSeconds == 10)
         h.clock.now += 8; h.model.append(.returned)
-        #expect(h.model.collapsedAt == date(6, 1, 10) + 6)
+        #expect(h.model.collapsedAt == nil && h.model.awayBudgetUse()?.used == 32)
+        #expect(h.model.awayBudgetState() == .spent)
+        h.clock.now = date(6, 1, 20); h.model.append(.leftApp)             // the budget is used up → no warning, down at once
+        #expect(h.model.nudgesSent == 3 && h.model.collapsedAt == date(6, 1, 20))
+    }
+
+    @Test func theBudgetStateFollowsTheTrips() {
+        let h = harness(at: date(5, 12))
+        h.clock.now = date(5, 22, 25); h.model.refresh(); h.model.startNight()
+        #expect(h.model.awayBudgetState() == .fine)
+        h.clock.now = date(6, 1, 0); h.model.append(.leftApp)
+        h.clock.now += 12; h.model.append(.returned)
+        h.clock.now = date(6, 1, 1); h.model.append(.leftApp)
+        h.clock.now += 12; h.model.append(.returned)
+        #expect(h.model.awayBudgetState() == .low)                         // 24 s used, 6 s left
+        h.clock.now = date(6, 1, 2); h.model.append(.leftApp)
+        h.clock.now += 12; h.model.append(.returned)
+        #expect(h.model.awayBudgetState() == .spent)
     }
 
     @Test func nightsFromBeforeThePauseKeepTheOldRules() {

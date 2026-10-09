@@ -296,9 +296,10 @@ struct NightDetail: View {
                 HStack {
                     Text(Fmt.timeSec(t.start)).monospacedDigit()
                     Text(verbatim: "→ \(Self.duration(t.duration))")
-                        .foregroundStyle(ok || t.duringPause ? Color.cardCaption
+                        .foregroundStyle(ok || t.duringPause || t.notCounted ? Color.cardCaption
                                          : (t.duration ?? .infinity) > 13 ? Color.readableOrange : Color.cardCaption)
                     if t.closedApp { Text(verbatim: "· \(L("closed the app"))").foregroundStyle(Color.cardCaption) }
+                    if t.onLockScreen { Text(verbatim: "· \(L("used the phone on the lock screen"))").foregroundStyle(Color.cardCaption) }
                     if t.duringPause { Text(verbatim: "🌙") }
                 }
                 .font(.caption)

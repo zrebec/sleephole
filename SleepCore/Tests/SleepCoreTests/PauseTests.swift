@@ -26,11 +26,16 @@ import Testing
         events.append((wakeMin, .confirmed))
         let l = log(events)
         #expect(NightEvaluator.evaluate(l, rules: legacy) == .complete)          // how it was
-        #expect(NightEvaluator.evaluate(l) == .ruins)                            // 32.5 s > the 30 s budget
-        // it collapses during the 5th trip, when the 30 s are used up (4 × 6.5 = 26 s before it → 4 s left)
-        let fifth = night.bedtime + (72.5 + 4 * 12.0 / 60) * 60
-        let collapse = NightEvaluator.collapsedAt(l)!
-        #expect(abs(collapse.timeIntervalSince(fifth) - 4) < 0.001)
+        // the 5th trip starts with 26 s used (< 30 s): it is a full trip, so it stands (32.5 s away in total)…
+        #expect(NightEvaluator.evaluate(l) == .complete)
+        #expect(NightEvaluator.collapsedAt(l) == nil)
+        // …but a 6th trip starts with the budget used up and collapses the building at the moment of leaving
+        var more = events.dropLast()
+        more.append((t, .leftApp)); more.append((t + 6.5 / 60, .returned)); more.append((wakeMin, .confirmed))
+        let sixth = night.bedtime + t * 60
+        let collapse = NightEvaluator.collapsedAt(log(Array(more)))!
+        #expect(abs(collapse.timeIntervalSince(sixth)) < 0.001)
+        #expect(NightEvaluator.evaluate(log(Array(more))) == .ruins)
     }
 
     @Test func twoAccidentalTripsStillFit() {
@@ -38,9 +43,113 @@ import Testing
                      (200, .leftApp), (200 + 12.0 / 60, .returned), (wakeMin, .confirmed)])
         #expect(NightEvaluator.evaluate(l) == .complete)                         // 24 s of 30
         #expect(NightEvaluator.awayAfterSetup(l, until: night.wake) == 24)
-        #expect(NightEvaluator.allowance(l, at: night.bedtime + 300 * 60) == 6)   // what a third trip may take
+        #expect(NightEvaluator.allowance(l, at: night.bedtime + 300 * 60) == 13)  // a third trip is still a full one
         #expect(NightEvaluator.allowance(l, at: night.bedtime + 50 * 60) == 13)   // before any trip: the full 13 s
         #expect(NightEvaluator.allowance(l, rules: legacy, at: night.bedtime + 300 * 60) == 13)
+    }
+
+    /// Bug of a real night: four short trips used 25.5 s and the fifth got only the rest, so its warning came too late.
+    @Test func aTripStartedWithBudgetLeftIsAFullTrip() {
+        func sec(_ s: Double) -> Double { s / 60 }
+        var events: [(Double, NightEventKind)] = [(0, .started)]
+        var t = 100.0
+        for d in [5.5, 4, 5, 11] {
+            events.append((t, .leftApp)); events.append((t + sec(d), .returned)); t += 1
+        }
+        let before = night.bedtime + t * 60
+        #expect(NightEvaluator.awayAfterSetup(log(events), until: before) == 25.5)
+        #expect(NightEvaluator.allowance(log(events), at: before) == 13)             // not 4.5
+        #expect(NightEvaluator.budgetState(log(events), at: before) == .low)
+        events.append((t, .leftApp)); events.append((t + sec(6.8), .returned))
+        let after = log(events + [(wakeMin, .confirmed)])
+        #expect(NightEvaluator.collapsedAt(after) == nil)
+        #expect(NightEvaluator.evaluate(after) == .complete)
+        let end = night.bedtime + (t + 1) * 60
+        #expect(NightEvaluator.budgetState(after, at: end) == .spent)                // 32.3 s used
+        #expect(NightEvaluator.allowance(after, at: end) == 0)
+        // a further detectable trip collapses the building exactly at its start
+        let next = events + [(t + 1, .leftApp), (t + 1 + sec(4), .returned), (wakeMin, .confirmed)]
+        #expect(NightEvaluator.collapsedAt(log(next)) == end)
+        #expect(NightEvaluator.evaluate(log(next)) == .ruins)
+    }
+
+    @Test func aTripWithAlmostNoBudgetLeftStillGetsThirteenSeconds() {
+        func sec(_ s: Double) -> Double { s / 60 }
+        // 29.9 s used by two trips, then a trip of 12 s (stands) or 14 s (collapses 13 s after its start)
+        let base: [(Double, NightEventKind)] = [(0, .started), (100, .leftApp), (100 + sec(12), .returned),
+                                                (110, .leftApp), (110 + sec(12), .returned),
+                                                (120, .leftApp), (120 + sec(5.9), .returned)]
+        let start = night.bedtime + 130 * 60
+        #expect(abs(NightEvaluator.awayAfterSetup(log(base), until: start) - 29.9) < 0.001)
+        let ok = log(base + [(130, .leftApp), (130 + sec(12), .returned), (wakeMin, .confirmed)])
+        #expect(NightEvaluator.collapsedAt(ok) == nil)
+        let bad = log(base + [(130, .leftApp), (130 + sec(14), .returned), (wakeMin, .confirmed)])
+        #expect(NightEvaluator.collapsedAt(bad) == start + 13)
+    }
+
+    @Test func budgetStateBoundaries() {
+        func sec(_ s: Double) -> Double { s / 60 }
+        func state(afterAway s: Double) -> AwayBudgetState? {
+            let l = log([(0, .started), (100, .leftApp), (100 + sec(s), .returned)])
+            return NightEvaluator.budgetState(l, at: night.bedtime + 101 * 60)
+        }
+        #expect(NightEvaluator.budgetState(log([(0, .started)]), rules: legacy, at: night.bedtime + 100 * 60) == nil)
+        #expect(NightEvaluator.budgetState(log([(0, .started)]), at: night.bedtime + 100 * 60) == .fine)
+        #expect(state(afterAway: 10) == .fine)
+        #expect(state(afterAway: 17) == .fine)       // 13 s left = one full trip
+        #expect(state(afterAway: 17.5) == .low)
+        #expect(state(afterAway: 29.5) == .low)
+        #expect(state(afterAway: 30) == .spent)      // used == budget
+    }
+
+    // MARK: forgiven (B24)
+
+    @Test func forgivenUndoesACollapse() {
+        func sec(_ s: Double) -> Double { s / 60 }
+        let trip: [(Double, NightEventKind)] = [(0, .started), (100, .leftApp), (100 + sec(40), .returned)]
+        #expect(NightEvaluator.collapsedAt(log(trip)) != nil)
+        let l = log(trip + [(101, .forgiven), (wakeMin, .confirmed)])
+        #expect(NightEvaluator.collapsedAt(l) == nil)
+        #expect(NightEvaluator.awayAfterSetup(l, until: night.wake) == 0)
+        #expect(NightEvaluator.budgetState(l, at: night.bedtime + 102 * 60) == .fine)
+        #expect(NightEvaluator.evaluate(l) == .complete)
+        #expect(NightEvaluator.awaySeconds(l) == 0)
+        #expect(NightReport(log: l).nightTrips.isEmpty)
+    }
+
+    @Test func revokedForgivenessBringsTheCollapseBack() {
+        func sec(_ s: Double) -> Double { s / 60 }
+        let trip: [(Double, NightEventKind)] = [(0, .started), (100, .leftApp), (100 + sec(40), .returned)]
+        let forgiven = log(trip + [(101, .forgiven), (wakeMin, .confirmed)])
+        #expect(NightEvaluator.evaluate(forgiven) == .complete)                      // regression: no revoke, as before
+        let l = log(trip + [(101, .forgiven), (150, .forgivenessRevoked), (wakeMin, .confirmed)])
+        #expect(NightEvaluator.collapsedAt(l) == NightEvaluator.collapsedAt(log(trip)))
+        #expect(NightEvaluator.collapsedAt(l) != nil && NightEvaluator.evaluate(l) == .ruins)
+        #expect(NightEvaluator.awaySeconds(l) == NightEvaluator.awaySeconds(log(trip)))
+        #expect(NightReport(log: l).nightTrips.count == NightReport(log: log(trip)).nightTrips.count)
+        #expect(NightReport(log: l).nightTrips.count == 1 && NightReport(log: forgiven).nightTrips.isEmpty)
+        let data = try! JSONEncoder().encode(NightEventKind.forgivenessRevoked)
+        #expect(try! JSONDecoder().decode(NightEventKind.self, from: data) == .forgivenessRevoked)
+    }
+
+    @Test func forgivenDropsAnOpenTripAndTripsAfterItCountNormally() {
+        func sec(_ s: Double) -> Double { s / 60 }
+        let open: [(Double, NightEventKind)] = [(0, .started), (100, .leftApp), (101, .forgiven)]
+        #expect(NightEvaluator.collapsedAt(log(open)) == nil)
+        let at = night.bedtime + 200 * 60
+        #expect(NightEvaluator.collapsedAt(log(open + [(200, .leftApp), (200 + sec(14), .returned)])) == at + 13)
+        #expect(NightEvaluator.collapsedAt(log(open + [(200, .leftApp), (200 + sec(12), .returned)])) == nil)
+    }
+
+    @Test func aClosureBeforeForgivenDoesNotCount() {
+        let l = log([(0, .started), (100, .closedByOwner), (101, .forgiven), (150, .appLaunched), (wakeMin, .confirmed)])
+        #expect(NightEvaluator.collapsedAt(l) == nil && NightEvaluator.evaluate(l) == .complete)
+    }
+
+    @Test func forgivenRoundTrips() throws {
+        let data = try JSONEncoder().encode(NightEventKind.forgiven)
+        #expect(String(data: data, encoding: .utf8) == "\"forgiven\"")
+        #expect(try JSONDecoder().decode(NightEventKind.self, from: data) == .forgiven)
     }
 
     @Test func setupTimeDoesNotUseTheBudget() {

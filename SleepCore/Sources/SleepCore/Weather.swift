@@ -14,9 +14,13 @@ public struct WeatherNow: Codable, Equatable, Sendable {
     public var isDaylight: Bool
     public var snowOnGround: Bool
     public var observedAt: Date
+    /// Metres per second; nil when the source did not say (and in values cached by older builds).
+    public var windSpeedMS: Double?
+    /// Where the wind comes FROM, degrees: 0 = north, 90 = east; nil when unknown.
+    public var windFromDegrees: Double?
 
     public init(temperatureC: Double, kind: WeatherKind, intensity: Double, cloudCover: Double, isDaylight: Bool,
-                snowOnGround: Bool, observedAt: Date) {
+                snowOnGround: Bool, observedAt: Date, windSpeedMS: Double? = nil, windFromDegrees: Double? = nil) {
         self.temperatureC = temperatureC
         self.kind = kind
         self.intensity = intensity
@@ -24,7 +28,18 @@ public struct WeatherNow: Codable, Equatable, Sendable {
         self.isDaylight = isDaylight
         self.snowOnGround = snowOnGround
         self.observedAt = observedAt
+        self.windSpeedMS = windSpeedMS
+        self.windFromDegrees = windFromDegrees
     }
+
+    public var windLevel: WindLevel { WeatherRules.windLevel(speedMS: windSpeedMS) }
+}
+
+/// How strong the wind is, for drawing (Beaufort-like bands).
+public enum WindLevel: Int, Comparable, Sendable, CaseIterable {
+    case calm, breeze, windy, gale
+
+    public static func < (a: WindLevel, b: WindLevel) -> Bool { a.rawValue < b.rawValue }
 }
 
 /// One past hour, for the "snow lies" rule.
@@ -102,6 +117,24 @@ public enum WeatherRules {
         case .thunder: return "⛈️"
         case .snow: return "🌨️"
         }
+    }
+
+    /// m/s: unknown or below 3 is calm, 3…<8 a breeze, 8…<14 windy, 14 and more a gale.
+    public static func windLevel(speedMS: Double?) -> WindLevel {
+        guard let v = speedMS else { return .calm }
+        if v >= 14 { return .gale }
+        if v >= 8 { return .windy }
+        if v >= 3 { return .breeze }
+        return .calm
+    }
+
+    /// On a north-up screen a wind coming FROM the west half (180 < degrees < 360) blows to the right; exactly 180
+    /// (south), 0 / 360 (north) and anything else count as left; unknown blows right.
+    public static func windBlowsRight(fromDegrees degrees: Double?) -> Bool {
+        guard let d = degrees else { return true }
+        let n = d.truncatingRemainder(dividingBy: 360)
+        let m = n < 0 ? n + 360 : n
+        return m > 180
     }
 
     /// Whole degrees, never "-0".

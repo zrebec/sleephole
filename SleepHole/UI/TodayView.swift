@@ -82,7 +82,6 @@ struct HomeView: View {
                 VStack(spacing: 16) {
                     if let expiry = AppExpiry.date, AppExpiry.isSoon(at: now) { ExpiryCard(expiry: expiry, now: now) }
                     if let at = model.safetyAlarmAt, at > now { SafetyAlarmCard(at: at) }
-                    if model.timeSensitiveOff { TimeSensitiveCard() }
                     if model.showsMonthlySchedulePrompt { MonthlyScheduleCard().appearIn(delay: 0) }
                     StatusBadges().appearIn(delay: 0.05)
                     // the hero (plan P2b): only the cat – the town has its own tab. A tap pets it (purr, arched back, wink).
@@ -133,6 +132,7 @@ struct HomeView: View {
             .sheet(isPresented: $briefing) { FirstNightBriefing() }
         }
         .navigationTitle(L("Today"))
+        .timeSensitiveWarning()                           // the warning triangle top left (only while the switch is off)
         .todayWeather()                                   // the weather badge top right + the refresh loop
     }
 
@@ -227,28 +227,31 @@ struct SafetyAlarmCard: View {
     }
 }
 
-/// Notifications are allowed but iOS's "Time Sensitive Notifications" switch is off: the warnings could stay silent
-/// during a Focus (TOWN-W step 0b).
-struct TimeSensitiveCard: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Label(L("Time Sensitive Notifications are off"), systemImage: "bell.slash.fill")
-                .font(.headline)
-            Text(L("During a Focus (Sleep, Do Not Disturb) the “Come back” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙"))
-                .font(.subheadline)
-            Text(L("Each Focus also has its own switch for time sensitive notifications – SleepHole can't see that one."))
-                .font(.footnote).cardCaption()
-            Button(L("Open notification settings")) {
-                if let url = URL(string: UIApplication.openNotificationSettingsURLString) {
-                    UIApplication.shared.open(url)
+/// iOS's "Time Sensitive Notifications" switch is off: the warnings could stay silent during a Focus. Today shows only
+/// this triangle (top left, the mirror of the weather badge); a tap opens Settings at the notifications section.
+/// Switch on: no bar item at all (an empty one would leave an empty capsule on iOS 26).
+struct TimeSensitiveWarningModifier: ViewModifier {
+    @Environment(AppModel.self) private var model
+
+    func body(content: Content) -> some View {
+        content.toolbar {
+            if model.timeSensitiveOff {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { model.showNotificationSettings() } label: {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.title3)
+                            .foregroundStyle(.orange)
+                    }
+                    .tint(.orange)
+                    .accessibilityLabel(L("Time Sensitive Notifications are off"))
                 }
             }
-            .buttonStyle(.bordered)
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .glassCard(tint: .orange)
     }
+}
+
+extension View {
+    func timeSensitiveWarning() -> some View { modifier(TimeSensitiveWarningModifier()) }
 }
 
 // MARK: - night
@@ -304,6 +307,7 @@ struct NightView: View {
                                 .font(.callout).foregroundStyle(.yellow)
                         } else {
                             Text(L("Lock your phone and have a nice rest 🧸")).font(.callout).foregroundStyle(.secondary)
+                            budgetNote(now: now, warningsOnly: true)
                         }
                     } else {
                         let pauseEnds = model.pauseEnds(at: now)
@@ -322,10 +326,7 @@ struct NightView: View {
                                 .font(.callout).foregroundStyle(.yellow).multilineTextAlignment(.center)
                         } else {
                             Text(L("Lock your phone and good night 🌙")).font(.callout).foregroundStyle(.secondary)
-                            if let use = model.awayBudgetUse(at: now), use.used >= 1 {
-                                Text(L("Out of the app tonight: \(Int(use.used)) s of \(Int(use.budget)) s"))
-                                    .font(.footnote).foregroundStyle(.secondary)
-                            }
+                            budgetNote(now: now)
                         }
                     }
                     Text(L("Alarm at \(Fmt.time(rec.wake))")).font(.footnote).foregroundStyle(.secondary)
@@ -349,7 +350,7 @@ struct NightView: View {
                     Button(rec.isNap ? L("End nap") : L("Cancel night"), role: .destructive) { confirmAbandon = true }
                         .font(.footnote)
                         .confirmationDialog(rec.isNap ? L("End the nap? It won't earn coins.")
-                                                      : L("Cancel tonight? The building will turn into ruins."),
+                                                      : L("End tonight early? The building stays as a ruin – a good night repairs it later 🛠️"),
                                             isPresented: $confirmAbandon, titleVisibility: .visible) {
                             Button(rec.isNap ? L("End") : L("Cancel night"), role: .destructive) { model.abandonNight() }
                         }
@@ -361,6 +362,27 @@ struct NightView: View {
         }
         .background { NightSky() }
         .preferredColorScheme(.dark)
+    }
+
+    /// Seconds out of the app tonight (owner 2026-10-08): a grey footnote while there is plenty of budget, an orange
+    /// notice when the next trip may be the last, and when it is used up. Naps show only the two notices.
+    @ViewBuilder
+    private func budgetNote(now: Date, warningsOnly: Bool = false) -> some View {
+        if let use = model.awayBudgetUse(at: now), use.used >= 1 {
+            switch model.awayBudgetState(at: now) {
+            case .low:
+                Text(L("Out of the app tonight: \(Int(use.used)) s of \(Int(use.budget)) s – the next trip may be your last 🌙"))
+                    .font(.footnote.weight(.semibold)).foregroundStyle(.orange).multilineTextAlignment(.center)
+            case .spent:
+                Text(L("Tonight's \(Int(use.budget)) s out of the app are used up – please stay with SleepHole now: one more trip and tonight's building comes down 🌙"))
+                    .font(.callout.weight(.semibold)).foregroundStyle(.orange).multilineTextAlignment(.center)
+            default:
+                if !warningsOnly {
+                    Text(L("Out of the app tonight: \(Int(use.used)) s of \(Int(use.budget)) s"))
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
+            }
+        }
     }
 
     /// "🌙 Pause" (D17): shown once the setup is over; the first pause of a night is free, the next ones cost coins.

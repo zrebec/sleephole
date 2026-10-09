@@ -13,6 +13,8 @@ final class WeatherStore {
         var latitude: Double
         var longitude: Double
         var lastSuccess: Date
+        /// Absent in a cache written before MET Norway existed: that was always Apple.
+        var provider: WeatherProvider?
     }
 
     static let cacheKey = "weather.cache"
@@ -28,6 +30,9 @@ final class WeatherStore {
     private(set) var lastSuccess: Date?
     private(set) var lastFailure: Date?
     private(set) var lastError: String?
+    /// Who gave the cached / last fetched value, and the source's remark about it.
+    private(set) var provider: WeatherProvider = .apple
+    private(set) var note: String?
 
     /// The Developer switch (Weather test); nil = live. In memory only: it lasts until it is set back or the app restarts,
     /// so a forgotten simulation can never show fake weather for days.
@@ -41,6 +46,7 @@ final class WeatherStore {
             weather = s.weather
             place = (s.latitude, s.longitude)
             lastSuccess = s.lastSuccess
+            provider = s.provider ?? .apple
         }
     }
 
@@ -66,6 +72,9 @@ final class WeatherStore {
         return shown
     }
 
+    /// The provider of what `shown` returns.
+    var shownProvider: WeatherProvider { activeSimulation != nil ? .simulated : provider }
+
     private func belongs(to city: SkyCity) -> Bool {
         place.map { $0.latitude == city.latitude && $0.longitude == city.longitude } ?? false
     }
@@ -77,6 +86,8 @@ final class WeatherStore {
         weather = nil
         place = nil
         lastSuccess = nil
+        provider = .apple
+        note = nil
         defaults.removeObject(forKey: Self.cacheKey)
     }
 
@@ -105,13 +116,17 @@ final class WeatherStore {
             place = (city.latitude, city.longitude)
             lastSuccess = now
             lastError = nil
+            provider = source.lastProvider
+            note = source.lastNote
             if let data = try? JSONEncoder().encode(Stored(weather: value, latitude: city.latitude,
-                                                           longitude: city.longitude, lastSuccess: now)) {
+                                                           longitude: city.longitude, lastSuccess: now,
+                                                           provider: provider)) {
                 defaults.set(data, forKey: Self.cacheKey)
             }
         } catch {
             lastFailure = now
-            lastError = String(describing: error)          // the cached value stays until it is stale
+            lastError = (error as? LocalizedError)?.errorDescription ?? String(describing: error)
+            note = nil          // the cached value stays until it is stale
         }
     }
 }

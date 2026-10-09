@@ -23,6 +23,15 @@ struct SettingsView: View {
     /// Dev aid: `-openWeatherTest` opens Developer → Weather test at once (screenshots).
     @State private var weatherTest = ProcessInfo.processInfo.arguments.contains("-openWeatherTest")
 
+    /// The warning triangle on Today: list's rows may not be laid out yet right after the tab switch → scroll twice.
+    private func scrollToNotifications(_ proxy: ScrollViewProxy) {
+        proxy.scrollTo("notifications", anchor: .top)
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(400))
+            proxy.scrollTo("notifications", anchor: .top)
+        }
+    }
+
     var body: some View {
         @Bindable var model = model
         let nightRunning = model.active != nil
@@ -134,7 +143,7 @@ struct SettingsView: View {
                             } icon: {
                                 Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
                             }
-                            Text(L("During a Focus (Sleep, Do Not Disturb) the “Come back” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙"))
+                            Text(L("During a Focus (Sleep, Do Not Disturb) the “SleepHole must stay open” warning and the backup alarm could stay silent. Switch them on for SleepHole in the notification settings 🌙"))
                                 .font(.footnote).foregroundStyle(.secondary)
                             Text(L("Each Focus also has its own switch for time sensitive notifications – SleepHole can't see that one."))
                                 .font(.footnote).foregroundStyle(.secondary)
@@ -161,9 +170,16 @@ struct SettingsView: View {
                     }
                 } footer: {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text(L("Without notifications you won't get the “Come back” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed."))
+                        Text(L("Without notifications you won't get the “SleepHole must stay open” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed."))
                         Text(L("The system alarm is a second backup next to the backup notifications: it rings in silent mode and during a Focus even if iOS has closed SleepHole – 30 s after your wake time, or when SleepHole's own alarm stops after 2 minutes."))
                     }
+                }
+
+                Section {
+                    Toggle(L("Strict mode"), isOn: $model.settings.strictMode)
+                        .disabled(nightRunning)
+                } footer: {
+                    Text(L("Off: when you use the phone on the lock screen at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning there, and tonight's building comes down if the screen stays on."))
                 }
 
                 Section {
@@ -289,6 +305,12 @@ struct SettingsView: View {
                 if args.contains("sounds") { proxy.scrollTo("sounds", anchor: .top) }
                 if args.contains("sky") { proxy.scrollTo("sky", anchor: .top) }
                 if args.contains("notifications") { proxy.scrollTo("notifications", anchor: .top) }
+                // opened by the warning triangle on Today: the tab switch just created this view
+                if model.takeNotificationsScroll() { scrollToNotifications(proxy) }
+            }
+            // ... or it was already open (scrolled elsewhere)
+            .onChange(of: model.notificationsRequest) { _, _ in
+                if model.takeNotificationsScroll() { scrollToNotifications(proxy) }
             }
             }
             .skyBackground()

@@ -96,7 +96,7 @@ struct ClosureTests {
         #expect(rec.log.events.last?.kind == .closedByOwner && rec.log.events.last?.at == date(6, 2, 0))
     }
 
-    @Test func theBudgetShortensTheWarning() {
+    @Test func theBudgetNeverShortensTheWarning() {
         let h = tonight()
         for i in 0..<2 {                                                // 2 × 12 s of 30 s used
             h.clock.now = date(6, 1, i); h.model.append(.leftApp)
@@ -104,8 +104,151 @@ struct ClosureTests {
         }
         h.clock.now = date(6, 2, 0)
         h.model.appWillTerminate()
-        #expect(h.model.nudgesSent == 3 && h.model.lastNudgeSeconds == 3)            // 6 s left − the 3 s of detection
-        #expect(h.model.collapsedAt == date(6, 2, 0) + 6)
+        #expect(h.model.nudgesSent == 3 && h.model.lastNudgeSeconds == 10)           // a full trip: the full warning
+        #expect(h.model.collapsedAt == date(6, 2, 0) + 13)
+    }
+
+    @Test func withTheBudgetUsedUpNoWarningIsSentAndTheClosureCollapsesAtOnce() {
+        let h = tonight()
+        for (i, d) in [12.0, 12, 8].enumerated() {                      // 32 s of 30 s used; each started with budget left
+            h.clock.now = date(6, 1, i); h.model.append(.leftApp)
+            h.clock.now += d; h.model.append(.returned)
+        }
+        #expect(h.model.collapsedAt == nil && h.model.nudgesSent == 3)
+        h.clock.now = date(6, 2, 0)
+        h.model.appWillTerminate()
+        #expect(h.model.nudgesSent == 3)                                // nothing to warn about
+        #expect(h.model.collapsedAt == date(6, 2, 0))
+    }
+
+    @Test func forgivingTheNightUndoesACollapseAndIsStored() {
+        let h = tonight()
+        h.clock.now = date(6, 1, 0); h.model.append(.leftApp)
+        h.clock.now += 40; h.model.append(.returned)
+        #expect(h.model.collapsedAt != nil)
+        h.model.forgiveNight()
+        #expect(h.model.collapsedAt == nil && h.model.awayBudgetState() == .fine)
+        let other = ModelContext(h.container)
+        let rec = try! other.fetch(FetchDescriptor<NightRecord>()).first!
+        #expect(rec.log.events.last?.kind == .forgiven)
+    }
+
+    // MARK: revoking the forgiveness (owner 2026-10-08)
+
+    /// A clean real night on `day` through the app (22:25 start, confirmed at the wake time).
+    func cleanNight(_ h: Harness, day: Int) {
+        h.clock.now = date(day, 22, 25); h.model.refresh(); h.model.startNight()
+        h.clock.now = date(day + 1, 6, 30, 30); h.model.refresh()
+        #expect(h.model.confirm(code: "1234"))
+        h.model.acknowledgeResult()
+    }
+
+    /// A night whose building collapsed after the setup, was forgiven, and was confirmed at the wake time.
+    func forgivenNight(_ h: Harness, day: Int) {
+        h.clock.now = date(day, 22, 25); h.model.refresh(); h.model.startNight()
+        h.clock.now = date(day, 23, 30); h.model.append(.leftApp)
+        h.clock.now += 40; h.model.append(.returned)
+        h.model.forgiveNight()
+        h.clock.now = date(day + 1, 6, 30, 30); h.model.refresh()
+        #expect(h.model.confirm(code: "1234"))
+        h.model.acknowledgeResult()
+    }
+
+    func emptyHarness(day: Int) -> Harness {
+        let suite = "sleephole-closure-\(UUID().uuidString)"
+        let h = Harness(container: try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self,
+                                                       ScheduleChange.self, JokerRecord.self,
+                                                       configurations: ModelConfiguration(isStoredInMemoryOnly: true)),
+                        clock: FakeClock(date(day, 12)), suite: suite, defaults: UserDefaults(suiteName: suite)!)
+        h.model = newModel(h)
+        h.model.refresh()
+        return h
+    }
+
+    @Test func revokingTheForgivenessOfTheNinthNightMakesItAnAutomaticBronzeJoker() {
+        let h = emptyHarness(day: 1)
+        for d in 1...8 { cleanNight(h, day: d) }
+        h.clock.now = date(10, 12); h.model.refresh()
+        let (streak8, coins8, built8) = (h.model.streak, h.model.coins, h.model.builtNights)
+        let achievementCoins8 = Achievements.coins(h.model.achievements)
+        let town8 = h.model.townSnapshot!
+        forgivenNight(h, day: 9)
+        h.clock.now = date(10, 12); h.model.refresh()
+        let key = NightKey(date: date(10, 6, 30), calendar: cal)
+        let ninth = h.model.realResults().last!
+        #expect(ninth.outcome == .complete && h.model.builtNights == 9 && h.model.jokerState.uses.isEmpty)
+        let (streak9, coins9, town9) = (h.model.streak, h.model.coins, h.model.townSnapshot!.buildings.count)
+        let earned = h.model.coinsEarned(for: NightKey(ninth.keyString)!) ?? 0
+        // buildings are picked at random, so the ninth night may also unlock an achievement (e.g. the first level-2
+        // building, +50 🪙), which `coins` includes: the balance grows by the night's own coins plus exactly those
+        let achievementCoins9 = Achievements.coins(h.model.achievements) - achievementCoins8
+        #expect(earned > 0 && coins9 - coins8 == earned + achievementCoins9 && streak9 == streak8 + 1)
+
+        h.model.revokeForgiveness()
+        let rec = h.model.realResults().last!
+        #expect(rec.outcome == .ruins && rec.log.events.last?.kind == .forgivenessRevoked && rec.awaySeconds > 0)
+        #expect(rec.buildingId == ninth.buildingId && rec.finalizedAt == ninth.finalizedAt)
+        let nightKey = NightKey(rec.keyString)!
+        let res = h.model.coreResults().first { $0.key == nightKey }
+        #expect(res?.outcome == .excused)
+        #expect(h.model.jokerState.uses.count == 1 && h.model.jokerState.uses[0].tier == .bronze
+                && h.model.jokerState.uses[0].automatic && h.model.jokerState.uses[0].firstNight == nightKey)
+        // each kind once a month (2026-10-09): the automatic bronze uses up only the bronze one, so silver / gold are
+        // not blocked by it any more (here at most by missing coins)
+        #expect(h.model.jokerBlock(.bronze) == .alreadyUsedThisMonth)
+        #expect(h.model.jokerBlock(.silver) != .alreadyUsedThisMonth && h.model.jokerBlock(.gold) != .alreadyUsedThisMonth)
+        #expect(h.model.townSnapshot == town8 && h.model.townSnapshot!.buildings.count <= town9)
+        #expect(h.model.townSnapshot?.buildings.contains { $0.state == .ruins } == false)
+        #expect(h.model.builtNights == built8 && h.model.coins == coins8 && h.model.streak == streak8)
+        #expect((h.model.coinsEarned(for: nightKey) ?? 0) == 0)
+        print("REVOKE numbers: coins \(coins9) -> \(h.model.coins), streak \(streak9) -> \(h.model.streak), town buildings \(town9) -> \(h.model.townSnapshot!.buildings.count), built nights 9 -> \(h.model.builtNights), key \(key)")
+    }
+
+    @Test func revokingTwiceOrWithNothingToRevokeChangesNothing() {
+        let h = emptyHarness(day: 1)
+        for d in 1...2 { cleanNight(h, day: d) }
+        h.model.revokeForgiveness()                                     // no forgiven night: nothing
+        #expect(h.model.realResults().allSatisfy { $0.outcome == .complete && !$0.log.has(.forgivenessRevoked) })
+        forgivenNight(h, day: 3)
+        h.model.revokeForgiveness()
+        let once = h.model.realResults().last!.eventsData
+        let (coins, streak) = (h.model.coins, h.model.streak)
+        h.model.revokeForgiveness()
+        #expect(h.model.realResults().last!.eventsData == once && h.model.coins == coins && h.model.streak == streak)
+        #expect(h.model.realResults().last!.log.events.filter { $0.kind == .forgivenessRevoked }.count == 1)
+    }
+
+    @Test func revokingDoesNothingWhileANightIsRunning() {
+        let h = emptyHarness(day: 1)
+        forgivenNight(h, day: 1)
+        h.clock.now = date(2, 22, 25); h.model.refresh(); h.model.startNight()
+        h.model.revokeForgiveness()
+        #expect(h.model.realResults().first!.outcome == .complete && h.model.realResults().first!.log.has(.forgivenessRevoked) == false)
+    }
+
+    @Test func revokingWhenTheMonthsJokerIsUsedLeavesAPlainRuin() {
+        let h = emptyHarness(day: 1)
+        for d in [1, 2, 4, 5, 6, 7] { cleanNight(h, day: d) }           // night 3 is missed: the automatic bronze
+        forgivenNight(h, day: 8)
+        h.clock.now = date(10, 12); h.model.refresh()
+        let before = h.model.jokerState.uses
+        #expect(before.count == 1 && before[0].automatic)
+        h.model.revokeForgiveness()
+        let nightKey = NightKey(h.model.realResults().last!.keyString)!
+        #expect(h.model.coreResults().first { $0.key == nightKey }?.outcome == .ruins)
+        #expect(h.model.jokerState.uses == before)
+        #expect(h.model.townSnapshot?.buildings.contains { $0.state == .ruins } == true)
+        #expect(h.model.streak == 0)
+    }
+
+    @Test func forgivingDoesNothingWithoutANightOrAfterTheWake() {
+        let idle = tonight()
+        idle.model.abandonNight()
+        idle.model.forgiveNight()                                       // nothing running: no crash, no event
+        let h = tonight()
+        h.clock.now = date(6, 7, 0)
+        h.model.forgiveNight()
+        #expect(h.model.active?.log.has(.forgiven) != true)
     }
 
     @Test func noWarningDuringTheSetupButTheClosureCounts() {
@@ -274,11 +417,14 @@ struct ClosureTests {
         m = closeAndReopen(h, closedAt: date(6, 2, 0), after: 5)
         #expect(m.collapsedAt == nil && m.awayBudgetUse()?.used == 10)
         #expect(m.active!.log.events.filter { $0.kind == .closedByOwner }.count == 2)
-        // two more of 12 s use up the 30 s of the night
+        // two more of 12 s use up the 30 s of the night (each starts with budget left, so it stands)
         m = closeAndReopen(h, closedAt: date(6, 3, 0), after: 12)
         #expect(m.collapsedAt == nil && m.awayBudgetUse()?.used == 22)
         m = closeAndReopen(h, closedAt: date(6, 4, 0), after: 12)
-        #expect(m.collapsedAt == date(6, 4, 0) + 8)
+        #expect(m.collapsedAt == nil && m.awayBudgetUse()?.used == 34 && m.awayBudgetState() == .spent)
+        // the next one starts with the budget used up: the building collapses at the moment of closing
+        m = closeAndReopen(h, closedAt: date(6, 5, 0), after: 5)
+        #expect(m.collapsedAt == date(6, 5, 0))
     }
 
     @Test func aNapIsClosedLikeANight() {
@@ -349,20 +495,20 @@ struct ClosureTests {
     @Test func theTextsInBothLanguages() {
         defer { Lang.current = .en }
         Lang.current = .en
-        #expect(L("⚠️ SleepHole was closed") == "⚠️ SleepHole was closed")
-        #expect(L("Open it within \(10) seconds, or the building collapses 🏗️") == "Open it within 10 seconds, or the building collapses 🏗️")
+        #expect(L("⚠️ Heads up! SleepHole was closed") == "⚠️ Heads up! SleepHole was closed")
+        #expect(L("Open it within \(10) seconds so tonight's building goes on 🏗️") == "Open it within 10 seconds so tonight's building goes on 🏗️")
         #expect(L("closed the app") == "closed the app")
-        #expect(GuideText.night.hasSuffix("Closing SleepHole (swiping it away) counts like leaving it."))
+        #expect(GuideText.night.contains("Closing SleepHole (swiping it away) counts like leaving it."))
         Lang.current = .sk
-        #expect(L("⚠️ SleepHole was closed") == "⚠️ SleepHole sa zavrela")
-        #expect(L("Open it within \(10) seconds, or the building collapses 🏗️") == "Otvor ju do 10 sekúnd, inak sa stavba zrúti 🏗️")
+        #expect(L("⚠️ Heads up! SleepHole was closed") == "⚠️ Pozor! SleepHole sa zavrela")
+        #expect(L("Open it within \(10) seconds so tonight's building goes on 🏗️") == "Otvor ju do 10 sekúnd, nech dnešná stavba pokračuje 🏗️")
         #expect(L("closed the app") == "zavretá appka")
-        #expect(GuideText.night.hasSuffix("Zavretie SleepHole (potiahnutím preč) sa počíta ako odchod z appky."))
+        #expect(GuideText.night.contains("Zavretie SleepHole (potiahnutím preč) sa počíta ako odchod z appky."))
         #expect(GuideText.night.contains("10 sekúnd") && GuideText.night.contains("30 sekúnd"))   // the rest of the rule is intact
     }
 
     @Test func theClosedNoticesAreNightNoticesAndTimeSensitive() {
-        for id in ["closed", "closed-2"] {
+        for id in ["closed", "closed-2"] {                               // "-2" only for a leftover of the previous build
             #expect(Notifications.nightIds.contains(id) && Notifications.isTimeSensitive(id), "\(id)")
         }
     }

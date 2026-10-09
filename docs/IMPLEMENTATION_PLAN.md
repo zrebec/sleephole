@@ -27,8 +27,10 @@
 | P2b | The buddy is the hero of Today (no town there any more) + three tap reactions: purr, arched back, wink (spec in §10 P2b) | ✅ accepted by the owner 2026-10-04; his remark: the arched back has too few poses – left as it is until we render our own models (F7) | owner pets the cat on Today |
 | SKY | City in Settings + real sun/moon on a semicircle (spec in §10 SKY) | 🟡 built, committed and installed 2026-10-04 17:29 (final build). City search, night sky, sun and moon confirmed by the owner on the interim build; only the final semicircle position (right of the title) still waits for his look | owner picks his city, sees the true sun/moon |
 | F5 | Living town (day/night, lamps, cars) + Cube Pets residents (plan A/B/C) | ⬜ todo – its first part runs as phase TOWN-W (next row) | "I like looking at it" |
-| TOWN-W | The town grows and has weather (owner 2026-10-07, spec in §10 TOWN-W): 0b warning when Time Sensitive Notifications are off, 1 roads first, 2 weather on Today (WeatherKit) → checkpoint A; 3 rain and snow in the town → B; 4 day and night in the town → C | 🟡 steps 1 (roads first) and 2 (weather badge on Today) built, reviewed, merged and committed 2026-10-07; the owner ran them from Xcode the same day (15:03): no weather badge – Apple refuses the WeatherKit token (B23, owner checks the App Services tab); roads not judged yet; step 0b (the warning for the Time Sensitive switch) built and reviewed 2026-10-07 afternoon, not committed; the tree with steps 0b + 1 + 2 was installed on the phone by Opus 2026-10-07 16:37 (the owner asked). **Checkpoint A passed the same evening** (roads ✓, the warning ✓, the Focus test with the switch on ✓; the weather still refused). Three follow-ups he approved before step 3: A1 the card on Today becomes a tappable triangle, A2 a second weather source (MET Norway), A3 the TestFlight preparation – see §10 TOWN-W | the owner sees the outlined empty block, the temperature on Today, rain / snow and the dark town at night |
+| TOWN-W | The town grows and has weather (owner 2026-10-07, spec in §10 TOWN-W): 0b warning when Time Sensitive Notifications are off, 1 roads first, 2 weather on Today (WeatherKit) → checkpoint A; 3 rain and snow in the town → B; 4 day and night in the town → C | 🟡 steps 1 (roads first) and 2 (weather badge on Today) built, reviewed, merged and committed 2026-10-07; the owner ran them from Xcode the same day (15:03): no weather badge – Apple refuses the WeatherKit token (B23, owner checks the App Services tab); roads not judged yet; step 0b (the warning for the Time Sensitive switch) built and reviewed 2026-10-07 afternoon, not committed; the tree with steps 0b + 1 + 2 was installed on the phone by Opus 2026-10-07 16:37 (the owner asked). **Checkpoint A passed the same evening** (roads ✓, the warning ✓, the Focus test with the switch on ✓; the weather still refused). The three follow-ups he approved before step 3 are built, reviewed and merged the same evening (A1 a tappable triangle instead of the card, A2 MET Norway as the second weather source, A3 version / build numbers + privacy manifest – see §10 TOWN-W): tests / simulator only, not committed, not on the phone; **next: his short phone check, then step 3** | the owner sees the outlined empty block, the temperature on Today, rain / snow and the dark town at night |
 | R4 | Closing the app during a night counts as leaving it (the owner's loophole finding 2026-10-04, spec in §10 R4) | 🟡 committed and installed by the owner 2026-10-07 07:44; his quick nights the same morning (journal pulled): closed + reopened in time → the building stands ✅, a phone restart → the building stands ✅, the notices arrive with the app closed ✅. Still to prove: closed and STAYED away → collapse; only one alarm when the app is reopened while the system alarm rings | swiping the app away and using the phone collapses the building |
+| LOCK-W | The lock-screen warning rings as a system alarm that the app ends itself + B27 + the late Face ID hole (owner 2026-10-08, spec in §10 LOCK-W) | 🟢 the three variants confirmed by the owner on the phone 2026-10-09 (with Face ID: return, screen off, left alone → collapse; the alarm covers the Camera); the forgiven night is taken back. Open: the hole without Face ID (proposal waits for his decision), the quick night's 15 s setup (worker) | his decision on lock-screen use without Face ID; then install the next build on his word |
+| CARE | Care instead of enforcement (owner 2026-10-09 evening, spec in §10 CARE): the siren only as an opt-in strict mode, lock-screen use costs a calm-hour bonus instead of the building, caring texts, calm-hour coins, Live Activity / Dynamic Island countdowns, then HealthKit, the shop, a flexible bedtime | 🟡 CARE-1 (jokers per kind, the reviewed texts, the gentle default + Strict mode) is on the phone since 2026-10-09 21:00 and both modes were tried by the owner the same evening | fix B29, then CARE-3 (the Live Activity try in the lock-screen Camera) and CARE-2 (calm-hour coins – he has not confirmed +10 per hour) |
 | F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a on the phone since 2026-10-04 19:11 – the owner's Focus test of 2026-10-07 brought no warning because Time Sensitive Notifications were switched off in iOS (his finding the same day) → B21 closed, the app gets a warning for it (TOWN-W step 0b); **re-tested with the switch on 2026-10-07 evening: the warning arrives in a Focus (owner: "confirmed")**; F6b (AlarmKit) built and reviewed 2026-10-04 evening, installed by the owner himself ≈ 20:00 – it rang with the app swiped away; committed 2026-10-07; his remaining checks are listed in §10 F6 | the system alarm wakes the owner with the app swiped away |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
 
@@ -48,7 +50,16 @@ they do not block P2. **What is really verified, feature by feature, is in §0a.
 * ❌ **failed on the phone** – a bug is open (§11a)
 
 When the owner confirms or rejects something, move the row the same day. Automated state on 2026-10-03 (evening):
-SleepCore 220 tests green; app 250 tests, 91.96 % line coverage (2026-10-07, roads first + weather + step 0b).
+SleepCore 247 tests green; app 289 tests, 92.11 % line coverage (2026-10-08 00:07, with A1–A3, B24, B25 and the wind data).
+App 292 tests green with 3 known issues (2026-10-08 11:20): the owner's quick-night lock-screen scenario was added; the known
+issues pin the B25 hole "Face ID recognises him after the 8 s window" (`withKnownIssue` – it fails the day the hole is closed).
+App 304 tests green, no known issue (2026-10-08 12:14, phase LOCK-W built: the hole is closed); i18n 594 keys 0 / 0 / 0.
+SleepCore 248 tests, app 308 tests green (2026-10-08 12:42, with `-revokeForgiveness`); i18n 594 keys 0 / 0 / 0.
+App 309 tests green (2026-10-09 14:50, the quick night's setup is 15 s); i18n 594 keys 0 / 0 / 0.
+App 311 tests green (2026-10-09 15:12, one lock-screen notification when the alarm rings); i18n 594 keys 0 / 0 / 0.
+App 331 tests green (2026-10-09 16:32: lock-screen lab, one notification per trip, collapse notice, keep-alive); i18n 596 keys 0 / 0 / 0.
+SleepCore 260 tests, app 341 tests green (2026-10-09 17:01: the lock screen without an unlock – `HoldDetector`); i18n 596 keys 0 / 0 / 0.
+SleepCore 273 tests, app 353 tests green (2026-10-09 20:55: jokers per kind, the reviewed texts, CARE-1 gentle default + strict mode); i18n 598 keys 0 / 0 / 0.
 
 ### Night and nap
 | | Feature | Evidence |
@@ -70,10 +81,13 @@ SleepCore 220 tests green; app 250 tests, 91.96 % line coverage (2026-10-07, roa
 | 🟢 | A phone restart during a night keeps the building (R4) | owner's quick night 2026-10-07 (the journal: see §12, 2026-10-07) |
 | 🟢 | Notices arrive with the app closed: "15 s of setup left", "SleepHole was closed" (no Focus) | owner 2026-10-07 |
 | 🟢 | Warnings during a Focus (F6a, time sensitive) | owner 2026-10-07 (checkpoint A, the new build): with Time Sensitive Notifications switched on the "Come back" warning arrives during a Focus – "confirmed". In the morning nothing had arrived only because the switch was off (B21 closed) |
-| 🟢 | Warning while Time Sensitive Notifications are off: a card on Today + a row in Settings (TOWN-W step 0b) | owner 2026-10-07 on the phone: switching the iOS switch off shows both, switching it on hides both – "works excellently". His wish: on Today a tappable triangle instead of the tall card (follow-up A1, §10 TOWN-W) |
+| 🟢 | Warning while Time Sensitive Notifications are off: a row in Settings + (until A1) a card on Today (TOWN-W step 0b) | owner 2026-10-07 on the phone: switching the iOS switch off shows both, switching it on hides both – "works excellently" |
+| 🖥 | The warning on Today as a tappable triangle that opens Settings at the notifications (A1) | tests + simulator screenshots 2026-10-07 evening (light, dark, with the weather badge); not on the phone yet |
 | 🖥 | Closing the app and staying away collapses the building (R4) | not tried on the phone yet |
 | 🖥 | Night pause (D17) | not used in any night up to 2026-10-06 → 07 (journal pulled 2026-10-07) |
-| 🖥 | Away budget 30 s per night + its counter | installed 2026-10-03 |
+| 📱 | Away budget 30 s per night: a started trip is always a full one, orange notice when low / used up (B24) | the old rule was rejected by the owner's night of 2026-10-07; the fix is installed since 2026-10-07 23:29; in the real night that followed one trip of 12.1 s with budget left kept the building (journal 2026-10-08) – the orange notice and the owner's own verdict are still missing |
+| 📱 | A lit lock screen for more than 8 s counts as leaving the app (B25) | the detection fired twice on the phone 2026-10-07 (journal); the second round (own warning text, the phone's own sound, the log) is installed since 2026-10-08 00:07: a whole real night without a false alarm (the lock screen lit twice for 6 s, logged and not counted – journal 2026-10-08); the new warning and the phone's own sound have not fired yet – to try on purpose; B26 |
+| 📱 | Forgiving a night ruined by a fault of the app (`-forgiveNight`) | ran on the iPhone 2026-10-07 23:29: the journal holds the event and the night is running again; the owner has not said what he saw |
 | 🖥 | Safer alarm (B1 retry, B3 five backup notifications) | installed 2026-10-03 |
 | 🖥 | Screen checks ignore the unlock after the alarm (B9) | installed 2026-10-03 |
 
@@ -92,6 +106,7 @@ SleepCore 220 tests green; app 250 tests, 91.96 % line coverage (2026-10-07, roa
 | 🖥 | English signs on buildings | the owner uses Slovak |
 | 🟢 | Roads first: the street ring of every started block + one empty block ahead (TOWN-W step 1) | owner 2026-10-07 (checkpoint A): he sees the outlined empty block; that both blocks do not fit the screen without panning does not bother him – the camera stays as it is |
 | ❌ | Weather badge on Today (TOWN-W step 2) | owner 2026-10-07 (his own Xcode build of 15:03): no badge – Apple refuses the WeatherKit token (`WDSJWTAuthenticatorServiceListener.Errors Code=2`), bug B23; the badge itself is checked only in the simulator with a simulated value. Still Code=2 after the install of 16:37 ("Refresh now"); the owner agreed to a second source, MET Norway (follow-up A2, §10 TOWN-W) |
+| 🖥 | Weather from MET Norway when Apple fails; the credit follows the provider (A2) | tests + a live request from the simulator 2026-10-07 evening ("23° ☀️", later "21° 🌙"); the fallback behind a failing WeatherKit is not proven until the phone |
 | 📱 | Settings → Developer → Weather test (TOWN-W step 2) | owner 2026-10-07: he read "Last error" from it on the phone; the simulation there not tried on the phone yet |
 
 ### Coins, progress, statistics
@@ -1227,6 +1242,9 @@ i18n 572 keys / 0 missing / 0 without sk / 0 unused.
 - [ ] **Unverified until the phone:** the live WeatherKit call (the first device build also proves the capability –
       a missing one shows as a signing error in Xcode or as "Last error" in Weather test), and whether `.hourly`
       returns PAST hours ("Past hourly values" in Weather test; 0 there = the snow rule only knows "it snows now")
+- [ ] **B23 – still open 2026-10-09:** the owner reported "WeatherKit finally works"; the phone's weather cache
+      (read 12:28, right after a launch) says the answer came from `metNorway` – the weather he sees is the second
+      source doing its job, Apple's part is unproven. Ask him for Weather test → "Answered by" / "Note".
 - [ ] **B23 – first phone run 2026-10-07 (owner's Xcode build of 15:03): no badge, "Last error" =
       `WeatherDaemon.WDSJWTAuthenticatorServiceListener.Errors Code=2`.** Checked from the Mac: the signed app and
       its profile (created 2026-10-07 12:20) carry `com.apple.developer.weatherkit`, a city is set, the phone's
@@ -1249,17 +1267,65 @@ step 0b. With the switch ON: the Focus test again (leave the app during a night 
 first look does not bother him; the warning appears and disappears with the iOS switch ("works excellently", "big
 praise"); with the switch on the "Come back" warning arrives during a Focus; the weather is still refused by
 Apple (Code=2). **Follow-ups he approved, before step 3:**
-- [ ] **A1 – Today: a triangle instead of the card.** The tall `TimeSensitiveCard` goes; while the switch is off
-      Today shows one tappable orange warning triangle (a navigation-bar item top left, the mirror of the weather
-      badge – nothing on Today moves, the semicircle and the title stay). A tap opens the app's Settings tab at the
-      notifications section (the row with the explanation and the "Open notification settings" button stays)
-- [ ] **A2 – a second weather source: MET Norway** (Locationforecast 2.0, no account, needs an identifying
-      User-Agent and a credit). Used when WeatherKit fails; the store remembers which provider gave the shown
-      value, the credit in Settings → Sky / Credits follows it, Weather test shows it. No past hours there → the
-      "snow lies" rule only knows "it snows now" with this source (to revisit in step 3)
-- [ ] **A3 – TestFlight preparation:** `Info.plist` takes version and build from `project.yml` (1.0, next build
-      2 – every upload needs a higher one), `PrivacyInfo.xcprivacy` with the reasons for the APIs the app really
-      uses. The Developer section stays visible for now (the owner has not decided)
+- [x] **A1 – Today: a triangle instead of the card** – built and reviewed 2026-10-07 evening (not on the phone
+      yet). `TimeSensitiveCard` is gone; `TimeSensitiveWarningModifier` (`.timeSensitiveWarning()` next to
+      `.todayWeather()`) puts one orange `exclamationmark.triangle.fill` into the navigation bar top LEFT, only
+      while the switch is off (no item otherwise – iOS 26 would draw an empty capsule). A tap calls
+      `AppModel.showNotificationSettings()`: `RootView` selects the Settings tab (never animated) and `SettingsView`
+      scrolls to its notifications section. The scroll is a ONE-SHOT (`takeNotificationsScroll()`): the first
+      version scrolled on every later visit of the tab and after a language switch – caught in review. Nothing on
+      Today moves; "Go to sleep" is back on the screen. Dev argument `-thenTab warning`. No new strings
+- [x] **A2 – a second weather source: MET Norway** – built and reviewed 2026-10-07 evening (not on the phone yet).
+      SleepCore `MetNorway.swift`: `WeatherProvider` (apple / metNorway / simulated), the symbol rule for MET's 41
+      symbol names (thunder > snow > sleet > rain > fog > cloudy > clear, light / plain / heavy), the request URL
+      with the coordinates rounded to 2 decimals, the parser (the last entry not after now; temperature, cloud
+      cover, the next hour's symbol). App: `MetNorwaySource` (Locationforecast 2.0 compact; User-Agent
+      `SleepHole/<version> github.com/zrebec/sleephole` – a generic one is refused; answers from memory until the
+      response's `Expires`), `FallbackWeather` (WeatherKit first, MET Norway when it throws; remembers who
+      answered and Apple's error as a note), the store keeps the provider with the cached value (an older cache
+      reads as Apple). The credit follows the provider in Settings → Sky ("Weather data: MET Norway" + a licence
+      link), Credits lists both; Weather test shows "Answered by" and "Note". `-weatherSource met` asks MET Norway
+      live, also in the simulator: a real request showed "23° ☀️" by day and "21° 🌙" after dusk for Bratislava.
+      **Limits:** no past hours and no snow depth from this API → "snow lies" only knows "it snows now" (revisit
+      in step 3); `Expires` is kept in memory only. **Unverified until the phone:** the fallback itself (Apple
+      refuses → MET Norway answers) – the simulator has no WeatherKit
+- [x] **A3 – TestFlight preparation** – built and reviewed 2026-10-07 evening. `project.yml`:
+      `MARKETING_VERSION` 1.0, `CURRENT_PROJECT_VERSION` 2, and `Info.plist` now takes both from there
+      (`$(MARKETING_VERSION)` / `$(CURRENT_PROJECT_VERSION)`) – **raise `CURRENT_PROJECT_VERSION` before every
+      upload** (build 1 is at Apple). `SleepHole/Resources/PrivacyInfo.xcprivacy`: no tracking, nothing collected,
+      UserDefaults (reason CA92.1) and the system boot time (35F9.1) – the only required-reason APIs the code
+      uses (audited: no file timestamps, disk space or keyboards). XcodeGen bundles the file by itself. The
+      Developer section is still visible in every build (the owner has not decided)
+
+On the merged tree (2026-10-07 18:20): SleepCore 231 tests, app 264 tests (92.16 %), i18n 579 keys / 0 missing /
+0 without sk / 0 unused. Not committed, not on the phone. **Phone check for the owner (short):** with the iOS
+switch off – the triangle top left on Today, a tap lands in Settings at the notifications; a temperature top
+right on Today (from MET Norway while Apple refuses) and Developer → Weather test → "Answered by" + "Note".
+
+**Step 2b – Weather as animation across the whole Today screen** (owner 2026-10-07 at night: "snow, rain – all of it
+must be animations across the complete Today, like a wiper on a car; when the wind blows the dashboard is affected
+too; touching the weather makes it gust. 1 collect the trends of weather apps (Android, iOS), 2 take what you think is
+good, 3 implement – only the weather, nothing else. Result tomorrow.") **ON HOLD since the same night: B24 / B25 and
+the lock screen came first (priority 0).**
+- [x] Research (2026-10-07): Apple Weather – full-screen animated backgrounds that follow the real weather and the
+      sun, realistic rather than cartoon-like; Xiaomi HyperOS – drops land on the edges of UI elements and bounce;
+      Samsung One UI 8 / 8.5 – full-screen scenes with depth, rain and snow pass BEHIND objects; Google Pixel Weather –
+      vibrations and a sound matched to the animation, strength by precipitation.
+- [x] Wind in the data (one Sonnet worker, 2026-10-07): `WeatherNow.windSpeedMS` / `windFromDegrees` (optional – an
+      old cache still decodes), `WindLevel` calm / breeze / windy / gale (< 3 / < 8 / < 14 / ≥ 14 m/s),
+      `WeatherRules.windBlowsRight`; filled from WeatherKit and from MET Norway (`wind_speed`,
+      `wind_from_direction`); simulation `-weatherWind N` and a wind picker in Developer → Weather test.
+- [ ] Design chosen by Opus (the owner has seen it in words, not agreed in detail): rain / snow over the whole
+      screen in two depth layers (dense behind the cards, sparse in front, never catching touches); the real wind
+      slants them; in strong wind gusts sweep across the screen and the cards lean a few points and settle (the
+      title and the semicircle never move); a tap on the weather badge = a gust across the whole screen with
+      `fx_whoosh` and a haptic; thunder = one soft flash; nothing is drawn in clear calm weather; nothing with
+      Reduce Motion; never on the night screen. Pure maths (plan, particle positions, gust envelope) in SleepCore
+      with tests, drawing in `SleepHole/Weather/` with `TimelineView` + `Canvas`.
+- [ ] **Open question for the owner:** "like a wiper on a car" was read as "the gust sweeps across the whole screen
+      and pushes the precipitation aside". If he meant drops on glass and a real wiper, that is a different effect.
+- [ ] Later: drops splashing / snow settling on the top edges of the cards (needs the cards' frames).
+- [ ] Simulator videos for the owner (rain, heavy rain, snow, thunder, wind); the phone only when he says so.
 
 **Step 3 – Rain and snow in the town** (after checkpoint A)
 - [ ] `TownScene.setWeather(...)`: particles as children of the camera node (they stay on screen while panning and
@@ -1330,6 +1396,321 @@ line). A swipe in the app switcher delivers it; a kill by iOS for memory, or a c
       alarm rings
 **Accept:** closing the app and using the phone collapses the building; an honest slip (reopened in time) and a
 phone restart do not. **Stop.**
+
+### LOCK-W — The lock-screen warning as a system alarm (owner 2026-10-08) – 🟡 in work
+
+**Why.** The owner's test on the phone (§12, 2026-10-08): using the lock screen is detected (3 of 3), but the warning
+notification stays hidden behind the Camera – only the Apple Watch alerts. An AlarmKit alert covers the Camera
+(his own try with Developer → System alarm test), but the ringing alarm could not be stopped (B27). A unit test
+proved that a Face ID recognition later than the 8 s window is never seen.
+
+**Design.**
+
+1. **The warning rings as a system alarm.** When a `.usedLockScreen` warning is due (unchanged conditions: after the
+   setup, before the wake time, outside a pause, not collapsed) and the system alarm is allowed, the app rings an
+   AlarmKit alarm at once (AlarmKit wants a date ~1.5–2 s ahead): its own id, the title "Put your phone down! Switch
+   the screen off", only the system's stop control (no "Open SleepHole" – unlocking is the wrong advice there). THE
+   system alarm (the night's backup / the safety alarm) is never touched. The notification stays – it is what alerts
+   the watch. Without the consent: the app's own sound, for the whole promised time instead of 3 s.
+2. **The app ends it itself – the owner never has to find a stop button:** the trip ends (`.locked` = the screen went
+   off, `.returned`), the promised 10 s are over, the night ends / is abandoned, or the app is launched cold. The
+   building still falls 13 s after the trip's start (3 s more than promised – in his favour, as with every trip).
+   The system's Stop only silences; the trip keeps counting.
+3. **B27.** The running app stops a RINGING system alarm when it becomes active and no night / nap runs (a waiting
+   safety alarm stays); the test screen gets "Stop the ringing alarm", always enabled.
+4. **Late Face ID.** A recognition that arrives while the screen is still lit, after the window, with no trip open →
+   `.usedLockScreen` at once. A lit screen that is never recognised is still only logged (a known limit: the Camera
+   used with the face out of view and no "Share"; StandBy and Always-On are untested).
+5. **Texts.** One sentence in the guide's lock-screen paragraph; EN + SK.
+
+**Tasks.**
+
+- [x] 1–5 built by a Sonnet worker in the existing files (no new files → no `xcodegen` while the owner's Xcode is open):
+      `SystemAlarm.ringWarning / stopWarning / stopRinging` (the warning keeps its own id, key `systemAlarm.warningID`;
+      `.fixed` 1.5 s ahead, sound `alarm_alert.caf`, tint orange, only the system's stop), `AppModel.startLockWarning /
+      endLockWarning / lockWarningDeadline` (ended on `.locked`, `.returned`, the deadline in `refresh(now:)`, the
+      wake time, `finalize`), `AppModel.appBecameActive` (called from `SleepHoleApp`'s scene-phase handler) +
+      `stopRingingSystemAlarms`, `LifecycleMonitor.dataProtectionChanged` (late recognition), the test-screen button,
+      the guide sentence
+- [x] reviewed by Opus 2026-10-08 12:14: the code read, whole app test target re-run – 304 tests green, no known
+      issue left; i18n 594 keys 0 / 0 / 0; a device build is ready in `build/DerivedDataDevice` (signed, profile until
+      2027-10-07) and NOT installed
+- [x] device install 2026-10-09 12:28 on the owner's word (the build of 2026-10-08 12:45:58 – LOCK-W + the revoke tool)
+- [x] owner's acceptance on the phone 2026-10-09 14:32–14:40 (an 8-minute debug night started remotely, journal in
+      the git-ignored `docs/device-logs/2026-10-09-lockw-test/`). **Owner: "with Face ID everything worked as it
+      should – the way back into the app, the screen off, the alarm covered the Camera."** The journal agrees:
+      detection 8.4–8.5 s after the lock screen lit in all three rounds; (b) back in SleepHole 10.6 s after the
+      detection → the building stood; (a) screen off 5.6 s after it → stood; (c) left alone, back after 23.7 s →
+      `ruins`. The app's audio was interrupted 2.5–2.8 s after each detection (~11 s after the screen lit) – that is
+      the alarm starting (the build of 2026-10-08 without it logged no interruption): AlarmKit accepts an alarm
+      1.5 s ahead and needs about one more second.
+- [ ] still unknown: how long the alarm really rang in (c) – the interruption of the app's audio ended after ~2 s
+      in (b) and (c), which may or may not be the end of the ringing (asked the owner); whether a running video
+      recording mutes it; the system's stop control over the Camera
+- [ ] **the hole without Face ID – seen in the same test (round 0) and asked about by the owner ("are we sure the
+      behaviour without Face ID is all right? I can film, then let Face ID unlock and share")**: the lock screen was
+      lit for 49.5 s with no warning because Face ID had not recognised him; at the recognition the app logged
+      `.usedLockScreen` (the late path of LOCK-W) and he was back 0.8 s later. So filming without Face ID is free
+      and unseen, and what follows the recognition gets the normal 13 s. Proposed, NOT decided: a lit lock screen
+      counts after 20 s even without Face ID (a notification lights it for ~6 s in his nights, the Camera keeps it
+      lit) – needs his answer about StandBy / Always-On first, both would look like "lit"
+- [x] quick night with a 15 s setup (owner 2026-10-09: "the setup is a minute, lower it to 15 s" – it was bedtime
+      + 60 s and 20 s of grace = 80 s): one Sonnet worker – `AppModel.debugGrace` 20 → 15 and the debug window's
+      bedtime `now` instead of `now + 60` (the 15-minute test night now has exactly the 5 min its label promises);
+      reviewed and re-run by Opus 14:50 – app 309 tests green, i18n 594 keys 0 / 0 / 0; a device build is ready in
+      `build/DerivedDataDevice` (2026-10-09 14:50) and NOT installed
+- [x] installed 2026-10-09 15:03 on the owner's word ("reinstall the app so that the 15 s are there"); no night or
+      nap was running
+- [x] one notification instead of two on the lock screen when the phone rings the system-alarm warning (owner
+      2026-10-09: "notifications reach the watch terribly often – one warning is enough"): one Sonnet worker –
+      `Notifications.lockScreenNudge(tolerance:alarmRings:)` skips `nudge-2` when the AlarmKit consent is `.allowed`
+      (pure helper `lockScreenNudgeIDs`, two tests); the fallback without consent and the ordinary trips keep two.
+      Reviewed and re-run by Opus 15:12 – app 311 tests green, i18n 594 keys 0 / 0 / 0. The call site in `AppModel`
+      is covered by review only (tests run without services). A device build is ready (2026-10-09 15:12), NOT
+      installed
+- [ ] install that build on the owner's word; then he checks on the watch: one notification per lock-screen warning
+- [x] **lock-screen lab (owner 2026-10-09: "yes to the measuring for the rule without Face ID, then install, then
+      start a quick test")** – a developer-only recorder built by one Sonnet worker (`SleepHole/Debug/LockLab.swift`,
+      launch argument `-lockLab`, records only during a DEBUG night into `Library/Application Support/lock-lab.log`:
+      the monitor's raw signals, extra Darwin candidates, brightness / battery / orientation / audio-interruption
+      notifications and a one-second line with lit, protected data, app state, peak acceleration and rotation,
+      gravity). No rule changes. Reviewed by Opus (code read; 316 of 317 app tests green – the one failure is the
+      random-dependent `ClosureTests.revokingTheForgiveness…`, see the next task; i18n 0 / 0 / 0), installed
+      2026-10-09 15:38 on the owner's word, first run 15:38–15:48 (results in §12).
+- [ ] lab, second run – what one run cannot show: the always-on display on and off, StandBy, a real notification
+      wake (watch off the wrist), a timer / another app's alarm ringing on the lock screen
+- [x] **one notification per trip everywhere, in words a first-time user understands (owner 2026-10-09)** – one
+      Sonnet worker: `nudge`, `lockScreenNudge`, `closed` schedule one notification each with the texts the owner
+      approved ("⚠️ Pozor! SleepHole musí zostať otvorená" …), the `-2` identifiers are only cancelled any more, the
+      guide quotes the new title, 9 old keys removed / 7 added. The flaky `ClosureTests.revokingTheForgiveness…`
+      is fixed in the test (cause confirmed in the code: the system RNG may give the ninth night the first level-2
+      building, whose achievement pays 50 coins on top of the night's own). Reviewed and re-run by Opus 16:05 – app
+      316 tests green, i18n 592 keys 0 / 0 / 0. Not installed yet.
+- [x] lab, second run 2026-10-09 15:59–16:05 with the always-on display ON (results in §12)
+- [x] **B28 + the owner's two rules, built by one Sonnet worker and reviewed by Opus 2026-10-09 16:32** (code
+      read; app 331 tests green, i18n 596 keys 0 / 0 / 0; a device build is ready in `build/DerivedDataDevice`,
+      NOT installed): (1) **B28** – a UIKit background task (`KeepAlive` seam, `UIKitKeepAlive`) from the start of
+      the lock warning until `stopWarning()` has really run; lab lines `lock warning started / ended`, `keep-alive
+      began / ended / EXPIRED` and `bg=<s>` in the one-second line. Whether iOS really keeps the app running while
+      the alarm holds the audio is unproven until the phone. (2) **a notification ALWAYS when the building
+      collapses** – `Notifications.collapsed(isNap:at:)`, id `collapsed`, time-sensitive, scheduled in advance when
+      a trip starts (pure `collapseNoticeTime`; at once when the budget is used up), withdrawn when the trip ends in
+      time, on a call, on a pause, on finalize; a delivered one stays. Texts: "🧱 Stavba sa zrútila / Dnes sa už nič
+      neráta – pokojne spi, zajtra staviaš znova 🌙", nap "😕 Odpočinok sa prerušil / Dnes sa už neráta – skús to
+      zajtra znova 🌙" (shown to the owner, not yet answered). Two gaps: no new notice after a call ends or a pause
+      runs out while he is still away. (3) **the remaining seconds in the system-alarm title** – "Odlož telefón!
+      Zhasni obrazovku do N sekúnd" (`ringWarning(soundFile:seconds:)`).
+- [x] **lock screen without an unlock – DECIDED by the owner 2026-10-09** ("yes – filming or another app started
+      from the lock screen gets the warning after 12 s and the collapse 13 s later, 25 s in all"), built by one
+      Sonnet worker in two rounds and reviewed by Opus 17:01 (code read; SleepCore 260 tests, app 341 tests green,
+      i18n 596 keys 0 / 0 / 0; a device build with everything of the day is ready, NOT installed): pure
+      `SleepCore/HoldDetector` (held = at least 4 of the last 12 seconds with a peak above 0.02 g AND the direction
+      of gravity moved by 3°; a `Summary` with the numbers; the window ends at the NEWEST sample, so no two clocks
+      have to agree), the seam `HandMotion` + `CoreMotionHold` (10 Hz, "stale" after 1.5 s without a sample, runs
+      only while the lock screen is lit, the app not active and no trip open), a third path in `LifecycleMonitor`
+      (`startHeldWatch`: from 12 s on a check every second, `.usedLockScreen` "(lit 12 s while held)"; every check
+      is a raw line with the numbers), the guide sentence ("… po 8 až 12 sekundách príde varovanie"). The two
+      collapse-notice gaps are closed too (`scheduleProjectedCollapseNotice` after a call ends and around a pause).
+      Unproven until the phone: motion samples reaching the app under the lock screen in this code path, the
+      staleness guard.
+- [x] installed 2026-10-09 17:05 on the owner's word and tested with the lab (8-minute debug night, log
+      `docs/device-logs/2026-10-09-lock-lab/lock-lab-4.log`): a tap on the resting phone – lit 6.2 s, nothing; the
+      Camera without Face ID in the hand – `.usedLockScreen` 12.8 s and 12.7 s after the screen lit (`active=10/12
+      tilt=67.7°`, `active=11/12 tilt=59.2°`, 120 samples each – motion reaches the app under the lock screen);
+      round 1: screen off 7.9 s after the warning → the building stands; round 2: left alone → the app ended the
+      warning exactly 10.0 s after it started, the night is `ruins`. No gap in the one-second lines. **B28 is NOT
+      proven:** the alarm gave the audio back after 1.5–2.2 s in both rounds, so the app was never in danger of
+      being suspended (`bg=inf` throughout). Not known: whether the collapse notification arrived (asked).
+- [ ] **OPEN – the product's tone (owner 2026-10-09 right after this test: "that system alarm is quite annoying …
+      I do not want the app to enforce its rules like a prison … more 'keep your sleep rhythm' than 'you are in jail
+      and using the phone is punished' … reward rather than enforce … let us change it now rather than after
+      TestFlight and the App Store").** He asked for: the list of system alarms and why, the list of all
+      notifications with their texts and why, ideas for the Dynamic Island, and Opus's own opinion. Opus's answer
+      (chat, 2026-10-09 ~17:30): keep the detection, soften the delivery – the system-alarm warning only as an
+      opt-in strict mode, calmer texts, a calm-night bonus in proportion to the economy (his "1000 coins for at most
+      3 looks" would break it: a level-1 night pays 100, a level-4 building costs 1000), the shop first so that
+      coins mean something, a flexible bedtime, a Live Activity with a live countdown (needs a widget extension;
+      whether it shows over the lock-screen Camera has to be tried). The crux he has to decide: without the alarm a
+      user with no watch gets no visible warning inside the lock-screen Camera, and his own rule says "no collapse
+      without a real warning". **Nothing of it is decided or built.**
+- [ ] **the next rule – lock-screen use without Face ID, for ANY user (owner 2026-10-09: "can we count the time
+      without Face ID too? … it is an app for many users, do not count only with me").** What iOS lets the app see
+      while it runs under the lock screen (no permission, no data leaves the phone): the screen lit / dark
+      (undocumented Darwin signal, already used), protected data available = Face ID / Touch ID / passcode done
+      (documented), raw accelerometer (`CMMotionManager`, no permission), audio-session interruptions, call state.
+      What it cannot see without the Screen Time APIs (forbidden, hard rule): which app or screen is in front, so
+      "the Camera is open" is unknowable. Today's rule leans on Face ID and therefore differs by device: with Face ID
+      a use without recognition is unseen (49.5 s in the test), with Touch ID nothing counts until the sensor is
+      touched, with no passcode every lit screen over 8 s counts. **Opus proposes (not decided):** count a lit lock
+      screen regardless of the unlock state once it is clearly not a passing wake – lit for more than ~20 s, or lit
+      AND the phone is being moved – after a measuring step on a device: a debug "lock-screen lab" that logs lit /
+      dark, protected data and accelerometer for a notification wake, raise to wake, the always-on display, StandBy,
+      a charger being plugged in, filming by hand. The thresholds come from that log, not from the owner's habits.
+- [ ] **Focus (owner 2026-10-09: "can we switch the phone into the Sleep Focus or at least Do Not Disturb? …
+      it must be switchable in Settings, not everyone wants Focus modes").** iOS has no public API that turns a
+      Focus on or off. What exists: (1) `INFocusStatusCenter` – only "some Focus is silencing this app: yes / no",
+      needs the user's permission and is meant for messaging apps; (2) a Focus Filter (`SetFocusFilterIntent`) – the
+      user adds SleepHole's filter to a Focus of his choice and iOS then tells the app when that Focus starts and
+      ends; (3) Shortcuts – the built-in "Set Focus" action can switch Do Not Disturb / Sleep, the app can offer an
+      App Intent "start the night" for the user's own automation ("when the Sleep Focus turns on → start the night
+      in SleepHole") and can run a shortcut the user installed (`shortcuts://x-callback-url/run-shortcut`, a short
+      trip out of the app inside the setup time). Our warnings already pass any Focus (Time Sensitive + AlarmKit).
+      Not decided; nothing built.
+
+
+**Open decision – the forgiven night of 2026-10-07 → 08 (owner 2026-10-08: "is it justified to take the building
+away?").** Opus recommends: revoke the forgiveness and let the game's own rules decide. With the `.forgiven` events
+ignored the night is `ruins`; nine complete nights in a row and no joker used in October mean the automatic bronze
+joker (`Jokers.apply`) turns it into `.excused` by itself: no building, no coins for it, the streak neither breaks
+nor grows, the October joker is spent – exactly what he proposed, with no special case. A plain ruin would punish
+him for the app's own fault (B24). Needs a small developer tool (a launch argument that re-evaluates the last real
+night without its `.forgiven` events and stores that outcome; tests in SleepCore + the app; the store pulled first).
+
+**Decided by the owner 2026-10-08 ("yes, revoke the forgiveness, take the building, no ruin, take the bronze joker –
+that closes it").**
+
+- [x] built by a Sonnet worker: the diagnostic event `.forgivenessRevoked` (a log that has it ignores every `.forgiven`
+      – `NightEvaluator.awayIntervals`, `NightReport`), `AppModel.revokeForgiveness()` (the latest finalized real night
+      that was forgiven: appends the event, re-derives `outcomeRaw` + `awaySeconds` with the record's rules, rebuilds
+      the town; idempotent; nothing while a night runs) and the launch argument `-revokeForgiveness`
+- [x] reviewed by Opus 2026-10-08 12:46: SleepCore 248 tests, app 308 tests green, i18n 594 keys 0 / 0 / 0
+- [x] proven in the simulator on a COPY of the owner's store (pulled right before, `STORE` way of `tools/sim_shot.sh`):
+      before – streak 9, built nights 9, coins 1870, the night green in the calendar; after `-revokeForgiveness` –
+      streak 8, built nights 8, coins 1740 (−130), the night shown as a joker; the record reads `ruins`, no
+      `JokerRecord` is written (the bronze one is automatic)
+- [x] on the phone 2026-10-09 12:28 (on the owner's word, phone unlocked, no night or nap running): the store pulled
+      first (`docs/device-logs/2026-10-09-before-revoke/`), the revoke re-run in the simulator on that fresh copy (one
+      honest night had been added since: 2026-10-09 `complete`), the waiting build installed, launched once with
+      `-revokeForgiveness`, the store pulled again (`…/2026-10-09-after-revoke/`): the record of 2026-10-08 reads
+      `ruins` with `.forgivenessRevoked` at 12:28:06, the night of 2026-10-09 is untouched, no `JokerRecord`. Derived
+      numbers (simulator, identical records): streak 10 → 9, best streak 10 → 9, built nights 10 → 9, coins 2120 →
+      1940 (−130 for the night, −50 for the `built10` achievement that is not reached any more and comes back with
+      the next built night), 2026-10-08 shown as a joker, only that one house gone from the town, every other
+      building in its place. The averages and the chart lose the night by themselves (`Jokers.apply` replaces a
+      protected night with a bare `.excused` result – no start, no wake-up, no bedtime)
+- [ ] owner looks at it on the phone (Stats: 9 / 9 / 9 / 1940, the 8th as a joker; Town: 9 buildings)
+
+### CARE — Care instead of enforcement (owner 2026-10-09 evening) – 🟡 direction decided, details proposed
+**Why.** Right after LOCK-W worked on his phone the owner stepped back: "that system alarm is quite annoying … I do
+not want the app to enforce its rules like a prison … more 'keep your sleep rhythm' than 'you are in jail' … a person
+should feel safe, like in childhood, when the only duty was to go to bed on time because the parents cared … let us
+change it now rather than after TestFlight and the App Store." He also said why the alarm sounded so short in the
+tests: **he switched it off himself each time because it is so unpleasant** (so the 1–3 s interruptions were his, the
+21.5 s one was the alarm left alone – B28 stands).
+
+**Decided by the owner 2026-10-09 (his answers to Opus's proposals):**
+- **Recommendation A:** using the phone on the lock screen does NOT collapse the building by default; it only costs
+  the reward for calm time. The collapse stays for clearly leaving the app (unlocked into another app, the app
+  closed), where the notification is visible.
+- **The system-alarm warning becomes an opt-in "strict mode" in Settings** (default off).
+- **Caring texts** everywhere ("take-caring texts are better 👍").
+- **Rewards in proportion to calm time** – his idea: every hour without a lit display until the wake-up pays +5 or
+  +10 coins ("more take-caring").
+- **Dynamic Island / Live Activities as much as possible** – a live countdown for nearly everything that is a
+  notification today; if it works inside the lock-screen Camera, many notifications and the system alarm can go.
+- **Order of the bigger things:** Apple Health first, then buying buildings (the shop).
+- **Flexible bedtime:** yes, but only after a written proposal (maybe two variants) and "a pile of follow-up
+  questions" – "so that we really decide well".
+- **Jokers:** he had understood "one joker of EACH kind per month"; today it is one joker of ANY kind per month, so
+  after October's automatic bronze nothing can be bought. He handed the design to Opus.
+
+**Opus's proposal for the details – waiting for his yes (asked 2026-10-09 ~17:50):**
+- [ ] **CARE-1 – strict mode + the gentle default + the texts.** `SleepRules` gets the mode (stored with each night,
+      so a night keeps the rules it started with). Default: detection as built (8 s recognised / 12 s held), no
+      system alarm, one calm notification, the trip is written into the journal but is not away time – no collapse.
+      Strict mode: what LOCK-W built (alarm, 13 s, collapse). Leaving the app / closing it: unchanged rule, new
+      texts. Proposed texts (Slovak, his language of approval): leaving – "🌙 SleepHole na teba čaká" / "Vráť sa do
+      N sekúnd, nech dnešná stavba vydrží 🏗️"; lock screen, default – "🌙 Telefón má teraz voľno" / "Zhasni
+      obrazovku a pokojná noc pokračuje."; lock screen, strict – same title / "Zhasni obrazovku do N sekúnd, nech
+      dnešná stavba vydrží 🏗️"; closed – "🌙 SleepHole sa zavrela" / "Otvor ju do N sekúnd, nech dnešná stavba
+      vydrží 🏗️"; collapse – "🧱 Dnešná stavba spadla" / "Nič sa nedeje – pokojne spi, zajtra staviame znova 🌙";
+      pause over – "🌙 Pauza sa skončila" / "Vráť sa do SleepHole, nech stavba vydrží 🏗️"; end of setup – "⏳
+      Ostáva 15 s na prípravu" / "Vráť sa do SleepHole a zhasni – dobrú noc 🌙".
+- [ ] **CARE-2 – calm hours – CONFIRMED by the owner 2026-10-09 21:15 ("I agree and confirm"):** every hour of the
+      night with the screen off pays **+10 🪙**, and **+11 🪙 when the phone was not even moved** in that hour ("a
+      tiny bonus that may one day help us make our own algorithm for when one really fell asleep"). Proposed
+      details, still Opus's: full hours between the end of the setup and the wake time; a screen that lights up by
+      itself does not spoil the hour (only use does); no bonus hour during a pause; the morning says it kindly ("8
+      pokojných hodín 🌙 +80 🪙", "7 z 8" without blame). Open for the design: "not moved" needs the motion sensor
+      for the whole night (today it runs only while the lock screen is lit) – measure the battery cost first. Not
+      built; after Apple Health unless he says otherwise.
+- [ ] **CARE-3 – Live Activity spike** (a widget extension, ActivityKit): a night's Live Activity with a live
+      countdown; try on the phone whether it shows in the Dynamic Island over the lock-screen Camera and on a phone
+      without the island. The result decides which notifications and whether the strict-mode alarm can be replaced.
+- [x] **Jokers – each kind once a month, independently (owner 2026-10-09: "build the jokers as you proposed – it
+      was exactly my proposal too")**: one Sonnet worker – `Jokers.apply` lets only a BRONZE use up the month's
+      automatic bronze, `Jokers.block` blocks only the SAME tier in the month; three texts; SleepCore 264 tests, app
+      341 (worker's run; Opus read the diff, its own run follows with the next step). Note: a silver / gold bought
+      the morning after an automatic bronze starts TONIGHT (`Jokers.firstNight`), so both stay in effect.
+- [ ] **Order agreed 2026-10-09 ~18:00 (owner: "step by step – jokers first, then the softer texts with a table of
+      what changed into what, then no siren, then the strict mode; install and a test round after that"; the
+      Dynamic Island in the lock-screen Camera as its own step after the install – Opus's suggestion, he had it
+      second):** texts in work (33 rows, the table is in the chat and in the worker's brief).
+      **His review of the table (18:35) – real warnings keep their titles:** leaving the app, the closed app and the
+      end of the pause keep "⚠️ Pozor! …" (only the bodies get "…, nech dnešná stavba vydrží"), the lock screen
+      gets "💤 Telefón má teraz voľno" (💤, not one more moon), the collapse gets "😢 Dnešná stavba spadla" / "Nič
+      hrozné sa nestalo. Všetko sa dá opraviť, zajtra to skúsime znovu.", the nap title and every descriptive text
+      stay as they were (result of the night, result of the nap, the trip without a return, the guide's start window
+      and trips, "the next trip may be your last"); new also: the cancel question, the used-up budget line, "len
+      tak ďalej 💪", the guide's line about notifications. The three texts that still quoted the old title "Vráť
+      sa" now quote "SleepHole musí zostať otvorená". Lesson: he wants a WARNING to look like one – soften what
+      the text says, not the fact that it warns.
+- [x] **texts done and on the phone 2026-10-09 20:37** (with the jokers; his last change: "nech stavba pokračuje"
+      instead of "vydrží" everywhere). Reviewed by Opus: SleepCore 264, app 341 tests green (own run 20:36), i18n
+      596 keys 0 / 0 / 0. The behaviour on the phone is still the strict one (alarm + collapse on the lock screen).
+      Two lessons of the evening: (1) the MacBook slept with its lid closed 18:50–20:17 and the worker stood still;
+      (2) the worker and Opus ran `xcodebuild test` on the same simulator at the same time and killed each other's
+      runs ("Mach error -308, server died") – one run at a time, and a worker is told so in its brief.
+- [x] **CARE-1 logic (step 3 + 4: gentle default, strict mode in Settings)** – one Sonnet worker, reviewed by Opus
+      2026-10-09 20:55 (key lines read; SleepCore 273 tests, app 353 tests green in Opus's own run; i18n 598 keys
+      0 / 0 / 0; a device build is ready, NOT installed): `SleepRules.lockScreenCollapses` (true by default = old
+      nights and every old test), `NightEvaluator.awayIntervals(_:rules:)` skips `.usedLockScreen` in a gentle
+      night and counts from a `.leftApp` inside such a trip, `NightReport.Trip.notCounted`, `NightRecord.
+      strictLockScreen: Bool?` stored at the start (nil = strict), carried by the backup, `AppSettings.strictMode`
+      (Settings: its own small section after Notifications / System alarm, disabled while a night runs),
+      `LifecycleMonitor` emits `.leftApp` after an unlock inside a lock-screen trip, `AppModel` sends
+      `Notifications.lockScreenReminder()` ("💤 Telefón má teraz voľno" / "Zhasni obrazovku a pokojná noc
+      pokračuje.") instead of the alarm, the guide sentence. Hard rules in `AGENTS.md` rewritten. Open edge (strict
+      only): unlocking into another app while the alarm rings does not stop the alarm early.
+- [x] CARE-1 installed 2026-10-09 21:00 on the owner's word (before his bedtime; the store was backed up to
+      `docs/device-logs/2026-10-09-before-care1/` and the new build was first opened in the simulator on a copy of
+      it – the new optional column migrates, the numbers are unchanged) and tried at once in a 5-minute debug night
+      with the lab (`lock-lab-5.log`): the night stored `strictLockScreen = 0`; lock-screen use on the 8 s path
+      (recognised) and on the 12 s path (`active=12/12 tilt=82.3°`) – no alarm, no keep-alive, no audio
+      interruption, the building stood; then an unlock straight into another app for 32 s → `.leftApp`, `ruins`.
+      **Owner: "it is better already, only a calm warning."** He tries Strict mode himself.
+- [ ] **B29 (found in that log):** unlocking straight into another app logs TWO `.leftApp` events for one trip –
+one from `unlockCandidate` ("unlocked but did not return in 5 s") and one from the background decision
+      ("background without a lock signal", stamped earlier). Checked in the code the same evening: no second
+      warning goes out, only the trip starts ~3.4 s earlier than the warning assumed (§11a B29). The background
+      decision does not look at `isAway`. Small fix, first thing 2026-10-10; not installed tonight.
+- [x] Strict mode checked by the owner 2026-10-09 21:04 ("strict mode works, the siren sounded"); the lab agrees:
+      the night stored `strictLockScreen = 1`, 12 s held → `.usedLockScreen`, keep-alive, the alarm 2.6 s later,
+      back in the app 10.0 s after the detection → the warning and the keep-alive ended, the building stood.
+      At 21:06 the switch was still ON in the phone's settings – he was told, because the real night stores the
+      mode at its start.
+- [ ] then: HealthKit ("when I really fell asleep", backlog idea 4) → the shop → the flexible-bedtime proposal.
+- [x] **closing check 2026-10-09 21:10 (owner: "go over once more whether we did everything from the texts and
+      remarks, analyse where a bug could still be – we want to close the chapter"):** 24 agreed texts compared with
+      the catalog – 0 mismatches, no leftover of the old wording; no stray debug code; `AppModel.append`'s leave
+      branch re-read (gentle / strict, the collapse notice, B29's real effect); a process started with
+      `-startTestNight` only skips the first-run guide and the permission prompt, so a real night in it is fine;
+      the data upgrade keeps the numbers (simulator on a copy: 9 / 9 / 9 / 1990). Not verifiable from the Mac: the
+      gentle reminder inside a Focus, an unlock into another app out of an OPEN lock-screen trip on the phone (unit
+      tests only), the collapse notification with the app swiped away, B28.
+- [ ] **ORDER FOR 2026-10-10 (owner 2026-10-09 21:10: "write it down for tomorrow as point 1, and then finally
+      Apple Health – I am really looking forward to it"; asked which comes first, the Dynamic Island or Apple Health,
+      Opus recommended Health first):** (1) B29 + anything the night shows, install on his word, a short check;
+      (2) **Apple Health** – analysis first (read-only sleep data, "went to bed" next to "fell asleep" in the chart),
+      then small steps; (3) the Dynamic Island / Live Activity try; then CARE-2 (calm-hour coins), the shop, the
+      flexible-bedtime proposal.
+- [ ] **TestFlight (owner 2026-10-09: "the mail still has not come, two days – why?"):** Xcode's own log of the
+      upload (`…/T/SleepHole_2026-10-07_16-24-00.866.xcdistributionlogs`, on this Mac only) says "UPLOAD SUCCEEDED
+      with no errors", no warnings, build 1 – Apple has the build. What happened after that is visible only in App
+      Store Connect → SleepHole → TestFlight → the build's status; Opus cannot see his account. Ask him for that
+      status (or look together) before guessing further; the next upload is build 2 with the privacy manifest.
+- [ ] when CARE-1 is built: rewrite the hard rules in `AGENTS.md` (R3's lock-screen part, "Warnings and
+      notifications", "Lock screen without an unlock") and the guide text.
 
 ### F6 — Paid Apple Developer Program (owner 2026-10-04: "next phase: F6, analyse it first"; the paid team is confirmed by a signed build)
 **Analysis (Opus, 2026-10-04; sources: the iOS 27 SDK's `AlarmKit.swiftinterface`, Apple's WWDC25 session 230
@@ -1444,6 +1825,38 @@ possible or is your solution better? Then I leave it at Recommended." (Per-weekd
 "Come back!" arrives during a Focus. **Stop.**
 
 ### Backlog from the owner (2026-09-30) – to discuss / schedule
+- [ ] **Five ideas from the owner, 2026-10-09 ("for now only a consideration") – nothing approved, nothing started.
+      Sizes are Opus's estimates (S = one worker step, M = 2–4 steps with checkpoints, L = a phase of its own).**
+      1. **The town as an island on living water** instead of a slab floating in the sky ("not a void like in
+         Minecraft"): an irregular outline (random is fine as long as the town always fits – else a rectangle), animated
+         water around it with a fake glint. **M.** The outline can be derived instead of guessed: the town's footprint
+         (`TownLayout`) grown by 2–3 tiles + seeded noise on the rim, never shrinking as the town grows – a pure
+         function in SleepCore with a "the town always fits" test; the water is one `SKShader`. Open: does the water
+         fill the whole Town tab (no sky there any more) or is there a horizon; it should come before / with TOWN-W
+         step 4 (day and night in the town), because the water reflects the sky.
+      2. **Live weather across the whole screen, "like on the HTC HD2"** (rain over everything). This IS TOWN-W step 2b
+         (on hold) – and the HD2 answers the open question about the "wiper": HTC Sense let drops gather on the glass
+         and a wiper swept them away. **M.** Open: only Today or every tab.
+      3. **Starting the bedtime / the nap from the Apple Watch** (a full Watch app only at the very end). The button is
+         the small part; the catch is the night's own rule – SleepHole must be in front on the iPhone, and iOS lets
+         nothing bring an iPhone app to the front from the watch. Needs a spike on the phone before any promise: with
+         SleepHole left open on the phone, can a command from the watch start the night and keep the app running
+         (background audio) while the phone is locked? Spike **S**; the feature **M** if the spike passes; a real
+         Watch app **L**.
+      4. **HealthKit: when he really fell asleep** next to when he went to bed (a green dot = build start, a blue dot =
+         asleep) "so one finds one's best sleep window". **S–M.** Read-only `sleepAnalysis` (the watch, other sleep apps if they
+         write to Health), a replaceable source like `WeatherSource`, the rule "first asleep sample after the start"
+         in SleepCore, the blue dot in `NightChart`, a row in the night detail, an average time to fall asleep. Health
+         data cannot be read while the phone is locked – read it in the morning. The hard rule "HealthKit only when
+         the owner asks" is met the moment he approves it. It also gives the still owed Health comparison for old
+         nights (Health keeps history). The public repo gets code only; TestFlight needs the Health purpose text.
+      5. **Swapping Kenney's city for Kenney's Fantasy Town Kit – "only the assets? S or M?"** Not only the assets:
+         **M–L.** The kit is on disk (`3D assets/Fantasy Town Kit`, ~170 models) but it is a construction set – walls,
+         roofs, stairs, fountain parts, stalls, road tiles – with NO finished buildings, while today's catalog has 107
+         whole buildings (83 / 4 / 5 / 11 by level + 4 parks). Every building would have to be composed in
+         `make_recipes.py` (`part(...)` already allows it), plus roads, ruins, scaffolds, level-4 landmarks. Stored
+         ids stay (hard rule), so it has to be a second theme with a mapping old → new. A small theme (~30 buildings)
+         is M, full parity L.
 - [ ] **TestFlight (owner asked 2026-10-07: "how do I put the app on TestFlight, to send somebody a mail?")** –
       answered in the chat, nothing built in the app. State of the project checked the same day: the built app is
       version 1.0 (1) (`Info.plist` carries the literal, `MARKETING_VERSION` 0.1.0 in `project.yml` is not used),
@@ -1576,6 +1989,12 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | ✅ B21 | – | – | No warning during a Focus (owner 2026-10-07: Sleep and Do Not Disturb – "Come back!" never arrived and the building collapsed after 13 s) | not a bug in the app: Time Sensitive Notifications were switched off in iOS (owner, same day); the code marks the night's notices `.timeSensitive` and the build carries the entitlement. Follow-up he asked for: the app warns while the switch is off (§10 TOWN-W step 0b). Not re-tested with the switch on |
 | B22 | L | XS | In a quick night the wake code could not be entered before the alarm (owner 2026-10-07, "does not matter – Cancel night is there"), although `NightWindow.canConfirm` is true from wake − 30 min, i.e. for the whole quick night | reproduce in the simulator first |
 | B23 | M | – | No weather badge on the phone: Apple's WeatherKit service refuses the token (`WDSJWTAuthenticatorServiceListener.Errors Code=2`, owner 2026-10-07). The build, its profile and the city are fine (§12, 2026-10-07) | not in the code so far: the owner checks the **App Services** tab of the App ID and waits; still refused the next day → a second `WeatherSource` (§10 TOWN-W step 2) |
+| B24 | H – fix on the phone 2026-10-07 23:29, not confirmed by the owner yet | – | The building collapsed with no usable warning (owner 2026-10-07): the night's 30 s budget SHORTENED a trip – short trips had used most of it, the next trip had under 5 s, detection takes 3 s, so "Come back!" went out ~1.5 s before the collapse and promised "1 second". The grey counter on the night screen was the only hint | fixed: a trip that starts while budget is left is always a full trip with the full warning (`NightEvaluator.allowance`); the night screen says in orange when the budget is low / used up (`AwayBudgetState`); §12, 2026-10-07 |
+| B25 | H – second round on the phone 2026-10-08 00:07, NOT tried yet | – | Using the phone on the LOCK screen (camera, video, replies) was invisible; in the first round the warning reached only the watch and told the owner to "come back" – Face ID wanted the passcode and the building fell by 1.6 s (owner 2026-10-07) | built: `.usedLockScreen` after 8 s of a lit screen with the owner recognised, its own warning ("switch the screen off") + the phone's own sound, all lock-screen signals in the night's log; open: the owner's check, false alarms in a real night (§12, 2026-10-07 and 2026-10-08) |
+| B26 | L | XS | Picking up the ringing phone is logged as `.usedLockScreen`, and the night's story may show it as "used the phone on the lock screen" (owner's night 2026-10-08, §12): the lock screen is lit for 8 s with Face ID done before he unlocks to enter the code. No warning is sent and the outcome is not affected | nothing from the lock screen counts or is told at or after the wake time: gate `.usedLockScreen` in `AppModel.append` (the monitor does not know the night), or drop it in `NightReport` – trips and `lockScreenWakes` that start at or after `alarmFiredAt ?? wake`, like `screenChecks`; a test in `LockScreenTests` |
+| B27 | M | S | A RINGING system alarm cannot be got rid of (owner 2026-10-08, Developer → System alarm test with the Camera open on the lock screen: "help, the phone keeps ringing"): the alert covered the Camera but he found no way to stop it; opening SleepHole did not stop it ("Cancel the test alarm" is disabled once the time has passed, and `tidySystemAlarm` leaves a ringing alarm alone unless the app is launched cold). A volume button seemed to silence it; Opus relaunched the app remotely (a cold launch cancels every leftover alarm) | the running app must stop a ringing system alarm when it becomes active with no night running, and the test screen needs a "Stop the ringing alarm" button; check on the phone what the system's stop control looks like over the lock-screen Camera (he saw "snooze" before, agenda) |
+| B28 | M | S | The lock-screen warning alarm can ring far longer than its 10 s (owner 2026-10-09: 21.5 s, "it rang the whole time"). The ringing alarm interrupts the app's audio session; with the audio gone iOS suspended the app ~4 s later (seen in the lock-screen lab: no one-second lines for 17.4 s), so nothing stopped the alarm at the deadline. A suspended app also learns late that the screen went off – the end of the trip could be logged late. | A UIKit background task from the start of the warning to its end; verify on the phone with the lab. In work 2026-10-09 (plan §10 LOCK-W). |
+| B29 | S | S | Unlocking the phone straight into another app during a night logs two `.leftApp` events for the same trip (seen 2026-10-09 21:02 in the lock-screen lab: `unlockCandidate` after its 5 s window, then the background decision stamped at the earlier background time). **No second warning is sent** (`alreadyCollapsed` is true once a counted trip is open – checked in `AppModel.append`), but the evaluator starts the trip at the earlier stamp: the free window after the unlock shrinks from 5 s to ~1.6 s and the owner has ~9.6 s after the warning instead of 10. The outcome is right. | In `LifecycleMonitor.didEnterBackground`'s delayed decision emit `.leftApp` only when no real leave is open (`!isAway \|\| lockTrip`); a test with both paths. First thing on 2026-10-10. |
 | ✅ B18 | H (process) | – | ~70 files had been changed since the last commit (2026-09-30) | done 2026-10-03: 12 commits on `main` (whole files only – what shares files went into one commit); the owner pushes |
 
 **Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
@@ -1652,7 +2071,20 @@ screen checks.
 | 2026-10-07 | **TOWN-W step 0b built (one Sonnet worker, reviewed by Opus in two rounds); steps 1 + 2 committed (five commits, the owner pushes).** (1) An app can read its own switch only together with the permission: the warning shows when notifications are allowed and `timeSensitiveSetting` is `.disabled`. (2) Review catches: the worker's screenshot named "light" was a DARK one (white title, deep sky) – the picture, not the file name, is the evidence; a `Label` coloured `.orange` as a whole puts orange text on a white Form row (≈ 2 : 1) – colour only the icon. (3) `tools/sim_shot.sh` sets the appearance right after `simctl boot`; twice that did not take and the shot came out dark although light was asked for. Opus repeated both Today shots (`-timeSensitive off` and `on`, no `-theme`): both light – the card has nothing to do with it. For a shot that must be light or dark, add `-theme light|dark`. (4) New dev argument `-timeSensitive off|on` (simulator only). (5) The owner asked about TestFlight – see the backlog entry in §10. |
 | 2026-10-07 | **TestFlight upload refused with ITMS-90035 "Invalid Signature … is not properly signed" – an Xcode cloud-signing bug with an accented name, not the project.** The owner archived (Release, Xcode 27.0 / 27A266a) and chose Distribute App; the upload itself completed and App Store Connect then failed the build. How it was found, all on the Mac: the distribution logs are in the user's temp folder (`getconf DARWIN_USER_TEMP_DIR` → `SleepHole_<date>.xcdistributionlogs/`, the error in `IDEDistribution.standard.log` / `ContentDelivery.log`, the codesign calls in `IDEDistributionPipeline.log`), and the exported app is still next to them in `XcodeDistPipeline.~~~*/Root/Payload/`. There: `codesign --verify` says "valid on disk" but **"does not satisfy its designated Requirement"**; `codesign -d -r-` shows the requirement `certificate leaf[subject.CN] = 0x…` with the name's accented letter as a plain letter + a combining accent (decomposed), while the certificate's CN holds the single precomposed letter – a byte comparison, so it fails. Every other clause passes (Apple anchor, identifier, team, distribution leaf), the profile ("iOS Team Store Provisioning Profile", WeatherKit + time sensitive, `beta-reports-active`) is right. Why: with no Apple Distribution identity in the keychain Xcode uses a cloud-managed certificate (`DISTRIBUTION_MANAGED`); for that it signs ad hoc with an explicit `--requirements` text built from the certificate's name and pastes Apple's remote signature in (`codesign -e --edit-cms`) – the name gets decomposed on the way into the codesign process. A locally signed build (the archive, development certificate) lets codesign derive the requirement from the certificate itself and is fine. Never write the owner's name into this public repo – the logs and certificates contain it. |
 | 2026-10-07 | **The local Apple Distribution certificate fixed the upload (16:24); the phone got the current tree (16:37).** With an "Apple Distribution" identity in the keychain Xcode signs the export itself (`codesign -f -s <hash>`, no `--requirements`, no remote signature): the exported app "satisfies its Designated Requirement", the log says "Upload succeeded", App Store Connect shows the build upload 1.0 (1) as PROCESSING. The three `90035` entries in that attempt's `ContentDelivery.log` belong to the record of the first try. Device install by Opus on the owner's request: `xcodegen generate`, `xcodebuild … -destination 'platform=iOS,name=<device name>' -derivedDataPath build/DerivedData -allowProvisioningUpdates build`, `xcrun devicectl device install app --device '<device name>' build/DerivedData/Build/Products/Debug-iphoneos/SleepHole.app` – the build carries the WeatherKit and time-sensitive entitlements, its profile runs until 2027-10-07. The owner: the weather still does not arrive (B23 unchanged). |
+| 2026-10-07 | **Checkpoint A passed; the follow-ups A1–A3 built by two parallel Sonnet workers (main tree + a worktree), reviewed and merged by Opus.** (1) What made the parallel run painless: Opus created the worktree itself from the current `main` (`git worktree add .claude/worktrees/<name> -b <name>` – the Agent tool's own worktree starts from `origin/main`, which was 9 commits behind), gave each worker a list of files it must not touch (only the weather worker edited the string catalog), and the worktree worker its own simulator (`SIM=<the iPhone 17's id>`). Merge = `git diff` of the worktree applied in the main tree + copies of the new files, then one full test run on the merged tree. (2) MET Norway's Locationforecast needs an identifying `User-Agent` (403 without one), answers with `Expires` / `Last-Modified`, and its first time-series entry is the current hour; `next_1_hours` exists only for the near entries. (3) Review catch: "scroll when the request counter is > 0" in `onAppear` fires on every later appearance – a request that a view consumes must be one-shot. (4) Screenshots under two parallel builds need 120 s; in zsh a variable holding several arguments is NOT split into words – write the arguments out. (5) With a city the sun reaches the left end of the semicircle only at the real sunrise (about 07:00 in October) – at 06:40 the moon still sits at the right end. (6) `Info.plist` is generated by XcodeGen: version and build must be given in `project.yml` (`info.properties`), otherwise it writes the literals 1.0 / 1. |
+| 2026-10-07 | **A collapse without a usable warning (B24, owner's real night – journal pulled into the git-ignored `docs/device-logs/`).** The owner: "I was in the Camera for about 15 seconds and the building collapsed, the warning did not come". What the journal shows (durations only – no details of the night in this public file): (1) after the setup, three trips of 4–6 s and one of 11 s had used ~25 s of the 30 s budget; the next trip therefore had under 5 s (`allowance = min(13, 30 − used)`). Leaving is detected after 3 s (`decisionDelay`), so the notification left ~1.5 s before the collapse with the body "You have 1 seconds". Every trip was a plain "background without a lock signal" – the Camera opened over the unlocked phone, not the `unlocked` → 5 s path. (2) The rule of 2026-10-03 worked as written, but it resolves the clash "10 s after the warning" vs "30 s a night" AGAINST the owner, and the only hint was the grey footnote "Out of the app tonight: 25 s of 30 s". (3) **Fix built the same night (installed – see the next row):** a trip that starts while some budget is left is always a full trip (3 s + 10 s) – the budget never shortens a warning; once the 30 s are used up the night screen says so in orange, and only the trip after that collapses the building at once (as it already did with 0 s left). Strictly in the owner's favour: no night that stood before falls now; a night can reach at most just under 30 + 13 s away. (4) **Not provable from the journal:** whether iOS SHOWED the earlier, full warnings while the Camera was open – the journal records the trips, not the notifications. To check on the phone: Developer → detection test, open the Camera the same way, watch for the banner and the sound. Idea for later: at the return, ask `UNUserNotificationCenter.deliveredNotifications()` before cancelling the warning and log whether it had arrived. (5) The Camera opened from a phone that STAYS locked cannot be seen by the app at all (it only knows "locked") – a known limit of the detection, not new. (6) The night itself cannot be rescued by the fix: after seeing the ruins the owner stayed out of the app for longer than one trip – it was forgiven instead (next row). |
+| 2026-10-07 | **B24 fixed, the night forgiven, and the lock screen is watched now (B25) – two Sonnet workers, reviewed by Opus, installed at the owner's request the same night (23:16 and 23:29; "load it straight onto the iPhone, this night is gone anyway").** (1) **Budget:** `allowance` = a full trip (3 s + 10 s) while `used < budget`, else 0; `NightEvaluator.budgetState` → `.fine` / `.low` (less than one full trip left) / `.spent`; the night and nap screens show an orange notice for `.low` and `.spent`; the guide text says it; no warning is sent at or after the wake time any more (nothing counts then). Stored outcomes never change: only `finalize` runs the evaluator on a real night. (2) **Forgiving a night:** the owner asked for the ruined night to be repaired. No data was edited by hand: a new diagnostic event `.forgiven` drops all away time before it (calls and pauses untouched; `NightReport` too), added only by the launch argument `-forgiveNight` (`AppModel.forgiveNight()`, works on a device). The pulled journal shows the event and the night still running. `devicectl device process launch` needs `--` before the bundle id when an app argument follows (`… launch --device <device name> --terminate-existing -- sk.zrebec.sleephole -forgiveNight`), otherwise its own parser eats the argument; it also fails while the phone is locked ("could not be unlocked") – a background loop that retried every 5 s did the job the moment the owner unlocked. Installing works on a locked phone. (3) **Lock screen (B25):** what the owner's detection test of 2026-09-29 had recorded on this phone: waking the lock screen gives the Darwin notification `hasBlankedScreen state=0`, ~0.5 s later `protectedDataDidBecomeAvailable` when Face ID recognises him (`lockstate` stays 1 until the swipe up), and an idle lock screen goes off by itself after 6.5–7 s (`state=1` + `protectedDataWillBecomeUnavailable`). Rule built on it: lit for more than `lockScreenWindow` = 8 s while the app is not active and protected data is available → `.leftApp`, stamped at the END of the window (free, like the 5 s after an unlock); the screen going off → `.locked`. The Face ID condition is the guard against false alarms (a notification, a charger or StandBy lighting the screen with nobody looking). The monitor got test seams (`isAppActive`, `isProtectedDataAvailable`, the two windows). (4) **Open – only the phone can tell:** does iOS show / sound the warning over the Camera opened from the lock screen, especially while a video is recording; is the Camera caught when Face ID has NOT recognised him; false alarms in a real night (reading the lock screen for more than 8 s counts now – that is the rule, but it is new); StandBy and the Always-On display are untested. The raw facts line ("screen on for 8 s · active=… · protectedData=…") is visible only in Developer → detection test – a real night keeps no raw signals. (5) Parallel work without a commit: the second worker got a worktree filled with `rsync` from the current (uncommitted) tree; the merge was a copy of the three files `diff -rq` listed. SleepCore 238 tests, app 279 tests / 92.24 %, i18n 581 keys 0 / 0 / 0 on the merged tree. |
+| 2026-10-07 | **The lock-screen detection on the phone, first try (owner, ~23:35–23:45; journal pulled into the git-ignored `docs/device-logs/`).** The detection works: twice a lit lock screen became a trip 8 s later. What went wrong around it: (1) **with the phone locked iOS delivers the notification to the Apple Watch and the phone stays silent** – the warning arrives on the wrist only. (2) The text "Come back to SleepHole!" is the wrong advice on the lock screen: the owner unlocked, Face ID asked for the passcode, and he was back 14.6 s after the trip's start – 1.6 s over the 13 s → collapsed. Switching the screen off ends such a trip in a second and needs no Face ID. (3) `UIApplication.isProtectedDataAvailable` stays true for several seconds after a lock, so it does not prove "Face ID has recognised the owner" for a screen that lights up right after locking; the two protected-data notifications do (measured 2026-09-29: unavailable at every lock, available ~0.5 s after a wake with recognition). (4) Owner: "watch the lock screen, what the user does there, and write it into the night log – everything"; and "instead of the Camera I can put a messenger there and chat" – by the code both ways are covered (an app opened from the lock screen needs the unlock → the 5 s unlock path; a reply from a notification keeps the screen lit → the 8 s path), not tried. iOS never tells WHICH app is used on the lock screen. (5) The night was forgiven a second time (23:49, the installed build already carries `-forgiveNight`, no install needed). (6) In work as priority 0: its own event kind and warning for the lock screen ("Put your phone down – switch the screen off"), the phone's own warning sound, recognition from the notifications, diagnostic events (screen on / off, owner recognised, data locked) in the night's log, the guide. The weather work (step 2b) waits. (7) An install is only possible while the owner is awake: it ends the app, and `devicectl … launch` needs the phone unlocked – never install while he sleeps (the in-app alarm would not ring). |
 | 2026-09-29 | Owner's first real night: bedtime 21:00, wake 04:30, ambience silence, podcast during the 5-min setup. |
+| 2026-10-08 | **The lock screen, second round – built by one Sonnet worker, reviewed by Opus, installed 00:07 at the owner's request (he waited for it), the night forgiven a third time.** (1) Its own event kind `.usedLockScreen` (counts exactly like `.leftApp`) and its own warning: "Put your phone down! Switch the screen off within 10 seconds" (`Notifications.lockScreenNudge`, same identifiers as `nudge`); the phone sounds the warning itself for 3 s (`SoundFX.previewAlarm("alarm_alert", seconds: 3)`, stopped when the trip ends, not gated by Sound effects) because iOS may deliver the notification to the watch only. (2) "Recognised" now comes from the protected-data notifications (`dataProtectionChanged(locked:)`), not from the lagging flag. (3) **Everything from the lock screen is in the night's log:** diagnostic kinds `.screenOn` / `.screenOff` (paired, only while the app is not in front), `.ownerRecognised` / `.dataLocked` (on a change); `NightReport.Trip.onLockScreen` and `lockScreenWakes`; the night's story in Stats marks such a trip "used the phone on the lock screen". (4) The guide says it (how to sleep: lock the phone, a lit lock screen for more than 8 s counts, on a warning switch the screen off). (5) No warning at or after the wake time. SleepCore 247 tests, app 289 tests / 92.11 %, i18n 591 keys 0 / 0 / 0 – run by Opus on the installed tree. A device build in its own `-derivedDataPath build/DerivedDataDevice` can run next to the simulator tests. **Nothing of this round is tried on the phone yet.** Not solved: iOS never tells which app is used on the lock screen; a video recording may silence the phone's own sound; StandBy / Always-On are untested. |
+| 2026-10-08 | **The first real night with the lock-screen build, and a reconstruction of that night for the owner (journal pulled in the morning into the git-ignored `docs/device-logs/`; the Slovak write-up stays there too – no details of the night in this public file).** (1) The night ended `complete`, confirmed by the wake code 24 s after the alarm; the stored outcome equals what the rules give, and the log only grew since the snapshot of 00:08 (append-only). After the last `.forgiven` there was one trip of 12.1 s – a full trip under the B24 rule, 0.9 s short of the limit – and the building stood. (2) **No false alarm from the lock screen:** in 5 h 49 min with the phone locked the screen lit twice for 6.2 s without the owner being recognised (`.screenOn` / `.screenOff`, no `.ownerRecognised`) and nothing was counted – an unused lock screen goes off by itself before the 8 s window, as measured on 2026-09-29. Not exercised by this night: the new warning text and the phone's own sound (no lock-screen trip happened before the wake time). (3) **New bug B26:** picking up the ringing phone is logged as `.usedLockScreen` (the screen on 8.4 s after the alarm, recognised 5.2 s later, the event at 8 s, the unlock 0.9 s after it). No warning goes out (`date < rec.wake` in `AppModel.append`) and the outcome is untouched (away time is clipped to the wake), but `NightReport.nightTrips` and `lockScreenWakes` do not stop at the alarm. (4) What the owner remembered as "the lock screen" before the collapse were two plain trips with the phone unlocked (no lock signal) – the journal cannot tell which app was open or how it was reached; the collapse itself was B24 exactly as the row of 2026-10-07 says (fifth trip, 4.6 s of the budget left). (5) Method worth keeping: `devicectl device info files … --subdirectory 'Library/Application Support'` lists the store's modification times without copying anything (the `-wal` time = the app's last write) – a read-only way to see whether a night has ended; the old rules can be replayed from `git show HEAD:…/NightEvaluator.swift` while the tree is uncommitted; the timestamps in the session transcripts (`~/.claude/projects/…/*.jsonl`) pair the owner's reports with the journal. (6) Open: the comparison with Apple Health and a sleep-tracking app (the owner's permission is given) waits for his Health export; nothing from it may enter this file. |
+| 2026-10-08 | **B25 confirmed by the owner's own evidence, two holes left in the lock-screen build, and what cannot be pulled from the phone.** (1) The owner dated three videos he recorded and shared from the LOCK screen (Camera → Share) – all three fall into one locked stretch of 3 min 26 s right after the setup in which the old build logged nothing: no event, so no warning could ever leave. During that stretch `lockstate` never went to 0 (no `.unlocked` until he opened the app again): sharing from the lock-screen Camera authenticates with Face ID without unlocking the phone, so only the lit-screen path can see it. The collapse two minutes later came from two plain trips with the phone unlocked (B24) – he had put it down to the videos. (2) **Holes found by reading `LifecycleMonitor.screenChanged` (not fixed, the owner picks):** (a) the check runs ONCE, 8 s after the screen lights up; if Face ID recognises him later (the Camera opened with his face out of view, recognised only at "Share"), `dataProtectionChanged(locked: false)` logs `.ownerRecognised` but nothing re-runs the check – the whole session is free; (b) the warning can be missed: with the phone locked iOS shows the notification on the watch only, the phone's own sound lasts 3 s, and whether the Camera mutes it while recording is untested. (3) Options put to the owner: a 2-minute test of the installed build (quick night → lock → Camera from the lock screen → 15 s of video); re-run the check when the recognition arrives late; count every lock screen lit for more than 8 s even without Face ID (catches everything, risks false alarms: charger, StandBy, a notification); sound and vibration from the phone for the whole 10 s. Recommended: the test, then the late recognition and the long warning. (4) **System log of the phone – not obtainable by the agent:** `devicectl device sysdiagnose` fails at once with `CoreDeviceCLISupport.DiagnoseError error 0` (also with `--dry-run-only`; the phone was unlocked and connected over the local network), and `log collect --device-name …` answers "Must be root to collect logs from attached device" – only the owner can run it with `sudo` in his own Terminal. It would add one thing: whether iOS really presented the warnings. A way without a password: `devicectl device info files / copy from … --domain-type systemCrashLogs` reads the phone's crash-log folder as the normal user (verified: it lists the `.ips` files), and a sysdiagnose the owner starts ON the phone (both volume buttons + the side button for about a second, ~10 min) is stored there under `DiagnosticLogs/sysdiagnose/` – untried; a cable instead of the local network may also cure the `devicectl` error (untried). Anything pulled this way goes to the scratchpad, never into the repo. |
+| 2026-10-08 | **The owner's "basal test" – a quick night with a video from the lock screen, as tests (one Sonnet worker, reviewed and re-run by Opus: 292 app tests green, 3 known issues).** `SleepHoleTests/LockScreenTests.swift`, section "The owner's quick-night scenario": the REAL `LifecycleMonitor` is wired to the REAL `AppModel`, the lock-screen signals are fed in by hand and every event is stamped with the fake clock (`Scene`). (1) His eight steps (`aVideoFromTheLockScreenFor25SecondsWarnsInTimeAndCollapses`): the warning leaves 8 s after the screen lights up, promises 10 s, the collapse comes 13 s after the warning (the trip starts at the end of the window and gets the full 3 s + 10 s, so the text understates by 3 s – in his favour); coming back after 25 s → `.ruins`. (2) **The limit is 21 s after the screen lights up, not 20** (`theRealLimitIs21SecondsAfterTheScreenLights`: 20.5 s stands, 21.5 s falls). (3) **The late-recognition hole is proven** (`faceIdRecognisingTheOwnerAfterTheWindowGoesUnseen`): the screen lit, Face ID recognising him only after the window → the app logs `dataLocked, screenOn, ownerRecognised, unlocked` and nothing else – 40 s unseen, no warning, the building stands. (4) What these tests cannot show: whether the phone really sends `hasBlankedScreen` / the protected-data notifications while the Camera runs on the lock screen, and whether iOS shows the notification and lets the phone's sound play – only a run on the phone with the owner's hands can (Opus can start the quick night remotely with `-startTestNight -testNightMinutes 4` and read the journal; it cannot press the phone's buttons). (5) Tests were run without `xcodegen` (the owner had the project open in Xcode): `xcodebuild test -project SleepHole.xcodeproj -scheme SleepHole -destination "platform=iOS Simulator,id=…" -derivedDataPath build/DerivedData` – fine as long as no file is added. |
+| 2026-10-08 | **The basal test on the owner's REAL phone (quick night started remotely with `-startTestNight -testNightMinutes 6`, he did the lock / lock-screen use / return by hand; journal pulled into the git-ignored `docs/device-logs/`, raw signals watched live with `devicectl device notification observe --name com.apple.springboard.hasBlankedScreen --name …lockstate --name …lockcomplete`).** (1) **The detection works on the phone:** three times the lock screen was lit and used, three times `.screenOn` → `.ownerRecognised` 0.3 s later → `.usedLockScreen` 8.0–8.5 s after the screen lit. (2) Trips of 8.5 s and 4.5 s after the warning (ended by an unlock into the app) kept the building; the third use lasted until after the alarm → collapse 13.0 s after the warning, 21.2 s after the screen lit, outcome `ruins` – the numbers of the unit test. The 16.3 s already used did not shorten the third trip (B24 rule). (3) While the lock screen is in use `lockstate` stays 1 and no further `hasBlankedScreen` arrives; `lockstate` = 0 comes only with the unlock – the lit-screen path is the only one that sees it. (4) **What the owner saw: the warning does NOT appear on the phone – it does not cover the Camera and nothing shows in the Dynamic Island; the notification exists but stays hidden behind the Camera. The Apple Watch alerts clearly ("it shouts"), both times he watched for it.** Whether the phone's own 3 s sound played: asked, not answered yet. His wish: a warning that also covers the Camera on the lock screen – "does Apple have tools for that?" Options given: (a) an AlarmKit alarm as the warning (already in the app for the backup alarm; rings through silent mode and a Focus, full-screen on the lock screen) – whether it covers the lock-screen Camera can be tried with NO code: Developer → System alarm test (rings in 20 s) → lock → Camera from the lock screen; (b) a Live Activity with a countdown in the Dynamic Island (needs a widget extension; visibility over the lock-screen Camera to be verified); (c) Critical Alerts – a special entitlement Apple grants to health / safety apps, not realistic; (d) the phone's own sound for the whole 10 s. Recommended: try (a) first. **He tried (a) at once: the AlarmKit alert DOES cover the Camera opened from the lock screen** – and then would not stop (bug B27). So an AlarmKit alarm can carry the lock-screen warning, on one condition: the app must end it itself (`AlarmManager.stop(id:)`) the moment the trip ends (screen off / back in the app) and after the 10 s at the latest – never leave the stopping to the owner. Not designed yet; the owner has to say go. (5) Side finding: a side-button lock whose lock signal comes more than 2.5 s after the app went to the background is logged as `.leftApp` + `.locked` (a counted trip of 3.3 s here) instead of a plain `.locked`. |
+| 2026-10-09 | **The forgiven night of 2026-10-07 → 08 taken back on the phone, and LOCK-W installed with it (owner: "can we upload it now? … keep the building of the 9th, take only the 8th, use the bronze joker, cancel that night's statistics too, leave the rest").** One honest night (2026-10-09, `complete`, a level-2 park) had been added since the tool was proven, so the order was: pull the store → run `-revokeForgiveness` in the simulator on that fresh copy → only then install and run it on the phone (12:28) → pull again and compare the records. Result: the tool picks the newest FORGIVEN night, not the newest night, so the later night is untouched; streak / best / built 10 → 9, coins 2120 → 1940. **Two things worth knowing:** (1) the coin difference is 180, not 130 – taking a built night away can also un-earn an achievement (`built10`, 50 🪙) because achievements are replayed, not stored; it returns with the next built night; (2) "cancel the statistics of that night" needed no code – a joker night enters `Stats.summary` as a bare `.excused` result without a start, a wake-up or a bedtime, so the averages, the regularity and the chart drop it (averages moved 21:20 → 21:19 and 5:31 → 5:28); the day's own detail in the calendar still tells the night's story under "Protected by a joker". The town kept every other building in its place. The phone now carries LOCK-W, whose AlarmKit part nobody has tried there. |
+| 2026-10-09 | **LOCK-W on the phone – the owner's three variants (8-minute debug night, 14:32–14:40).** With Face ID it works: detection ~8.5 s after the lock screen lights up, the AlarmKit warning covers the Camera, screen off and the way back into the app both silence it and keep the building, leaving it collapses the building (`ruins`, away 40.7 s in four trips). **How to see the alarm in the journal:** the app cannot observe AlarmKit, but the ringing alarm interrupts the app's own audio session – `audioInterrupted` came 2.5–2.8 s after each `.usedLockScreen` (the alarm is scheduled 1.5 s ahead). The matching `audioResumed` came only ~2 s later even when nobody touched the phone, so the end of the interruption is NOT a reliable sign that the ringing stopped. **Round 0 showed the remaining hole live:** 49.5 s on the lit lock screen without Face ID recognising him = no event, no warning; the late-recognition path then fired at the recognition exactly as built. The owner asked for the debug night's setup to be 15 s instead of 80 s. |
+| 2026-10-09 | **Lock-screen lab, first run (iPhone 16 Pro `iPhone17,1`, iOS 27.0, a 10-minute debug night, log in the git-ignored `docs/device-logs/2026-10-09-lock-lab/`).** (1) **A passive wake lasts 6.2–6.3 s and ends by itself** – tap to wake, raise to wake, charger unplugged, charger plugged in: four of four. **The Camera on the lock screen keeps the screen lit** until the user ends it (16.5 s and 21.2 s without Face ID – no event, as the rule stands). (2) **Movement separates "in the hand" from "lying there" cleanly:** per-second peak of `userAcceleration` at rest ≤ 0.011 g (median 0.003), in the hand median 0.03–0.07 g and above 0.02 g in 76–100 % of the seconds; a single tap on a resting phone gives one peak of 0.05 g. (3) **Signals:** `com.apple.iokit.hid.displayStatus` (1 / 0) and `com.apple.backboardd.backlight.changed` (100 / 0 – a LEVEL, so it may tell a dimmed always-on display from a lit one; to be measured) fire together with `hasBlankedScreen`; `com.apple.springboard.pluggedin` fires on the charger; `com.apple.springboard.DeviceLockStatus` never fired; `UIScreen.brightness` reads 0.00 for the whole locked time, lit or not – useless. (4) With Face ID the detection came 8.05–8.4 s after the screen lit and the app's audio was interrupted 2.5–2.7 s later (`reason=0`); the interruption ended 0.7 s after the app stopped the alarm when the screen was switched off, but after only 1.0–1.3 s in the two rounds where the alarm was left ringing – so the journal cannot say how long the alarm rings; only the owner's ears can. (5) Opus's proposal from the data, NOT decided: without Face ID a lit lock screen counts once it has been lit for 12 s (about twice a passive wake) AND the phone has been moved in that time; with Face ID the 8 s stay. The movement condition keeps every resting phone safe whatever its settings (StandBy, a ringing timer) – the always-on display still has to be measured, because a phone carried in the hand with it must not look "lit". |
+| 2026-10-09 | **Lock-screen lab, second run – the always-on display ON (same phone, 15:59–16:05) and the owner's own quick night of 15:51.** (1) **The dimmed always-on display is reported as dark** (`hasBlankedScreen` 1, about 2.6 s after the lock) – a phone carried with it does not look lit. (2) With it on, a passive wake lasts **7.4 s by `hasBlankedScreen`** (5.2 s by `iokit.hid.displayStatus`, which lags 0.8 s at the start and leads 1.5 s at the end) against 6.2 s with it off – only 0.6 s under the 8 s window of the Face ID rule; `backboardd.backlight.changed` never fires with it on (0 / 100 only with it off) and `UIScreen.brightness` reads the dim level (0.19) instead of 0.00 – neither is usable. (3) A phone held in the hand while Face ID recognises its owner stays lit (attention) and gets the 8 s warning – by the rule. (4) **The hole, measured again:** 51 s of video on the lock screen without Face ID = nothing; the recognition that sharing needs started the trip (late path), and 45 s later the night was `ruins` – the owner shared the video to a messenger from the lock screen and says no notification reached him. (5) **B28:** in the quick night of 15:51 the warning alarm rang 21.5 s; the lab shows the app suspended for 17.4 s from ~4 s after the alarm took the audio. (6) Held or resting, from both runs: resting – 0–1 of 12 seconds above 0.02 g, gravity drift 0.0°; in the hand – 11–12 of 12 seconds, drift ≥ 6.4° even when holding still to share. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |
 | 2026-09-29 | `swift test` in SleepCore uses Swift Testing (`import Testing`) fine with the Xcode toolchain. |

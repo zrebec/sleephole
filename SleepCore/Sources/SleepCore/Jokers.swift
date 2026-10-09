@@ -1,7 +1,7 @@
 import Foundation
 
-/// Jokers 🛡️ (owner 2026-10-02): protect the 🔥 streak when you are ill or on holiday. ONE joker of any kind per
-/// calendar month. A protected night that was missed or ruined becomes `.excused` – the streak neither grows nor
+/// Jokers 🛡️ (owner 2026-10-02): protect the 🔥 streak when you are ill or on holiday. Each kind (bronze, silver, gold)
+/// once per calendar month, independently of the others. A protected night that was missed or ruined becomes `.excused` – the streak neither grows nor
 /// breaks, no building, no coins. A good night inside a joker still counts normally.
 public enum JokerTier: String, Codable, CaseIterable, Sendable {
     case bronze, silver, gold
@@ -80,7 +80,8 @@ public enum Jokers {
         }
 
         var uses = manual
-        var usedMonths = Set(manual.map(\.month))
+        // only a BRONZE (by hand or automatic) uses up the month's automatic bronze – silver / gold do not
+        var usedMonths = Set(manual.filter { $0.tier == .bronze }.map(\.month))
         for use in manual {
             var key = use.firstNight
             while key <= min(use.lastNight(calendar: calendar), lastNight) {
@@ -89,7 +90,7 @@ public enum Jokers {
             }
         }
 
-        // automatic bronze: the first missed night of a month (without any joker yet) that would break a streak
+        // automatic bronze: the first missed night of a month (without a bronze yet) that would break a streak
         if let first = results.map(\.key).min() {
             let breakSet = Set(breaks)
             var run = 0
@@ -120,15 +121,11 @@ public enum Jokers {
         case notEnoughCoins(missing: Int)
     }
 
-    /// A silver / gold joker may REPLACE the month's automatic bronze when it starts on the very night the bronze
-    /// saved (the morning after the first missed night of a holiday – owner bug 2026-10-03: the automatic bronze
-    /// had used up the month, so the holiday joker was refused).
+    /// Each kind may be used once per calendar month (the month of its first night), independently of the others.
+    /// A manual joker is applied before the automatic bronze, so one that starts on the night the automatic bronze
+    /// saved covers that night itself and the month's bronze stays free for a later missed night.
     public static func block(_ tier: JokerTier, firstNight: NightKey, uses: [JokerUse], coins: Int) -> Block? {
-        let taken = uses.contains { use in
-            guard use.month == Month(firstNight) else { return false }
-            let upgrade = use.automatic && use.firstNight == firstNight && tier != .bronze
-            return !upgrade
-        }
+        let taken = uses.contains { $0.tier == tier && $0.month == Month(firstNight) }
         if taken { return .alreadyUsedThisMonth }
         if coins < tier.price { return .notEnoughCoins(missing: tier.price - coins) }
         return nil

@@ -62,6 +62,7 @@ struct BackupFile: Codable, Equatable {
         var confirmedAt: Date?
         var finalizedAt: Date?
         var pauses: Int? = nil          // nil in backups from before the pause (2026-10-03) = old rules
+        var strictLockScreen: Bool? = nil   // nil = a night from before Strict mode existed (2026-10-09) = strict
     }
 
     static let fileName = "SleepHole-zaloha.json"
@@ -89,7 +90,7 @@ extension NightRecord {
         BackupFile.Night(id: id, keyString: keyString, isDebug: isDebug, isNap: isNap, bedtime: bedtime, wake: wake,
                          buildingId: buildingId, events: log.events, setupGrace: setupGrace, outcomeRaw: outcomeRaw,
                          awaySeconds: awaySeconds, startedAt: startedAt, confirmedAt: confirmedAt,
-                         finalizedAt: finalizedAt, pauses: pauses)
+                         finalizedAt: finalizedAt, pauses: pauses, strictLockScreen: strictLockScreen)
     }
 
     convenience init(backup n: BackupFile.Night) {
@@ -104,6 +105,7 @@ extension NightRecord {
         confirmedAt = n.confirmedAt
         finalizedAt = n.finalizedAt
         pauses = n.pauses
+        strictLockScreen = n.strictLockScreen
     }
 }
 

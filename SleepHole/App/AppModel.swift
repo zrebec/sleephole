@@ -49,16 +49,21 @@ final class AppModel {
     private let container: ModelContainer
     private let calendar = Calendar.current
     private let monitor = LifecycleMonitor()
+    private let lockLab = LockLab()
     private var alarmTask: Task<Void, Never>?
     private var ticker: Timer?
 
-    static let debugGrace: TimeInterval = 20
+    static let debugGrace: TimeInterval = 15
 
     /// Dev aid – launch arguments (e.g. via `xcrun devicectl device process launch … sk.zrebec.sleephole -clearNights`):
     ///   -clearNights                  delete all night records
+    ///   -forgiveNight                 forgive everything out of the app so far in the running night (after a fault of the app)
+    ///   -revokeForgiveness            judge the latest finalized night that was forgiven as if it never had been (re-derives its outcome)
     ///   -bedtime HH:MM -wake HH:MM    set the schedule
     ///   -ambience silence|brown       set the night sound
     ///   -startTestNight               immediately start a 4-min debug night (screenshots in the simulator)
+    ///   -lockLab                      DEBUG nights only: record the lock-screen lab (Darwin / UIKit signals, motion, a line
+    ///                                 per second) to Application Support/lock-lab.log – pull it with devicectl
     ///   -startNap                     screenshots: open the nap window around now and start a nap
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
@@ -66,7 +71,7 @@ final class AppModel {
     ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
     ///   -theme system|light|dark      set the appearance (Settings → Theme)
     ///   -screenshot                   no permission alert, no first-run guide (use with a pulled store, tools/sim_shot.sh)
-    ///   -thenTab 1|island|abandon|pause   4 s after launch: select a tab / open the Town tab / cancel the
+    ///   -thenTab 1|island|abandon|pause|warning   4 s after launch: select a tab / open the Town tab / cancel the
     ///                                 running night and close its result / start a pause once the setup is over
     ///   -expiresIn HOURS              pretend the provisioning profile runs out then (AppExpiry)
     ///   -mute                         silence every sound (alarm, effects) – for screenshots of a night's end
@@ -80,6 +85,9 @@ final class AppModel {
     ///   -systemAlarm allowed|denied|notAsked   SIMULATOR ONLY: pretend that consent for the system alarm (a silent
     ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
     ///   -weather clear|cloudy|fog|rain|heavyRain|thunder|snow, -weatherTemp N, -weatherSnowCover   simulate the weather
+    ///   -weatherWind N                 with -weather: the simulated wind in m/s, from the west (default 0)
+    ///   -weatherSource met            ask MET Norway live instead of the launch's default source (simulator and device,
+    ///                                 never under test)
     ///                                 for this run (see `WeatherSimulation`); -openWeatherTest opens Developer → Weather test
     ///   -timeSensitive off|on         SIMULATOR ONLY: pretend that iOS's "Time Sensitive Notifications" switch is off / on
     ///   -openSystemAlarmTest          with -openTab settings: open Developer → System alarm test at once
@@ -161,6 +169,9 @@ final class AppModel {
     let servicesEnabled: Bool
     /// The system alarm (phase F6b). The default does nothing: only `SleepHoleApp` passes the real one.
     let systemAlarm: any SystemAlarm
+    /// Keeps the app running while the lock-screen warning alarm rings (B28). The default does nothing: only
+    /// `SleepHoleApp` passes the real UIKit one.
+    let keepAlive: any KeepAlive
     /// The weather over the owner's city (TOWN-W); `SleepHoleApp` passes the launch's store, the default has no source.
     let weather: WeatherStore
     /// Asks whether iOS's "Time Sensitive Notifications" switch is off (the default never does – tests stay off the system).
@@ -176,8 +187,8 @@ final class AppModel {
 
     init(context: ModelContext, catalog: Catalog?, clock: any Clock = SystemClock(),
          settings initialSettings: AppSettings? = nil, servicesEnabled: Bool = true,
-         systemAlarm: any SystemAlarm = NoSystemAlarm(), weather: WeatherStore? = nil,
-         timeSensitiveCheck: @escaping @MainActor () async -> Bool = { false }, defaults: UserDefaults = .standard,
+         systemAlarm: any SystemAlarm = NoSystemAlarm(), keepAlive: any KeepAlive = NoKeepAlive(),
+         weather: WeatherStore? = nil, timeSensitiveCheck: @escaping @MainActor () async -> Bool = { false }, defaults: UserDefaults = .standard,
          bootDate: @escaping () -> Date? = { DeviceBoot.date() }) {
         self.context = context
         self.container = context.container
@@ -185,6 +196,7 @@ final class AppModel {
         self.clock = clock
         self.servicesEnabled = servicesEnabled
         self.systemAlarm = systemAlarm
+        self.keepAlive = keepAlive
         self.weather = weather ?? WeatherStore(source: NoWeather(), defaults: defaults)
         self.timeSensitiveCheck = timeSensitiveCheck
         self.defaults = defaults
@@ -199,6 +211,8 @@ final class AppModel {
         loadProgress()
         if initialSettings == nil, let lang = Self.launchLanguage() { language = lang }
         resumeActiveNight()
+        if ProcessInfo.processInfo.arguments.contains("-forgiveNight") { forgiveNight() }
+        if ProcessInfo.processInfo.arguments.contains("-revokeForgiveness") { revokeForgiveness() }
         tidySystemAlarm(now: clock.now, atLaunch: true)
         rebuildTown()
         refresh()
@@ -426,7 +440,8 @@ final class AppModel {
         let now = clock.now
         let window = settings.nap.session(startingAt: now, calendar: calendar)
         let rec = NightRecord(window: window, buildingId: "", isDebug: false,
-                              setupGrace: NapPlan.rules.setupGrace, isNap: true)
+                              setupGrace: NapPlan.rules.setupGrace, isNap: true,
+                              strictLockScreen: settings.strictMode)
         rec.append(.started, at: now)
         context.insert(rec)
         save()
@@ -478,6 +493,16 @@ final class AppModel {
     /// Bumped to open the Town tab (the Today island did it; `-thenTab island` still does) → RootView switches to it.
     private(set) var townRequest = 0
     func showTown() { townRequest += 1 }
+    /// Bumped by the warning triangle on Today → RootView opens Settings, which scrolls to the notifications section.
+    private(set) var notificationsRequest = 0
+    private var notificationsScrollPending = false
+    func showNotificationSettings() { notificationsRequest += 1; notificationsScrollPending = true }
+    /// One-shot: true exactly once per `showNotificationSettings()` – Settings scrolls to the notifications section
+    /// only then (not on every later appearance of the tab, not after a language switch).
+    func takeNotificationsScroll() -> Bool {
+        defer { notificationsScrollPending = false }
+        return notificationsScrollPending
+    }
 
     func scheduleChangeCost(at t: Date? = nil) -> SchedulePolicy.Change {
         SchedulePolicy.change(at: t ?? clock.now, calibrationStart: scheduleCalibrationStart, calendar: calendar)
@@ -686,6 +711,8 @@ final class AppModel {
     func refresh() { refresh(now: clock.now) }
 
     func refresh(now: Date) {
+        // the lock-screen warning ends with its promised seconds, at the wake time and with the night
+        if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false { endLockWarning() }
         if let rec = active {
             let log = rec.log
             if log.confirmedAt != nil || now > log.window.confirmLateUntil {
@@ -724,7 +751,7 @@ final class AppModel {
             rng: &rng)
         let rec = NightRecord(window: window, buildingId: entry.id, isDebug: isDebug,
                               setupGrace: debugWindow != nil ? debugGrace : SleepRules().setupGrace,
-                              idPrefix: isBonus ? "bonus" : nil)
+                              idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode)
         rec.append(.started, at: now)
         context.insert(rec)
         save()
@@ -767,11 +794,11 @@ final class AppModel {
     /// Setup grace of the pending debug night.
     private(set) var debugGrace: TimeInterval = AppModel.debugGrace
 
-    /// Debug night: bedtime in 1 min, wake in `minutes`, setup grace `grace` s. Never counts for the town.
+    /// Debug night: bedtime now, wake in `minutes`, setup grace `grace` s (so the setup ends `grace` s after the start). Never counts for the town.
     func startTestNight(minutes: Double = 4, grace: TimeInterval = AppModel.debugGrace) {
         guard active == nil else { return }
         let now = clock.now
-        debugWindow = NightWindow(key: NightKey(date: now, calendar: calendar), bedtime: now + 60,
+        debugWindow = NightWindow(key: NightKey(date: now, calendar: calendar), bedtime: now,
                                   wake: now + minutes * 60)
         debugGrace = grace
         shownResult = nil
@@ -882,13 +909,13 @@ final class AppModel {
     }
 
     var collapsedAt: Date? {
-        active.flatMap { NightEvaluator.collapsedAt($0.log, rules: $0.isNap ? NapPlan.rules : $0.rules) }
+        active.flatMap { NightEvaluator.collapsedAt($0.log, rules: $0.rules) }
     }
 
     /// End of the setup time: bedtime + grace (or start + grace after bedtime), see `NightWindow.setupEnds`.
     var graceEnds: Date? {
         active.flatMap { rec in
-            rec.startedAt.map { rec.window.setupEnds(start: $0, rules: rec.isNap ? NapPlan.rules : rec.rules) }
+            rec.startedAt.map { rec.window.setupEnds(start: $0, rules: rec.rules) }
         }
     }
 
@@ -957,6 +984,84 @@ final class AppModel {
     func cancelTestSystemAlarm() {
         guard testAlarmAt != nil else { return }
         cancelSystemAlarm()
+    }
+
+    /// Stops every system alarm that rings right now; waiting ones stay (B27: a ringing alarm must be easy to silence).
+    func stopRingingSystemAlarms() {
+        enqueueSystemAlarm { [weak self] in self?.systemAlarm.stopRinging() }
+    }
+
+    /// The app became active: with no night / nap running, opening SleepHole silences a ringing safety / test alarm.
+    func appBecameActive() {
+        guard active == nil else { return }
+        stopRingingSystemAlarms()
+    }
+
+    // MARK: lock-screen warning alarm
+
+    /// When the lock-screen warning ends by itself (the seconds it promised), nil = none is on. Driven by `refresh`
+    /// (the 1 s ticker, and `lockWarningTask` at the exact moment – the audio session keeps the app running at night).
+    private(set) var lockWarningDeadline: Date?
+    /// The warning rings as a system alarm (else the app's own sound plays).
+    private var lockWarningIsSystem = false
+    @ObservationIgnored private var lockWarningTask: Task<Void, Never>?
+    /// The open keep-alive of the running warning (B28), nil = none.
+    @ObservationIgnored private var keepAliveToken: Int?
+
+    /// Rings the warning for `seconds`: the system alarm when allowed (it covers the Camera), else the app's own sound.
+    private func startLockWarning(seconds: TimeInterval, at date: Date) {
+        endLockWarning()
+        lockWarningDeadline = date + seconds
+        // B28: the system alarm interrupts our audio session and iOS then suspends the app ~4 s later, so the deadline
+        // would never run; a background task keeps it alive until the warning has ended
+        keepAliveToken = keepAlive.begin(name: "lock-warning") { [weak self] in self?.keepAliveExpired() }
+        lockLab.note("keep-alive began")
+        lockLab.note("lock warning started · system=\(systemAlarm.consent == .allowed) · seconds=\(Int(seconds))")
+        if systemAlarm.consent == .allowed {
+            lockWarningIsSystem = true
+            let file = "alarm_alert.caf"                  // the file the app's own warning sound uses
+            let shown = Int(seconds)                      // the same number the notification shows
+            enqueueSystemAlarm { [weak self] in _ = await self?.systemAlarm.ringWarning(soundFile: file, seconds: shown) }
+        } else if servicesEnabled {
+            SoundFX.previewAlarm("alarm_alert", seconds: seconds)
+        }
+        if servicesEnabled {
+            lockWarningTask = Task { [weak self] in
+                try? await Task.sleep(for: .seconds(seconds))
+                guard !Task.isCancelled else { return }
+                self?.refresh()
+            }
+        }
+    }
+
+    private func endLockWarning() {
+        guard lockWarningDeadline != nil else { return }
+        lockWarningDeadline = nil
+        lockWarningTask?.cancel()
+        lockWarningTask = nil
+        lockLab.note("lock warning ended")
+        let token = keepAliveToken
+        keepAliveToken = nil
+        if lockWarningIsSystem {
+            lockWarningIsSystem = false
+            // the keep-alive ends only after the stop has really run (the app must not be suspended before it)
+            let (keepAlive, lab) = (keepAlive, lockLab)
+            enqueueSystemAlarm { [weak self] in
+                self?.systemAlarm.stopWarning()
+                if let token { keepAlive.end(token); lab.note("keep-alive ended") }
+            }
+        } else {
+            if servicesEnabled { SoundFX.stopPreview() }
+            if let token { keepAlive.end(token); lockLab.note("keep-alive ended") }
+        }
+    }
+
+    /// iOS is about to take the background time away: close the task (an open one would kill the app).
+    private func keepAliveExpired() {
+        lockLab.note("keep-alive EXPIRED")
+        guard let token = keepAliveToken else { return }
+        keepAliveToken = nil
+        keepAlive.end(token)
     }
 
     /// Waits until every system alarm call so far has finished (tests).
@@ -1089,6 +1194,7 @@ final class AppModel {
         rec.append(.appLaunched, at: now)
         save()
         if closedAt != nil, servicesEnabled { Notifications.cancelClosed() }       // the owner is back
+        if closedAt != nil { cancelCollapseNotice() }
         startServices(for: rec)
         // came back in time after a "SleepHole was closed" warning → the same "phew" as after "Come back!"
         if let c = closedAt, !restarted, now < rec.wake, let graceEnds, c >= graceEnds,
@@ -1117,6 +1223,10 @@ final class AppModel {
         monitor.onEvent = { [weak self] kind, date in self?.append(kind, at: date) }
         monitor.onTerminate = { [weak self] in self?.appWillTerminate() }
         monitor.start()
+        if LockLab.shouldRecord(arguments: ProcessInfo.processInfo.arguments, isDebugNight: rec.isDebug) {
+            monitor.onRaw = { [weak self] text in self?.lockLab.note(text) }
+            lockLab.start()
+        }
         alarmTask?.cancel()
         let wake = rec.wake
         alarmTask = Task { [weak self] in
@@ -1135,6 +1245,7 @@ final class AppModel {
         alarmTask?.cancel()
         alarmTask = nil
         monitor.stop()
+        if lockLab.isRunning { lockLab.stop(); monitor.onRaw = nil }
         monitor.onEvent = nil
         monitor.onTerminate = nil
         audio.stop()
@@ -1189,12 +1300,41 @@ final class AppModel {
         append(.closedByOwner)
     }
 
+    /// Developer aid (`-forgiveNight`): forgives everything out of the app so far in the running night / nap.
+    /// The collapse is derived from the event log, so an explicit `.forgiven` event undoes it without editing data.
+    func forgiveNight() {
+        guard let rec = active, clock.now < rec.wake, !rec.log.has(.abandoned) else { return }
+        append(.forgiven)
+        if servicesEnabled { Notifications.cancelNudge(); Notifications.cancelClosed() }
+        cancelCollapseNotice()
+        waitingForReturn = false
+    }
+
+    /// Developer aid (`-revokeForgiveness`): takes back the forgiveness of the most recent finalized real night that has
+    /// one. `.forgivenessRevoked` makes the rules ignore every `.forgiven` of that log; the stored outcome and away time
+    /// are re-derived with the rules the night was finalized with. Everything else (events, building, `finalizedAt`)
+    /// stays; coins, streak, jokers and the town follow because they are derived from the records. Idempotent.
+    func revokeForgiveness() {
+        guard active == nil,
+              let rec = realResults().last(where: { $0.log.has(.forgiven) && !$0.log.has(.forgivenessRevoked) })
+        else { return }
+        rec.append(.forgivenessRevoked, at: clock.now)
+        let log = rec.log
+        let result = NightEvaluator.result(for: log, key: log.key, rules: rec.rules)
+        rec.outcomeRaw = result.outcome.rawValue
+        rec.awaySeconds = result.awaySeconds
+        save()
+        rebuildTown()
+        refresh()
+    }
+
     /// Appends a night event (from the lifecycle monitor; internal for tests).
     func append(_ kind: NightEventKind) { append(kind, at: clock.now) }
 
     /// How many "Vráť sa" warnings were sent this app session (diagnostics + tests).
     private(set) var nudgesSent = 0
-    /// The seconds the last warning promised (10, or less when the night's budget is nearly used up).
+    /// The seconds the last warning promised (always the full 10 – the night's budget never shortens a warning;
+    /// with the budget used up no warning is sent at all).
     private(set) var lastNudgeSeconds = 0
 
     // MARK: - night pause (owner 2026-10-02, D17)
@@ -1223,6 +1363,12 @@ final class AppModel {
         return (NightEvaluator.awayAfterSetup(rec.log, rules: rec.rules, until: t ?? clock.now), budget)
     }
 
+    /// How much of the night's budget is left (nil without a budget) – the night screen warns when it runs low.
+    func awayBudgetState(at t: Date? = nil) -> AwayBudgetState? {
+        guard let rec = active else { return nil }
+        return NightEvaluator.budgetState(rec.log, rules: rec.rules, at: t ?? clock.now)
+    }
+
     func startPause() {
         guard let rec = active, pauseBlock() == nil else { return }
         let price = nextPausePrice
@@ -1237,16 +1383,38 @@ final class AppModel {
         // wake time, so afterwards the building always looks collapsed and no warning was ever sent
         // (bug found by the owner 2026-09-29).
         let alreadyCollapsed = collapsedAt != nil
+        let lockTripWasOpen = Self.lockScreenTripOpen(rec.log)
         rec.append(kind, at: date)
         save()
         switch kind {
-        case .leftApp, .closedByOwner:
+        case .leftApp where lockTripWasOpen && rec.rules.lockScreenCollapses:
+            break           // strict: the lock-screen trip is counted and warned about since it began; nothing new
+        case .usedLockScreen where !rec.rules.lockScreenCollapses:
+            // gentle mode (owner 2026-10-09): the lock-screen use is only logged and met with one calm reminder – no
+            // system alarm, no keep-alive, no deadline, no collapse notice, no "come back" state; the building stays
+            if let graceEnds, date >= graceEnds, date < rec.wake, !alreadyCollapsed,
+               PausePolicy.activeUntil(rec.log, at: date) == nil {
+                lockRemindersSent += 1
+                if servicesEnabled { Notifications.lockScreenReminder() }
+            }
+        case .leftApp, .closedByOwner, .usedLockScreen:
             // no vibration here: the app is in the background now and iOS only lets the notification vibrate
             if let pauseEnds = PausePolicy.activeUntil(rec.log, at: date) {
                 // inside a pause (D17) leaving is free – only remind when it is about to end
                 if servicesEnabled { Notifications.pauseEnding(at: pauseEnds) }
-            } else if let graceEnds, date >= graceEnds, !alreadyCollapsed {
-                // what is left for this trip: 13 s, or less when the night's budget is nearly used up
+                scheduleProjectedCollapseNotice(after: date)      // out when the pause runs out → it can collapse then
+            } else if let graceEnds, date >= graceEnds, !alreadyCollapsed, date < rec.wake {
+                // nothing counts after the wake time (away intervals are clipped to it): picking up the ringing
+                // phone must not produce "Come back … or the building collapses"
+                // a trip that starts with budget left is a full one (13 s); with the budget used up there is no time
+                // for a warning (left = 0) and the building has already collapsed
+                // owner 2026-10-09: the collapse always comes with a notice, scheduled now because the app may be dead
+                // or suspended when it happens (also with the budget used up: then it fires at once)
+                if let fire = Notifications.collapseNoticeTime(log: rec.log, rules: rec.rules,
+                                                               at: date, alreadyCollapsed: alreadyCollapsed) {
+                    collapseNoticeAt = fire
+                    if servicesEnabled { Notifications.collapsed(isNap: rec.isNap, at: fire) }
+                }
                 let left = NightEvaluator.allowance(rec.log, rules: rec.rules, at: date) - rec.rules.noticeDelay
                 guard left >= 1 else { break }                // the warning would come too late
                 nudgesSent += 1
@@ -1254,8 +1422,16 @@ final class AppModel {
                 if kind == .closedByOwner {
                     // the process dies now: the notice is all that is left, and the relaunch ends the trip
                     if servicesEnabled { Notifications.closed(tolerance: left) }
+                } else if kind == .usedLockScreen {
+                    // "come back" is the wrong advice on the lock screen (Face ID wants the passcode): switch the screen off.
+                    // The notification may reach only the Apple Watch, so the phone sounds the warning itself.
+                    waitingForReturn = true
+                    lastWarning = .lockScreen
+                    if servicesEnabled { Notifications.lockScreenNudge(tolerance: left) }
+                    startLockWarning(seconds: left, at: date)
                 } else {
                     waitingForReturn = true
+                    lastWarning = .comeBack
                     if servicesEnabled { Notifications.nudge(tolerance: left) }
                 }
             }
@@ -1264,11 +1440,40 @@ final class AppModel {
                 Notifications.cancelNudge()
                 Notifications.cancelPauseNotices()
             }
+            cancelCollapseNotice()
+            endLockWarning()
             if kind == .returned, waitingForReturn, collapsedAt == nil { buzz(.relief) }
             waitingForReturn = false
+        case .callStarted, .pauseStarted:
+            cancelCollapseNotice()                      // a call or a pause excuses the trip that is running
+            // ... but if the owner is still out when the pause runs out, the trip goes on and so does the notice
+            if kind == .pauseStarted { scheduleProjectedCollapseNotice(after: date) }
+        case .callEnded:
+            scheduleProjectedCollapseNotice(after: date)    // still out after the call → the trip counts again
         default:
             break
         }
+    }
+
+    /// The last trip-relevant event of the log is `.usedLockScreen`: a lock-screen trip is open.
+    static func lockScreenTripOpen(_ log: NightLog) -> Bool {
+        let ends: Set<NightEventKind> = [.usedLockScreen, .leftApp, .closedByOwner, .returned, .locked, .confirmed,
+                                         .appLaunched, .restartExcused, .forgiven]
+        return log.sortedEvents.last { ends.contains($0.kind) }?.kind == .usedLockScreen
+    }
+
+    /// The evaluator already knows the collapse moment of a trip that is still open (an open `.leftApp` runs to the
+    /// wake time, calls and pauses are cut out of it): when that moment is still ahead, the notice is set for it.
+    private func scheduleProjectedCollapseNotice(after date: Date) {
+        guard let rec = active, let fire = collapsedAt, fire > date else { return }
+        collapseNoticeAt = fire
+        if servicesEnabled { Notifications.collapsed(isNap: rec.isNap, at: fire) }
+    }
+
+    /// The trip ended in time or is excused: the pending collapse notice is withdrawn (a delivered one stays).
+    private func cancelCollapseNotice() {
+        collapseNoticeAt = nil
+        if servicesEnabled { Notifications.cancelCollapsed() }
     }
 
     // MARK: - vibrations (owner 2026-09-30, idea XS)
@@ -1277,6 +1482,14 @@ final class AppModel {
     /// iOS does not let apps vibrate in the background (owner test 2026-09-30) – there the notifications
     /// ("⏳ 15 s of setup left", "⚠️ Come back!") vibrate the phone through their sound.
     private(set) var haptics: [Haptic] = []
+    /// Which "come back" style warning was sent last (tests): the usual one, or "switch the screen off" for the lock screen.
+    enum Warning: Equatable { case comeBack, lockScreen }
+    private(set) var lastWarning: Warning?
+    /// How many gentle lock-screen reminders (`Notifications.lockScreenReminder`) were asked for this app session (tests).
+    private(set) var lockRemindersSent = 0
+    /// When the "building collapsed" notice is set to fire for the trip that is running (nil = none). Kept even without
+    /// services so tests can see the decision; the notification itself is scheduled only with services.
+    private(set) var collapseNoticeAt: Date?
     /// A "Come back!" warning was sent and the owner has not returned yet.
     private var waitingForReturn = false
 
@@ -1311,13 +1524,15 @@ final class AppModel {
         let coinsBefore = coins
         let achievedBefore = Set(achievements.map(\.achievement))
         let log = rec.log
-        let result = NightEvaluator.result(for: log, key: log.key, rules: rec.isNap ? NapPlan.rules : rec.rules)
+        let result = NightEvaluator.result(for: log, key: log.key, rules: rec.rules)
         rec.outcomeRaw = result.outcome.rawValue
         rec.awaySeconds = result.awaySeconds
         rec.finalizedAt = clock.now
         save()
         stopServices()
         active = nil
+        collapseNoticeAt = nil                       // stopServices already withdrew the pending notice
+        endLockWarning()
         settleSystemAlarm(for: rec)
         shownResult = rec
         levelUp = rec.isDebug || rec.isNap ? nil : Progression.levelUp(builtBefore: before, builtAfter: builtNights)

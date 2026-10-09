@@ -32,6 +32,7 @@ struct SystemAlarmTestView: View {
                     .disabled(consent != .allowed || !model.canTestSystemAlarm)
                 Button(L("Cancel the test alarm")) { model.cancelTestSystemAlarm() }
                     .disabled(model.testAlarmAt == nil)
+                Button(L("Stop the ringing alarm")) { model.stopRingingSystemAlarms() }
                 if let at = model.testAlarmAt {
                     Label(L("Test alarm set for \(Fmt.timeSec(at))"), systemImage: "alarm.fill")
                 }

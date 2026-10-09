@@ -12,8 +12,9 @@ packages:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "0.1.0"
-    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "1.0"
+    # every upload to App Store Connect / TestFlight needs a higher CURRENT_PROJECT_VERSION (build 1 is uploaded)
+    CURRENT_PROJECT_VERSION: "2"
 targets:
   SleepHole:
     type: application
@@ -34,6 +35,8 @@ targets:
       path: SleepHole/Info.plist
       properties:
         CFBundleDisplayName: SleepHole
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleDevelopmentRegion: en
         CFBundleLocalizations: [en, sk]
         UILaunchScreen: {}

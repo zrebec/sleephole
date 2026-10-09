@@ -18,6 +18,17 @@ public enum NightEventKind: String, Codable, Sendable {
     case confirmedByShake  // diagnostics: how "Vstal som" was done (logged right before `.confirmed`)
     case confirmedByCode
     case audioResumed
+    /// The owner is using the phone on the LOCK SCREEN (camera, replies, widgets): the screen stayed lit with the owner
+    /// recognised by Face ID. Counts exactly like `.leftApp`; ends with `.locked` / `.returned`.
+    case usedLockScreen
+    /// Diagnostics (no effect on the outcome): the screen lit up while the app was not in front.
+    case screenOn
+    /// Diagnostics: the screen went off again (logged before the `.locked` that the same moment may produce).
+    case screenOff
+    /// Diagnostics: protected data became available – Face ID / the passcode recognised the owner.
+    case ownerRecognised
+    /// Diagnostics: protected data is being locked again.
+    case dataLocked
     /// "🌙 Pause" tapped (owner 2026-10-02, D17): for `PausePolicy.duration` the owner may leave the app.
     case pauseStarted
     /// iOS told the RUNNING app that it is being terminated (`willTerminate`: the owner swiped it away in the app
@@ -27,6 +38,12 @@ public enum NightEventKind: String, Codable, Sendable {
     /// Logged at the relaunch right before `.appLaunched` when the phone has booted since the `.closedByOwner`: it was
     /// a restart / shutdown, not the owner – the closure is excused.
     case restartExcused
+    /// Everything the owner did out of the app BEFORE this moment of the night is forgiven: a fault of the app made the
+    /// night unfair (owner 2026-10-07, B24). Only the developer launch argument `-forgiveNight` adds it.
+    case forgiven
+    /// Developer aid (`-revokeForgiveness`): once a log has this event every `.forgiven` of the log is ignored by the
+    /// rules, so the night is judged as if nothing had been forgiven (owner 2026-10-08).
+    case forgivenessRevoked
 }
 
 public struct NightEvent: Codable, Equatable, Sendable {

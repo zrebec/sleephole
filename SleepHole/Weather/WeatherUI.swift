@@ -84,18 +84,29 @@ extension View {
     func todayWeather() -> some View { modifier(TodayWeatherModifier()) }
 }
 
-/// Apple's attribution (WeatherKit rules): the Apple Weather mark and the legal link to the other data sources.
+/// The credit both providers require. Apple (WeatherKit rules): the Apple Weather mark and the legal link to the other
+/// data sources. MET Norway (its licence): the data credit and a link to the licensing page.
 struct WeatherAttribution: View {
     static let legalURL = URL(string: "https://developer.apple.com/weatherkit/data-source-attribution/")!
+    static let metLicenceURL = URL(string: "https://www.met.no/en/free-meteorological-data/Licensing-and-crediting")!
     /// The Apple logo character (U+F8FF) followed by " Weather".
     static let mark = "\u{F8FF} Weather"
+
+    /// Whose value is shown; a simulation or no value yet keeps Apple's credit.
+    var provider: WeatherProvider = .apple
 
     var body: some View {
         HStack(spacing: 8) {
             // primary colour, not the link tint: the tint is unreadable on the light sky (seen in the simulator)
-            Text(verbatim: Self.mark).font(.footnote.weight(.semibold)).foregroundStyle(.primary)
-            Link(L("Other data sources"), destination: Self.legalURL)
-                .font(.footnote).underline().foregroundStyle(.primary)
+            if provider == .metNorway {
+                Text(L("Weather data: MET Norway")).font(.footnote.weight(.semibold)).foregroundStyle(.primary)
+                Link(L("Licence and credit"), destination: Self.metLicenceURL)
+                    .font(.footnote).underline().foregroundStyle(.primary)
+            } else {
+                Text(verbatim: Self.mark).font(.footnote.weight(.semibold)).foregroundStyle(.primary)
+                Link(L("Other data sources"), destination: Self.legalURL)
+                    .font(.footnote).underline().foregroundStyle(.primary)
+            }
         }
     }
 }

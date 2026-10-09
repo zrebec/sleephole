@@ -34,13 +34,40 @@ struct WeatherTestView: View {
         case .snow: kind = .snow
         }
         return WeatherSimulation(kind: kind, heavy: c == .heavyRain, temperatureC: old?.temperatureC ?? 12,
-                                 snowOnGround: old?.snowOnGround ?? false)
+                                 snowOnGround: old?.snowOnGround ?? false, windMS: old?.windMS ?? 0)
     }
 
     private func row(_ label: String, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label).font(.footnote).foregroundStyle(.secondary)
             Text(value).textSelection(.enabled)
+        }
+    }
+
+    private func providerName(_ p: WeatherProvider) -> String {
+        switch p {
+        case .apple: "Apple WeatherKit"
+        case .metNorway: "MET Norway"
+        case .simulated: L("Simulation")
+        }
+    }
+
+    private func levelName(_ l: WindLevel) -> String {
+        switch l {
+        case .calm: L("Calm")
+        case .breeze: L("Breeze")
+        case .windy: L("Windy")
+        case .gale: L("Gale")
+        }
+    }
+
+    /// The simulation's speed for a level (m/s).
+    private static func windSpeed(_ l: WindLevel) -> Double {
+        switch l {
+        case .calm: 0
+        case .breeze: 5
+        case .windy: 10
+        case .gale: 16
         }
     }
 
@@ -63,6 +90,7 @@ struct WeatherTestView: View {
                     row(L("Kind"), "\(w.kind.title) \(WeatherRules.emoji(w))")
                     row(L("Intensity"), String(format: "%.2f", w.intensity))
                     row(L("Cloud cover"), String(format: "%.2f", w.cloudCover))
+                    row(L("Wind"), w.windSpeedMS.map { "\(String(format: "%.1f", $0)) m/s · \(levelName(w.windLevel))" } ?? "–")
                     row(L("Daylight"), w.isDaylight ? L("Day") : L("Night"))
                     row(L("Snow on the ground"), w.snowOnGround ? L("Yes") : L("No"))
                     row(L("Observed at"), time(w.observedAt))
@@ -74,6 +102,8 @@ struct WeatherTestView: View {
                 row(L("Last success"), time(store.lastSuccess))
                 row(L("Last failure"), time(store.lastFailure))
                 row(L("Last error"), store.lastError ?? "–")
+                row(L("Answered by"), providerName(store.shownProvider))
+                row(L("Note"), store.note ?? "–")
                 Button(L("Refresh now")) {
                     refreshing = true
                     Task {
@@ -108,6 +138,14 @@ struct WeatherTestView: View {
                     }
                     Toggle(L("Snow on the ground"), isOn: Binding(get: { sim.snowOnGround },
                                                                    set: { store.simulation?.snowOnGround = $0 }))
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(L("Wind")).font(.footnote).foregroundStyle(.secondary)
+                        Picker(L("Wind"), selection: Binding(get: { WeatherRules.windLevel(speedMS: sim.windMS) },
+                                                             set: { store.simulation?.windMS = Self.windSpeed($0) })) {
+                            ForEach(WindLevel.allCases, id: \.self) { Text(levelName($0)).tag($0) }
+                        }
+                        .pickerStyle(.segmented)
+                    }
                 }
             } header: { Text(L("Simulation")) } footer: {
                 Text(L("A simulation lasts until you set it back to Live or the app restarts. It needs a city."))

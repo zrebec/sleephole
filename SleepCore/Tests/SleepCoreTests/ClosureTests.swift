@@ -101,17 +101,20 @@ import Testing
     }
 
     @Test func severalShortClosuresShareTheBudget() {
-        // 3 × 12 s = 36 s > the 30 s of the night; each alone is within the 13 s of one trip
+        // 3 × 12 s = 36 s > the 30 s of the night; each alone is within the 13 s of one trip, and each STARTS with
+        // budget left (0, 12, 24 s used) – so all three stand, but a 4th starts with the budget used up
         var events: [(Double, NightEventKind)] = [(0, .started)]
         for (i, at) in [100.0, 200, 300].enumerated() {
             events.append((at, .closedByOwner))
             events.append((at + sec(12), .appLaunched))
-            #expect(NightEvaluator.collapsedAt(log(events)) == (i < 2 ? nil : time(300) + 6), "closure \(i + 1)")
+            #expect(NightEvaluator.collapsedAt(log(events)) == nil, "closure \(i + 1)")
         }
         let l = log(events + [(wakeMin, .confirmed)])
-        #expect(NightEvaluator.evaluate(l) == .ruins)
+        #expect(NightEvaluator.evaluate(l) == .complete)
         #expect(NightEvaluator.awayAfterSetup(l, until: night.wake) == 36)
-        #expect(NightEvaluator.allowance(log(Array(events.prefix(5))), at: time(400)) == 6)    // what a third closure may take
+        #expect(NightEvaluator.allowance(log(Array(events.prefix(7))), at: time(400)) == 0)     // the 4th closure
+        let fourth = log(events + [(400, .closedByOwner), (400 + sec(5), .appLaunched)])
+        #expect(NightEvaluator.collapsedAt(fourth) == time(400))
         var legacy = SleepRules(); legacy.awayBudget = nil
         #expect(NightEvaluator.evaluate(l, rules: legacy) == .complete)                         // old nights: no budget
     }
