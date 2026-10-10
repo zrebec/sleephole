@@ -24,7 +24,7 @@ final class DetectionTest {
         UIApplication.shared.isIdleTimerDisabled = false        // auto-lock is welcome
         do {
             try audio.start(ambience: ambience, volume: volume)
-            audio.onInterruption = { [log] text in log.add(text) }
+            audio.onInterruption = { [log] report in log.add(report.rawValue) }
             audioError = nil
         } catch {
             audioError = L("The sound didn't start: \(error.localizedDescription)")

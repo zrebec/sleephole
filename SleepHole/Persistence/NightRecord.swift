@@ -29,6 +29,18 @@ final class NightRecord {
     /// the phone on the lock screen is a trip out of the app, false = gentle (logged, never counted). nil = a night
     /// from before the switch existed: it keeps today's meaning, strict.
     var strictLockScreen: Bool?
+    /// What the sleep source (Apple Health, phase HEALTH) said about this night. All optional so the store migrates.
+    var fellAsleepAt: Date?
+    var sleepEndedAt: Date?
+    var asleepSeconds: Double?
+    var awakeSeconds: Double?
+    var sleepSourceName: String?
+    /// When the source was last asked about this night (also set when it found nothing).
+    var sleepReadAt: Date?
+    /// The JSON of `[SleepAnalysis.SourceSummary]` – what every source said about this night – and the version of the
+    /// choice rule the stored values were made with (nil = read before the version existed).
+    var sleepSourcesData: Data?
+    var sleepRuleVersion: Int?
 
     /// `idPrefix`: "bonus" for a test night that counts for the town (one-shot, owner request) –
     /// a unique id so it never collides with the real night of the same date.
@@ -47,6 +59,11 @@ final class NightRecord {
         self.setupGrace = setupGrace
         self.pauses = 0
         self.strictLockScreen = strictLockScreen
+    }
+
+    /// What every source said about this night (empty when nothing is stored).
+    var sleepSources: [SleepAnalysis.SourceSummary] {
+        sleepSourcesData.flatMap { try? JSONDecoder().decode([SleepAnalysis.SourceSummary].self, from: $0) } ?? []
     }
 
     var window: NightWindow {
@@ -81,6 +98,7 @@ final class NightRecord {
     var result: NightResult? {
         guard let outcome else { return nil }
         return NightResult(key: window.key, outcome: outcome, buildingId: buildingId, awaySeconds: awaySeconds,
-                           startedAt: startedAt, confirmedAt: confirmedAt, pauses: pauses, bedtime: bedtime)
+                           startedAt: startedAt, confirmedAt: confirmedAt, pauses: pauses, bedtime: bedtime,
+                           fellAsleepAt: fellAsleepAt, asleepSeconds: asleepSeconds)
     }
 }

@@ -183,6 +183,27 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    Toggle(L("Show when you fell asleep"), isOn: Binding(
+                        get: { model.settings.usesHealth },
+                        set: { on in Task { await model.setHealth(on: on) } }))
+                        .disabled(!model.sleepSource.isAvailable)
+                    if model.settings.usesHealth, model.sleepSource.isAvailable {
+                        let status = model.sleepStatus
+                        Text(L("Nights with sleep data: \(status.withData) of \(status.total)"))
+                        if status.withData == 0, status.anyRead {
+                            Text(L("No data yet? In the Health app open your profile → Apps → SleepHole and allow Sleep."))
+                                .font(.footnote).foregroundStyle(.secondary)
+                        }
+                    }
+                } header: {
+                    Text(L("Apple Health")).id("health")
+                } footer: {
+                    Text(model.sleepSource.isAvailable
+                         ? L("SleepHole reads your sleep from Apple Health (an Apple Watch or another sleep app writes it there) and shows when you really fell asleep next to when you went to bed. It only reads – nothing is written to Health and nothing leaves your iPhone.")
+                         : L("Apple Health isn't available on this device."))
+                }
+
+                Section {
                     Picker(L("Sound"), selection: $model.settings.ambience) {
                         ForEach(AudioKeeper.Ambience.allCases) { Text($0.title).tag($0) }
                     }
@@ -283,6 +304,7 @@ struct SettingsView: View {
                     }
                 }
 
+                #if DEBUG                                  // developer tools never ship to testers (TestFlight = Release)
                 Section(L("Developer")) {
                     Button(L("Quick night (4 min, \(Int(AppModel.debugGrace)) s setup)")) { model.startTestNight() }
                         .disabled(nightRunning)
@@ -299,10 +321,12 @@ struct SettingsView: View {
                     Button(L("Show the guide and first night again")) { model.resetGuide() }
                         .disabled(nightRunning)
                 }
+                #endif
             }
             .onAppear {                                   // `-scrollTo sounds|sky` (screenshots)
                 let args = ProcessInfo.processInfo.arguments
                 if args.contains("sounds") { proxy.scrollTo("sounds", anchor: .top) }
+                if args.contains("health") { proxy.scrollTo("health", anchor: .top) }
                 if args.contains("sky") { proxy.scrollTo("sky", anchor: .top) }
                 if args.contains("notifications") { proxy.scrollTo("notifications", anchor: .top) }
                 // opened by the warning triangle on Today: the tab switch just created this view

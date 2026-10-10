@@ -57,4 +57,44 @@ import Testing
         let o = Stats.summary(old, today: NightKey(year: 2026, month: 10, day: 5), calendar: bratislava)
         #expect(o.regularityMinutes! > 10)
     }
+
+    /// Night i with Apple Health data: fell asleep `fell` minutes after the 21:00 start (nil = no value).
+    func sleepNight(_ i: Int, fell: Int?, start: Int = 0) -> NightResult {
+        let n = night(i, .complete, start: start)
+        return NightResult(key: n.key, outcome: n.outcome, buildingId: "x", startedAt: n.startedAt, confirmedAt: n.confirmedAt,
+                           fellAsleepAt: fell.flatMap { f in n.startedAt.map { $0 + Double(f * 60) } },
+                           asleepSeconds: fell == nil ? nil : 7 * 3600)
+    }
+
+    @Test func fellAsleepAveragesTakeOnlyNightsWithAValue() {
+        let r = [sleepNight(0, fell: 20), sleepNight(1, fell: nil), sleepNight(2, fell: 40), night(3, .complete)]
+        let s = Stats.summary(r, today: first.adding(days: 4, calendar: bratislava), calendar: bratislava)
+        #expect(s.averageFellAsleep == TimeOfDay(21, 30))                 // 21:20 and 21:40
+        #expect(s.averageMinutesToSleep == 30)
+        #expect(s.series[0].asleepMinutes == 560)                         // 21:20 → minutes after noon
+        #expect(s.series[1].asleepMinutes == nil && s.series[3].asleepMinutes == nil)
+    }
+
+    @Test func fellAsleepWrapsAroundMidnightAndNegativeCountsAsZero() {
+        let r = [sleepNight(0, fell: 175), sleepNight(1, fell: 185), sleepNight(2, fell: -10)]
+        let s = Stats.summary(r, today: first.adding(days: 3, calendar: bratislava), calendar: bratislava)
+        #expect(s.series[0].asleepMinutes == 715)                         // 23:55, minutes after noon
+        #expect(s.series[1].asleepMinutes == 725)                         // 00:05 → continuous with the evening axis
+        #expect(s.averageMinutesToSleep == 120.0)                    // (175 + 185 + 0) / 3
+        let two = Stats.summary(Array(r.prefix(2)), today: first.adding(days: 3, calendar: bratislava), calendar: bratislava)
+        #expect(two.averageFellAsleep == TimeOfDay(0, 0))                 // 23:55 and 00:05 meet at midnight
+    }
+
+    @Test func withoutSleepDataNothingElseChanges() {
+        let plain = [night(0, .complete, start: -4), night(1, .complete, start: 2), night(2, .unfinished, start: 5, wake: 20)]
+        let s = Stats.summary(plain, today: first.adding(days: 3, calendar: bratislava), calendar: bratislava)
+        #expect(s.averageFellAsleep == nil && s.averageMinutesToSleep == nil && s.series.allSatisfy { $0.asleepMinutes == nil })
+        let withData = plain.enumerated().map { i, n in
+            NightResult(key: n.key, outcome: n.outcome, buildingId: n.buildingId, startedAt: n.startedAt, confirmedAt: n.confirmedAt,
+                        fellAsleepAt: n.startedAt.map { $0 + Double((10 + i) * 60) })
+        }
+        let t = Stats.summary(withData, today: first.adding(days: 3, calendar: bratislava), calendar: bratislava)
+        #expect(t.averageStart == s.averageStart && t.averageWake == s.averageWake && t.regularityMinutes == s.regularityMinutes
+                && t.coins == s.coins && t.currentStreak == s.currentStreak && t.calendar == s.calendar)
+    }
 }

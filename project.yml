@@ -49,6 +49,10 @@ targets:
         LSSupportsOpeningDocumentsInPlace: true
         # F6b: the system alarm (AlarmKit) asks the owner once; the Slovak text is in Resources/InfoPlist.xcstrings
         NSAlarmKitUsageDescription: SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night.
+        # HEALTH: read-only access to sleep analysis; the Slovak text is in Resources/InfoPlist.xcstrings
+        NSHealthShareUsageDescription: SleepHole reads your sleep data to show when you really fell asleep next to when you went to bed. Nothing leaves your iPhone.
+        # App Store Connect requires this key for any app with the HealthKit entitlement (upload refused on 2026-10-10 without it) although the app never writes.
+        NSHealthUpdateUsageDescription: SleepHole does not write anything to Apple Health. It only reads your sleep data.
     # F6a: time-sensitive notifications break through a Focus – a capability of the paid team. Proven by a signed
     # device build on 2026-10-04 (before Xcode was restarted it still treated the team as a Personal Team).
     entitlements:
@@ -57,6 +61,8 @@ targets:
         com.apple.developer.usernotifications.time-sensitive: true
         # TOWN-W: the weather on Today (Apple WeatherKit) – the App ID has the capability ticked on developer.apple.com
         com.apple.developer.weatherkit: true
+        # HEALTH: read the owner's sleep from Apple Health (read only – nothing is written)
+        com.apple.developer.healthkit: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: sk.zrebec.sleephole

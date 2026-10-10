@@ -34,6 +34,7 @@ final class LifecycleMonitor {
     var isProtectedDataAvailable: () -> Bool = { UIApplication.shared.isProtectedDataAvailable }
     var screenWindow: Duration = LifecycleMonitor.lockScreenWindow
     var unlockWindow: Duration = LifecycleMonitor.unlockReturnWindow
+    var backgroundDelay: Duration = LifecycleMonitor.decisionDelay
     /// A lit lock screen with the phone HELD IN A HAND counts as use after this long, recognised or not (owner
     /// 2026-10-09: filming with the lock-screen camera without Face ID); then it is re-checked every `heldInterval`.
     nonisolated static let lockScreenHeldWindow: Duration = .seconds(12)
@@ -117,7 +118,7 @@ final class LifecycleMonitor {
         tokens.removeAll()
         DarwinNotifications.shared.removeAll()
         callObserver.setDelegate(nil, queue: nil)
-        pendingBackground?.cancel(); pendingUnlock?.cancel(); pendingScreenOn?.cancel()
+        pendingBackground?.cancel(); pendingUnlock?.cancel(); pendingUnlock = nil; pendingScreenOn?.cancel()
         endHeldWatch()
         isRunning = false
         raw("monitor stopped")
@@ -150,20 +151,23 @@ final class LifecycleMonitor {
         }
     }
 
-    private func didEnterBackground() {
+    func didEnterBackground() {
         let now = Date()
         let brightness = UIApplication.shared.connectedScenes.compactMap { ($0 as? UIWindowScene)?.screen.brightness }.first ?? -1
         raw(String(format: "didEnterBackground · protectedData=%@ · brightness=%.2f · calls=%d",
                    UIApplication.shared.isProtectedDataAvailable ? "yes" : "no", brightness, activeCalls.count))
         pendingBackground?.cancel()
         pendingBackground = Task { [weak self] in
-            try? await Task.sleep(for: Self.decisionDelay)
+            try? await Task.sleep(for: self?.backgroundDelay ?? Self.decisionDelay)
             guard let self, !Task.isCancelled else { return }
             self.pendingBackground = nil
             if let lock = self.lastLockSignal, abs(lock.timeIntervalSince(now)) < 2.5 {
                 self.emit(.locked, "(background by lock)", at: now)
-            } else if !self.isAppActive() {
-                self.isAway = true
+            } else if !self.isAppActive(), self.pendingUnlock == nil, !self.isAway || self.lockTrip {
+                // One trip, one `.leftApp` (B29): while an unlock window is pending, the unlock path reports the trip at
+                // the END of that window (the window is free); a real leave that is already open needs nothing more. An
+                // open lock-screen trip is not a real leave, so a background that follows it still reports one.
+                self.isAway = true; self.lockTrip = false
                 self.emit(.leftApp, "(background without a lock signal)", at: now)
             }
         }
@@ -171,7 +175,7 @@ final class LifecycleMonitor {
 
     private func didBecomeActive() {
         raw("didBecomeActive")
-        pendingUnlock?.cancel()
+        pendingUnlock?.cancel(); pendingUnlock = nil
         pendingScreenOn?.cancel(); pendingScreenOn = nil
         endHeldWatch()
         screenLit = false                 // while the app is active no `.screenOff` is owed
@@ -193,6 +197,7 @@ final class LifecycleMonitor {
         pendingUnlock = Task { [weak self] in
             try? await Task.sleep(for: self?.unlockWindow ?? Self.unlockReturnWindow)
             guard let self, !Task.isCancelled else { return }
+            self.pendingUnlock = nil          // the window is over: the background decision may report again
             // `isAway`: another path (lit lock screen, background) has already reported the trip – no second `.leftApp`,
             // unless that trip is only lock-screen use: unlocking into another app is a real leave (care-not-enforcement
             // mode, owner 2026-10-09 – the lock-screen trip itself may be free)

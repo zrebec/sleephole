@@ -36,9 +36,25 @@ struct StatsView: View {
                             Divider()
                             metric(L("Wake-up"), s.averageWake.map(Fmt.time) ?? "–")
                         }
+                        if showsSleep(s) {
+                            Divider()
+                            HStack {
+                                metric(L("Fell asleep"), s.averageFellAsleep.map(Fmt.time) ?? "–")
+                                Divider()
+                                metric(L("Time to fall asleep"), s.averageMinutesToSleep.map { L("\(Int($0.rounded())) min") } ?? "–")
+                            }
+                        }
                         regularity(s.regularityMinutes)
                     }
-                    card(L("When you start and get up")) { NightChart(points: s.series, bedtime: model.settings.schedule) }
+                    .id("average")
+                    card(showsSleep(s) ? L("When you go to bed and fall asleep") : L("When you start and get up")) {
+                        NightChart(points: s.series, bedtime: model.settings.schedule, showsSleep: showsSleep(s),
+                                   initialSelection: Self.launchChartNight(s.series)) { key in
+                            if selectedDay == key { withAnimation { proxy.scrollTo("detail", anchor: .top) } }
+                            else { selectedDay = key }
+                        }
+                    }
+                    .id("chart")
                     card(L("Naps")) {
                         let n = model.napSummary
                         Label(L("\(n.count) complete naps") + " · +\(n.coins) 🪙", systemImage: "bed.double.fill")
@@ -61,15 +77,32 @@ struct StatsView: View {
             .skyBackground()
             .onAppear {                                   // `-scrollTo journal|achievements` (screenshots)
                 let args = ProcessInfo.processInfo.arguments
-                for id in ["journal", "achievements"] where args.contains(id) { proxy.scrollTo(id, anchor: .top) }
+                for id in ["journal", "achievements", "chart", "average"] where args.contains(id) { proxy.scrollTo(id, anchor: .top) }
             }
             .onChange(of: selectedDay) { _, day in
                 if day != nil { withAnimation { proxy.scrollTo("detail", anchor: .top) } }
             }
             }
             .navigationTitle(L("Stats"))
+            .task { await model.refreshSleepIfIdle() }
             .onAppear { if preselect, selectedDay == nil { selectedDay = model.realResults().last.map { NightKey($0.keyString)! } } }
         }
+    }
+
+    /// Sleep data (phase HEALTH) shows only with the switch on and at least one shown night with a value.
+    private func showsSleep(_ s: StatsSummary) -> Bool {
+        Self.showsSleep(s, on: model.settings.usesHealth)
+    }
+
+    /// `-selectChartNight K` → the night K places before the newest one is selected on the chart (screenshots).
+    static func launchChartNight(_ series: [NightPoint], args: [String] = ProcessInfo.processInfo.arguments) -> NightKey? {
+        guard let i = args.firstIndex(of: "-selectChartNight"), i + 1 < args.count, let back = Int(args[i + 1]),
+              series.indices.contains(series.count - 1 - back) else { return nil }
+        return series[series.count - 1 - back].key
+    }
+
+    static func showsSleep(_ s: StatsSummary, on: Bool) -> Bool {
+        on && s.series.contains { $0.asleepMinutes != nil }
     }
 
     private func tile(_ icon: String, _ value: Int, _ label: String) -> some View {
@@ -176,37 +209,140 @@ struct CalendarGrid: View {
     }
 }
 
-/// Start and wake times of the last 30 nights (dashed lines = the schedule).
+/// The last 30 nights: per night the build start (a dot in the outcome's colour) and, with Apple Health data, a bar up
+/// to the blue "fell asleep" diamond. Tap a night to select it; the dashed line is the bedtime.
 struct NightChart: View {
     let points: [NightPoint]
     let bedtime: Schedule
+    /// Also draw the bars and the blue "fell asleep" points (Apple Health).
+    var showsSleep = false
+    /// The night shown selected when the card first appears (screenshots only).
+    var initialSelection: NightKey?
+    /// "Night details" in the callout: StatsView selects that night in the calendar.
+    var onDetails: (NightKey) -> Void = { _ in }
+
+    @State private var selected: NightKey?
+
+    init(points: [NightPoint], bedtime: Schedule, showsSleep: Bool = false, initialSelection: NightKey? = nil,
+         onDetails: @escaping (NightKey) -> Void = { _ in }) {
+        self.points = points
+        self.bedtime = bedtime
+        self.showsSleep = showsSleep
+        self.initialSelection = initialSelection
+        self.onDetails = onDetails
+        _selected = State(initialValue: initialSelection)
+    }
+
+    private static let barColor = Color(red: 0.40, green: 0.47, blue: 0.82)         // solid, reads on light and dark skies
+
+    // MARK: pure rules (unit-tested)
+
+    /// The index of the night nearest to a tapped x position (the chart's x axis is the night's index); nil without nights.
+    static func nearestIndex(x: Double, count: Int) -> Int? {
+        guard count > 0, x.isFinite else { return nil }
+        return min(max(Int(x.rounded()), 0), count - 1)
+    }
+
+    /// A tap on the already selected night clears the selection.
+    static func toggled(_ current: NightKey?, tapped: NightKey) -> NightKey? { current == tapped ? nil : tapped }
+
+    /// Every n-th night gets a label on the x axis, so the day numbers never collide.
+    static func labelStep(count: Int) -> Int { count <= 12 ? 1 : count <= 24 ? 2 : 5 }
+
+    /// The line under the card's title: the hint, or the selected night in words (also the marks' spoken label).
+    static func callout(_ p: NightPoint?, showsSleep: Bool) -> String {
+        guard let p else { return L("Tap a night to see it.") }
+        let date = Fmt.dayMonth(p.key)
+        let start = p.startMinutes.map(clock(afterNoon:)) ?? "–"
+        if showsSleep, let asleep = p.asleepMinutes {
+            return L("\(date) · start \(start) · asleep \(clock(afterNoon: asleep)) · after \(NightDetail.minutesToSleep(startMinutes: p.startMinutes, asleepMinutes: asleep)) min")
+        }
+        return L("\(date) · start \(start)")
+    }
+
+    /// Clock time of a minute count after 12:00.
+    static func clock(afterNoon minutes: Double) -> String { Fmt.time(minutesOfDay: Int((minutes + 720).rounded())) }
+
+    // MARK: view
 
     var body: some View {
         if points.isEmpty {
             Text(L("The chart fills up after your first nights.")).font(.subheadline).cardCaption()
         } else {
             let bed = Double((bedtime.bedtime.hour * 60 + bedtime.bedtime.minute + 720) % 1440)
-            Chart {
-                RuleMark(y: .value(L("Bedtime"), bed))
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4])).foregroundStyle(.indigo.opacity(0.6))
-                ForEach(points, id: \.key) { p in
-                    if let s = p.startMinutes {
-                        PointMark(x: .value(L("Night"), Fmt.dayMonth(p.key)), y: .value(L("Start"), s))
-                            .foregroundStyle(CalendarGrid.color(p.outcome))
+            let step = Self.labelStep(count: points.count)
+            let chosen = points.first { $0.key == selected }
+            VStack(alignment: .leading, spacing: 8) {
+                Text(Self.callout(chosen, showsSleep: showsSleep)).font(.footnote).monospacedDigit()
+                    .fixedSize(horizontal: false, vertical: true)
+                if let chosen {
+                    Button(L("Night details")) { onDetails(chosen.key) }
+                        .font(.footnote.weight(.semibold)).buttonStyle(.borderedProminent).tint(.indigo).controlSize(.small)
+                }
+                Chart {
+                    RuleMark(y: .value(L("Bedtime"), bed))
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4])).foregroundStyle(.indigo.opacity(0.6))
+                    if let i = points.firstIndex(where: { $0.key == selected }) {
+                        RuleMark(x: .value(L("Night"), i))                               // behind the selected night
+                            .lineStyle(StrokeStyle(lineWidth: 2)).foregroundStyle(Color.gray)
+                    }
+                    ForEach(Array(points.enumerated()), id: \.element.key) { i, p in
+                        let on = p.key == selected
+                        let label = Self.callout(p, showsSleep: showsSleep)
+                        if showsSleep, let s = p.startMinutes, let a = p.asleepMinutes {
+                            RuleMark(x: .value(L("Night"), i), yStart: .value(L("Start"), s), yEnd: .value(L("Fell asleep"), a))
+                                .lineStyle(StrokeStyle(lineWidth: on ? 8 : 5, lineCap: .round))
+                                .foregroundStyle(Self.barColor)
+                                .accessibilityLabel(label)
+                        }
+                        if let s = p.startMinutes {
+                            PointMark(x: .value(L("Night"), i), y: .value(L("Start"), s))
+                                .foregroundStyle(CalendarGrid.color(p.outcome))
+                                .symbolSize(on ? 150 : 55)
+                                .accessibilityLabel(label)
+                        }
+                        if showsSleep, let a = p.asleepMinutes {
+                            PointMark(x: .value(L("Night"), i), y: .value(L("Fell asleep"), a))
+                                .foregroundStyle(Color.blue)
+                                .symbol(.diamond)
+                                .symbolSize(on ? 150 : 55)
+                                .accessibilityLabel(label)
+                        }
                     }
                 }
-            }
-            .chartYAxis {
-                AxisMarks(values: .automatic(desiredCount: 4)) { v in
-                    AxisGridLine()
-                    AxisValueLabel {
-                        if let m = v.as(Double.self) { Text(Self.clock(m + 720)) }
+                .chartXScale(domain: -0.5...(Double(points.count) - 0.5))
+                .chartXAxis {
+                    AxisMarks(values: Array(stride(from: 0, to: points.count, by: step))) { v in
+                        AxisGridLine()
+                        AxisValueLabel {
+                            if let i = v.as(Int.self), points.indices.contains(i) { Text(verbatim: "\(points[i].key.day)") }
+                        }
                     }
                 }
+                .chartYAxis {
+                    AxisMarks(values: .automatic(desiredCount: 4)) { v in
+                        AxisGridLine()
+                        AxisValueLabel {
+                            if let m = v.as(Double.self) { Text(Self.clock(afterNoon: m)) }
+                        }
+                    }
+                }
+                .chartYScale(domain: .automatic(includesZero: false))
+                .chartOverlay { proxy in
+                    GeometryReader { geo in
+                        Rectangle().fill(.clear).contentShape(Rectangle())
+                            .onTapGesture(coordinateSpace: .local) { location in
+                                guard let frame = proxy.plotFrame,
+                                      let x = proxy.value(atX: location.x - geo[frame].origin.x, as: Double.self),
+                                      let i = Self.nearestIndex(x: x, count: points.count) else { return }
+                                selected = Self.toggled(selected, tapped: points[i].key)
+                            }
+                    }
+                }
+                .frame(height: 180)
+                Text(showsSleep ? L("Each bar runs from the build start to falling asleep – the shorter, the sooner you slept. The dashed line is your bedtime.")
+                                : L("Dots = build start, line = bedtime.")).font(.caption).cardCaption()
             }
-            .chartYScale(domain: .automatic(includesZero: false))
-            .frame(height: 180)
-            Text(L("Dots = build start, line = bedtime.")).font(.caption).cardCaption()
         }
     }
 
@@ -236,6 +372,7 @@ struct NightDetail: View {
                 building(outcome: outcome)
                 row("🌙", L("Build started"), r.startedAt.map(Fmt.timeSec))
                 row("🔒", L("Phone locked"), r.firstLockAt.map(Fmt.timeSec))
+                sleepRows(rec)
                 row("⏰", L("Alarm"), r.alarmFiredAt.map { fired in
                         r.alarmStoppedAt.map { L("rang at \(Fmt.timeSec(fired)), stopped \(Fmt.time($0))") }
                             ?? L("rang at \(Fmt.timeSec(fired))") }
@@ -279,6 +416,68 @@ struct NightDetail: View {
             }
         }
     }
+
+    /// Minutes from the build start to falling asleep: rounded, never negative.
+    static func minutesToSleep(started: Date?, fellAsleep: Date) -> Int {
+        max(0, Int((fellAsleep.timeIntervalSince(started ?? fellAsleep) / 60).rounded()))
+    }
+
+    /// The same on the chart's axis (minutes after 12:00): no build start counts as no waiting.
+    static func minutesToSleep(startMinutes: Double?, asleepMinutes: Double) -> Int {
+        max(0, Int((asleepMinutes - (startMinutes ?? asleepMinutes)).rounded()))
+    }
+
+    static func hoursMinutes(_ seconds: TimeInterval) -> String {
+        let m = max(0, Int((seconds / 60).rounded()))
+        return L("\(m / 60) h \(m % 60) min")
+    }
+
+    /// What the night's detail says about sleep (phase HEALTH): nothing with the switch off or before the first read.
+    enum SleepLines: Equatable {
+        case hidden
+        case none
+        case values(fellAsleep: String, slept: String, source: String?)
+    }
+
+    static func sleepLines(_ rec: NightRecord, on: Bool) -> SleepLines {
+        guard on else { return .hidden }
+        if let fell = rec.fellAsleepAt {
+            let minutes = minutesToSleep(started: rec.startedAt, fellAsleep: fell)
+            return .values(fellAsleep: Fmt.time(fell) + L(" (after \(minutes) min)"),
+                           slept: rec.asleepSeconds.map(hoursMinutes) ?? "–",
+                           source: rec.sleepSourceName)
+        }
+        return rec.sleepReadAt != nil ? .none : .hidden
+    }
+
+    @ViewBuilder
+    private func sleepRows(_ rec: NightRecord) -> some View {
+        switch Self.sleepLines(rec, on: model.settings.usesHealth) {
+        case .hidden: EmptyView()
+        case .none: Text(L("No sleep data for this night")).cardCaption()
+        case let .values(fell, slept, source):
+            row("😴", L("Fell asleep"), fell)
+            row("🛌", L("Slept"), slept)
+            if let source { Text(L("Source: \(source)")).cardCaption() }
+            #if DEBUG
+            debugSources(rec)
+            #endif
+        }
+    }
+
+    #if DEBUG
+    /// Developer aid: what every source said about the night (which one the rule chose is marked).
+    @ViewBuilder
+    private func debugSources(_ rec: NightRecord) -> some View {
+        ForEach(rec.sleepSources, id: \.name) { src in
+            let m = Int((src.asleepSeconds / 60).rounded())
+            let mark = src.name == rec.sleepSourceName ? "> " : "· "
+            Text(verbatim: "\(mark)\(src.name): \(m / 60) h \(m % 60) min asleep, from \(Fmt.time(src.fellAsleepAt)), "
+                 + (src.hasStages ? "stages" : "no stages") + (src.isFirstParty ? ", first-party" : ""))
+                .font(.caption2).foregroundStyle(.secondary)
+        }
+    }
+    #endif
 
     private func row(_ icon: String, _ label: String, _ value: String?) -> some View {
         HStack(alignment: .top) {

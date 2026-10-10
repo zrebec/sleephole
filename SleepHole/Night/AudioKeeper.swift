@@ -87,7 +87,24 @@ final class AudioKeeper {
     private let noise = NoiseState()
     private var observers: [NSObjectProtocol] = []
     private(set) var isRunning = false
-    var onInterruption: ((String) -> Void)?
+    /// What the audio session reported. The texts feed the developer "Detection test" screen; `journalKind` is what the
+    /// night journal records (diagnostics only).
+    enum Report: String, CaseIterable {
+        case interruptionBegan = "audio interruption began"
+        case interruptionEnded = "audio interruption ended"
+        case configurationChange = "audio configuration change"
+        case servicesReset = "media services reset"
+
+        var journalKind: NightEventKind {
+            switch self {
+            case .interruptionBegan: .audioInterrupted
+            case .interruptionEnded: .audioResumed
+            case .configurationChange: .audioRouteChanged
+            case .servicesReset: .audioServicesReset
+            }
+        }
+    }
+    var onInterruption: ((Report) -> Void)?
     private let alarmPlayer = AVAudioPlayerNode()
     private var alarmTask: Task<Void, Never>?
     private(set) var isAlarmRinging = false
@@ -159,7 +176,7 @@ final class AudioKeeper {
             let raw = note.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt
             let began = raw == AVAudioSession.InterruptionType.began.rawValue
             MainActor.assumeIsolated {
-                self?.onInterruption?(began ? "audio interruption began" : "audio interruption ended")
+                self?.onInterruption?(began ? .interruptionBegan : .interruptionEnded)
                 if !began { try? self?.engine.start() }          // resume after a call
             }
         })
@@ -167,14 +184,14 @@ final class AudioKeeper {
         observers.append(nc.addObserver(forName: .AVAudioEngineConfigurationChange, object: engine,
                                         queue: .main) { [weak self] _ in
             MainActor.assumeIsolated {
-                self?.onInterruption?("audio configuration change")
+                self?.onInterruption?(.configurationChange)
                 self?.ensureRunning()
             }
         })
         observers.append(nc.addObserver(forName: AVAudioSession.mediaServicesWereResetNotification, object: nil,
                                         queue: .main) { [weak self] _ in
             MainActor.assumeIsolated {
-                self?.onInterruption?("media services reset")
+                self?.onInterruption?(.servicesReset)
                 if let self, self.isRunning { try? self.start(ambience: ambience, volume: volume) }
             }
         })

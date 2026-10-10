@@ -81,7 +81,7 @@ final class AppModel {
     ///   -skyTime HH:MM                pin the sky's time of day; -skyArc 0.3 / -skyBody sun|moon|none / -skyMoon 0.5
     ///                                 force the drawn arc / body / moon's lit fraction (see `SkyOverrides`)
     ///   -cityQuery Brat               pre-fill Settings → Sky → city so the real Apple Maps search runs
-    ///   -scrollTo sky                 scroll Settings to the Sky section (also: sounds, notifications)
+    ///   -scrollTo sky                 scroll Settings to the Sky section (also: sounds, notifications, health)
     ///   -systemAlarm allowed|denied|notAsked   SIMULATOR ONLY: pretend that consent for the system alarm (a silent
     ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
     ///   -weather clear|cloudy|fog|rain|heavyRain|thunder|snow, -weatherTemp N, -weatherSnowCover   simulate the weather
@@ -90,6 +90,10 @@ final class AppModel {
     ///                                 never under test)
     ///                                 for this run (see `WeatherSimulation`); -openWeatherTest opens Developer → Weather test
     ///   -timeSensitive off|on         SIMULATOR ONLY: pretend that iOS's "Time Sensitive Notifications" switch is off / on
+    ///   -sleepSim N                   use a simulated sleep source (Health stand-in): asleep N minutes after the build
+    ///                                 start, a staged night (default 18 when N is missing); switch "Apple Health" on to read it
+    ///   -selectChartNight K           Stats: select the night K places before the newest on the sleep chart (0 = newest)
+    ///   -healthOn                     switch Settings → Apple Health on for this run (with -sleepSim: seeded nights get sleep data)
     ///   -openSystemAlarmTest          with -openTab settings: open Developer → System alarm test at once
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
                                      args: [String] = ProcessInfo.processInfo.arguments) {
@@ -104,6 +108,7 @@ final class AppModel {
             try? context.delete(model: NightRecord.self)
             try? context.save()
         }
+        if args.contains("-healthOn") { settings.usesHealth = true }
         if args.contains("-mute") { AudioKeeper.muted = true }          // screenshots: no alarm on the Mac's speakers
         if let t = time(value("-bedtime")) { settings.schedule.bedtime = t }
         if let t = time(value("-wake")) { settings.schedule.wake = t }
@@ -149,6 +154,13 @@ final class AppModel {
         settings.save()
     }
 
+    /// `-sleepSim [minutes]` → the simulated sleep source; nil without the argument.
+    static func launchSleepSource(args: [String] = ProcessInfo.processInfo.arguments) -> (any SleepSource)? {
+        guard let i = args.firstIndex(of: "-sleepSim") else { return nil }
+        let minutes = args.indices.contains(i + 1) ? Double(args[i + 1]) : nil
+        return SimulatedSleepSource(fallAsleepMinutes: minutes ?? 18)
+    }
+
     /// "Bratislava,48.1486,17.1077" → the city (the name may itself contain commas: the last two parts are the
     /// coordinates).
     static func parseCity(_ text: String) -> SkyCity? {
@@ -172,10 +184,14 @@ final class AppModel {
     /// Keeps the app running while the lock-screen warning alarm rings (B28). The default does nothing: only
     /// `SleepHoleApp` passes the real UIKit one.
     let keepAlive: any KeepAlive
+    /// Where the real fall-asleep time comes from (phase HEALTH). The default has no data; `-sleepSim` picks a simulated one.
+    let sleepSource: any SleepSource
     /// The weather over the owner's city (TOWN-W); `SleepHoleApp` passes the launch's store, the default has no source.
     let weather: WeatherStore
     /// Asks whether iOS's "Time Sensitive Notifications" switch is off (the default never does – tests stay off the system).
     private let timeSensitiveCheck: @MainActor () async -> Bool
+    /// Health cannot be read while the phone is locked (protected data); tests pass a fake.
+    private let protectedDataAvailable: @MainActor () -> Bool
     /// True while notifications are allowed but their Time Sensitive switch is off (warning on Today and in Settings).
     private(set) var timeSensitiveOff = false
 
@@ -187,8 +203,9 @@ final class AppModel {
 
     init(context: ModelContext, catalog: Catalog?, clock: any Clock = SystemClock(),
          settings initialSettings: AppSettings? = nil, servicesEnabled: Bool = true,
-         systemAlarm: any SystemAlarm = NoSystemAlarm(), keepAlive: any KeepAlive = NoKeepAlive(),
-         weather: WeatherStore? = nil, timeSensitiveCheck: @escaping @MainActor () async -> Bool = { false }, defaults: UserDefaults = .standard,
+         systemAlarm: any SystemAlarm = NoSystemAlarm(), keepAlive: any KeepAlive = NoKeepAlive(), sleepSource: (any SleepSource)? = nil,
+         weather: WeatherStore? = nil, timeSensitiveCheck: @escaping @MainActor () async -> Bool = { false },
+         protectedDataAvailable: @escaping @MainActor () -> Bool = { UIApplication.shared.isProtectedDataAvailable }, defaults: UserDefaults = .standard,
          bootDate: @escaping () -> Date? = { DeviceBoot.date() }) {
         self.context = context
         self.container = context.container
@@ -197,8 +214,10 @@ final class AppModel {
         self.servicesEnabled = servicesEnabled
         self.systemAlarm = systemAlarm
         self.keepAlive = keepAlive
+        self.sleepSource = sleepSource ?? Self.launchSleepSource() ?? NoSleepSource()
         self.weather = weather ?? WeatherStore(source: NoWeather(), defaults: defaults)
         self.timeSensitiveCheck = timeSensitiveCheck
+        self.protectedDataAvailable = protectedDataAvailable
         self.defaults = defaults
         self.bootDate = bootDate
         let memory = SystemAlarmMemory(defaults: defaults)
@@ -238,6 +257,69 @@ final class AppModel {
     /// Finalized real nights, oldest first (debug nights never count).
     func realResults() -> [NightRecord] {
         records().filter { !$0.isDebug && !$0.isNap && $0.isFinalized }
+    }
+
+    // MARK: - sleep from the source (phase HEALTH)
+
+    /// A night's sleep is read again until this long after its wake time (a watch may sync late).
+    static let sleepRereadUntil: TimeInterval = 3 * 86400
+    /// ...but not more often than this.
+    static let sleepRereadEvery: TimeInterval = 3600
+
+    /// The switch in Settings → Apple Health: on = ask for access once (the iOS sheet), then read. Off keeps what is stored.
+    func setHealth(on: Bool) async {
+        settings.usesHealth = on
+        guard on else { return }
+        _ = await sleepSource.requestAccess()
+        await refreshSleepIfIdle()
+    }
+
+    /// `refreshSleep` at a safe moment only: never while a night or nap runs, never while the phone is locked.
+    func refreshSleepIfIdle() async {
+        guard active == nil, protectedDataAvailable() else { return }
+        await refreshSleep(now: clock.now)
+    }
+
+    /// Bumped after every read that stored something, so a view showing `sleepStatus` redraws (SwiftData rows are not observed).
+    private(set) var sleepReads = 0
+
+    /// Nights with a stored fall-asleep time of all finalized real nights, and whether any was read at all.
+    var sleepStatus: (withData: Int, total: Int, anyRead: Bool) {
+        _ = sleepReads
+        let nights = realResults()
+        return (nights.filter { $0.fellAsleepAt != nil }.count, nights.count, nights.contains { $0.sleepReadAt != nil })
+    }
+
+    /// Asks the sleep source about every finalized real night that is due and stores what it says. Does nothing while
+    /// Health is switched off or the source is not available. A source that throws leaves that night untouched.
+    func refreshSleep(now: Date) async {
+        guard settings.usesHealth, sleepSource.isAvailable else { return }
+        var changed = false
+        for night in realResults() {
+            // a night stored under another rule version (nil = none) is read again, whatever its age
+            if let read = night.sleepReadAt, night.sleepRuleVersion == SleepAnalysis.ruleVersion {
+                guard read < night.wake.addingTimeInterval(Self.sleepRereadUntil),
+                      now.timeIntervalSince(read) >= Self.sleepRereadEvery else { continue }
+            }
+            let w = SleepAnalysis.window(nightStart: night.startedAt ?? night.bedtime, wake: night.wake,
+                                         confirmedAt: night.confirmedAt)
+            guard let samples = try? await sleepSource.samples(from: w.from, to: w.to) else { continue }
+            let list = SleepAnalysis.sources(samples: samples, from: w.from, to: w.to)
+            let summary = SleepAnalysis.chosen(from: list).map {
+                SleepSummary(fellAsleepAt: $0.fellAsleepAt, wokeAt: $0.wokeAt, asleepSeconds: $0.asleepSeconds,
+                             awakeSeconds: $0.awakeSeconds, source: $0.name, hasStages: $0.hasStages)
+            }
+            night.fellAsleepAt = summary?.fellAsleepAt
+            night.sleepEndedAt = summary?.wokeAt
+            night.asleepSeconds = summary?.asleepSeconds
+            night.awakeSeconds = summary?.awakeSeconds
+            night.sleepSourceName = summary?.source
+            night.sleepReadAt = now
+            night.sleepSourcesData = try? JSONEncoder().encode(list)
+            night.sleepRuleVersion = SleepAnalysis.ruleVersion
+            changed = true
+        }
+        if changed { try? context.save(); sleepReads += 1 }
     }
 
     /// The real results as every rule sees them: nights protected by a joker are `.excused` (owner 2026-10-02).
@@ -318,8 +400,9 @@ final class AppModel {
 
     /// Everything for the Štatistiky tab.
     var stats: StatsSummary {
-        Stats.summary(coreResults(), today: NightKey(date: clock.now, calendar: calendar),
-                      calendar: calendar, breaks: streakBreaks, catalog: catalog)
+        _ = sleepReads                              // a finished Health read redraws Stats (SwiftData rows are not observed)
+        return Stats.summary(coreResults(), today: NightKey(date: clock.now, calendar: calendar),
+                             calendar: calendar, breaks: streakBreaks, catalog: catalog)
     }
 
     /// Coin balance 🪙: earned (replayed from the real nights, naps and achievements) − spent (`CoinSpend`).
@@ -995,6 +1078,7 @@ final class AppModel {
     func appBecameActive() {
         guard active == nil else { return }
         stopRingingSystemAlarms()
+        Task { await refreshSleepIfIdle() }
     }
 
     // MARK: lock-screen warning alarm
@@ -1217,8 +1301,8 @@ final class AppModel {
             let elapsed = clock.now.timeIntervalSince(rec.startedAt ?? clock.now)
             audio.sleepTimer(seconds: max(0, total - elapsed), volume: settings.volume)
         }
-        audio.onInterruption = { [weak self] text in
-            self?.append(text.hasSuffix("began") ? .audioInterrupted : .audioResumed)
+        audio.onInterruption = { [weak self] report in
+            self?.append(report.journalKind)
         }
         monitor.onEvent = { [weak self] kind, date in self?.append(kind, at: date) }
         monitor.onTerminate = { [weak self] in self?.appWillTerminate() }
@@ -1546,6 +1630,7 @@ final class AppModel {
                 .map(journalWeek(monday:)).flatMap { $0.nights > 0 ? $0 : nil }
         }
         if !rec.isDebug { writeAutoBackup() }
+        if servicesEnabled, !rec.isDebug, !rec.isNap { Task { await refreshSleepIfIdle() } }   // the watch may not have synced yet: read again later
         let entry = rec.isDebug || rec.isNap ? nil
             : Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
                 .last { $0.key.description == rec.keyString }

@@ -31,6 +31,7 @@
 | R4 | Closing the app during a night counts as leaving it (the owner's loophole finding 2026-10-04, spec in §10 R4) | 🟡 committed and installed by the owner 2026-10-07 07:44; his quick nights the same morning (journal pulled): closed + reopened in time → the building stands ✅, a phone restart → the building stands ✅, the notices arrive with the app closed ✅. Still to prove: closed and STAYED away → collapse; only one alarm when the app is reopened while the system alarm rings | swiping the app away and using the phone collapses the building |
 | LOCK-W | The lock-screen warning rings as a system alarm that the app ends itself + B27 + the late Face ID hole (owner 2026-10-08, spec in §10 LOCK-W) | 🟢 the three variants confirmed by the owner on the phone 2026-10-09 (with Face ID: return, screen off, left alone → collapse; the alarm covers the Camera); the forgiven night is taken back. Open: the hole without Face ID (proposal waits for his decision), the quick night's 15 s setup (worker) | his decision on lock-screen use without Face ID; then install the next build on his word |
 | CARE | Care instead of enforcement (owner 2026-10-09 evening, spec in §10 CARE): the siren only as an opt-in strict mode, lock-screen use costs a calm-hour bonus instead of the building, caring texts, calm-hour coins, Live Activity / Dynamic Island countdowns, then HealthKit, the shop, a flexible bedtime | 🟡 CARE-1 (jokers per kind, the reviewed texts, the gentle default + Strict mode) is on the phone since 2026-10-09 21:00 and both modes were tried by the owner the same evening | fix B29, then CARE-3 (the Live Activity try in the lock-screen Camera) and CARE-2 (calm-hour coins – he has not confirmed +10 per hour) |
+| HEALTH | Apple Health: "when did I really fall asleep" next to "when did I go to bed" (owner 2026-10-09 / 10, spec in §10 HEALTH) – read-only sleep data, stored per night, bars in the chart | 🟢 H1–H4, H2b, H2c built, reviewed and on the phone 2026-10-10; the owner checked the data, the chart with bars and the tap ("it looks good"); uploaded to TestFlight as 1.0 (2) the same morning | more statistics from the sleep data and the buddy talking about the town (his direction, candidates in §10 HEALTH) – he picks |
 | F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a on the phone since 2026-10-04 19:11 – the owner's Focus test of 2026-10-07 brought no warning because Time Sensitive Notifications were switched off in iOS (his finding the same day) → B21 closed, the app gets a warning for it (TOWN-W step 0b); **re-tested with the switch on 2026-10-07 evening: the warning arrives in a Focus (owner: "confirmed")**; F6b (AlarmKit) built and reviewed 2026-10-04 evening, installed by the owner himself ≈ 20:00 – it rang with the app swiped away; committed 2026-10-07; his remaining checks are listed in §10 F6 | the system alarm wakes the owner with the app swiped away |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
 
@@ -60,6 +61,8 @@ App 311 tests green (2026-10-09 15:12, one lock-screen notification when the ala
 App 331 tests green (2026-10-09 16:32: lock-screen lab, one notification per trip, collapse notice, keep-alive); i18n 596 keys 0 / 0 / 0.
 SleepCore 260 tests, app 341 tests green (2026-10-09 17:01: the lock screen without an unlock – `HoldDetector`); i18n 596 keys 0 / 0 / 0.
 SleepCore 273 tests, app 353 tests green (2026-10-09 20:55: jokers per kind, the reviewed texts, CARE-1 gentle default + strict mode); i18n 598 keys 0 / 0 / 0.
+SleepCore 274 tests, app 361 tests green (2026-10-10 07:23: B29 + the audio event kinds); i18n 598 keys 0 / 0 / 0.
+SleepCore 307 tests, app 388 tests green (2026-10-10 09:19: phase HEALTH H1–H4, H2b, H2c; the Developer section only in Debug); i18n 617 keys 0 / 0 / 0.
 
 ### Night and nap
 | | Feature | Evidence |
@@ -1679,11 +1682,15 @@ tests: **he switched it off himself each time because it is so unpleasant** (so 
       (recognised) and on the 12 s path (`active=12/12 tilt=82.3°`) – no alarm, no keep-alive, no audio
       interruption, the building stood; then an unlock straight into another app for 32 s → `.leftApp`, `ruins`.
       **Owner: "it is better already, only a calm warning."** He tries Strict mode himself.
-- [ ] **B29 (found in that log):** unlocking straight into another app logs TWO `.leftApp` events for one trip –
-one from `unlockCandidate` ("unlocked but did not return in 5 s") and one from the background decision
-      ("background without a lock signal", stamped earlier). Checked in the code the same evening: no second
-      warning goes out, only the trip starts ~3.4 s earlier than the warning assumed (§11a B29). The background
-      decision does not look at `isAway`. Small fix, first thing 2026-10-10; not installed tonight.
+- [x] **B29 (found in that log) – fixed 2026-10-10:** unlocking straight into another app logged TWO `.leftApp`
+      events for one trip (§11a B29). Fix in `LifecycleMonitor.didEnterBackground`'s delayed decision + seven tests
+      that force both orders of the two timers. The first version of the tightened test
+      `theUnlockPathAndTheScreenPathReportOnce` failed in Opus's own run (two 150 ms timers raced) – the worker
+      rewrote the timing tests to poll with wide margins and proved them with ten iterations of the suite. With it:
+      the journal no longer calls a change of the audio output "audio resumed" (`.audioRouteChanged`,
+      `.audioServicesReset`; the owner confirmed that last night's two lone events were his Bluetooth speaker being
+      switched on and off). Reviewed: SleepCore 274, app 361 tests green, i18n 598 keys 0 / 0 / 0. **Not installed –
+      goes onto the phone with HEALTH's checkpoint A unless he wants it sooner.**
 - [x] Strict mode checked by the owner 2026-10-09 21:04 ("strict mode works, the siren sounded"); the lab agrees:
       the night stored `strictLockScreen = 1`, 12 s held → `.usedLockScreen`, keep-alive, the alarm 2.6 s later,
       back in the app 10.0 s after the detection → the warning and the keep-alive ended, the building stood.
@@ -1704,6 +1711,28 @@ one from `unlockCandidate` ("unlocked but did not return in 5 s") and one from t
       (2) **Apple Health** – analysis first (read-only sleep data, "went to bed" next to "fell asleep" in the chart),
       then small steps; (3) the Dynamic Island / Live Activity try; then CARE-2 (calm-hour coins), the shop, the
       flexible-bedtime proposal.
+- [ ] **TestFlight, build 2 (owner 2026-10-10: "it must go to TestFlight for the friend this morning – stabilised,
+      steps closed, the next plan prepared; then a detailed guide, how to invite the friend, the legal texts"):**
+      the owner confirmed checkpoint B's second round ("it looks good – let us do build 2"). Opus built the Release
+      archive of 1.0 (2) from the CLI straight into Xcode's archive folder (09:42, `ARCHIVE SUCCEEDED`; checked:
+      version and build, the Health and AlarmKit usage texts, the entitlements healthkit / time-sensitive /
+      weatherkit, the privacy manifest, no Developer section in the binary) so that he only opens Organizer →
+      Distribute App → "TestFlight & App Store" → Upload. The upload is his step. Build 1 was "Validated" all along –
+      no mail came because no tester was attached (his screenshot of the build's metadata, 2026-10-09). A Slovak
+      step-by-step guide is in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`: upload, processing, inviting a
+      friend as an internal tester (recommended today) or an external one, texts to paste, what is legally needed
+      when – nothing for internal testers, a privacy-policy page before the App Store; it must mention that the
+      chosen city's coordinates go to the weather service and the city search to Apple Maps). Next upload: raise
+      `CURRENT_PROJECT_VERSION` to 3 first.
+      **The first upload of build 2 was REFUSED (10:01): "Missing purpose string … NSHealthUpdateUsageDescription".**
+      App Store Connect wants the "update" purpose string from every app with the HealthKit entitlement, also from
+      one that only reads – Opus had weighed adding it before the archive and decided against it; wrong. Added
+      (`project.yml` + `InfoPlist.xcstrings`, "SleepHole does not write anything to Apple Health. It only reads your
+      sleep data."), a new archive built 10:11 and checked (both Health keys, en + sk), app tests 388 green. Also
+      learned: in his Xcode the upload option is called "App Store Connect" (the guide said "TestFlight & App
+      Store"; corrected). The refused upload did not use up build number 2.
+      **Second upload 2026-10-10 ~10:25: "Upload succeeded" (owner).** Open: processing in App Store Connect, then
+      inviting the friend (the guide, part 4).
 - [ ] **TestFlight (owner 2026-10-09: "the mail still has not come, two days – why?"):** Xcode's own log of the
       upload (`…/T/SleepHole_2026-10-07_16-24-00.866.xcdistributionlogs`, on this Mac only) says "UPLOAD SUCCEEDED
       with no errors", no warnings, build 1 – Apple has the build. What happened after that is visible only in App
@@ -1711,6 +1740,122 @@ one from `unlockCandidate` ("unlocked but did not return in 5 s") and one from t
       status (or look together) before guessing further; the next upload is build 2 with the privacy manifest.
 - [ ] when CARE-1 is built: rewrite the hard rules in `AGENTS.md` (R3's lock-screen part, "Warnings and
       notifications", "Lock screen without an unlock") and the guide text.
+
+### HEALTH — Apple Health: when did I really fall asleep (owner 2026-10-09: "then finally Apple Health – I am really looking forward to it"; 2026-10-10: "get going") – 🟡 analysed
+**Goal (owner, backlog idea 4):** the app shows when he went to bed (the build start) but not when he really fell
+asleep. Both belong side by side – "so one finds one's best sleep window".
+
+**Analysis (Opus, 2026-10-10).**
+- **The data:** HealthKit's `sleepAnalysis` category samples – start, end, a value (in bed / awake / asleep
+  unspecified / core / deep / REM) and the source that wrote them. An Apple Watch writes stages, other apps write
+  their own, the iPhone itself writes "in bed" from the Sleep schedule. Several sources overlap for the same night and
+  HealthKit does NOT merge them – the app has to choose.
+- **Access:** the HealthKit capability (entitlement `com.apple.developer.healthkit`; a normal capability of the paid
+  team, automatic signing should add it), `NSHealthShareUsageDescription` in English and Slovak (`InfoPlist.xcstrings`,
+  like the AlarmKit text), read-only – nothing is ever written to Health. iOS never tells an app whether reading was
+  allowed (a refusal looks like "no data"), and Health data cannot be read while the phone is locked – so the app
+  reads after the morning confirmation and when Stats is opened, never at night.
+- **Privacy (hard rule "Built for many users"):** everything stays on the phone – read, reduced to a few numbers,
+  stored in the app's own store and its backup file. Nothing is sent anywhere, the App Store label stays "Data Not
+  Collected"; a privacy-policy page is required for a HealthKit app at submission (to do before the App Store, not
+  for TestFlight-internal). The public repo gets code only; no value of the owner's sleep goes into a doc.
+- **The rule (pure, `SleepCore`):** for one night take the samples that overlap [build start, confirmation] (or the
+  wake time + 3 h when nobody confirmed); per source build the union of its asleep intervals (gaps of up to 2 min
+  are bridged); choose the source with the most sleep (a tie: the one with stages); **fell asleep = the start of the
+  first asleep run of at least 5 min** (a one-minute blip is not falling asleep); woke up = the end of the last run;
+  time asleep = the union; awake in between = the rest; less than 30 min of sleep in the window = no result.
+  "Time to fall asleep" = fell asleep − build start.
+- **Storage:** optional fields on `NightRecord` (fell asleep, sleep ended, seconds asleep, the source's name, when
+  it was read), carried by the backup; a night is read again for a few days (a watch syncs late) and every stored
+  night is filled in once after the permission (Health keeps history – his whole town gets its second dot at once).
+- **Seam:** `SleepSource` like `WeatherSource` – HealthKit, none (tests, simulator) and a simulated one for
+  screenshots.
+- **What he will see:** Settings → "Apple Health" (one switch, a plain explanation, default off); Stats → the chart
+  gets a second dot per night (he asked: green = went to bed, blue = fell asleep – today the start dot carries the
+  outcome colour, to be shown to him at the checkpoint); the "Average" card gets "fell asleep" and "time to fall
+  asleep"; the night's detail gets "😴 Fell asleep", "after N min", "slept X h Y min". Later: a sentence about his
+  best window, naps, and the link to the calm hours (CARE-2: "+11 when the phone was not moved" was his idea of a
+  first step towards an own fall-asleep estimate – Health's value is the reference to compare it with).
+- **Risks:** the capability may need a tick on developer.apple.com (as WeatherKit did); a night without the watch
+  has no data (the app must say so kindly, not show zero); two sources disagree; a late sync changes yesterday's
+  value; clock changes.
+
+**Steps (each one small, one Sonnet worker, reviewed by Opus):**
+- [x] **H1** – built by one Sonnet worker, reviewed by Opus 2026-10-10 07:37 (rule and reader read; SleepCore 287,
+      app 370 tests green; i18n 598 keys 0 / 0 / 0): `SleepCore/SleepSummary.swift` (`SleepAnalysis.window`,
+      `.summary` – constants `bridgeGap` 120 s, `minOnsetRun` 300 s, `minAsleep` 1800 s), `SleepHole/Health/
+      SleepSource.swift` (protocol, none, simulated – launch argument `-sleepSim <minutes>`), six optional fields
+      on `NightRecord` + backup, `NightResult.fellAsleepAt / asleepSeconds`, `AppSettings.usesHealth`,
+      `AppModel.refreshSleep(now:)` (a night is "due" when never read, or last read before wake + 3 days and at
+      least an hour ago). Nothing visible, nothing calls the reader yet.
+- [x] **H2** – built by one Sonnet worker, reviewed by Opus 2026-10-10 08:08 (source code and both simulator
+      screenshots looked at; SleepCore 287, app 378 tests green; i18n 609 keys 0 / 0 / 0): `HealthKitSleepSource`
+      (read-only, `HKSampleQueryDescriptor`, samples overlapping the window, source = the sample's source name),
+      entitlement `com.apple.developer.healthkit` + `NSHealthShareUsageDescription` (en + sk), Settings → "Apple
+      Health" after Strict mode (switch "Show when you fell asleep", "Nights with sleep data: N of M", a hint when
+      nothing was found), `AppModel.setHealth(on:)` / `refreshSleepIfIdle()` (on switching on, when the app becomes
+      active, when Stats opens, after a real night is finalized; never while a night runs or the phone is locked),
+      the night's detail rows "Fell asleep … (after N min)" and "Slept X h Y min", launch argument `-healthOn`.
+      **The device build SUCCEEDED with the HealthKit entitlement – automatic signing provisioned it, no step for
+      the owner.** The data upgrade was tried in the simulator on a copy of the morning's store (six new columns,
+      the numbers unchanged, simulated values land only on real nights). NOT installed.
+- [x] **checkpoint A on the phone 2026-10-10 08:12–08:20** (installed on his word with B29; he switched it on and
+      allowed Sleep; store pulled into the git-ignored `docs/device-logs/2026-10-10-health-a/`): **every finalized
+      real night got values (11 of 11), no debug night and no nap did; the owner: "the length seems right".** The
+      permission sheet, the read and the storing work on the device. He cannot read the fall-asleep time out of
+      the Health app himself ("the whole app is rather confusing for me") – SleepHole's own rows are his answer.
+- [x] **H2b on the phone 2026-10-10 08:57 – what every source said (store pulled into the git-ignored
+      `docs/device-logs/2026-10-10-health-b/`):** two sources wrote ALL eleven nights and BOTH have stages, so rule
+      2 changed nothing. They agree within a quarter of an hour on most nights and differ widely on two; the
+      third-party one reports more sleep nearly every night. **Opus had told the owner the two very late nights
+      were the app's error – the watch says the same; corrected to him the same hour.**
+- [x] **H2c – rule version 3** (one Sonnet worker, reviewed by Opus 2026-10-10 09:19: SleepCore 307, app 388 tests
+      green; i18n 617 keys 0 / 0 / 0; Release compiles; a device build is ready, NOT installed): the system's own
+      measurement comes first – a source whose bundle id starts with `com.apple.` wins when it reaches two thirds
+      of the largest source's sleep, then a source with stages, then the largest; "fell asleep" = the first run of
+      at least 10 min (`minOnsetRun` 600 s, the usual "persistent sleep"); the night's detail names the source
+      ("Zdroj: …") in every build.
+- [x] **H3** – built by one Sonnet worker, reviewed by Opus 2026-10-10 08:36 (the simulator screenshot looked at;
+      SleepCore 290, app 379 tests green; i18n 611 keys 0 / 0 / 0; a Release build compiles): `NightPoint.
+      asleepMinutes`, `StatsSummary.averageFellAsleep` / `averageMinutesToSleep`, blue diamonds for "fell asleep"
+      in the chart (the scale covers both series – before, it ended a few minutes after the starts, which is why the
+      owner saw "only up to 21:40"), a second row in the average card ("Fell asleep", "Time to fall asleep"), the
+      new caption; all of it only with the switch on and data present. Found on the way: `AppModel.stats` did not
+      redraw after a Health read (`sleepReads`). A device build is ready (08:36), NOT installed.
+- [x] **the Developer section is compiled only into Debug builds** (same worker; for today's TestFlight upload) –
+      the owner's own installs from the Mac keep it. `AppExpiry` needs no change: a TestFlight / App Store install
+      has no `embedded.mobileprovision`, so no "signature runs out" card (Opus's knowledge, to be seen on the
+      tester's phone). Note for `keys.py`: run it on a Debug build – after a Release build it reports the
+      Developer strings as unused.
+- [x] **checkpoint B 2026-10-10 08:42–08:50** (installed on his word): he sees the blue marks and the averages and
+      says the data fits. **His verdict on the chart: nothing ties a night's two marks together, nothing is
+      highlighted, the date labels are cut off, he cannot tell which night the "almost ideal" pair belongs to; he
+      wants it tappable or as bars and left the decision to Opus.**
+- [x] **H4 – the chart, second version (Opus's decision)** – one Sonnet worker, reviewed by Opus 2026-10-10 09:19
+      (screenshots on the light and the dark sky looked at; tests below): one thin bar per night from the build
+      start to "fell asleep" with the two marks as its ends, tap selects the nearest night (a grey rule behind it, a
+      thicker bar, larger marks – nothing dimmed; a tap again clears; dragging does not select, so the page still
+      scrolls), a callout line under the title ("7. 10. · začiatok … · zaspal si … · po N min") with a "Detail
+      noci" button that selects the night in the calendar, day numbers on the axis (thinned out), the title "Kedy
+      si líhaš a kedy zaspíš" and a new caption with sleep data shown; launch argument `-selectChartNight K`; the
+      simulated source varies per night. Not seen with a real finger yet: the tap and the scroll to the detail.
+- [x] **H2b built and reviewed 2026-10-10 08:49** (the choice rule read; SleepCore 297, app 383 tests green; i18n
+      611 keys 0 / 0 / 0; Release compiles; a device build is ready): `SleepAnalysis.sources` / `chosen` – a source
+      with stages wins when it has at least two thirds of the largest source's sleep (`ruleVersion` 2); every read
+      stores what each source said (`NightRecord.sleepSourcesData`) and the rule's version, and a night with another
+      version is read again once; the Debug build's night detail lists the sources. NOT installed – on his word,
+      then the store is pulled to see what each source said for his nights.
+- [ ] later – the "best window" sentence, naps, comparing with the phone's own motion (CARE-2).
+- [ ] **The owner's direction after checkpoint A (2026-10-10: "statistics, statistics, statistics … no restrictions
+      now – we focus on statistics and on linking the buddy with the town"):** (1) more statistics from the sleep
+      data – Opus's candidates, none approved yet: time to fall asleep per night as its own small chart; the best
+      window (start time against time to fall asleep and against time slept); time slept per night as bars with
+      the average; sleep efficiency (asleep / in bed); awake time in the night; weekdays against weekends; what
+      the day did to the night (a nap, the weather the app already knows, screen checks, the sleep sound); personal
+      records. (2) **the buddy talks about the town in a speech bubble** – his example: "we have no fire station
+      yet – that may worry the residents; but we have two lovely parks". Needs a pure rule in SleepCore that turns
+      the town (kinds and levels of buildings, parks, ruins, the streak, last night) into a few ranked sentences,
+      and it ties in with the shop (the residents' wishes say what to buy). Both after today's TestFlight upload.
 
 ### F6 — Paid Apple Developer Program (owner 2026-10-04: "next phase: F6, analyse it first"; the paid team is confirmed by a signed build)
 **Analysis (Opus, 2026-10-04; sources: the iOS 27 SDK's `AlarmKit.swiftinterface`, Apple's WWDC25 session 230
@@ -1994,7 +2139,7 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | B26 | L | XS | Picking up the ringing phone is logged as `.usedLockScreen`, and the night's story may show it as "used the phone on the lock screen" (owner's night 2026-10-08, §12): the lock screen is lit for 8 s with Face ID done before he unlocks to enter the code. No warning is sent and the outcome is not affected | nothing from the lock screen counts or is told at or after the wake time: gate `.usedLockScreen` in `AppModel.append` (the monitor does not know the night), or drop it in `NightReport` – trips and `lockScreenWakes` that start at or after `alarmFiredAt ?? wake`, like `screenChecks`; a test in `LockScreenTests` |
 | B27 | M | S | A RINGING system alarm cannot be got rid of (owner 2026-10-08, Developer → System alarm test with the Camera open on the lock screen: "help, the phone keeps ringing"): the alert covered the Camera but he found no way to stop it; opening SleepHole did not stop it ("Cancel the test alarm" is disabled once the time has passed, and `tidySystemAlarm` leaves a ringing alarm alone unless the app is launched cold). A volume button seemed to silence it; Opus relaunched the app remotely (a cold launch cancels every leftover alarm) | the running app must stop a ringing system alarm when it becomes active with no night running, and the test screen needs a "Stop the ringing alarm" button; check on the phone what the system's stop control looks like over the lock-screen Camera (he saw "snooze" before, agenda) |
 | B28 | M | S | The lock-screen warning alarm can ring far longer than its 10 s (owner 2026-10-09: 21.5 s, "it rang the whole time"). The ringing alarm interrupts the app's audio session; with the audio gone iOS suspended the app ~4 s later (seen in the lock-screen lab: no one-second lines for 17.4 s), so nothing stopped the alarm at the deadline. A suspended app also learns late that the screen went off – the end of the trip could be logged late. | A UIKit background task from the start of the warning to its end; verify on the phone with the lab. In work 2026-10-09 (plan §10 LOCK-W). |
-| B29 | S | S | Unlocking the phone straight into another app during a night logs two `.leftApp` events for the same trip (seen 2026-10-09 21:02 in the lock-screen lab: `unlockCandidate` after its 5 s window, then the background decision stamped at the earlier background time). **No second warning is sent** (`alreadyCollapsed` is true once a counted trip is open – checked in `AppModel.append`), but the evaluator starts the trip at the earlier stamp: the free window after the unlock shrinks from 5 s to ~1.6 s and the owner has ~9.6 s after the warning instead of 10. The outcome is right. | In `LifecycleMonitor.didEnterBackground`'s delayed decision emit `.leftApp` only when no real leave is open (`!isAway \|\| lockTrip`); a test with both paths. First thing on 2026-10-10. |
+| B29 | S | S | Unlocking the phone straight into another app during a night logs two `.leftApp` events for the same trip (seen 2026-10-09 21:02 in the lock-screen lab: `unlockCandidate` after its 5 s window, then the background decision stamped at the earlier background time). **No second warning is sent** (`alreadyCollapsed` is true once a counted trip is open – checked in `AppModel.append`), but the evaluator starts the trip at the earlier stamp: the free window after the unlock shrinks from 5 s to ~1.6 s and the owner has ~9.6 s after the warning instead of 10. The outcome is right. | In `LifecycleMonitor.didEnterBackground`'s delayed decision emit `.leftApp` only when no real leave is open (`!isAway \|\| lockTrip`); a test with both paths. **Fixed 2026-10-10** (one Sonnet worker, two rounds; reviewed by Opus – SleepCore 274, app 361 tests green): the background decision stays silent while an unlock window is pending or a real leave is open, `pendingUnlock` is cleared when its window ends; a trip that an unlock started begins at the END of the 5 s window whichever timer fires first. Not on the phone yet. |
 | ✅ B18 | H (process) | – | ~70 files had been changed since the last commit (2026-09-30) | done 2026-10-03: 12 commits on `main` (whole files only – what shares files went into one commit); the owner pushes |
 
 **Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
@@ -2085,6 +2230,7 @@ screen checks.
 | 2026-10-09 | **LOCK-W on the phone – the owner's three variants (8-minute debug night, 14:32–14:40).** With Face ID it works: detection ~8.5 s after the lock screen lights up, the AlarmKit warning covers the Camera, screen off and the way back into the app both silence it and keep the building, leaving it collapses the building (`ruins`, away 40.7 s in four trips). **How to see the alarm in the journal:** the app cannot observe AlarmKit, but the ringing alarm interrupts the app's own audio session – `audioInterrupted` came 2.5–2.8 s after each `.usedLockScreen` (the alarm is scheduled 1.5 s ahead). The matching `audioResumed` came only ~2 s later even when nobody touched the phone, so the end of the interruption is NOT a reliable sign that the ringing stopped. **Round 0 showed the remaining hole live:** 49.5 s on the lit lock screen without Face ID recognising him = no event, no warning; the late-recognition path then fired at the recognition exactly as built. The owner asked for the debug night's setup to be 15 s instead of 80 s. |
 | 2026-10-09 | **Lock-screen lab, first run (iPhone 16 Pro `iPhone17,1`, iOS 27.0, a 10-minute debug night, log in the git-ignored `docs/device-logs/2026-10-09-lock-lab/`).** (1) **A passive wake lasts 6.2–6.3 s and ends by itself** – tap to wake, raise to wake, charger unplugged, charger plugged in: four of four. **The Camera on the lock screen keeps the screen lit** until the user ends it (16.5 s and 21.2 s without Face ID – no event, as the rule stands). (2) **Movement separates "in the hand" from "lying there" cleanly:** per-second peak of `userAcceleration` at rest ≤ 0.011 g (median 0.003), in the hand median 0.03–0.07 g and above 0.02 g in 76–100 % of the seconds; a single tap on a resting phone gives one peak of 0.05 g. (3) **Signals:** `com.apple.iokit.hid.displayStatus` (1 / 0) and `com.apple.backboardd.backlight.changed` (100 / 0 – a LEVEL, so it may tell a dimmed always-on display from a lit one; to be measured) fire together with `hasBlankedScreen`; `com.apple.springboard.pluggedin` fires on the charger; `com.apple.springboard.DeviceLockStatus` never fired; `UIScreen.brightness` reads 0.00 for the whole locked time, lit or not – useless. (4) With Face ID the detection came 8.05–8.4 s after the screen lit and the app's audio was interrupted 2.5–2.7 s later (`reason=0`); the interruption ended 0.7 s after the app stopped the alarm when the screen was switched off, but after only 1.0–1.3 s in the two rounds where the alarm was left ringing – so the journal cannot say how long the alarm rings; only the owner's ears can. (5) Opus's proposal from the data, NOT decided: without Face ID a lit lock screen counts once it has been lit for 12 s (about twice a passive wake) AND the phone has been moved in that time; with Face ID the 8 s stay. The movement condition keeps every resting phone safe whatever its settings (StandBy, a ringing timer) – the always-on display still has to be measured, because a phone carried in the hand with it must not look "lit". |
 | 2026-10-09 | **Lock-screen lab, second run – the always-on display ON (same phone, 15:59–16:05) and the owner's own quick night of 15:51.** (1) **The dimmed always-on display is reported as dark** (`hasBlankedScreen` 1, about 2.6 s after the lock) – a phone carried with it does not look lit. (2) With it on, a passive wake lasts **7.4 s by `hasBlankedScreen`** (5.2 s by `iokit.hid.displayStatus`, which lags 0.8 s at the start and leads 1.5 s at the end) against 6.2 s with it off – only 0.6 s under the 8 s window of the Face ID rule; `backboardd.backlight.changed` never fires with it on (0 / 100 only with it off) and `UIScreen.brightness` reads the dim level (0.19) instead of 0.00 – neither is usable. (3) A phone held in the hand while Face ID recognises its owner stays lit (attention) and gets the 8 s warning – by the rule. (4) **The hole, measured again:** 51 s of video on the lock screen without Face ID = nothing; the recognition that sharing needs started the trip (late path), and 45 s later the night was `ruins` – the owner shared the video to a messenger from the lock screen and says no notification reached him. (5) **B28:** in the quick night of 15:51 the warning alarm rang 21.5 s; the lab shows the app suspended for 17.4 s from ~4 s after the alarm took the audio. (6) Held or resting, from both runs: resting – 0–1 of 12 seconds above 0.02 g, gravity drift 0.0°; in the hand – 11–12 of 12 seconds, drift ≥ 6.4° even when holding still to share. |
+| 2026-10-10 | **The first real night with CARE-1 (stored as strict – the switch had stayed on) – journal pulled in the morning into the git-ignored `docs/device-logs/`.** `complete`; after the setup the screen did not light up once until the alarm (no screen wake, no lock-screen event, no trip), so nothing of LOCK-W / CARE-1 was exercised by a real night yet. **A labelling flaw found in the journal:** two lone `audioResumed` events without an `audioInterrupted` – `AppModel` logs every report of `AudioKeeper` that does not end in "began" as `.audioResumed`, also "audio configuration change" (a route change) and "media services reset"; fixed together with B29 (own event kinds). What a real night cannot tell today: whether the phone was picked up without its screen lighting – the motion sensor runs only while the lock screen is lit (relevant for CARE-2's "+11 when not moved"). |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |
 | 2026-09-29 | `swift test` in SleepCore uses Swift Testing (`import Testing`) fine with the Xcode toolchain. |

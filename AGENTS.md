@@ -72,14 +72,19 @@ then answer. Remove items here when they are done.
      collapses the building unless "Strict mode" is switched on in Settings); he tried both modes the same evening
      ("it is better already, only a calm warning"; "strict mode works, the siren sounded").** At 21:06 the Strict
      switch was still ON – ask whether the night of 2026-10-09 → 10 ran gentle or strict and how it went.
-     **ORDER HE SET FOR 2026-10-10 (plan §10 CARE, the task "ORDER FOR 2026-10-10"): (1) fix B29 (two `.leftApp`
-     for one trip, plan §11a) and close the lock-screen chapter; (2) APPLE HEALTH – he is "really looking forward
-     to it": analysis first, then small steps; (3) the Dynamic Island / Live Activity try.** CARE-2 is confirmed by him (+10 coins per hour of
-     the night with the screen off, +11 when the phone was not even moved) – not built, after Apple Health.
-     Everything up to CARE-1 was committed on 2026-10-09 at his request (he pushes). TestFlight: the upload of
-     2026-10-07 succeeded; his screenshot showed only the Distribution page ("1.0 Prepare for Submission") – the
-     build's state is on the TestFlight tab, ask him for it. He will try himself: the calm reminder during the
-     Sleep Focus, the notification with the app swiped away. B28 unproven ("it would ring to death"), B26 open.
+     **2026-10-10: PHASE HEALTH IS BUILT AND ON THE PHONE (plan §10 HEALTH): Apple Health sleep data is read
+     (read-only, switch in Settings, default off), every real night got "fell asleep / slept / source", the chart
+     shows one bar per night from the build start to falling asleep, tap selects a night; the source rule prefers
+     the system's own measurement (rule version 3). B29 is fixed and on the phone. Version 1.0 (2) was uploaded to
+     TestFlight by him that morning (the first try was refused for a missing `NSHealthUpdateUsageDescription`).
+     Everything is committed (he pushes).** Ask / do next: (1) did build 2 finish processing, is the friend
+     invited – the Slovak guide is in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`); raise
+     `CURRENT_PROJECT_VERSION` to 3 before the next upload; (2) **his direction: "statistics, statistics,
+     statistics" and the buddy talking about the town in a speech bubble** – candidates are listed at the end of
+     plan §10 HEALTH, he picks; (3) he asked for a simulation of 100 nights with screenshots of the growing town
+     (`-seedNights 100` exists); (4) CARE-2 (calm-hour coins +10 / +11) is confirmed but NOT built – he believed
+     it was; (5) the Dynamic Island / Live Activity try. Never write his sleep values or the names of his devices
+     and apps into the repo.
      **The forgiven night
      of 2026-10-07 → 08 is taken back (his decision 2026-10-08, done on the phone 2026-10-09 12:28 with
      `-revokeForgiveness`):** the record reads `ruins`, the automatic bronze joker of October turns it into a joker

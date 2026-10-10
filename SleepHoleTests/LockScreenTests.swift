@@ -22,6 +22,7 @@ struct LockScreenTests {
         let monitor = LifecycleMonitor()
         let motion = FakeMotion()
         var events: [NightEventKind] = []
+        var stamps: [(NightEventKind, Date)] = []
         var raw: [String] = []
         var active = false
         var protectedData = true
@@ -33,12 +34,18 @@ struct LockScreenTests {
             monitor.motion = motion
             monitor.isAppActive = { [unowned self] in active }
             monitor.isProtectedDataAvailable = { [unowned self] in protectedData }
-            monitor.onEvent = { [unowned self] k, _ in events.append(k) }
+            monitor.onEvent = { [unowned self] k, d in events.append(k); stamps.append((k, d)) }
             monitor.onRaw = { [unowned self] t in raw.append(t) }
         }
     }
 
     func wait(_ s: Double) async { try? await Task.sleep(for: .seconds(s)) }
+
+    /// Polls until `condition` holds (at most `timeout` s) – a loaded machine only makes the tests slower, never wrong.
+    func waitUntil(_ timeout: Double = 5, _ condition: () -> Bool) async {
+        let end = Date().addingTimeInterval(timeout)
+        while !condition(), Date() < end { await wait(0.02) }
+    }
 
     @Test func aLitScreenForTheWholeWindowIsUsingTheLockScreen() async {
         let r = Rig()
@@ -169,30 +176,141 @@ struct LockScreenTests {
 
     @Test func theUnlockPathAndTheScreenPathReportOnce() async {
         let r = Rig()
+        // the screen path is forced to fire first (100 ms vs 600 ms – a margin that survives a loaded machine): the lit
+        // screen reports the lock-screen trip, the unlock then reports the real leave inside it (owner 2026-10-09:
+        // unlocking into another app is a leave even after lock-screen use) – never two of the same kind. (With both
+        // windows equal the order is a coin toss: the unlock path first opens a real trip and the screen path then
+        // stays silent, which is also one trip – so the test must not leave it to chance.)
+        r.monitor.screenWindow = .milliseconds(100)
+        r.monitor.unlockWindow = .milliseconds(600)
         r.monitor.screenChanged(blanked: false)
         r.monitor.unlockCandidate()
-        await wait(0.5)
-        // both paths fire at the same moment: the lit screen reports the lock-screen trip, the unlock then reports the
-        // real leave inside it (owner 2026-10-09: unlocking into another app is a leave even after lock-screen use) –
-        // never two of the same kind
-        #expect(r.events.filter { $0 == .usedLockScreen }.count <= 1 && r.events.filter { $0 == .leftApp }.count <= 1)
-        #expect(r.events.contains { $0 == .leftApp || $0 == .usedLockScreen })
+        await waitUntil { r.events.contains(.leftApp) }
+        await wait(0.3)
+        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1 && r.events.filter { $0 == .leftApp }.count == 1)
         #expect(r.events.contains(.unlocked))
         // the other way round: the unlock path first, then a screen cycle
         let r2 = Rig()
+        r2.monitor.unlockWindow = .milliseconds(100)
         r2.monitor.unlockCandidate()
-        await wait(0.3)
+        await waitUntil { r2.events.contains(.leftApp) }
         r2.monitor.screenChanged(blanked: false)
-        await wait(0.3)
+        await wait(0.5)
         #expect(r2.events.filter { $0 == .leftApp || $0 == .usedLockScreen }.count == 1)
+        // and the unlock path first by a wide margin when both start together: one real leave, no lock-screen event
+        let r3 = Rig()
+        r3.monitor.unlockWindow = .milliseconds(100)
+        r3.monitor.screenWindow = .milliseconds(800)
+        r3.monitor.screenChanged(blanked: false)
+        r3.monitor.unlockCandidate()
+        await waitUntil { r3.events.contains(.leftApp) }
+        await wait(1.0)
+        #expect(r3.events.filter { $0 == .leftApp }.count == 1 && !r3.events.contains(.usedLockScreen))
+    }
+
+    // MARK: - B29: one trip, one `.leftApp`
+    // Windows are far apart (hundreds of ms) and the tests poll instead of sleeping a fixed time; only lower bounds
+    // are asserted on timestamps (a loaded machine delays timers, it never fires them early).
+
+    func leftApps(_ r: Rig) -> [Date] { r.stamps.filter { $0.0 == .leftApp }.map(\.1) }
+
+    @Test func unlockIntoAnotherAppReportsOnceWhenTheBackgroundTimerFiresFirst() async {
+        let r = Rig()
+        r.monitor.unlockWindow = .milliseconds(800)
+        r.monitor.backgroundDelay = .milliseconds(100)
+        let t0 = Date()
+        r.monitor.unlockCandidate()
+        r.monitor.didEnterBackground()
+        await waitUntil { !leftApps(r).isEmpty }
+        await wait(0.3)
+        let l = leftApps(r)
+        #expect(l.count == 1)
+        #expect((l.first?.timeIntervalSince(t0) ?? 0) >= 0.75)        // the END of the unlock window, not the background
+        #expect(r.events.filter { $0 == .unlocked }.count == 1)
+    }
+
+    @Test func unlockIntoAnotherAppReportsOnceWhenTheUnlockTimerFiresFirst() async {
+        let r = Rig()
+        r.monitor.unlockWindow = .milliseconds(200)
+        r.monitor.backgroundDelay = .milliseconds(1000)
+        let t0 = Date()
+        r.monitor.unlockCandidate()
+        r.monitor.didEnterBackground()
+        await waitUntil { !leftApps(r).isEmpty }
+        await wait(1.2)                                               // the background decision has run by now
+        let l = leftApps(r)
+        #expect(l.count == 1)
+        #expect((l.first?.timeIntervalSince(t0) ?? 0) >= 0.18)        // the unlock window's end, not the background moment
+    }
+
+    @Test func unlockThenBackInTheAppInsideTheWindowReportsNothing() async {
+        let r = Rig()
+        r.monitor.unlockWindow = .milliseconds(500)
+        r.monitor.backgroundDelay = .milliseconds(200)
+        r.monitor.unlockCandidate()
+        r.monitor.didEnterBackground()
+        r.active = true
+        await wait(1.0)
+        #expect(leftApps(r).isEmpty)
+    }
+
+    @Test func anUnlockWindowThatEndsWithoutALeaveDoesNotSwallowALaterBackground() async {
+        let r = Rig()
+        r.monitor.backgroundDelay = .milliseconds(100)
+        r.monitor.unlockWindow = .milliseconds(100)
+        r.protectedData = false                               // locked again: the window ends without a leave
+        r.monitor.unlockCandidate()
+        await wait(0.6)
+        #expect(leftApps(r).isEmpty)
+        r.protectedData = true
+        let t0 = Date()
+        r.monitor.didEnterBackground()
+        await waitUntil { !leftApps(r).isEmpty }
+        let l = leftApps(r)
+        #expect(l.count == 1 && abs((l.first ?? .distantPast).timeIntervalSince(t0)) < 0.1)   // stamped at the background
+    }
+
+    @Test func aPlainBackgroundIsOneLeftAppStampedAtTheBackgroundMoment() async {
+        let r = Rig()
+        r.monitor.backgroundDelay = .milliseconds(800)
+        let t0 = Date()
+        r.monitor.didEnterBackground()
+        await waitUntil { !leftApps(r).isEmpty }
+        await wait(0.3)
+        let l = leftApps(r)
+        #expect(l.count == 1 && abs((l.first ?? .distantPast).timeIntervalSince(t0)) < 0.4)   // not the 0.8 s later
+    }
+
+    @Test func aLockScreenTripFollowedByAnUnlockIntoAnotherAppIsOneOfEach() async {
+        let r = Rig()
+        r.monitor.backgroundDelay = .milliseconds(100)
+        r.monitor.screenChanged(blanked: false)
+        await waitUntil { r.events.contains(.usedLockScreen) }
+        r.monitor.unlockCandidate()
+        r.monitor.didEnterBackground()
+        await waitUntil { r.events.contains(.leftApp) }
+        await wait(0.8)
+        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1)
+        #expect(r.events.filter { $0 == .leftApp }.count == 1)
+    }
+
+    @Test func aLockScreenTripFollowedByARealBackgroundStillReportsTheLeave() async {
+        let r = Rig()
+        r.monitor.backgroundDelay = .milliseconds(100)
+        r.monitor.screenChanged(blanked: false)
+        await waitUntil { r.events.contains(.usedLockScreen) }
+        r.monitor.didEnterBackground()
+        await waitUntil { r.events.contains(.leftApp) }
+        await wait(0.3)
+        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1 && r.events.filter { $0 == .leftApp }.count == 1)
     }
 
     @Test func whenAlreadyAwayTheScreenAddsNoLeftApp() async {
         let r = Rig()
         r.monitor.unlockCandidate()                               // → .unlocked, then a trip after the window
-        await wait(0.3)
+        await waitUntil { r.events.contains(.leftApp) }
         r.monitor.screenChanged(blanked: false)
-        await wait(0.3)
+        await wait(0.5)
         r.monitor.screenChanged(blanked: true)
         #expect(r.events.filter { $0 == .leftApp || $0 == .usedLockScreen }.count == 1)
         #expect(r.events.filter { $0 == .locked }.count == 1)    // the screen going off ends the trip, once

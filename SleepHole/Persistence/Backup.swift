@@ -63,6 +63,15 @@ struct BackupFile: Codable, Equatable {
         var finalizedAt: Date?
         var pauses: Int? = nil          // nil in backups from before the pause (2026-10-03) = old rules
         var strictLockScreen: Bool? = nil   // nil = a night from before Strict mode existed (2026-10-09) = strict
+        // what the sleep source said (phase HEALTH) – all optional, older backups still load
+        var fellAsleepAt: Date? = nil
+        var sleepEndedAt: Date? = nil
+        var asleepSeconds: Double? = nil
+        var awakeSeconds: Double? = nil
+        var sleepSourceName: String? = nil
+        var sleepReadAt: Date? = nil
+        var sleepSourcesData: Data? = nil
+        var sleepRuleVersion: Int? = nil
     }
 
     static let fileName = "SleepHole-zaloha.json"
@@ -90,7 +99,10 @@ extension NightRecord {
         BackupFile.Night(id: id, keyString: keyString, isDebug: isDebug, isNap: isNap, bedtime: bedtime, wake: wake,
                          buildingId: buildingId, events: log.events, setupGrace: setupGrace, outcomeRaw: outcomeRaw,
                          awaySeconds: awaySeconds, startedAt: startedAt, confirmedAt: confirmedAt,
-                         finalizedAt: finalizedAt, pauses: pauses, strictLockScreen: strictLockScreen)
+                         finalizedAt: finalizedAt, pauses: pauses, strictLockScreen: strictLockScreen,
+                         fellAsleepAt: fellAsleepAt, sleepEndedAt: sleepEndedAt, asleepSeconds: asleepSeconds,
+                         awakeSeconds: awakeSeconds, sleepSourceName: sleepSourceName, sleepReadAt: sleepReadAt,
+                         sleepSourcesData: sleepSourcesData, sleepRuleVersion: sleepRuleVersion)
     }
 
     convenience init(backup n: BackupFile.Night) {
@@ -106,6 +118,14 @@ extension NightRecord {
         finalizedAt = n.finalizedAt
         pauses = n.pauses
         strictLockScreen = n.strictLockScreen
+        fellAsleepAt = n.fellAsleepAt
+        sleepEndedAt = n.sleepEndedAt
+        asleepSeconds = n.asleepSeconds
+        awakeSeconds = n.awakeSeconds
+        sleepSourceName = n.sleepSourceName
+        sleepReadAt = n.sleepReadAt
+        sleepSourcesData = n.sleepSourcesData
+        sleepRuleVersion = n.sleepRuleVersion
     }
 }
 

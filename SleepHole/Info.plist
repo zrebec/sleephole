@@ -31,6 +31,10 @@
 	<true/>
 	<key>NSAlarmKitUsageDescription</key>
 	<string>SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>SleepHole reads your sleep data to show when you really fell asleep next to when you went to bed. Nothing leaves your iPhone.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>SleepHole does not write anything to Apple Health. It only reads your sleep data.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

@@ -18,6 +18,10 @@ public enum NightEventKind: String, Codable, Sendable {
     case confirmedByShake  // diagnostics: how "Vstal som" was done (logged right before `.confirmed`)
     case confirmedByCode
     case audioResumed
+    /// Diagnostics (no effect on the outcome): the audio route changed (headphones, Bluetooth, a speaker).
+    case audioRouteChanged
+    /// Diagnostics (no effect on the outcome): iOS restarted its media services.
+    case audioServicesReset
     /// The owner is using the phone on the LOCK SCREEN (camera, replies, widgets): the screen stayed lit with the owner
     /// recognised by Face ID. Counts exactly like `.leftApp`; ends with `.locked` / `.returned`.
     case usedLockScreen
@@ -126,9 +130,13 @@ public struct NightResult: Codable, Equatable, Sendable {
     /// The night's bedtime – the regularity is measured as start − bedtime, so a changed schedule does not
     /// look like irregular sleep.
     public let bedtime: Date?
+    /// When Apple Health says the owner fell asleep and how long he slept (phase HEALTH). nil = not read / nothing found.
+    public let fellAsleepAt: Date?
+    public let asleepSeconds: TimeInterval?
 
     public init(key: NightKey, outcome: Outcome, buildingId: String?, awaySeconds: TimeInterval = 0,
-                startedAt: Date? = nil, confirmedAt: Date? = nil, pauses: Int? = nil, bedtime: Date? = nil) {
+                startedAt: Date? = nil, confirmedAt: Date? = nil, pauses: Int? = nil, bedtime: Date? = nil,
+                fellAsleepAt: Date? = nil, asleepSeconds: TimeInterval? = nil) {
         self.key = key
         self.outcome = outcome
         self.buildingId = buildingId
@@ -137,5 +145,7 @@ public struct NightResult: Codable, Equatable, Sendable {
         self.confirmedAt = confirmedAt
         self.pauses = pauses
         self.bedtime = bedtime
+        self.fellAsleepAt = fellAsleepAt
+        self.asleepSeconds = asleepSeconds
     }
 }

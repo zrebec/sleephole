@@ -18,6 +18,7 @@ struct SleepHoleApp: App {
         _model = State(initialValue: AppModel(context: container.mainContext, catalog: sprites.catalog,
                                               systemAlarm: SystemAlarms.forLaunch(),
                                               keepAlive: UIKitKeepAlive(),
+                                              sleepSource: AppModel.launchSleepSource() ?? HealthKitSleepSource(),
                                               weather: WeatherStore.forLaunch(),
                                               timeSensitiveCheck: Notifications.timeSensitiveCheckForLaunch()))
     }

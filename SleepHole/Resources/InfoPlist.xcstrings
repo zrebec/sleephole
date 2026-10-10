@@ -42,6 +42,42 @@
           }
         }
       }
+    },
+    "NSHealthShareUsageDescription" : {
+      "comment" : "Shown by iOS when SleepHole asks to read sleep data from Apple Health.",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SleepHole reads your sleep data to show when you really fell asleep next to when you went to bed. Nothing leaves your iPhone."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SleepHole číta údaje o spánku, aby ti ukázal, kedy si naozaj zaspal, vedľa času, kedy si išiel spať. Nič neopúšťa tvoj iPhone."
+          }
+        }
+      }
+    },
+    "NSHealthUpdateUsageDescription" : {
+      "comment" : "Shown by iOS if SleepHole asked to write to Apple Health (it never does; App Store Connect requires the key).",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SleepHole does not write anything to Apple Health. It only reads your sleep data."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SleepHole do Apple Zdravia nič nezapisuje. Tvoje údaje o spánku iba číta."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

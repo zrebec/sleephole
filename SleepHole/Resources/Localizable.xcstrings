@@ -2517,6 +2517,102 @@
         }
       }
     },
+    "Tap a night to see it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap a night to see it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ťukni na noc a uvidíš ju."
+          }
+        }
+      }
+    },
+    "%@ · start %@ · asleep %@ · after %lld min": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · start %@ · asleep %@ · after %lld min"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · začiatok %2$@ · zaspal si %3$@ · po %4$lld min"
+          }
+        }
+      }
+    },
+    "%@ · start %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · start %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · začiatok %2$@"
+          }
+        }
+      }
+    },
+    "Night details": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night details"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detail noci"
+          }
+        }
+      }
+    },
+    "When you go to bed and fall asleep": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When you go to bed and fall asleep"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kedy si líhaš a kedy zaspíš"
+          }
+        }
+      }
+    },
+    "Each bar runs from the build start to falling asleep – the shorter, the sooner you slept. The dashed line is your bedtime.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Each bar runs from the build start to falling asleep – the shorter, the sooner you slept. The dashed line is your bedtime."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každý stĺpec vedie od začiatku stavby po zaspatie – čím je kratší, tým skôr si zaspal. Prerušovaná čiara je tvoja večierka."
+          }
+        }
+      }
+    },
     "Dots = build start, line = bedtime.": {
       "localizations": {
         "en": {
@@ -9781,6 +9877,214 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ak odídeš z appky, príde upozornenie „SleepHole musí zostať otvorená“."
+          }
+        }
+      }
+    },
+    "Apple Health": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Health"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Zdravie"
+          }
+        }
+      }
+    },
+    "Show when you fell asleep": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show when you fell asleep"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukázať, kedy si zaspal"
+          }
+        }
+      }
+    },
+    "Apple Health isn't available on this device.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Health isn't available on this device."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Zdravie na tomto zariadení nie je dostupné."
+          }
+        }
+      }
+    },
+    "SleepHole reads your sleep from Apple Health (an Apple Watch or another sleep app writes it there) and shows when you really fell asleep next to when you went to bed. It only reads – nothing is written to Health and nothing leaves your iPhone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole reads your sleep from Apple Health (an Apple Watch or another sleep app writes it there) and shows when you really fell asleep next to when you went to bed. It only reads – nothing is written to Health and nothing leaves your iPhone."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole číta tvoj spánok z appky Zdravie (zapisujú ho tam Apple Watch alebo iná appka na spánok) a ukáže, kedy si naozaj zaspal, vedľa času, kedy si išiel spať. Iba číta – do Zdravia nič nezapisuje a nič neopúšťa tvoj iPhone."
+          }
+        }
+      }
+    },
+    "Nights with sleep data: %lld of %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nights with sleep data: %lld of %lld"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noci s údajmi o spánku: %1$lld z %2$lld"
+          }
+        }
+      }
+    },
+    "No data yet? In the Health app open your profile → Apps → SleepHole and allow Sleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No data yet? In the Health app open your profile → Apps → SleepHole and allow Sleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatiaľ žiadne údaje? V appke Zdravie otvor svoj profil → Appky → SleepHole a povoľ Spánok."
+          }
+        }
+      }
+    },
+    "Time to fall asleep": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time to fall asleep"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas zaspávania"
+          }
+        }
+      }
+    },
+    "Fell asleep": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fell asleep"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaspal si"
+          }
+        }
+      }
+    },
+    " (after %lld min)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (after %lld min)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (po %lld min)"
+          }
+        }
+      }
+    },
+    "Source: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source: %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zdroj: %@"
+          }
+        }
+      }
+    },
+    "Slept": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slept"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spal si"
+          }
+        }
+      }
+    },
+    "%lld h %lld min": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld h %lld min"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld h %2$lld min"
+          }
+        }
+      }
+    },
+    "No sleep data for this night": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No sleep data for this night"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pre túto noc nie sú údaje o spánku"
           }
         }
       }

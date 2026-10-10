@@ -46,6 +46,19 @@ import Testing
         #expect(NightEvaluator.awayIntervals(onlyDiag).isEmpty && NightEvaluator.evaluate(onlyDiag) == .complete)
     }
 
+    @Test func theNewAudioKindsChangeNothingAndOldLogsStillDecode() throws {
+        let plain: [(Double, NightEventKind)] = [(0, .started), (100, .leftApp), (100 + sec(5), .returned), (wakeMinutes, .confirmed)]
+        let noisy: [(Double, NightEventKind)] = [(0, .started), (50, .audioRouteChanged), (60, .audioServicesReset),
+                                                 (100, .leftApp), (100 + sec(5), .returned), (wakeMinutes, .confirmed)]
+        let a = log(plain), b = log(noisy)
+        #expect(NightEvaluator.awayIntervals(a).map(\.0) == NightEvaluator.awayIntervals(b).map(\.0))
+        #expect(NightEvaluator.collapsedAt(a) == NightEvaluator.collapsedAt(b))
+        #expect(NightEvaluator.evaluate(a) == NightEvaluator.evaluate(b))
+        let old = Data(#"[{"kind":"audioResumed","at":0},{"kind":"started","at":1}]"#.utf8)
+        #expect(try JSONDecoder().decode([NightEvent].self, from: old).map(\.kind) == [.audioResumed, .started])
+        #expect(NightEventKind.audioRouteChanged.rawValue == "audioRouteChanged" && NightEventKind.audioServicesReset.rawValue == "audioServicesReset")
+    }
+
     @Test func rawValuesRoundTrip() throws {
         let kinds: [NightEventKind] = [.usedLockScreen, .screenOn, .screenOff, .ownerRecognised, .dataLocked]
         #expect(kinds.map(\.rawValue) == ["usedLockScreen", "screenOn", "screenOff", "ownerRecognised", "dataLocked"])

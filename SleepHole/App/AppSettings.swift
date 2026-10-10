@@ -34,6 +34,12 @@ struct AppSettings: Codable, Equatable {
         get { strictModeOn == true }
         set { strictModeOn = newValue ? true : nil }
     }
+    /// Read sleep from Apple Health (phase HEALTH). nil = off. Optional so settings saved by older builds still load.
+    var healthOn: Bool?
+    var usesHealth: Bool {
+        get { healthOn == true }
+        set { healthOn = newValue ? true : nil }
+    }
     /// Afternoon rest. Optional in the JSON so settings saved by older builds still load.
     var napPlan: NapPlan?
     var nap: NapPlan {

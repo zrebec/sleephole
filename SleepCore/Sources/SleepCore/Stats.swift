@@ -14,6 +14,10 @@ public struct StatsSummary: Equatable, Sendable {
     public let averageWake: TimeOfDay?
     /// Regularity = standard deviation of the start time in minutes (lower is better).
     public let regularityMinutes: Double?
+    /// Average time of falling asleep (Apple Health; circular mean over the same nights, only those with a value).
+    public let averageFellAsleep: TimeOfDay?
+    /// Average minutes from the build start to falling asleep (nights with both values; negative counts as 0).
+    public let averageMinutesToSleep: Double?
     /// Last `calendarDays` nights (oldest first) with their outcome (nil = no record = missed).
     public let calendar: [CalendarDay]
     /// Per-night series for the chart (oldest first).
@@ -29,7 +33,16 @@ public struct NightPoint: Equatable, Sendable {
     public let key: NightKey
     public let startMinutes: Double?     // minutes after 12:00 (so evenings/after-midnight are continuous)
     public let wakeMinutes: Double?      // minutes after 00:00
+    public let asleepMinutes: Double?    // fell asleep, on the same axis as `startMinutes` (minutes after 12:00)
     public let outcome: Outcome
+
+    public init(key: NightKey, startMinutes: Double?, wakeMinutes: Double?, asleepMinutes: Double?, outcome: Outcome) {
+        self.key = key
+        self.startMinutes = startMinutes
+        self.wakeMinutes = wakeMinutes
+        self.asleepMinutes = asleepMinutes
+        self.outcome = outcome
+    }
 }
 
 public enum Stats {
@@ -43,6 +56,10 @@ public enum Stats {
         let recent = Array(sorted.suffix(window))
         let starts = recent.compactMap { $0.startedAt.map { minutesOfDay($0, calendar) } }
         let wakes = recent.compactMap { $0.confirmedAt.map { minutesOfDay($0, calendar) } }
+        let fells = recent.compactMap { $0.fellAsleepAt.map { minutesOfDay($0, calendar) } }
+        let toSleep = recent.compactMap { r in
+            r.fellAsleepAt.flatMap { f in r.startedAt.map { max(0, f.timeIntervalSince($0) / 60) } }
+        }
         let byKey = Dictionary(sorted.map { ($0.key, $0.outcome) }, uniquingKeysWith: { _, b in b })
         let days = (0..<calendarDays).reversed().map { back -> CalendarDay in
             let k = last.adding(days: -back, calendar: calendar)
@@ -51,7 +68,9 @@ public enum Stats {
         let series = sorted.suffix(30).map { r in
             NightPoint(key: r.key,
                        startMinutes: r.startedAt.map { (minutesOfDay($0, calendar) + 720).truncatingRemainder(dividingBy: 1440) },
-                       wakeMinutes: r.confirmedAt.map { minutesOfDay($0, calendar) }, outcome: r.outcome)
+                       wakeMinutes: r.confirmedAt.map { minutesOfDay($0, calendar) },
+                       asleepMinutes: r.fellAsleepAt.map { (minutesOfDay($0, calendar) + 720).truncatingRemainder(dividingBy: 1440) },
+                       outcome: r.outcome)
         }
         return StatsSummary(
             currentStreak: Progression.currentStreak(sorted, lastNight: last, calendar: calendar, breaks: breaks),
@@ -63,6 +82,8 @@ public enum Stats {
             averageStart: circularMean(starts).map(timeOfDay),
             averageWake: circularMean(wakes).map(timeOfDay),
             regularityMinutes: regularity(recent, calendar: calendar),
+            averageFellAsleep: circularMean(fells).map(timeOfDay),
+            averageMinutesToSleep: toSleep.isEmpty ? nil : toSleep.reduce(0, +) / Double(toSleep.count),
             calendar: days,
             series: Array(series))
     }

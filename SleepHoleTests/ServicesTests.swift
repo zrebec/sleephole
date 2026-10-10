@@ -12,6 +12,13 @@ struct ServicesTests {
 
     func wait(_ s: Double) async { try? await Task.sleep(for: .seconds(s)) }
 
+    @Test func audioReportsMapToTheirOwnJournalKinds() {
+        #expect(AudioKeeper.Report.allCases.map(\.journalKind) ==
+                [.audioInterrupted, .audioResumed, .audioRouteChanged, .audioServicesReset])
+        #expect(Set(AudioKeeper.Report.allCases.map(\.journalKind)).count == 4)
+        #expect(AudioKeeper.Report.configurationChange.rawValue == "audio configuration change")
+    }
+
     @Test func lifecycleMonitorMapsSignalsToEvents() async {
         let monitor = LifecycleMonitor()
         var events: [NightEventKind] = []

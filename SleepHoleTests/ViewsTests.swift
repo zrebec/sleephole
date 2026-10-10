@@ -120,6 +120,67 @@ struct ViewsTests {
         render(NavigationStack { CreditsView() }, m)
     }
 
+    @Test(arguments: AppLanguage.allCases) func statsSleepChartAndAverageCard(language: AppLanguage) {
+        let (m, clock, _) = makeModel(at: date(5, 12), language: language)
+        for d in 5...9 {
+            clock.now = date(d, 22, 25); m.refresh(); m.startNight()
+            clock.now = date(d + 1, 6, 31); m.refresh(); m.confirm(); m.acknowledgeResult()
+        }
+        let plain = Stats.summary(m.coreResults(), today: NightKey(year: 2026, month: 10, day: 11), calendar: cal)
+        #expect(!StatsView.showsSleep(plain, on: true))                        // no night has a value
+        render(StatsView(), m)                                                 // switch off
+        m.settings.usesHealth = true
+        render(StatsView(), m)                                                 // switch on, no data
+        render(NightChart(points: plain.series, bedtime: m.settings.schedule, showsSleep: true), m)
+        let results = (0..<4).map { i -> NightResult in
+            let start = date(5 + i, 22, 30)
+            return NightResult(key: NightKey(year: 2026, month: 10, day: 5 + i), outcome: .complete, buildingId: nil,
+                               startedAt: start, confirmedAt: date(6 + i, 6, 30),
+                               fellAsleepAt: i == 2 ? nil : start + 1200, asleepSeconds: i == 2 ? nil : 7 * 3600)
+        }
+        let s = Stats.summary(results, today: NightKey(year: 2026, month: 10, day: 9), calendar: cal)
+        let withData = s.series
+        #expect(s.averageFellAsleep == TimeOfDay(22, 50) && s.averageMinutesToSleep == 20)
+        #expect(StatsView.showsSleep(s, on: true) && !StatsView.showsSleep(s, on: false))
+        render(NightChart(points: withData, bedtime: m.settings.schedule, showsSleep: true), m)
+        render(NightChart(points: withData, bedtime: m.settings.schedule, showsSleep: false), m)
+        render(NightChart(points: withData, bedtime: m.settings.schedule, showsSleep: true,
+                          initialSelection: withData[1].key), m)                // a selected night, with sleep data
+        render(NightChart(points: withData, bedtime: m.settings.schedule, showsSleep: true,
+                          initialSelection: withData[2].key), m)                // a selected night without a value
+        #expect(!L("Each bar runs from the build start to falling asleep – the shorter, the sooner you slept. The dashed line is your bedtime.").isEmpty)
+    }
+
+    @Test(arguments: AppLanguage.allCases) func chartCalloutTexts(language: AppLanguage) {
+        Lang.current = language
+        defer { Lang.current = .en }
+        let key = NightKey(year: 2026, month: 10, day: 5)
+        let both = NightPoint(key: key, startMinutes: 630, wakeMinutes: 390, asleepMinutes: 655.4, outcome: .complete)   // 22:30 / 22:55
+        let plain = NightPoint(key: key, startMinutes: 630, wakeMinutes: 390, asleepMinutes: nil, outcome: .complete)
+        let date = Fmt.dayMonth(key)
+        let sk = language == .sk
+        #expect(NightChart.callout(nil, showsSleep: true) == (sk ? "Ťukni na noc a uvidíš ju." : "Tap a night to see it."))
+        #expect(NightChart.callout(both, showsSleep: true)
+                == (sk ? "\(date) · začiatok 22:30 · zaspal si 22:55 · po 25 min" : "\(date) · start 22:30 · asleep 22:55 · after 25 min"))
+        #expect(NightChart.callout(plain, showsSleep: true) == (sk ? "\(date) · začiatok 22:30" : "\(date) · start 22:30"))
+        #expect(NightChart.callout(both, showsSleep: false) == NightChart.callout(plain, showsSleep: false))
+    }
+
+    @Test func chartSelectionRules() {
+        #expect(NightChart.nearestIndex(x: 2.4, count: 5) == 2 && NightChart.nearestIndex(x: 2.6, count: 5) == 3)
+        #expect(NightChart.nearestIndex(x: -0.4, count: 5) == 0 && NightChart.nearestIndex(x: 9, count: 5) == 4)
+        #expect(NightChart.nearestIndex(x: 1, count: 0) == nil && NightChart.nearestIndex(x: .nan, count: 5) == nil)
+        let a = NightKey(year: 2026, month: 10, day: 1), b = NightKey(year: 2026, month: 10, day: 2)
+        #expect(NightChart.toggled(nil, tapped: a) == a && NightChart.toggled(a, tapped: b) == b && NightChart.toggled(a, tapped: a) == nil)
+        #expect(NightChart.labelStep(count: 7) == 1 && NightChart.labelStep(count: 12) == 1)
+        #expect(NightChart.labelStep(count: 14) == 2 && NightChart.labelStep(count: 24) == 2 && NightChart.labelStep(count: 30) == 5)
+        #expect(NightDetail.minutesToSleep(startMinutes: 630, asleepMinutes: 655.4) == 25)
+        #expect(NightDetail.minutesToSleep(startMinutes: 700, asleepMinutes: 655) == 0)             // never negative
+        let series = (1...5).map { NightPoint(key: NightKey(year: 2026, month: 10, day: $0), startMinutes: 600, wakeMinutes: nil, asleepMinutes: nil, outcome: .complete) }
+        #expect(StatsView.launchChartNight(series, args: ["-selectChartNight", "1"]) == series[3].key)
+        #expect(StatsView.launchChartNight(series, args: ["-selectChartNight", "9"]) == nil && StatsView.launchChartNight(series, args: []) == nil)
+    }
+
     @Test(arguments: AppLanguage.allCases) func effectsAndJokers(language: AppLanguage) {
         let (m, clock, _) = makeModel(at: date(5, 12), language: language)
         render(JokerCard(), m)
