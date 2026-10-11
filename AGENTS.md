@@ -98,19 +98,34 @@ then answer. Remove items here when they are done.
      keys 0 / 0 / 0). His test with one iPhone passed (~09:15): he deleted the app, the new build was installed
      and the town came back from iCloud. After it a code review brought ten points – step S4 fixed seven and
      added what he asked for around Apple Health (values are read right after a sync, a new install takes over
-     the Health switch, a button "Načítať spánok znova"). S4 is NOT on the phone yet (the phone was not
-     connected at 10:15) – install it when it is connected and no nap or night runs, and ask him to try the
-     button. `CURRENT_PROJECT_VERSION` is 3 and the Release archive of 1.0 (3) is prepared for his upload – ask
-     whether he uploaded it and whether the testers got it. Not proven on devices: two live devices syncing (a
-     tester with a phone and a tablet will show). The proposal document's eight questions are still
-     unanswered.**
+     the Health switch, a button "Načítať spánok znova"). Opus has NOT installed S4 on the phone (the phone was
+     not connected at 10:15, he had his afternoon nap at 12:45). **But Xcode's own log shows that HE pressed Run
+     for a device at 12:40 and it succeeded (34 s, no error) – so the current code with S4 is probably on the
+     phone as a Debug build since 12:41; not verified on the phone. Ask him whether Settings → Apple Health
+     shows "Načítať spánok znova"; if not, install when the phone is connected and no nap or night runs.** Then
+     ask him to try the button. **Build 1.0 (3) IS UPLOADED (2026-10-11 12:52, "Upload
+     succeeded", Apple was processing it):** his own upload from Xcode failed at the very end on an expired
+     sign-in (a slow line, 8 minutes), so on his request Opus archived and uploaded from the command line (plan
+     §12, 2026-10-11 – the commands are there). Build 3 went out WITHOUT S4 having run on a phone – his
+     decision. **State from his screenshots the same afternoon: build 3 is processed and sits in the internal
+     group with the status "Testing" (the two internal testers still had build 2 installed); in the external
+     group build 2 is still "Waiting for Review" since 2026-10-10 and build 3 is "Ready to Submit" – not sent
+     to the external group yet. Ask whether he added build 3 to the external group (Add Builds → Submit
+     Review, Review Notes with the iCloud paragraph), whether Apple approved it and whether the testers
+     updated.** He offered his
+     Firefox for those clicks; the browser tool drives only Chrome with the Claude extension and none was
+     connected. Not proven on devices: two live devices syncing (a tester with a phone and a tablet will show).
+     The proposal document's eight questions are still unanswered.**
      Also open: (1) TestFlight – build 2 is uploaded; the friend got his invitation as an internal tester in the end
      (the public link said "not accepting new testers" because Apple's review had not finished); the guide in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`) now explains the missing step
      (an Internal Testing group holding the friend and the build), the public link for several friends and the
      text for Apple's review – ask what worked and whether he cut the friend's roles to Marketing; raise
      `CURRENT_PROJECT_VERSION` to 3 before the next upload; (2) CARE-2 (calm-hour coins +10 / +11) is confirmed
      but NOT built – he believed it was; (3) the Dynamic Island / Live Activity try. Never write his sleep values
-     or the names of his devices and apps into the repo. Everything up to S4 was committed 2026-10-11 (he pushes) – check `git status` for what came after.
+     or the names of his devices and apps into the repo. Everything up to S4 was committed 2026-10-11 (he pushes);
+     the notes about the upload of build 3 (this file and the plan) came after it and are NOT committed – check
+     `git status`. A build in the Xcode app rewrites the two String Catalogs – restore them with `git checkout`
+     before a commit (plan §12, 2026-10-11).
      **The forgiven night
      of 2026-10-07 → 08 is taken back (his decision 2026-10-08, done on the phone 2026-10-09 12:28 with
      `-revokeForgiveness`):** the record reads `ruins`, the automatic bronze joker of October turns it into a joker
@@ -159,8 +174,9 @@ then answer. Remove items here when they are done.
    1.0 (2) is uploaded (2026-10-10 morning). The friend was added as an internal tester and saw nothing; more
    friends want to help, so the next step is an external group with a public link (Beta App Review first) – see
    item 0 and the guide in his iCloud Drive. **Raise `CURRENT_PROJECT_VERSION` in `project.yml` before every
-   further upload** (3 is prepared as an archive since 2026-10-11; the next one is 4). He uploads himself (Xcode →
-   Organizer → Distribute App).
+   further upload** (3 is uploaded since 2026-10-11 12:52; the next one is 4). He uploads himself (Xcode →
+   Organizer → Distribute App); when he asks, Opus can archive and upload from the command line (plan §12,
+   2026-10-11) – adding a build to the tester groups stays his clicks.
 
 ## ⚠️ WHO DOES WHAT – OWNER'S RULE (2026-10-03) – IMPORTANT
 
