@@ -52,7 +52,7 @@ struct HealthTests {
     /// The model, the clock and the store. Nights: 10th→11th (real), a debug night and a nap.
     func setup(catalog: Catalog? = nil, health: Bool = true, source: FakeSleepSource = FakeSleepSource(), protectedData: @escaping @MainActor () -> Bool = { true }) -> (AppModel, FakeClock, FakeSleepSource, ModelContext) {
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
-                                    configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+                                    configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         Self.kept.append(c)
         let clock = FakeClock(date(11, 9))
         var s = AppSettings()
@@ -399,5 +399,159 @@ struct HealthTests {
             host.view.layoutIfNeeded()
             window.isHidden = true
         }
+    }
+
+    // MARK: "Read sleep again" (Settings → Apple Health)
+
+    /// A source that holds every read until the test lets it go (a read that is "running").
+    final class GatedSleepSource: SleepSource, @unchecked Sendable {
+        private let lock = NSLock()
+        private var waiting: [CheckedContinuation<Void, Never>] = []
+        private var isOpen = false
+        var name: String { "gated" }
+        var isAvailable: Bool { true }
+        func requestAccess() async -> Bool { true }
+        var waitingCount: Int { lock.withLock { waiting.count } }
+        func samples(from: Date, to: Date) async throws -> [SleepSample] {
+            await withCheckedContinuation { c in
+                let resumeAtOnce = lock.withLock { () -> Bool in
+                    if isOpen { return true }
+                    waiting.append(c)
+                    return false
+                }
+                if resumeAtOnce { c.resume() }
+            }
+            return []
+        }
+        func open() {
+            let all = lock.withLock { () -> [CheckedContinuation<Void, Never>] in
+                isOpen = true
+                defer { waiting = [] }
+                return waiting
+            }
+            for c in all { c.resume() }
+        }
+    }
+
+    @Test func aForcedReadAsksForEveryNightEvenThoseThatAreDoneForGoodAndTheNormalOneKeepsItsWindow() async {
+        let (m, clock, src, ctx) = setup()
+        src.samples = sleep(10) + sleep(5)
+        let recent = night(ctx, day: 10), old = night(ctx, day: 5)
+        await m.refreshSleep(now: clock.now)                               // 11th 9:00: the old night is read once, past its window
+        #expect(src.asked.count == 2)
+        clock.now = date(20, 9)                                            // past the window of the recent night: one more read …
+        await m.refreshSleep(now: clock.now)
+        #expect(src.asked.count == 3)
+        clock.advance(5 * 3600)
+        await m.refreshSleep(now: clock.now)                               // … then both are done for good
+        #expect(src.asked.count == 3)
+        let readBefore = (recent.sleepReadAt, old.sleepReadAt)
+
+        await m.refreshSleep(now: clock.now, force: true)                  // the button: every night again
+        #expect(src.asked.count == 5)
+        #expect(recent.sleepReadAt == clock.now && old.sleepReadAt == clock.now)
+        #expect(readBefore.0 != clock.now && readBefore.1 != clock.now)    // the dates were NOT cleared, they were replaced
+        // debug nights and naps are not read by a forced read either, and neither is anything with the switch off
+        night(ctx, day: 3, debug: true); night(ctx, day: 2, nap: true)
+        await m.refreshSleep(now: clock.now, force: true)
+        #expect(src.asked.count == 7)
+        await m.setHealth(on: false)
+        await m.refreshSleep(now: clock.now, force: true)
+        #expect(src.asked.count == 7)
+    }
+
+    @Test func theButtonReadsEveryNightOnlyWhenItIsShownAndEnabled() async {
+        let (m, clock, src, ctx) = setup(catalog: SpriteLibrary.loadFromBundle().catalog)
+        src.samples = sleep(10)
+        night(ctx, day: 10)
+        await m.refreshSleep(now: clock.now)
+        clock.now = date(30, 9)                                            // long past the window: a normal read asks nothing
+        await m.refreshSleep(now: clock.now)
+        await m.refreshSleep(now: clock.now)
+        let normal = src.asked.count
+        await m.readSleepAgain()
+        #expect(src.asked.count == normal + 1)
+
+        // disabled during a night or nap
+        clock.now = date(30, 22, 25); m.refresh(); m.startNight()
+        #expect(m.active != nil && m.showsReadSleepAgain && !m.canReadSleepAgain)
+        await m.readSleepAgain()
+        #expect(src.asked.count == normal + 1)
+        m.abandonNight(); m.acknowledgeResult()
+        #expect(m.canReadSleepAgain)
+    }
+
+    @Test func theButtonIsDisabledWhileAReadIsRunning() async throws {
+        let gate = GatedSleepSource()
+        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
+                                    configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+        Self.kept.append(c)
+        var s = AppSettings(); s.usesHealth = true
+        let m = AppModel(context: c.mainContext, catalog: nil, clock: FakeClock(date(11, 9)), settings: s, servicesEnabled: false,
+                         sleepSource: gate)
+        night(c.mainContext, day: 10)
+        #expect(m.canReadSleepAgain && !m.isReadingSleep)
+        let reading = Task { await m.readSleepAgain() }
+        while gate.waitingCount == 0 { try await Task.sleep(for: .milliseconds(5)) }
+        #expect(m.isReadingSleep && m.showsReadSleepAgain && !m.canReadSleepAgain)
+        await m.readSleepAgain()                                           // a second press changes nothing
+        #expect(gate.waitingCount == 1)
+        gate.open()
+        await reading.value
+        #expect(!m.isReadingSleep && m.canReadSleepAgain)
+    }
+
+    @Test func theButtonIsShownOnlyWhileTheSwitchIsOnAndHealthCanBeRead() {
+        let (on, _, _, _) = setup()
+        #expect(on.showsReadSleepAgain)
+        let (off, _, _, _) = setup(health: false)
+        #expect(!off.showsReadSleepAgain && !off.canReadSleepAgain)
+        let unavailable = FakeSleepSource(); unavailable.available = false
+        let (none, _, _, _) = setup(source: unavailable)
+        #expect(!none.showsReadSleepAgain && !none.canReadSleepAgain)
+    }
+
+    func render(_ section: HealthSection, _ m: AppModel) {
+        let sprites = SpriteLibrary.loadFromBundle()
+        let host = UIHostingController(rootView: Form { section }.environment(m).environment(sprites))
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 402, height: 874))
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        host.view.layoutIfNeeded()
+        RunLoop.main.run(until: Date() + 0.15)
+        window.isHidden = true
+    }
+
+    /// The section is built from the model's flags (`showsReadSleepAgain`, `canReadSleepAgain`); it has to render in every
+    /// state – switch on, off, unavailable, a night running, a read going on – in both languages.
+    @Test(arguments: AppLanguage.allCases) func theHealthSectionRendersWithAndWithoutTheButton(language: AppLanguage) async {
+        let was = Lang.current
+        defer { Lang.current = was }
+        let (on, clock, _, ctx) = setup(catalog: SpriteLibrary.loadFromBundle().catalog)
+        on.language = language
+        night(ctx, day: 10)
+        #expect(on.showsReadSleepAgain)
+        render(HealthSection(), on)                                         // the button, enabled
+        clock.now = date(11, 22, 25); on.refresh(); on.startNight()
+        #expect(on.showsReadSleepAgain && !on.canReadSleepAgain)
+        render(HealthSection(), on)                                         // the button, disabled by the night
+
+        let (off, _, _, _) = setup(health: false)
+        off.language = language
+        #expect(!off.showsReadSleepAgain)
+        render(HealthSection(), off)                                        // no button: the switch is off
+
+        let unavailable = FakeSleepSource(); unavailable.available = false
+        let (none, _, _, _) = setup(source: unavailable)
+        none.language = language
+        #expect(!none.showsReadSleepAgain)
+        render(HealthSection(), none)                                       // no button: Health cannot be read
+    }
+
+    @Test(arguments: AppLanguage.allCases) func theButtonTextIsTranslated(language: AppLanguage) {
+        let was = Lang.current
+        defer { Lang.current = was }
+        Lang.current = language
+        #expect(L("Read sleep again") == (language == .sk ? "Načítať spánok znova" : "Read sleep again"))
     }
 }

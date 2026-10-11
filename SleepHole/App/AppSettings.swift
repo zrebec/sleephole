@@ -35,10 +35,22 @@ struct AppSettings: Codable, Equatable {
         set { strictModeOn = newValue ? true : nil }
     }
     /// Read sleep from Apple Health (phase HEALTH). nil = off. Optional so settings saved by older builds still load.
+    /// Per device, but its POSITION travels in the sync file as a preference (it is not health data): a merge keeps the
+    /// local value, only a new install (no nights of its own) takes it over, once, at its first contact with the sync
+    /// place (`SyncEngine`).
+    /// Toggling it is no change that gets a stamp.
     var healthOn: Bool?
     var usesHealth: Bool {
         get { healthOn == true }
         set { healthOn = newValue ? true : nil }
+    }
+    /// Phase SYNC: set when the user switched syncing with their other devices off ON THIS DEVICE. nil = on (the
+    /// default). Per device, like `healthOn`: a merge keeps the local value, toggling it is no change that gets a
+    /// stamp – but unlike `healthOn` it is never put into a sync file. Optional so settings saved by older builds still load.
+    var syncOff: Bool?
+    var usesSync: Bool {
+        get { syncOff != true }
+        set { syncOff = newValue ? nil : true }
     }
     /// Afternoon rest. Optional in the JSON so settings saved by older builds still load.
     var napPlan: NapPlan?
@@ -74,6 +86,9 @@ struct AppSettings: Codable, Equatable {
     }
     /// Typed on the alarm screen as an alternative to shaking (D15).
     var wakeCode: String = AppSettings.randomCode()
+    /// When the USER last changed any setting on some device (phase SYNC): the newest settings win a merge. Set by
+    /// `AppModel.settings`'s `didSet`, never by a launch argument or a merge. Optional so older settings still load.
+    var changedAt: Date?
 
     enum AlarmSound: String, Codable, CaseIterable, Identifiable {
         case gentle = "alarm_gentle"          // default

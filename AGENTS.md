@@ -77,14 +77,40 @@ then answer. Remove items here when they are done.
      shows one bar per night from the build start to falling asleep, tap selects a night; the source rule prefers
      the system's own measurement (rule version 3). B29 is fixed and on the phone. Version 1.0 (2) was uploaded to
      TestFlight by him that morning (the first try was refused for a missing `NSHealthUpdateUsageDescription`).
-     Everything is committed (he pushes).** Ask / do next: (1) did build 2 finish processing, is the friend
-     invited – the Slovak guide is in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`); raise
-     `CURRENT_PROJECT_VERSION` to 3 before the next upload; (2) **his direction: "statistics, statistics,
-     statistics" and the buddy talking about the town in a speech bubble** – candidates are listed at the end of
-     plan §10 HEALTH, he picks; (3) he asked for a simulation of 100 nights with screenshots of the growing town
-     (`-seedNights 100` exists); (4) CARE-2 (calm-hour coins +10 / +11) is confirmed but NOT built – he believed
-     it was; (5) the Dynamic Island / Live Activity try. Never write his sleep values or the names of his devices
-     and apps into the repo.
+     Everything of that morning is committed (he pushes).**
+     **2026-10-10 afternoon – THE PROPOSAL DOCUMENT WAITS FOR HIS ANSWERS (phase NEXT, plan §10 NEXT; nothing of
+     it is built):** after the 100-night simulation he answered its findings, added his own (the tester sees
+     nothing in TestFlight, Today is "big", the night's detail is unreadable) and asked about a light sensor and
+     the microphone. Opus wrote `docs/NAVRH-MESTO-STATISTIKY.md` (Slovak, mock-ups in
+     `docs/previews/navrh-2026-10-10/`) and put the PDF into his iCloud Drive (`SleepHole/NAVRH-2026-10-10.pdf`):
+     a month calendar with periods, the night's detail in blocks with a timeline, residents (100 nights ≈ 40
+     thousand, town size names), a compact Today, the town camera (B30), the buddy talking, the island whose
+     coast follows the town, coins (strict-mode commitment, building office, town services) and a movement spike.
+     **Ask for his answers to the eight questions at the document's end and which sub-phase goes first** (Opus
+     recommends the calendar together with the residents). Two things he must hear again if he has not read it:
+     the earlier finding "the map is enough for 130–150 buildings" was WRONG (the ground grows with the town, as
+     a rectangle), and Opus disagrees with "unpaid fees → buildings burn" (it contradicts CARE; proposed
+     principle: only a night can take a building, never coins).
+     **NEW 2026-10-10 late afternoon – phase SYNC (plan §10 SYNC): he wants one town on all of a user's devices
+     through iCloud BEFORE build 3** (a tester alternates phone and tablet; today nothing syncs). **Decided by
+     him the same evening:** one file per device in the user's iCloud Drive container + a clear merge rule, the
+     switch ON by default, two nights at once → the better one counts, Health data never into iCloud. **The whole phase is built, reviewed and committed 2026-10-11 (SleepCore 326 / app 484 tests green, i18n 642
+     keys 0 / 0 / 0). His test with one iPhone passed (~09:15): he deleted the app, the new build was installed
+     and the town came back from iCloud. After it a code review brought ten points – step S4 fixed seven and
+     added what he asked for around Apple Health (values are read right after a sync, a new install takes over
+     the Health switch, a button "Načítať spánok znova"). S4 is NOT on the phone yet (the phone was not
+     connected at 10:15) – install it when it is connected and no nap or night runs, and ask him to try the
+     button. `CURRENT_PROJECT_VERSION` is 3 and the Release archive of 1.0 (3) is prepared for his upload – ask
+     whether he uploaded it and whether the testers got it. Not proven on devices: two live devices syncing (a
+     tester with a phone and a tablet will show). The proposal document's eight questions are still
+     unanswered.**
+     Also open: (1) TestFlight – build 2 is uploaded; the friend got his invitation as an internal tester in the end
+     (the public link said "not accepting new testers" because Apple's review had not finished); the guide in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`) now explains the missing step
+     (an Internal Testing group holding the friend and the build), the public link for several friends and the
+     text for Apple's review – ask what worked and whether he cut the friend's roles to Marketing; raise
+     `CURRENT_PROJECT_VERSION` to 3 before the next upload; (2) CARE-2 (calm-hour coins +10 / +11) is confirmed
+     but NOT built – he believed it was; (3) the Dynamic Island / Live Activity try. Never write his sleep values
+     or the names of his devices and apps into the repo. Everything up to S4 was committed 2026-10-11 (he pushes) – check `git status` for what came after.
      **The forgiven night
      of 2026-10-07 → 08 is taken back (his decision 2026-10-08, done on the phone 2026-10-09 12:28 with
      `-revokeForgiveness`):** the record reads `ruins`, the automatic bronze joker of October turns it into a joker
@@ -129,13 +155,12 @@ then answer. Remove items here when they are done.
    top right on Today, Weather test → "Answered by" / "Note". **Next after his check: step 3** rain and snow in
    the town → B; 4 day and night in the town → C. Stop at every checkpoint. Waiting ideas: the robotic announcer
    voice (plan §10 backlog), plan A / B / C (`docs/NAVRH-ZVIERATKA.md`, 5 open questions at the end).
-5. **TestFlight (owner 2026-10-07 – a friend wants to test; he is new to it, explain in plain steps):** the first
-   build 1.0 (1) was uploaded 2026-10-07 16:27 (the first try failed on Xcode's cloud signing and his accented
-   name – solved with a local Apple Distribution certificate, plan §12). Ask: did Apple's "completed processing"
-   mail (or a mail with problems) arrive, and does he want the friend as an internal or an external tester? The
-   project is ready for the next upload (version 1.0, build 2, privacy manifest – follow-up A3); **raise
-   `CURRENT_PROJECT_VERSION` in `project.yml` before every further upload.** He uploads himself (Xcode →
-   Archive → Distribute App).
+5. **TestFlight (owner 2026-10-07 – a friend wants to test; he is new to it, explain in plain steps):** build
+   1.0 (2) is uploaded (2026-10-10 morning). The friend was added as an internal tester and saw nothing; more
+   friends want to help, so the next step is an external group with a public link (Beta App Review first) – see
+   item 0 and the guide in his iCloud Drive. **Raise `CURRENT_PROJECT_VERSION` in `project.yml` before every
+   further upload** (3 is prepared as an archive since 2026-10-11; the next one is 4). He uploads himself (Xcode →
+   Organizer → Distribute App).
 
 ## ⚠️ WHO DOES WHAT – OWNER'S RULE (2026-10-03) – IMPORTANT
 
@@ -293,6 +318,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `docs/IMPLEMENTATION_PLAN.md` | the plan (read first) |
 | `docs/PLAN.md` | product decisions (Slovak) |
 | `docs/NAVRH-ZVIERATKA.md` | next plans A/B/C: pause, sleep buddy, Cube Pets residents, living town (Slovak, owner picks) |
+| `docs/NAVRH-MESTO-STATISTIKY.md`, `docs/previews/navrh-2026-10-10/` | proposals of 2026-10-10 after the 100-night simulation (Slovak) and their SVG mock-ups – the spec of phase NEXT (plan §10); the owner picks |
 | `docs/IMPLEMENTATION_I18N.md` | full spec for the EN/SK multi-language phase (string inventory, architecture, tests) |
 | `SleepCore/` | pure Swift package: schedule, night evaluation, progression, picker, town layout |
 | `SleepHole/` | iOS app target (created in F0) |

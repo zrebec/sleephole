@@ -22,6 +22,10 @@ struct SettingsView: View {
     @State private var systemAlarmTest = ProcessInfo.processInfo.arguments.contains("-openSystemAlarmTest")
     /// Dev aid: `-openWeatherTest` opens Developer → Weather test at once (screenshots).
     @State private var weatherTest = ProcessInfo.processInfo.arguments.contains("-openWeatherTest")
+    #if DEBUG
+    /// Dev aid: `-openSyncTest` opens Developer → Sync test at once (screenshots).
+    @State private var syncTest = ProcessInfo.processInfo.arguments.contains("-openSyncTest")
+    #endif
 
     /// The warning triangle on Today: list's rows may not be laid out yet right after the tab switch → scroll twice.
     private func scrollToNotifications(_ proxy: ScrollViewProxy) {
@@ -182,26 +186,9 @@ struct SettingsView: View {
                     Text(L("Off: when you use the phone on the lock screen at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning there, and tonight's building comes down if the screen stays on."))
                 }
 
-                Section {
-                    Toggle(L("Show when you fell asleep"), isOn: Binding(
-                        get: { model.settings.usesHealth },
-                        set: { on in Task { await model.setHealth(on: on) } }))
-                        .disabled(!model.sleepSource.isAvailable)
-                    if model.settings.usesHealth, model.sleepSource.isAvailable {
-                        let status = model.sleepStatus
-                        Text(L("Nights with sleep data: \(status.withData) of \(status.total)"))
-                        if status.withData == 0, status.anyRead {
-                            Text(L("No data yet? In the Health app open your profile → Apps → SleepHole and allow Sleep."))
-                                .font(.footnote).foregroundStyle(.secondary)
-                        }
-                    }
-                } header: {
-                    Text(L("Apple Health")).id("health")
-                } footer: {
-                    Text(model.sleepSource.isAvailable
-                         ? L("SleepHole reads your sleep from Apple Health (an Apple Watch or another sleep app writes it there) and shows when you really fell asleep next to when you went to bed. It only reads – nothing is written to Health and nothing leaves your iPhone.")
-                         : L("Apple Health isn't available on this device."))
-                }
+                HealthSection()
+
+                SyncSection()
 
                 Section {
                     Picker(L("Sound"), selection: $model.settings.ambience) {
@@ -318,6 +305,7 @@ struct SettingsView: View {
                     NavigationLink(L("Sound effects test")) { SoundEffectsTestView() }
                     NavigationLink(L("System alarm test")) { SystemAlarmTestView() }
                     NavigationLink(L("Weather test")) { WeatherTestView() }
+                    NavigationLink(L("Sync test")) { SyncTestView() }
                     Button(L("Show the guide and first night again")) { model.resetGuide() }
                         .disabled(nightRunning)
                 }
@@ -327,6 +315,7 @@ struct SettingsView: View {
                 let args = ProcessInfo.processInfo.arguments
                 if args.contains("sounds") { proxy.scrollTo("sounds", anchor: .top) }
                 if args.contains("health") { proxy.scrollTo("health", anchor: .top) }
+                if args.contains("icloud") { proxy.scrollTo("icloud", anchor: .top) }
                 if args.contains("sky") { proxy.scrollTo("sky", anchor: .top) }
                 if args.contains("notifications") { proxy.scrollTo("notifications", anchor: .top) }
                 // opened by the warning triangle on Today: the tab switch just created this view
@@ -342,6 +331,9 @@ struct SettingsView: View {
             .navigationDestination(isPresented: $soundTest) { SoundEffectsTestView() }
             .navigationDestination(isPresented: $systemAlarmTest) { SystemAlarmTestView() }
             .navigationDestination(isPresented: $weatherTest) { WeatherTestView() }
+            #if DEBUG
+            .navigationDestination(isPresented: $syncTest) { SyncTestView() }
+            #endif
             .renameTownAlert(isPresented: $renaming)
             .sheet(isPresented: $showGuide) { GuideView(replay: true) }
             .task {

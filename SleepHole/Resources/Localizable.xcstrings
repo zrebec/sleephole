@@ -10088,6 +10088,406 @@
           }
         }
       }
+    },
+    "iCloud": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        }
+      }
+    },
+    "Your nights, coins and settings are kept in your own iCloud. The town is then the same on all your devices and comes back after you reinstall SleepHole. Nothing from Apple Health is stored there. Start and finish a night on the same device.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your nights, coins and settings are kept in your own iCloud. The town is then the same on all your devices and comes back after you reinstall SleepHole. Nothing from Apple Health is stored there. Start and finish a night on the same device."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje noci, mince a nastavenia sa ukladajú do tvojho vlastného iCloudu. Mesto je potom rovnaké na všetkých tvojich zariadeniach a po preinštalovaní SleepHole sa vráti. Z Apple Zdravia sa tam neukladá nič. Noc začni aj dokonči na tom istom zariadení."
+          }
+        }
+      }
+    },
+    "Last synced: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last synced: %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naposledy synchronizované: %@"
+          }
+        }
+      }
+    },
+    "Not synced yet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not synced yet"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatiaľ nesynchronizované"
+          }
+        }
+      }
+    },
+    "iCloud isn't available. Sign in to iCloud and switch on iCloud Drive in the iPhone's Settings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud isn't available. Sign in to iCloud and switch on iCloud Drive in the iPhone's Settings."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud nie je dostupný. V Nastaveniach iPhonu sa prihlás do iCloudu a zapni iCloud Drive."
+          }
+        }
+      }
+    },
+    "Couldn't sync just now. SleepHole will try again by itself.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't sync just now. SleepHole will try again by itself."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teraz sa nepodarilo synchronizovať. SleepHole to skúsi znova sám."
+          }
+        }
+      }
+    },
+    "Sync test": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sync test"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test synchronizácie"
+          }
+        }
+      }
+    },
+    "Transport": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transport"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prenos"
+          }
+        }
+      }
+    },
+    "This device's file": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This device's file"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Súbor tohto zariadenia"
+          }
+        }
+      }
+    },
+    "Sync switch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sync switch"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prepínač synchronizácie"
+          }
+        }
+      }
+    },
+    "Sync place": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sync place"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Miesto synchronizácie"
+          }
+        }
+      }
+    },
+    "Not tried yet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not tried yet"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatiaľ neskúšané"
+          }
+        }
+      }
+    },
+    "Available": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Available"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dostupné"
+          }
+        }
+      }
+    },
+    "Not available": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not available"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nedostupné"
+          }
+        }
+      }
+    },
+    "Last sync": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last sync"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posledná synchronizácia"
+          }
+        }
+      }
+    },
+    "Other devices' files read": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other devices' files read"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prečítané súbory iných zariadení"
+          }
+        }
+      }
+    },
+    "Settings stamp": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings stamp"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pečiatka nastavení"
+          }
+        }
+      }
+    },
+    "First read done": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First read done"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prvé čítanie hotové"
+          }
+        }
+      }
+    },
+    "Sync owed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sync owed"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synchronizácia čaká"
+          }
+        }
+      }
+    },
+    "Sync now": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sync now"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synchronizovať teraz"
+          }
+        }
+      }
+    },
+    "Runs one sync at once. During a night or nap it only remembers that one is owed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Runs one sync at once. During a night or nap it only remembers that one is owed."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spustí jednu synchronizáciu hneď. Počas noci alebo odpočinku si len zapamätá, že nejaká čaká."
+          }
+        }
+      }
+    },
+    "Plain folder": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plain folder"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obyčajný priečinok"
+          }
+        }
+      }
+    },
+    "Off": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vypnutý"
+          }
+        }
+      }
+    },
+    "Sync through iCloud": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sync through iCloud"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synchronizovať cez iCloud"
+          }
+        }
+      }
+    },
+    "Read sleep again": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read sleep again"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Načítať spánok znova"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

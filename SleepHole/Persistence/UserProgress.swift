@@ -13,6 +13,8 @@ final class UserProgress {
     var languageRaw: String?
     /// The owner's name for the town; nil = the default "My Town".
     var townName: String?
+    /// When the name was last changed on some device (phase SYNC): the newest name wins a merge. nil = older store.
+    var townNameChangedAt: Date?
     /// The last counted rename (a typo fix within 10 min does not move it) and the last *yearly* free one.
     var lastRenameAt: Date?
     var lastFreeRenameAt: Date?

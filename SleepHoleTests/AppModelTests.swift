@@ -25,7 +25,7 @@ struct AppModelTests {
 
     func harness(at now: Date, container: ModelContainer? = nil) -> Harness {
         let c = container ?? (try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
-                                                   configurations: ModelConfiguration(isStoredInMemoryOnly: true)))
+                                                   configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)))
         let clock = FakeClock(now)
         var s = AppSettings()
         s.schedule = Schedule(bedtime: TimeOfDay(22, 30), wake: TimeOfDay(6, 30))

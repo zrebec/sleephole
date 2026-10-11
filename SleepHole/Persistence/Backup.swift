@@ -25,6 +25,9 @@ struct BackupFile: Codable, Equatable {
     var spends: [Spend]? = nil
     var scheduleChanges: [Change]? = nil
     var jokers: [Joker]? = nil
+    // phase SYNC (2026-10-10) – optional, older backups still load
+    var townNameChangedAt: Date? = nil
+    var schedulePromptMonth: String? = nil
 
     struct Joker: Codable, Equatable {
         var at: Date
@@ -110,14 +113,7 @@ extension NightRecord {
                                       bedtime: n.bedtime, wake: n.wake),
                   buildingId: n.buildingId, isDebug: n.isDebug, setupGrace: n.setupGrace, isNap: n.isNap ?? false)
         id = n.id
-        eventsData = (try? JSONEncoder().encode(n.events)) ?? eventsData
-        outcomeRaw = n.outcomeRaw
-        awaySeconds = n.awaySeconds
-        startedAt = n.startedAt
-        confirmedAt = n.confirmedAt
-        finalizedAt = n.finalizedAt
-        pauses = n.pauses
-        strictLockScreen = n.strictLockScreen
+        adoptNight(n)
         fellAsleepAt = n.fellAsleepAt
         sleepEndedAt = n.sleepEndedAt
         asleepSeconds = n.asleepSeconds
@@ -126,6 +122,26 @@ extension NightRecord {
         sleepReadAt = n.sleepReadAt
         sleepSourcesData = n.sleepSourcesData
         sleepRuleVersion = n.sleepRuleVersion
+    }
+
+    /// Everything about the night itself except its sleep values (the Health fields belong to the device that read
+    /// them) and its id. `init(backup:)` and the in-place overwrite of a merge (phase SYNC) share it.
+    func adoptNight(_ n: BackupFile.Night) {
+        if NightKey(n.keyString) != nil { keyString = n.keyString }      // a broken key keeps the one derived from `wake`
+        isDebug = n.isDebug
+        isNap = n.isNap ?? false
+        bedtime = n.bedtime
+        wake = n.wake
+        buildingId = n.buildingId
+        eventsData = (try? JSONEncoder().encode(n.events)) ?? eventsData
+        setupGrace = n.setupGrace
+        outcomeRaw = n.outcomeRaw
+        awaySeconds = n.awaySeconds
+        startedAt = n.startedAt
+        confirmedAt = n.confirmedAt
+        finalizedAt = n.finalizedAt
+        pauses = n.pauses
+        strictLockScreen = n.strictLockScreen
     }
 }
 

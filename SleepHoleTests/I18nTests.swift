@@ -17,7 +17,7 @@ struct I18nTests {
 
     func store() -> ModelContainer {
         try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
-                            configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+                            configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
     }
 
     func model(_ c: ModelContainer, at now: Date = Date(timeIntervalSinceReferenceDate: 0)) -> AppModel {

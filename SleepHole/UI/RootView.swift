@@ -53,7 +53,7 @@ struct RootView: View {
             }
         }
         .onChange(of: model.settings.theme) { _, theme in theme.apply() }
-        .fullScreenCover(isPresented: Binding(get: { !model.onboardingDone && !screenshotMode }, set: { _ in })) {
+        .fullScreenCover(isPresented: Binding(get: { model.needsGuide && !screenshotMode }, set: { _ in })) {
             GuideView().id(lang).environment(\.locale, lang.locale)
         }
     }

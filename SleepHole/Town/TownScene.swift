@@ -15,6 +15,8 @@ final class TownScene: SKScene {
     static let minScale: CGFloat = 0.6      // camera scale: smaller = closer
     static let maxScale: CGFloat = 10
     private var needsFit = true
+    /// Dev aid for screenshots (`-townFit`): the whole town is always fitted, uncapped, and refitted when the view is sized.
+    static let townFit = ProcessInfo.processInfo.arguments.contains("-townFit")
 
     override init(size: CGSize) {
         super.init(size: size)
@@ -95,12 +97,13 @@ final class TownScene: SKScene {
         guard needsFit, let model, size.width > 10, size.height > 10 else { return }
         needsFit = false
         let fit = max(model.bounds.width / size.width, model.bounds.height / (size.height * 0.8)) * 1.05
-        cameraNode.setScale(min(max(fit, 1.4), 4.5))
+        cameraNode.setScale(Self.townFit ? fit * 0.62 : min(max(fit, 1.4), 4.5))
         cameraNode.position = CGPoint(x: model.bounds.mid.x, y: model.bounds.mid.y)
     }
 
     override func didChangeSize(_ oldSize: CGSize) {
         super.didChangeSize(oldSize)
+        if Self.townFit { needsFit = true }
         fitIfPossible()
     }
 

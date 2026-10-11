@@ -32,6 +32,8 @@
 | LOCK-W | The lock-screen warning rings as a system alarm that the app ends itself + B27 + the late Face ID hole (owner 2026-10-08, spec in §10 LOCK-W) | 🟢 the three variants confirmed by the owner on the phone 2026-10-09 (with Face ID: return, screen off, left alone → collapse; the alarm covers the Camera); the forgiven night is taken back. Open: the hole without Face ID (proposal waits for his decision), the quick night's 15 s setup (worker) | his decision on lock-screen use without Face ID; then install the next build on his word |
 | CARE | Care instead of enforcement (owner 2026-10-09 evening, spec in §10 CARE): the siren only as an opt-in strict mode, lock-screen use costs a calm-hour bonus instead of the building, caring texts, calm-hour coins, Live Activity / Dynamic Island countdowns, then HealthKit, the shop, a flexible bedtime | 🟡 CARE-1 (jokers per kind, the reviewed texts, the gentle default + Strict mode) is on the phone since 2026-10-09 21:00 and both modes were tried by the owner the same evening | fix B29, then CARE-3 (the Live Activity try in the lock-screen Camera) and CARE-2 (calm-hour coins – he has not confirmed +10 per hour) |
 | HEALTH | Apple Health: "when did I really fall asleep" next to "when did I go to bed" (owner 2026-10-09 / 10, spec in §10 HEALTH) – read-only sleep data, stored per night, bars in the chart | 🟢 H1–H4, H2b, H2c built, reviewed and on the phone 2026-10-10; the owner checked the data, the chart with bars and the tap ("it looks good"); uploaded to TestFlight as 1.0 (2) the same morning | more statistics from the sleep data and the buddy talking about the town (his direction, candidates in §10 HEALTH) – he picks |
+| NEXT | Proposals after the 100-night simulation (owner 2026-10-10, spec in §10 NEXT; the Slovak document with mock-ups is `docs/NAVRH-MESTO-STATISTIKY.md`): CAL a real month calendar and periods, NIGHT the night's detail in blocks + a timeline, POP residents, TODAY a compact home screen, ZOOM the town camera (B30), TALK the buddy talks, ISLAND the coast follows the town, ECON coins (strict-mode commitment, building office, town services), SENSE a whole-night movement spike | 🟡 proposed 2026-10-10 – **nothing built**; the document and its PDF (the owner's iCloud Drive) are written, eight questions are asked | the owner answers the questions and names the first sub-phase (Opus recommends CAL together with POP) |
+| SYNC | One town on all of a user's devices through iCloud (owner 2026-10-10: before build 3; spec in §10 SYNC) | 🟡 variant decided by the owner 2026-10-10: one file per device in the user's iCloud Drive container, merged by a pure rule; the switch on by default; the better of two nights counts; Health data stays out of iCloud. **S1 (merge rule, sync file, `mergeSync`, tests – no iCloud, no UI) built and reviewed 2026-10-10 evening: tests / simulator only, not committed, not on the phone** | **2026-10-11: S2a, S2b, S3 on the phone since 08:34; his delete-and-reinstall test passed at ~09:15 (the town came back from iCloud). S4 (ten review points, Apple Health after a sync) built and reviewed 10:15 – SleepCore 326, app 484 tests, i18n 642 keys green – tests only, NOT on the phone yet.** Next: install S4 when the phone is connected, his look at the Health button, upload of build 1.0 (3) |
 | F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a on the phone since 2026-10-04 19:11 – the owner's Focus test of 2026-10-07 brought no warning because Time Sensitive Notifications were switched off in iOS (his finding the same day) → B21 closed, the app gets a warning for it (TOWN-W step 0b); **re-tested with the switch on 2026-10-07 evening: the warning arrives in a Focus (owner: "confirmed")**; F6b (AlarmKit) built and reviewed 2026-10-04 evening, installed by the owner himself ≈ 20:00 – it rang with the app swiped away; committed 2026-10-07; his remaining checks are listed in §10 F6 | the system alarm wakes the owner with the app swiped away |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
 
@@ -63,6 +65,11 @@ SleepCore 260 tests, app 341 tests green (2026-10-09 17:01: the lock screen with
 SleepCore 273 tests, app 353 tests green (2026-10-09 20:55: jokers per kind, the reviewed texts, CARE-1 gentle default + strict mode); i18n 598 keys 0 / 0 / 0.
 SleepCore 274 tests, app 361 tests green (2026-10-10 07:23: B29 + the audio event kinds); i18n 598 keys 0 / 0 / 0.
 SleepCore 307 tests, app 388 tests green (2026-10-10 09:19: phase HEALTH H1–H4, H2b, H2c; the Developer section only in Debug); i18n 617 keys 0 / 0 / 0.
+SleepCore 320 tests, app 408 tests green (2026-10-10 19:45: phase SYNC step S1 – the merge rule and `mergeSync`); i18n 617 keys 0 / 0 / 0.
+SleepCore 321 tests, app 426 tests green (2026-10-10 20:45: phase SYNC step S2a – the sync engine over a plain folder); i18n 617 keys 0 / 0 / 0.
+SleepCore 321 tests, app 441 tests green (2026-10-11 07:58: phase SYNC step S2b – the iCloud transport; a signed device build with the iCloud entitlements succeeds); i18n 617 keys 0 / 0 / 0.
+SleepCore 321 tests, app 452 tests green (2026-10-11 08:33: phase SYNC step S3 – Settings → iCloud, the language travels to a device without one); i18n 641 keys 0 / 0 / 0.
+SleepCore 326 tests, app 484 tests green (2026-10-11 10:15: phase SYNC step S4 – review fixes, Apple Health after a sync); i18n 642 keys 0 / 0 / 0.
 
 ### Night and nap
 | | Feature | Evidence |
@@ -163,6 +170,8 @@ SleepCore 307 tests, app 388 tests green (2026-10-10 09:19: phase HEALTH H1–H4
 | 📱 | Automatic backup after a real night | the backup file was on the phone at the audit |
 | 📱 | Install over the cable + pulling the app's data | used for the audit |
 | 🖥 | Manual backup export / import | no record of use on the phone |
+| 🟢 | iCloud sync: the town comes back on a fresh install (phase SYNC) | owner 2026-10-11 ~09:15: he deleted the app, the new build was installed, "the data look OK"; the Apple Health values were missing until the switch is turned on again (by design then – S4 changes it) |
+| 🖥 | iCloud sync between two live devices; S4 (retry, first-contact stamp, Health switch taken over by a new install, "Read sleep again") | automated tests only (two and three simulated devices); no second device has synced yet |
 | 🖥 | Store migration to the version with pauses | checked on a copy of the owner's store in the simulator |
 
 ---
@@ -1857,6 +1866,320 @@ asleep. Both belong side by side – "so one finds one's best sleep window".
       the town (kinds and levels of buildings, parks, ruins, the streak, last night) into a few ranked sentences,
       and it ties in with the shop (the residents' wishes say what to buy). Both after today's TestFlight upload.
 
+### NEXT — Proposals after the 100-night simulation (owner 2026-10-10) – 🟡 proposed, NOTHING built; the owner picks
+**Why.** The owner went through the simulation's findings (§12, 2026-10-10), added three of his own (a TestFlight
+tester who sees nothing, the Today screen is "big", the night's detail is one block nobody can read) and asked
+whether the app can use a light sensor or the microphone. He asked for a detailed proposal document with
+screenshots and drawings.
+
+**The document:** `docs/NAVRH-MESTO-STATISTIKY.md` (Slovak; mock-ups as SVG in `docs/previews/navrh-2026-10-10/`).
+The PDF with the simulation screenshots is in his iCloud Drive (`SleepHole/NAVRH-2026-10-10.pdf`). **Read the
+document and look at the mock-ups before starting a sub-phase – they are the spec of the look.** The values in the
+mock-ups are invented; never put the owner's own nights into a document or a screenshot.
+
+**Nothing below is approved yet.** He answers the eight questions at the end and names the first sub-phase. Each
+sub-phase runs in small steps, one Sonnet worker per step, reviewed by Opus, then his check on the phone.
+Sizes: S = one worker step, M = 2–4 steps with checkpoints, L = a phase of its own.
+
+**Sub-phases in the recommended order (CAL and POP touch different files and can run in parallel):**
+- [ ] **CAL – a real month calendar and periods (M, 2 steps).** Today `Stats.summary` is fixed to the last 35 days
+      (calendar), the last 30 nights (chart) and the last 14 nights (averages); after 100 nights the first two
+      months are visible nowhere. *Step 1:* a pure `MonthGrid` (the weeks of a month, leading / trailing blanks,
+      order from `calendar.firstWeekday`) and month totals (nights by outcome, the month's coins from
+      `Economy.ledger`) in `SleepCore/Stats.swift`; `CalendarGrid` (`StatsView.swift`) becomes a month view with
+      ‹ month year › buttons from the month of the first night to the current one, a weekday header, today
+      ringed, future days empty, the totals under the grid; a tap on the title opens the year (12 small months,
+      ‹ year ›, a tap on a month returns to it). `Fmt` gets month and weekday names in the app's language; launch
+      argument `-statsMonth YYYY-MM` for screenshots. *Step 2:* the "Average" card and `NightChart` follow the
+      shown month (the title names it, compared with the month before), a Month / Year switch (the year shows
+      monthly averages); the four tiles at the top stay all-time. Tests: February with 28 and 29 days, a week
+      starting on Monday and on Sunday, the days of a clock change, a month before the first night, no nights.
+      Mock-up: `kalendar.svg`.
+- [ ] **NIGHT – the night's detail as its own screen (M, 2 steps).** *Step 1:* `NightReport` gets what it lacks –
+      screen wakes as intervals (`.screenOn` → `.screenOff`; both are logged, the app shows neither), totals per
+      kind, the longest calm stretch between the end of the setup and the wake time, wakes per hour. The detail
+      moves out of `StatsView.swift` into its own file and becomes a pushed screen (from a calendar day, the
+      chart's "Night details", the journal) with arrows to the night before and after. Cards: summary (building,
+      outcome, the coins broken down, in bed from – to, the longest calm), setup (trips: count, sum, a table),
+      after the setup (screen looks, phone on the lock screen, trips out of the app, pauses, calls – each row a
+      count and a sum, opening into a table; "show all" above three rows), wakes per hour (a small bar chart),
+      morning, sleep (Apple Health), that day's nap. *Step 2:* the timeline (Swift Charts): lanes setup / sleep /
+      screen lit / phone used / out of the app / pause / call / alarm; three fixed windows (whole night, evening,
+      morning); a tap names the item. Sleep is blue, what counts against the night is orange, the rest neutral;
+      every lane has its label, colour never carries a meaning alone. Later charts to choose from (month / year):
+      time to fall asleep, time slept, screen wakes per night. Mock-ups: `detail-noci.svg`, `casova-os.svg`.
+- [ ] **POP – residents (S).** Today `TownStats.population` (`TownView.swift`) gives 4 / 20 / 60 for the L1 kinds,
+      300 for any L4 building and 0 for every L2 and L3 building. New pure `SleepCore/Population.swift`: a count
+      per building from the range of its kind, by id prefix (ids are stable) – `l1-house` 2–14 (70 % 2–5, 25 %
+      6–9, 5 % 10–14), `l1-block` 24–96, `l1-bigblock` 180–540, `l4-tower` 600–1 400, `l4-sky` 1 500–4 000,
+      everything else 0; seeded from the night key + the building id through a hash that is the same in every
+      process (FNV-1a → `SeededGenerator`; never Swift's `Hasher`); unfinished = half, ruins = 0, as today. Town
+      size names under the town's name (Osada < 100, Dedina < 1 000, Mestečko < 5 000, Mesto < 20 000, Veľké mesto
+      < 100 000, Veľkomesto < 500 000, Metropola; English names to be chosen), "N people live here" in the
+      building sheet, a tap on the header opens "The town in numbers" (complete buildings, unfinished, ruins, lit
+      street cells, residents, built nights – it explains why the header says 93 buildings and Stats 91 built
+      nights). The prototype of this rule gave 175 / 224 / 14 986 / 39 487 residents for the seeded town at
+      10 / 30 / 60 / 100 nights and 200–240 thousand after a year of complete nights; tests pin the ranges and the
+      determinism, not those totals. Optional later: people move into a new building over five good nights.
+- [ ] **TODAY – a compact home screen (S–M).** Mock-up `dnes.svg`. Instead of the large "Today" title a header row:
+      the city and the temperature (`WeatherLabel`), under it the countdown to bedtime, streak and coins as small
+      chips on the right; without a city a greeting and a "Set your city" link; the Time Sensitive triangle moves
+      into the header. One card holds both buttons (today the nap button hides under the tab bar on an iPhone 16
+      Pro), captions of one line (the long explanation only while the start window is open); the joker row and
+      the level line fit without scrolling on 402 × 874 pt, smaller phones keep scrolling. "Go to sleep" moves
+      from about 75 % of the screen height to about 56 %. **Hard rules:** the semicircle is not touched (centre
+      310 pt, radius 150 pt); the buddy 250 → about 200 pt wide changes a look he accepted (P2b) – only with his
+      yes (question 2). Files: `TodayView.swift` (`HomeView`), `Badges.swift`, `Weather/WeatherUI.swift`.
+- [ ] **ZOOM – the town camera (S) = B30 (§11a).** The zoom-out cap grows with the town (the scale that fits the
+      whole ground, a pure function next to `TownRender.clamp`, tested on replayed towns); the app remembers the
+      camera (scale and position) across launches; after a night that added a building the camera glides to it,
+      also on the first show after a relaunch. No automatic fit of the first look (owner 2026-10-07 and
+      2026-10-10: zooming is enough) – `-townFit` stays a developer switch for screenshots.
+- [ ] **TALK – the buddy talks (M).** A pure `BuddyTalk` in SleepCore turns the town (kinds of buildings, missing
+      services, residents and yesterday's change), the streak, last night and the time to bedtime into ranked
+      sentences; one per day (seeded by the date), a tap on the buddy shows the next one; a bubble under the buddy
+      on Today. Kind tone, no blame, every text through `L()`. After POP.
+- [ ] **ISLAND – the coast follows the town (M, 3 steps).** The ground already grows with the town, but always as
+      the bounding rectangle (58 % of its cells in use at 100 nights). *Step 1:* pure
+      `Island.land(layout:seed:) -> Set<Cell>` – the started blocks and the frontier block grown by 2–3 cells,
+      rounded, the rim varied by a smooth function of the direction from the centre, so a cell that is land stays
+      land; seeded per town; tests: every lot and drawn road is land, land only grows along a replayed town, the
+      same input gives the same island. *Step 2:* grass only on land, a rim at the shore, a low shore instead of
+      the 180 px soil (`TownRender.build`, `TownScene.addSoilEdge`; `groundDiamond` gives way to the outline).
+      *Step 3:* water as the Town tab's background with slow glints; camera bounds and the zoom-out cap follow the
+      outline. Before or with TOWN-W step 4 (the water mirrors the sky). Open: water over the whole tab or a
+      horizon, a beach or grass to the water (question 3). Mock-up: `ostrov.svg` (drawn from the real layout).
+- [ ] **ECON – what coins are for (E1 S, E2 M, E3 L).** Income in the simulation: 16 160 coins in 100 nights
+      (≈ 160 a night); sinks today: jokers, pauses, the rename.
+      **E1 – Strict mode as a commitment (the owner's idea):** switching it on is free and shows the rule first;
+      switching it off is free in the first 24 hours and on days 1–3 of a month, else 1 000 coins (`StrictPolicy`
+      in `Limits.swift` after `RenamePolicy` / `SchedulePolicy`, `CoinSpend`); without the coins one waits for the
+      month's start (question 5). Later idea: a strict challenge of 7 / 14 / 30 nights with a reward.
+      **E2 – the building office:** tonight's building stays random and free; "another draw" 25 coins; "choose a
+      building" for `Economy.price(level:)`; a bought building waits until a complete night builds it and is never
+      lost to a ruin; a collection of the 107 kinds; unique civic buildings (one town hall, the other services by
+      the town's size) – that changes D13 and needs his yes (question 8). Opus recommends dropping the open R&D
+      centre idea in favour of E2.
+      **E3 – town services:** a weekly budget per service (proposal: fire 150, police 150, hospital 200, school
+      150, town hall 100, culture 100, parks 50); a running service adds residents (+5…10 % each) and its vehicle
+      drives through the town (`v-firetruck-*`, `v-police-*`, `v-ambulance-*` exist), the town hall returns 5 % of
+      the nights' coins; an unpaid service is closed and its bonus is missing – nothing else.
+      **Opus's objection, put to the owner (question 6):** his idea "unpaid fees → buildings burn, crime, the town
+      declines" contradicts CARE and "cute and never cruel"; proposed principle: **only a night can take a
+      building, never coins.** Mild variant if he wants tension: without the fire service some residents move out
+      after a "fire" and come back when it runs.
+- [ ] **SENSE – a whole-night movement spike (S).** Answers given: iOS has no public ambient-light API (SensorKit
+      is for approved research studies only; `UIScreen.brightness` reads 0.00 while the phone is locked – §12,
+      2026-10-09). The microphone is technically possible (background audio already runs; processing on the
+      device keeps the App Store label "Data Not Collected") but not recommended now: the orange indicator all
+      night, a change inside `AudioKeeper` (the alarm depends on it) and the users' trust; if ever, then opt-in
+      and loudness per minute only, never audio. The spike: device motion for the whole night at a low rate, a
+      summary per minute, the battery level at the start and the end; one real night with it against one without
+      tells the cost. It feeds the timeline's "movement" lane and CARE-2's "+11 when the phone was not moved".
+
+**Questions asked 2026-10-10 (his answers decide):** (1) the order; (2) may the buddy on Today shrink to about
+200 pt; (3) water over the whole Town tab or a horizon, a beach or grass; (4) the ranges and size names of POP,
+and the gradual moving-in; (5) 1 000 coins to leave Strict mode, waiting for the month's start without coins;
+(6) the principle "coins never take a building"; (7) ZOOM without an automatic fit; (8) one town hall per town.
+
+**TestFlight (no code, 2026-10-10):** the friend added in Users and Access (as App Manager + Marketing +
+Developer) saw nothing in TestFlight – most likely the second step was missing (an Internal Testing group that
+holds both him and build 2). For several friends the right way is an external group with a public link (Beta App
+Review first). The guide in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`) got "Keď tester appku nevidí", the
+public-link steps and an English text for the Review Notes (background audio, lock detection, Health, AlarmKit,
+weather). Marketing is role enough for a tester.
+
+### SYNC — One town on all of a user's devices (owner 2026-10-10: "we should do it right before build 3") – 🟡 S1 built and reviewed, S2 next
+**Why.** A tester asked what happens when she alternates between her phone and her tablet. The owner answered
+"the town is always rebuilt from the data in iCloud" – only the first half is true: the town is replayed from the
+nights, but the nights live in one device's SwiftData store. The app has no iCloud entitlement and no sync
+(checked 2026-10-10: entitlements hold healthkit / time-sensitive / weatherkit only; `ModelContainer` is local).
+Asked whether to note it as an idea, he said: do it before build 3. That is his request for iCloud (hard rule
+"paid-only APIs only when the owner asks").
+
+**Analysis (Opus, 2026-10-10).**
+- **Two ways.** (A) SwiftData + CloudKit: every model loses `@Attribute(.unique)` (all five have one), every
+  attribute needs a default or becomes optional, the existing store on the owner's and the tester's phone has to
+  migrate, duplicates must be merged by hand, and the CloudKit schema must be deployed to Production before a
+  TestFlight build (TestFlight uses Production). Large and risky right before an upload. (B) **Files in the
+  user's iCloud Drive container, one file per device, merged by a pure rule** – recommended: the app already has
+  the whole state as one `BackupFile` (`Backup.swift`), and everything shown is derived from the nights, so a
+  merge is a union. Each device writes only its own file, so two devices never write the same file and there is
+  nothing to conflict.
+- **The merge rule (pure, `SleepCore`, tests first):** nights by id – a finalized night beats a running one; two
+  finalized results of the same night → the better outcome (ambiguity in the user's favour); coin spends, jokers
+  and schedule changes by id (union); settings, town name and language → the newest write; never while a night or
+  a nap runs.
+- **Health data must NOT go to iCloud** (App Review guideline 5.1.3). The sleep fields of `NightRecord` are left
+  out of the synced file; every device reads them from Apple Health itself (Health has its own sync).
+- **What it does not change:** a night is started and confirmed on ONE device – the other one learns about it
+  afterwards. Two nights on two devices at the same time give one night (the better one). iPhone only stays
+  (`TARGETED_DEVICE_FAMILY` 1) – on an iPad the app would run scaled; untested, not promised.
+- **Privacy:** the data sits in the user's own iCloud, nobody else can read it, the App Store label stays "Data
+  Not Collected"; the privacy text has to say it. A switch in Settings (default to be decided), and the app works
+  as today when the user is not signed in to iCloud.
+- **Owner's part:** the iCloud capability with an iCloud Documents container for `sk.zrebec.sleephole` (automatic
+  signing may add it, as it did for HealthKit; otherwise one tick on developer.apple.com).
+
+**Steps (variant B; one Sonnet worker each, reviewed by Opus):**
+- [x] **S1** – built by one Sonnet worker (cut off once by the usage limit, resumed), reviewed by Opus 2026-10-10
+      19:45 (rule and merge read line by line; own runs: SleepCore 320 tests, app 408 tests green; i18n 617 keys
+      0 / 0 / 0; nothing installed, nothing committed): `SleepCore/SyncMerge.swift` (`keepsFirst` with one more
+      last tie-break, the outcome's name – `missed` and `excused` share a rank), `SleepHole/Persistence/Sync.swift`
+      (`BackupFile.forSync()`, `encodedForSync()` / `decodeSync()` with exact dates, `SyncStore` – nights by id,
+      spends / jokers / schedule changes as a one-to-one union, `UserProgress.merge`), `AppModel.makeSyncFile()` /
+      `mergeSync(_:)`, `AppSettings.changedAt` (stamped in `settings.didSet` by a real change of the user, not by
+      the Health switch, a launch argument or a merge), `UserProgress.townNameChangedAt`, two new optional
+      `BackupFile` fields, `NightRecord.adoptNight` (shared by `init(backup:)` and the in-place overwrite),
+      `coins` clamped at 0. A merge removes the sleep values of whatever file it is given. No UI, no transport.
+      **Not yet tried: the store's upgrade (one new optional column) on a copy of a real store – do it in the
+      simulator before any install.**
+- [ ] **S2** – the transport, split in two (owner 2026-10-10 evening: "continue"): **S2a** the seam, a plain-folder
+      transport, the engine with its triggers, the first-contact rule, the per-device switch field
+      (`AppSettings.syncOff`, ON by default, no UI yet) and their tests – **built by one Sonnet worker, reviewed by
+      Opus 2026-10-10 ~20:45** (engine and transport read; own runs: SleepCore 321, app 426 tests green; i18n 617
+      keys 0 / 0 / 0): `SyncTransport.swift` (protocol, none, plain folder, `SyncDevice.id`, launch arguments
+      `-syncFolder` / `-syncDevice`), `SyncEngine.swift` (one sync at a time, owed during a night, writes only
+      changed content, `lastSyncAt` / `lastSyncError`, the guide gate `holdsGuide`), settings are stamped only
+      after the install's first read, `RootView` shows the guide by `needsGuide`, the notification permission is
+      asked after a guide that another device finished. `Jokers.apply` with two bought jokers of one kind in a
+      month applies both (pinned by a test; the once-a-month rule lives in `block`). **S2b** the iCloud container
+      transport, the entitlements, the device id that must not travel in a phone backup (found in S2a's review),
+      the folder transport Debug-only (it reads file dates – a Release build would need a privacy-manifest
+      reason) and a signed device build – one Sonnet worker, 2026-10-10 ~20:50; **its run was torn apart by the
+      Mac sleeping through the night and it never reported – Opus read the code and ran everything itself on
+      2026-10-11 morning:** SleepCore 321, app 441 tests green, i18n 617 keys 0 / 0 / 0, the Release build
+      compiles, and **the signed Debug build for a device SUCCEEDED with the three iCloud entitlements in the
+      app – automatic signing provisioned the container, no step for the owner.** Built: `ICloudSyncTransport.swift`
+      (the container found off the main thread; one `NSMetadataQuery` in the ubiquitous data scope; `readOthers`
+      waits for the first gathering and gives downloads a few seconds, and answers `[]` only when the listing
+      really holds no other device's file – else it throws, so a slow iCloud is never taken for first contact;
+      coordinated reads and writes on its own queue), `SyncDevice` tied to `identifierForVendor`, the folder
+      transport and its arguments Debug-only, `SyncTransports.forLaunch` (device → iCloud, simulator → none).
+      **Found by the worker and important:** with the iCloud entitlements SwiftData's default configuration
+      tries CloudKit by itself, which the models do not allow (unique attributes) – the app's container and every
+      test container now say `ModelConfiguration(cloudKitDatabase: .none)`.
+      **Store upgrade checked 2026-10-11 08:03:** a copy of the owner's real store (pulled 2026-10-10, git-ignored)
+      opens in the new build in the simulator with every night, the town, its name and the coins as before.
+      Lesson: a worker cannot work through a night on a sleeping Mac – run long steps while the Mac is awake,
+      under `caffeinate -i`.
+      Design (Opus 2026-10-10, the workers' briefs follow it):
+      *Seam:* a `SyncTransport` (available?, write this device's data, read the others' data, a change signal)
+      with three makes – the iCloud container, a plain folder (tests: two models sharing a temporary folder are
+      two devices; simulator: launch argument `-syncFolder PATH`) and none.
+      *iCloud:* entitlements `com.apple.developer.icloud-services` = `CloudDocuments`,
+      `icloud-container-identifiers` and `ubiquity-container-identifiers` = `iCloud.sk.zrebec.sleephole`; files in
+      a `sync/` folder OUTSIDE the container's `Documents` (not shown in the Files app), one `<device id>.json`
+      per install (a random id in UserDefaults, never in the synced settings); `url(forUbiquityContainerIdentifier:)`
+      off the main thread, `NSFileCoordinator` for reading and writing, an `NSMetadataQuery` (ubiquitous data
+      scope) to learn of other devices' files and to start their download.
+      *Engine:* read the others → `decodeSync` → `mergeSync` → write the own file only when its content changed
+      (`exportedAt` differs on every call – compare without it). Triggers: launch, becoming active, the query's
+      update, and after a finalized night / spend / joker / schedule change / rename / settings change (a short
+      delay gathers several). Never during a night or nap – postponed until it ends. Decode and merge off the
+      file coordination; the merge runs on the main actor.
+      *First contact (a hole S1 left open, found in review):* a new device stamps its settings when the guide
+      sets the schedule, and that newer stamp would overwrite the settings of the device the user already has
+      (wake code, sounds, schedule). Rule: until this install has finished its first read of the container,
+      settings changes are not stamped; at that first read the account's settings win if any exist, otherwise
+      the local ones are stamped then. On a launch with an empty store and iCloud available the app waits a few
+      seconds for that first read before it shows the guide (a file with a finished guide skips it).
+      *Also in S2:* a SleepCore test of `Jokers.apply` with two bought jokers of one kind in one month (possible
+      after a merge); the owner's part – the iCloud container may have to be created on developer.apple.com
+      (Identifiers → iCloud Containers → `iCloud.sk.zrebec.sleephole`, then ticked on the App ID) if the signed
+      device build does not create it by itself: the worker's device build tells.
+      *Check without a second iPhone:* the Mac shows the container under
+      `~/Library/Mobile Documents/iCloud~sk~zrebec~sleephole/` – a second device's file placed into `sync/`
+      there must show up in the phone's town.
+- [x] **S3** – built by one Sonnet worker, reviewed by Opus 2026-10-11 08:33 (section and screenshot looked at;
+      own runs: SleepCore 321, app 452 tests green; i18n 641 keys 0 / 0 / 0; Release compiles). The owner reviewed
+      the texts the same morning: the switch reads "Synchronizovať cez iCloud", the rest as proposed.
+      `SyncSection.swift` (Settings → iCloud, after Apple Health: switch, status line, footer), `SyncEngine.place`
+      / `othersRead` and the pure `SyncStatus`, `Fmt.moment`, the Debug-only "Sync test" screen (Settings →
+      Developer; `-openSyncTest`, `-scrollTo icloud`). **Added on the way (Opus, for the reinstall test): the UI
+      language travels in the sync file and is taken ONLY by a device that has never chosen one** – a device
+      with its own language keeps it. The guide's first page stores a language as soon as the user picks one
+      there. Original plan of this step: Settings (a per-device switch, ON by default, "last synced", a plain explanation), the guide's
+      sentence, the privacy text (the file holds nights, coins and settings with the wake code and the chosen
+      city – never anything from Apple Health; it sits in the user's own iCloud).
+- [x] **installed on the phone 2026-10-11 08:34 on the owner's word** ("install right after S3"); before it the
+      store was pulled into the git-ignored `docs/device-logs/2026-10-11-before-sync/` (46 records, no night or
+      nap running, the night of 2026-10-11 complete).
+- [x] **the owner's test with ONE iPhone, 2026-10-11 ~09:15:** he deleted the app himself (without waiting for part
+      A's confirmation) and asked for a clean install; Opus installed, and **the town, coins and nights came back
+      from iCloud (owner: "the data look OK")** – the first proof of the whole path on a real device: write,
+      upload, listing, download, merge, first contact. On the Mac the container folder showed no `sync/` file at
+      that time, so the Mac is NOT a way to confirm an upload. His remark: the Apple Health values were missing
+      (the switch is per device and off after a reinstall) – he wants them to come back by themselves after a
+      sync, or a button; and build 3 only at the very end.
+- [x] **S4 – review fixes + Apple Health after a sync** (one Sonnet worker, 2026-10-11 09:45–10:10; reviewed by
+      Opus 10:15 – the engine's sync routine read, own runs: SleepCore 326, app 484 tests green, i18n 642 keys
+      0 / 0 / 0, the Release build and the signed device build succeed). A code
+      review of the whole phase (the `code-review` skill, high) found ten points; Opus's verdict on each:
+      **fix now** – (A1) first contact stamped a fresh install's settings with "now" whenever its first read
+      found nothing usable, so defaults could overwrite the real phone's settings: the first-contact stamp becomes
+      a minimal date ordered by the number of finalized nights (reference date + n seconds), and a read with an
+      unusable file is no first contact; (A2) a later correction of the SAME run of a night that lowers its
+      outcome (`-revokeForgiveness`) was undone by the other device's older complete copy: same `startedAt` →
+      the copy with more events wins, before the rank; (A3) a failed sync is retried by the engine (10 s, 30 s,
+      2 min, then every 5 min) and a late first gathering signals a read; (A4) the notification permission is
+      asked whenever a merge finishes the guide, not only during launch; (A5) a restore stamps the town name;
+      (A6) with the switch off nothing watches or downloads, and a stopped listing forgets "gathered"; (A7) one
+      encode per quiet sync. **Accepted, not fixed** – a restore of an older backup and the developer's "show
+      the guide again" are undone by the next sync, because a merge never deletes (to be said in the restore
+      dialog one day). **Owner's request** – (B1) sleep values are read right after a merge that brought nights;
+      (B2) a new install takes over the Health switch at first contact (its position travels as a preference,
+      never health data; afterwards the switch is the device's own); (B3) a button "Načítať spánok znova" in
+      Settings → Apple Health that reads every night again.
+      What S4 changed beyond that list: the Health switch is taken over at first contact ONLY by a device
+      without a finalized night or nap of its own (a new phone, a reinstall) – an established device keeps its
+      deliberate "off" (`AppModel.establishedNights`); during first contact unstamped local settings count as
+      stamped with the minimal first-contact stamp and a tie goes to the account; `SyncMerge.keepsFirst` got
+      the same-run rule (same `startedAt` → more events win) – **with it the order is no longer transitive for
+      one constructed triple** (a complete copy and a longer ruins copy of one run, plus an unfinished copy of
+      another run); every pair is still decided the same way on both devices; documented and pinned by a test;
+      it needs a developer correction of a night that also ran on two devices. `HealthSection.swift` is the
+      Health section moved out of `SettingsView` with the new button. Left open by S4: a file that this build
+      can never use (written by a newer version) keeps that device from ever finishing first contact; the
+      Health permission sheet may appear while the guide is still shown.
+- [ ] **after S4:** install on the phone (the phone was not connected at 10:15 – not installed yet; the build of
+      08:34 / 09:15, without S4, is on it), the owner tries "Načítať spánok znova"; `CURRENT_PROJECT_VERSION`
+      is 3, the commit he asked for is made, the Release archive of 1.0 (3) is placed in Xcode's Organizer;
+      his upload.
+- [ ] **(original checkpoint text) the owner's test with ONE iPhone** (his idea: delete the app and install it again; guide in
+      his iCloud Drive `SleepHole/TEST-ICLOUD-NAVOD.md`): part A – Settings → iCloud says "last synced", the
+      Sync test screen shows iCloud / available / no error, and Opus sees the device's file arrive on the Mac
+      under `~/Library/Mobile Documents/iCloud~sk~zrebec~sleephole/sync/` BEFORE anything is deleted; part B –
+      he exports the JSON backup, deletes the app, Opus installs again, the town / coins / streak / settings /
+      language come back without the guide, the Health switch and iOS permissions do not (by design).
+      Not covered by it: two live devices exchanging changes (automated tests only; a tester with two devices).
+      **Never place a made-up second device's file into his real container – a merge never deletes.**
+      Then build 3 (`CURRENT_PROJECT_VERSION` 3).
+
+**Decided by the owner 2026-10-10 (evening):** variant B – one file per device with a clear merge rule; the time of
+falling asleep is always read from Apple Health and is not written into the synced file; the switch in Settings is
+ON by default; two nights at once on two devices → the better one counts.
+
+**Design notes for S1 (Opus, the worker's brief follows them):** the pure part is `SleepCore/SyncMerge.swift` –
+the choice between two copies of one night (rank complete > unfinished > ruins > missed; then the earlier start,
+the earlier finalisation, a fingerprint – a strict total order, so two devices end with the SAME copy and the
+same building), `earliest` / `latest`, last-writer-wins by a stamp, and "the same moment" (less than a second
+apart – old backups cut times to whole seconds). The app part (`SleepHole/Persistence/Sync.swift`, `AppModel`):
+a sync file = the backup without debug nights, without running nights, without the eight sleep fields, without
+the per-device switches (Health, language), encoded with exact dates; `mergeSync` never deletes, never runs
+during a night, keeps a local night's sleep values, unions spends / jokers / schedule changes, takes settings
+and the town name from the newest real change (new stamps `AppSettings.changedAt`,
+`UserProgress.townNameChangedAt` – a device that merely opened the app must not overwrite newer settings), and
+`coins` never drops below 0. Known and accepted: nothing is ever deleted through sync (a restored older backup
+gets the other devices' nights back); two devices that each buy the same joker offline both keep it; a second,
+untouched device can earn a night for a user who uses the first one – the same loophole as using any other
+device today.
+
+**For S2 (not started):** files outside the container's `Documents` folder (not shown in the Files app), named
+by a per-install id; a new install with an empty store gets the whole town back from the old device's file.
+The Mac signed in to the same iCloud account shows the container under `~/Library/Mobile Documents/` – a second
+"device file" can be placed there to test the merge on the phone without a second iPhone.
+
 ### F6 — Paid Apple Developer Program (owner 2026-10-04: "next phase: F6, analyse it first"; the paid team is confirmed by a signed build)
 **Analysis (Opus, 2026-10-04; sources: the iOS 27 SDK's `AlarmKit.swiftinterface`, Apple's WWDC25 session 230
 "Wake up to the AlarmKit API", the app's `Night/Notifications.swift` and `AppModel.ringAlarm`).**
@@ -1972,7 +2295,7 @@ possible or is your solution better? Then I leave it at Recommended." (Per-weekd
 ### Backlog from the owner (2026-09-30) – to discuss / schedule
 - [ ] **Five ideas from the owner, 2026-10-09 ("for now only a consideration") – nothing approved, nothing started.
       Sizes are Opus's estimates (S = one worker step, M = 2–4 steps with checkpoints, L = a phase of its own).**
-      1. **The town as an island on living water** instead of a slab floating in the sky ("not a void like in
+      1. **The town as an island on living water** (→ designed 2026-10-10 as phase NEXT / ISLAND, §10) instead of a slab floating in the sky ("not a void like in
          Minecraft"): an irregular outline (random is fine as long as the town always fits – else a rectangle), animated
          water around it with a fake glint. **M.** The outline can be derived instead of guessed: the town's footprint
          (`TownLayout`) grown by 2–3 tiles + seeded noise on the rim, never shrinking as the town grows – a pure
@@ -2041,7 +2364,7 @@ possible or is your solution better? Then I leave it at Recommended." (Per-weekd
       a 2nd pause 50 🪙 flat, the building stays complete. Implementation sketch: `NightEventKind.pauseStarted/
       pauseEnded`, the evaluator ignores away time inside a pause ≤ 10 min, the warning flow starts after it;
       `Economy` gets the bonus / spend. Owner decides first.
-- [ ] **R&D centre (owner idea 2026-10-02, OPEN):** start with ~300 🪙, every building (also L1) must be bought /
+- [ ] **R&D centre (owner idea 2026-10-02, OPEN – 2026-10-10 Opus recommends dropping it for the building office, phase NEXT / ECON E2; his word is missing):** start with ~300 🪙, every building (also L1) must be bought /
       "developed" before nights can build it, so coins compete between pauses and growth. Risk: one building per
       level → a monotonous town. Agent ideas (chat 2026-10-02): research *blueprint packs* (3–5 variants at once)
       instead of single buildings; L1 starter pack free; higher-level buildings pay more per night (e.g. L1 100,
@@ -2057,7 +2380,7 @@ possible or is your solution better? Then I leave it at Recommended." (Per-weekd
       effects (flat pitch, ring modulation, radio band-pass), English and Slovak, no files; (b) offline in
       `tools/audio/` – a free synthesiser + our own processing → CAF files. It must be an original voice in that
       spirit, not a copy of the recordings. Opus recommends (a) first. Waits for the owner.
-- [ ] **Building shop (next):** prices L1 100, L2 200, L3 400, L4 1000 (`Economy.price`). Owner's intent: you spend
+- [ ] **Building shop (next; → proposed 2026-10-10 as the "building office", phase NEXT / ECON E2, §10):** prices L1 100, L2 200, L3 400, L4 1000 (`Economy.price`). Owner's intent: you spend
       a long time in villages/suburbs before a block of flats, police comes much later. Open: when to choose
       (at "Začať stavbu"?), what if coins are short (proposal: a free random L1), pay on start or on completion,
       ruin repair price.
@@ -2140,6 +2463,7 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | B27 | M | S | A RINGING system alarm cannot be got rid of (owner 2026-10-08, Developer → System alarm test with the Camera open on the lock screen: "help, the phone keeps ringing"): the alert covered the Camera but he found no way to stop it; opening SleepHole did not stop it ("Cancel the test alarm" is disabled once the time has passed, and `tidySystemAlarm` leaves a ringing alarm alone unless the app is launched cold). A volume button seemed to silence it; Opus relaunched the app remotely (a cold launch cancels every leftover alarm) | the running app must stop a ringing system alarm when it becomes active with no night running, and the test screen needs a "Stop the ringing alarm" button; check on the phone what the system's stop control looks like over the lock-screen Camera (he saw "snooze" before, agenda) |
 | B28 | M | S | The lock-screen warning alarm can ring far longer than its 10 s (owner 2026-10-09: 21.5 s, "it rang the whole time"). The ringing alarm interrupts the app's audio session; with the audio gone iOS suspended the app ~4 s later (seen in the lock-screen lab: no one-second lines for 17.4 s), so nothing stopped the alarm at the deadline. A suspended app also learns late that the screen went off – the end of the trip could be logged late. | A UIKit background task from the start of the warning to its end; verify on the phone with the lab. In work 2026-10-09 (plan §10 LOCK-W). |
 | B29 | S | S | Unlocking the phone straight into another app during a night logs two `.leftApp` events for the same trip (seen 2026-10-09 21:02 in the lock-screen lab: `unlockCandidate` after its 5 s window, then the background decision stamped at the earlier background time). **No second warning is sent** (`alreadyCollapsed` is true once a counted trip is open – checked in `AppModel.append`), but the evaluator starts the trip at the earlier stamp: the free window after the unlock shrinks from 5 s to ~1.6 s and the owner has ~9.6 s after the warning instead of 10. The outcome is right. | In `LifecycleMonitor.didEnterBackground`'s delayed decision emit `.leftApp` only when no real leave is open (`!isAway \|\| lockTrip`); a test with both paths. **Fixed 2026-10-10** (one Sonnet worker, two rounds; reviewed by Opus – SleepCore 274, app 361 tests green): the background decision stays silent while an unlock window is pending or a real leave is open, `pendingUnlock` is cleared when its window ends; a trip that an unlock started begins at the END of the 5 s window whichever timer fires first. Not on the phone yet. |
+| B30 | M | S | **A grown town cannot be seen as a whole, by no gesture** (100-night simulation 2026-10-10; numbers from the replay, §12). Pinch zoom-out is capped at scale 10 (`TownScene.maxScale`); the built-up part needs more than that from about night 45 on (11.7 at 60 nights, 15.1 at 100, 28 after a year; the whole ground 20.1 at 100 nights). The first look is capped at 4.5 and shows 82 / 64 / 40 / 31 % of the built-up width at 10 / 30 / 60 / 100 nights – the owner does not mind that ("we can zoom", 2026-10-07 and 2026-10-10). The camera is also not remembered: after a relaunch it returns to the middle of the ground, and the newest building may be off screen. The header card covers the tallest towers. | Phase NEXT / ZOOM (§10), offered to the owner 2026-10-10, not approved yet: the zoom-out cap grows with the town (fits the whole ground), the app remembers the camera across launches, after a night that added a building the camera glides to it. **No automatic fit of the first look** unless he asks; `-townFit` stays a developer switch for screenshots. |
 | ✅ B18 | H (process) | – | ~70 files had been changed since the last commit (2026-09-30) | done 2026-10-03: 12 commits on `main` (whole files only – what shares files went into one commit); the owner pushes |
 
 **Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
@@ -2231,6 +2555,8 @@ screen checks.
 | 2026-10-09 | **Lock-screen lab, first run (iPhone 16 Pro `iPhone17,1`, iOS 27.0, a 10-minute debug night, log in the git-ignored `docs/device-logs/2026-10-09-lock-lab/`).** (1) **A passive wake lasts 6.2–6.3 s and ends by itself** – tap to wake, raise to wake, charger unplugged, charger plugged in: four of four. **The Camera on the lock screen keeps the screen lit** until the user ends it (16.5 s and 21.2 s without Face ID – no event, as the rule stands). (2) **Movement separates "in the hand" from "lying there" cleanly:** per-second peak of `userAcceleration` at rest ≤ 0.011 g (median 0.003), in the hand median 0.03–0.07 g and above 0.02 g in 76–100 % of the seconds; a single tap on a resting phone gives one peak of 0.05 g. (3) **Signals:** `com.apple.iokit.hid.displayStatus` (1 / 0) and `com.apple.backboardd.backlight.changed` (100 / 0 – a LEVEL, so it may tell a dimmed always-on display from a lit one; to be measured) fire together with `hasBlankedScreen`; `com.apple.springboard.pluggedin` fires on the charger; `com.apple.springboard.DeviceLockStatus` never fired; `UIScreen.brightness` reads 0.00 for the whole locked time, lit or not – useless. (4) With Face ID the detection came 8.05–8.4 s after the screen lit and the app's audio was interrupted 2.5–2.7 s later (`reason=0`); the interruption ended 0.7 s after the app stopped the alarm when the screen was switched off, but after only 1.0–1.3 s in the two rounds where the alarm was left ringing – so the journal cannot say how long the alarm rings; only the owner's ears can. (5) Opus's proposal from the data, NOT decided: without Face ID a lit lock screen counts once it has been lit for 12 s (about twice a passive wake) AND the phone has been moved in that time; with Face ID the 8 s stay. The movement condition keeps every resting phone safe whatever its settings (StandBy, a ringing timer) – the always-on display still has to be measured, because a phone carried in the hand with it must not look "lit". |
 | 2026-10-09 | **Lock-screen lab, second run – the always-on display ON (same phone, 15:59–16:05) and the owner's own quick night of 15:51.** (1) **The dimmed always-on display is reported as dark** (`hasBlankedScreen` 1, about 2.6 s after the lock) – a phone carried with it does not look lit. (2) With it on, a passive wake lasts **7.4 s by `hasBlankedScreen`** (5.2 s by `iokit.hid.displayStatus`, which lags 0.8 s at the start and leads 1.5 s at the end) against 6.2 s with it off – only 0.6 s under the 8 s window of the Face ID rule; `backboardd.backlight.changed` never fires with it on (0 / 100 only with it off) and `UIScreen.brightness` reads the dim level (0.19) instead of 0.00 – neither is usable. (3) A phone held in the hand while Face ID recognises its owner stays lit (attention) and gets the 8 s warning – by the rule. (4) **The hole, measured again:** 51 s of video on the lock screen without Face ID = nothing; the recognition that sharing needs started the trip (late path), and 45 s later the night was `ruins` – the owner shared the video to a messenger from the lock screen and says no notification reached him. (5) **B28:** in the quick night of 15:51 the warning alarm rang 21.5 s; the lab shows the app suspended for 17.4 s from ~4 s after the alarm took the audio. (6) Held or resting, from both runs: resting – 0–1 of 12 seconds above 0.02 g, gravity drift 0.0°; in the hand – 11–12 of 12 seconds, drift ≥ 6.4° even when holding still to share. |
 | 2026-10-10 | **The first real night with CARE-1 (stored as strict – the switch had stayed on) – journal pulled in the morning into the git-ignored `docs/device-logs/`.** `complete`; after the setup the screen did not light up once until the alarm (no screen wake, no lock-screen event, no trip), so nothing of LOCK-W / CARE-1 was exercised by a real night yet. **A labelling flaw found in the journal:** two lone `audioResumed` events without an `audioInterrupted` – `AppModel` logs every report of `AudioKeeper` that does not end in "began" as `.audioResumed`, also "audio configuration change" (a route change) and "media services reset"; fixed together with B29 (own event kinds). What a real night cannot tell today: whether the phone was picked up without its screen lighting – the motion sensor runs only while the lock screen is lit (relevant for CARE-2's "+11 when not moved"). |
+| 2026-10-10 | **A simulation of 100 nights in the simulator (owner: "let us do the simulation of 100 nights"; one Sonnet worker, screenshots in `build/shots/sim100/`, a copy in the owner's iCloud Drive `SleepHole/simulacia-100-noci/`).** `-seedNights N` with its fixed seed gives the same town at 10 / 30 / 60 / 100 nights (about 80 % complete, 10 % unfinished, 10 % ruins). Read from the screenshots – buildings / residents / coins / built nights / streak now / best / level: 10 → 9 / 92 / 1 530 / 9 / 8 / 8 / 2; 30 → 26 / 108 / 4 365 / 26 / 1 / 21 / 3; 60 → 53 / 1 828 / 9 085 / 54 / 18 / 21 / 4; 100 → 93 / 5 192 / 16 160 / 91 / 16 / 21 / 4; achievements 9 of 12. **Findings:** (1) B30 – the first look does not fit the town from ~60 buildings on; (2) no overlaps, cut-off buildings or broken roads at 100 buildings, drawing takes under 25 s on a cold simulator; (3) the map has room for roughly 130–150 buildings – at 100 the built-up part is about 60 % of its width – so the map must grow (or become the island of the backlog) before a town reaches that size; (4) the header's "buildings" and Stats' "built nights" differ by design (a lit-street night upgrades the streets instead of adding a building; a ruin stands in the town but is not a built night) – two numbers a user may find confusing; (5) the residents jump with the first skyscrapers (108 → 1 828 → 5 192); (6) the calendar and the charts show the last 35 / 30 nights only – nothing shows the first two months of a 100-night history; (7) 16 160 coins after 100 nights with today's economy and nothing to spend them on. For the screenshots a developer-only launch argument `-townFit` was added (`TownScene`). |
+| 2026-10-10 | **The 100-night simulation replayed outside the app (Opus; a scratchpad Swift tool over `SleepCore`: the `-seedNights` loop of `AppModel`, `Jokers.apply`, `TownBuilder`, `TownRender`).** The replay gives the screenshots' numbers exactly (buildings / residents 9 / 92, 26 / 108, 53 / 1 828, 93 / 5 192; built nights 9 / 26 / 54 / 91), so what follows is computed, not read off pictures. **Corrections of the row above:** (1) finding (3) is wrong – the map has no fixed size. `TownLayout.nextOrigin` adds blocks in a spiral without a limit and `TownRender.build` draws the ground as the bounding rectangle of the lots and drawn roads plus 2 cells; "about 60 % of its width" was the share of that rectangle in use (58 % of its cells at 100 nights), because every new ring of blocks enlarges the rectangle by a whole strip. For a player whose every night is complete the rings start by night ~25 (2nd), ~90 (3rd), ~195 (4th), ~335 (5th), ~520 (6th). (2) Camera scales for a 402 × 815 pt view (scene pixels per point): the whole ground needs 8.4 / 13.4 / 15.1 / 20.1 at 10 / 30 / 60 / 100 nights (33.5 after a year), the built-up part (roads and buildings, with the frontier ring) 5.8 / 7.4 / 11.7 / 15.1 (28.0). The first look is capped at 4.5 and shows 82 / 64 / 40 / 31 % of the built-up width; **pinch zoom-out is capped at 10, which stops being enough for the built-up part around night 45** (70 % of its width at 100 nights, 37 % after a year) – B30 is rewritten. In plan mode the same day Opus had told the owner "about 10.4 at 100 nights" and "the third ring at about 140 buildings", estimated from a screenshot; both were wrong and are corrected in the proposal document. (3) Residents: `TownStats.population` counts 4 / 20 / 60 for the L1 kinds, 300 for any L4 building and 0 for every L2 and L3 building – that is why 26 buildings hold 108 people. (4) The seeded 100-night town holds 5 hospitals, 4 town halls, 4 fire stations, 4 police stations and 4 schools: the picker draws the level first and L3 has five kinds. (5) A prototype of the proposed residents rule (phase NEXT / POP) gives 175 / 224 / 14 986 / 39 487 for the seeded town and 200–240 thousand after a year of complete nights. **Lesson:** a worker's reading of screenshots is a hypothesis – check it against the code (or replay it) before it is told to the owner as a finding. The proposals that came out of the owner's answers are phase NEXT (§10); the Slovak document is `docs/NAVRH-MESTO-STATISTIKY.md`. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |
 | 2026-09-29 | `swift test` in SleepCore uses Swift Testing (`import Testing`) fine with the Xcode toolchain. |

@@ -30,6 +30,17 @@ final class AppModel {
 
     var settings: AppSettings {
         didSet {
+            // the user changed a setting (not Health or sync, which are per device): stamp it, the newest settings win a
+            // merge of the devices (phase SYNC). A merge, a launch argument or an unchanged value never stamps – and
+            // neither does a device that has not yet finished its first read of the sync place (first contact: its
+            // settings must not overwrite those of the device the user already has). Assigning inside the observer does
+            // not run it again.
+            if !applyingMergedSettings {
+                let changed = !settings.hasSameSyncedValues(as: oldValue)
+                if changed, sync.firstReadDone { settings.changedAt = clock.now }
+                if settings.usesSync != oldValue.usesSync { sync.switchChanged() }   // watching starts / ends with the switch
+                if changed || settings.usesSync != oldValue.usesSync { sync.noteLocalChange() }
+            }
             settings.save()
             // during a night, Settings switch the sound that is playing (a stopped sound stays stopped)
             if active != nil, sleepSoundPlaying,
@@ -41,6 +52,12 @@ final class AppModel {
             if settings.schedule != oldValue.schedule { Notifications.scheduleReminders(settings.schedule) }
         }
     }
+
+    /// True while a merge assigns the other device's settings (they keep their own change stamp).
+    @ObservationIgnored private var applyingMergedSettings = false
+
+    /// Phase SYNC: reads, merges and writes the files of the user's devices at the right moments (never during a night).
+    let sync: SyncEngine
 
     let catalog: Catalog?
     let audio = AudioKeeper()
@@ -68,6 +85,7 @@ final class AppModel {
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
     ///   -openTab town                 start on the Mesto tab
+    ///   -townFit                      screenshots: the Town view frames the built-up part of the town (no zoom cap)
     ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
     ///   -theme system|light|dark      set the appearance (Settings → Theme)
     ///   -screenshot                   no permission alert, no first-run guide (use with a pulled store, tools/sim_shot.sh)
@@ -81,7 +99,7 @@ final class AppModel {
     ///   -skyTime HH:MM                pin the sky's time of day; -skyArc 0.3 / -skyBody sun|moon|none / -skyMoon 0.5
     ///                                 force the drawn arc / body / moon's lit fraction (see `SkyOverrides`)
     ///   -cityQuery Brat               pre-fill Settings → Sky → city so the real Apple Maps search runs
-    ///   -scrollTo sky                 scroll Settings to the Sky section (also: sounds, notifications, health)
+    ///   -scrollTo sky                 scroll Settings to the Sky section (also: sounds, notifications, health, icloud)
     ///   -systemAlarm allowed|denied|notAsked   SIMULATOR ONLY: pretend that consent for the system alarm (a silent
     ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
     ///   -weather clear|cloudy|fog|rain|heavyRain|thunder|snow, -weatherTemp N, -weatherSnowCover   simulate the weather
@@ -95,6 +113,12 @@ final class AppModel {
     ///   -selectChartNight K           Stats: select the night K places before the newest on the sleep chart (0 = newest)
     ///   -healthOn                     switch Settings → Apple Health on for this run (with -sleepSim: seeded nights get sleep data)
     ///   -openSystemAlarmTest          with -openTab settings: open Developer → System alarm test at once
+    ///   -openSyncTest                 DEBUG builds only, with -openTab settings: open Developer → Sync test at once
+    ///   -syncFolder PATH              DEBUG builds only, phase SYNC: sync with the other devices through this plain folder
+    ///                                 (one file per device; without it a real iPhone uses its iCloud container, the
+    ///                                 simulator syncs with nobody)
+    ///   -syncDevice NAME              with -syncFolder: this launch's device id (the file is NAME.json; default: the
+    ///                                 install's random id)
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
                                      args: [String] = ProcessInfo.processInfo.arguments) {
         func value(_ flag: String) -> String? {
@@ -206,7 +230,9 @@ final class AppModel {
          systemAlarm: any SystemAlarm = NoSystemAlarm(), keepAlive: any KeepAlive = NoKeepAlive(), sleepSource: (any SleepSource)? = nil,
          weather: WeatherStore? = nil, timeSensitiveCheck: @escaping @MainActor () async -> Bool = { false },
          protectedDataAvailable: @escaping @MainActor () -> Bool = { UIApplication.shared.isProtectedDataAvailable }, defaults: UserDefaults = .standard,
-         bootDate: @escaping () -> Date? = { DeviceBoot.date() }) {
+         bootDate: @escaping () -> Date? = { DeviceBoot.date() },
+         syncTransport: any SyncTransport = NoSyncTransport(), syncDelay: TimeInterval = 2, syncGuideWait: TimeInterval = 4,
+         syncRetryDelay: @escaping (Int) -> TimeInterval = SyncEngine.standardRetryDelay) {
         self.context = context
         self.container = context.container
         self.catalog = catalog
@@ -220,6 +246,8 @@ final class AppModel {
         self.protectedDataAvailable = protectedDataAvailable
         self.defaults = defaults
         self.bootDate = bootDate
+        self.sync = SyncEngine(transport: syncTransport, defaults: defaults, settleDelay: syncDelay, guideWait: syncGuideWait,
+                               retryDelay: syncRetryDelay)
         let memory = SystemAlarmMemory(defaults: defaults)
         systemAlarmAt = memory.at
         systemAlarmIsSafety = memory.isSafety
@@ -228,6 +256,7 @@ final class AppModel {
         self.settings = settings
         self.window = settings.schedule.window(containing: clock.now, calendar: .current)
         loadProgress()
+        sync.attach(self)
         if initialSettings == nil, let lang = Self.launchLanguage() { language = lang }
         resumeActiveNight()
         if ProcessInfo.processInfo.arguments.contains("-forgiveNight") { forgiveNight() }
@@ -269,6 +298,7 @@ final class AppModel {
     /// The switch in Settings → Apple Health: on = ask for access once (the iOS sheet), then read. Off keeps what is stored.
     func setHealth(on: Bool) async {
         settings.usesHealth = on
+        sync.noteLocalChange()                       // the switch's position travels in the sync file (no stamp: not a setting)
         guard on else { return }
         _ = await sleepSource.requestAccess()
         await refreshSleepIfIdle()
@@ -290,14 +320,33 @@ final class AppModel {
         return (nights.filter { $0.fellAsleepAt != nil }.count, nights.count, nights.contains { $0.sleepReadAt != nil })
     }
 
+    /// How many reads are running right now (a count: a read can start while another one is still waiting for Health).
+    private(set) var sleepReadsRunning = 0
+    var isReadingSleep: Bool { sleepReadsRunning > 0 }
+
+    /// The "Read sleep again" button in Settings → Apple Health is shown while the switch is on and the source can be read.
+    var showsReadSleepAgain: Bool { settings.usesHealth && sleepSource.isAvailable }
+    /// … and works while no night or nap runs and no read is already going on.
+    var canReadSleepAgain: Bool { showsReadSleepAgain && active == nil && !isReadingSleep }
+
+    /// The button: every finalized real night is read once more, also those past their re-read window.
+    func readSleepAgain() async {
+        guard canReadSleepAgain else { return }
+        await refreshSleep(now: clock.now, force: true)
+    }
+
     /// Asks the sleep source about every finalized real night that is due and stores what it says. Does nothing while
     /// Health is switched off or the source is not available. A source that throws leaves that night untouched.
-    func refreshSleep(now: Date) async {
+    /// `force` reads every night, whatever its read time and age (the Settings button) – the stored dates stay as they are
+    /// until the read stores new ones.
+    func refreshSleep(now: Date, force: Bool = false) async {
         guard settings.usesHealth, sleepSource.isAvailable else { return }
+        sleepReadsRunning += 1
+        defer { sleepReadsRunning -= 1 }
         var changed = false
         for night in realResults() {
             // a night stored under another rule version (nil = none) is read again, whatever its age
-            if let read = night.sleepReadAt, night.sleepRuleVersion == SleepAnalysis.ruleVersion {
+            if !force, let read = night.sleepReadAt, night.sleepRuleVersion == SleepAnalysis.ruleVersion {
                 guard read < night.wake.addingTimeInterval(Self.sleepRereadUntil),
                       now.timeIntervalSince(read) >= Self.sleepRereadEvery else { continue }
             }
@@ -406,7 +455,8 @@ final class AppModel {
     }
 
     /// Coin balance 🪙: earned (replayed from the real nights, naps and achievements) − spent (`CoinSpend`).
-    var coins: Int { coinsEarned - coinsSpent }
+    /// Never negative: two devices may have spent the same coins before they synced (phase SYNC).
+    var coins: Int { max(0, coinsEarned - coinsSpent) }
 
     var coinsEarned: Int {
         Economy.earned(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
@@ -543,6 +593,9 @@ final class AppModel {
     // MARK: - guide & first night (stored in the database, `UserProgress`)
 
     private(set) var onboardingDone = false
+    /// The first-run guide is due: not finished, and not held back while a fresh install makes its first read of the
+    /// sync place (a guide finished on another device is then not shown at all – phase SYNC).
+    var needsGuide: Bool { !onboardingDone && !sync.holdsGuide }
     private(set) var firstNightBriefed = false
 
     private func progress() -> UserProgress {
@@ -677,6 +730,7 @@ final class AppModel {
         }
         customTownName = new
         p.townName = new
+        p.townNameChangedAt = clock.now                  // the newest name wins a merge of the devices (phase SYNC)
         save()
         return .renamed
     }
@@ -726,7 +780,8 @@ final class AppModel {
                           scheduleChanges: scheduleChanges().map {
                               .init(at: $0.at, from: $0.from, to: $0.to, free: $0.free, breakKey: $0.breakKey)
                           },
-                          jokers: jokerRecords().map { .init(at: $0.at, tier: $0.tierRaw, firstNight: $0.firstNight) })
+                          jokers: jokerRecords().map { .init(at: $0.at, tier: $0.tierRaw, firstNight: $0.firstNight) },
+                          townNameChangedAt: p.townNameChangedAt, schedulePromptMonth: p.schedulePromptMonth)
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
@@ -739,10 +794,14 @@ final class AppModel {
         p.onboardingCompletedAt = b.onboardingCompletedAt
         p.firstNightBriefingAt = b.firstNightBriefingAt
         if let lang = b.language, AppLanguage(rawValue: lang) != nil { p.languageRaw = lang }
-        if let name = b.townName { p.townName = name }
+        if let name = b.townName {
+            p.townName = name
+            p.townNameChangedAt = clock.now                  // a restore is the user's own act: the name counts as just written
+        }
         if let d = b.lastRenameAt { p.lastRenameAt = d }
         if let d = b.lastFreeRenameAt { p.lastFreeRenameAt = d }
         if let d = b.scheduleCalibrationStart { p.scheduleCalibrationStart = d }
+        if let m = b.schedulePromptMonth { p.schedulePromptMonth = m }
         // the backup is the whole truth: an older one (no spends / changes) had none
         try context.delete(model: CoinSpend.self)
         for s in b.spends ?? [] { context.insert(CoinSpend(at: s.at, amount: s.amount, reason: s.reason)) }
@@ -772,6 +831,87 @@ final class AppModel {
             case .tooNew: L("The backup is from a newer version of SleepHole.")
             }
         }
+    }
+
+    // MARK: - sync between the user's devices (phase SYNC, step S1 – the transport is S2)
+
+    /// What this device offers the others: the whole state without debug and running nights, sleep values and the
+    /// per-device settings.
+    func makeSyncFile() -> BackupFile { makeBackup().forSync() }
+
+    /// Merges the sync files of other devices into this store; returns whether anything changed. A merge only adds or
+    /// replaces (see `SyncMerge`), the files are merged one after another and their order does not matter. Refused while
+    /// a night or nap runs; a file from a newer version of the app is skipped.
+    ///
+    /// `firstContactStamp` is passed by the engine at this install's FIRST CONTACT only, while the settings carry no stamp
+    /// yet: for the comparison they then count as stamped with it (`firstContactStamp()`), and the account wins a tie.
+    /// Nothing is written into the settings here – `stampSettingsForSync(at:)` does that after the last file.
+    ///
+    /// When a night was added or replaced and Apple Health is on, its sleep values are read at once (not awaited): a new
+    /// install or a second device has none for the nights it just received – they are never part of a sync file.
+    @discardableResult
+    func mergeSync(_ files: [BackupFile], firstContactStamp: Date? = nil) throws -> Bool {
+        guard active == nil else { throw BackupError.nightRunning }
+        let guideWasDone = onboardingDone
+        var changed = false, nightsChanged = false
+        for file in files where file.version <= BackupFile.currentVersion {
+            let merged = try SyncStore.merge(file, into: context, progress: progress())
+            nightsChanged = nightsChanged || merged.nightsChanged
+            changed = mergeSyncSettings(file.settings, firstContactStamp: firstContactStamp) || merged.changed || changed
+        }
+        guard changed else { return false }
+        loadProgress()
+        rebuildTown()
+        refresh()                                        // `shownResult` stays: the user may be reading this morning's result
+        if nightsChanged, settings.usesHealth { Task { await refreshSleepIfIdle() } }
+        // the guide was finished on another device: the notification permission is asked here, the guide would have done it
+        if !guideWasDone, onboardingDone, let adopted = onGuideAdoptedBySync { Task { await adopted() } }
+        return true
+    }
+
+    /// Called (not awaited) when a merge finishes the first-run guide on this device because another device had finished
+    /// it. `SleepHoleApp` asks for the notification permission there – the guide itself asks when the user goes through it.
+    @ObservationIgnored var onGuideAdoptedBySync: (@MainActor () async -> Void)?
+
+    /// The stamp this install's settings get at first contact when the user has changed nothing since: older than any
+    /// real change, higher the more finalized, non-debug nights and naps the device holds (`SyncMerge.firstContactStamp`).
+    /// Counted BEFORE the first merge – a device that has just received nights from the account is not "established".
+    func firstContactStamp() -> Date {
+        SyncMerge.firstContactStamp(established: establishedNights)
+    }
+
+    /// How many finalized, non-debug nights and naps this device's own store holds – how established the device is. Zero
+    /// means a new phone or a reinstall (`SyncEngine` takes over the Health switch only then).
+    var establishedNights: Int {
+        records().filter { !$0.isDebug && $0.isFinalized }.count
+    }
+
+    /// The newest settings win; the Health switch is per device and stays. Assigning them runs the usual `didSet`
+    /// (saving, the reminders when the schedule changed) but not the stamp – the winner keeps its own `changedAt`.
+    private func mergeSyncSettings(_ remote: AppSettings, firstContactStamp: Date?) -> Bool {
+        let remoteWins: Bool
+        if let first = firstContactStamp, settings.changedAt == nil {
+            remoteWins = remote.changedAt.map { $0 >= first } ?? false
+        } else {
+            remoteWins = SyncMerge.newer((false, settings.changedAt), (true, remote.changedAt)).value
+        }
+        guard remoteWins else { return false }
+        var merged = remote
+        merged.healthOn = settings.healthOn
+        merged.syncOff = settings.syncOff
+        guard merged != settings else { return false }
+        applyingMergedSettings = true
+        settings = merged
+        applyingMergedSettings = false
+        return true
+    }
+
+    /// First contact (`SyncEngine`): no setting of any other device was newer than `firstContactStamp()`, so this
+    /// device's own settings get that stamp. Not a change of the user – it neither stamps twice nor starts a sync.
+    func stampSettingsForSync(at stamp: Date) {
+        applyingMergedSettings = true
+        settings.changedAt = stamp
+        applyingMergedSettings = false
     }
 
     /// Automatic backup after every finished night → Documents (Files app) and a safe copy for migrations.
@@ -1616,6 +1756,7 @@ final class AppModel {
         stopServices()
         active = nil
         collapseNoticeAt = nil                       // stopServices already withdrew the pending notice
+        sync.activityEnded()                         // a sync owed since the night began runs now
         endLockWarning()
         settleSystemAlarm(for: rec)
         shownResult = rec
@@ -1654,5 +1795,8 @@ final class AppModel {
         }
     }
 
-    private func save() { try? context.save() }
+    private func save() {
+        try? context.save()
+        sync.noteLocalChange()
+    }
 }

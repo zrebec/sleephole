@@ -27,7 +27,7 @@ struct GuideTests {
 
     func store() -> ModelContainer {
         try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
-                            configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+                            configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
     }
 
     func render<V: View>(_ view: V, _ model: AppModel) {

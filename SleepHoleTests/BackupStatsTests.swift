@@ -19,7 +19,7 @@ struct BackupStatsTests {
 
     func store() -> ModelContainer {
         try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
-                            configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+                            configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
     }
 
     func model(_ c: ModelContainer, at now: Date) -> (AppModel, FakeClock) {
@@ -52,6 +52,8 @@ struct BackupStatsTests {
         for d in 1...4 { night(m1, c1, day: d) }
         m1.completeOnboarding()
         m1.settings.alarmSound = .ode
+        m1.renameTown("Dreamland")                                       // first naming: free, stamps the name (phase SYNC)
+        m1.answerMonthlyPrompt(adjust: false)                            // stores this month as answered
         let data = try m1.makeBackup().encoded()
 
         let b = store()
@@ -61,6 +63,12 @@ struct BackupStatsTests {
         #expect(m2.onboardingDone && m2.settings.alarmSound == .ode)
         #expect(m2.townSnapshot?.buildings.map(\.buildingId) == m1.townSnapshot?.buildings.map(\.buildingId))
         #expect(m2.records().first?.log.has(.confirmedByCode) == true)
+        // the two fields phase SYNC added to the backup
+        let b1 = m1.makeBackup(), b2 = m2.makeBackup()
+        #expect(b1.townNameChangedAt != nil && b1.schedulePromptMonth == "2026-10")
+        #expect(m2.customTownName == "Dreamland" && m2.schedulePromptAnswered == "2026-10")
+        // a restore is the user's own act: the restored name is stamped with the moment of the restore (not the old stamp)
+        #expect(b2.townNameChangedAt == date(9, 12) && b2.schedulePromptMonth == b1.schedulePromptMonth)
     }
 
     @Test func restoreIsRefusedDuringANightAndForNewerFiles() throws {

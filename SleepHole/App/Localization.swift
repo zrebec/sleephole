@@ -84,6 +84,13 @@ enum Fmt {
         return Lang.current == .sk ? "\(day) \(clock)" : L("\(day) at \(clock)")
     }
 
+    /// A moment in the recent past for a status line: today → the clock time ("14:05"), another day → day, month and
+    /// time ("30. 9. 14:05" / "9/30 2:05 PM").
+    static func moment(_ date: Date, now: Date, calendar: Calendar = .current) -> String {
+        if calendar.isDate(date, inSameDayAs: now) { return time(date) }
+        return "\(dayMonth(NightKey(date: date, calendar: calendar))) \(time(date))"
+    }
+
     nonisolated(unsafe) private static var cache: [String: DateFormatter] = [:]
 
     private static func formatter(seconds: Bool) -> DateFormatter {

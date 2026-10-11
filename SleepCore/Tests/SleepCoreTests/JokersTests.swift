@@ -87,6 +87,44 @@ import Testing
         #expect(out.map(\.key) == [key(1), key(2), key(3), key(4)])
     }
 
+    /// Phase SYNC: two devices of one user may each have bought the same kind of joker in the same month (the sync
+    /// merges both). `Jokers.apply` was never meant to see that, so this pins what it does today: nothing crashes, every
+    /// joker in the list is applied (the month rule lives in `block` – a UI check, not in `apply`), overlapping ones
+    /// simply cover the union of their nights, and the list of uses keeps all of them, oldest first.
+    @Test func twoBoughtJokersOfOneKindInOneMonthAreBothApplied() {
+        // 1–2 complete, 3–6 missed, 7 complete, 8–13 missed, 14 complete
+        let r = results([(1, .complete), (2, .complete), (7, .complete), (14, .complete)])
+
+        // two silvers, overlapping: 3–5 and 4–6 → 3–6 are protected, 8–13 are not
+        let overlapping = [JokerUse(tier: .silver, firstNight: key(3)), JokerUse(tier: .silver, firstNight: key(4))]
+        let a = apply(r, manual: overlapping, last: 14)
+        #expect(a.uses.filter { $0.tier == .silver } == overlapping)                          // both kept
+        #expect((3...6).allSatisfy { d in a.results.first { $0.key == key(d) }?.outcome == .excused })
+        #expect(a.results.first { $0.key == key(7) }?.outcome == .complete)
+        // the automatic bronze still takes the first missed night after that (8), once for the month
+        #expect(a.uses.filter { $0.automatic }.map(\.firstNight) == [key(8)])
+        #expect(a.results.first { $0.key == key(9) }?.outcome != .excused)
+
+        // two silvers, apart: 3–5 and 8–10 → both ranges are protected (night 6, the first one missed after the first silver,
+        // gets the month's automatic bronze)
+        let apart = [JokerUse(tier: .silver, firstNight: key(8)), JokerUse(tier: .silver, firstNight: key(3))]
+        let b = apply(r, manual: apart, last: 14)
+        #expect(b.uses.filter { $0.tier == .silver }.map(\.firstNight) == [key(3), key(8)])   // sorted, both there
+        #expect(((3...5).map { $0 } + (8...10).map { $0 }).allSatisfy { d in
+            b.results.first { $0.key == key(d) }?.outcome == .excused
+        })
+        #expect(b.uses.filter { $0.automatic }.map(\.firstNight) == [key(6)])                // the bronze took night 6 …
+        #expect((11...13).allSatisfy { d in b.results.first { $0.key == key(d) }?.outcome != .excused })   // … so 11–13 break it
+
+        // two bronzes bought by hand in one month: both protect their night, and no automatic bronze is added on top
+        let bronzes = [JokerUse(tier: .bronze, firstNight: key(3)), JokerUse(tier: .bronze, firstNight: key(8))]
+        let c = apply(r, manual: bronzes, last: 14)
+        #expect(c.uses == bronzes)
+        #expect([3, 8].allSatisfy { d in c.results.first { $0.key == key(d) }?.outcome == .excused })
+        #expect([4, 5, 6, 9].allSatisfy { d in c.results.first { $0.key == key(d) }?.outcome != .excused })
+        #expect(Progression.currentStreak(c.results, lastNight: key(14), calendar: bratislava) == 1)
+    }
+
     @Test func blockingRules() {
         let used = [JokerUse(tier: .bronze, firstNight: key(4), automatic: true)]
         #expect(Jokers.block(.bronze, firstNight: key(20), uses: used, coins: 0) == .alreadyUsedThisMonth)

@@ -61,7 +61,7 @@ struct SkyCityTests {
 
     func makeModel(city: SkyCity? = nil, language: AppLanguage = .en) -> (AppModel, ModelContainer) {
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
-                                    JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+                                    JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         var s = AppSettings()
         s.wakeCode = "1234"
         s.city = city

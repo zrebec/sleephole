@@ -327,7 +327,7 @@ struct LockScreenTests {
     func model(at now: Date, alarm: any SystemAlarm = NoSystemAlarm(),
                keepAlive: any KeepAlive = NoKeepAlive(), strict: Bool = true) -> (AppModel, FakeClock) {
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
-                                    configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+                                    configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let clock = FakeClock(now)
         var s = AppSettings()
         s.schedule = Schedule(bedtime: TimeOfDay(22, 30), wake: TimeOfDay(6, 30))

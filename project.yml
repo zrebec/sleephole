@@ -13,8 +13,8 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "1.0"
-    # every upload to App Store Connect / TestFlight needs a higher CURRENT_PROJECT_VERSION (build 1 is uploaded)
-    CURRENT_PROJECT_VERSION: "2"
+    # every upload to App Store Connect / TestFlight needs a higher CURRENT_PROJECT_VERSION (builds 1 and 2 are uploaded)
+    CURRENT_PROJECT_VERSION: "3"
 targets:
   SleepHole:
     type: application
@@ -63,6 +63,11 @@ targets:
         com.apple.developer.weatherkit: true
         # HEALTH: read the owner's sleep from Apple Health (read only – nothing is written)
         com.apple.developer.healthkit: true
+        # SYNC: one town on all of a user's devices – every device writes its own file into the app's iCloud Drive container
+        # (outside Documents, not shown in Files); the container must exist on developer.apple.com and be ticked on the App ID
+        com.apple.developer.icloud-container-identifiers: [iCloud.sk.zrebec.sleephole]
+        com.apple.developer.icloud-services: [CloudDocuments]
+        com.apple.developer.ubiquity-container-identifiers: [iCloud.sk.zrebec.sleephole]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: sk.zrebec.sleephole
