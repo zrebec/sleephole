@@ -259,9 +259,14 @@ struct AppModelTests {
         #expect(h.model.streak == 0)
     }
 
-    @Test func confirmingAfterTheAlarmStoppedIsUnfinished() {
+    @Test func confirmingAfterTheAlarmStoppedIsStillCompleteWithinTenMinutes() {
         let h = harness(at: date(5, 12))
-        #expect(playNight(h, day: 5, confirmAfterWake: 2 * 60 + 16) == .unfinished)   // owner test 29.09 19:06
+        #expect(playNight(h, day: 5, confirmAfterWake: 2 * 60 + 16) == .complete)     // was unfinished until 2026-10-12
+    }
+
+    @Test func confirmingMoreThanTenMinutesAfterTheWakeTimeIsUnfinished() {
+        let h = harness(at: date(5, 12))
+        #expect(playNight(h, day: 5, confirmAfterWake: 10 * 60 + 1) == .unfinished)
     }
 
     @Test func coinsForRealNightsOnly() {

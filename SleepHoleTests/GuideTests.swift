@@ -77,8 +77,20 @@ struct GuideTests {
         #expect(GuideText.night.contains("10 sekúnd"))
         #expect(GuideText.alarm.contains("2 minúty") && GuideText.alarm.contains("30 minút"))
         #expect(GuideText.outcomes.count == 3 && GuideText.levels.count == 4)
+        #expect(GuideText.outcomes[0].1.contains("10 minút"))
         #expect(GuideText.levels[1].when.contains("5 nocí") && GuideText.levels[3].when.contains("30 nocí"))
         #expect(Plural.minutes(60) == "1 minútu" && Plural.seconds(3) == "3 sekundy" && Plural.nights(1) == "1 noc")
+    }
+
+    @Test func theLateConfirmationLineReadsInBothLanguages() {
+        defer { Lang.current = .en }
+        func line() -> String {
+            L("You confirmed \(Plural.minutes(16 * 60)) after the alarm – within \(Plural.minutes(NightWindow.onTimeConfirm)) the building would be complete.")
+        }
+        Lang.current = .en
+        #expect(line() == "You confirmed 16 minutes after the alarm – within 10 minutes the building would be complete.")
+        Lang.current = .sk
+        #expect(line() == "Vstávanie bolo potvrdené 16 minút po budíku – do 10 minút by bola budova hotová.")
     }
 
     @Test func guideTextInEnglish() {
@@ -86,6 +98,7 @@ struct GuideTests {
         #expect(GuideText.startWindow.contains("10 minutes") && GuideText.startWindow.contains("5 minutes"))
         #expect(GuideText.night.contains("10 seconds"))
         #expect(GuideText.alarm.contains("2 minutes") && GuideText.alarm.contains("30 minutes"))
+        #expect(GuideText.outcomes[0].1 == "confirmed within 10 minutes after wake-up")
         #expect(GuideText.levels[1].when == "after 5 nights" && GuideText.levels[0].what == "houses and apartment blocks")
         #expect(Plural.minutes(60) == "1 minute" && Plural.seconds(3) == "3 seconds" && Plural.nights(1) == "1 night")
     }

@@ -19,12 +19,22 @@ import Testing
         #expect(w.wake > w.bedtime)
     }
 
+    @Test func minutesLateIsNilOnTimeAndWholeMinutesAfter() {
+        #expect(night.minutesLate(confirmedAt: nil) == nil)
+        #expect(night.minutesLate(confirmedAt: night.wake + 9 * 60 + 59) == nil)
+        #expect(night.minutesLate(confirmedAt: night.wake + 10 * 60) == nil)
+        #expect(night.minutesLate(confirmedAt: night.wake + 10 * 60 + 1) == 10)
+        #expect(night.minutesLate(confirmedAt: night.wake + 16 * 60 + 40) == 17)
+        #expect(night.minutesLate(confirmedAt: night.wake + 60 * 60) == 60)
+        #expect(SleepRules().alarmDuration == 2 * 60 && NightWindow.onTimeConfirm == 10 * 60)   // two separate constants
+    }
+
     @Test func derivedWindows() {
         #expect(night.bedtime == at(2026, 9, 28, 22, 30))
         #expect(night.wake == at(2026, 9, 29, 6, 30))
         #expect(night.startOpens == at(2026, 9, 28, 22, 20))      // bedtime − 10 min (owner rule)
         #expect(night.confirmOpens == at(2026, 9, 29, 6, 0))
-        #expect(night.confirmOnTimeUntil == at(2026, 9, 29, 6, 32))       // only while the alarm rings
+        #expect(night.confirmOnTimeUntil == at(2026, 9, 29, 6, 40))       // 10 min (the alarm itself rings 2)
         #expect(night.confirmLateUntil == at(2026, 9, 29, 7, 30))
         #expect(night.duration == 8 * 3600)
     }

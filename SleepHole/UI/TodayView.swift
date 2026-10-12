@@ -684,6 +684,10 @@ struct ResultView: View {
                     BuildingImage(id: rec.buildingId, progress: 0.6)
                     Text(L("Unfinished 🚧")).font(.largeTitle.bold())
                     Text(L("\(name) is waiting – your next good night will finish it.")).multilineTextAlignment(.center)
+                    if let late = rec.window.minutesLate(confirmedAt: rec.confirmedAt), !rec.isNap {
+                        Text(L("You confirmed \(Plural.minutes(TimeInterval(late) * 60)) after the alarm – within \(Plural.minutes(NightWindow.onTimeConfirm)) the building would be complete."))
+                            .font(.footnote).cardCaption().multilineTextAlignment(.center)
+                    }
                 case .ruins, .missed, .excused:
                     BuildingImage(id: (model.catalog?[rec.buildingId]?.footprint.first ?? 1) == 2 ? "o-ruin-2" : "o-ruin-1")
                     Text(L("Not this time")).font(.largeTitle.bold())

@@ -34,7 +34,7 @@ struct StatsView: View {
                         HStack {
                             metric(L("Build start"), s.averageStart.map(Fmt.time) ?? "–")
                             Divider()
-                            metric(L("Wake-up"), s.averageWake.map(Fmt.time) ?? "–")
+                            metric(L("Getting up"), s.averageWake.map(Fmt.time) ?? "–")
                         }
                         if showsSleep(s) {
                             Divider()

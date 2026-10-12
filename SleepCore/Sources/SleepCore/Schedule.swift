@@ -82,7 +82,7 @@ public struct NightWindow: Codable, Equatable, Sendable {
     public static let startLead: TimeInterval = 10 * 60           // "Začať stavbu" from bedtime − 10 min (owner, critical)
     public static let earlyStartLead: TimeInterval = 3 * 3600    // early start from bedtime − 3 h, until the normal start opens (owner 2026-10-11)
     public static let earlyConfirm: TimeInterval = 30 * 60        // "Vstal som" from wake − 30 min
-    public static let onTimeConfirm: TimeInterval = 2 * 60        // on time only while the alarm rings (owner, = alarmDuration)
+    public static let onTimeConfirm: TimeInterval = 10 * 60       // complete when confirmed within 10 min of the wake time (owner 2026-10-12; was 2 min). Independent of `SleepRules.alarmDuration` (the alarm still rings 2 min)
     public static let lateConfirm: TimeInterval = 60 * 60         // night is over at wake + 60 min
 
     public let key: NightKey
@@ -103,5 +103,13 @@ public struct NightWindow: Codable, Equatable, Sendable {
     public var confirmOpens: Date { wake - (earlyConfirmOverride ?? Self.earlyConfirm) }
     public var confirmOnTimeUntil: Date { wake + Self.onTimeConfirm }
     public var confirmLateUntil: Date { wake + Self.lateConfirm }
+
+    /// Whole minutes by which a confirmation missed the on-time window, or nil when it was on time (or unknown).
+    /// What the "unfinished" result screen tells the user; never 0 (a late confirmation is > `onTimeConfirm` after
+    /// the wake time, so at least 10).
+    public func minutesLate(confirmedAt: Date?) -> Int? {
+        guard let confirmedAt, confirmedAt > confirmOnTimeUntil else { return nil }
+        return max(1, Int((confirmedAt.timeIntervalSince(wake) / 60).rounded()))
+    }
     public var duration: TimeInterval { wake.timeIntervalSince(bedtime) }
 }

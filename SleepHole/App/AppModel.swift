@@ -89,7 +89,8 @@ final class AppModel {
     ///   -startNap                     screenshots: open the nap window around now and start a nap
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
-    ///   -showResult                   SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
+    ///   -showResult [unfinished]      SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
+    ///                                 (with `unfinished`: of the newest unfinished one, which was confirmed 30 min after the alarm)
     ///   -openTab town                 start on the Mesto tab
     ///   -townFit                      screenshots: the Town view frames the built-up part of the town (no zoom cap)
     ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
@@ -271,8 +272,10 @@ final class AppModel {
         rebuildTown()
         refresh()
         #if targetEnvironment(simulator)
+        let wantedResult: Outcome = DevArgs.list.firstIndex(of: "-showResult").map {
+            DevArgs.list.indices.contains($0 + 1) && DevArgs.list[$0 + 1] == "unfinished" } == true ? .unfinished : .complete
         if DevArgs.list.contains("-showResult"), active == nil, initialSettings == nil,
-           let rec = realResults().last(where: { $0.outcome == .complete }) {       // store screenshots: the morning screen
+           let rec = realResults().last(where: { $0.outcome == wantedResult }) {       // store screenshots: the morning screen
             let entry = Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
                 .last { $0.key.description == rec.keyString }
             shownResult = rec

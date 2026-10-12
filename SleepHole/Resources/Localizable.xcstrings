@@ -2261,6 +2261,22 @@
         }
       }
     },
+    "Getting up": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Getting up"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vstávanie"
+          }
+        }
+      }
+    },
     "Privacy policy": {
       "localizations": {
         "en": {
@@ -5409,6 +5425,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stavať môžeš od %1$@ do %2$@ · skôr už od %3$@"
+          }
+        }
+      }
+    },
+    "You confirmed %@ after the alarm – within %@ the building would be complete.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You confirmed %@ after the alarm – within %@ the building would be complete."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vstávanie bolo potvrdené %1$@ po budíku – do %2$@ by bola budova hotová."
           }
         }
       }
