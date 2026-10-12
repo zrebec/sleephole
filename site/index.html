@@ -3,87 +3,208 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SleepHole – Support</title>
-<meta name="description" content="SleepHole turns a regular bedtime into a small town. Help, answers and contact.">
+<title>SleepHole – Sleep on time, grow a town</title>
+<meta name="description" content="SleepHole turns a regular bedtime into a small town. Start a building at bedtime, wake up to a finished house. No account, no ads, no tracking. Help, answers and contact.">
+<meta name="theme-color" content="#070a1c">
+<link rel="canonical" href="https://zrebec.github.io/sleephole/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SleepHole – Sleep on time, grow a town">
+<meta property="og:description" content="Start a building when you go to bed. Wake up to a finished house. Night by night, a small town grows.">
+<meta property="og:url" content="https://zrebec.github.io/sleephole/">
+<meta property="og:image" content="https://zrebec.github.io/sleephole/icon.png">
 <link rel="icon" href="icon.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main>
-  <header>
-    <img src="icon.png" alt="">
-    <div>
-      <h1>SleepHole</h1>
-      <p>Sleep on time, grow a town</p>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="band">
+  <a class="icon" href="./" aria-label="SleepHole, home"><img src="icon.png" alt="" width="44" height="44"></a>
+  <p class="title">SleepHole<span class="tag"> · Sleep on time, grow a town</span></p>
+  <nav aria-label="Main">
+    <a href="#support">Support</a>
+    <a href="privacy.html">Privacy</a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="top">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="pill">For iPhone · Coming soon to the App Store</p>
+        <h1 id="top">SleepHole</h1>
+        <p class="tagline">Sleep on time, grow a town</p>
+        <p class="lead">Start a building when you go to bed. Let your phone rest. Wake up to a finished house. Night by night, a small town grows.</p>
+        <div class="actions">
+          <a class="btn primary" href="#how">See how it works</a>
+          <a class="btn" href="#support">Support</a>
+        </div>
+        <p class="small">No account. No ads. No tracking. Pay once.</p>
+        <p class="small">iPhone (iOS 18 or later), in English and Slovak</p>
+      </div>
+      <div class="hero-shot">
+        <img class="shot" src="img/01-town.jpg" width="660" height="1434" alt="The Town tab of SleepHole: a small isometric low-poly town with houses and roads, grown over many nights.">
+      </div>
     </div>
-  </header>
-
-  <section>
-    <p class="lead">In the evening you start a building. The phone rests for the night. In the morning you confirm that you are up, and the building is finished. Night by night a small town grows.</p>
-    <p>SleepHole is an app for iPhone (iOS 18 or later), in English and Slovak. No account, no ads, no tracking.</p>
   </section>
 
-  <section>
-    <h2>Contact</h2>
-    <p>Questions, a bug, an idea? Write to <a href="mailto:zrebec@zrebec.sk">zrebec@zrebec.sk</a>. Every message is read.</p>
-    <p class="muted">It helps to say which iPhone and iOS version you use and what you expected to happen.</p>
+  <section class="gallery" aria-labelledby="gallery-h">
+    <div class="wrap">
+      <h2 id="gallery-h">A look inside</h2>
+    </div>
+    <div class="wrap">
+      <ul class="shots" tabindex="0" aria-label="Screenshots of the app, scrolls sideways">
+        <li><figure>
+          <img class="shot" src="img/01-town.jpg" width="660" height="1434" loading="lazy" alt="The Town tab with a grown isometric low-poly town: many small buildings along roads.">
+          <figcaption>Night by night, a town grows</figcaption>
+        </figure></li>
+        <li><figure>
+          <img class="shot" src="img/02-today.jpg" width="660" height="1434" loading="lazy" alt="The Today screen: the grey sleep-buddy cat, the streak and the coin count, and two buttons, Go to sleep and Rest.">
+          <figcaption>Your evening starts with one tap</figcaption>
+        </figure></li>
+        <li><figure>
+          <img class="shot" src="img/03-night.jpg" width="660" height="1434" loading="lazy" alt="The night screen: a building under construction with a crane, and the sleeping cat.">
+          <figcaption>The phone rests while the crane works</figcaption>
+        </figure></li>
+        <li><figure>
+          <img class="shot" src="img/04-morning.jpg" width="660" height="1434" loading="lazy" alt="The morning result: the finished building and the coins earned for the night.">
+          <figcaption>Wake up to a finished building</figcaption>
+        </figure></li>
+        <li><figure>
+          <img class="shot" src="img/05-stats.jpg" width="660" height="1434" loading="lazy" alt="Statistics: the streak, the coins and a calendar of nights.">
+          <figcaption>See how your nights went</figcaption>
+        </figure></li>
+        <li><figure>
+          <img class="shot" src="img/06-town-night.jpg" width="660" height="1434" loading="lazy" alt="A big town in dark mode, with lit windows against the night.">
+          <figcaption>Your town, day and night</figcaption>
+        </figure></li>
+      </ul>
+    </div>
   </section>
 
-  <section>
-    <h2>Does the app have to stay open all night?</h2>
-    <p>Yes. After the setup time SleepHole has to stay the app in front. Lock the phone as usual – the screen can be off. If you leave the app, a reminder tells you how many seconds you have to come back. Phone calls never count against you. Closing the app (swiping it away) counts as leaving it.</p>
+  <section class="block" id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <h2 id="how-h">How a night works</h2>
+      <ol class="steps">
+        <li><h3>Set it once</h3><p>Pick your bedtime and your wake-up time.</p></li>
+        <li><h3>Go to sleep</h3><p>Around your bedtime tap “Go to sleep”. You get a few minutes to finish what you are doing.</p></li>
+        <li><h3>Let the phone rest</h3><p>SleepHole stays open; the screen can be off. If you leave the app, it reminds you and gives you a moment to come back.</p></li>
+        <li><h3>Wake up</h3><p>When the alarm rings, shake the phone or type your wake code. The building stands.</p></li>
+      </ol>
+    </div>
   </section>
 
-  <section>
-    <h2>Tonight’s building was not finished. Why?</h2>
-    <p>You were out of the app longer than the reminder allows, or the night was cancelled. The building stays as a ruin and a later good night repairs it. If you need the phone at night, use the Pause on the night screen: ten minutes, and the first one each night is free.</p>
+  <section class="block" aria-labelledby="gentle-h">
+    <div class="wrap">
+      <h2 id="gentle-h">Gentle, not strict</h2>
+      <ul class="ticks">
+        <li>A look at the lock screen brings only a calm reminder. Strict mode is there for those who want it.</li>
+        <li>One pause per night is free, and phone calls never count against you.</li>
+        <li>Jokers protect your streak when you are ill or away.</li>
+        <li>No shaming. When the app is not sure, it decides in your favour.</li>
+      </ul>
+    </div>
   </section>
 
-  <section>
-    <h2>The reminder did not arrive during a Focus</h2>
-    <p>Open iOS Settings → Notifications → SleepHole and switch on Time Sensitive Notifications. While that switch is off, the Today screen shows an orange triangle.</p>
+  <section class="block" aria-labelledby="more-h">
+    <div class="wrap">
+      <h2 id="more-h">More than a timer</h2>
+      <div class="two">
+        <ul class="ticks">
+          <li>A sleep buddy – a cat that dozes with you.</li>
+          <li>Sleep sounds: brown, pink and white noise, rain, and sound stories that are different every night.</li>
+          <li>More than ten alarm sounds, from birdsong to a music box.</li>
+          <li>An afternoon nap of 30 or 60 minutes.</li>
+        </ul>
+        <ul class="ticks">
+          <li>Coins, streaks, achievements, and levels that unlock bigger buildings.</li>
+          <li>The real sun and moon over your city, and today's weather.</li>
+          <li>Statistics for every night. If you allow it, SleepHole reads your sleep data from Apple Health to show when you actually fell asleep.</li>
+          <li>Your town on all your devices through your own iCloud.</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <h2>Will the alarm ring in silent mode?</h2>
-    <p>Yes. The app’s alarm rings with the ringer switched off. On iOS 26 or later SleepHole can also set a backup system alarm that rings even if iOS closed the app during the night – allow it when the app asks.</p>
-    <p>In the morning shake the phone, or type the code from Settings → Morning confirmation.</p>
+  <section class="private" aria-labelledby="private-h">
+    <div class="wrap">
+      <h2 id="private-h">A sleep app that knows nothing about you</h2>
+      <ul class="ticks">
+        <li>No account, no ads, no analytics, no tracking.</li>
+        <li>Your nights stay on your iPhone and, if you want, in your own iCloud.</li>
+        <li>Apple Health data is only read on the device and never leaves it.</li>
+        <li>Pay once. No subscription, no in-app purchases.</li>
+      </ul>
+      <a class="btn" href="privacy.html">Read the privacy policy</a>
+    </div>
   </section>
 
-  <section>
-    <h2>I am ill or away</h2>
-    <p>Tap “Ill or on holiday?” on the Today screen. A joker protects your streak: the bronze one is free once a month, the silver and the gold one cost coins. If you simply miss a night, this month’s bronze joker is used by itself.</p>
+  <section class="block" id="support" aria-labelledby="support-h">
+    <div class="wrap">
+      <h2 id="support-h">Support</h2>
+      <div class="contact">
+        <h3>Contact</h3>
+        <p>Questions, a bug, an idea? Write to <a href="mailto:zrebec@zrebec.sk">zrebec@zrebec.sk</a>. Every message is read.</p>
+        <p class="muted">It helps to say which iPhone and iOS version you use and what you expected to happen.</p>
+      </div>
+      <h3>Common questions</h3>
+      <div class="faq">
+        <details open>
+          <summary>Does the app have to stay open all night?</summary>
+          <p>Yes. After the setup time SleepHole has to stay the app in front. Lock the phone as usual – the screen can be off. If you leave the app, a reminder tells you how many seconds you have to come back. Phone calls never count against you. Closing the app (swiping it away) counts as leaving it.</p>
+        </details>
+        <details open>
+          <summary>Tonight’s building was not finished. Why?</summary>
+          <p>You were out of the app longer than the reminder allows, or the night was cancelled. The building stays as a ruin and a later good night repairs it. If you need the phone at night, use the Pause on the night screen: ten minutes, and the first one each night is free.</p>
+        </details>
+        <details>
+          <summary>The reminder did not arrive during a Focus</summary>
+          <p>Open iOS Settings → Notifications → SleepHole and switch on Time Sensitive Notifications. While that switch is off, the Today screen shows an orange triangle.</p>
+        </details>
+        <details>
+          <summary>Will the alarm ring in silent mode?</summary>
+          <p>Yes. The app’s alarm rings with the ringer switched off. On iOS 26 or later SleepHole can also set a backup system alarm that rings even if iOS closed the app during the night – allow it when the app asks.</p>
+          <p>In the morning shake the phone, or type the code from Settings → Morning confirmation.</p>
+        </details>
+        <details>
+          <summary>I am ill or away</summary>
+          <p>Tap “Ill or on holiday?” on the Today screen. A joker protects your streak: the bronze one is free once a month, the silver and the gold one cost coins. If you simply miss a night, this month’s bronze joker is used by itself.</p>
+        </details>
+        <details>
+          <summary>I want to go to bed earlier today</summary>
+          <p>From three hours before your bedtime the button reads “Go to sleep early today”. The night counts in full and your alarm stays at the usual time.</p>
+        </details>
+        <details>
+          <summary>Changing bedtime and wake-up time</summary>
+          <p>Settings → Schedule. Changes are free in your first seven days and on days 1–3 of every month. At any other time a change starts your streak again; buildings, coins and levels stay.</p>
+        </details>
+        <details>
+          <summary>A new iPhone, or the app was reinstalled</summary>
+          <p>With “Sync through iCloud” on (the default), your town comes back by itself on a device signed in to the same iCloud. You can also use Settings → Backup: “Export backup” and “Restore from backup…”.</p>
+        </details>
+        <details>
+          <summary>Apple Health shows no sleep data</summary>
+          <p>Switch on “Show when you fell asleep” in Settings and allow reading sleep in the question that follows. The values come from what Apple Health already knows, for example from an Apple Watch. “Read sleep again” loads them once more.</p>
+        </details>
+        <details>
+          <summary>Good to know</summary>
+          <p>SleepHole is not a sleep tracker and gives no medical advice.</p>
+        </details>
+      </div>
+    </div>
   </section>
-
-  <section>
-    <h2>I want to go to bed earlier today</h2>
-    <p>From three hours before your bedtime the button reads “Go to sleep early today”. The night counts in full and your alarm stays at the usual time.</p>
-  </section>
-
-  <section>
-    <h2>Changing bedtime and wake-up time</h2>
-    <p>Settings → Schedule. Changes are free in your first seven days and on days 1–3 of every month. At any other time a change starts your streak again; buildings, coins and levels stay.</p>
-  </section>
-
-  <section>
-    <h2>A new iPhone, or the app was reinstalled</h2>
-    <p>With “Sync through iCloud” on (the default), your town comes back by itself on a device signed in to the same iCloud. You can also use Settings → Backup: “Export backup” and “Restore from backup…”.</p>
-  </section>
-
-  <section>
-    <h2>Apple Health shows no sleep data</h2>
-    <p>Switch on “Show when you fell asleep” in Settings and allow reading sleep in the question that follows. The values come from what Apple Health already knows, for example from an Apple Watch. “Read sleep again” loads them once more.</p>
-  </section>
-
-  <section>
-    <h2>Good to know</h2>
-    <p>SleepHole is not a sleep tracker and gives no medical advice.</p>
-  </section>
-
-  <footer>
-    <a href="./">Support</a>
-    <a href="privacy.html">Privacy Policy</a>
-  </footer>
 </main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="./#support">Support</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <p>SleepHole is an app for iPhone (iOS 18 or later), in English and Slovak.</p>
+    <p>SleepHole is not a sleep tracker and gives no medical advice.</p>
+    <p>Apple, iPhone, iCloud, Apple Health and Apple Watch are trademarks of Apple Inc.</p>
+  </div>
+</footer>
 </body>
 </html>

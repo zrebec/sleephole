@@ -4,23 +4,49 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SleepHole – Privacy Policy</title>
+<meta name="theme-color" content="#070a1c">
+<link rel="canonical" href="https://zrebec.github.io/sleephole/privacy.html">
 <meta name="description" content="SleepHole collects no data about you. No account, no ads, no analytics, no tracking.">
 <link rel="icon" href="icon.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main>
-  <header>
-    <img src="icon.png" alt="">
+<a class="skip" href="#main">Skip to content</a>
+<header class="band">
+  <a class="icon" href="./" aria-label="SleepHole, home"><img src="icon.png" alt="" width="44" height="44"></a>
+  <p class="title">SleepHole<span class="tag"> · Sleep on time, grow a town</span></p>
+  <nav aria-label="Main">
+    <a href="./#support">Support</a>
+    <a href="privacy.html" aria-current="page">Privacy</a>
+  </nav>
+</header>
+<main id="main" class="reading">
+  <div class="pagehead">
+    <img src="icon.png" alt="" width="64" height="64">
     <div>
       <h1>Privacy Policy</h1>
       <p>SleepHole · last updated October 12, 2026</p>
     </div>
-  </header>
+  </div>
 
   <section>
     <p class="lead"><strong>SleepHole collects no data about you.</strong> There is no account, no advertising, no analytics and no tracking. The developer of SleepHole never receives your nights, your town, your sleep data or anything else from the app.</p>
     <p>The rest of this page says where your data is kept and which services the app talks to.</p>
+  </section>
+
+  <section aria-labelledby="glance-h">
+    <h2 id="glance-h">At a glance</h2>
+    <table class="glance">
+      <thead><tr><th scope="col">What</th><th scope="col">Where it is kept</th><th scope="col">Who can see it</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Nights, town, coins, settings, wake code</th><td data-label="Where it is kept">On your iPhone</td><td data-label="Who can see it">Only you</td></tr>
+        <tr><th scope="row">The same data, when iCloud sync is on</th><td data-label="Where it is kept">Also in your own iCloud</td><td data-label="Who can see it">Only you</td></tr>
+        <tr><th scope="row">Sleep data from Apple Health (optional)</th><td data-label="Where it is kept">On your iPhone only</td><td data-label="Who can see it">Only you</td></tr>
+        <tr><th scope="row">The city you chose (optional)</th><td data-label="Where it is kept">Sent as coordinates to the weather service</td><td data-label="Who can see it">Apple WeatherKit or MET Norway</td></tr>
+        <tr><th scope="row">Your location</th><td data-label="Where it is kept">Never asked for</td><td data-label="Who can see it">Nobody</td></tr>
+        <tr><th scope="row">Account, ads, analytics, tracking</th><td data-label="Where it is kept">None</td><td data-label="Who can see it">–</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <section>
@@ -83,10 +109,16 @@
     <p><a href="mailto:zrebec@zrebec.sk">zrebec@zrebec.sk</a></p>
   </section>
 
-  <footer>
-    <a href="./">Support</a>
-    <a href="privacy.html">Privacy Policy</a>
-  </footer>
 </main>
+<footer class="site-foot">
+  <div class="wrap">
+    <nav aria-label="Footer">
+      <a href="./#support">Support</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <p>SleepHole is not a sleep tracker and gives no medical advice.</p>
+    <p>Apple, iPhone, iCloud, Apple Health and Apple Watch are trademarks of Apple Inc.</p>
+  </div>
+</footer>
 </body>
 </html>
