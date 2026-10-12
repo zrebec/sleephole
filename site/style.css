@@ -1,4 +1,6 @@
-/* SleepHole – landing, support and privacy pages. No external resources, no JavaScript. */
+/* SleepHole – landing, support and privacy pages. No external resources, no JavaScript.
+   The pages link this file as style.css?v=N – raise N in both pages with every change here, or a browser / the
+   CDN may pair new HTML with the old sheet for a while (seen 2026-10-12: bullets and full-size images). */
 :root {
   --bg: #f5f6fc;
   --card: #ffffff;
@@ -157,7 +159,7 @@ p, ul, ol { margin: 0 0 .9rem; }
 }
 .btn.primary { background: var(--moon); color: var(--moon-ink); }
 .btn:hover { filter: brightness(1.08); }
-.hero-shot { justify-self: center; width: min(100%, 17rem); position: relative; }
+.hero-shot { justify-self: center; width: min(56vw, 12.5rem); position: relative; }
 .hero-shot::before {
   content: ""; position: absolute; inset: -12% -25%; z-index: -1;
   background: radial-gradient(closest-side, rgba(255, 214, 107, .22), transparent);
@@ -166,7 +168,7 @@ p, ul, ol { margin: 0 0 .9rem; }
   .hero { padding: 4rem 0 4.5rem; }
   .hero-grid { grid-template-columns: 1.25fr .75fr; }
 }
-@media (min-width: 1000px) { .hero { padding: 5rem 0 5.5rem; } .hero-shot { width: 19rem; justify-self: end; } }
+@media (min-width: 1000px) { .hero { padding: 5rem 0 5.5rem; } .hero-shot { width: 14rem; justify-self: end; } }
 
 /* screenshots: plain rounded rectangles, never a drawn phone */
 .shot {
@@ -184,14 +186,14 @@ p, ul, ol { margin: 0 0 .9rem; }
   scroll-snap-type: x mandatory; scroll-padding: 0 1.25rem;
   -webkit-overflow-scrolling: touch;
 }
-.shots li { flex: none; width: min(68vw, 15rem); scroll-snap-align: start; }
+.shots li { flex: none; width: min(42vw, 10.5rem); scroll-snap-align: start; }
 .shots figure { margin: 0; }
-.shots figcaption { margin-top: .85rem; font-weight: 600; line-height: 1.35; padding: 0 .2rem; }
+.shots figcaption { margin-top: .7rem; font-size: .92rem; font-weight: 600; line-height: 1.35; padding: 0 .1rem; }
 .shots .shot { border-color: var(--line); }
 @media (min-width: 1000px) {
-  .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem 2rem; overflow: visible; padding: .5rem 0 1.5rem; }
+  .shots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.5rem 1.25rem; overflow: visible; padding: .5rem 0 1.5rem; }
   .shots li { width: auto; }
-  .shots li figure { max-width: 15.5rem; margin: 0 auto; }
+  .shots li figure { max-width: 11rem; margin: 0 auto; }
 }
 
 /* ---- sections ---- */
