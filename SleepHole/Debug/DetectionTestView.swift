@@ -1,3 +1,4 @@
+#if DEBUG   // developer screen: not part of Release builds
 import SleepCore
 import SwiftUI
 import UIKit
@@ -136,3 +137,4 @@ struct DetectionTestView: View {
 
 
 }
+#endif

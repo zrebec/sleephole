@@ -7,7 +7,7 @@ struct StatsView: View {
     @Environment(AppModel.self) private var model
     /// `-selectLastNight` preselects the newest night (screenshots).
     @State private var selectedDay: NightKey?
-    private let preselect = ProcessInfo.processInfo.arguments.contains("-selectLastNight")
+    private let preselect = DevArgs.list.contains("-selectLastNight")
 
     var body: some View {
         let s = model.stats
@@ -76,8 +76,11 @@ struct StatsView: View {
             }
             .skyBackground()
             .onAppear {                                   // `-scrollTo journal|achievements` (screenshots)
-                let args = ProcessInfo.processInfo.arguments
+                let args = DevArgs.list
                 for id in ["journal", "achievements", "chart", "average"] where args.contains(id) { proxy.scrollTo(id, anchor: .top) }
+                if args.contains("detail") {                // after `-selectLastNight` has opened the detail card
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { proxy.scrollTo("detail", anchor: UnitPoint(x: 0.5, y: -0.006)) }
+                }
             }
             .onChange(of: selectedDay) { _, day in
                 if day != nil { withAnimation { proxy.scrollTo("detail", anchor: .top) } }
@@ -95,7 +98,7 @@ struct StatsView: View {
     }
 
     /// `-selectChartNight K` → the night K places before the newest one is selected on the chart (screenshots).
-    static func launchChartNight(_ series: [NightPoint], args: [String] = ProcessInfo.processInfo.arguments) -> NightKey? {
+    static func launchChartNight(_ series: [NightPoint], args: [String] = DevArgs.list) -> NightKey? {
         guard let i = args.firstIndex(of: "-selectChartNight"), i + 1 < args.count, let back = Int(args[i + 1]),
               series.indices.contains(series.count - 1 - back) else { return nil }
         return series[series.count - 1 - back].key

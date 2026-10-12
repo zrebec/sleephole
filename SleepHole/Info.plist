@@ -30,7 +30,7 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSAlarmKitUsageDescription</key>
-	<string>SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night.</string>
+	<string>SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night. In Strict mode it also rings a short warning when the phone is used at night.</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>SleepHole reads your sleep data to show when you really fell asleep next to when you went to bed. Nothing leaves your iPhone.</string>
 	<key>NSHealthUpdateUsageDescription</key>

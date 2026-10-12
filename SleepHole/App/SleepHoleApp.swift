@@ -37,7 +37,7 @@ struct SleepHoleApp: App {
     /// Dev aid: launch with `-audioSmokeTest` to start the background audio immediately
     /// (lets agents verify the audio thread in the simulator without tapping through the UI).
     @State private var smokeAudio: AudioKeeper? = {
-        guard ProcessInfo.processInfo.arguments.contains("-audioSmokeTest") else { return nil }
+        guard DevArgs.list.contains("-audioSmokeTest") else { return nil }
         let keeper = AudioKeeper()
         try? keeper.start(ambience: .brownNoise, volume: 0.05)
         return keeper
@@ -71,7 +71,7 @@ struct SleepHoleApp: App {
     /// guide asks at the right moment) and never in screenshot mode (-startTestNight must not be covered by the alert).
     @MainActor
     private static func askForNotificationsIfGuideDone(_ model: AppModel) async {
-        let args = ProcessInfo.processInfo.arguments
+        let args = DevArgs.list
         guard !args.contains("-startTestNight"), !args.contains("-seedNights"), !args.contains("-screenshot") else { return }
         guard model.onboardingDone else { return }
         if await Notifications.requestAuthorization() {

@@ -70,8 +70,8 @@ struct HomeView: View {
     @Environment(AppModel.self) private var model
     @State private var briefing = false
     @State private var confirmEarly = false
-    /// The hero cat: 62 % of the screen width (250 pt on a 402 pt wide phone), at most this wide.
-    static let buddyMaxWidth: CGFloat = 260
+    /// The hero cat: 50 % of the screen width (200 pt on a 402 pt wide phone), at most this wide.
+    static let buddyMaxWidth: CGFloat = 200
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 30)) { ctx in
@@ -92,14 +92,14 @@ struct HomeView: View {
                     BuddyView.centred(
                         BuddyView(state: model.buddyState(at: now), cloud: true, onPet: { model.petBuddy() },
                                   hold: AppModel.forcedBuddyReaction)
-                            .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.62) })
-                        .padding(.top, 40)
-                        .padding(.bottom, 22)
+                            .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.5) })
+                        .padding(.top, 25)
+                        .padding(.bottom, 14)
                         .appearIn(delay: 0.1)
 
-                    VStack(spacing: 12) {
+                    VStack(spacing: 10) {
                         Text(L("Bedtime \(Fmt.time(w.bedtime)) · wake-up \(Fmt.time(w.wake))"))
-                            .font(.title3.bold())
+                            .font(.headline)
                         actionButton(early ? L("🌙 Go to sleep early today") : L("🌙 Go to sleep"),
                                      enabled: canSleep || early, prominent: true) {
                             if model.needsFirstNightBriefing { briefing = true }
@@ -113,21 +113,18 @@ struct HomeView: View {
                             Text(L("Your bedtime is at \(Fmt.time(w.bedtime)), so tonight you'll be without your phone for longer. You have \(Plural.minutes(SleepRules().earlySetup)) from now to set up; your alarm rings at \(Fmt.time(w.wake)) as always."))
                         }
                         Text(sleepCaption(canSleep: canSleep, early: early, played: model.tonightPlayed, now: now, w: w))
-                            .font(.callout).cardCaption().multilineTextAlignment(.center)
+                            .font(.subheadline).cardCaption().multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Divider()
+                        actionButton(L("😴 Nap (\(model.settings.nap.minutes) min)"), enabled: napReason == nil,
+                                     prominent: false) { model.startNap() }
+                        Text(napReason ?? L("Until \(Fmt.time(model.settings.nap.windowEnd)) · a complete nap earns +\(NapPlan.reward(.complete)) 🪙"))
+                            .font(.subheadline).cardCaption().multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding()
                     .glassCard(cornerRadius: 28)
                     .appearIn(delay: 0.15)
-
-                    VStack(spacing: 12) {
-                        actionButton(L("😴 Nap (\(model.settings.nap.minutes) min)"), enabled: napReason == nil,
-                                     prominent: false) { model.startNap() }
-                        Text(napReason ?? L("You can nap until \(Fmt.time(model.settings.nap.windowEnd)). An alarm rings at the end; a complete nap earns +\(NapPlan.reward(.complete)) 🪙."))
-                            .font(.callout).cardCaption().multilineTextAlignment(.center)
-                    }
-                    .padding()
-                    .glassCard(cornerRadius: 28)
-                    .appearIn(delay: 0.2)
 
                     JokerCard().appearIn(delay: 0.25)
 
@@ -160,14 +157,14 @@ struct HomeView: View {
         if played {
             return L("You've already built tonight 🌙 You can build again tomorrow from \(Fmt.time(w.startOpens)).")
         }
-        return L("You can't go to sleep yet – you can build from \(Fmt.time(w.startOpens)) to \(Fmt.time(w.startCloses())). Tired sooner? An early start opens at \(Fmt.time(w.earlyStartOpens)).")
+        return L("You can build from \(Fmt.time(w.startOpens)) to \(Fmt.time(w.startCloses())) · early start from \(Fmt.time(w.earlyStartOpens))")
     }
 
     @ViewBuilder
     private func actionButton(_ title: String, enabled: Bool, prominent: Bool, action: @escaping () -> Void) -> some View {
         // `.disabled` goes last: the button style reads `isEnabled` to draw its calm disabled look
         Button(action: action) {
-            Text(title).font(.title2.bold()).frame(maxWidth: .infinity).padding(.vertical, 10)
+            Text(title).font(.title3.bold()).frame(maxWidth: .infinity).padding(.vertical, 0)
         }
         .controlSize(.large)
         .glassButton(prominent: prominent)
@@ -472,7 +469,7 @@ struct ConstructionSite: View {
 
     /// Dev aid: `-previewProgress 0.6` overrides the progress (screenshots).
     private var shownProgress: Double {
-        let args = ProcessInfo.processInfo.arguments
+        let args = DevArgs.list
         if let i = args.firstIndex(of: "-previewProgress"), args.indices.contains(i + 1),
            let p = Double(args[i + 1]) { return p }
         return progress

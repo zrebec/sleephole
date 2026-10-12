@@ -6,7 +6,7 @@ import Foundation
 enum AppExpiry {
     /// Dev aid: `-expiresIn 20` pretends the profile runs out in 20 hours (screenshots in the simulator).
     static let date: Date? = {
-        let args = ProcessInfo.processInfo.arguments
+        let args = DevArgs.list
         if let i = args.firstIndex(of: "-expiresIn"), args.indices.contains(i + 1), let hours = Double(args[i + 1]) {
             return Date() + hours * 3600
         }

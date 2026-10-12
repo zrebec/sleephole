@@ -4,11 +4,11 @@ struct RootView: View {
     @Environment(AppModel.self) private var model
     /// `-openTab town|settings` (screenshots)
     @State private var tab: Int = {
-        let a = ProcessInfo.processInfo.arguments
+        let a = DevArgs.list
         return a.contains("town") ? 1 : a.contains("stats") ? 2 : a.contains("settings") ? 3 : 0
     }()
     /// Screenshot / agent modes skip the first-run guide.
-    private let screenshotMode = ProcessInfo.processInfo.arguments.contains {
+    private let screenshotMode = DevArgs.list.contains {
         $0 == "-seedNights" || $0 == "-startTestNight" || $0 == "-screenshot"
     }
 
@@ -32,7 +32,7 @@ struct RootView: View {
         .onAppear { model.settings.theme.apply() }
         .task {
             // dev aid (see AppModel.applyLaunchArguments): `-thenTab 1|island|abandon`
-            let a = ProcessInfo.processInfo.arguments
+            let a = DevArgs.list
             guard let i = a.firstIndex(of: "-thenTab"), a.indices.contains(i + 1) else { return }
             try? await Task.sleep(for: .seconds(4))
             if let t = Int(a[i + 1]) {

@@ -27,7 +27,12 @@ struct NoSleepSource: SleepSource {
 /// without Apple Health). Asleep about `fallAsleepMinutes` after `from` (varies per night, see `minutes(for:)`), stages in realistic chunks, one short awake stretch
 /// in the middle, the last sample ends five minutes before `to`. Deterministic for a given window.
 struct SimulatedSleepSource: SleepSource {
-    static let sourceName = "Simulated"
+    /// `-sleepSimName "Apple Watch"` renames the source (store screenshots, developer aid).
+    static let sourceName: String = {
+        let a = DevArgs.list
+        if let i = a.firstIndex(of: "-sleepSimName"), a.indices.contains(i + 1) { return a[i + 1] }
+        return "Simulated"
+    }()
     var fallAsleepMinutes: Double = 18
 
     var name: String { "simulated" }

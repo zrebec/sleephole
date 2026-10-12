@@ -32,13 +32,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night."
+            "value" : "SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night. In Strict mode it also rings a short warning when the phone is used at night."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SleepHole nastaví systémový budík ako zálohu, aby ťa zobudil, aj keď iOS appku v noci ukončí."
+            "value" : "SleepHole nastaví systémový budík ako zálohu, aby ťa zobudil, aj keď iOS appku v noci ukončí. V Prísnom režime ním krátko zazvoní aj výstraha, keď telefón v noci používaš."
           }
         }
       }

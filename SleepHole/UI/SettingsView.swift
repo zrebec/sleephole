@@ -16,15 +16,15 @@ struct SettingsView: View {
     /// The schedule being edited (nil = not edited); saved only with "Save" (owner 2026-09-30 limits).
     @State private var scheduleDraft: Schedule?
     @State private var confirmSchedule = false
-    /// Dev aid: `-openSoundTest` opens Developer → Sound effects test at once (screenshots; `-scrollTo cat` shows the cat).
-    @State private var soundTest = ProcessInfo.processInfo.arguments.contains("-openSoundTest")
-    /// Dev aid: `-openSystemAlarmTest` opens Developer → System alarm test at once (screenshots).
-    @State private var systemAlarmTest = ProcessInfo.processInfo.arguments.contains("-openSystemAlarmTest")
-    /// Dev aid: `-openWeatherTest` opens Developer → Weather test at once (screenshots).
-    @State private var weatherTest = ProcessInfo.processInfo.arguments.contains("-openWeatherTest")
     #if DEBUG
+    /// Dev aid: `-openSoundTest` opens Developer → Sound effects test at once (screenshots; `-scrollTo cat` shows the cat).
+    @State private var soundTest = DevArgs.list.contains("-openSoundTest")
+    /// Dev aid: `-openSystemAlarmTest` opens Developer → System alarm test at once (screenshots).
+    @State private var systemAlarmTest = DevArgs.list.contains("-openSystemAlarmTest")
+    /// Dev aid: `-openWeatherTest` opens Developer → Weather test at once (screenshots).
+    @State private var weatherTest = DevArgs.list.contains("-openWeatherTest")
     /// Dev aid: `-openSyncTest` opens Developer → Sync test at once (screenshots).
-    @State private var syncTest = ProcessInfo.processInfo.arguments.contains("-openSyncTest")
+    @State private var syncTest = DevArgs.list.contains("-openSyncTest")
     #endif
 
     /// The warning triangle on Today: list's rows may not be laid out yet right after the tab switch → scroll twice.
@@ -274,7 +274,9 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    NavigationLink(L("Credits")) { CreditsView() }
+                    NavigationLink(L("Credits")) { CreditsView() }.id("about")
+                    Button(L("Privacy policy")) { UIApplication.shared.open(AppLinks.privacyPolicy) }
+                        .disabled(nightRunning)       // the browser would count as leaving the app
                     if let expiry = AppExpiry.date {
                         HStack {
                             Text(L("The app works until"))
@@ -313,11 +315,12 @@ struct SettingsView: View {
                 #endif
             }
             .onAppear {                                   // `-scrollTo sounds|sky` (screenshots)
-                let args = ProcessInfo.processInfo.arguments
-                if args.contains("sounds") { proxy.scrollTo("sounds", anchor: .top) }
+                let args = DevArgs.list
+                if args.contains("sounds") { proxy.scrollTo("sounds", anchor: UnitPoint(x: 0.5, y: -0.004)) }
                 if args.contains("health") { proxy.scrollTo("health", anchor: .top) }
                 if args.contains("icloud") { proxy.scrollTo("icloud", anchor: .top) }
                 if args.contains("sky") { proxy.scrollTo("sky", anchor: .top) }
+                if args.contains("about") { proxy.scrollTo("about", anchor: .top) }
                 if args.contains("notifications") { proxy.scrollTo("notifications", anchor: .top) }
                 // opened by the warning triangle on Today: the tab switch just created this view
                 if model.takeNotificationsScroll() { scrollToNotifications(proxy) }
@@ -329,10 +332,10 @@ struct SettingsView: View {
             }
             .skyBackground()
             .navigationTitle(L("Settings"))
+            #if DEBUG
             .navigationDestination(isPresented: $soundTest) { SoundEffectsTestView() }
             .navigationDestination(isPresented: $systemAlarmTest) { SystemAlarmTestView() }
             .navigationDestination(isPresented: $weatherTest) { WeatherTestView() }
-            #if DEBUG
             .navigationDestination(isPresented: $syncTest) { SyncTestView() }
             #endif
             .renameTownAlert(isPresented: $renaming)
@@ -414,6 +417,7 @@ extension SettingsView {
     }
 }
 
+#if DEBUG
 /// Debug: all nights with their events and outcome.
 struct NightLogView: View {
     @Environment(AppModel.self) private var model
@@ -442,6 +446,7 @@ struct NightLogView: View {
         }
     }
 }
+#endif
 
 /// Round ▶ / ■ preview buttons (Liquid Glass on iOS 26), left-aligned. `.borderless` gives each button its own
 /// hit area – with default styles a List row fires ALL its buttons on a tap (owner bug 2026-09-30).
@@ -489,6 +494,7 @@ private struct GlassCircle: ViewModifier {
     }
 }
 
+#if DEBUG
 /// Developer: play every effect and voice line (phase UI-2), so the owner can judge them without a night.
 struct SoundEffectsTestView: View {
     @Environment(AppModel.self) private var model
@@ -536,7 +542,7 @@ struct SoundEffectsTestView: View {
             }
         }
         .onAppear {                                       // `-scrollTo cat` (screenshots)
-            if ProcessInfo.processInfo.arguments.contains("cat") { proxy.scrollTo("cat", anchor: .center) }
+            if DevArgs.list.contains("cat") { proxy.scrollTo("cat", anchor: .center) }
         }
         }
         .navigationTitle(L("Sound effects test"))
@@ -552,3 +558,4 @@ struct SoundEffectsTestView: View {
         }
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if DEBUG   // developer screen: not part of Release builds
 import SwiftUI
 
 /// Settings → Developer → Vibration test: play every night vibration and see whether Core Haptics works.
@@ -38,3 +39,4 @@ struct VibrationTestView: View {
         }
     }
 }
+#endif

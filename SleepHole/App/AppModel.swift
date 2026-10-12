@@ -89,6 +89,7 @@ final class AppModel {
     ///   -startNap                     screenshots: open the nap window around now and start a nap
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
+    ///   -showResult                   SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
     ///   -openTab town                 start on the Mesto tab
     ///   -townFit                      screenshots: the Town view frames the built-up part of the town (no zoom cap)
     ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
@@ -125,7 +126,7 @@ final class AppModel {
     ///   -syncDevice NAME              with -syncFolder: this launch's device id (the file is NAME.json; default: the
     ///                                 install's random id)
     static func applyLaunchArguments(to settings: inout AppSettings, context: ModelContext,
-                                     args: [String] = ProcessInfo.processInfo.arguments) {
+                                     args: [String] = DevArgs.list) {
         func value(_ flag: String) -> String? {
             args.firstIndex(of: flag).flatMap { args.indices.contains($0 + 1) ? args[$0 + 1] : nil }
         }
@@ -184,7 +185,7 @@ final class AppModel {
     }
 
     /// `-sleepSim [minutes]` → the simulated sleep source; nil without the argument.
-    static func launchSleepSource(args: [String] = ProcessInfo.processInfo.arguments) -> (any SleepSource)? {
+    static func launchSleepSource(args: [String] = DevArgs.list) -> (any SleepSource)? {
         guard let i = args.firstIndex(of: "-sleepSim") else { return nil }
         let minutes = args.indices.contains(i + 1) ? Double(args[i + 1]) : nil
         return SimulatedSleepSource(fallAsleepMinutes: minutes ?? 18)
@@ -200,7 +201,7 @@ final class AppModel {
         return name.isEmpty ? nil : SkyCity(name: name, latitude: lat, longitude: lon)
     }
 
-    static func launchLanguage(args: [String] = ProcessInfo.processInfo.arguments) -> AppLanguage? {
+    static func launchLanguage(args: [String] = DevArgs.list) -> AppLanguage? {
         args.firstIndex(of: "-lang").flatMap { args.indices.contains($0 + 1) ? AppLanguage(rawValue: args[$0 + 1]) : nil }
     }
 
@@ -264,19 +265,31 @@ final class AppModel {
         sync.attach(self)
         if initialSettings == nil, let lang = Self.launchLanguage() { language = lang }
         resumeActiveNight()
-        if ProcessInfo.processInfo.arguments.contains("-forgiveNight") { forgiveNight() }
-        if ProcessInfo.processInfo.arguments.contains("-revokeForgiveness") { revokeForgiveness() }
+        if DevArgs.list.contains("-forgiveNight") { forgiveNight() }
+        if DevArgs.list.contains("-revokeForgiveness") { revokeForgiveness() }
         tidySystemAlarm(now: clock.now, atLaunch: true)
         rebuildTown()
         refresh()
+        #if targetEnvironment(simulator)
+        if DevArgs.list.contains("-showResult"), active == nil, initialSettings == nil,
+           let rec = realResults().last(where: { $0.outcome == .complete }) {       // store screenshots: the morning screen
+            let entry = Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
+                .last { $0.key.description == rec.keyString }
+            shownResult = rec
+            lastReward = entry?.coins ?? 0
+            lastStreakBonus = entry?.streakBonus ?? 0
+            lastUndisturbedBonus = entry?.undisturbedBonus ?? 0
+            phase = .result
+        }
+        #endif
         guard servicesEnabled else { return }
-        if ProcessInfo.processInfo.arguments.contains("-startTestNight"), active == nil {
-            let a = ProcessInfo.processInfo.arguments
+        if DevArgs.list.contains("-startTestNight"), active == nil {
+            let a = DevArgs.list
             let minutes = a.firstIndex(of: "-testNightMinutes").flatMap { a.indices.contains($0 + 1) ? Double(a[$0 + 1]) : nil }
             startTestNight(minutes: minutes ?? 4)
             startNight()
         }
-        if ProcessInfo.processInfo.arguments.contains("-startNap"), active == nil { startNap() }
+        if DevArgs.list.contains("-startNap"), active == nil { startNap() }
         ticker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.refresh() }
         }
@@ -1115,7 +1128,7 @@ final class AppModel {
 
     /// Dev aid: `-buddy awake|asleep` forces the sleep buddy's state (screenshots).
     static let forcedBuddyState: BuddyState? = {
-        let a = ProcessInfo.processInfo.arguments
+        let a = DevArgs.list
         guard let i = a.firstIndex(of: "-buddy"), a.indices.contains(i + 1) else { return nil }
         switch a[i + 1] {
         case "awake": return .awake
@@ -1126,7 +1139,7 @@ final class AppModel {
 
     /// Dev aid: `-buddyReaction purr|arch|wink` shows that reaction's hold frame on Today (screenshots).
     static let forcedBuddyReaction: BuddyReaction? = {
-        let a = ProcessInfo.processInfo.arguments
+        let a = DevArgs.list
         guard let i = a.firstIndex(of: "-buddyReaction"), a.indices.contains(i + 1) else { return nil }
         switch a[i + 1] {
         case "purr": return .purr
@@ -1485,7 +1498,7 @@ final class AppModel {
         monitor.onEvent = { [weak self] kind, date in self?.append(kind, at: date) }
         monitor.onTerminate = { [weak self] in self?.appWillTerminate() }
         monitor.start()
-        if LockLab.shouldRecord(arguments: ProcessInfo.processInfo.arguments, isDebugNight: rec.isDebug) {
+        if LockLab.shouldRecord(arguments: DevArgs.list, isDebugNight: rec.isDebug) {
             monitor.onRaw = { [weak self] text in self?.lockLab.note(text) }
             lockLab.start()
         }

@@ -1,3 +1,4 @@
+#if DEBUG   // developer lab: not part of Release builds (see the stand-in below)
 import AVFoundation
 import CoreMotion
 import Foundation
@@ -224,3 +225,14 @@ final class LockLab {
         }
     }
 }
+#else
+/// Release stand-in: the lock-screen lab does not exist in TestFlight / App Store builds.
+@MainActor
+final class LockLab {
+    static func shouldRecord(arguments: [String], isDebugNight: Bool) -> Bool { false }
+    var isRunning: Bool { false }
+    func start() {}
+    func stop() {}
+    func note(_ text: String) {}
+}
+#endif

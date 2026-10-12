@@ -1,3 +1,4 @@
+#if DEBUG   // developer screen: not part of Release builds
 import SwiftUI
 
 /// Settings → Developer → System alarm test: rings the system alarm (AlarmKit) 20 seconds from now, so the owner can
@@ -54,3 +55,4 @@ struct SystemAlarmTestView: View {
         }
     }
 }
+#endif

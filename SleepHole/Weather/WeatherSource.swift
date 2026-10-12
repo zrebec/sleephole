@@ -270,7 +270,7 @@ enum WeatherSources {
     /// `-weatherSource met` → MET Norway alone, live (simulator and device, never under test); a real device →
     /// WeatherKit, and MET Norway when that fails; the simulator without arguments → none.
     @MainActor
-    static func forLaunch(args: [String] = ProcessInfo.processInfo.arguments,
+    static func forLaunch(args: [String] = DevArgs.list,
                           underTest: Bool = SystemAlarms.isRunningTests,
                           isDaylight: (@Sendable (Date) -> Bool)? = nil) -> any WeatherSource {
         if underTest { return NoWeather() }

@@ -16,7 +16,7 @@ final class TownScene: SKScene {
     static let maxScale: CGFloat = 10
     private var needsFit = true
     /// Dev aid for screenshots (`-townFit`): the whole town is always fitted, uncapped, and refitted when the view is sized.
-    static let townFit = ProcessInfo.processInfo.arguments.contains("-townFit")
+    static let townFit = DevArgs.list.contains("-townFit")
 
     override init(size: CGSize) {
         super.init(size: size)

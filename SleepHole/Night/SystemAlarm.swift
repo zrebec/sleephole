@@ -119,7 +119,7 @@ enum SystemAlarms {
 
     /// The system alarm for this launch. The real AlarmKit one exists only on a real device, outside tests and
     /// without `-mute`; the simulator never gets it (nothing may ring on the Mac), at most the silent stand-in.
-    static func forLaunch(args: [String] = ProcessInfo.processInfo.arguments,
+    static func forLaunch(args: [String] = DevArgs.list,
                           underTest: Bool = SystemAlarms.isRunningTests) -> any SystemAlarm {
         #if targetEnvironment(simulator)
         if !underTest, let consent = SimulatedSystemAlarm.consent(from: args) { return SimulatedSystemAlarm(consent: consent) }

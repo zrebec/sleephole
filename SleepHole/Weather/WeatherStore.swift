@@ -51,7 +51,7 @@ final class WeatherStore {
     }
 
     /// The store for this launch (see `WeatherSources.forLaunch`).
-    static func forLaunch(defaults: UserDefaults = .standard, args: [String] = ProcessInfo.processInfo.arguments,
+    static func forLaunch(defaults: UserDefaults = .standard, args: [String] = DevArgs.list,
                           underTest: Bool = SystemAlarms.isRunningTests) -> WeatherStore {
         WeatherStore(source: WeatherSources.forLaunch(args: args, underTest: underTest), defaults: defaults,
                      launchSimulation: underTest ? nil : WeatherSimulation.from(args: args))

@@ -13,8 +13,8 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "1.0"
-    # every upload to App Store Connect / TestFlight needs a higher CURRENT_PROJECT_VERSION (builds 1 to 3 are uploaded)
-    CURRENT_PROJECT_VERSION: "4"
+    # every upload to App Store Connect / TestFlight needs a higher CURRENT_PROJECT_VERSION (builds 1 to 4 are uploaded)
+    CURRENT_PROJECT_VERSION: "5"
 targets:
   SleepHole:
     type: application
@@ -51,7 +51,7 @@ targets:
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
         # F6b: the system alarm (AlarmKit) asks the owner once; the Slovak text is in Resources/InfoPlist.xcstrings
-        NSAlarmKitUsageDescription: SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night.
+        NSAlarmKitUsageDescription: SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night. In Strict mode it also rings a short warning when the phone is used at night.
         # HEALTH: read-only access to sleep analysis; the Slovak text is in Resources/InfoPlist.xcstrings
         NSHealthShareUsageDescription: SleepHole reads your sleep data to show when you really fell asleep next to when you went to bed. Nothing leaves your iPhone.
         # App Store Connect requires this key for any app with the HealthKit entitlement (upload refused on 2026-10-10 without it) although the app never writes.

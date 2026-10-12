@@ -1,3 +1,4 @@
+#if DEBUG   // developer screen: not part of Release builds
 import SleepCore
 import SwiftUI
 
@@ -154,3 +155,4 @@ struct WeatherTestView: View {
         .navigationTitle(L("Weather test"))
     }
 }
+#endif

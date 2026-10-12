@@ -2261,6 +2261,22 @@
         }
       }
     },
+    "Privacy policy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy policy"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zásady ochrany súkromia"
+          }
+        }
+      }
+    },
     "Dark": {
       "localizations": {
         "en": {
@@ -5381,18 +5397,18 @@
         }
       }
     },
-    "You can't go to sleep yet – you can build from %@ to %@. Tired sooner? An early start opens at %@.": {
+    "You can build from %@ to %@ · early start from %@": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "You can't go to sleep yet – you can build from %@ to %@. Tired sooner? An early start opens at %@."
+            "value": "You can build from %@ to %@ · early start from %@"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ešte nemôžeš ísť spať – stavať môžeš od %1$@ do %2$@. Keď sa ti bude chcieť spať skôr, dá sa to už od %3$@."
+            "value": "Stavať môžeš od %1$@ do %2$@ · skôr už od %3$@"
           }
         }
       }
@@ -8393,18 +8409,18 @@
         }
       }
     },
-    "You can nap until %@. An alarm rings at the end; a complete nap earns +%lld 🪙.": {
+    "Until %@ · a complete nap earns +%lld 🪙": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "You can nap until %@. An alarm rings at the end; a complete nap earns +%lld 🪙."
+            "value": "Until %@ · a complete nap earns +%lld 🪙"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Odpočívať môžeš do %1$@. Na konci zazvoní budík, za hotový odpočinok +%2$lld 🪙."
+            "value": "Dnes do %1$@ · hotový odpočinok +%2$lld 🪙"
           }
         }
       }

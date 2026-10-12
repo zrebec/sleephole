@@ -151,7 +151,7 @@ enum SyncTransports {
     /// folder, `-syncDevice NAME` names this launch's device (default: the install's id). Otherwise: the hosted unit
     /// tests and the simulator → nothing; a real iPhone → the user's iCloud container.
     @MainActor
-    static func forLaunch(args: [String] = ProcessInfo.processInfo.arguments,
+    static func forLaunch(args: [String] = DevArgs.list,
                           defaults: UserDefaults = .standard,
                           underTest: Bool = SystemAlarms.isRunningTests,
                           vendorId: String? = SyncDevice.currentVendorId()) -> any SyncTransport {

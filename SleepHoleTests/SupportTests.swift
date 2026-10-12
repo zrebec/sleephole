@@ -18,6 +18,11 @@ struct SupportTests {
         #expect(SpriteLibrary.loadFromBundle(Bundle(for: BundleToken.self)).catalog == nil)
     }
 
+    @Test func privacyPolicyLinkIsPinned() {
+        #expect(AppLinks.privacyPolicy.absoluteString == "https://zrebec.github.io/sleephole/privacy.html")
+        #expect(AppLinks.privacyPolicy.scheme == "https")
+    }
+
     @Test func everyAlarmSoundShipsInTheBundle() {
         for s in AppSettings.AlarmSound.allCases {
             #expect(Bundle.main.url(forResource: s.fileName, withExtension: nil) != nil, "\(s)")

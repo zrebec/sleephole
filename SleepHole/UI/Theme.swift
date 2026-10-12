@@ -88,7 +88,7 @@ struct SkyOverrides: Equatable {
         moon = value("-skyMoon").flatMap(Double.init).map { min(1, max(0, $0)) }
     }
 
-    static let launch = SkyOverrides(args: ProcessInfo.processInfo.arguments)
+    static let launch = SkyOverrides(args: DevArgs.list)
 
     func apply(to s: SkyState) -> SkyState {
         guard arc != nil || body != nil || moon != nil else { return s }
@@ -122,7 +122,7 @@ struct LivingSky: View {
 
     /// Dev aid: `-skyTime 21:45` pins the sky's time of day (screenshots).
     static let pinnedTime: (Int, Int)? = {
-        let a = ProcessInfo.processInfo.arguments
+        let a = DevArgs.list
         guard let i = a.firstIndex(of: "-skyTime"), a.indices.contains(i + 1) else { return nil }
         let p = a[i + 1].split(separator: ":").compactMap { Int($0) }
         return p.count == 2 ? (p[0], p[1]) : nil
@@ -375,7 +375,7 @@ private struct PopIn: ViewModifier {
 /// with Reduce Transparency (or the dev launch argument `-solidCards`, for screenshots).
 enum CardBacking {
     static func solidRequested(_ args: [String]) -> Bool { args.contains("-solidCards") }
-    static let solidLaunch = solidRequested(ProcessInfo.processInfo.arguments)
+    static let solidLaunch = solidRequested(DevArgs.list)
     /// Fully opaque: the system's Reduce Transparency, or the dev launch argument `-solidCards`.
     static func isSolid(reduceTransparency: Bool, launchSolid: Bool = solidLaunch) -> Bool {
         reduceTransparency || launchSolid

@@ -13,7 +13,7 @@ struct SkySection: View {
 
     /// Dev aid: `-cityQuery Brat` pre-fills the field so the real Apple Maps search runs (screenshots).
     private static let launchQuery: String? = {
-        let a = ProcessInfo.processInfo.arguments
+        let a = DevArgs.list
         return a.firstIndex(of: "-cityQuery").flatMap { a.indices.contains($0 + 1) ? a[$0 + 1] : nil }
     }()
 

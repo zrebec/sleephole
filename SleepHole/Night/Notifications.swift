@@ -30,7 +30,7 @@ enum Notifications {
     /// The check for this launch: under test it never touches the system; in the simulator `-timeSensitive off|on`
     /// pretends the answer (dev aid for screenshots); otherwise the real reader.
     @MainActor
-    static func timeSensitiveCheckForLaunch(args: [String] = ProcessInfo.processInfo.arguments,
+    static func timeSensitiveCheckForLaunch(args: [String] = DevArgs.list,
                                             underTest: Bool = SystemAlarms.isRunningTests) -> @MainActor () async -> Bool {
         if underTest { return { false } }
         #if targetEnvironment(simulator)

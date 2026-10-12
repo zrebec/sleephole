@@ -1,3 +1,4 @@
+#if DEBUG   // developer screen: not part of Release builds
 import Foundation
 import Observation
 
@@ -47,3 +48,4 @@ final class ProbeLog {
         entries.map { "\(Self.timeFormat.string(from: $0.at))  \($0.text)" }.joined(separator: "\n")
     }
 }
+#endif
