@@ -1,9 +1,15 @@
 # SleepHole – prehľad plánov a návrhov
 
-Stav k 2026-10-12 ráno. Tento dokument je prehľad pre majiteľa: čo je rozrobené, čo je navrhnuté a čo je len
+Stav k 2026-10-12 popoludní. Tento dokument je prehľad pre majiteľa: čo je rozrobené, čo je navrhnuté a čo je len
 nápad – s odhadom náročnosti a s prioritou. Podrobný plán a zadania pre workerov sú v
 [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) (§10), nákresy k návrhom z 2026-10-10 v
 [`NAVRH-MESTO-STATISTIKY.md`](NAVRH-MESTO-STATISTIKY.md).
+
+## Rozsah je zmrazený (tvoje rozhodnutie 2026-10-12)
+
+Do vydania verzie 1.0 v App Store sa nič nové nezačína. Otvorené položky sa zatvárajú po jednej v poradí:
+Dnes → riziko u Applu → obyvatelia → slovenské texty pre všetkých → kalendár → stránka v obchode a snímky → dlžné
+skúšky na telefóne. Nový nápad sa zapíše jedným riadkom a počká.
 
 ## Ako to čítať
 
@@ -34,12 +40,12 @@ Priority sú **odporúčanie Opusu**. S prehľadom a s poradím si 2026-10-12 s�
 |---|---|---|---|---|
 | 1 | **EARLY – „Dnes ísť spať skôr"** | S – M | P0 ✅ | **Hotovo 2026-10-12.** Noc sa dá začať až 3 h pred večierkou, bez postihu, príprava 15 min od štartu. Tvoja noc z 11. na 12. 10. to potvrdila na telefóne (skorší štart, budík, budova, mince). Texty prešli revíziou a šesť drobných úprav z kontroly je spravených a otestovaných. |
 | 2 | **Build 1.0 (4) do TestFlightu** | XS | P0 ✅ | **Hotovo 2026-10-12.** Build 4 je nahraný do App Store Connect (08:41, „Upload succeeded"). Pridať ho do skupín testerov ostáva na tebe – vtedy dostane opravu aj testerka, ktorá problém nahlásila. |
-| 3 | **TODAY – kompaktná obrazovka Dnes** | S – M | P1 | Obe tlačidlá v jednej karte, kratšie popisy, hlavička s mestom a teplotou. Dnes sa tlačidlo Odpočinok na iPhone 16 Pro schová pod spodnú lištu. |
+| 3 | **TODAY – kompaktná obrazovka Dnes** | S – M | P1 ✅ | **Hotovo 2026-10-12.** Obe tlačidlá sú v jednej karte, mačka má 200 bodov, tlačidlá sú nižšie a dva popisy kratšie. Na telefóne si potvrdil, že je všetko nad spodnou lištou aj pri troch riadkoch textu. Hlavička s mestom a teplotou sa nerobila – netreba ju. |
 | 4 | **POP – obyvatelia** | S | P1 | Budovy úrovne 2 a 3 majú dnes 0 obyvateľov – vyzerá to ako chyba. Nové počty podľa druhu budovy, názvy veľkosti mesta, „Mesto v číslach". |
 | 5 | **CAL – mesačný kalendár a obdobia** | M | P1 | Skutočný kalendár po mesiacoch a rokoch; priemery a graf za zobrazený mesiac. Dnes po 35 dňoch staršie noci nikde nevidno. |
 | 6 | **CARE-2a – mince za pokojné hodiny (+10)** | S – M | P1 | Potvrdil si to 2026-10-09, postavené to nie je. Každá hodina noci s vypnutou obrazovkou +10 🪙. Hodiny sa počítajú od večierky, aby skorší štart nezarábal viac. |
-| 7 | **App Store stránka – texty a zásady súkromia** | S | P1 | Návrhy textov máš v iCloude. Treba tvoj výber podtitulu, kde bude stránka so zásadami súkromia a ktorý kontakt smie byť verejný. Bez kódu. |
-| 8 | **Riziko pri kontrole Applu** | S | P1 | Dve veci môže Apple spochybniť: signály zamknutia obrazovky a tichý zvuk, ktorý drží appku nažive. Rozbor a záložný plán skôr, než pôjde appka do App Store. |
+| 7 | **App Store stránka – texty a zásady súkromia** | S | P1 | Texty sú v App Store Connect a sedia do písmena, stránka podpory a zásady súkromia sú zverejnené, vekové hodnotenie vyšlo 9+, súkromie je zverejnené ako „Data Not Collected". Ostáva tvoje rozhodnutie: zadarmo alebo platená (zmluva o platených appkách nie je podpísaná), vyhlásenie podľa DSA a výber krajín. |
+| 8 | **Riziko pri kontrole Applu** | S | P1 ✅ | **Hotovo 2026-10-12.** Rozbor je v `ROZBOR-APP-REVIEW.md` (dvanásť rizík, záložná cesta, kroky k podaniu). Rozhodol si: podať s tromi signálmi zámku a s priznaním v poznámkach, záložnú detekciu postaviť, kým Apple kontroluje. Čo z rozboru treba spraviť v kóde, je riadok 32. |
 | 9 | **Dlžné skúšky na telefóne** | tvojich 20 – 30 min | P1 | Zavretá appka a nevrátiť sa → zrútenie; systémový budík; synchronizácia na dvoch zariadeniach; pauza. Bez kódu. |
 | 10 | **NIGHT – detail noci ako vlastná obrazovka** | M | P2 | Karty namiesto jedného bloku textu, potom časová os noci. Sám si povedal, že detail sa nedá čítať. |
 | 11 | **ZOOM – kamera mesta (chyba B30)** | S | P2 | Veľké mesto sa nedá vidieť celé (od asi 45. noci). Oddialenie rastie s mestom, appka si pamätá pohľad, po novej budove sa naň kamera posunie. |
@@ -63,6 +69,10 @@ Priority sú **odporúčanie Opusu**. S prehľadom a s poradím si 2026-10-12 s�
 | 29 | **Téma Fantasy Town** | M – L | P3 | Druhá sada budov. Nie sú to len obrázky – každú budovu treba poskladať. |
 | 30 | **B10 – odpočinok ukončiť skôr** | XS | P3 | Rozhodnutie: smie sa odpočinok potvrdiť v posledných asi 20 % času? |
 | 31 | **Slovenské texty pre všetkých** | S – M | P2 | Appka po slovensky oslovuje každého v mužskom rode („zaspal si", „vstal som", „postavil si"). Buď texty prepísať neutrálne, alebo pridať voľbu oslovenia. Nový návrh Opusu z revízie textov 2026-10-12. |
+| 32 | **Zostavenie 5 pre kontrolu Applu** | S | P0 ✅ | **Hotovo 2026-10-12.** Nahraté do App Store Connect o 14:42 a nainštalované na tvoj telefón. Obsahuje kompaktné Dnes, odkaz na zásady súkromia v Nastavenia → O aplikácii, ostré zostavenie bez vývojárskych vecí (overené na nahratom archíve) a presnejší text povolenia pre systémový budík. 498 testov zelených. |
+| 33 | **Záložná detekcia zamknutia** | M | P1 | Poistka z rozboru rizík: appka by rozlišovala „zamkol som" od „odišiel som" len zdokumentovanými signálmi. Stavia sa, kým Apple kontroluje; nasadí sa len vtedy, keď Apple tri dnešné signály odmietne. Stratila by sa pripomienka a siréna na zamknutej obrazovke. |
+| 34 | **Snímky a podanie do App Store** | S | P1 | Anglické snímky zo simulátora (dve veľkosti), potom podanie s ručným vydaním – schválenie tak nič nezverejní. Pred podaním: skúška appky na iPade a recept „noc za 15 minút" na čistej inštalácii. |
+| 35 | **Budova namiesto mačky na Dnes** | M | P3 | Tvoj nápad z 2026-10-12: hrdinom obrazovky Dnes by bola posledná postavená budova, tiež s reakciou na ťuknutie. Zmrazené do vydania 1.0. |
 | – | Povolené appky počas noci | – | neodporúčam | Vyžaduje Screen Time API – to je proti pevnému pravidlu projektu. |
 
 ## Popis po skupinách
@@ -111,9 +121,13 @@ celú noc, a to najprv treba vyskúšať na batérii (riadok 18).
 **7 · App Store stránka.** Návod s návrhmi textov po anglicky a po slovensky je v iCloude
 (`SleepHole/APPSTORE-NAVOD.md`). Snímky obrazovky až po TODAY a CAL, nech sa nerobia dvakrát.
 
-**8 · Riziko pri kontrole Applu.** Vonkajší testeri prechádzajú kontrolou Applu (Beta App Review), App Store
-prísnejšou. Appka používa dva postupy, na ktoré sa Apple môže opýtať. Rozbor povie, čo sa dá vysvetliť v poznámke
-pre kontrolu a čo by sme robili, keby to Apple odmietol. Lepšie to vedieť teraz ako pri podaní do App Store.
+**8 · Riziko pri kontrole Applu.** Rozbor je hotový (`ROZBOR-APP-REVIEW.md`). Jediné riziko s doloženým
+zamietnutím sú tri nezdokumentované signály zámku; Beta App Review ich pustila dvakrát, čo je dobrý signál, nie
+záruka. Podľa záznamov z tvojho telefónu má zdokumentovaný signál zámku rovnakú rýchlosť, takže záložná cesta
+existuje (riadok 33). Zvuk na pozadí v tichu je stredné riziko a poznámky pre kontrolu ho priznávajú.
+
+**32 – 34 · Cesta do App Store.** Zostavenie 5 je malé a nič nové neprináša. Podanie pôjde s voľbou ručného
+vydania: odpoveď Applu budeš mať do pár dní a appka sa sama nezverejní. Záložná detekcia je poistka do zásuvky.
 
 **9 · Dlžné skúšky.** Zoznam je v agende v `AGENTS.md`. Najdôležitejšie: appku zavrieť a nevrátiť sa (má sa
 zrútiť), systémový budík po skorom potvrdení, tester s telefónom a tabletom.
@@ -162,15 +176,17 @@ zobudiť a čakať na potvrdenie. Oboje má zmysel rozhodnúť, až keď uvidím
 
 ## Odporúčané poradie najbližších krokov
 
-1. ✅ Hotovo 2026-10-12: tvoja skúška EARLY na telefóne a build 4 nahraný do TestFlightu.
-2. TODAY a POP súbežne (dvaja workeri, iné súbory).
-3. CAL (dva kroky), popri tom tvoje odpovede k App Store stránke.
-4. CARE-2a a rozbor rizika pri kontrole Applu.
-5. NIGHT, potom podľa chuti: ZOOM, štatistiky zo spánku, počasie v meste.
+1. ✅ Hotovo 2026-10-12: tvoja skúška EARLY na telefóne, build 4 v TestFlighte, rozbor rizika pri kontrole Applu.
+2. ✅ Hotovo 2026-10-12: kompaktné Dnes a zostavenie 5 (riadky 3 a 32).
+3. Snímky, polia v App Store Connect a podanie s ručným vydaním (riadky 7 a 34); kým Apple kontroluje, záložná
+   detekcia (riadok 33).
+4. Obyvatelia, slovenské texty pre všetkých, kalendár (riadky 4, 31, 5) – ďalšie zostavenie.
+5. Dlžné skúšky na telefóne (riadok 9). Všetko ostatné až po vydaní 1.0.
 
 ## Čo potrebujem od teba
 
-* Či sa mačka na Dnes smie zmenšiť na asi 200 bodov (pre TODAY).
-* Súhlas s rozsahmi obyvateľov a s názvami veľkosti mesta (pre POP).
-* Podtitul, miesto pre zásady súkromia a verejný kontakt (pre App Store).
-* Zvyšných šesť otázok z návrhu z 2026-10-10 – stačí postupne, keď na ne príde rad.
+* Zmluva o platených appkách, banka a dane v App Store Connect – spracovanie u Applu trvá dni.
+* Rozhodnutie, či appka začne zadarmo alebo platená (podľa neho vyhlásenie DSA a krajiny).
+* Pohľad na zostavenie 5 na telefóne: Dnes a odkaz na zásady súkromia v Nastaveniach.
+* Súhlas s rozsahmi obyvateľov a s názvami veľkosti mesta (pre POP), keď naň príde rad.
+* Otázky z návrhu z 2026-10-10 počkajú do vydania 1.0.

@@ -20,7 +20,38 @@ Whatever the owner's first message is (even just "Ahoj"), **start your reply by 
 then answer. Remove items here when they are done.
 
 0. **Open phone checks (plan §10 F6 and R4, bug B21 in §11a):**
-   * **FIRST – the night of 2026-10-07 → 08 (bugs B24 + B25 + B26, plan §11a and §12):** the building collapsed
+   * **NEWEST, READ THIS FIRST – 2026-10-12 afternoon: RELEASE 1.0 IS IN WORK (phase REL, plan §10 REL and the two
+     §12 rows of that afternoon; the scope is FROZEN – hard rule below).** State: the compact Today is confirmed by
+     him on the phone; **build 1.0 (5) is uploaded (14:42, "Upload succeeded") and its Debug build is on his phone
+     since 14:42** (privacy link in Settings → About, Release clean-up, truthful AlarmKit text; app 498 tests green
+     in Opus's own run); the support / landing page and the privacy policy are live
+     (`https://zrebec.github.io/sleephole/`, source `site/`); all store texts are in App Store Connect (he pasted
+     them, Opus checked them; paste sheet in his iCloud Drive `SleepHole/APPSTORE-TEXTY-EN.md`); the analysis is
+     `docs/ROZBOR-APP-REVIEW.md` – he chose route (a). The final English screenshots (`tools/store_shots.sh`, two
+     sizes in `build/store/en-US/`) were being shot by a worker when this was written – check the folders.
+     **Ask, in this order:** (a) what he saw in build 5 on the phone (Today; does the "Privacy policy" row open
+     the page – nobody has tapped it on a device); (b) did Apple finish processing build 5, is it in both tester
+     groups and selected on the version page (Opus can click that in his Chrome with his per-action OK);
+     (c) **the app starts FREE (his decision that afternoon, "for now"):** Opus set the price to 0.00 in all
+     175 countries through his Chrome and took "Pay once" out of the store description and the landing page; the
+     Paid Apps Agreement stays unsigned. Still his own clicks: the Digital Services Act declaration ("not a
+     trader" fits a free hobby app) and "Set Up Availability" (the countries). A price comes back only after an
+     accountant has told him how such income is taxed and which levies follow (the chat answer of that afternoon
+     had the sources; his reasons are personal and stay out of this public repo – be gentle, never push); (d) the age rating came out 9+ because of one "yes" (Health or
+     Wellness Topics) – is that fine. **Still owed before "Add for Review":** the 15-minute night recipe of the
+     review notes tried on a clean install (NOT his phone), one iPad simulator run, the screenshots uploaded, the
+     release option left on "Manually release this version". Then, while Apple reviews: the documented-only lock
+     detection as a fallback. Everything of that afternoon except two site commits is UNCOMMITTED – check
+     `git status` and offer the commits. His idea "the newest building instead of the cat on Today" is in the
+     backlog, frozen. The next upload needs `CURRENT_PROJECT_VERSION` 6.
+     **Added the same day, late afternoon (plan §12, last row of 2026-10-12):** a tester's first night ended
+     "unfinished" because she confirmed later than 2 minutes after the alarm, and the app did not say why → **he
+     decided: the on-time window is 10 minutes** (hard rule R3 below is changed) + two text fixes = **build 6**.
+     Check whether build 6 is built, uploaded and on his phone; he then adds it to the tester groups, and only
+     then the beta is listed on departures.to (he asked to wait for build 6; Opus fills the form in his Chrome,
+     he approves before it is sent). Through his Chrome Opus already set: all 175 countries, a limit of 200
+     testers on the public link. Two announcement posts went out on his accounts with his approved text.
+   * **The night of 2026-10-07 → 08 (bugs B24 + B25 + B26, plan §11a and §12):** the building collapsed
      with ~1.5 s of warning (the 30 s budget had shortened the trip); three builds went onto the phone that night
      at his request (23:16, 23:29, 00:07), the night was forgiven three times (`-forgiveNight`) and it ended
      `complete`. On 2026-10-08 he asked for a full reconstruction: the journal part is done and written up in Slovak
@@ -148,7 +179,7 @@ then answer. Remove items here when they are done.
      (the public link said "not accepting new testers" because Apple's review had not finished); the guide in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`) now explains the missing step
      (an Internal Testing group holding the friend and the build), the public link for several friends and the
      text for Apple's review – ask what worked and whether he cut the friend's roles to Marketing; raise
-     `CURRENT_PROJECT_VERSION` to 5 before the next upload (4 is uploaded); (2) CARE-2 (calm-hour coins +10 / +11) is confirmed
+     `CURRENT_PROJECT_VERSION` to 6 before the next upload (5 is uploaded since 2026-10-12 14:42); (2) CARE-2 (calm-hour coins +10 / +11) is confirmed
      but NOT built – he believed it was; (3) the Dynamic Island / Live Activity try. Never write his sleep values
      or the names of his devices and apps into the repo. Everything up to the morning of 2026-10-12 (build 4) is
      committed; he pushes – check `git status` all the same. A build in the Xcode app rewrites the two String Catalogs – restore them with `git checkout`
@@ -201,7 +232,7 @@ then answer. Remove items here when they are done.
    1.0 (2) is uploaded (2026-10-10 morning). The friend was added as an internal tester and saw nothing; more
    friends want to help, so the next step is an external group with a public link (Beta App Review first) – see
    item 0 and the guide in his iCloud Drive. **Raise `CURRENT_PROJECT_VERSION` in `project.yml` before every
-   further upload** (4 is uploaded since 2026-10-12 08:41; the next one is 5). He uploads himself (Xcode →
+   further upload** (5 is uploaded since 2026-10-12 14:42; the next one is 6). He uploads himself (Xcode →
    Organizer → Distribute App); when he asks, Opus can archive and upload from the command line (plan §12,
    2026-10-11) – adding a build to the tester groups stays his clicks.
 
@@ -242,6 +273,12 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   while a worker is still running. Use parallel workers inside a step where the files allow it (worktree + its own
   simulator; this Mac builds at most two at a time). The plan below stays the source of truth; the handoff only
   carries what is not written down yet.
+* **One simulator job at a time (2026-10-12, plan §12).** Two simulators, or a simulator and a build, running
+  together overload this Mac: screenshots come out black or white and tests fail falsely. Run workers that need the
+  simulator one after the other; a web-only or Python-only worker may run beside one of them.
+* **The owner's Chrome can be driven (since 2026-10-12):** he installed Chrome with the Claude extension and is
+  signed in to App Store Connect there (he works in Firefox otherwise). Every change in his account needs his
+  explicit yes for that action; bank and tax data, agreements and the trader declaration stay his own clicks.
 * **Tests first for logic.** All rules live in the `SleepCore` Swift package and are unit-tested
   (`cd SleepCore && swift test`). UI/system code stays thin.
 * If something in the plan is wrong or impossible, don't silently diverge: write it into §12, propose the
@@ -267,7 +304,9 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   another app from there is leaving the app in both modes. The mode is stored with each night at its start; nights
   stored before CARE count as strict;
   screen off is fine, the app must stay in the foreground; confirm by shake or wake code from wake −30 min;
-  complete only while the alarm rings (2 min), unfinished until +60 min. Tone is **cute and never cruel** — no
+  **complete when confirmed within 10 min after the wake time (owner 2026-10-12, was 2 min: a tester's first night
+  ended "unfinished" because she confirmed a quarter of an hour after the alarm and the app did not say why – the
+  alarm itself still rings 2 min; `NightWindow.onTimeConfirm`)**, unfinished until +60 min. Tone is **cute and never cruel** — no
   shaming copy, ambiguity is resolved in the owner's favour.
   **Closing the app (swiping it away) during a night or nap counts as leaving it** (owner 2026-10-04, plan R4) –
   an immediate warning, the same tolerance; the app killed by iOS itself and a restart of the phone stay in the
@@ -340,6 +379,16 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   behaves by measuring on a device, not by asking what he uses; (2) anything that touches Focus modes is optional
   and switchable in Settings – not everyone wants Focus modes; (3) cheating must not be easy (he names SleepTown as
   the bad example), yet ambiguity is still resolved in the user's favour and the tone stays cute.
+* **Scope freeze until version 1.0 is in the App Store (owner 2026-10-12: "we are closing now, no new features,
+  although I had them planned").** Open items are closed one by one; nothing new is started – no new phase, no new
+  rule, no "small extra" inside a task. A new idea (his or Opus's) goes into the plan's backlog in one line and
+  waits; Opus says so kindly and returns to the open item. The order he started: TODAY → App Review risk → POP →
+  Slovak texts for everybody → CAL → store page and screenshots → the owed phone checks (plan §12, 2026-10-12).
+  Only he lifts the freeze.
+* **Nothing undocumented is ever hidden from App Review (Opus's rule of 2026-10-12, written into
+  `docs/ROZBOR-APP-REVIEW.md` for the owner – not his decision yet):** the Darwin lock signals and the background
+  audio are described truthfully in the review notes; their names are never obfuscated or assembled at run time to
+  get past a scan.
 * **The GitHub repo is PUBLIC.** Never commit device logs, the device UDID, the wake code, health or other
   personal information about the owner. Pulled journals go to `docs/device-logs/` (git-ignored).
 
@@ -365,6 +414,8 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `docs/NAVRH-ZVIERATKA.md` | next plans A/B/C: pause, sleep buddy, Cube Pets residents, living town (Slovak, owner picks) |
 | `docs/NAVRH-MESTO-STATISTIKY.md`, `docs/previews/navrh-2026-10-10/` | proposals of 2026-10-10 after the 100-night simulation (Slovak) and their SVG mock-ups – the spec of phase NEXT (plan §10); the owner picks |
 | `docs/PREHLAD-PLANOV.md` | the owner's overview of everything open (Slovak, 2026-10-11): one table with effort and priority per item + short descriptions; priorities are Opus's recommendation – the plan's §10 stays the spec. **Bundled into Debug builds and shown in Settings → Developer → "Plans and proposals" (`SleepHole/Debug/PlansView.swift`) – keep the main table's five columns (`#` first) or the parser loses it; no `http` links. A `✅` in a row's priority cell marks it finished (green badges on the screen) – set it only after the proof is seen** |
+| `docs/ROZBOR-APP-REVIEW.md` | what Apple's review can question and the way to a submission (Slovak, 2026-10-12): twelve risks with guideline numbers, the three undocumented lock signals and their documented fallback, the steps to a review with a manual release, five decisions asked from the owner. A copy is in his iCloud Drive `SleepHole/` |
+| `site/`, `.github/workflows/pages.yml` | the public support page and the privacy policy (English, owner's decision 2026-10-12: on GitHub, public contact `zrebec@zrebec.sk`); the workflow publishes `site/` to `https://zrebec.github.io/sleephole/` (+ `privacy.html`) – the App Store page and the app link there. Whatever the policy says must stay true of the shipped build: change it together with any change of what leaves the device |
 | `docs/IMPLEMENTATION_I18N.md` | full spec for the EN/SK multi-language phase (string inventory, architecture, tests) |
 | `SleepCore/` | pure Swift package: schedule, night evaluation, progression, picker, town layout |
 | `SleepHole/` | iOS app target (created in F0) |
