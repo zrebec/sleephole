@@ -48,6 +48,9 @@ struct ViewsTests {
         render(FirstNightBriefing(), m)
         m.startNight(early: true)
         render(TodayView(), m)                                      // early night, setup
+        m.abandonNight(); m.acknowledgeResult()
+        #expect(m.tonightPlayed)
+        render(TodayView(), m)                                      // early night cancelled, tonight already played
     }
 
     @Test(arguments: AppLanguage.allCases) func todayInEveryPhase(language: AppLanguage) {

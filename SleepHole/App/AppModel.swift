@@ -30,6 +30,8 @@ final class AppModel {
     /// "Go to sleep early" is possible right now (phase EARLY): the window is in [bedtime − 3 h, start opens) and
     /// nothing else blocks a start. Set by `refresh`.
     private(set) var canStartEarly = false
+    /// Tonight's night is already in the records (it ran, or was cancelled / collapsed), so it cannot be started again.
+    private(set) var tonightPlayed = false
 
     var settings: AppSettings {
         didSet {
@@ -939,8 +941,8 @@ final class AppModel {
     func refresh(now: Date) {
         // the lock-screen warning ends with its promised seconds, at the wake time and with the night
         if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false { endLockWarning() }
-        canStartEarly = false
         if let rec = active {
+            setEarlyFlags(canStartEarly: false, tonightPlayed: false)
             let log = rec.log
             if log.confirmedAt != nil || now > log.window.confirmLateUntil {
                 finalize(rec)
@@ -954,27 +956,42 @@ final class AppModel {
         }
         tidySystemAlarm(now: now)
         if shownResult != nil {
+            setEarlyFlags(canStartEarly: false, tonightPlayed: false)
             phase = .result
             return
         }
         window = debugWindow ?? settings.schedule.window(containing: now, calendar: calendar)
         let alreadyPlayed = debugWindow == nil && records().contains { $0.id == window.key.description }
         phase = !alreadyPlayed && window.canStart(at: now) ? .canStart : .idle
-        canStartEarly = debugWindow == nil && !alreadyPlayed && window.canStartEarly(at: now)
+        setEarlyFlags(canStartEarly: debugWindow == nil && !alreadyPlayed && window.canStartEarly(at: now),
+                      tonightPlayed: alreadyPlayed)
+    }
+
+    /// Writes the two flags only when they change, so an unchanged value never notifies observers.
+    private func setEarlyFlags(canStartEarly new: Bool, tonightPlayed played: Bool) {
+        if canStartEarly != new { canStartEarly = new }
+        if tonightPlayed != played { tonightPlayed = played }
     }
 
     /// The reminders to schedule, in one place. A night started early must not be woken by its own bedtime reminder:
-    /// until that bedtime the reminders are one-shot ones for the next occurrence (`Notifications.reminderTriggerDates`).
+    /// until that bedtime the reminders repeat weekly on every weekday except tonight's (`Notifications.reminderTriggers`).
     func rescheduleReminders() {
         guard servicesEnabled else { return }
         Notifications.scheduleReminders(settings.schedule, quietUntil: reminderQuietUntil)
     }
 
-    /// The bedtime of the running night when it was started early and that bedtime has not come yet; otherwise nil.
+    /// Tonight's bedtime while its reminder must stay quiet: the running night when it was started early and that
+    /// bedtime has not come yet, or – with no night running – an early night that was cancelled / collapsed before
+    /// its bedtime (tonight is in the records). Otherwise nil.
     var reminderQuietUntil: Date? {
-        guard let rec = active, !rec.isNap, !rec.isDebug, let started = rec.startedAt,
-              rec.window.isEarlyStart(started), clock.now < rec.window.bedtime else { return nil }
-        return rec.window.bedtime
+        if let rec = active {
+            guard !rec.isNap, !rec.isDebug, let started = rec.startedAt,
+                  rec.window.isEarlyStart(started), clock.now < rec.window.bedtime else { return nil }
+            return rec.window.bedtime
+        }
+        let tonight = settings.schedule.window(containing: clock.now, calendar: calendar)
+        guard clock.now < tonight.bedtime, records().contains(where: { $0.id == tonight.key.description }) else { return nil }
+        return tonight.bedtime
     }
 
     // MARK: - actions

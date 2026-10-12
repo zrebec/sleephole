@@ -1,6 +1,6 @@
 # SleepHole – prehľad plánov a návrhov
 
-Stav k 2026-10-11 večer. Tento dokument je prehľad pre majiteľa: čo je rozrobené, čo je navrhnuté a čo je len
+Stav k 2026-10-12 ráno. Tento dokument je prehľad pre majiteľa: čo je rozrobené, čo je navrhnuté a čo je len
 nápad – s odhadom náročnosti a s prioritou. Podrobný plán a zadania pre workerov sú v
 [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) (§10), nákresy k návrhom z 2026-10-10 v
 [`NAVRH-MESTO-STATISTIKY.md`](NAVRH-MESTO-STATISTIKY.md).
@@ -24,15 +24,16 @@ nápad – s odhadom náročnosti a s prioritou. Podrobný plán a zadania pre w
 | P1 | pred širším testovaním a pred App Store |
 | P2 | robí appku bohatšou, nič na tom nestojí |
 | P3 | neskôr, nápad, alebo čaká na tvoje rozhodnutie |
+| ✅ | hotové – položka má v appke zelený štítok |
 
-Priority sú **odporúčanie Opusu**, nie rozhodnutie. Poradie určuješ ty.
+Priority sú **odporúčanie Opusu**. S prehľadom a s poradím si 2026-10-12 súhlasil; meniť ho môžeš kedykoľvek.
 
 ## Tabuľka
 
 | # | Čo | Náročnosť | Priorita | Popis |
 |---|---|---|---|---|
-| 1 | **EARLY – „Dnes ísť spať skôr"** | S – M | P0 | Noc sa dá začať až 3 h pred večierkou, bez postihu, príprava 15 min od štartu. Postavené a od 2026-10-11 20:33 na tvojom telefóne; čaká na tvoju noc s ním, na tvoje čítanie textov a na päť drobných úprav z kontroly. |
-| 2 | **Build 1.0 (4) do TestFlightu** | XS | P0 | Po tvojej skúške EARLY. Testerka, ktorá problém nahlásila, dostane opravu. |
+| 1 | **EARLY – „Dnes ísť spať skôr"** | S – M | P0 ✅ | **Hotovo 2026-10-12.** Noc sa dá začať až 3 h pred večierkou, bez postihu, príprava 15 min od štartu. Tvoja noc z 11. na 12. 10. to potvrdila na telefóne (skorší štart, budík, budova, mince). Texty prešli revíziou a šesť drobných úprav z kontroly je spravených a otestovaných. |
+| 2 | **Build 1.0 (4) do TestFlightu** | XS | P0 ✅ | **Hotovo 2026-10-12.** Build 4 je nahraný do App Store Connect (08:41, „Upload succeeded"). Pridať ho do skupín testerov ostáva na tebe – vtedy dostane opravu aj testerka, ktorá problém nahlásila. |
 | 3 | **TODAY – kompaktná obrazovka Dnes** | S – M | P1 | Obe tlačidlá v jednej karte, kratšie popisy, hlavička s mestom a teplotou. Dnes sa tlačidlo Odpočinok na iPhone 16 Pro schová pod spodnú lištu. |
 | 4 | **POP – obyvatelia** | S | P1 | Budovy úrovne 2 a 3 majú dnes 0 obyvateľov – vyzerá to ako chyba. Nové počty podľa druhu budovy, názvy veľkosti mesta, „Mesto v číslach". |
 | 5 | **CAL – mesačný kalendár a obdobia** | M | P1 | Skutočný kalendár po mesiacoch a rokoch; priemery a graf za zobrazený mesiac. Dnes po 35 dňoch staršie noci nikde nevidno. |
@@ -61,11 +62,12 @@ Priority sú **odporúčanie Opusu**, nie rozhodnutie. Poradie určuješ ty.
 | 28 | **Robotický hlas hlásateľa** | S – M | P3 | Vlastný hlas v duchu hry M.A.X., vyrobený v telefóne. |
 | 29 | **Téma Fantasy Town** | M – L | P3 | Druhá sada budov. Nie sú to len obrázky – každú budovu treba poskladať. |
 | 30 | **B10 – odpočinok ukončiť skôr** | XS | P3 | Rozhodnutie: smie sa odpočinok potvrdiť v posledných asi 20 % času? |
+| 31 | **Slovenské texty pre všetkých** | S – M | P2 | Appka po slovensky oslovuje každého v mužskom rode („zaspal si", „vstal som", „postavil si"). Buď texty prepísať neutrálne, alebo pridať voľbu oslovenia. Nový návrh Opusu z revízie textov 2026-10-12. |
 | – | Povolené appky počas noci | – | neodporúčam | Vyžaduje Screen Time API – to je proti pevnému pravidlu projektu. |
 
 ## Popis po skupinách
 
-### P0 – hneď
+### P0 – hotovo ✅
 
 **1 · EARLY.** Podnet prišiel od testerky. Pravidlo, ktoré si dnes rozhodol: tlačidlo je dostupné od večierky − 3 h
 až po chvíľu, keď sa otvorí bežný štart (večierka − 10 min). Noc sa počíta celá – budova, mince, séria. Ráno sa
@@ -74,15 +76,19 @@ Pred štartom sa appka krátko opýta, aby sa noc nezačala omylom o tri hodiny 
 ktorá už beží, neposiela. Nič nové sa neukladá – skorší štart sa pozná z času štartu, takže to netreba
 synchronizovať.
 
-Z kontroly kódu ostalo päť drobností na jeden krok workera, žiadna nebráni skúšaniu: popis na Dnes po zrušenej
-skoršej noci (dnes hovorí „ešte nemôžeš ísť spať", hoci dnešná noc je už odohraná), pripomienka večierky po
-zrušenej skoršej noci, zbytočné prekresľovanie Dnes každú sekundu počas skoršieho okna, jedna veta v sprievodcovi
-a jedna formulácia workera na tvoje posúdenie.
+**Potvrdené 2026-10-12.** Tvoja noc z 11. na 12. 10. bola skorší štart: začal si pred bežným oknom, všetko
+používanie telefónu sa zmestilo do 15 minút prípravy, budík zazvonil v obvyklom čase, budova stojí a mince sedia.
 
-**Pozor pri skúšaní:** skorší štart je ostrá noc daného dňa. Keď ju zrušíš, ostane ruina.
+Šesť drobností z kontroly kódu je spravených a otestovaných 2026-10-12: popis na Dnes po zrušenej skoršej noci
+(hovoril „ešte nemôžeš ísť spať", hoci dnešná noc už bola odohraná), pripomienka večierky po zrušenej skoršej noci,
+zbytočné prekresľovanie Dnes každú sekundu počas skoršieho okna, dve vety v sprievodcovi a ťuknutie na odkaz na
+obrazovke plánov, ktoré by počas noci vyviedlo z appky. Navyše: riadok sprievodcu „pripoj iPhone k Macu" už
+testeri neuvidia (platí len pre inštaláciu z Xcode).
 
-**2 · Build 4.** Číslo buildu treba zdvihnúť na 4. Nahrať ho vieš z Xcode sám, alebo to na tvoje slovo spraví Opus
-z príkazového riadku; pridanie buildu do skupín testerov ostáva na tebe.
+**Dobré vedieť:** skorší štart je ostrá noc daného dňa. Keď ju zrušíš, ostane ruina.
+
+**2 · Build 4.** Nahraný 2026-10-12 o 08:41 z príkazového riadku. Pridanie buildu do skupín testerov ostáva na
+tebe (App Store Connect → TestFlight). Ďalšie nahratie bude potrebovať číslo buildu 5.
 
 ### P1 – pred širším testovaním a pred App Store
 
@@ -138,6 +144,10 @@ neodporúčam ho (oranžová bodka celú noc, dôvera ľudí). Pohyb je rozumná
 **19 · Prístupnosť.** V pláne to doteraz nebolo. Pri appke pre veľa ľudí sa na to príde skôr či neskôr; prvý
 prechod je malý.
 
+**31 · Slovenské texty pre všetkých.** Vyšlo to z revízie všetkých textov: slovenčina v appke hovorí „zaspal si",
+„vstal som", „chorý alebo na dovolenke?". Testerka, ktorá nahlásila skoršiu večierku, to číta každý deň. Anglická
+verzia tento problém nemá.
+
 ### P3 – neskôr alebo čaká na teba
 
 **20 – 23 · Ostrov a mince.** Všetko je opísané v návrhu z 2026-10-10 a čaká na tvojich osem odpovedí. Pri
@@ -152,7 +162,7 @@ zobudiť a čakať na potvrdenie. Oboje má zmysel rozhodnúť, až keď uvidím
 
 ## Odporúčané poradie najbližších krokov
 
-1. Tvoja skúška EARLY na telefóne → build 4 do TestFlightu.
+1. ✅ Hotovo 2026-10-12: tvoja skúška EARLY na telefóne a build 4 nahraný do TestFlightu.
 2. TODAY a POP súbežne (dvaja workeri, iné súbory).
 3. CAL (dva kroky), popri tom tvoje odpovede k App Store stránke.
 4. CARE-2a a rozbor rizika pri kontrole Applu.

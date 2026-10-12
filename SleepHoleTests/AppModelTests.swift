@@ -669,5 +669,28 @@ struct AppModelTests {
         #expect(n.model.reminderQuietUntil == nil)                             // a normal night
         let nap = harness(at: date(5, 14, 0)); nap.model.startNap()
         #expect(nap.model.reminderQuietUntil == nil)                           // a nap
+        // an early night cancelled before its bedtime: tonight's reminder stays quiet until that bedtime
+        let c = harness(at: date(5, 21, 0)); c.model.refresh(); c.model.startNight(early: true)
+        c.model.abandonNight(); c.model.acknowledgeResult()
+        #expect(c.model.reminderQuietUntil == date(5, 22, 30))
+        c.clock.now = date(5, 22, 31)
+        #expect(c.model.reminderQuietUntil == nil)                             // after that bedtime
+        // a normal night cancelled after its bedtime: nothing to keep quiet
+        let d = harness(at: date(5, 22, 25)); d.model.refresh(); d.model.startNight()
+        d.clock.now = date(5, 22, 40); d.model.abandonNight(); d.model.acknowledgeResult()
+        #expect(d.model.reminderQuietUntil == nil)
+    }
+
+    @Test func tonightPlayedAfterACancelledEarlyNight() {
+        let h = harness(at: date(5, 12, 0)); h.model.refresh()
+        #expect(!h.model.tonightPlayed)
+        h.clock.now = date(5, 21, 0); h.model.refresh()
+        #expect(h.model.canStartEarly && !h.model.tonightPlayed)
+        h.model.startNight(early: true)
+        #expect(!h.model.tonightPlayed)                                        // while it runs
+        h.model.abandonNight(); h.model.acknowledgeResult()
+        #expect(h.model.tonightPlayed && !h.model.canStartEarly && h.model.phase == .idle)
+        h.clock.now = date(6, 20, 0); h.model.refresh()
+        #expect(!h.model.tonightPlayed)                                        // the next evening
     }
 }

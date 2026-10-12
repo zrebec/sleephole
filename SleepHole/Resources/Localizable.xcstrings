@@ -992,7 +992,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Praská pec, vonku svrčky; píla, hoblík, brúsny papier, klince, metla a priadúca mačka. Každú noc iný príbeh."
+            "value": "Praská pec, vonku svrčky; píla, hoblík, brúsny papier, klince, metla a pradúca mačka. Každú noc iný príbeh."
           }
         }
       }
@@ -2624,7 +2624,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Už sa ti chce spať? Dnešnú stavbu môžeš začať už teraz – noc bez telefónu bude len dlhšia. Budík ostáva na %@."
+            "value": "Už sa ti chce spať? Dnešnú stavbu môžeš začať už teraz – noc bez telefónu bude len dlhšia. Budík zazvoní o %@ ako vždy."
           }
         }
       }
@@ -2640,7 +2640,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chce sa ti spať skôr? Už %lld h pred večierkou môžeš ísť spať skôr: noc sa počíta celá, len noc bez telefónu je dlhšia. Na prípravu máš potom %@ od začiatku a budík ostáva na čase vstávania."
+            "value": "Chce sa ti spať skôr? Dnešnú stavbu môžeš začať už %lld h pred večierkou: noc sa počíta celá, len bez telefónu budeš dlhšie. Na prípravu máš vtedy %@ od štartu a budík zazvoní ako vždy."
           }
         }
       }
@@ -3045,18 +3045,18 @@
         }
       }
     },
-    "For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus %@ – start earlier, get more time. We'll warn you 15 s before it ends; then come back to SleepHole.": {
+    "For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus %@. We'll warn you 15 s before it ends; then come back to SleepHole.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus %@ – start earlier, get more time. We'll warn you 15 s before it ends; then come back to SleepHole."
+            "value": "For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus %@. We'll warn you 15 s before it ends; then come back to SleepHole."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Na prípravu (podcast, rozprávka, selfie…) máš čas od štartu až do večierky a ešte %@ po nej – kto začne skôr, má viac času. 15 s pred koncom ťa upozorníme, potom sa vráť do SleepHole."
+            "value": "Na prípravu (podcast, rozprávka, selfie…) máš čas od štartu až do večierky a ešte %@ po nej. 15 s pred koncom ťa upozorníme, potom sa vráť do SleepHole."
           }
         }
       }
@@ -5392,7 +5392,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ešte nemôžeš ísť spať – stavať môžeš od %1$@ do %2$@. Chce sa ti spať skôr? Skorší začiatok sa otvára o %3$@."
+            "value": "Ešte nemôžeš ísť spať – stavať môžeš od %1$@ do %2$@. Keď sa ti bude chcieť spať skôr, dá sa to už od %3$@."
           }
         }
       }
@@ -5413,34 +5413,50 @@
         }
       }
     },
-    "You start building from %@ before bedtime to %@ after it. Later than that the night counts as missed.": {
+    "You can start building from %@ before bedtime until %@ after it. Later than that the night counts as missed.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "You start building from %@ before bedtime to %@ after it. Later than that the night counts as missed."
+            "value": "You can start building from %@ before bedtime until %@ after it. Later than that the night counts as missed."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stavbu začneš od %1$@ pred večierkou do %2$@ po nej. Neskôr sa noc počíta ako vynechaná."
+            "value": "Stavbu môžeš začať od %1$@ pred večierkou do %2$@ po nej. Neskôr sa noc počíta ako vynechaná."
           }
         }
       }
     },
-    "Your bedtime is at %@, so tonight's night without your phone will be longer. You have %@ to set up; your alarm stays at %@.": {
+    "You've already built tonight 🌙 You can build again tomorrow from %@.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Your bedtime is at %@, so tonight's night without your phone will be longer. You have %@ to set up; your alarm stays at %@."
+            "value": "You've already built tonight 🌙 You can build again tomorrow from %@."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Večierku máš o %1$@, takže dnešná noc bez telefónu bude dlhšia. Na prípravu máš %2$@; budík ostáva na %3$@."
+            "value": "Dnes sa už stavalo 🌙 Znova môžeš stavať zajtra od %@."
+          }
+        }
+      }
+    },
+    "Your bedtime is at %@, so tonight you'll be without your phone for longer. You have %@ from now to set up; your alarm rings at %@ as always.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your bedtime is at %@, so tonight you'll be without your phone for longer. You have %@ from now to set up; your alarm rings at %@ as always."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večierku máš o %1$@, takže dnes budeš bez telefónu dlhšie. Na prípravu máš odteraz %2$@; budík zazvoní o %3$@ ako vždy."
           }
         }
       }
@@ -6532,7 +6548,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Podpis appky SleepHole vyprší v čase uvedenom vyššie. Do vtedy pripoj iPhone k Macu a nainštaluj SleepHole znova – dáta zostanú. Deň a 3 hodiny vopred dostaneš pripomienku."
+            "value": "Podpis appky SleepHole vyprší v čase uvedenom vyššie. Dovtedy pripoj iPhone k Macu a nainštaluj SleepHole znova – dáta zostanú. Deň a 3 hodiny vopred dostaneš pripomienku."
           }
         }
       }
@@ -8404,7 +8420,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Displej môžeš vypnúť, ale SleepHole musí zostať otvorený. Ak prepneš do inej appky, dostaneš upozornenie a %1$@ na návrat. Všetky takéto odchody majú spolu %2$@ za noc – keď sa minú, obrazovka noci ti to povie a ďalší odchod stavbu zrúti."
+            "value": "Displej môžeš vypnúť, ale SleepHole musí zostať otvorená. Ak prepneš do inej appky, dostaneš upozornenie a %1$@ na návrat. Všetky takéto odchody majú spolu %2$@ za noc – keď sa minú, obrazovka noci ti to povie a ďalší odchod stavbu zrúti."
           }
         }
       }
@@ -9124,7 +9140,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "iOS dovolí appke vibrovať, len keď je na obrazovke. V noci vibrujú varovania cez svoju notifikáciu – na to treba nastavenia vyššie. Sú časovo citlivé, takže prídu aj počas Sústredenia – ak sa iOS spýta, nechaj ich povolené."
+            "value": "iOS dovolí appke vibrovať, len keď je na obrazovke. V noci vibrujú varovania cez svoje upozornenie – na to treba nastavenia vyššie. Sú časovo citlivé, takže prídu aj počas Sústredenia – ak sa iOS spýta, nechaj ich povolené."
           }
         }
       }
@@ -10292,7 +10308,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Teraz sa nepodarilo synchronizovať. SleepHole to skúsi znova sám."
+            "value": "Teraz sa nepodarilo synchronizovať. SleepHole to skúsi znova sama."
           }
         }
       }

@@ -177,24 +177,22 @@ struct ServicesTests {
         // (requestAuthorization is not called: the permission alert would block the test run forever)
     }
 
-    @Test func reminderTriggerIsDailyWithoutQuietAndOneShotWithIt() {
+    @Test func reminderTriggersAreDailyWithoutQuietAndWeeklyWithoutTonightWithIt() {
         var cal = Calendar(identifier: .gregorian); cal.timeZone = TimeZone(identifier: "Europe/Bratislava")!
         func at(_ d: Int, _ h: Int, _ m: Int) -> Date { cal.date(from: DateComponents(year: 2026, month: 10, day: d, hour: h, minute: m))! }
         let sched = Schedule(bedtime: TimeOfDay(22, 30), wake: TimeOfDay(6, 30), reminderOffsets: [30])
-        let daily = Notifications.reminderTrigger(schedule: sched, offset: 30, quietUntil: nil, calendar: cal)
-        #expect(daily?.repeats == true && daily?.components.hour == 22 && daily?.components.minute == 0 && daily?.components.day == nil)
-        // an early start at 21:00 (tonight's 22:00 reminder still ahead) and at 22:10 (already past)
-        for quiet in [at(5, 22, 30)] {
-            let t = Notifications.reminderTrigger(schedule: sched, offset: 30, quietUntil: quiet, calendar: cal)!
-            #expect(t.repeats == false)
-            #expect(cal.date(from: t.components) == at(6, 22, 0))
-        }
-        // a bedtime shortly after midnight: reminder 23:45, quiet until 00:15 → the same evening's 23:45
+        let daily = Notifications.reminderTriggers(schedule: sched, offset: 30, quietUntil: nil, calendar: cal)
+        #expect(daily.count == 1 && daily[0].suffix == "")
+        #expect(daily[0].components.hour == 22 && daily[0].components.minute == 0 && daily[0].components.weekday == nil)
+        // Monday 2026-10-05 is tonight: six weekly triggers, none on Monday (weekday 2)
+        let weekly = Notifications.reminderTriggers(schedule: sched, offset: 30, quietUntil: at(5, 22, 30), calendar: cal)
+        #expect(weekly.map(\.suffix) == ["-w1", "-w3", "-w4", "-w5", "-w6", "-w7"])
+        #expect(weekly.allSatisfy { $0.components.hour == 22 && $0.components.minute == 0 && $0.components.weekday != 2 })
+        #expect(weekly.map { $0.components.weekday } == [1, 3, 4, 5, 6, 7])
+        // a bedtime shortly after midnight: the reminder moment is Monday 23:45 → Monday is skipped
         let late = Schedule(bedtime: TimeOfDay(0, 15), wake: TimeOfDay(7, 0), reminderOffsets: [30])
-        let l = Notifications.reminderTrigger(schedule: late, offset: 30, quietUntil: at(6, 0, 15), calendar: cal)!
-        #expect(!l.repeats && cal.date(from: l.components) == at(6, 23, 45))
-        let ld = Notifications.reminderTrigger(schedule: late, offset: 30, quietUntil: nil, calendar: cal)!
-        #expect(ld.repeats && ld.components.hour == 23 && ld.components.minute == 45)
+        let l = Notifications.reminderTriggers(schedule: late, offset: 30, quietUntil: at(6, 0, 15), calendar: cal)
+        #expect(l.count == 6 && l.allSatisfy { $0.components.weekday != 2 && $0.components.hour == 23 && $0.components.minute == 45 })
     }
 
     @Test func schedulingRemindersWithQuietDoesNotCrash() {

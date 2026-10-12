@@ -13,13 +13,13 @@ enum Plural {
 enum GuideText {
     static let rules = SleepRules()
     static var startWindow: String {
-        L("You start building from \(Plural.minutes(NightWindow.startLead)) before bedtime to \(Plural.minutes(rules.startDeadline)) after it. Later than that the night counts as missed.")
+        L("You can start building from \(Plural.minutes(NightWindow.startLead)) before bedtime until \(Plural.minutes(rules.startDeadline)) after it. Later than that the night counts as missed.")
     }
     static var earlyStart: String {
         L("Tired sooner? From \(Int(NightWindow.earlyStartLead / 3600)) h before bedtime you can go to sleep early: the night counts in full, only the night without your phone is longer. You then have \(Plural.minutes(rules.earlySetup)) from the start to set up, and the alarm stays at your wake-up time.")
     }
     static var setup: String {
-        L("For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus \(Plural.minutes(rules.setupGrace)) – start earlier, get more time. We'll warn you 15 s before it ends; then come back to SleepHole.")
+        L("For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus \(Plural.minutes(rules.setupGrace)). We'll warn you 15 s before it ends; then come back to SleepHole.")
     }
     static var night: String {
         L("You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and \(Plural.seconds(rules.accidentalTolerance)) to come back. All such trips share \(Plural.seconds(rules.awayBudget ?? 0)) per night – when they are used up, the night screen tells you, and leaving again collapses the building.")
@@ -221,7 +221,9 @@ struct GuideView: View {
             row("moon.zzz.fill", L("The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “SleepHole must stay open” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed."))
             row("speaker.wave.2.fill", L("The alarm rings even in silent mode. Pick the sound in Settings."))
             row("arrow.down.circle", L("iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – the system alarm (if you allowed it) and the backup notifications ring instead. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing."))
-            row("arrow.clockwise", L("SleepHole's signature runs out after a while – then connect your iPhone to the Mac and install SleepHole again. Your data stays."))
+            if AppExpiry.date != nil {   // only builds installed from Xcode carry a profile; TestFlight / App Store have none
+                row("arrow.clockwise", L("SleepHole's signature runs out after a while – then connect your iPhone to the Mac and install SleepHole again. Your data stays."))
+            }
         }
         .task {
             let settings = await UNUserNotificationCenter.current().notificationSettings()

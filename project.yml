@@ -13,8 +13,8 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "1.0"
-    # every upload to App Store Connect / TestFlight needs a higher CURRENT_PROJECT_VERSION (builds 1 and 2 are uploaded)
-    CURRENT_PROJECT_VERSION: "3"
+    # every upload to App Store Connect / TestFlight needs a higher CURRENT_PROJECT_VERSION (builds 1 to 3 are uploaded)
+    CURRENT_PROJECT_VERSION: "4"
 targets:
   SleepHole:
     type: application

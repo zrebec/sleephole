@@ -57,7 +57,7 @@ struct SyncStatusTests {
 
         Lang.current = .sk
         #expect(SyncStatus.unavailable.text(now: now) == "iCloud nie je dostupný. V Nastaveniach iPhonu sa prihlás do iCloudu a zapni iCloud Drive.")
-        #expect(SyncStatus.failed.text(now: now) == "Teraz sa nepodarilo synchronizovať. SleepHole to skúsi znova sám.")
+        #expect(SyncStatus.failed.text(now: now) == "Teraz sa nepodarilo synchronizovať. SleepHole to skúsi znova sama.")
         #expect(SyncStatus.notYet.text(now: now) == "Zatiaľ nesynchronizované")
         #expect(SyncStatus.synced(today).text(now: now) == "Naposledy synchronizované: 14:05")
         #expect(SyncStatus.synced(earlier).text(now: now) == "Naposledy synchronizované: 3. 10. 9:07")

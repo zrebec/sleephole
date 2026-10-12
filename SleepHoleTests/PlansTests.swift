@@ -25,7 +25,7 @@ struct PlansTests {
 
         | # | What | Effort | Priority | Description |
         |---|---|---|---|---|
-        | 1 | **Alpha** | S | P0 | does a |
+        | 1 | **Alpha** | S | P0 ✅ | does a |
         | – | Beta | M | P3 | does b |
         """
         let blocks = PlansDocument.parse(md)
@@ -37,8 +37,8 @@ struct PlansTests {
             .bullet("two"),
             .bullet("1. numbered"),
             .legend(["XS", "tiny"]),
-            .item(.init(number: 1, title: "Alpha", effort: "S", priority: "P0", summary: "does a")),
-            .item(.init(number: nil, title: "Beta", effort: "M", priority: "P3", summary: "does b")),
+            .item(.init(number: 1, title: "Alpha", effort: "S", priority: "P0", done: true, summary: "does a")),
+            .item(.init(number: nil, title: "Beta", effort: "M", priority: "P3", done: false, summary: "does b")),
         ])
     }
 
@@ -50,6 +50,7 @@ struct PlansTests {
         for i in items {
             #expect(!i.title.isEmpty && !i.effort.isEmpty && !i.priority.isEmpty && !i.summary.isEmpty)
         }
+        #expect(items.allSatisfy { !$0.priority.contains("✅") })
         let numbers = items.compactMap(\.number)
         #expect(numbers == Array(1...numbers.count))
         #expect(blocks.contains { if case .heading = $0 { true } else { false } })

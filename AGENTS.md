@@ -112,30 +112,31 @@ then answer. Remove items here when they are done.
      Firefox for those clicks; the browser tool drives only Chrome with the Claude extension and none was
      connected. Not proven on devices: two live devices syncing (a tester with a phone and a tablet will show).
      The proposal document's eight questions are still unanswered.**
-     **NEW 2026-10-11 evening:** (1) **THE EARLY START IS BUILT AND ON THE PHONE (phase EARLY, plan §10 EARLY;
-     since 2026-10-11 20:33, installed at his request – he wanted to try it that very night).** A tester had wanted
-     to go to bed 100 minutes before her bedtime and the app refused; he took it as urgent and decided: from
-     bedtime − 3 h, no penalty (the night without the phone is simply longer), the setup 15 min from the start (a
-     normal start keeps its 5), the morning unchanged. The button reads "🌙 Dnes ísť spať skôr" and asks "Ísť spať
-     už teraz?" first; the bedtime reminder is not sent for a night that already runs. Nothing new is stored.
-     SleepCore 335 / app 496 tests green, i18n 651 keys 0 / 0 / 0; UNCOMMITTED – check `git status`.
-     **At 20:46 a second build followed at his request (he confirmed no night was running): the same tree plus
-     Settings → Developer → "Plány a návrhy"** – `docs/PREHLAD-PLANOV.md` shown natively (Debug builds only, the
-     document is bundled and parsed at run time; SleepHole is the only app he can read in during a night). Nobody
-     has looked at that screen yet – ask how it reads on the phone.
-     **FIRST QUESTION OF THE NEXT SESSION: how did the night of 2026-10-11 → 12 go – did he start it early, did the
-     question appear, were the 15 minutes right, did a bedtime reminder still arrive, did the alarm ring at the
-     usual time?** Then: his reading of the nine new texts (the table was in the chat; they are in the String
-     Catalog), the six small review follow-ups (plan §10 EARLY – one worker step, among them Today's caption after
-     a cancelled early night and that night's reminder), then `CURRENT_PROJECT_VERSION` 4 and TestFlight for the
-     tester who reported it. He was told before his test that an early start is the real night of that date:
-     cancelling it leaves ruins and October's joker is spent. **The same evening Opus wrote
-     `docs/PREHLAD-PLANOV.md` (a copy is in his iCloud Drive `SleepHole/`): every open item in one table with effort
-     and priority, as he asked. Opus's order after EARLY: TODAY + POP in parallel, then CAL, CARE-2a (+10 per calm
-     hour; the +11 waits for the movement spike) and an analysis of the App Review risk – ask whether he agrees and
-     for the three answers the first steps need (may the buddy on Today shrink to about 200 pt; the residents'
-     ranges and the town size names; the App Store subtitle / privacy page / public contact).**
-     (2) **the App Store page:** he asked what
+     **2026-10-12 morning – PHASE EARLY IS CONFIRMED AND FINISHED (plan §10 EARLY and the three §12 rows of that
+     day).** A tester had wanted to go to bed 100 minutes before her bedtime and the app refused; the owner decided
+     (2026-10-11): from bedtime − 3 h, no penalty, the setup 15 min from the start, the morning unchanged. **His own
+     night of 2026-10-11 → 12 was an early start and he confirmed it ("the alarm worked, the building was built, the
+     coins agree to the last one"); the journal agrees.** The same morning, on his "finish P0": the six review
+     follow-ups, a review of ALL texts (twelve changed – the table was in the chat, he has not commented yet), green
+     "✓ Hotovo" badges for finished rows on Settings → Developer → "Plány a návrhy", and build number 4 (SleepCore
+     335 / app 497 tests green, i18n 652 keys 0 / 0 / 0; two commits, he pushes). **Build 1.0 (4) is uploaded to App
+     Store Connect (08:41, "Upload succeeded"); the phone carries the Debug build 1.0 (4) since 08:45.**
+     **Ask first:** (a) did he add build 4 to both tester groups, and did the tester who reported the early bedtime
+     get it; (b) how the plans screen reads on the phone – nobody has seen it yet – and whether the green badges are
+     what he meant; (c) his word on the twelve changed texts; (d) his next early night: the bedtime reminders now
+     skip only that evening's weekday (six weekly triggers, untried on a device) – does the reminder of the
+     FOLLOWING evening arrive; and were the 15 minutes of setup tight (he finished 24 s before their end); (e) the
+     Strict switch is still ON on his phone (that night was stored as strict) – is that what he wants.
+     **Two things Opus must remember from that morning:** he caught a premature "build 4 is uploaded" in the
+     overview – a status is written only after the proof is seen (memory `done-only-when-done`); and an export from
+     the command line can hang silently on a keychain dialog on his Mac (plan §12, 2026-10-12) – look for it and
+     tell him at once. **`docs/PREHLAD-PLANOV.md`** (a copy is in his iCloud Drive `SleepHole/`): every open item in
+     one table with effort and priority; rows 1 and 2 (P0) are done, row 31 is new (the Slovak texts address
+     everybody as a man). **He agreed with the overview and its order (2026-10-12): TODAY + POP in parallel next,
+     then CAL, CARE-2a (+10 per calm hour; the +11 waits for the movement spike) and an analysis of the App Review
+     risk.** The three answers the first steps need are still open: may the buddy on Today shrink to about 200 pt;
+     the residents' ranges and the town size names; the App Store subtitle / privacy page / public contact.
+     **The App Store page (2026-10-11 evening):** he asked what
      App Store Connect needs (icon, subtitle…) and for help with the texts. The guide with text proposals in
      English and Slovak is in his iCloud Drive (`SleepHole/APPSTORE-NAVOD.md`): fields and limits, subtitle /
      promotional text / keywords / description, a privacy policy draft, the questionnaires, and what is not
@@ -147,11 +148,10 @@ then answer. Remove items here when they are done.
      (the public link said "not accepting new testers" because Apple's review had not finished); the guide in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`) now explains the missing step
      (an Internal Testing group holding the friend and the build), the public link for several friends and the
      text for Apple's review – ask what worked and whether he cut the friend's roles to Marketing; raise
-     `CURRENT_PROJECT_VERSION` to 3 before the next upload; (2) CARE-2 (calm-hour coins +10 / +11) is confirmed
+     `CURRENT_PROJECT_VERSION` to 5 before the next upload (4 is uploaded); (2) CARE-2 (calm-hour coins +10 / +11) is confirmed
      but NOT built – he believed it was; (3) the Dynamic Island / Live Activity try. Never write his sleep values
-     or the names of his devices and apps into the repo. Everything up to S4 was committed 2026-10-11 (he pushes);
-     the notes about the upload of build 3 (this file and the plan) came after it and are NOT committed – check
-     `git status`. A build in the Xcode app rewrites the two String Catalogs – restore them with `git checkout`
+     or the names of his devices and apps into the repo. Everything up to the morning of 2026-10-12 (build 4) is
+     committed; he pushes – check `git status` all the same. A build in the Xcode app rewrites the two String Catalogs – restore them with `git checkout`
      before a commit (plan §12, 2026-10-11).
      **The forgiven night
      of 2026-10-07 → 08 is taken back (his decision 2026-10-08, done on the phone 2026-10-09 12:28 with
@@ -201,7 +201,7 @@ then answer. Remove items here when they are done.
    1.0 (2) is uploaded (2026-10-10 morning). The friend was added as an internal tester and saw nothing; more
    friends want to help, so the next step is an external group with a public link (Beta App Review first) – see
    item 0 and the guide in his iCloud Drive. **Raise `CURRENT_PROJECT_VERSION` in `project.yml` before every
-   further upload** (3 is uploaded since 2026-10-11 12:52; the next one is 4). He uploads himself (Xcode →
+   further upload** (4 is uploaded since 2026-10-12 08:41; the next one is 5). He uploads himself (Xcode →
    Organizer → Distribute App); when he asks, Opus can archive and upload from the command line (plan §12,
    2026-10-11) – adding a build to the tester groups stays his clicks.
 
@@ -364,7 +364,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `docs/PLAN.md` | product decisions (Slovak) |
 | `docs/NAVRH-ZVIERATKA.md` | next plans A/B/C: pause, sleep buddy, Cube Pets residents, living town (Slovak, owner picks) |
 | `docs/NAVRH-MESTO-STATISTIKY.md`, `docs/previews/navrh-2026-10-10/` | proposals of 2026-10-10 after the 100-night simulation (Slovak) and their SVG mock-ups – the spec of phase NEXT (plan §10); the owner picks |
-| `docs/PREHLAD-PLANOV.md` | the owner's overview of everything open (Slovak, 2026-10-11): one table with effort and priority per item + short descriptions; priorities are Opus's recommendation – the plan's §10 stays the spec. **Bundled into Debug builds and shown in Settings → Developer → "Plans and proposals" (`SleepHole/Debug/PlansView.swift`) – keep the main table's five columns (`#` first) or the parser loses it; no `http` links** |
+| `docs/PREHLAD-PLANOV.md` | the owner's overview of everything open (Slovak, 2026-10-11): one table with effort and priority per item + short descriptions; priorities are Opus's recommendation – the plan's §10 stays the spec. **Bundled into Debug builds and shown in Settings → Developer → "Plans and proposals" (`SleepHole/Debug/PlansView.swift`) – keep the main table's five columns (`#` first) or the parser loses it; no `http` links. A `✅` in a row's priority cell marks it finished (green badges on the screen) – set it only after the proof is seen** |
 | `docs/IMPLEMENTATION_I18N.md` | full spec for the EN/SK multi-language phase (string inventory, architecture, tests) |
 | `SleepCore/` | pure Swift package: schedule, night evaluation, progression, picker, town layout |
 | `SleepHole/` | iOS app target (created in F0) |

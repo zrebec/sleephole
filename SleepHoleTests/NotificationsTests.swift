@@ -40,6 +40,7 @@ struct NotificationsTests {
     @Test func bedtimeRemindersAreTimeSensitive() {
         for i in 0..<10 {
             #expect(Notifications.isTimeSensitive(Notifications.reminderId(i)), "reminder \(i)")
+            #expect(Notifications.isTimeSensitive(Notifications.reminderId(i) + "-w3"), "reminder \(i) weekday")
         }
         let content = Notifications.reminderContent(0, bedtime: TimeOfDay(22, 30), offset: 30)
         #expect(content.interruptionLevel == .timeSensitive)

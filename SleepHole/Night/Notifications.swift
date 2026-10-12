@@ -43,37 +43,40 @@ enum Notifications {
     }
 
     /// Daily reminders before bedtime (time sensitive: owner 2026-10-04 – they should reach him in a Focus too).
-    /// With `quietUntil` (the bedtime of a night that was started early) every reminder is a one-shot for its first
-    /// occurrence after that moment, so the running night is not interrupted; the next launch / night end restores
-    /// the daily repeating ones.
+    /// With `quietUntil` (tonight's bedtime, a night started early) each reminder becomes six weekly ones – every
+    /// weekday except tonight's – so the running night is not interrupted and the others keep repeating on their own.
     static func scheduleReminders(_ schedule: Schedule, quietUntil: Date? = nil, calendar: Calendar = .current) {
-        let ids = (0..<10).map(reminderId)
-        center.removePendingNotificationRequests(withIdentifiers: ids)
+        center.removePendingNotificationRequests(withIdentifiers: (0..<10).flatMap(reminderIds))
         for (i, offset) in schedule.reminderOffsets.enumerated() where offset > 0 {
-            guard let plan = reminderTrigger(schedule: schedule, offset: offset, quietUntil: quietUntil, calendar: calendar)
-            else { continue }
-            let trigger = UNCalendarNotificationTrigger(dateMatching: plan.components, repeats: plan.repeats)
             let content = reminderContent(i, bedtime: schedule.bedtime, offset: offset)
-            center.add(UNNotificationRequest(identifier: reminderId(i), content: content, trigger: trigger))
+            for plan in reminderTriggers(schedule: schedule, offset: offset, quietUntil: quietUntil, calendar: calendar) {
+                let trigger = UNCalendarNotificationTrigger(dateMatching: plan.components, repeats: true)
+                center.add(UNNotificationRequest(identifier: reminderId(i) + plan.suffix, content: content, trigger: trigger))
+            }
         }
         scheduleMonthlyCheck(wake: schedule.wake)
     }
 
-    /// Pure: which date components a reminder fires at, and whether it repeats daily. Without `quietUntil` the daily
-    /// one (hour + minute); with it a single full date – the first time of day (bedtime − offset) strictly after it.
-    static func reminderTrigger(schedule: Schedule, offset: Int, quietUntil: Date?,
-                                calendar: Calendar) -> (components: DateComponents, repeats: Bool)? {
+    /// Pure: the repeating triggers of one reminder. Without `quietUntil` one daily trigger (hour + minute, suffix "");
+    /// with it six weekly ones (suffix "-w<weekday>") for every weekday except the one of tonight's reminder moment
+    /// (`quietUntil` − offset, so a bedtime shortly after midnight skips the evening before it).
+    static func reminderTriggers(schedule: Schedule, offset: Int, quietUntil: Date?,
+                                 calendar: Calendar) -> [(suffix: String, components: DateComponents)] {
         let total = (schedule.bedtime.hour * 60 + schedule.bedtime.minute - offset + 24 * 60) % (24 * 60)
-        let daily = DateComponents(hour: total / 60, minute: total % 60)
-        guard let quietUntil else { return (daily, true) }
-        var time = daily
-        time.second = 0
-        guard let next = calendar.nextDate(after: quietUntil, matching: time, matchingPolicy: .nextTime) else { return nil }
-        return (calendar.dateComponents([.year, .month, .day, .hour, .minute], from: next), false)
+        let hour = total / 60, minute = total % 60
+        guard let quietUntil else { return [("", DateComponents(hour: hour, minute: minute))] }
+        let skipped = calendar.component(.weekday, from: quietUntil.addingTimeInterval(-Double(offset) * 60))
+        return (1...7).filter { $0 != skipped }.map {
+            ("-w\($0)", DateComponents(hour: hour, minute: minute, weekday: $0))
+        }
     }
 
     static let reminderPrefix = "reminder-"
     static func reminderId(_ index: Int) -> String { reminderPrefix + String(index) }
+    /// Every identifier a reminder can have: the daily one and its seven weekday variants.
+    static func reminderIds(_ index: Int) -> [String] {
+        [reminderId(index)] + (1...7).map { reminderId(index) + "-w\($0)" }
+    }
 
     static func reminderContent(_ index: Int, bedtime: TimeOfDay, offset: Int) -> UNMutableNotificationContent {
         content(title: L("Bedtime at \(Fmt.time(bedtime))"), body: L("Bedtime in \(offset) minutes. Time to get ready 🌙"),

@@ -9,6 +9,7 @@ enum PlansDocument {
         var title: String
         var effort: String
         var priority: String
+        var done = false
         var summary: String
     }
 
@@ -65,7 +66,10 @@ enum PlansDocument {
                 if isSeparator(row) { continue }
                 if tableIsMain, row.count == 5 {
                     let title = row[1].replacingOccurrences(of: "**", with: "")
-                    blocks.append(.item(Item(number: Int(row[0]), title: title, effort: row[2], priority: row[3], summary: row[4])))
+                    let done = row[3].contains("✅")
+                    let priority = row[3].replacingOccurrences(of: "✅", with: "").trimmingCharacters(in: .whitespaces)
+                    blocks.append(.item(Item(number: Int(row[0]), title: title, effort: row[2], priority: priority,
+                                             done: done, summary: row[4])))
                 } else {
                     blocks.append(.legend(row))
                 }
@@ -123,6 +127,8 @@ struct PlansView: View {
         }
     }
 
+    private static let doneGreen = Color(red: 0.1, green: 0.5, blue: 0.2)
+
     private func badge(_ text: String, _ color: Color) -> some View {
         Text(verbatim: text)
             .font(.caption.bold())
@@ -145,7 +151,8 @@ struct PlansView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(verbatim: item.number.map { "\($0) · \(item.title)" } ?? item.title).font(.headline)
                 HStack(spacing: 6) {
-                    badge(item.priority, priorityColor(item.priority))
+                    badge(item.priority, item.done ? Self.doneGreen : priorityColor(item.priority))
+                    if item.done { badge("✓ " + L("Done"), Self.doneGreen) }
                     badge(item.effort, Color(white: 0.4))
                 }
                 Text(inline(item.summary)).font(.subheadline)
@@ -171,6 +178,7 @@ struct PlansView: View {
             }
             .padding(16)
         }
+        .environment(\.openURL, OpenURLAction { _ in .discarded })   // a link must not take the user out of the app at night
         .background(Color(.systemBackground))
         .navigationTitle(L("Plans and proposals"))
         .navigationBarTitleDisplayMode(.inline)

@@ -110,9 +110,9 @@ struct HomeView: View {
                             Button(L("Start tonight's building")) { model.startNight(early: true) }
                             Button(L("Not yet"), role: .cancel) {}
                         } message: {
-                            Text(L("Your bedtime is at \(Fmt.time(w.bedtime)), so tonight's night without your phone will be longer. You have \(Plural.minutes(SleepRules().earlySetup)) to set up; your alarm stays at \(Fmt.time(w.wake))."))
+                            Text(L("Your bedtime is at \(Fmt.time(w.bedtime)), so tonight you'll be without your phone for longer. You have \(Plural.minutes(SleepRules().earlySetup)) from now to set up; your alarm rings at \(Fmt.time(w.wake)) as always."))
                         }
-                        Text(sleepCaption(canSleep: canSleep, early: early, now: now, w: w))
+                        Text(sleepCaption(canSleep: canSleep, early: early, played: model.tonightPlayed, now: now, w: w))
                             .font(.callout).cardCaption().multilineTextAlignment(.center)
                     }
                     .padding()
@@ -147,7 +147,7 @@ struct HomeView: View {
         .todayWeather()                                   // the weather badge top right + the refresh loop
     }
 
-    private func sleepCaption(canSleep: Bool, early: Bool, now: Date, w: NightWindow) -> String {
+    private func sleepCaption(canSleep: Bool, early: Bool, played: Bool, now: Date, w: NightWindow) -> String {
         if early {
             return L("Tired already? You can start tonight's building now – the night without your phone will just be longer. Your alarm stays at \(Fmt.time(w.wake)).")
         }
@@ -156,6 +156,9 @@ struct HomeView: View {
         }
         if now > w.startCloses() {
             return L("It's too late to build tonight 🌙 Tomorrow from \(Fmt.time(w.startOpens)).")
+        }
+        if played {
+            return L("You've already built tonight 🌙 You can build again tomorrow from \(Fmt.time(w.startOpens)).")
         }
         return L("You can't go to sleep yet – you can build from \(Fmt.time(w.startOpens)) to \(Fmt.time(w.startCloses())). Tired sooner? An early start opens at \(Fmt.time(w.earlyStartOpens)).")
     }
