@@ -46,9 +46,12 @@ then answer. Remove items here when they are done.
      **Added the same day, late afternoon (plan §12, last row of 2026-10-12):** a tester's first night ended
      "unfinished" because she confirmed later than 2 minutes after the alarm, and the app did not say why → **he
      decided: the on-time window is 10 minutes** (hard rule R3 below is changed) + two text fixes = **build 6, uploaded 17:11 and on his
-     phone since 17:12** (SleepCore 336 / app 500 tests green; naps share the 10-minute window). Ask what he saw;
-     he adds build 6 to the tester groups (or Opus clicks it in his Chrome on his word), and only then the beta
-     is listed on departures.to (he asked to wait for build 6; Opus fills the form in his Chrome,
+     phone since 17:12** (SleepCore 336 / app 500 tests green; naps share the 10-minute window). He checked it the same evening
+     (privacy link opens, the Stats label is right). **Build 6 is in both tester groups and on the public link,
+     and the beta is listed on departures.to (`/apps/23674`).** **B23:** WeatherKit was not ticked under the App
+     ID's "App Services" on developer.apple.com – ticked at about 18:20 on his word; ASK whether the Weather test
+     now says "Apple WeatherKit" under "Answered by" (if not: try a build signed after the change). Earlier
+     note, kept for the record: the listing was to follow build 6 on departures.to (he asked to wait for build 6; Opus fills the form in his Chrome,
      he approves before it is sent). Through his Chrome Opus already set: all 175 countries, a limit of 200
      testers on the public link. Two announcement posts went out on his accounts with his approved text.
    * **The night of 2026-10-07 → 08 (bugs B24 + B25 + B26, plan §11a and §12):** the building collapsed
