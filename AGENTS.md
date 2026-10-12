@@ -41,14 +41,14 @@ then answer. Remove items here when they are done.
      Wellness Topics) – is that fine. **Still owed before "Add for Review":** the 15-minute night recipe of the
      review notes tried on a clean install (NOT his phone), one iPad simulator run, the screenshots uploaded, the
      release option left on "Manually release this version". Then, while Apple reviews: the documented-only lock
-     detection as a fallback. Everything of that afternoon except two site commits is UNCOMMITTED – check
-     `git status` and offer the commits. His idea "the newest building instead of the cat on Today" is in the
-     backlog, frozen. The next upload needs `CURRENT_PROJECT_VERSION` 6.
+     detection as a fallback. Everything of that day is committed (he pushes) – check `git status` all the same. His idea "the newest building instead of the cat on Today" is in the
+     backlog, frozen. The next upload needs `CURRENT_PROJECT_VERSION` 7 (6 is uploaded).
      **Added the same day, late afternoon (plan §12, last row of 2026-10-12):** a tester's first night ended
      "unfinished" because she confirmed later than 2 minutes after the alarm, and the app did not say why → **he
-     decided: the on-time window is 10 minutes** (hard rule R3 below is changed) + two text fixes = **build 6**.
-     Check whether build 6 is built, uploaded and on his phone; he then adds it to the tester groups, and only
-     then the beta is listed on departures.to (he asked to wait for build 6; Opus fills the form in his Chrome,
+     decided: the on-time window is 10 minutes** (hard rule R3 below is changed) + two text fixes = **build 6, uploaded 17:11 and on his
+     phone since 17:12** (SleepCore 336 / app 500 tests green; naps share the 10-minute window). Ask what he saw;
+     he adds build 6 to the tester groups (or Opus clicks it in his Chrome on his word), and only then the beta
+     is listed on departures.to (he asked to wait for build 6; Opus fills the form in his Chrome,
      he approves before it is sent). Through his Chrome Opus already set: all 175 countries, a limit of 200
      testers on the public link. Two announcement posts went out on his accounts with his approved text.
    * **The night of 2026-10-07 → 08 (bugs B24 + B25 + B26, plan §11a and §12):** the building collapsed
@@ -179,7 +179,7 @@ then answer. Remove items here when they are done.
      (the public link said "not accepting new testers" because Apple's review had not finished); the guide in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`) now explains the missing step
      (an Internal Testing group holding the friend and the build), the public link for several friends and the
      text for Apple's review – ask what worked and whether he cut the friend's roles to Marketing; raise
-     `CURRENT_PROJECT_VERSION` to 6 before the next upload (5 is uploaded since 2026-10-12 14:42); (2) CARE-2 (calm-hour coins +10 / +11) is confirmed
+     `CURRENT_PROJECT_VERSION` to 7 before the next upload (6 is uploaded since 2026-10-12 17:11); (2) CARE-2 (calm-hour coins +10 / +11) is confirmed
      but NOT built – he believed it was; (3) the Dynamic Island / Live Activity try. Never write his sleep values
      or the names of his devices and apps into the repo. Everything up to the morning of 2026-10-12 (build 4) is
      committed; he pushes – check `git status` all the same. A build in the Xcode app rewrites the two String Catalogs – restore them with `git checkout`
@@ -232,7 +232,7 @@ then answer. Remove items here when they are done.
    1.0 (2) is uploaded (2026-10-10 morning). The friend was added as an internal tester and saw nothing; more
    friends want to help, so the next step is an external group with a public link (Beta App Review first) – see
    item 0 and the guide in his iCloud Drive. **Raise `CURRENT_PROJECT_VERSION` in `project.yml` before every
-   further upload** (5 is uploaded since 2026-10-12 14:42; the next one is 6). He uploads himself (Xcode →
+   further upload** (6 is uploaded since 2026-10-12 17:11; the next one is 7). He uploads himself (Xcode →
    Organizer → Distribute App); when he asks, Opus can archive and upload from the command line (plan §12,
    2026-10-11) – adding a build to the tester groups stays his clicks.
 
