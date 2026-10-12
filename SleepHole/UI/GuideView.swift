@@ -13,7 +13,10 @@ enum Plural {
 enum GuideText {
     static let rules = SleepRules()
     static var startWindow: String {
-        L("You can start building at the earliest \(Plural.minutes(NightWindow.startLead)) before bedtime and at the latest \(Plural.minutes(rules.startDeadline)) after it. Otherwise the night counts as missed.")
+        L("You start building from \(Plural.minutes(NightWindow.startLead)) before bedtime to \(Plural.minutes(rules.startDeadline)) after it. Later than that the night counts as missed.")
+    }
+    static var earlyStart: String {
+        L("Tired sooner? From \(Int(NightWindow.earlyStartLead / 3600)) h before bedtime you can go to sleep early: the night counts in full, only the night without your phone is longer. You then have \(Plural.minutes(rules.earlySetup)) from the start to set up, and the alarm stays at your wake-up time.")
     }
     static var setup: String {
         L("For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus \(Plural.minutes(rules.setupGrace)) – start earlier, get more time. We'll warn you 15 s before it ends; then come back to SleepHole.")
@@ -97,7 +100,7 @@ struct GuideView: View {
         guard model.servicesEnabled else { return }
         Task {
             // ask for notifications even if the button on the last page was skipped
-            if await Notifications.requestAuthorization() { Notifications.scheduleReminders(model.settings.schedule) }
+            if await Notifications.requestAuthorization() { model.rescheduleReminders() }
             await model.refreshTimeSensitive()
         }
     }
@@ -156,6 +159,7 @@ struct GuideView: View {
     private var nightRules: some View {
         pageLayout("hammer.fill", L("How a night works")) {
             row("clock.badge.checkmark", GuideText.startWindow)
+            row("moon.stars.fill", GuideText.earlyStart)
             row("headphones", GuideText.setup)
             row("lock.iphone", GuideText.night)
             row("moon.zzz.fill", GuideText.pause)
@@ -263,6 +267,8 @@ struct ScheduleFields: View {
 
 /// "Tvoja prvá noc" – shown once before the first real night is started.
 struct FirstNightBriefing: View {
+    /// Started from "Go to sleep early": the setup is counted from the start, not from the bedtime.
+    var early = false
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
 
@@ -270,7 +276,9 @@ struct FirstNightBriefing: View {
         NavigationStack {
             List {
                 Section {
-                    Label(L("You have until bedtime + \(Plural.minutes(GuideText.rules.setupGrace)) for a podcast or story."), systemImage: "headphones")
+                    Label(early ? L("You have \(Plural.minutes(GuideText.rules.earlySetup)) from now for a podcast or story.")
+                                : L("You have until bedtime + \(Plural.minutes(GuideText.rules.setupGrace)) for a podcast or story."),
+                          systemImage: "headphones")
                     Label(L("Then come back to SleepHole and lock your phone."), systemImage: "lock.iphone")
                     Label(L("Keep your phone on the charger."), systemImage: "battery.100.bolt")
                     Label(L("Alarm at \(Fmt.time(model.window.wake)) – shake your phone or enter code \(model.settings.wakeCode)."), systemImage: "alarm.fill")
@@ -281,7 +289,7 @@ struct FirstNightBriefing: View {
                 Section {
                     Button {
                         model.acknowledgeFirstNightBriefing()
-                        model.startNight()
+                        model.startNight(early: early)
                         dismiss()
                     } label: {
                         Text(L("Got it, start building")).frame(maxWidth: .infinity).bold()

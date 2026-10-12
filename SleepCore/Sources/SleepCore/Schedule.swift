@@ -80,6 +80,7 @@ public struct Schedule: Codable, Equatable, Sendable {
 /// A concrete night with its derived time windows.
 public struct NightWindow: Codable, Equatable, Sendable {
     public static let startLead: TimeInterval = 10 * 60           // "Začať stavbu" from bedtime − 10 min (owner, critical)
+    public static let earlyStartLead: TimeInterval = 3 * 3600    // early start from bedtime − 3 h, until the normal start opens (owner 2026-10-11)
     public static let earlyConfirm: TimeInterval = 30 * 60        // "Vstal som" from wake − 30 min
     public static let onTimeConfirm: TimeInterval = 2 * 60        // on time only while the alarm rings (owner, = alarmDuration)
     public static let lateConfirm: TimeInterval = 60 * 60         // night is over at wake + 60 min
@@ -98,6 +99,7 @@ public struct NightWindow: Codable, Equatable, Sendable {
     }
 
     public var startOpens: Date { bedtime - Self.startLead }
+    public var earlyStartOpens: Date { bedtime - Self.earlyStartLead }
     public var confirmOpens: Date { wake - (earlyConfirmOverride ?? Self.earlyConfirm) }
     public var confirmOnTimeUntil: Date { wake + Self.onTimeConfirm }
     public var confirmLateUntil: Date { wake + Self.lateConfirm }

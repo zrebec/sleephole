@@ -27,6 +27,9 @@ final class AppModel {
     private(set) var levelUp: Int?
     /// A debug "fast night" window that overrides the schedule until it is started.
     private(set) var debugWindow: NightWindow?
+    /// "Go to sleep early" is possible right now (phase EARLY): the window is in [bedtime − 3 h, start opens) and
+    /// nothing else blocks a start. Set by `refresh`.
+    private(set) var canStartEarly = false
 
     var settings: AppSettings {
         didSet {
@@ -49,7 +52,7 @@ final class AppModel {
                 if servicesEnabled { audio.setVolume(settings.volume, ambience: settings.ambience) }
             }
             guard servicesEnabled else { return }
-            if settings.schedule != oldValue.schedule { Notifications.scheduleReminders(settings.schedule) }
+            if settings.schedule != oldValue.schedule { rescheduleReminders() }
         }
     }
 
@@ -747,7 +750,7 @@ final class AppModel {
                 p.languageRaw = language.rawValue
                 save()
             }
-            if servicesEnabled { Notifications.scheduleReminders(settings.schedule) }
+            rescheduleReminders()
         }
     }
 
@@ -936,6 +939,7 @@ final class AppModel {
     func refresh(now: Date) {
         // the lock-screen warning ends with its promised seconds, at the wake time and with the night
         if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false { endLockWarning() }
+        canStartEarly = false
         if let rec = active {
             let log = rec.log
             if log.confirmedAt != nil || now > log.window.confirmLateUntil {
@@ -956,12 +960,27 @@ final class AppModel {
         window = debugWindow ?? settings.schedule.window(containing: now, calendar: calendar)
         let alreadyPlayed = debugWindow == nil && records().contains { $0.id == window.key.description }
         phase = !alreadyPlayed && window.canStart(at: now) ? .canStart : .idle
+        canStartEarly = debugWindow == nil && !alreadyPlayed && window.canStartEarly(at: now)
+    }
+
+    /// The reminders to schedule, in one place. A night started early must not be woken by its own bedtime reminder:
+    /// until that bedtime the reminders are one-shot ones for the next occurrence (`Notifications.reminderTriggerDates`).
+    func rescheduleReminders() {
+        guard servicesEnabled else { return }
+        Notifications.scheduleReminders(settings.schedule, quietUntil: reminderQuietUntil)
+    }
+
+    /// The bedtime of the running night when it was started early and that bedtime has not come yet; otherwise nil.
+    var reminderQuietUntil: Date? {
+        guard let rec = active, !rec.isNap, !rec.isDebug, let started = rec.startedAt,
+              rec.window.isEarlyStart(started), clock.now < rec.window.bedtime else { return nil }
+        return rec.window.bedtime
     }
 
     // MARK: - actions
 
-    func startNight() {
-        guard phase == .canStart, let catalog else { return }
+    func startNight(early: Bool = false) {
+        guard phase == .canStart || (early && canStartEarly), let catalog else { return }
         let now = clock.now
         let isBonus = debugWindow != nil && nextTestNightCounts
         let isDebug = debugWindow != nil && !isBonus
@@ -986,6 +1005,7 @@ final class AppModel {
         say(.goodNight, after: Motion.t(1.4))
         buzz(.start)
         refresh(now: now)
+        rescheduleReminders()                        // after an early start tonight's reminder must stay quiet
     }
 
     /// Shake or correct wake code. Returns false when the code is wrong / confirming is not possible yet.
@@ -1135,7 +1155,8 @@ final class AppModel {
         active.flatMap { NightEvaluator.collapsedAt($0.log, rules: $0.rules) }
     }
 
-    /// End of the setup time: bedtime + grace (or start + grace after bedtime), see `NightWindow.setupEnds`.
+    /// End of the setup time, see `NightWindow.setupEnds`: bedtime + grace, start + grace when started after bedtime,
+    /// start + 15 min for an early start.
     var graceEnds: Date? {
         active.flatMap { rec in
             rec.startedAt.map { rec.window.setupEnds(start: $0, rules: rec.rules) }
@@ -1757,6 +1778,7 @@ final class AppModel {
         active = nil
         collapseNoticeAt = nil                       // stopServices already withdrew the pending notice
         sync.activityEnded()                         // a sync owed since the night began runs now
+        rescheduleReminders()                        // the daily reminders are back (an early night had one-shot ones)
         endLockWarning()
         settleSystemAlarm(for: rec)
         shownResult = rec

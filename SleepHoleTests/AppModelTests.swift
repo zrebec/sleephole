@@ -570,4 +570,104 @@ struct AppModelTests {
         let next = harness(at: date(5, 12), container: h.container)       // "a new session": the same store, a new model
         #expect(next.model.petBuddy() == .purr)
     }
+
+    // MARK: - early start (phase EARLY)
+
+    @Test func earlyWindowOpens3HoursBeforeBedtime() {
+        let h = harness(at: date(5, 19, 29))
+        #expect(!h.model.canStartEarly && h.model.phase == .idle)
+        for t in [date(5, 19, 30), date(5, 21, 0)] {
+            h.clock.now = t; h.model.refresh()
+            #expect(h.model.canStartEarly && h.model.phase == .idle)
+        }
+        h.clock.now = date(5, 22, 20); h.model.refresh()
+        #expect(!h.model.canStartEarly && h.model.phase == .canStart)
+        h.clock.now = date(5, 22, 36); h.model.refresh()
+        #expect(!h.model.canStartEarly && h.model.phase == .idle)
+    }
+
+    @Test func aPlainStartDoesNothingInTheEarlyWindow() {
+        let h = harness(at: date(5, 21, 0)); h.model.refresh()
+        h.model.startNight()
+        #expect(h.model.active == nil && h.model.phase == .idle && h.model.canStartEarly)
+        h.model.startNight(early: true)
+        #expect(h.model.phase == .building && h.model.active != nil && !h.model.canStartEarly)
+        #expect(h.model.graceEnds == date(5, 21, 15))                        // start + 15 min
+        h.model.startNight(early: true)                                       // a second call does nothing
+        #expect(h.model.records().count == 1)
+    }
+
+    @Test func earlyNightIsCompleteAndPaysLikeANormalOne() {
+        let early = harness(at: date(5, 21, 0)); early.model.refresh()
+        early.model.startNight(early: true)
+        early.clock.now = date(6, 6, 30); early.model.refresh()
+        #expect(early.model.phase == .alarm)
+        #expect(early.model.confirm(code: "1234"))
+        #expect(early.model.shownResult?.outcome == .complete)
+        let normal = harness(at: date(5, 12))
+        playNight(normal, day: 5)
+        #expect(early.model.coins == normal.model.coins && early.model.coins > 0)
+        early.model.acknowledgeResult()
+        early.clock.now = date(6, 21, 0); early.model.refresh()                // the next evening: a new key, early again
+        #expect(early.model.canStartEarly)
+        early.clock.now = date(6, 6, 45); early.model.refresh()                // still the played night's key
+        early.model.startNight(early: true); early.model.startNight()
+        #expect(early.model.active == nil)
+    }
+
+    @Test func aPlayedNightCannotBeStartedAgainEarlyOrNormally() {
+        let h = harness(at: date(5, 21, 0)); h.model.refresh()
+        h.model.startNight(early: true)
+        h.clock.now = date(5, 21, 10); h.model.append(.leftApp)               // inside the 15 min setup
+        h.clock.now += 5; h.model.append(.returned)
+        h.clock.now = date(6, 6, 30); h.model.refresh()
+        #expect(h.model.confirm(code: "1234"))
+        h.model.acknowledgeResult()
+        // the evening of the same key is not reachable any more (the key is the next day's) – check the same window directly
+        h.clock.now = date(5, 21, 30); h.model.refresh()
+        #expect(!h.model.canStartEarly && h.model.phase == .idle)
+        h.clock.now = date(5, 22, 25); h.model.refresh()
+        #expect(h.model.phase == .idle)
+        h.model.startNight()
+        #expect(h.model.active == nil)
+    }
+
+    @Test func leavingTheAppAfterAnEarlyStartStillCollapsesTheBuilding() {
+        let h = harness(at: date(5, 21, 0)); h.model.refresh()
+        h.model.startNight(early: true)
+        h.clock.now = date(5, 21, 20)                                          // 20 min in: after the setup, before bedtime
+        h.model.append(.leftApp)
+        h.clock.now += 20; h.model.append(.returned)
+        #expect(h.model.collapsedAt != nil)
+    }
+
+    @Test func earlyStartIsBlockedByEverythingThatBlocksTheNormalStart() {
+        let h = harness(at: date(5, 21, 0))
+        h.model.startTestNight()
+        #expect(!h.model.canStartEarly)                                        // a debug window is pending
+        h.model.cancelFastNight()
+        h.model.refresh()
+        #expect(h.model.canStartEarly)
+        let nap = harness(at: date(5, 14, 0))
+        nap.model.startNap()
+        nap.clock.now = date(5, 19, 40)
+        #expect(!nap.model.canStartEarly)                                      // a nap runs (the flag was cleared by refresh)
+        let r = harness(at: date(5, 21, 0)); r.model.refresh()
+        r.model.startNight(early: true)
+        r.clock.now = date(6, 6, 30); r.model.refresh(); r.model.confirm(code: "1234")
+        #expect(r.model.phase == .result && !r.model.canStartEarly)           // a result is shown
+    }
+
+    @Test func bedtimeRemindersStayQuietOnlyForARunningEarlyNight() {
+        let h = harness(at: date(5, 21, 0)); h.model.refresh()
+        #expect(h.model.reminderQuietUntil == nil)                             // no night
+        h.model.startNight(early: true)
+        #expect(h.model.reminderQuietUntil == date(5, 22, 30))                 // early, before its bedtime
+        h.clock.now = date(5, 22, 31)
+        #expect(h.model.reminderQuietUntil == nil)                             // after the bedtime
+        let n = harness(at: date(5, 22, 25)); n.model.refresh(); n.model.startNight()
+        #expect(n.model.reminderQuietUntil == nil)                             // a normal night
+        let nap = harness(at: date(5, 14, 0)); nap.model.startNap()
+        #expect(nap.model.reminderQuietUntil == nil)                           // a nap
+    }
 }

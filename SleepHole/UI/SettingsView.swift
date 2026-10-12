@@ -293,6 +293,7 @@ struct SettingsView: View {
 
                 #if DEBUG                                  // developer tools never ship to testers (TestFlight = Release)
                 Section(L("Developer")) {
+                    NavigationLink(L("Plans and proposals")) { PlansView() }
                     Button(L("Quick night (4 min, \(Int(AppModel.debugGrace)) s setup)")) { model.startTestNight() }
                         .disabled(nightRunning)
                     Button(L("Test night (15 min, 5 min setup)")) { model.startTestNight(minutes: 15, grace: 300) }

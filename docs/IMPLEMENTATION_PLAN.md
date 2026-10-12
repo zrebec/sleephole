@@ -33,7 +33,8 @@
 | CARE | Care instead of enforcement (owner 2026-10-09 evening, spec in §10 CARE): the siren only as an opt-in strict mode, lock-screen use costs a calm-hour bonus instead of the building, caring texts, calm-hour coins, Live Activity / Dynamic Island countdowns, then HealthKit, the shop, a flexible bedtime | 🟡 CARE-1 (jokers per kind, the reviewed texts, the gentle default + Strict mode) is on the phone since 2026-10-09 21:00 and both modes were tried by the owner the same evening | fix B29, then CARE-3 (the Live Activity try in the lock-screen Camera) and CARE-2 (calm-hour coins – he has not confirmed +10 per hour) |
 | HEALTH | Apple Health: "when did I really fall asleep" next to "when did I go to bed" (owner 2026-10-09 / 10, spec in §10 HEALTH) – read-only sleep data, stored per night, bars in the chart | 🟢 H1–H4, H2b, H2c built, reviewed and on the phone 2026-10-10; the owner checked the data, the chart with bars and the tap ("it looks good"); uploaded to TestFlight as 1.0 (2) the same morning | more statistics from the sleep data and the buddy talking about the town (his direction, candidates in §10 HEALTH) – he picks |
 | NEXT | Proposals after the 100-night simulation (owner 2026-10-10, spec in §10 NEXT; the Slovak document with mock-ups is `docs/NAVRH-MESTO-STATISTIKY.md`): CAL a real month calendar and periods, NIGHT the night's detail in blocks + a timeline, POP residents, TODAY a compact home screen, ZOOM the town camera (B30), TALK the buddy talks, ISLAND the coast follows the town, ECON coins (strict-mode commitment, building office, town services), SENSE a whole-night movement spike | 🟡 proposed 2026-10-10 – **nothing built**; the document and its PDF (the owner's iCloud Drive) are written, eight questions are asked | the owner answers the questions and names the first sub-phase (Opus recommends CAL together with POP) |
-| SYNC | One town on all of a user's devices through iCloud (owner 2026-10-10: before build 3; spec in §10 SYNC) | 🟡 variant decided by the owner 2026-10-10: one file per device in the user's iCloud Drive container, merged by a pure rule; the switch on by default; the better of two nights counts; Health data stays out of iCloud. **S1 (merge rule, sync file, `mergeSync`, tests – no iCloud, no UI) built and reviewed 2026-10-10 evening: tests / simulator only, not committed, not on the phone** | **2026-10-11: S2a, S2b, S3 on the phone since 08:34; his delete-and-reinstall test passed at ~09:15 (the town came back from iCloud). S4 (ten review points, Apple Health after a sync) built and reviewed 10:15 – SleepCore 326, app 484 tests, i18n 642 keys green – tests only, NOT on the phone yet. Build 1.0 (3) uploaded to App Store Connect 12:52 (from the command line, after his upload from Xcode failed on an expired sign-in).** Next: install S4 when the phone is connected, his look at the Health button, build 3 into the tester groups (his clicks) |
+| SYNC | One town on all of a user's devices through iCloud (owner 2026-10-10: before build 3; spec in §10 SYNC) | 🟡 variant decided by the owner 2026-10-10: one file per device in the user's iCloud Drive container, merged by a pure rule; the switch on by default; the better of two nights counts; Health data stays out of iCloud. **S1 (merge rule, sync file, `mergeSync`, tests – no iCloud, no UI) built and reviewed 2026-10-10 evening: tests / simulator only, not committed, not on the phone** | **2026-10-11: S2a, S2b, S3 on the phone since 08:34; his delete-and-reinstall test passed at ~09:15 (the town came back from iCloud). S4 (ten review points, Apple Health after a sync) built and reviewed 10:15 – SleepCore 326, app 484 tests, i18n 642 keys green – tests only, NOT on the phone yet. Build 1.0 (3) uploaded to App Store Connect 12:52 (from the command line, after his upload from Xcode failed on an expired sign-in).** **Evening: S4 confirmed by the owner on the phone (the Health button works); build 3 is in the internal group and sent to the external one.** Next: Apple's Beta App Review, the testers' update, a tester with two devices |
+| EARLY | An earlier start of the night (a tester's case 2026-10-11, spec in §10 EARLY): "Go to sleep early today" from bedtime − 3 h, after a short confirmation, no penalty, the setup 15 min from the start | 🟡 decided by the owner 2026-10-11 evening (3 h, no penalty, 15 min of setup); built by two Sonnet workers and reviewed by Opus the same evening (SleepCore 335 / app 494 tests green, i18n 649 keys 0 / 0 / 0); **on the phone since 2026-10-11 20:33 at his request – he tries it that night** (20:46: the same tree plus the Debug-only screen Developer → "Plans and proposals", app 496 tests, i18n 651 keys); uncommitted | the owner tries an early night and reads the nine new texts; then build 4 for TestFlight |
 | F6 | Paid Apple Developer Program: F6a Time Sensitive notifications, F6b AlarmKit backup + safety alarm (spec in §10 F6); later HealthKit, iCloud, TestFlight | 🟡 F6a on the phone since 2026-10-04 19:11 – the owner's Focus test of 2026-10-07 brought no warning because Time Sensitive Notifications were switched off in iOS (his finding the same day) → B21 closed, the app gets a warning for it (TOWN-W step 0b); **re-tested with the switch on 2026-10-07 evening: the warning arrives in a Focus (owner: "confirmed")**; F6b (AlarmKit) built and reviewed 2026-10-04 evening, installed by the owner himself ≈ 20:00 – it rang with the app swiped away; committed 2026-10-07; his remaining checks are listed in §10 F6 | the system alarm wakes the owner with the app swiped away |
 | F7 | *(optional)* own / extended assets | ⬜ later | — |
 
@@ -70,6 +71,8 @@ SleepCore 321 tests, app 426 tests green (2026-10-10 20:45: phase SYNC step S2a 
 SleepCore 321 tests, app 441 tests green (2026-10-11 07:58: phase SYNC step S2b – the iCloud transport; a signed device build with the iCloud entitlements succeeds); i18n 617 keys 0 / 0 / 0.
 SleepCore 321 tests, app 452 tests green (2026-10-11 08:33: phase SYNC step S3 – Settings → iCloud, the language travels to a device without one); i18n 641 keys 0 / 0 / 0.
 SleepCore 326 tests, app 484 tests green (2026-10-11 10:15: phase SYNC step S4 – review fixes, Apple Health after a sync); i18n 642 keys 0 / 0 / 0.
+SleepCore 335 tests, app 494 tests green (2026-10-11 20:30: phase EARLY – the early start of the night); i18n 649 keys 0 / 0 / 0.
+SleepCore 335 tests, app 496 tests green (2026-10-11 20:45: the Debug-only plans screen); i18n 651 keys 0 / 0 / 0.
 
 ### Night and nap
 | | Feature | Evidence |
@@ -78,6 +81,7 @@ SleepCore 326 tests, app 484 tests green (2026-10-11 10:15: phase SYNC step S4 �
 | 🟢 | App survives a whole night, podcast during the setup | podcast test (2026-09-29) + the real nights since |
 | 🟢 | Whole night: start → setup → alarm → confirm → building | F2 ✅; real nights since 2026-09-30 |
 | 🟢 | Collapse after leaving the app once the setup is over | owner's quick nights (2026-09-29) |
+| 🖥 | Early start of the night (phase EARLY): the button from bedtime − 3 h, the question before the start, 15 min of setup from the start, no bedtime reminder that evening, the full reward | tests only; installed 2026-10-11 20:33 – the owner tries it in the night 2026-10-11 → 12 |
 | 🟢 | "Come back!" warning (two notifications) | owner (2026-10-03) |
 | 🟢 | Phone call is excused | device log #2 (2026-09-29) |
 | 🟢 | In-app alarm, also with the ringer switched off (silent mode) | owner (2026-10-03): "the alarm works with the ringer off"; again after a real night (2026-10-04) |
@@ -171,7 +175,8 @@ SleepCore 326 tests, app 484 tests green (2026-10-11 10:15: phase SYNC step S4 �
 | 📱 | Install over the cable + pulling the app's data | used for the audit |
 | 🖥 | Manual backup export / import | no record of use on the phone |
 | 🟢 | iCloud sync: the town comes back on a fresh install (phase SYNC) | owner 2026-10-11 ~09:15: he deleted the app, the new build was installed, "the data look OK"; the Apple Health values were missing until the switch is turned on again (by design then – S4 changes it) |
-| 🖥 | iCloud sync between two live devices; S4 (retry, first-contact stamp, Health switch taken over by a new install, "Read sleep again") | automated tests only (two and three simulated devices); no second device has synced yet |
+| 🟢 | S4 on the phone: Apple Health values come back after a sync, the button "Read sleep again" | owner 2026-10-11 evening: "I read it again, the data came from Apple Health, all fine" (version 1.0 (3) on the phone) |
+| 🖥 | iCloud sync between two live devices; the rest of S4 (retry, first-contact stamp, Health switch taken over by a new install) | automated tests only (two and three simulated devices); no second device has synced yet – a tester with a phone and a tablet has build 3 |
 | 🖥 | Store migration to the version with pauses | checked on a copy of the owner's store in the simulator |
 
 ---
@@ -2148,12 +2153,12 @@ Asked whether to note it as an idea, he said: do it before build 3. That is his 
       succeeded". The story and the commands are in §12 (2026-10-11). **The next upload needs
       `CURRENT_PROJECT_VERSION` 4.** Still his clicks in App Store Connect: add build 3 to the tester groups (the
       external group goes through a short Beta App Review).
-- [ ] **after S4:** install on the phone (the phone was not connected at 10:15 and he had his afternoon nap at
-      12:45 – Opus installed nothing after 09:15), the owner tries "Načítať spánok znova". Xcode's own log
-      (`DerivedData/…/Logs/Launch`) shows a successful "Run SleepHole" for a device at 12:40–12:41, his click
-      after the failed upload – so the current code with S4 is probably on the phone already as a Debug build;
-      not verified on the phone, ask him whether the button is there. Build 3 went to TestFlight WITHOUT a
-      deliberate check of S4 on a phone – his decision.
+- [x] **after S4: on the phone and confirmed by the owner (2026-10-11 evening).** Opus installed nothing after
+      09:15; Xcode's own log (`DerivedData/…/Logs/Launch`) shows his successful "Run SleepHole" for a device at
+      12:40–12:41, and the phone reports version 1.0 (3). His words: "I read it again, the data came from Apple
+      Health, all fine" – the button "Načítať spánok znova" works. The store pulled at 19:06 (git-ignored
+      `docs/device-logs/2026-10-11-evening/`): 23 records, none unfinalized, every night carries sleep values.
+      He also sent build 3 to the external group (Beta App Review pending).
 - [ ] **(original checkpoint text) the owner's test with ONE iPhone** (his idea: delete the app and install it again; guide in
       his iCloud Drive `SleepHole/TEST-ICLOUD-NAVOD.md`): part A – Settings → iCloud says "last synced", the
       Sync test screen shows iCloud / available / no error, and Opus sees the device's file arrive on the Mac
@@ -2187,6 +2192,128 @@ device today.
 by a per-install id; a new install with an empty store gets the whole town back from the old device's file.
 The Mac signed in to the same iCloud account shows the container under `~/Library/Mobile Documents/` – a second
 "device file" can be placed there to test the merge on the phone without a second iPhone.
+
+### EARLY — An earlier start of the night (proposed 2026-10-11) – 🟡 decided by the owner 2026-10-11 evening; built, reviewed and on the phone since 20:33 (20:46 with the plans screen); his night with it is the check
+
+**Why.** A tester was tired and wanted to go to bed 100 minutes before her bedtime; the app refused, because a night can
+start only from bedtime − 10 min to + 5 min (`NightWindow.startLead`, `canStart`). The owner asked: shall we allow
+it, and shall we limit or penalise it? At CARE he had decided that a flexible bedtime comes only after a written
+proposal – this is it. A background analysis of the same question came to the same core (not −30 min, not a
+setting, an own early start).
+
+**Opus recommends: allow it, with no penalty.**
+
+* The habit is hurt by going to bed late, not early. Refusing a tired user is enforcement, against CARE.
+* It cannot be used to cheat: an early start only makes the phone-free night longer.
+* No setting. Everyone would put it to the maximum, and it would be one more thing to explain and to sync.
+
+**The rule (proposal).**
+
+1. **"Go to sleep earlier"** is offered from **bedtime − 3 h** (owner 2026-10-11; the proposal said 2 h) to bedtime − 10 min; from − 10 to + 5 min today's
+   "Go to sleep" stays as it is. The late end (+ 5 min) does not move.
+2. **No penalty:** the night counts in full – building, coins, streak, level.
+3. **A short confirmation before it starts** ("Start the night now? Your bedtime is at 22:30, the alarm stays at
+   6:30"). A night started by mistake two hours early is expensive, so one extra tap is worth it here.
+4. **The setup lasts 15 min from an early start.** Today's formula `max(start, bedtime) + 5 min` would give 105
+   minutes of free phone for a start 100 minutes early. 15 min is what the earliest normal start (− 10 min) gets today, so
+   nothing jumps at the boundary.
+5. **The morning does not change:** the alarm at the set wake time, confirmation from wake − 30 min.
+6. **One night per day** as today; the night's key comes from the schedule, not from the clock (a bedtime after
+   midnight). The bedtime reminder is not sent for a night that already runs.
+7. Nothing new is stored: the start time is in the night already, the early window is derived from the bedtime –
+   so it follows a changed bedtime by itself and needs nothing in the sync file.
+
+**Limits that are not penalties (to keep in mind).**
+
+* When CARE-2 (coins per calm hour) is built, calm hours count from the scheduled bedtime (or are capped per
+  night) – an early start must not earn more coins.
+* A user who starts early most days simply has another bedtime. Later (a second step, his decision) the app may
+  offer kindly to move the bedtime after several early nights – free and without restarting the streak, which
+  would be an exception to the LIM rule.
+
+**Open questions for the owner – answered 2026-10-11 evening** (his words: "I take the tester's report as urgent.
+Let's go for the button … It can be more. We can give 3 h. We will not penalise it, but the night without the
+phone will be longer. In this case we raise the setup time from 5 to 15 minutes (the standard stays 5).").
+
+1. How early: **3 hours** (point 1 of the rule above reads "bedtime − 3 h" from now on).
+2. The setup after an early start: **15 min from the start**; a normal start keeps `max(start, bedtime) + 5 min`.
+3. The morning: he did not answer it. Built as recommended – **unchanged**; the earlier morning confirmation stays
+   an open follow-up (below).
+
+**How it is built (the decisions Opus took while writing the briefs).**
+
+* **Derived, never stored.** `NightWindow.isEarlyStart(start)` = the start lies before `startOpens`
+  (bedtime − 10 min). `setupEnds` gives `start + SleepRules.earlySetup` (15 min) for such a start. Nothing changes in
+  `NightRecord`, the backup or the sync file. The two formulas meet at the boundary (a start at bedtime − 10 min has
+  15 minutes either way), so nothing jumps. Consequence to remember: if `earlySetup` is ever changed, nights already
+  finalized keep their outcome (it is stored) and only the report's "setup until" line of old early nights moves.
+* **Naps and debug nights are never early** – their window's bedtime is the start itself.
+* **A device with an older build** that receives an early night through the sync would show its setup as "until
+  bedtime + 5 min" (more lenient). The outcome travels stored, so nothing is decided differently.
+* **`startNight(early:)`**: a plain `startNight()` does nothing in the early window – only the confirmed tap starts
+  a night there. `AppModel.canStartEarly` is the gate for the UI (no night / nap active, no result shown, no debug
+  window, tonight not played yet).
+* **The bedtime reminders** repeat daily and cannot skip one day. After an early start they are replaced by
+  one-shot reminders for TOMORROW's bedtime (same identifiers); the daily ones come back when the night is
+  finalized and at every launch without an early night before its bedtime.
+* **Statistics:** the "regularity" (spread of start − bedtime) honestly gets wider with early nights; the chart's
+  axis is automatic; the Apple Health window already begins at the build start, so falling asleep before the
+  bedtime is found.
+* **The label.** The owner calls the button "Dnes skôr"; built as "🌙 Go to sleep early today" / "🌙 Dnes ísť spať
+  skôr" (clear for a first-time user, his two words are in it) – his to confirm with the other texts.
+
+**Tasks.**
+
+- [x] **Step 1 – the rule in `SleepCore`** (one Sonnet worker, 2026-10-11 evening; reviewed by Opus):
+      `NightWindow.earlyStartLead` / `earlyStartOpens` / `isEarlyStart` / `canStartEarly`, `SleepRules.earlySetup`,
+      `setupEnds`; `EarlyStartTests` (9 tests). `SleepRules` is never decoded from stored data, so the new property
+      is safe. No existing test had to change. SleepCore 335 tests green (Opus's own run).
+- [x] **Step 2 – the app** (one Sonnet worker, 2026-10-11 evening; reviewed by Opus – the whole diff read):
+      `AppModel.canStartEarly` + `startNight(early:)`; `AppModel.rescheduleReminders()` is now the ONLY caller of
+      `Notifications.scheduleReminders` (schedule change, language change, launch, the guide's end, the end of
+      `startNight`, `finalize`) and passes `reminderQuietUntil`; the pure `Notifications.reminderTrigger`; the Today
+      button "🌙 Go to sleep early today" with the question "Go to sleep now?" (`confirmationDialog`), two captions,
+      `FirstNightBriefing(early:)`, the guide's start-window sentence reworded + a new early-start row; nine new /
+      changed texts in English and Slovak, two keys removed. Tests: 10 new in `AppModelTests`, `ServicesTests`,
+      `ViewsTests`. Worker's run: app 494 tests, i18n 649 keys 0 / 0 / 0, SleepCore 335. No simulator screenshots
+      (the worker's shell had no `simctl`). **Opus's own runs the same evening: SleepCore 335, i18n 649 keys
+      0 / 0 / 0, app 494 tests in 31 suites green (20:39, the tree that is on the phone).**
+- [x] **Installed on the owner's iPhone 2026-10-11 20:33 at his request** ("load it onto the phone, I want to try
+      the earlier bedtime tonight") – a Debug device build of the reviewed tree, still version 1.0 (3); checked that
+      the built app carries the new code and the Slovak texts.
+- [x] **Developer → "Plans and proposals" (owner 2026-10-11 ~20:40: "can you put this table into the app's
+      developer options? SleepHole is the only app that can stay open during the night and I would like to read
+      it").** One Sonnet worker, reviewed by Opus: `docs/PREHLAD-PLANOV.md` is bundled as a resource in Debug
+      builds only (`project.yml`: `EXCLUDED_SOURCE_FILE_NAMES` for Release) and parsed at run time by the pure
+      `PlansDocument.parse` (`SleepHole/Debug/PlansView.swift`, `#if DEBUG`): headings, paragraphs, bullets, the
+      main table as cards with priority / effort badges (the table is found by its shape – five header cells, the
+      first one `#` – so no Slovak word sits in the code), the legend tables as lines. The document is the single
+      source – edit it and the screen follows with the next build. Two new keys; app 496 tests, i18n 651 keys
+      0 / 0 / 0 (the worker's run and Opus's own run of 20:50 – 496 tests in 32 suites). **Installed 20:46 after he confirmed that no night was running.** Nobody has LOOKED at the screen
+      yet (tests only, no simulator screenshot) – ask him how it reads.
+- [ ] **Review follow-ups (Opus, none of them blocked the install) – one small worker step:**
+      (1) `refresh` sets `canStartEarly = false` at its top and true again at its end, so inside the early window
+      the flag flips twice a second and Today is re-evaluated every second – set it once per branch instead;
+      (2) Today's caption after tonight's night is ALREADY played (an early night that was cancelled, then the
+      result acknowledged) still says "You can't go to sleep yet – you can build from … An early start opens at …"
+      – it needs its own sentence (the old text had the same flaw for a few minutes; an early start stretches it to
+      three hours); (3) after an early night is cancelled before its bedtime, `finalize` brings the daily reminders
+      back and tonight's reminder still fires although the night is played – keep it quiet until that bedtime;
+      (4) `GuideText.setup` still says "start earlier, get more time" (true only inside the normal window);
+      (5) the worker's wording for the owner to judge: "Stavbu začneš od … Neskôr sa noc počíta ako vynechaná".
+      (6) `PlansView` renders Markdown links as tappable links. Today the document has only two relative links
+      (they open nothing), but an `http` link tapped during a night would leave the app – discard every link tap
+      on that screen (`OpenURLAction { _ in .discarded }`).
+- [ ] the owner reads the new texts (a table is in the chat of 2026-10-11) and tries it on the phone: the button
+      appears three hours before bedtime, the question before the start, 15 minutes of setup, no bedtime reminder
+      that evening, the alarm at the usual time.
+- [ ] `CURRENT_PROJECT_VERSION` 4, then TestFlight (the tester who reported it).
+
+**Follow-ups, not built (his decision, after the testers have used it).**
+
+* The morning confirmation opening earlier by as much as the night started earlier (question 3).
+* Offering kindly to move the bedtime after several early nights (see "Limits that are not penalties").
+* CARE-2: calm hours count from the scheduled bedtime or are capped per night.
 
 ### F6 — Paid Apple Developer Program (owner 2026-10-04: "next phase: F6, analyse it first"; the paid team is confirmed by a signed build)
 **Analysis (Opus, 2026-10-04; sources: the iOS 27 SDK's `AlarmKit.swiftinterface`, Apple's WWDC25 session 230
@@ -2565,6 +2692,8 @@ screen checks.
 | 2026-10-10 | **The first real night with CARE-1 (stored as strict – the switch had stayed on) – journal pulled in the morning into the git-ignored `docs/device-logs/`.** `complete`; after the setup the screen did not light up once until the alarm (no screen wake, no lock-screen event, no trip), so nothing of LOCK-W / CARE-1 was exercised by a real night yet. **A labelling flaw found in the journal:** two lone `audioResumed` events without an `audioInterrupted` – `AppModel` logs every report of `AudioKeeper` that does not end in "began" as `.audioResumed`, also "audio configuration change" (a route change) and "media services reset"; fixed together with B29 (own event kinds). What a real night cannot tell today: whether the phone was picked up without its screen lighting – the motion sensor runs only while the lock screen is lit (relevant for CARE-2's "+11 when not moved"). |
 | 2026-10-10 | **A simulation of 100 nights in the simulator (owner: "let us do the simulation of 100 nights"; one Sonnet worker, screenshots in `build/shots/sim100/`, a copy in the owner's iCloud Drive `SleepHole/simulacia-100-noci/`).** `-seedNights N` with its fixed seed gives the same town at 10 / 30 / 60 / 100 nights (about 80 % complete, 10 % unfinished, 10 % ruins). Read from the screenshots – buildings / residents / coins / built nights / streak now / best / level: 10 → 9 / 92 / 1 530 / 9 / 8 / 8 / 2; 30 → 26 / 108 / 4 365 / 26 / 1 / 21 / 3; 60 → 53 / 1 828 / 9 085 / 54 / 18 / 21 / 4; 100 → 93 / 5 192 / 16 160 / 91 / 16 / 21 / 4; achievements 9 of 12. **Findings:** (1) B30 – the first look does not fit the town from ~60 buildings on; (2) no overlaps, cut-off buildings or broken roads at 100 buildings, drawing takes under 25 s on a cold simulator; (3) the map has room for roughly 130–150 buildings – at 100 the built-up part is about 60 % of its width – so the map must grow (or become the island of the backlog) before a town reaches that size; (4) the header's "buildings" and Stats' "built nights" differ by design (a lit-street night upgrades the streets instead of adding a building; a ruin stands in the town but is not a built night) – two numbers a user may find confusing; (5) the residents jump with the first skyscrapers (108 → 1 828 → 5 192); (6) the calendar and the charts show the last 35 / 30 nights only – nothing shows the first two months of a 100-night history; (7) 16 160 coins after 100 nights with today's economy and nothing to spend them on. For the screenshots a developer-only launch argument `-townFit` was added (`TownScene`). |
 | 2026-10-10 | **The 100-night simulation replayed outside the app (Opus; a scratchpad Swift tool over `SleepCore`: the `-seedNights` loop of `AppModel`, `Jokers.apply`, `TownBuilder`, `TownRender`).** The replay gives the screenshots' numbers exactly (buildings / residents 9 / 92, 26 / 108, 53 / 1 828, 93 / 5 192; built nights 9 / 26 / 54 / 91), so what follows is computed, not read off pictures. **Corrections of the row above:** (1) finding (3) is wrong – the map has no fixed size. `TownLayout.nextOrigin` adds blocks in a spiral without a limit and `TownRender.build` draws the ground as the bounding rectangle of the lots and drawn roads plus 2 cells; "about 60 % of its width" was the share of that rectangle in use (58 % of its cells at 100 nights), because every new ring of blocks enlarges the rectangle by a whole strip. For a player whose every night is complete the rings start by night ~25 (2nd), ~90 (3rd), ~195 (4th), ~335 (5th), ~520 (6th). (2) Camera scales for a 402 × 815 pt view (scene pixels per point): the whole ground needs 8.4 / 13.4 / 15.1 / 20.1 at 10 / 30 / 60 / 100 nights (33.5 after a year), the built-up part (roads and buildings, with the frontier ring) 5.8 / 7.4 / 11.7 / 15.1 (28.0). The first look is capped at 4.5 and shows 82 / 64 / 40 / 31 % of the built-up width; **pinch zoom-out is capped at 10, which stops being enough for the built-up part around night 45** (70 % of its width at 100 nights, 37 % after a year) – B30 is rewritten. In plan mode the same day Opus had told the owner "about 10.4 at 100 nights" and "the third ring at about 140 buildings", estimated from a screenshot; both were wrong and are corrected in the proposal document. (3) Residents: `TownStats.population` counts 4 / 20 / 60 for the L1 kinds, 300 for any L4 building and 0 for every L2 and L3 building – that is why 26 buildings hold 108 people. (4) The seeded 100-night town holds 5 hospitals, 4 town halls, 4 fire stations, 4 police stations and 4 schools: the picker draws the level first and L3 has five kinds. (5) A prototype of the proposed residents rule (phase NEXT / POP) gives 175 / 224 / 14 986 / 39 487 for the seeded town and 200–240 thousand after a year of complete nights. **Lesson:** a worker's reading of screenshots is a hypothesis – check it against the code (or replay it) before it is told to the owner as a finding. The proposals that came out of the owner's answers are phase NEXT (§10); the Slovak document is `docs/NAVRH-MESTO-STATISTIKY.md`. |
+| 2026-10-11 | **Phase EARLY built and installed in one evening (owner ~20:10: "I take the tester's report as urgent … 3 h … no penalty, the night without the phone will be longer … the setup from 5 to 15 minutes, the standard stays 5"; ~20:25: "load it onto the phone, I want to try the earlier bedtime tonight").** Two Sonnet workers in sequence (the rule in SleepCore, then the app), Opus wrote the briefs with the exact API and the Slovak texts and read both diffs. What made it small: an early start is DERIVED (`start < startOpens`), so nothing is stored, backed up or synced. What a brief has to think of: the daily repeating bedtime reminder cannot skip one evening (`UNCalendarNotificationTrigger` has no start date) – it is replaced by a one-shot for the next day and restored at the night's end and at launch. A signed device build was started while the worker's simulator tests still ran (two builds at once are fine on this Mac), so the install took seconds once the tests were green; in a Debug build the code lives in `SleepHole.debug.dylib` – the main binary's date says nothing, check the dylib or `strings` for a new symbol. **Told to the owner before his test: an early start is the REAL night of that date – cancelling it leaves ruins, and October's bronze joker is spent.** Open: his night with it, his reading of the nine texts, the review follow-ups (§10 EARLY). The same evening Opus wrote `docs/PREHLAD-PLANOV.md` (Slovak): every open item in one table with effort and priority – Opus now recommends TODAY + POP before CAL (external testers see Today every evening and the nap button hides under the tab bar; the calendar starts to matter after 35 nights); the day before it had recommended CAL + POP. |
+| 2026-10-11 | **Evening: S4 confirmed, the night of 2026-10-07 → 08 compared with Apple Health, an early start proposed, the App Store page prepared (Opus; nothing built).** (1) The owner: the button "Načítať spánok znova" filled the nights from Apple Health; build 3 is sent to the external group too. The store was pulled at 19:06 into the git-ignored `docs/device-logs/2026-10-11-evening/` (23 records, none unfinalized, every night with sleep values, version 1.0 (3) on the phone). (2) **The JSON backup is enough for a Health comparison:** a backup carries, per night, what Apple Health says – start and end of sleep and the sums, for each source separately (`sleepSourcesData`, base64 JSON) – so section 8 of the reconstruction was written from his backup without the full Health export; only sleep stages are not in it. The values stay in the git-ignored write-up and its iCloud copy. (3) **Phase EARLY proposed (§10 EARLY)** after a tester could not start a night 100 minutes before her bedtime. (4) **What the App Store page needs – checked against Apple's help pages the same day:** the icon comes from the build and is never uploaded; name and subtitle 30 characters, promotional text 170, description 4 000, keywords 100 BYTES (Slovak diacritics count twice); one screenshot size is enough – iPhone 6.9" (1320 × 2868 or 1290 × 2796), 1–10 pieces per language, and `tools/sim_shot.sh` shoots a 6.3" simulator today; a privacy policy URL and a support URL are required; a paid app needs the Paid Apps agreement with bank and tax data; **a paid app makes an individual a trader under the EU's DSA, and Apple then shows his address or P.O. box, phone and e-mail publicly on the product page in the EU.** The weather attribution Apple asks for is in the app already (`CreditsView`). (5) **TestFlight has no catalogue of betas:** a public link is found only by those who get it; the invitation shows the icon, the name and the Beta App Description, screenshots and the category only once a version is approved for the store. Third-party lists of public links exist (Departures); Opus advised against them for now. The guide with the text proposals is in his iCloud Drive (`SleepHole/APPSTORE-NAVOD.md`), not in the repo. |
 | 2026-10-11 | **Build 1.0 (3): the upload from Xcode failed at the very end, the upload from the command line worked.** (1) **What failed:** the owner's upload from the Organizer (12:30) sent all ten parts of the package, then Apple answered 401 and Xcode said "Account credentials have expired – sign in again" although he was signed in. The distribution log (`$TMPDIR/SleepHole_<date>.xcdistributionlogs/ContentDelivery.log`) shows why: the line carried about 1 Mbps at that moment, the upload took 8 minutes, and Xcode's sign-in token ran out meanwhile; Xcode cannot renew it in the middle of an upload (`reauthenticationNotSupported`). Apple never got the "upload complete" call, so build number 3 stayed free (the record stayed `AWAITING_UPLOAD` and the second upload reused it). Twenty minutes later the line measured 21 Mbps (`networkQuality -s`) and the second upload carried about 5 Mbps – the package went up in 2 minutes. **Check the uplink before an upload; with a slow line the upload fails after minutes, not at the start.** (2) **What worked (12:48–12:52, Opus on his request):** `xcodebuild … -configuration Release -destination 'generic/platform=iOS' -archivePath "$HOME/Library/Developer/Xcode/Archives/<date>/SleepHole 1.0 (3).xcarchive" -allowProvisioningUpdates archive`, then `xcodebuild -exportArchive -archivePath … -exportOptionsPlist ExportOptions.plist -exportPath <scratch> -allowProvisioningUpdates` with `method` = `app-store-connect`, `destination` = `upload`, `teamID`, `signingStyle` = `automatic`, `manageAppVersionAndBuildNumber` = false (otherwise Xcode may renumber the build), `uploadSymbols` = true. It uses the account stored in Xcode, needs the Bash sandbox off and ran 3.5 minutes; no API key was needed. (3) **The archive of the morning was gone** from Xcode's archive folder at 12:41 (deleted in the Organizer, presumably) – it was rebuilt from the same commit and checked again (version, usage texts, entitlements, privacy manifest, no developer screen in the binary). (4) **A build in the Xcode app rewrites the String Catalogs:** after his build at 12:41 `Localizable.xcstrings` was reformatted (13 000 changed lines, the meaning identical except `extractionState: stale` on 23 Debug-only keys) and `InfoPlist.xcstrings` lost two stale flags. Nothing of it is wanted in a commit – `git checkout -- SleepHole/Resources/*.xcstrings` after working in Xcode; `xcodebuild` from the command line does not touch them. (5) **No browser for App Store Connect:** he offered his Firefox; the browser tool of this session drives only Chrome with the Claude extension and no browser was connected, so adding the build to the tester groups stayed his clicks. |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |

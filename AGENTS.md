@@ -25,10 +25,10 @@ then answer. Remove items here when they are done.
      at his request (23:16, 23:29, 00:07), the night was forgiven three times (`-forgiveNight`) and it ended
      `complete`. On 2026-10-08 he asked for a full reconstruction: the journal part is done and written up in Slovak
      in the git-ignored `docs/device-logs/2026-10-08-morning/REKONSTRUKCIA.md` (a copy is in his iCloud Drive
-     `SleepHole/`). **Still owed: the comparison with Apple Health and his sleep-tracking app** (his permission is given) – it needs
-     his Health export (Health → profile picture → Export All Health Data → AirDrop to the Mac; unpack it in the
-     scratchpad, read only the night's window, delete it afterwards, nothing of it into the repo) and a
-     screenshot of the night from that app; ask whether he has sent them, then add section 8 of the write-up. The night brought
+     `SleepHole/`). **The comparison with Apple Health is DONE (2026-10-11 evening):** section 8 of the write-up was
+     filled from his own JSON backup – the app stores per night what Apple Health says, per source – so the full
+     Health export was not needed; only sleep stages would need it, and only if he asks. The values stay in the
+     git-ignored write-up and its iCloud copy. The night brought
      no false alarm from the lock screen, but the new warning ("Put your phone down! Switch the screen off", the
      phone's own sound) never fired – still to try on purpose: on the watch, on the phone, did the phone sound, did
      switching the screen off save the building; does he use StandBy. Everything is still UNCOMMITTED – check
@@ -98,24 +98,51 @@ then answer. Remove items here when they are done.
      keys 0 / 0 / 0). His test with one iPhone passed (~09:15): he deleted the app, the new build was installed
      and the town came back from iCloud. After it a code review brought ten points – step S4 fixed seven and
      added what he asked for around Apple Health (values are read right after a sync, a new install takes over
-     the Health switch, a button "Načítať spánok znova"). Opus has NOT installed S4 on the phone (the phone was
-     not connected at 10:15, he had his afternoon nap at 12:45). **But Xcode's own log shows that HE pressed Run
-     for a device at 12:40 and it succeeded (34 s, no error) – so the current code with S4 is probably on the
-     phone as a Debug build since 12:41; not verified on the phone. Ask him whether Settings → Apple Health
-     shows "Načítať spánok znova"; if not, install when the phone is connected and no nap or night runs.** Then
-     ask him to try the button. **Build 1.0 (3) IS UPLOADED (2026-10-11 12:52, "Upload
+     the Health switch, a button "Načítať spánok znova"). **S4 is CONFIRMED on the phone (owner 2026-10-11
+     evening: "I read it again, the data came from Apple Health, all fine"; the phone carries version 1.0 (3) –
+     he ran it from Xcode at 12:40).** **Build 1.0 (3) IS UPLOADED (2026-10-11 12:52, "Upload
      succeeded", Apple was processing it):** his own upload from Xcode failed at the very end on an expired
      sign-in (a slow line, 8 minutes), so on his request Opus archived and uploaded from the command line (plan
      §12, 2026-10-11 – the commands are there). Build 3 went out WITHOUT S4 having run on a phone – his
      decision. **State from his screenshots the same afternoon: build 3 is processed and sits in the internal
      group with the status "Testing" (the two internal testers still had build 2 installed); in the external
-     group build 2 is still "Waiting for Review" since 2026-10-10 and build 3 is "Ready to Submit" – not sent
-     to the external group yet. Ask whether he added build 3 to the external group (Add Builds → Submit
-     Review, Review Notes with the iCloud paragraph), whether Apple approved it and whether the testers
-     updated.** He offered his
+     group build 2 was still "Waiting for Review" since 2026-10-10. He then sent build 3 to the external group
+     too (his words, the same evening). Ask whether Apple approved it, whether the public link works and
+     whether the testers updated.** He offered his
      Firefox for those clicks; the browser tool drives only Chrome with the Claude extension and none was
      connected. Not proven on devices: two live devices syncing (a tester with a phone and a tablet will show).
      The proposal document's eight questions are still unanswered.**
+     **NEW 2026-10-11 evening:** (1) **THE EARLY START IS BUILT AND ON THE PHONE (phase EARLY, plan §10 EARLY;
+     since 2026-10-11 20:33, installed at his request – he wanted to try it that very night).** A tester had wanted
+     to go to bed 100 minutes before her bedtime and the app refused; he took it as urgent and decided: from
+     bedtime − 3 h, no penalty (the night without the phone is simply longer), the setup 15 min from the start (a
+     normal start keeps its 5), the morning unchanged. The button reads "🌙 Dnes ísť spať skôr" and asks "Ísť spať
+     už teraz?" first; the bedtime reminder is not sent for a night that already runs. Nothing new is stored.
+     SleepCore 335 / app 496 tests green, i18n 651 keys 0 / 0 / 0; UNCOMMITTED – check `git status`.
+     **At 20:46 a second build followed at his request (he confirmed no night was running): the same tree plus
+     Settings → Developer → "Plány a návrhy"** – `docs/PREHLAD-PLANOV.md` shown natively (Debug builds only, the
+     document is bundled and parsed at run time; SleepHole is the only app he can read in during a night). Nobody
+     has looked at that screen yet – ask how it reads on the phone.
+     **FIRST QUESTION OF THE NEXT SESSION: how did the night of 2026-10-11 → 12 go – did he start it early, did the
+     question appear, were the 15 minutes right, did a bedtime reminder still arrive, did the alarm ring at the
+     usual time?** Then: his reading of the nine new texts (the table was in the chat; they are in the String
+     Catalog), the six small review follow-ups (plan §10 EARLY – one worker step, among them Today's caption after
+     a cancelled early night and that night's reminder), then `CURRENT_PROJECT_VERSION` 4 and TestFlight for the
+     tester who reported it. He was told before his test that an early start is the real night of that date:
+     cancelling it leaves ruins and October's joker is spent. **The same evening Opus wrote
+     `docs/PREHLAD-PLANOV.md` (a copy is in his iCloud Drive `SleepHole/`): every open item in one table with effort
+     and priority, as he asked. Opus's order after EARLY: TODAY + POP in parallel, then CAL, CARE-2a (+10 per calm
+     hour; the +11 waits for the movement spike) and an analysis of the App Review risk – ask whether he agrees and
+     for the three answers the first steps need (may the buddy on Today shrink to about 200 pt; the residents'
+     ranges and the town size names; the App Store subtitle / privacy page / public contact).**
+     (2) **the App Store page:** he asked what
+     App Store Connect needs (icon, subtitle…) and for help with the texts. The guide with text proposals in
+     English and Slovak is in his iCloud Drive (`SleepHole/APPSTORE-NAVOD.md`): fields and limits, subtitle /
+     promotional text / keywords / description, a privacy policy draft, the questionnaires, and what is not
+     text (screenshots 6.9", price, the Paid Apps agreement, the EU trader status that shows his contact
+     publicly). **Ask which subtitle he picked, where the privacy page should live and which contact may be
+     public.** Opus advised against listing the beta in third-party directories for now (Apple itself has no
+     catalogue of betas) and to make the store screenshots only after Today and the calendar are redone.
      Also open: (1) TestFlight – build 2 is uploaded; the friend got his invitation as an internal tester in the end
      (the public link said "not accepting new testers" because Apple's review had not finished); the guide in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`) now explains the missing step
      (an Internal Testing group holding the friend and the build), the public link for several friends and the
@@ -229,7 +256,9 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   In use: Time Sensitive notifications (F6a), WeatherKit (owner's OK 2026-10-07, phase TOWN-W). Other paid-only APIs (HealthKit, iCloud, push) only when the owner
   asks for them. AlarmKit needs no entitlement.
 * Night rules **R3** (plan D15 + findings 2026-09-29/30): start only bedtime −10…+5 min; setup until
-  max(start, bedtime) + 5 min; after it, leaving the app → warning after ~3 s and 10 s to return (and at most
+  max(start, bedtime) + 5 min; **an early start ("Go to sleep early today", owner 2026-10-11, plan §10 EARLY) is
+  allowed from bedtime − 3 h, after a short confirmation, with no penalty – the night counts in full and the morning
+  does not change; its setup lasts 15 min from the start**; after the setup, leaving the app → warning after ~3 s and 10 s to return (and at most
   30 s out of the app per night in total – see "Away budget"), else the building collapses (calls excused);
   **using the phone on the LOCK screen is detected too** (owner 2026-10-07, B25: camera / video from the lock
   screen) – the screen lit for more than 8 s with the user recognised, or lit for 12 s while the phone is held; it
@@ -335,6 +364,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `docs/PLAN.md` | product decisions (Slovak) |
 | `docs/NAVRH-ZVIERATKA.md` | next plans A/B/C: pause, sleep buddy, Cube Pets residents, living town (Slovak, owner picks) |
 | `docs/NAVRH-MESTO-STATISTIKY.md`, `docs/previews/navrh-2026-10-10/` | proposals of 2026-10-10 after the 100-night simulation (Slovak) and their SVG mock-ups – the spec of phase NEXT (plan §10); the owner picks |
+| `docs/PREHLAD-PLANOV.md` | the owner's overview of everything open (Slovak, 2026-10-11): one table with effort and priority per item + short descriptions; priorities are Opus's recommendation – the plan's §10 stays the spec. **Bundled into Debug builds and shown in Settings → Developer → "Plans and proposals" (`SleepHole/Debug/PlansView.swift`) – keep the main table's five columns (`#` first) or the parser loses it; no `http` links** |
 | `docs/IMPLEMENTATION_I18N.md` | full spec for the EN/SK multi-language phase (string inventory, architecture, tests) |
 | `SleepCore/` | pure Swift package: schedule, night evaluation, progression, picker, town layout |
 | `SleepHole/` | iOS app target (created in F0) |

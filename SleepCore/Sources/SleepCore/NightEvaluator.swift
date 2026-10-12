@@ -8,6 +8,9 @@ public struct SleepRules: Codable, Equatable, Sendable {
     /// max(start, bedtime) + setupGrace (owner, 2026-09-30: starting at 20:51 for a 21:00 bedtime gives
     /// 9 + 5 = 14 min to set up a podcast, a story, selfies…).
     public var setupGrace: TimeInterval = 5 * 60
+    /// Setup time of a night started early (before `NightWindow.startOpens`): it runs from the start, not from
+    /// the bedtime (owner 2026-10-11; the normal `setupGrace` stays 5 min).
+    public var earlySetup: TimeInterval = 15 * 60
     /// After the grace period ANY user-initiated background collapses the building (like SleepTown),
     /// except for this tiny tolerance for an accidental swipe.
     public var accidentalTolerance: TimeInterval = 10
@@ -174,10 +177,15 @@ public enum NightEvaluator {
 }
 
 extension NightWindow {
-    /// End of the setup time for a night started at `start`: until bedtime + grace, or start + grace
-    /// when started after bedtime (never less than the full grace).
+    /// A night started before the normal start opens (bedtime − 10 min) is an early start (owner 2026-10-11).
+    public func isEarlyStart(_ start: Date) -> Bool { start < startOpens }
+    /// "Go to sleep earlier" is possible in [earlyStartOpens, startOpens); the normal start takes over there.
+    public func canStartEarly(at t: Date) -> Bool { t >= earlyStartOpens && t < startOpens }
+
+    /// End of the setup time for a night started at `start`: an early start gets `earlySetup` from the start;
+    /// otherwise until bedtime + grace, or start + grace when started after bedtime (never less than the full grace).
     public func setupEnds(start: Date, rules: SleepRules = SleepRules()) -> Date {
-        max(start, bedtime) + rules.setupGrace
+        isEarlyStart(start) ? start + rules.earlySetup : max(start, bedtime) + rules.setupGrace
     }
 
     /// "Začať stavbu" is enabled in [startOpens, startCloses].

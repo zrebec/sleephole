@@ -69,6 +69,7 @@ struct BuildingImage: View {
 struct HomeView: View {
     @Environment(AppModel.self) private var model
     @State private var briefing = false
+    @State private var confirmEarly = false
     /// The hero cat: 62 % of the screen width (250 pt on a 402 pt wide phone), at most this wide.
     static let buddyMaxWidth: CGFloat = 260
 
@@ -77,6 +78,7 @@ struct HomeView: View {
             let now = ctx.date
             let w = model.window
             let canSleep = model.phase == .canStart
+            let early = model.canStartEarly
             let napReason = model.napBlockReason(at: now)
             ScrollView {
                 VStack(spacing: 16) {
@@ -98,10 +100,19 @@ struct HomeView: View {
                     VStack(spacing: 12) {
                         Text(L("Bedtime \(Fmt.time(w.bedtime)) · wake-up \(Fmt.time(w.wake))"))
                             .font(.title3.bold())
-                        actionButton(L("🌙 Go to sleep"), enabled: canSleep, prominent: true) {
-                            if model.needsFirstNightBriefing { briefing = true } else { model.startNight() }
+                        actionButton(early ? L("🌙 Go to sleep early today") : L("🌙 Go to sleep"),
+                                     enabled: canSleep || early, prominent: true) {
+                            if model.needsFirstNightBriefing { briefing = true }
+                            else if early { confirmEarly = true }        // an early start asks first
+                            else { model.startNight() }
                         }
-                        Text(sleepCaption(canSleep: canSleep, now: now, w: w))
+                        .confirmationDialog(L("Go to sleep now?"), isPresented: $confirmEarly, titleVisibility: .visible) {
+                            Button(L("Start tonight's building")) { model.startNight(early: true) }
+                            Button(L("Not yet"), role: .cancel) {}
+                        } message: {
+                            Text(L("Your bedtime is at \(Fmt.time(w.bedtime)), so tonight's night without your phone will be longer. You have \(Plural.minutes(SleepRules().earlySetup)) to set up; your alarm stays at \(Fmt.time(w.wake))."))
+                        }
+                        Text(sleepCaption(canSleep: canSleep, early: early, now: now, w: w))
                             .font(.callout).cardCaption().multilineTextAlignment(.center)
                     }
                     .padding()
@@ -129,21 +140,24 @@ struct HomeView: View {
             }
             // no rubber-band scrolling when everything fits (owner 2026-09-30: "Dnes" could be dragged around)
             .scrollBounceBehavior(.basedOnSize)
-            .sheet(isPresented: $briefing) { FirstNightBriefing() }
+            .sheet(isPresented: $briefing) { FirstNightBriefing(early: model.canStartEarly) }
         }
         .navigationTitle(L("Today"))
         .timeSensitiveWarning()                           // the warning triangle top left (only while the switch is off)
         .todayWeather()                                   // the weather badge top right + the refresh loop
     }
 
-    private func sleepCaption(canSleep: Bool, now: Date, w: NightWindow) -> String {
+    private func sleepCaption(canSleep: Bool, early: Bool, now: Date, w: NightWindow) -> String {
+        if early {
+            return L("Tired already? You can start tonight's building now – the night without your phone will just be longer. Your alarm stays at \(Fmt.time(w.wake)).")
+        }
         if canSleep {
             return L("Start building by \(Fmt.time(w.startCloses())). You have until \(Fmt.time(w.setupEnds(start: w.bedtime))) to set up (podcast, bedtime story), then keep SleepHole open and lock your phone.")
         }
         if now > w.startCloses() {
             return L("It's too late to build tonight 🌙 Tomorrow from \(Fmt.time(w.startOpens)).")
         }
-        return L("You can't go to sleep yet – you can build from \(Fmt.time(w.startOpens)) to \(Fmt.time(w.startCloses())).")
+        return L("You can't go to sleep yet – you can build from \(Fmt.time(w.startOpens)) to \(Fmt.time(w.startCloses())). Tired sooner? An early start opens at \(Fmt.time(w.earlyStartOpens)).")
     }
 
     @ViewBuilder

@@ -2517,6 +2517,38 @@
         }
       }
     },
+    "Go to sleep now?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Go to sleep now?"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ísť spať už teraz?"
+          }
+        }
+      }
+    },
+    "Start tonight's building": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start tonight's building"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Začať dnešnú stavbu"
+          }
+        }
+      }
+    },
     "Tap a night to see it.": {
       "localizations": {
         "en": {
@@ -2577,6 +2609,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Detail noci"
+          }
+        }
+      }
+    },
+    "Tired already? You can start tonight's building now – the night without your phone will just be longer. Your alarm stays at %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tired already? You can start tonight's building now – the night without your phone will just be longer. Your alarm stays at %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Už sa ti chce spať? Dnešnú stavbu môžeš začať už teraz – noc bez telefónu bude len dlhšia. Budík ostáva na %@."
+          }
+        }
+      }
+    },
+    "Tired sooner? From %lld h before bedtime you can go to sleep early: the night counts in full, only the night without your phone is longer. You then have %@ from the start to set up, and the alarm stays at your wake-up time.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tired sooner? From %lld h before bedtime you can go to sleep early: the night counts in full, only the night without your phone is longer. You then have %@ from the start to set up, and the alarm stays at your wake-up time."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chce sa ti spať skôr? Už %lld h pred večierkou môžeš ísť spať skôr: noc sa počíta celá, len noc bez telefónu je dlhšia. Na prípravu máš potom %@ od začiatku a budík ostáva na čase vstávania."
           }
         }
       }
@@ -5317,6 +5381,70 @@
         }
       }
     },
+    "You can't go to sleep yet – you can build from %@ to %@. Tired sooner? An early start opens at %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can't go to sleep yet – you can build from %@ to %@. Tired sooner? An early start opens at %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ešte nemôžeš ísť spať – stavať môžeš od %1$@ do %2$@. Chce sa ti spať skôr? Skorší začiatok sa otvára o %3$@."
+          }
+        }
+      }
+    },
+    "You have %@ from now for a podcast or story.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You have %@ from now for a podcast or story."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na podcast či rozprávku máš odteraz %@."
+          }
+        }
+      }
+    },
+    "You start building from %@ before bedtime to %@ after it. Later than that the night counts as missed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You start building from %@ before bedtime to %@ after it. Later than that the night counts as missed."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavbu začneš od %1$@ pred večierkou do %2$@ po nej. Neskôr sa noc počíta ako vynechaná."
+          }
+        }
+      }
+    },
+    "Your bedtime is at %@, so tonight's night without your phone will be longer. You have %@ to set up; your alarm stays at %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your bedtime is at %@, so tonight's night without your phone will be longer. You have %@ to set up; your alarm stays at %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večierku máš o %1$@, takže dnešná noc bez telefónu bude dlhšia. Na prípravu máš %2$@; budík ostáva na %3$@."
+          }
+        }
+      }
+    },
     "Your phone is off duty – switch the screen off within %lld seconds": {
       "localizations": {
         "en": {
@@ -5329,6 +5457,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Telefón má voľno – zhasni obrazovku do %lld sekúnd"
+          }
+        }
+      }
+    },
+    "🌙 Go to sleep early today": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌙 Go to sleep early today"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌙 Dnes ísť spať skôr"
           }
         }
       }
@@ -8249,22 +8393,6 @@
         }
       }
     },
-    "You can start building at the earliest %@ before bedtime and at the latest %@ after it. Otherwise the night counts as missed.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You can start building at the earliest %@ before bedtime and at the latest %@ after it. Otherwise the night counts as missed."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stavbu môžeš začať najskôr %1$@ pred večierkou a najneskôr %2$@ po nej. Inak sa noc počíta ako vynechaná."
-          }
-        }
-      }
-    },
     "You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and %@ to come back. All such trips share %@ per night – when they are used up, the night screen tells you, and leaving again collapses the building.": {
       "localizations": {
         "en": {
@@ -8277,22 +8405,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Displej môžeš vypnúť, ale SleepHole musí zostať otvorený. Ak prepneš do inej appky, dostaneš upozornenie a %1$@ na návrat. Všetky takéto odchody majú spolu %2$@ za noc – keď sa minú, obrazovka noci ti to povie a ďalší odchod stavbu zrúti."
-          }
-        }
-      }
-    },
-    "You can't go to sleep yet – you can build from %@ to %@.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You can't go to sleep yet – you can build from %@ to %@."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ešte nemôžeš ísť spať – stavať môžeš od %1$@ do %2$@."
           }
         }
       }
@@ -10485,6 +10597,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "Načítať spánok znova"
+          }
+        }
+      }
+    },
+    "Plans and proposals": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plans and proposals"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plány a návrhy"
+          }
+        }
+      }
+    },
+    "The plans document is not part of this build.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The plans document is not part of this build."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dokument s plánmi nie je súčasťou tohto buildu."
           }
         }
       }

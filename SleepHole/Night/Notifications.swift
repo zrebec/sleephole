@@ -43,17 +43,33 @@ enum Notifications {
     }
 
     /// Daily reminders before bedtime (time sensitive: owner 2026-10-04 – they should reach him in a Focus too).
-    static func scheduleReminders(_ schedule: Schedule) {
+    /// With `quietUntil` (the bedtime of a night that was started early) every reminder is a one-shot for its first
+    /// occurrence after that moment, so the running night is not interrupted; the next launch / night end restores
+    /// the daily repeating ones.
+    static func scheduleReminders(_ schedule: Schedule, quietUntil: Date? = nil, calendar: Calendar = .current) {
         let ids = (0..<10).map(reminderId)
         center.removePendingNotificationRequests(withIdentifiers: ids)
         for (i, offset) in schedule.reminderOffsets.enumerated() where offset > 0 {
-            let total = (schedule.bedtime.hour * 60 + schedule.bedtime.minute - offset + 24 * 60) % (24 * 60)
-            let trigger = UNCalendarNotificationTrigger(dateMatching: DateComponents(hour: total / 60, minute: total % 60),
-                                                        repeats: true)
+            guard let plan = reminderTrigger(schedule: schedule, offset: offset, quietUntil: quietUntil, calendar: calendar)
+            else { continue }
+            let trigger = UNCalendarNotificationTrigger(dateMatching: plan.components, repeats: plan.repeats)
             let content = reminderContent(i, bedtime: schedule.bedtime, offset: offset)
             center.add(UNNotificationRequest(identifier: reminderId(i), content: content, trigger: trigger))
         }
         scheduleMonthlyCheck(wake: schedule.wake)
+    }
+
+    /// Pure: which date components a reminder fires at, and whether it repeats daily. Without `quietUntil` the daily
+    /// one (hour + minute); with it a single full date – the first time of day (bedtime − offset) strictly after it.
+    static func reminderTrigger(schedule: Schedule, offset: Int, quietUntil: Date?,
+                                calendar: Calendar) -> (components: DateComponents, repeats: Bool)? {
+        let total = (schedule.bedtime.hour * 60 + schedule.bedtime.minute - offset + 24 * 60) % (24 * 60)
+        let daily = DateComponents(hour: total / 60, minute: total % 60)
+        guard let quietUntil else { return (daily, true) }
+        var time = daily
+        time.second = 0
+        guard let next = calendar.nextDate(after: quietUntil, matching: time, matchingPolicy: .nextTime) else { return nil }
+        return (calendar.dateComponents([.year, .month, .day, .hour, .minute], from: next), false)
     }
 
     static let reminderPrefix = "reminder-"

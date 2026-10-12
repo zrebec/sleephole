@@ -39,6 +39,17 @@ struct ViewsTests {
         window.isHidden = true
     }
 
+    @Test(arguments: AppLanguage.allCases) func todayInTheEarlyWindow(language: AppLanguage) {
+        let (m, clock, _) = makeModel(at: date(5, 12), language: language)
+        clock.now = date(5, 20, 0); m.refresh()
+        #expect(m.canStartEarly)
+        render(TodayView(), m)                                      // early start available
+        render(FirstNightBriefing(early: true), m)
+        render(FirstNightBriefing(), m)
+        m.startNight(early: true)
+        render(TodayView(), m)                                      // early night, setup
+    }
+
     @Test(arguments: AppLanguage.allCases) func todayInEveryPhase(language: AppLanguage) {
         let (m, clock, _) = makeModel(at: date(5, 12), language: language)
         render(TodayView(), m)                                      // idle
@@ -114,6 +125,7 @@ struct ViewsTests {
         render(RootView(), m)
         render(PlaceholderView(title: "x", text: "y"), m)
         render(NavigationStack { DetectionTestView() }, m)
+        render(NavigationStack { PlansView() }, m)
         render(ConstructionSite(buildingId: "l3-police", progress: 0.5), m)
         render(NightSky(), m)
         render(LevelInfo(), m)

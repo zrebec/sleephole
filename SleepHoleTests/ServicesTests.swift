@@ -177,6 +177,31 @@ struct ServicesTests {
         // (requestAuthorization is not called: the permission alert would block the test run forever)
     }
 
+    @Test func reminderTriggerIsDailyWithoutQuietAndOneShotWithIt() {
+        var cal = Calendar(identifier: .gregorian); cal.timeZone = TimeZone(identifier: "Europe/Bratislava")!
+        func at(_ d: Int, _ h: Int, _ m: Int) -> Date { cal.date(from: DateComponents(year: 2026, month: 10, day: d, hour: h, minute: m))! }
+        let sched = Schedule(bedtime: TimeOfDay(22, 30), wake: TimeOfDay(6, 30), reminderOffsets: [30])
+        let daily = Notifications.reminderTrigger(schedule: sched, offset: 30, quietUntil: nil, calendar: cal)
+        #expect(daily?.repeats == true && daily?.components.hour == 22 && daily?.components.minute == 0 && daily?.components.day == nil)
+        // an early start at 21:00 (tonight's 22:00 reminder still ahead) and at 22:10 (already past)
+        for quiet in [at(5, 22, 30)] {
+            let t = Notifications.reminderTrigger(schedule: sched, offset: 30, quietUntil: quiet, calendar: cal)!
+            #expect(t.repeats == false)
+            #expect(cal.date(from: t.components) == at(6, 22, 0))
+        }
+        // a bedtime shortly after midnight: reminder 23:45, quiet until 00:15 → the same evening's 23:45
+        let late = Schedule(bedtime: TimeOfDay(0, 15), wake: TimeOfDay(7, 0), reminderOffsets: [30])
+        let l = Notifications.reminderTrigger(schedule: late, offset: 30, quietUntil: at(6, 0, 15), calendar: cal)!
+        #expect(!l.repeats && cal.date(from: l.components) == at(6, 23, 45))
+        let ld = Notifications.reminderTrigger(schedule: late, offset: 30, quietUntil: nil, calendar: cal)!
+        #expect(ld.repeats && ld.components.hour == 23 && ld.components.minute == 45)
+    }
+
+    @Test func schedulingRemindersWithQuietDoesNotCrash() {
+        Notifications.scheduleReminders(Schedule(reminderOffsets: [30]), quietUntil: Date() + 3600)
+        Notifications.scheduleReminders(Schedule(reminderOffsets: [30]))
+    }
+
     @Test func shakeAndSounds() {
         var shaken = false
         let token = NotificationCenter.default.addObserver(forName: .deviceDidShake, object: nil, queue: nil) { _ in

@@ -75,7 +75,7 @@ struct SleepHoleApp: App {
         guard !args.contains("-startTestNight"), !args.contains("-seedNights"), !args.contains("-screenshot") else { return }
         guard model.onboardingDone else { return }
         if await Notifications.requestAuthorization() {
-            Notifications.scheduleReminders(model.settings.schedule)
+            model.rescheduleReminders()
             Notifications.scheduleExpiry(AppExpiry.date)
         }
         await model.refreshTimeSensitive()

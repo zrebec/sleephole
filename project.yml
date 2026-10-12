@@ -29,6 +29,9 @@ targets:
         buildPhase: resources
         excludes:
           - "*.txt"
+      # the plans overview shown in Settings → Developer (Debug builds only – excluded from Release below)
+      - path: docs/PREHLAD-PLANOV.md
+        buildPhase: resources
     dependencies:
       - package: SleepCore
     info:
@@ -80,6 +83,9 @@ targets:
         # UI text goes through L("English key") → extract those keys like String(localized:)
         LOCALIZED_STRING_MACRO_NAMES: "L NSLocalizedString CFCopyLocalizedString"
         SWIFT_EMIT_LOC_STRINGS: YES
+      configs:
+        Release:
+          EXCLUDED_SOURCE_FILE_NAMES: PREHLAD-PLANOV.md
     scheme:
       testTargets: [SleepHoleTests]
       gatherCoverageData: true
