@@ -98,7 +98,8 @@ struct SupportTests {
             NightResult(key: k.adding(days: 1, calendar: .current), outcome: .ruins, buildingId: "l1-block-a-0"),
             NightResult(key: k.adding(days: 2, calendar: .current), outcome: .unfinished, buildingId: "l4-sky-a-0"),
         ], catalog: catalog)
-        #expect(TownStats.population(town, catalog: catalog) == 4 + 150)
+        let people = TownStats.population(town)
+        #expect(people == Population.total(town) && people >= 2 + 750 && people <= 14 + 2_000)   // house + half a sky tower, no ruin
         #expect([1, 2][safe: 5] == nil && [1, 2][safe: 1] == 2)
     }
 

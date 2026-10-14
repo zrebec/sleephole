@@ -384,7 +384,7 @@ struct NightDetail: View {
                 trips(L("Trips during setup (until \(r.setupEnds.map(Fmt.time) ?? "–"))"), r.setupTrips, ok: true)
                 trips(L("Trips after setup"), r.nightTrips, ok: false)
                 if !r.pauses.isEmpty { chips(L("🌙 Pauses: \(r.pauses.count)×"), r.pauses) }
-                chips(L("👀 Screen checks: \(r.screenChecks.count)×"), r.screenChecks)
+                if !r.screenChecks.isEmpty { chips(L("👀 Screen checks: \(r.screenChecks.count)×"), r.screenChecks) }   // nights stored before 2026-10-14 only
                 if !r.calls.isEmpty { trips(L("📞 Calls"), r.calls, ok: true) }
                 if !r.relaunches.isEmpty { chips(L("🔄 The app restarted"), r.relaunches) }
                 if let c = r.collapsedAt { row("🧱", L("The building collapsed"), Fmt.timeSec(c)) }
@@ -501,7 +501,7 @@ struct NightDetail: View {
                         .foregroundStyle(ok || t.duringPause || t.notCounted ? Color.cardCaption
                                          : (t.duration ?? .infinity) > 13 ? Color.readableOrange : Color.cardCaption)
                     if t.closedApp { Text(verbatim: "· \(L("closed the app"))").foregroundStyle(Color.cardCaption) }
-                    if t.onLockScreen { Text(verbatim: "· \(L("used the phone on the lock screen"))").foregroundStyle(Color.cardCaption) }
+                    if t.onLockScreen { Text(verbatim: "· \(L("used the phone outside the app"))").foregroundStyle(Color.cardCaption) }
                     if t.duringPause { Text(verbatim: "🌙") }
                 }
                 .font(.caption)

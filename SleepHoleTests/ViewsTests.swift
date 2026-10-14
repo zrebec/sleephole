@@ -176,7 +176,7 @@ struct ViewsTests {
         let sk = language == .sk
         #expect(NightChart.callout(nil, showsSleep: true) == (sk ? "Ťukni na noc a uvidíš ju." : "Tap a night to see it."))
         #expect(NightChart.callout(both, showsSleep: true)
-                == (sk ? "\(date) · začiatok 22:30 · zaspal si 22:55 · po 25 min" : "\(date) · start 22:30 · asleep 22:55 · after 25 min"))
+                == (sk ? "\(date) · začiatok 22:30 · spánok prišiel 22:55 · po 25 min" : "\(date) · start 22:30 · asleep 22:55 · after 25 min"))
         #expect(NightChart.callout(plain, showsSleep: true) == (sk ? "\(date) · začiatok 22:30" : "\(date) · start 22:30"))
         #expect(NightChart.callout(both, showsSleep: false) == NightChart.callout(plain, showsSleep: false))
     }

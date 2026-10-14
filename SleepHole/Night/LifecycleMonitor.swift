@@ -6,10 +6,13 @@ import UIKit
 
 /// Turns UIKit / system signals into `NightEvent`s (plan §6.2).
 ///
-/// iOS has no public "user locked the phone" API, so several signals are combined:
-///  * Darwin notification `com.apple.springboard.lockcomplete` (immediate, undocumented but long-lived)
-///  * `protectedDataWillBecomeUnavailable` (documented, but arrives ~10 s after the lock)
-///  * `isProtectedDataAvailable` and the screen brightness at the moment of backgrounding
+/// Only documented signals are used (Apple refused a build for listening to the undocumented lock notifications,
+/// ITMS-90699, 2026-10-14):
+///  * `protectedDataWillBecomeUnavailable` – the phone locked / the screen went off (arrives as fast as the old
+///    Darwin lock signal, measured). It ends an open trip and tells a lock from leaving the app.
+///  * `protectedDataDidBecomeAvailable` – the user was recognised (Face ID / Touch ID / passcode), on the lock screen or
+///    after unlocking into another app (the two cannot be told apart). If the app is still not in front
+///    `lockScreenWindow` later, the phone is being used → `.usedLockScreen`.
 /// On `didEnterBackground` the monitor waits `decisionDelay` and then decides lock vs. left-app.
 /// Every raw signal is also reported via `onRaw` for the F2 spike log.
 @MainActor
@@ -22,45 +25,33 @@ final class LifecycleMonitor {
     var onTerminate: (() -> Void)?
 
     static let decisionDelay: Duration = .seconds(3)      // lock signals arrive ~1.6 s after background (device log)
-    static let unlockReturnWindow: Duration = .seconds(5)  // lockstate=0 fires on swipe-up; the app is active ~0.8 s later (device log #2)
 
-    /// An idle lock screen switches itself off after ~7 s (device log), so a glance at the clock stays free; a screen
-    /// that stays lit for 8 s while the app is not active (and Face ID has recognised the owner) is being used
-    /// (camera from the lock screen, widgets, …) → left the app.
+    /// After the user was recognised (protected data available) while the app is not in front, this long without a lock
+    /// and without the app coming back means the phone is being used elsewhere → `.usedLockScreen` (owner 2026-10-14).
     nonisolated static let lockScreenWindow: Duration = .seconds(8)
 
     // Seams for tests (hosted tests always see the app as active and cannot wait 8 s per case); production defaults.
     var isAppActive: () -> Bool = { UIApplication.shared.applicationState == .active }
     var isProtectedDataAvailable: () -> Bool = { UIApplication.shared.isProtectedDataAvailable }
+    /// Can this phone tell locking from leaving the app (passcode + Face ID / Touch ID)? When not, a background trip is
+    /// never counted as leaving (the user's favour); closing the app and calls keep their rules.
+    var canTellLockFromLeaving: () -> Bool = { LockCapability.canTellLockFromLeaving() }
     var screenWindow: Duration = LifecycleMonitor.lockScreenWindow
-    var unlockWindow: Duration = LifecycleMonitor.unlockReturnWindow
     var backgroundDelay: Duration = LifecycleMonitor.decisionDelay
-    /// A lit lock screen with the phone HELD IN A HAND counts as use after this long, recognised or not (owner
-    /// 2026-10-09: filming with the lock-screen camera without Face ID); then it is re-checked every `heldInterval`.
-    nonisolated static let lockScreenHeldWindow: Duration = .seconds(12)
-    var heldWindow: Duration = LifecycleMonitor.lockScreenHeldWindow
-    var heldInterval: Duration = .seconds(1)
-    var motion: any HandMotion = CoreMotionHold()
 
     private var tokens: [NSObjectProtocol] = []
     private var lastLockSignal: Date?
     private var pendingBackground: Task<Void, Never>?
-    private var pendingUnlock: Task<Void, Never>?
-    private var pendingScreenOn: Task<Void, Never>?
-    /// The "lit while held" watch: runs (with the motion sensor) only while the screen is lit, the app is not active and
-    /// no trip is open.
-    private var pendingHeld: Task<Void, Never>?
+    /// The window after a recognition while the app is not in front.
+    private var pendingLockUse: Task<Void, Never>?
     private var isAway = false {
-        didSet { if isAway { endHeldWatch() } else { lockTrip = false } }
+        didSet { if !isAway { lockTrip = false } }
     }
-    /// The open trip began as lock-screen use (`.usedLockScreen`), not as a real leave. An unlock into another app
-    /// during such a trip still emits `.leftApp` (in gentle mode the lock-screen trip itself is free).
+    /// The open trip began as lock-screen use (`.usedLockScreen`), not as a real leave.
     private var lockTrip = false
     /// Protected data is locked, as told by the two notifications. `isProtectedDataAvailable` stays true for several
-    /// seconds after a lock, so "Face ID has recognised the owner" must come from the notifications, not from that flag.
+    /// seconds after a lock, so the state must come from the notifications, not from that flag.
     private var dataLocked = false
-    /// A `.screenOn` was emitted and its `.screenOff` has not been yet.
-    private var screenLit = false
     private let callObserver = CXCallObserver()
     private var callDelegate: CallDelegate?
     private var activeCalls = Set<UUID>()
@@ -70,7 +61,6 @@ final class LifecycleMonitor {
         guard !isRunning else { return }
         isRunning = true
         dataLocked = !isProtectedDataAvailable()
-        screenLit = false
         let nc = NotificationCenter.default
         func observe(_ name: Notification.Name, queue: OperationQueue? = .main, _ handler: @escaping @MainActor () -> Void) {
             tokens.append(nc.addObserver(forName: name, object: nil, queue: queue) { _ in
@@ -94,19 +84,6 @@ final class LifecycleMonitor {
             self?.onTerminate?()
         }
 
-        DarwinNotifications.shared.observe(["com.apple.springboard.lockcomplete",
-                                            "com.apple.springboard.lockstate",
-                                            "com.apple.springboard.hasBlankedScreen"]) { [weak self] name, state in
-            self?.raw("darwin \(name.replacingOccurrences(of: "com.apple.springboard.", with: "")) state=\(state)")
-            if name == "com.apple.springboard.lockcomplete" { self?.lockSignal("lockcomplete") }
-            if name == "com.apple.springboard.hasBlankedScreen" { self?.screenChanged(blanked: state == 1) }
-            // lockstate fires on BOTH lock and unlock – the state tells which (1 = locked, 0 = unlocked)
-            if name == "com.apple.springboard.lockstate", state == 0,
-               self?.isAppActive() == false {
-                self?.unlockCandidate()
-            }
-        }
-
         let delegate = CallDelegate { [weak self] call in self?.callChanged(call) }
         callDelegate = delegate
         callObserver.setDelegate(delegate, queue: .main)
@@ -116,10 +93,8 @@ final class LifecycleMonitor {
     func stop() {
         tokens.forEach(NotificationCenter.default.removeObserver)
         tokens.removeAll()
-        DarwinNotifications.shared.removeAll()
         callObserver.setDelegate(nil, queue: nil)
-        pendingBackground?.cancel(); pendingUnlock?.cancel(); pendingUnlock = nil; pendingScreenOn?.cancel()
-        endHeldWatch()
+        pendingBackground?.cancel(); pendingLockUse?.cancel(); pendingLockUse = nil
         isRunning = false
         raw("monitor stopped")
     }
@@ -134,13 +109,12 @@ final class LifecycleMonitor {
         let changed = dataLocked != locked
         dataLocked = locked
         if changed { emit(locked ? .dataLocked : .ownerRecognised, "") }
-        // Face ID recognised the owner only AFTER the window ran out (a tap on a widget, …): the lit screen is being used
-        // → the trip starts now. A recognition inside the window is left to the check at its end.
-        if changed, !locked, screenLit, pendingScreenOn == nil, !isAway, !isAppActive() {
-            isAway = true; lockTrip = true
-            emit(.usedLockScreen, "(recognised after the window)")
+        if locked {
+            pendingLockUse?.cancel(); pendingLockUse = nil
+            lockSignal("protectedData")
+        } else if changed, !isAway, !isAppActive() {
+            startLockUseWindow()
         }
-        if locked { lockSignal("protectedData") }
     }
 
     private func lockSignal(_ source: String) {
@@ -148,6 +122,24 @@ final class LifecycleMonitor {
         if isAway {                       // left the app, then locked → away interval ends at the lock
             isAway = false
             emit(.locked, "(\(source), ends away)")
+        }
+    }
+
+    /// The user was recognised while the app is not in front. If after `screenWindow` the app is still not active and
+    /// no lock came in between, the phone is being used (lock-screen camera, widgets, another app) → `.usedLockScreen`,
+    /// stamped at the END of the window (the window is free).
+    private func startLockUseWindow() {
+        pendingLockUse?.cancel()
+        pendingLockUse = Task { [weak self] in
+            try? await Task.sleep(for: self?.screenWindow ?? Self.lockScreenWindow)
+            guard let self, !Task.isCancelled else { return }
+            self.pendingLockUse = nil
+            let active = self.isAppActive()
+            self.raw("recognised \(Int(Self.lockScreenWindow.components.seconds)) s ago · active=\(active) · locked=\(self.dataLocked)")
+            if !active, !self.dataLocked, !self.isAway {
+                self.isAway = true; self.lockTrip = true
+                self.emit(.usedLockScreen, "(recognised and not back in time)")
+            }
         }
     }
 
@@ -163,10 +155,14 @@ final class LifecycleMonitor {
             self.pendingBackground = nil
             if let lock = self.lastLockSignal, abs(lock.timeIntervalSince(now)) < 2.5 {
                 self.emit(.locked, "(background by lock)", at: now)
-            } else if !self.isAppActive(), self.pendingUnlock == nil, !self.isAway || self.lockTrip {
-                // One trip, one `.leftApp` (B29): while an unlock window is pending, the unlock path reports the trip at
-                // the END of that window (the window is free); a real leave that is already open needs nothing more. An
-                // open lock-screen trip is not a real leave, so a background that follows it still reports one.
+            } else if !self.isAppActive(), !self.isAway || self.lockTrip {
+                // One trip, one `.leftApp` (B29): a real leave that is already open needs nothing more. An open
+                // lock-screen trip is not a real leave, so a background that follows it still reports one.
+                guard self.canTellLockFromLeaving() else {
+                    // no passcode / no Face ID or Touch ID: a lock looks exactly like leaving → the user's favour
+                    self.raw("(background not counted: this phone cannot tell a lock from leaving)")
+                    return
+                }
                 self.isAway = true; self.lockTrip = false
                 self.emit(.leftApp, "(background without a lock signal)", at: now)
             }
@@ -175,10 +171,7 @@ final class LifecycleMonitor {
 
     private func didBecomeActive() {
         raw("didBecomeActive")
-        pendingUnlock?.cancel(); pendingUnlock = nil
-        pendingScreenOn?.cancel(); pendingScreenOn = nil
-        endHeldWatch()
-        screenLit = false                 // while the app is active no `.screenOff` is owed
+        pendingLockUse?.cancel(); pendingLockUse = nil
         if pendingBackground != nil {     // came back before the decision → nothing happened
             pendingBackground?.cancel(); pendingBackground = nil
             raw("(short background ignored)")
@@ -186,85 +179,6 @@ final class LifecycleMonitor {
         }
         isAway = false
         emit(.returned, "")
-    }
-
-    /// The phone was unlocked while our app sat in the background after a lock. If the app does not
-    /// become active within `unlockReturnWindow`, the owner is using the phone elsewhere (lock-screen
-    /// notifications, camera, …) → left the app, stamped at the END of the window (the window is free).
-    func unlockCandidate() {
-        emit(.unlocked, "(lockstate=0 while inactive)")
-        pendingUnlock?.cancel()
-        pendingUnlock = Task { [weak self] in
-            try? await Task.sleep(for: self?.unlockWindow ?? Self.unlockReturnWindow)
-            guard let self, !Task.isCancelled else { return }
-            self.pendingUnlock = nil          // the window is over: the background decision may report again
-            // `isAway`: another path (lit lock screen, background) has already reported the trip – no second `.leftApp`,
-            // unless that trip is only lock-screen use: unlocking into another app is a real leave (care-not-enforcement
-            // mode, owner 2026-10-09 – the lock-screen trip itself may be free)
-            if !self.isAway || self.lockTrip, !self.isAppActive(), self.isProtectedDataAvailable() {
-                self.isAway = true; self.lockTrip = false
-                self.emit(.leftApp, "(unlocked but did not return in 5 s)")
-            }
-        }
-    }
-
-    /// `hasBlankedScreen`: the screen went off (`blanked`) or came on. With the phone locked and the app in the
-    /// background, a screen that stays lit for `screenWindow` with Face ID done means the owner is using the lock
-    /// screen (camera, …): left the app, stamped at the END of the window. It ends with the screen going off.
-    func screenChanged(blanked: Bool) {
-        if blanked {
-            pendingScreenOn?.cancel(); pendingScreenOn = nil
-            endHeldWatch()
-            if screenLit { screenLit = false; emit(.screenOff, "") }       // before the `.locked` below
-            // the `protectedDataWillBecomeUnavailable` lock signal may fire at the same moment: `isAway` makes sure
-            // that exactly one of the two emits `.locked`
-            if isAway, !isAppActive() {
-                isAway = false
-                emit(.locked, "(screen off, ends away)")
-            }
-            return
-        }
-        if !isAppActive(), !screenLit { screenLit = true; emit(.screenOn, "") }
-        guard !isAppActive(), !isAway else { return }
-        if pendingHeld == nil { startHeldWatch() }
-        pendingScreenOn?.cancel()
-        pendingScreenOn = Task { [weak self] in
-            try? await Task.sleep(for: self?.screenWindow ?? Self.lockScreenWindow)
-            guard let self, !Task.isCancelled else { return }
-            self.pendingScreenOn = nil
-            let active = self.isAppActive(), recognised = !self.dataLocked
-            self.raw("screen on for \(Int(Self.lockScreenWindow.components.seconds)) s · active=\(active) · protectedData=\(self.isProtectedDataAvailable()) · recognised=\(recognised)")
-            if !active, !self.isAway, recognised {
-                self.isAway = true; self.lockTrip = true
-                self.emit(.usedLockScreen, "(screen on while locked)")
-            }
-        }
-    }
-
-    /// Lit for `heldWindow` without a break, app not active, no trip open, phone in a hand → used the lock screen,
-    /// whether or not Face ID recognised anyone. Whichever path reports the trip first wins (`isAway`).
-    private func startHeldWatch() {
-        motion.start()
-        pendingHeld = Task { [weak self] in
-            try? await Task.sleep(for: self?.heldWindow ?? Self.lockScreenHeldWindow)
-            while let self, !Task.isCancelled {
-                guard self.screenLit, !self.isAppActive(), !self.isAway else { self.endHeldWatch(); return }
-                let held = self.motion.isHeld()
-                let numbers = self.motion.describe()
-                self.raw("lit \(Int(Self.lockScreenHeldWindow.components.seconds)) s · held=\(held)" + (numbers.isEmpty ? "" : " · \(numbers)"))
-                if held {
-                    self.isAway = true; self.lockTrip = true      // also ends the watch
-                    self.emit(.usedLockScreen, "(lit 12 s while held)")
-                    return
-                }
-                try? await Task.sleep(for: self.heldInterval)
-            }
-        }
-    }
-
-    private func endHeldWatch() {
-        pendingHeld?.cancel(); pendingHeld = nil
-        motion.stop()
     }
 
     func callChanged(_ call: CallInfo) {

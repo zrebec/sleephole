@@ -19,6 +19,8 @@ public enum PausePolicy {
         case setup(until: Date)         // during the setup the app may be left anyway
         case running(until: Date)       // a pause is on
         case notEnoughCoins(missing: Int)
+        /// A pause started now would still be on when getting up opens (owner 2026-10-14) – the pause must end by then.
+        case tooLate(opens: Date)
     }
 
     /// The end of the pause that is on at `t`, if any.
@@ -36,6 +38,8 @@ public enum PausePolicy {
             if t < setupEnds { return .setup(until: setupEnds) }
         }
         if let until = activeUntil(log, at: t) { return .running(until: until) }
+        let opens = log.window.confirmOpens
+        if t + duration > opens { return .tooLate(opens: opens) }
         let price = price(number: log.pauseStarts.count + 1)
         return coins < price ? .notEnoughCoins(missing: price - coins) : nil
     }

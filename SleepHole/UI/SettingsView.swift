@@ -25,6 +25,8 @@ struct SettingsView: View {
     @State private var weatherTest = DevArgs.list.contains("-openWeatherTest")
     /// Dev aid: `-openSyncTest` opens Developer → Sync test at once (screenshots).
     @State private var syncTest = DevArgs.list.contains("-openSyncTest")
+    /// Dev aid: `-openTextsView` opens Developer → Texts at once (screenshots).
+    @State private var textsView = DevArgs.list.contains("-openTextsView")
     #endif
 
     /// The warning triangle on Today: list's rows may not be laid out yet right after the tab switch → scroll twice.
@@ -183,7 +185,10 @@ struct SettingsView: View {
                     Toggle(L("Strict mode"), isOn: $model.settings.strictMode)
                         .disabled(nightRunning)
                 } footer: {
-                    Text(L("Off: when you use the phone on the lock screen at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning there, and tonight's building comes down if the screen stays on."))
+                    Text(L("Off: when you unlock the phone and keep using it at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning, and tonight's building comes down if you keep using it."))
+                    if !LockCapability.canTellLockFromLeaving() {
+                        Text(L("Without a passcode with Face ID or Touch ID, SleepHole can't tell locking the phone from leaving the app, so leaving isn't counted on this iPhone."))
+                    }
                 }
 
                 HealthSection()
@@ -296,7 +301,10 @@ struct SettingsView: View {
                 #if DEBUG                                  // developer tools never ship to testers (TestFlight = Release)
                 Section(L("Developer")) {
                     NavigationLink(L("Plans and proposals")) { PlansView() }
+                    NavigationLink(L("Texts")) { TextsView() }
                     Button(L("Quick night (4 min, \(Int(AppModel.debugGrace)) s setup)")) { model.startTestNight() }
+                        .disabled(nightRunning)
+                    Button(L("Test night (30 min, \(Int(AppModel.debugGrace)) s setup)")) { model.startTestNight(minutes: 30) }
                         .disabled(nightRunning)
                     Button(L("Test night (15 min, 5 min setup)")) { model.startTestNight(minutes: 15, grace: 300) }
                         .disabled(nightRunning)
@@ -337,6 +345,7 @@ struct SettingsView: View {
             .navigationDestination(isPresented: $systemAlarmTest) { SystemAlarmTestView() }
             .navigationDestination(isPresented: $weatherTest) { WeatherTestView() }
             .navigationDestination(isPresented: $syncTest) { SyncTestView() }
+            .navigationDestination(isPresented: $textsView) { TextsView() }
             #endif
             .renameTownAlert(isPresented: $renaming)
             .sheet(isPresented: $showGuide) { GuideView(replay: true) }

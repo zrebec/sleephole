@@ -2,38 +2,28 @@ import Foundation
 import SleepCore
 import SwiftData
 import Testing
+import notify
 import UIKit
 @testable import SleepHole
 
-/// The lit-lock-screen detection (camera from the lock screen) and the "no warning after the wake time" rule.
+/// The documented-signals-only lock detection (owner 2026-10-14, after ITMS-90699) and the "no warning after the wake
+/// time" rule.
 @MainActor
 struct LockScreenTests {
-    @MainActor final class FakeMotion: HandMotion {
-        var held = false
-        var running = false
-        var starts = 0, stops = 0
-        func start() { running = true; starts += 1 }
-        func stop() { running = false; stops += 1 }
-        func isHeld() -> Bool { running && held }
-        func describe() -> String { "active=\(held ? 11 : 0)/12 tilt=0.0° samples=1" }
-    }
-
     @MainActor final class Rig {
         let monitor = LifecycleMonitor()
-        let motion = FakeMotion()
         var events: [NightEventKind] = []
         var stamps: [(NightEventKind, Date)] = []
         var raw: [String] = []
         var active = false
         var protectedData = true
+        var capable = true
         init() {
             monitor.screenWindow = .milliseconds(150)
-            monitor.unlockWindow = .milliseconds(150)
-            monitor.heldWindow = .milliseconds(300)
-            monitor.heldInterval = .milliseconds(50)
-            monitor.motion = motion
+            monitor.backgroundDelay = .milliseconds(100)
             monitor.isAppActive = { [unowned self] in active }
             monitor.isProtectedDataAvailable = { [unowned self] in protectedData }
+            monitor.canTellLockFromLeaving = { [unowned self] in capable }
             monitor.onEvent = { [unowned self] k, d in events.append(k); stamps.append((k, d)) }
             monitor.onRaw = { [unowned self] t in raw.append(t) }
         }
@@ -47,57 +37,13 @@ struct LockScreenTests {
         while !condition(), Date() < end { await wait(0.02) }
     }
 
-    @Test func aLitScreenForTheWholeWindowIsUsingTheLockScreen() async {
-        let r = Rig()
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.4)
-        #expect(r.events == [.screenOn, .usedLockScreen])
-        r.monitor.screenChanged(blanked: true)
-        #expect(r.events == [.screenOn, .usedLockScreen, .screenOff, .locked])
-        #expect(r.raw.contains { $0.hasPrefix("screen on for") })
-    }
+    func leftApps(_ r: Rig) -> [Date] { r.stamps.filter { $0.0 == .leftApp }.map(\.1) }
 
-    @Test func aGlanceIsFree() async {
-        let r = Rig()
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.05)
-        r.monitor.screenChanged(blanked: true)
-        await wait(0.3)
-        #expect(r.events == [.screenOn, .screenOff])
-    }
-
-    @Test func withoutFaceIdOnlyTheFactIsLogged() async {
-        let r = Rig()
-        r.monitor.dataProtectionChanged(locked: true)
-        r.events.removeAll()
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.4)
-        #expect(r.events == [.screenOn])
-        #expect(r.raw.contains { $0.contains("recognised=false") })
-    }
-
-    @Test func dataLockedByTheNotificationWhileTheFlagStillSaysAvailableIsNoTrip() async {
-        let r = Rig()
-        r.protectedData = true                                    // the flag lags several seconds behind a lock
-        r.monitor.dataProtectionChanged(locked: true)
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.4)
-        #expect(!r.events.contains(.usedLockScreen))
-        #expect(r.raw.contains { $0.contains("protectedData=true") && $0.contains("recognised=false") })
-    }
-
-    @Test func recognisedByTheNotificationIsATrip() async {
-        let r = Rig()
-        r.protectedData = false                                   // the flag is no longer what decides
-        r.monitor.dataProtectionChanged(locked: true)
-        r.monitor.screenChanged(blanked: false)
-        r.monitor.dataProtectionChanged(locked: false)            // Face ID recognised the owner
-        await wait(0.4)
-        #expect(r.events == [.dataLocked, .screenOn, .ownerRecognised, .usedLockScreen])
-    }
+    // MARK: - the monitor: documented signals only
 
     @Test func protectedDataEventsOnlyOnAChange() {
         let r = Rig()
+        r.active = true
         r.monitor.dataProtectionChanged(locked: false)            // already unlocked: nothing
         r.monitor.dataProtectionChanged(locked: true)
         r.monitor.dataProtectionChanged(locked: true)
@@ -107,167 +53,14 @@ struct LockScreenTests {
         #expect(r.raw.filter { $0 == "protectedDataDidBecomeAvailable" }.count == 3)
     }
 
-    @Test func screenOnAndOffArePairedAndOnlyWhileTheAppIsNotActive() {
+    @Test func backgroundWithADataLockWithinTwoAndAHalfSecondsIsLocked() async {
         let r = Rig()
-        r.monitor.screenChanged(blanked: false)
-        r.monitor.screenChanged(blanked: false)                   // a second "on" adds nothing
-        r.monitor.screenChanged(blanked: true)
-        r.monitor.screenChanged(blanked: true)                    // an "off" without an open "on" adds nothing
-        #expect(r.events == [.screenOn, .screenOff])
-        let a = Rig()
-        a.active = true
-        a.monitor.screenChanged(blanked: false)
-        a.monitor.screenChanged(blanked: true)
-        #expect(a.events.isEmpty)
-    }
-
-    @Test func aScreenCycleWithoutATripGivesNoLocked() {
-        let r = Rig()
-        r.monitor.unlockCandidate()                               // → .unlocked
-        r.events.removeAll()
-        r.monitor.screenChanged(blanked: false)
-        r.monitor.screenChanged(blanked: true)
-        #expect(r.events == [.screenOn, .screenOff])              // no trip open: no .locked
-    }
-
-    @Test func comingBackBeforeTheWindowEndsIsNothing() async {
-        let r = Rig()
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.05)
-        r.active = true
-        r.monitor.stop()                                          // cancels like didBecomeActive does
-        await wait(0.3)
-        #expect(r.events == [.screenOn])
-    }
-
-    @Test func theAppBecomingActiveInTheWindowCancelsIt() async {
-        let r = Rig()
-        r.monitor.start()
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.05)
-        r.active = true
-        NotificationCenter.default.post(name: UIApplication.didBecomeActiveNotification, object: nil)
-        await wait(0.3)
-        r.monitor.stop()
-        #expect(!r.events.contains(.usedLockScreen))
-    }
-
-    @Test func aScreenOnWhileTheAppIsActiveSchedulesNothing() async {
-        let r = Rig()
-        r.active = true
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.4)
-        #expect(r.events.isEmpty && !r.raw.contains { $0.hasPrefix("screen on for") })
-    }
-
-    @Test func lockSignalAndScreenOffTogetherGiveOneLocked() async {
-        let r = Rig()
-        r.monitor.start()
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.4)
-        NotificationCenter.default.post(name: UIApplication.protectedDataWillBecomeUnavailableNotification, object: nil)
-        r.monitor.screenChanged(blanked: true)
-        await wait(0.1)
-        r.monitor.stop()
-        #expect(r.events.filter { $0 == .locked }.count == 1)
-        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1)
-        #expect(r.events.filter { $0 == .screenOff }.count == 1)    // (the lock signal came first here: .locked, then .screenOff)
-    }
-
-    @Test func theUnlockPathAndTheScreenPathReportOnce() async {
-        let r = Rig()
-        // the screen path is forced to fire first (100 ms vs 600 ms – a margin that survives a loaded machine): the lit
-        // screen reports the lock-screen trip, the unlock then reports the real leave inside it (owner 2026-10-09:
-        // unlocking into another app is a leave even after lock-screen use) – never two of the same kind. (With both
-        // windows equal the order is a coin toss: the unlock path first opens a real trip and the screen path then
-        // stays silent, which is also one trip – so the test must not leave it to chance.)
-        r.monitor.screenWindow = .milliseconds(100)
-        r.monitor.unlockWindow = .milliseconds(600)
-        r.monitor.screenChanged(blanked: false)
-        r.monitor.unlockCandidate()
-        await waitUntil { r.events.contains(.leftApp) }
-        await wait(0.3)
-        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1 && r.events.filter { $0 == .leftApp }.count == 1)
-        #expect(r.events.contains(.unlocked))
-        // the other way round: the unlock path first, then a screen cycle
-        let r2 = Rig()
-        r2.monitor.unlockWindow = .milliseconds(100)
-        r2.monitor.unlockCandidate()
-        await waitUntil { r2.events.contains(.leftApp) }
-        r2.monitor.screenChanged(blanked: false)
-        await wait(0.5)
-        #expect(r2.events.filter { $0 == .leftApp || $0 == .usedLockScreen }.count == 1)
-        // and the unlock path first by a wide margin when both start together: one real leave, no lock-screen event
-        let r3 = Rig()
-        r3.monitor.unlockWindow = .milliseconds(100)
-        r3.monitor.screenWindow = .milliseconds(800)
-        r3.monitor.screenChanged(blanked: false)
-        r3.monitor.unlockCandidate()
-        await waitUntil { r3.events.contains(.leftApp) }
-        await wait(1.0)
-        #expect(r3.events.filter { $0 == .leftApp }.count == 1 && !r3.events.contains(.usedLockScreen))
-    }
-
-    // MARK: - B29: one trip, one `.leftApp`
-    // Windows are far apart (hundreds of ms) and the tests poll instead of sleeping a fixed time; only lower bounds
-    // are asserted on timestamps (a loaded machine delays timers, it never fires them early).
-
-    func leftApps(_ r: Rig) -> [Date] { r.stamps.filter { $0.0 == .leftApp }.map(\.1) }
-
-    @Test func unlockIntoAnotherAppReportsOnceWhenTheBackgroundTimerFiresFirst() async {
-        let r = Rig()
-        r.monitor.unlockWindow = .milliseconds(800)
-        r.monitor.backgroundDelay = .milliseconds(100)
-        let t0 = Date()
-        r.monitor.unlockCandidate()
         r.monitor.didEnterBackground()
-        await waitUntil { !leftApps(r).isEmpty }
-        await wait(0.3)
-        let l = leftApps(r)
-        #expect(l.count == 1)
-        #expect((l.first?.timeIntervalSince(t0) ?? 0) >= 0.75)        // the END of the unlock window, not the background
-        #expect(r.events.filter { $0 == .unlocked }.count == 1)
-    }
-
-    @Test func unlockIntoAnotherAppReportsOnceWhenTheUnlockTimerFiresFirst() async {
-        let r = Rig()
-        r.monitor.unlockWindow = .milliseconds(200)
-        r.monitor.backgroundDelay = .milliseconds(1000)
-        let t0 = Date()
-        r.monitor.unlockCandidate()
-        r.monitor.didEnterBackground()
-        await waitUntil { !leftApps(r).isEmpty }
-        await wait(1.2)                                               // the background decision has run by now
-        let l = leftApps(r)
-        #expect(l.count == 1)
-        #expect((l.first?.timeIntervalSince(t0) ?? 0) >= 0.18)        // the unlock window's end, not the background moment
-    }
-
-    @Test func unlockThenBackInTheAppInsideTheWindowReportsNothing() async {
-        let r = Rig()
-        r.monitor.unlockWindow = .milliseconds(500)
-        r.monitor.backgroundDelay = .milliseconds(200)
-        r.monitor.unlockCandidate()
-        r.monitor.didEnterBackground()
-        r.active = true
-        await wait(1.0)
+        r.monitor.dataProtectionChanged(locked: true)
+        await waitUntil { r.events.contains(.locked) }
+        await wait(0.2)
+        #expect(r.events == [.dataLocked, .locked])
         #expect(leftApps(r).isEmpty)
-    }
-
-    @Test func anUnlockWindowThatEndsWithoutALeaveDoesNotSwallowALaterBackground() async {
-        let r = Rig()
-        r.monitor.backgroundDelay = .milliseconds(100)
-        r.monitor.unlockWindow = .milliseconds(100)
-        r.protectedData = false                               // locked again: the window ends without a leave
-        r.monitor.unlockCandidate()
-        await wait(0.6)
-        #expect(leftApps(r).isEmpty)
-        r.protectedData = true
-        let t0 = Date()
-        r.monitor.didEnterBackground()
-        await waitUntil { !leftApps(r).isEmpty }
-        let l = leftApps(r)
-        #expect(l.count == 1 && abs((l.first ?? .distantPast).timeIntervalSince(t0)) < 0.1)   // stamped at the background
     }
 
     @Test func aPlainBackgroundIsOneLeftAppStampedAtTheBackgroundMoment() async {
@@ -281,23 +74,84 @@ struct LockScreenTests {
         #expect(l.count == 1 && abs((l.first ?? .distantPast).timeIntervalSince(t0)) < 0.4)   // not the 0.8 s later
     }
 
-    @Test func aLockScreenTripFollowedByAnUnlockIntoAnotherAppIsOneOfEach() async {
+    @Test func aBackgroundThatIsActiveAgainAtTheDecisionIsNothing() async {
         let r = Rig()
-        r.monitor.backgroundDelay = .milliseconds(100)
-        r.monitor.screenChanged(blanked: false)
-        await waitUntil { r.events.contains(.usedLockScreen) }
-        r.monitor.unlockCandidate()
         r.monitor.didEnterBackground()
-        await waitUntil { r.events.contains(.leftApp) }
-        await wait(0.8)
+        r.active = true
+        await wait(0.4)
+        #expect(leftApps(r).isEmpty && r.events.isEmpty)
+    }
+
+    @Test func aPhoneWithoutPasscodeOrFaceIdNeverCountsABackgroundAsLeaving() async {
+        let r = Rig()
+        r.capable = false
+        r.monitor.didEnterBackground()
+        await wait(0.5)
+        #expect(leftApps(r).isEmpty && r.events.isEmpty)
+        #expect(r.raw.contains { $0.contains("cannot tell a lock from leaving") })
+    }
+
+    @Test func dataAvailableWhileInactiveFor8SecondsIsUsingTheLockScreenOnce() async {
+        let r = Rig()
+        r.monitor.dataProtectionChanged(locked: true)
+        r.monitor.dataProtectionChanged(locked: false)            // recognised
+        r.monitor.dataProtectionChanged(locked: false)            // sometimes twice
+        await waitUntil { r.events.contains(.usedLockScreen) }
+        await wait(0.4)
+        #expect(r.events == [.dataLocked, .ownerRecognised, .usedLockScreen])
+        #expect(leftApps(r).isEmpty)
+    }
+
+    @Test func lockedAgainBeforeTheWindowEndsIsNothing() async {
+        let r = Rig()
+        r.monitor.dataProtectionChanged(locked: true)
+        r.monitor.dataProtectionChanged(locked: false)
+        await wait(0.05)
+        r.monitor.dataProtectionChanged(locked: true)             // a glance, then the screen went off
+        await wait(0.5)
+        #expect(r.events == [.dataLocked, .ownerRecognised, .dataLocked])
+    }
+
+    @Test func theAppBecomingActiveInTheWindowCancelsIt() async {
+        let r = Rig()
+        r.monitor.start()
+        defer { r.monitor.stop() }
+        r.monitor.dataProtectionChanged(locked: true)
+        r.monitor.dataProtectionChanged(locked: false)
+        r.active = true
+        NotificationCenter.default.post(name: UIApplication.didBecomeActiveNotification, object: nil)
+        await wait(0.5)
+        #expect(!r.events.contains(.usedLockScreen))
+    }
+
+    @Test func recognisedWhileTheAppIsActiveStartsNoWindow() async {
+        let r = Rig()
+        r.active = true
+        r.monitor.dataProtectionChanged(locked: true)
+        r.monitor.dataProtectionChanged(locked: false)
+        await wait(0.5)
+        #expect(!r.events.contains(.usedLockScreen))
+    }
+
+    @Test func noSecondTripWhileOneIsOpen() async {
+        let r = Rig()
+        r.monitor.didEnterBackground()
+        await waitUntil { !leftApps(r).isEmpty }                  // a real leave is open
+        r.monitor.dataProtectionChanged(locked: false)            // (data was available already: no change)
+        r.monitor.dataProtectionChanged(locked: true)             // lock ends the trip
+        r.monitor.dataProtectionChanged(locked: false)            // recognised: a window, a new trip
+        await waitUntil { r.events.contains(.usedLockScreen) }
+        #expect(leftApps(r).count == 1)
         #expect(r.events.filter { $0 == .usedLockScreen }.count == 1)
-        #expect(r.events.filter { $0 == .leftApp }.count == 1)
+        #expect(r.events.contains(.locked))
     }
 
     @Test func aLockScreenTripFollowedByARealBackgroundStillReportsTheLeave() async {
         let r = Rig()
-        r.monitor.backgroundDelay = .milliseconds(100)
-        r.monitor.screenChanged(blanked: false)
+        r.protectedData = false                                   // the phone starts locked: no lock signal is recorded
+        r.monitor.start()
+        defer { r.monitor.stop() }
+        r.monitor.dataProtectionChanged(locked: false)
         await waitUntil { r.events.contains(.usedLockScreen) }
         r.monitor.didEnterBackground()
         await waitUntil { r.events.contains(.leftApp) }
@@ -305,15 +159,15 @@ struct LockScreenTests {
         #expect(r.events.filter { $0 == .usedLockScreen }.count == 1 && r.events.filter { $0 == .leftApp }.count == 1)
     }
 
-    @Test func whenAlreadyAwayTheScreenAddsNoLeftApp() async {
+    @Test func theUndocumentedLockNotificationsAreNotObserved() async {
+        // the old Darwin names must not drive the monitor any more (ITMS-90699)
         let r = Rig()
-        r.monitor.unlockCandidate()                               // → .unlocked, then a trip after the window
-        await waitUntil { r.events.contains(.leftApp) }
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.5)
-        r.monitor.screenChanged(blanked: true)
-        #expect(r.events.filter { $0 == .leftApp || $0 == .usedLockScreen }.count == 1)
-        #expect(r.events.filter { $0 == .locked }.count == 1)    // the screen going off ends the trip, once
+        r.monitor.start()
+        defer { r.monitor.stop() }
+        notify_post("com.apple.springboard.lockcomplete")
+        notify_post("com.apple.springboard.hasBlankedScreen")
+        await wait(0.3)
+        #expect(!r.raw.contains { $0.contains("darwin") })
     }
 
     // MARK: - AppModel: no warning after the wake time
@@ -418,21 +272,18 @@ struct LockScreenTests {
             model.append(.locked, at: clock.now)
             rig.active = false
             rig.monitor.dataProtectionChanged(locked: true)
-            rig.monitor.screenChanged(blanked: true)
             return graceEnds
         }
         /// Step 4: the owner wakes the lock screen at `clock.now + 10` and Face ID recognises him (or not).
-        func wakeLockScreen(recognised: Bool) -> Date {
+        func wakeLockScreen() -> Date {
             clock.now += 10
             let t = clock.now
-            rig.monitor.screenChanged(blanked: false)
-            if recognised { rig.monitor.dataProtectionChanged(locked: false) }
+            rig.monitor.dataProtectionChanged(locked: false)
             return t
         }
         /// Step 7: back in the app at `at`.
         func comeBack(at: Date) {
             clock.now = at
-            rig.monitor.unlockCandidate()
             rig.active = true
             model.append(.returned, at: clock.now)
             rig.monitor.stop()
@@ -450,10 +301,9 @@ struct LockScreenTests {
         s.model.append(.locked, at: s.clock.now)
         s.rig.active = false
         s.rig.monitor.dataProtectionChanged(locked: true)
-        s.rig.monitor.screenChanged(blanked: true)
         #expect(s.model.nudgesSent == 0)
         #expect(s.model.collapsedAt == nil)
-        let t = s.wakeLockScreen(recognised: true)                          // 4
+        let t = s.wakeLockScreen()                          // 4
         s.clock.now = t + s.window                                          // 5
         await wait(0.4)
         #expect(s.kinds.contains(.usedLockScreen))
@@ -476,175 +326,13 @@ struct LockScreenTests {
     func theRealLimitIs21SecondsAfterTheScreenLights(returnAfter: Double, collapses: Bool) async {
         let s = Scene(self)
         _ = s.startAndLock()
-        let t = s.wakeLockScreen(recognised: true)
+        let t = s.wakeLockScreen()
         s.clock.now = t + s.window
-        await wait(0.4)
+        await waitUntil { s.kinds.contains(.usedLockScreen) }
+        await wait(0.05)
         s.comeBack(at: t + returnAfter)
         #expect((s.model.collapsedAt != nil) == collapses)
         if collapses { #expect(s.model.collapsedAt == t + 21) }
-    }
-
-    @Test func faceIdRecognisingTheOwnerAfterTheWindowStartsTheTripAtTheRecognition() async {
-        let s = Scene(self)
-        _ = s.startAndLock()
-        let t = s.wakeLockScreen(recognised: false)                         // lit, Face ID has not seen him
-        s.clock.now = t + s.window
-        await wait(0.4)
-        #expect(s.kinds == [.dataLocked, .screenOn])                        // a lit screen alone is only logged
-        s.clock.now = t + 20
-        s.rig.monitor.dataProtectionChanged(locked: false)                  // recognised later (tap on "Share")
-        #expect(s.kinds == [.dataLocked, .screenOn, .ownerRecognised, .usedLockScreen])
-        #expect(s.model.nudgesSent == 1 && s.model.lastWarning == .lockScreen)
-        #expect(s.model.collapsedAt == t + 20 + 13)                         // staying on collapses the building
-        s.clock.now = t + 40
-        s.comeBack(at: t + 40)
-        #expect(s.model.collapsedAt == t + 33)
-    }
-
-    @Test func aRecognitionInsideTheWindowGivesExactlyOneTrip() async {
-        let r = Rig()
-        r.monitor.dataProtectionChanged(locked: true)
-        r.monitor.screenChanged(blanked: false)
-        r.monitor.dataProtectionChanged(locked: false)
-        await wait(0.4)
-        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1)
-    }
-
-    @Test func aRecognitionAfterTheScreenWentOffIsNothing() async {
-        let r = Rig()
-        r.monitor.dataProtectionChanged(locked: true)
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.4)
-        r.monitor.screenChanged(blanked: true)
-        r.monitor.dataProtectionChanged(locked: false)
-        #expect(!r.events.contains(.usedLockScreen))
-        #expect(r.events == [.dataLocked, .screenOn, .screenOff, .ownerRecognised])
-    }
-
-    // MARK: - a lit lock screen in a hand counts, recognised or not (owner 2026-10-09)
-
-    @Test func litForTwelveSecondsInAHandWithoutFaceIdWarnsAndCollapses() async {
-        let s = Scene(self)
-        _ = s.startAndLock()
-        s.rig.motion.held = true
-        let t = s.wakeLockScreen(recognised: false)
-        s.clock.now = t + 12
-        await wait(0.6)
-        #expect(s.kinds == [.dataLocked, .screenOn, .usedLockScreen])
-        #expect(s.model.nudgesSent == 1 && s.model.lastWarning == .lockScreen)
-        #expect(s.model.collapsedAt == t + 12 + 13)
-        #expect(s.rig.raw.contains { $0.hasPrefix("lit 12 s") && $0.contains("held=true") })
-        s.comeBack(at: t + 26)                                    // a second after the 13 s are over
-        #expect(s.model.collapsedAt == t + 25 && s.model.collapsedAt! <= s.clock.now)
-    }
-
-    @Test func theScreenGoingOffInTimeSavesTheBuildingInTheHeldCase() async {
-        let s = Scene(self)
-        _ = s.startAndLock()
-        s.rig.motion.held = true
-        let t = s.wakeLockScreen(recognised: false)
-        s.clock.now = t + 12
-        await wait(0.6)
-        s.clock.now = t + 20
-        s.rig.monitor.screenChanged(blanked: true)
-        s.clock.now = t + 60; s.model.refresh()
-        #expect(s.model.collapsedAt == nil)
-        #expect(s.kinds.suffix(2) == [.screenOff, .locked])
-    }
-
-    @Test func aLitScreenThatIsNotHeldIsNothing() async {
-        let r = Rig()
-        r.monitor.dataProtectionChanged(locked: true)
-        r.events.removeAll()
-        r.monitor.screenChanged(blanked: false)
-        await wait(1.0)                                           // ~14 checks
-        #expect(r.events == [.screenOn])
-        let checks = r.raw.filter { $0.hasPrefix("lit 12 s") }
-        #expect(checks.count >= 8 && checks.allSatisfy { $0.contains("held=false") && $0.contains("active=0/12") })   // every check is logged
-        #expect(r.motion.running)                                 // still watching while the screen stays lit
-    }
-
-    @Test func pickedUpLaterWhileStillLitFiresOnceItIsHeld() async {
-        let r = Rig()
-        r.monitor.dataProtectionChanged(locked: true)
-        r.events.removeAll()
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.5)
-        #expect(r.events == [.screenOn])
-        r.motion.held = true
-        await wait(0.3)
-        #expect(r.events == [.screenOn, .usedLockScreen])
-        await wait(0.3)
-        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1)
-        #expect(!r.motion.running)
-    }
-
-    @Test func aPassiveWakeSwitchedOffEarlyIsNothingAndTheSensorIsStopped() async {
-        let r = Rig()
-        r.motion.held = true
-        r.monitor.screenChanged(blanked: false)
-        #expect(r.motion.running && r.motion.starts == 1)
-        await wait(0.1)
-        r.monitor.screenChanged(blanked: true)
-        #expect(!r.motion.running)
-        await wait(0.5)
-        #expect(r.events == [.screenOn, .screenOff])
-    }
-
-    @Test func recognisedEarlyTheEightSecondPathFiresAndThereIsNoSecondEvent() async {
-        let r = Rig()
-        r.motion.held = true
-        r.monitor.dataProtectionChanged(locked: true)
-        r.monitor.screenChanged(blanked: false)
-        r.monitor.dataProtectionChanged(locked: false)
-        await wait(0.2)                                           // the 8 s path has fired (150 ms)
-        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1)
-        #expect(!r.motion.running)                                // the trip is open: the sensor is off
-        await wait(0.5)                                           // past the 12 s point
-        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1)
-    }
-
-    @Test func recognisedBetweenTheTwoWindowsTheLatePathFiresAndThereIsNoSecondEvent() async {
-        let r = Rig()
-        r.motion.held = true
-        r.monitor.dataProtectionChanged(locked: true)
-        r.monitor.screenChanged(blanked: false)
-        await wait(0.2)                                           // after the 8 s, before the 12 s
-        #expect(!r.events.contains(.usedLockScreen))
-        r.monitor.dataProtectionChanged(locked: false)
-        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1)
-        await wait(0.5)
-        #expect(r.events.filter { $0 == .usedLockScreen }.count == 1)
-    }
-
-    @Test func theSensorRunsOnlyWhileTheLockScreenIsLitAndNoTripIsOpen() async {
-        // not started while the app is active
-        let a = Rig()
-        a.active = true
-        a.monitor.screenChanged(blanked: false)
-        #expect(a.motion.starts == 0)
-        // stopped when the app becomes active
-        let b = Rig()
-        b.monitor.start()
-        b.monitor.screenChanged(blanked: false)
-        #expect(b.motion.running)
-        b.active = true
-        NotificationCenter.default.post(name: UIApplication.didBecomeActiveNotification, object: nil)
-        #expect(!b.motion.running)
-        b.monitor.stop()
-        // stopped with the monitor
-        let c = Rig()
-        c.monitor.screenChanged(blanked: false)
-        c.monitor.stop()
-        #expect(!c.motion.running)
-        await wait(0.5)
-        #expect(!c.events.contains(.usedLockScreen))
-        // not started while a trip is open
-        let d = Rig()
-        d.monitor.unlockCandidate()
-        await wait(0.3)
-        d.monitor.screenChanged(blanked: false)
-        #expect(d.motion.starts == 0)
     }
 
     // MARK: - one notification per trip
@@ -661,9 +349,10 @@ struct LockScreenTests {
         let alarm = FakeSystemAlarm(consent: .allowed)
         let s = Scene(self, alarm: alarm, keepAlive: keepAlive)
         _ = s.startAndLock()
-        let t = s.wakeLockScreen(recognised: true)
+        let t = s.wakeLockScreen()
         s.clock.now = t + s.window
-        await wait(0.4)
+        await waitUntil { s.kinds.contains(.usedLockScreen) }
+        await wait(0.05)
         await s.model.systemAlarmIdle()
         return (s, alarm, t)
     }
@@ -678,7 +367,7 @@ struct LockScreenTests {
     @Test func theScreenGoingOffStopsTheWarningAndTheBuildingStands() async {
         let (s, alarm, t) = await ringingScene()
         s.clock.now = t + 12
-        s.rig.monitor.screenChanged(blanked: true)
+        s.rig.monitor.dataProtectionChanged(locked: true)
         await s.model.systemAlarmIdle()
         #expect(alarm.warningStops == 1 && s.model.lockWarningDeadline == nil)
         s.clock.now = t + 40; s.model.refresh()
@@ -722,7 +411,7 @@ struct LockScreenTests {
         let wakeAlarm = s.model.systemAlarmAt
         #expect(wakeAlarm != nil)
         s.clock.now = t + 12
-        s.rig.monitor.screenChanged(blanked: true)
+        s.rig.monitor.dataProtectionChanged(locked: true)
         await s.model.systemAlarmIdle()
         #expect(alarm.scheduled == [wakeAlarm!])                            // scheduled once, at the start
         #expect(!alarm.events.drop { $0 != .ringWarning("alarm_alert.caf", 10) }.contains(.cancel))
@@ -759,7 +448,7 @@ struct LockScreenTests {
         let (s, alarm, t) = await ringingScene(keepAlive: ka)
         #expect(ka.began == 1 && ka.open == 1)
         s.clock.now = t + 12
-        s.rig.monitor.screenChanged(blanked: true)
+        s.rig.monitor.dataProtectionChanged(locked: true)
         await s.model.systemAlarmIdle()
         #expect(alarm.warningStops == 1 && ka.began == 1 && ka.open == 0)
     }
@@ -983,92 +672,29 @@ struct LockScreenTests {
 // MARK: - Gentle mode (owner 2026-10-09, "care instead of enforcement"): Strict mode is off
 
 extension LockScreenTests {
-    /// A quick night in gentle mode, locked; the lock screen is lit from T and held for 12 s (or Face ID done at 8 s).
-    func gentleScene(recognised: Bool, alarm: FakeSystemAlarm, keepAlive: any KeepAlive = NoKeepAlive()) async -> (Scene, Date) {
+    /// A quick night in gentle mode, locked; the user is recognised at T and the app stays away for 8 s.
+    func gentleScene(alarm: FakeSystemAlarm, keepAlive: any KeepAlive = NoKeepAlive()) async -> (Scene, Date) {
         let s = Scene(self, alarm: alarm, keepAlive: keepAlive, strict: false)
         _ = s.startAndLock()
-        let t = s.wakeLockScreen(recognised: recognised)
-        if recognised {
-            s.clock.now = t + s.window
-            await wait(0.4)
-        } else {
-            s.rig.motion.held = true
-            s.clock.now = t + 12
-            await wait(0.9)
-        }
+        let t = s.wakeLockScreen()
+        s.clock.now = t + s.window
+        await waitUntil { s.kinds.contains(.usedLockScreen) }
+        await wait(0.05)
         await s.model.systemAlarmIdle()
         return (s, t)
     }
 
-    @Test func gentleTwelveSecondsHeldIsLoggedAndMetWithOneCalmReminder() async {
+    @Test func gentleRecognisedAndAwayFor8SecondsIsOneCalmReminder() async {
         let alarm = FakeSystemAlarm(consent: .allowed), ka = FakeKeepAlive()
-        let (s, t) = await gentleScene(recognised: false, alarm: alarm, keepAlive: ka)
-        #expect(s.kinds.contains(.usedLockScreen))
-        #expect(alarm.warningRings == 0 && ka.began == 0)
-        #expect(s.model.nudgesSent == 0 && s.model.lastWarning == nil && s.model.lockWarningDeadline == nil)
-        #expect(s.model.lockRemindersSent == 1)
-        #expect(s.model.collapsedAt == nil && s.model.collapseNoticeAt == nil)
-        s.clock.now = t + 72; s.model.refresh()                             // a minute later
-        #expect(s.model.collapsedAt == nil)
-        #expect(s.model.awayBudgetUse(at: s.clock.now)?.used == 0)
-        #expect(s.model.awayBudgetState(at: s.clock.now) == .fine)
-        s.rig.monitor.stop()
-    }
-
-    @Test func gentleFaceIDEightSecondPathIsTheSame() async {
-        let alarm = FakeSystemAlarm(consent: .allowed), ka = FakeKeepAlive()
-        let (s, t) = await gentleScene(recognised: true, alarm: alarm, keepAlive: ka)
+        let (s, t) = await gentleScene(alarm: alarm, keepAlive: ka)
         #expect(s.kinds.contains(.usedLockScreen))
         #expect(alarm.warningRings == 0 && ka.began == 0 && s.model.nudgesSent == 0)
         #expect(s.model.lockRemindersSent == 1 && s.model.collapseNoticeAt == nil)
         s.clock.now = t + 60; s.model.refresh()
         #expect(s.model.collapsedAt == nil)
-        // the screen goes off: the trip ends, the building stands, the night is complete at the wake-up
-        s.rig.monitor.screenChanged(blanked: true)
+        // the phone locks: the trip ends, the building stands, the night is complete at the wake-up
+        s.rig.monitor.dataProtectionChanged(locked: true)
         #expect(s.model.collapsedAt == nil)
-        s.rig.monitor.stop()
-    }
-
-    @Test func gentleUnlockingIntoAnotherAppIsALeaveAndCollapsesByTheNormalRule() async {
-        let alarm = FakeSystemAlarm(consent: .allowed)
-        let (s, t) = await gentleScene(recognised: true, alarm: alarm)
-        #expect(s.model.collapsedAt == nil)
-        s.clock.now = t + 20
-        s.rig.monitor.unlockCandidate()                                      // unlocked, another app, never back
-        await wait(0.4)
-        #expect(s.kinds.contains(.leftApp))
-        #expect(s.model.nudgesSent == 1 && s.model.lastWarning == .comeBack)
-        #expect(s.model.collapsedAt == t + 20 + 13)
-        s.rig.monitor.stop()
-    }
-
-    @Test func strictUnlockingAfterTheLockScreenTripSendsNoSecondWarning() async {
-        let alarm = FakeSystemAlarm(consent: .allowed)
-        let s = Scene(self, alarm: alarm)
-        _ = s.startAndLock()
-        let t = s.wakeLockScreen(recognised: true)
-        s.clock.now = t + s.window
-        await wait(0.4)
-        #expect(s.model.nudgesSent == 1 && s.model.lastWarning == .lockScreen)
-        s.clock.now = t + 12
-        s.rig.monitor.unlockCandidate()
-        await wait(0.4)
-        #expect(s.kinds.contains(.leftApp))
-        #expect(s.model.nudgesSent == 1 && s.model.lastWarning == .lockScreen)       // the trip was warned about already
-        #expect(s.model.collapsedAt == t + 8 + 13)                                  // counted from the lock screen
-        s.rig.monitor.stop()
-    }
-
-    @Test func aLeaveThatIsAlreadyReportedGetsNoSecondLeftApp() async {
-        let s = Scene(self, strict: false)
-        _ = s.startAndLock()
-        s.clock.now += 10
-        s.rig.monitor.screenChanged(blanked: false)                          // lit, not recognised
-        s.rig.monitor.unlockCandidate()                                      // unlocked, another app
-        await wait(0.4)
-        s.rig.monitor.unlockCandidate()                                      // again: the trip is a real leave now
-        await wait(0.4)
-        #expect(s.kinds.filter { $0 == .leftApp }.count == 1)
         s.rig.monitor.stop()
     }
 

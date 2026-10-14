@@ -182,6 +182,26 @@ import Testing
         #expect(NightEvaluator.collapsedAt(late) == night.bedtime + 190.2 * 60 + 13)
     }
 
+    /// Owner 2026-10-14: a pause may start only if it ends no later than the moment getting up opens.
+    @Test func aPauseMustEndBeforeGettingUpOpens() {
+        let started = log([(0, .started)])
+        let opens = started.window.confirmOpens
+        let fits = opens - PausePolicy.duration
+        #expect(PausePolicy.block(started, at: fits, coins: 0) == nil)                       // ends exactly at the opening
+        #expect(PausePolicy.block(started, at: fits + 1, coins: 0) == .tooLate(opens: opens))
+        #expect(PausePolicy.block(started, at: opens + 60, coins: 0) == .tooLate(opens: opens))
+        #expect(PausePolicy.block(started, at: fits - 60, coins: 0) == nil)
+        // the quick test night's own opening (30 s before its wake) counts the same way
+        var w = started.window
+        w.earlyConfirmOverride = NightWindow.testNightConfirmLead
+        let quick = log([(0, .started)], window: w)
+        #expect(PausePolicy.block(quick, at: w.confirmOpens - 601, coins: 0) == nil)
+        #expect(PausePolicy.block(quick, at: w.confirmOpens - 599, coins: 0) == .tooLate(opens: w.confirmOpens))
+        // a running pause is still reported as running
+        let one = log([(0, .started), (100, .pauseStarted)])
+        #expect(PausePolicy.block(one, at: night.bedtime + 105 * 60, coins: 999) == .running(until: night.bedtime + 110 * 60))
+    }
+
     @Test func blockReasons() {
         let started = log([(0, .started)])
         let t = { (min: Double) in night.bedtime + min * 60 }

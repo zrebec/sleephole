@@ -545,6 +545,30 @@ final class AppModel {
         return Progression.currentStreak(results, lastNight: last, calendar: calendar, breaks: streakBreaks)
     }
 
+    /// The sleep buddy's sentences of the day (phase TALK): the first is the sentence of the day, a tap steps on.
+    func buddyLines(now: Date) -> [BuddyLine] {
+        let town = townSnapshot ?? buildSnapshot()
+        let results = coreResults()
+        let last = results.last.map { r -> BuddyTalkInput.LastNight in
+            let b = town.buildings.first { $0.nightKey == r.key }
+            let id = r.outcome == .complete || r.outcome == .unfinished ? b?.buildingId : r.buildingId
+            return BuddyTalkInput.LastNight(key: r.key, outcome: r.outcome, buildingId: id,
+                                            residents: r.outcome == .complete ? b.map(Population.residents(of:)) ?? 0 : 0)
+        }
+        return BuddyTalk.lines(BuddyTalkInput(
+            now: now, calendar: calendar, town: town, lastNight: last, streak: streak,
+            bestStreak: Progression.bestStreak(results, calendar: calendar, breaks: streakBreaks),
+            builtNights: builtNights, unlockedMaxLevel: Progression.unlockedMaxLevel(builtBefore: builtNights),
+            nextBedtime: window.bedtime > now ? window.bedtime : nil))
+    }
+
+    /// Dev aid: `-buddyLine N` starts the buddy's bubble at its N-th sentence (screenshots).
+    static let forcedBuddyLine: Int? = {
+        let a = DevArgs.list
+        guard let i = a.firstIndex(of: "-buddyLine"), a.indices.contains(i + 1) else { return nil }
+        return Int(a[i + 1])
+    }()
+
     /// The town is not stored – it is replayed from the finalized nights (placement is deterministic).
     func town() -> TownLayout { buildSnapshot().layout }
 

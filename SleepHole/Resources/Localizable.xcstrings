@@ -92,7 +92,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ čaká na dokončenie – ďalšia dobrá noc ju dostavia."
+            "value": "%@ čaká na dokončenie – ďalšia dobrá noc stavbu dokončí."
           }
         }
       }
@@ -2608,7 +2608,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "%1$@ · začiatok %2$@ · zaspal si %3$@ · po %4$lld min"
+            "value": "%1$@ · začiatok %2$@ · spánok prišiel %3$@ · po %4$lld min"
           }
         }
       }
@@ -2704,7 +2704,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Každý stĺpec vedie od začiatku stavby po zaspatie – čím je kratší, tým skôr si zaspal. Prerušovaná čiara je tvoja večierka."
+            "value": "Každý stĺpec vedie od začiatku stavby po zaspatie – čím je kratší, tým skôr prišiel spánok. Prerušovaná čiara je tvoja večierka."
           }
         }
       }
@@ -3360,7 +3360,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vstal si"
+            "value": "Vstávanie"
           }
         }
       }
@@ -3504,7 +3504,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vstal som"
+            "value": "Som hore"
           }
         }
       }
@@ -3536,7 +3536,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ak vynecháš noc a bronzového žolíka si tento mesiac ešte nepoužil, použije sa sám."
+            "value": "Ak vynecháš noc a bronzový žolík tento mesiac ešte nebol použitý, použije sa sám."
           }
         }
       }
@@ -3552,7 +3552,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chorý alebo na dovolenke?"
+            "value": "Choroba alebo dovolenka?"
           }
         }
       }
@@ -3701,18 +3701,18 @@
         }
       }
     },
-    "Keep a passcode / Face ID on your iPhone – without it the app can't tell when the phone is locked.": {
+    "Keep a passcode with Face ID or Touch ID on your iPhone – without them the app can't tell locking the phone from leaving the app.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keep a passcode / Face ID on your iPhone – without it the app can't tell when the phone is locked."
+            "value": "Keep a passcode with Face ID or Touch ID on your iPhone – without them the app can't tell locking the phone from leaving the app."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Maj na iPhone nastavený kód / Face ID – bez neho appka nerozozná zamknutie telefónu."
+            "value": "Maj na iPhone nastavený kód s Face ID alebo Touch ID – bez nich appka nerozozná zamknutie telefónu od odchodu z appky."
           }
         }
       }
@@ -5008,7 +5008,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Žolíky ochránia tvoju 🔥 sériu, keď si chorý alebo preč: séria počká – nepreruší sa ani nenarastie. Každý druh môžeš použiť raz za mesiac: bronzový je zadarmo, strieborný a zlatý stoja mince. Chránené noci nič nestavajú a neplatia mince; dobrá noc sa aj tak počíta ako zvyčajne."
+            "value": "Žolíky ochránia tvoju 🔥 sériu počas choroby alebo keď nie si doma: séria počká – nepreruší sa ani nenarastie. Každý druh môžeš použiť raz za mesiac: bronzový je zadarmo, strieborný a zlatý stoja mince. Chránené noci nič nestavajú a neplatia mince; dobrá noc sa aj tak počíta ako zvyčajne."
           }
         }
       }
@@ -5248,7 +5248,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zamkol si telefón"
+            "value": "Telefón zamknutý"
           }
         }
       }
@@ -6037,6 +6037,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ruina"
+          }
+        }
+      }
+    },
+    "Ruins (count)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruins"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruiny"
           }
         }
       }
@@ -8073,18 +8089,18 @@
         }
       }
     },
-    "SleepHole also notices when you use the phone on the lock screen (camera, replies, widgets) – even without unlocking it. It reminds you gently and the building stays. With Strict mode on (Settings), the phone rings after 8 to 12 seconds and the building comes down if the screen stays on – switching the screen off silences it.": {
+    "SleepHole also notices when you unlock the phone and keep using it for a few seconds (lock-screen camera, widgets, another app). It reminds you gently and the building stays. With Strict mode on (Settings), the phone rings after 8 seconds and the building comes down if you keep using it – locking the phone silences it.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "SleepHole also notices when you use the phone on the lock screen (camera, replies, widgets) – even without unlocking it. It reminds you gently and the building stays. With Strict mode on (Settings), the phone rings after 8 to 12 seconds and the building comes down if the screen stays on – switching the screen off silences it."
+            "value": "SleepHole also notices when you unlock the phone and keep using it for a few seconds (lock-screen camera, widgets, another app). It reminds you gently and the building stays. With Strict mode on (Settings), the phone rings after 8 seconds and the building comes down if you keep using it – locking the phone silences it."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "SleepHole si všimne aj používanie telefónu na zamknutej obrazovke (fotoaparát, odpovede, widgety) – aj bez odomknutia. Jemne ti to pripomenie a stavba zostáva. So zapnutým Prísnym režimom (Nastavenia) telefón po 8 až 12 sekundách zazvoní a stavba spadne, ak obrazovka zostane svietiť – zhasnutie obrazovky ho utíši."
+            "value": "SleepHole si všimne aj to, keď telefón odomkneš a pár sekúnd ho používaš (fotoaparát zo zamknutej obrazovky, widgety, iná appka). Jemne ti to pripomenie a stavba zostáva. So zapnutým Prísnym režimom (Nastavenia) telefón po 8 sekundách zazvoní a stavba spadne, ak ho používaš ďalej – zamknutie telefónu ho utíši."
           }
         }
       }
@@ -8260,7 +8276,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pekne si si oddýchol 💙"
+            "value": "Výborný šlofík 💙"
           }
         }
       }
@@ -8420,7 +8436,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Postavil si: %@"
+            "value": "Postavené: %@"
           }
         }
       }
@@ -8500,7 +8516,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Noc si zrušil"
+            "value": "Noc je zrušená"
           }
         }
       }
@@ -8532,7 +8548,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Potvrdil si skôr – budík ostáva zapnutý, keby si znova zaspal."
+            "value": "Potvrdené skôr – budík ostáva zapnutý, keby ťa spánok ešte premohol."
           }
         }
       }
@@ -9076,7 +9092,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "nezazvonil – vstal si skôr"
+            "value": "nezazvonil – vstávanie bolo skôr"
           }
         }
       }
@@ -9204,7 +9220,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "iOS si v noci môže sám nainštalovať aktualizáciu a reštartovať telefón. Stavbe to neublíži (počíta sa v tvoj prospech), ale budík z appky vtedy nezazvoní – zazvoní systémový budík (ak si ho povolil) a záložné upozornenia. Pokojnejšie spanie: Nastavenia → Všeobecné → Aktualizácia softvéru → Automatické aktualizácie → vypni inštaláciu."
+            "value": "iOS si v noci môže sám nainštalovať aktualizáciu a reštartovať telefón. Stavbe to neublíži (počíta sa v tvoj prospech), ale budík z appky vtedy nezazvoní – zazvoní systémový budík (ak je povolený) a záložné upozornenia. Pokojnejšie spanie: Nastavenia → Všeobecné → Aktualizácia softvéru → Automatické aktualizácie → vypni inštaláciu."
           }
         }
       }
@@ -9476,7 +9492,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "stavba sa zrútila, zrušil si noc, alebo si nepotvrdil vstávanie. Ďalšia hotová noc ju opraví 🛠️ (ak nečaká rozostavaná budova), inak časom zarastie kvetmi 🌸"
+            "value": "stavba sa zrútila, noc bola zrušená alebo vstávanie nebolo potvrdené. Ďalšia hotová noc ju opraví 🛠️ (ak nečaká rozostavaná budova), inak časom zarastie kvetmi 🌸"
           }
         }
       }
@@ -9529,18 +9545,18 @@
         }
       }
     },
-    "used the phone on the lock screen": {
+    "used the phone outside the app": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "used the phone on the lock screen"
+            "value": "used the phone outside the app"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "používal telefón na zamknutej obrazovke"
+            "value": "telefón použitý mimo appky"
           }
         }
       }
@@ -9572,7 +9588,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "nevrátil si sa"
+            "value": "bez návratu do appky"
           }
         }
       }
@@ -9961,6 +9977,54 @@
         }
       }
     },
+    "Without a passcode with Face ID or Touch ID, SleepHole can't tell locking the phone from leaving the app, so leaving isn't counted on this iPhone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Without a passcode with Face ID or Touch ID, SleepHole can't tell locking the phone from leaving the app, so leaving isn't counted on this iPhone."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez kódu s Face ID alebo Touch ID SleepHole nevie rozlíšiť zamknutie telefónu od odchodu z appky, preto sa na tomto iPhone odchody nepočítajú."
+          }
+        }
+      }
+    },
+    "A pause no longer fits – you can confirm getting up from %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A pause no longer fits – you can confirm getting up from %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pauza sa už nezmestí – vstávanie potvrdíš od %@."
+          }
+        }
+      }
+    },
+    "Test night (30 min, %lld s setup)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test night (30 min, %lld s setup)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testovacia noc (30 min, príprava %lld s)"
+          }
+        }
+      }
+    },
     "Strict mode": {
       "localizations": {
         "en": {
@@ -9977,18 +10041,18 @@
         }
       }
     },
-    "Off: when you use the phone on the lock screen at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning there, and tonight's building comes down if the screen stays on.": {
+    "Off: when you unlock the phone and keep using it at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning, and tonight's building comes down if you keep using it.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Off: when you use the phone on the lock screen at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning there, and tonight's building comes down if the screen stays on."
+            "value": "Off: when you unlock the phone and keep using it at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning, and tonight's building comes down if you keep using it."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vypnutý: keď v noci používaš telefón na zamknutej obrazovke, SleepHole ti to len jemne pripomenie a stavba zostáva. Zapnutý: telefón tam nahlas zazvoní a dnešná stavba spadne, ak obrazovka zostane svietiť."
+            "value": "Vypnutý: keď v noci telefón odomkneš a používaš ho, SleepHole ti to len jemne pripomenie a stavba zostáva. Zapnutý: telefón nahlas zazvoní a dnešná stavba spadne, ak ho používaš ďalej."
           }
         }
       }
@@ -10084,7 +10148,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ukázať, kedy si zaspal"
+            "value": "Ukázať, kedy prišiel spánok"
           }
         }
       }
@@ -10116,7 +10180,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "SleepHole číta tvoj spánok z appky Zdravie (zapisujú ho tam Apple Watch alebo iná appka na spánok) a ukáže, kedy si naozaj zaspal, vedľa času, kedy si išiel spať. Iba číta – do Zdravia nič nezapisuje a nič neopúšťa tvoj iPhone."
+            "value": "SleepHole číta tvoj spánok z appky Zdravie (zapisujú ho tam Apple Watch alebo iná appka na spánok) a ukáže, kedy naozaj prišiel spánok, vedľa začiatku noci. Iba číta – do Zdravia nič nezapisuje a nič neopúšťa tvoj iPhone."
           }
         }
       }
@@ -10180,7 +10244,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zaspal si"
+            "value": "Prišiel spánok"
           }
         }
       }
@@ -10228,7 +10292,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Spal si"
+            "value": "Prespané"
           }
         }
       }
@@ -10665,6 +10729,22 @@
         }
       }
     },
+    "Texts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Texts"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Texty"
+          }
+        }
+      }
+    },
     "Plans and proposals": {
       "localizations": {
         "en": {
@@ -10725,6 +10805,1054 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ešte je skoro 🌙 Vstávanie sa dá potvrdiť od %@."
+          }
+        }
+      }
+    },
+    "%lld people live here" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld person lives here"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld people live here"
+                }
+              }
+            }
+          }
+        },
+        "sk" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Býva tu %lld človek"
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Bývajú tu %lld ľudia"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Býva tu %lld ľudí"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Býva tu %lld ľudí"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld people moved in" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld person moved in"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld people moved in"
+                }
+              }
+            }
+          }
+        },
+        "sk" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Nasťahoval sa %lld človek"
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Nasťahovali sa %lld ľudia"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Nasťahovalo sa %lld ľudí"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Nasťahovalo sa %lld ľudí"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Big city" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Big city"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veľkomesto"
+          }
+        }
+      }
+    },
+    "City (large)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "City"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veľké mesto"
+          }
+        }
+      }
+    },
+    "Complete buildings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Complete buildings"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hotové budovy"
+          }
+        }
+      }
+    },
+    "Hamlet" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hamlet"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Osada"
+          }
+        }
+      }
+    },
+    "Lit street cells" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lit street cells"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Osvetlené kúsky ulíc"
+          }
+        }
+      }
+    },
+    "Metropolis" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metropolis"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metropola"
+          }
+        }
+      }
+    },
+    "Nights built" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nights built"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Postavené noci"
+          }
+        }
+      }
+    },
+    "Residents" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Residents"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obyvatelia"
+          }
+        }
+      }
+    },
+    "Ruins, unfinished buildings and lit streets are part of the town too, so the numbers can differ from the nights you built." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruins, unfinished buildings and lit streets are part of the town too, so the numbers can differ from the nights you built."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruiny, rozostavané budovy aj osvetlené ulice patria k mestu, preto sa čísla môžu líšiť od počtu postavených nocí."
+          }
+        }
+      }
+    },
+    "Small town" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Small town"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mestečko"
+          }
+        }
+      }
+    },
+    "The town in numbers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The town in numbers"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mesto v číslach"
+          }
+        }
+      }
+    },
+    "Unfinished buildings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unfinished buildings"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozostavané budovy"
+          }
+        }
+      }
+    },
+    "Village" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Village"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dedina"
+          }
+        }
+      }
+    },
+    "%@ already has %lld residents." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ already has %#@residents@."
+          },
+          "substitutions" : {
+            "residents" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg resident"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg residents"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ už má %#@residents@."
+          },
+          "substitutions" : {
+            "residents" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg obyvateľa"
+                    }
+                  },
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg obyvateľov"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg obyvateľov"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg obyvateľov"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "The whole town is talking about something new: %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The whole town is talking about something new: %@."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Celé mesto hovorí o novinke: %@."
+          }
+        }
+      }
+    },
+    "%@ is waiting for its last bricks – no rush, tonight is a new chance." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ is waiting for its last bricks – no rush, tonight is a new chance."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ čaká na posledné tehly – nič sa nedeje, dnes v noci je nová šanca."
+          }
+        }
+      }
+    },
+    "The builders took a day off. Tonight we try again 🌙" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The builders took a day off. Tonight we try again 🌙"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stavbári si dali voľno. Dnes v noci to skúsime znova 🌙"
+          }
+        }
+      }
+    },
+    "Your streak was safe – the town waited for you." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your streak was safe – the town waited for you."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Séria je v bezpečí – mesto na teba počkalo."
+          }
+        }
+      }
+    },
+    "Bedtime is at %@. The builders are already putting on their helmets." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedtime is at %@. The builders are already putting on their helmets."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Večierka je o %@. Stavbári si už nasadzujú prilby."
+          }
+        }
+      }
+    },
+    "A whole week of good nights – the town is throwing a little party 🎉" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A whole week of good nights – the town is throwing a little party 🎉"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Celý týždeň dobrých nocí – mesto má malú oslavu 🎉"
+          }
+        }
+      }
+    },
+    "%lld nights in a row! The builders are proud of you." : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld night in a row! The builders are proud of you."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld nights in a row! The builders are proud of you."
+                }
+              }
+            }
+          }
+        },
+        "sk" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld noc za sebou! Stavbári sú na teba hrdí."
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld noci za sebou! Stavbári sú na teba hrdí."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld nocí za sebou! Stavbári sú na teba hrdí."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld nocí za sebou! Stavbári sú na teba hrdí."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "A new streak starts tonight. The town believes in you." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A new streak starts tonight. The town believes in you."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dnes v noci začína nová séria. Mesto ti verí."
+          }
+        }
+      }
+    },
+    "We're a %@ now – %lld people live here." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We're a %1$@ now – %#@people@."
+          },
+          "substitutions" : {
+            "people" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg person lives here"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg people live here"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Už sme %1$@ – %#@people@."
+          },
+          "substitutions" : {
+            "people" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "býva tu %arg človek"
+                    }
+                  },
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "bývajú tu %arg ľudia"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "býva tu %arg ľudí"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "býva tu %arg ľudí"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld more people and we'll be a %@!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%#@people@ and we'll be a %2$@!"
+          },
+          "substitutions" : {
+            "people" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg more person"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg more people"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ešte %#@people@ a budeme %2$@!"
+          },
+          "substitutions" : {
+            "people" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg človek"
+                    }
+                  },
+                  "few" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg ľudia"
+                    }
+                  },
+                  "many" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg ľudí"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg ľudí"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Our first neighbours are settling in. Every good night brings new ones." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Our first neighbours are settling in. Every good night brings new ones."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prví susedia sa zabývajú. Každá dobrá noc privedie nových."
+          }
+        }
+      }
+    },
+    "We have %lld lovely parks – people love an evening stroll." : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "We have %lld lovely park – people love an evening stroll there."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "We have %lld lovely parks – people love an evening stroll."
+                }
+              }
+            }
+          }
+        },
+        "sk" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Máme %lld pekný park – ľudia sa v ňom radi večer prechádzajú."
+                }
+              },
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Máme %lld pekné parky – ľudia sa v nich radi večer prechádzajú."
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Máme %lld pekných parkov – ľudia sa v nich radi večer prechádzajú."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Máme %lld pekných parkov – ľudia sa v nich radi večer prechádzajú."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "The library is full tonight – everyone is reading bedtime stories." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The library is full tonight – everyone is reading bedtime stories."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Knižnica je dnes plná – všetci si čítajú rozprávky na dobrú noc."
+          }
+        }
+      }
+    },
+    "The museum has a new painting: a cat sleeping on a cloud. I wonder who posed for it 🐾" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The museum has a new painting: a cat sleeping on a cloud. I wonder who posed for it 🐾"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Múzeum má nový obraz: mačka spí na obláčiku. Ktovie, kto im stál modelom 🐾"
+          }
+        }
+      }
+    },
+    "From the top of our tallest building you can see the whole town." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From the top of our tallest building you can see the whole town."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Z našej najvyššej budovy vidno celé mesto."
+          }
+        }
+      }
+    },
+    "The residents whisper: “Who would put out a fire? We have no fire station yet.”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The residents whisper: “Who would put out a fire? We have no fire station yet.”"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obyvatelia si šepkajú: „Kto by hasil požiar? Hasičov ešte nemáme.“"
+          }
+        }
+      }
+    },
+    "Overheard at the bakery: “If someone gets ill, where do we go? A hospital would be nice.”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overheard at the bakery: “If someone gets ill, where do we go? A hospital would be nice.”"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počuté v pekárni: „Keď niekto ochorie, kam pôjdeme? Nemocnica by sa hodila.“"
+          }
+        }
+      }
+    },
+    "The neighbours say a police station would make the nights even calmer." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The neighbours say a police station would make the nights even calmer."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Susedia vravia, že s políciou by boli noci ešte pokojnejšie."
+          }
+        }
+      }
+    },
+    "The children keep asking when they'll get a school." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The children keep asking when they'll get a school."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deti sa stále pýtajú, kedy budú mať školu."
+          }
+        }
+      }
+    },
+    "Nobody knows who the mayor is. Maybe once we have a town hall…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nobody knows who the mayor is. Maybe once we have a town hall…"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nikto nevie, kto je starosta. Možno keď budeme mať radnicu…"
+          }
+        }
+      }
+    },
+    "The firefighters polished their truck again. Twice today." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The firefighters polished their truck again. Twice today."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hasiči si zase leštili auto. Dnes už druhýkrát."
+          }
+        }
+      }
+    },
+    "The hospital is quiet tonight – just the way the doctors like it." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The hospital is quiet tonight – just the way the doctors like it."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "V nemocnici je dnes ticho – presne tak to lekári majú radi."
+          }
+        }
+      }
+    },
+    "Overheard on the street: “This town gets nicer every night.”" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overheard on the street: “This town gets nicer every night.”"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Počuté na ulici: „To mesto je každou nocou krajšie.“"
+          }
+        }
+      }
+    },
+    "The neighbours say the streets are quietest at night – just the way we like it." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The neighbours say the streets are quietest at night – just the way we like it."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Susedia vravia, že v noci sú ulice najtichšie – presne ako to máme radi."
+          }
+        }
+      }
+    },
+    "Someone asked if we'll ever get a cinema. Who knows!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Someone asked if we'll ever get a cinema. Who knows!"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ktosi sa pýtal, či raz budeme mať kino. Ktovie!"
+          }
+        }
+      }
+    },
+    "The baker says fresh bread tastes best after a good night's sleep." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The baker says fresh bread tastes best after a good night's sleep."
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pekár vraví, že čerstvý chlieb chutí najlepšie po dobre prespatej noci."
+          }
+        }
+      }
+    },
+    "Tonight we build again. I'll keep an eye on the site 🐾" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonight we build again. I'll keep an eye on the site 🐾"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dnes v noci znova staviame. Na stavenisko dohliadnem 🐾"
+          }
+        }
+      }
+    },
+    "next sentence" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "next sentence"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ďalšia veta"
+          }
+        }
+      }
+    },
+    "Buddy" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buddy"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mačka"
+          }
+        }
+      }
+    },
+    "All texts" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All texts"
+          }
+        },
+        "sk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Všetky texty"
           }
         }
       }

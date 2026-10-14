@@ -120,7 +120,7 @@ struct CoverageTests {
         #expect(t.night != nil && t.audio.isRunning)
         t.setVolume()
         t.monitor.callChanged(CallInfo(uuid: UUID(), isOutgoing: false, hasConnected: false, hasEnded: false))
-        t.monitor.unlockCandidate()
+        t.monitor.dataProtectionChanged(locked: true)
         try? await Task.sleep(for: .seconds(5.5))
         t.stop()
         #expect(t.night == nil && !t.audio.isRunning)

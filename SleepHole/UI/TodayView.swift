@@ -93,6 +93,12 @@ struct HomeView: View {
                         BuddyView(state: model.buddyState(at: now), cloud: true, onPet: { model.petBuddy() },
                                   hold: AppModel.forcedBuddyReaction)
                             .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.5) })
+                        .overlay(alignment: .bottom) {
+                            // the buddy talks (phase TALK): an overlay, so Today's layout does not change
+                            BuddyBubble(now: now)
+                                .frame(width: 250)
+                                .offset(y: 20)
+                        }
                         .padding(.top, 25)
                         .padding(.bottom, 14)
                         .appearIn(delay: 0.1)
@@ -417,6 +423,9 @@ struct NightView: View {
         switch block {
         case .nap?, .collapsed?, .setup?, .running?:
             EmptyView()
+        case .tooLate(let opens)?:
+            Text(L("A pause no longer fits – you can confirm getting up from \(Fmt.time(opens))."))
+                .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
         case .notEnoughCoins(let missing)?:
             Text(L("🌙 Next pause: \(price) 🪙 (\(missing) 🪙 short)")).font(.footnote).foregroundStyle(.secondary)
         case nil:
@@ -690,6 +699,10 @@ struct ResultView: View {
                     .frame(height: 260)
                     Text(L("Done! 🎉")).font(.largeTitle.bold()).popIn(delay: 0.6)
                     Text(L("You built: \(name)")).font(.title3).appearIn(delay: 0.8)
+                    if !rec.isNap, let b = model.townBuilding(for: rec.window.key), Population.residents(of: b) > 0 {
+                        Label(L("\(Population.residents(of: b)) people moved in"), systemImage: "person.2.fill")
+                            .font(.subheadline).foregroundStyle(.secondary).appearIn(delay: 1.0)
+                    }
                 case .unfinished:
                     BuildingImage(id: rec.buildingId, progress: 0.6)
                     Text(L("Unfinished 🚧")).font(.largeTitle.bold())
