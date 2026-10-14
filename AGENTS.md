@@ -20,7 +20,40 @@ Whatever the owner's first message is (even just "Ahoj"), **start your reply by 
 then answer. Remove items here when they are done.
 
 0. **Open phone checks (plan §10 F6 and R4, bug B21 in §11a):**
-   * **NEWEST, READ THIS FIRST – 2026-10-12 afternoon: RELEASE 1.0 IS IN WORK (phase REL, plan §10 REL and the two
+   * **NEWEST – 2026-10-14 (plan §12, row of that day; Opus read App Store Connect through his Chrome, changed
+     nothing):** the P0 rows of the overview (1, 2, 32) are done and proven. **Apple has updated the Developer
+     Program License Agreement – until he (the Account Holder) accepts it on developer.apple.com, no build can be
+     uploaded and nothing can be submitted; his own click.** Build 6: 14 of 15 testers installed it (two on iPads –
+     the app runs there in iPhone mode), no crashes, one anonymous feedback "不支持汉语" ("no Chinese"). The DSA
+     declaration (non-trader) and the 175 countries are done; the release option is "Manually release". Ask: does
+     the seller name on the Business page (it differs from the name in the copyright) look the way he wants it on
+     the store page.
+     **His answers the same afternoon (plan §12, second row of 2026-10-14):** he accepted the new agreement; B23 is
+     closed (WeatherKit answers); 9+ is fine; **build 6 is attached to version 1.0 (Opus, on his word – the real icon
+     shows next to the name now)**; **Apple may review the app, but nothing is released** (manual release) – before
+     "Add for Review": the iPad check (a Sonnet worker ran it that afternoon – see §12) and the 15-minute recipe on
+     a clean install; Strict mode stays on; the lock-screen question is closed by Opus (all four options of
+     2026-10-08 are covered by what is on the phone); R4 "swipe away and stay away" collapses ✓; the system alarm
+     rings after an early confirm ✓; the twelve texts are confirmed; CARE-2 confirmed again (+10 per calm hour, +11
+     when the phone lies still). **Open, waiting for his word:** the lit street (`l2-road-lit-*`) as a night's
+     build felt like a joke to him (his night of 2026-10-13 → 14, level range L1–L3) – Opus proposes to take lit
+     streets out of the draw (XS–S, build 7); the residents' ranges and town size names and the Slovak texts for
+     everybody (both tables were in the chat); what "a little tuning of the home screen UI" and "some AI
+     optimisation" mean; a Chinese translation is NOT recommended now (one anonymous tester, no native reviewer,
+     mainland China needs an ICP filing) – one backlog line. His questions about selling were answered in the chat
+     and stay out of this public repo.
+     **Evening of 2026-10-14 – BUILD 7 IS IN WORK (plan §10 REL, steps 7a–7d):** he said yes to the lit street out of
+     the draw, wants TALK (the cat talks about the town and the residents' chatter – texts by Opus), approved the
+     neutral Slovak table (row 9 is the nap: "Výborný šlofík 💙"; creative forms instead of "zaspal si") and asked for
+     a Debug "Texts" screen with every text in its own box. His "bug" (a night ended by a shake 12 s after its
+     start) was a QUICK TEST night – its confirm window opens at once; fixed in 7a together with a clear "you can
+     confirm from …" line and a refused early shake. The iPad simulator check passed; the 15-minute recipe still
+     needs a person. **Build 6 was SUBMITTED for review that evening on his word ("Waiting for Review", manual release). 7a is built
+     and reviewed (uncommitted; its Debug build is on his phone since 17:18 – ask what he saw: the "you can confirm
+     from …" line, the orange "too early" note after a shake, a quick test night that can be confirmed only in its
+     last 30 s); next session: 7b POP.** The `SyncEngineTests` timing tests are
+     flaky on this Mac (they fail at HEAD too, §12) – do not chase them as a 7a regression. One step per session, then `session-handoff`.
+   * **2026-10-12 afternoon: RELEASE 1.0 IS IN WORK (phase REL, plan §10 REL and the two
      §12 rows of that afternoon; the scope is FROZEN – hard rule below).** State: the compact Today is confirmed by
      him on the phone; **build 1.0 (5) is uploaded (14:42, "Upload succeeded") and its Debug build is on his phone
      since 14:42** (privacy link in Settings → About, Release clean-up, truthful AlarmKit text; app 498 tests green
@@ -30,17 +63,17 @@ then answer. Remove items here when they are done.
      `docs/ROZBOR-APP-REVIEW.md` – he chose route (a). The final English screenshots (`tools/store_shots.sh`, two
      sizes in `build/store/en-US/`) were being shot by a worker when this was written – check the folders.
      **Ask, in this order:** (a) what he saw in build 5 on the phone (Today; does the "Privacy policy" row open
-     the page – nobody has tapped it on a device); (b) did Apple finish processing build 5, is it in both tester
-     groups and selected on the version page (Opus can click that in his Chrome with his per-action OK);
+     the page – nobody has tapped it on a device); (b) builds 4, 5 and 6 are processed and in both tester
+     groups (seen 2026-10-14); build 6 is attached to version 1.0 (2026-10-14, on his word);
      (c) **the app starts FREE (his decision that afternoon, "for now"):** Opus set the price to 0.00 in all
      175 countries through his Chrome and took "Pay once" out of the store description and the landing page; the
-     Paid Apps Agreement stays unsigned. Still his own clicks: the Digital Services Act declaration ("not a
-     trader" fits a free hobby app) and "Set Up Availability" (the countries). A price comes back only after an
+     Paid Apps Agreement stays unsigned. The Digital Services Act declaration (non-trader) is "Active" since
+     2026-10-12 and the availability is set (175 countries) – both done. A price comes back only after an
      accountant has told him how such income is taxed and which levies follow (the chat answer of that afternoon
-     had the sources; his reasons are personal and stay out of this public repo – be gentle, never push); (d) the age rating came out 9+ because of one "yes" (Health or
-     Wellness Topics) – is that fine. **Still owed before "Add for Review":** the 15-minute night recipe of the
-     review notes tried on a clean install (NOT his phone), one iPad simulator run, the screenshots uploaded, the
-     release option left on "Manually release this version". Then, while Apple reviews: the documented-only lock
+     had the sources; his reasons are personal and stay out of this public repo – be gentle, never push); (d) the age rating 9+ is fine with him (2026-10-14). **Still owed before "Add for Review":** the 15-minute
+     night recipe of the review notes tried on a clean install (NOT his phone) – it needs taps, a person has to do
+     it (the iPad simulator check passed 2026-10-14, §12); the release option stays on "Manually release this
+     version". Then, while Apple reviews: the documented-only lock
      detection as a fallback. Everything of that day is committed (he pushes) – check `git status` all the same. His idea "the newest building instead of the cat on Today" is in the
      backlog, frozen. The next upload needs `CURRENT_PROJECT_VERSION` 7 (6 is uploaded).
      **Added the same day, late afternoon (plan §12, last row of 2026-10-12):** a tester's first night ended
@@ -49,11 +82,27 @@ then answer. Remove items here when they are done.
      phone since 17:12** (SleepCore 336 / app 500 tests green; naps share the 10-minute window). He checked it the same evening
      (privacy link opens, the Stats label is right). **Build 6 is in both tester groups and on the public link,
      and the beta is listed on departures.to (`/apps/23674`).** **B23:** WeatherKit was not ticked under the App
-     ID's "App Services" on developer.apple.com – ticked at about 18:20 on his word; ASK whether the Weather test
-     now says "Apple WeatherKit" under "Answered by" (if not: try a build signed after the change). Earlier
+     ID's "App Services" on developer.apple.com – ticked at about 18:20 on his word; **he confirmed 2026-10-14
+     that WeatherKit answers – B23 is closed.** Earlier
      note, kept for the record: the listing was to follow build 6 on departures.to (he asked to wait for build 6; Opus fills the form in his Chrome,
      he approves before it is sent). Through his Chrome Opus already set: all 175 countries, a limit of 200
      testers on the public link. Two announcement posts went out on his accounts with his approved text.
+     **Added late in the evening of 2026-10-12 (plan §12, the row "Late evening") – ASK THIS BEFORE ANYTHING ELSE:**
+     he wrote that he wants to POSTPONE the App Store release until the business side of selling is clear, and
+     asked whether selling only in the USA avoids it (it does not). Opus separated the two things for him: a FREE
+     release needs none of it, and the price is 0. **He answered that "free now, paid later" is not for him – it
+     would make him look like a corporation; do not offer it again. So the release waits: TestFlight goes on, and
+     the app enters the store with its final price model from day one (or stays free for good – his call later).
+     **2026-10-14: he agreed that Apple may review it meanwhile (manual release – nothing is published).** A one-page plan with seven questions for the offices is in his iCloud Drive
+     (`SleepHole/PREDAJ-PLAN-A-OTAZKY.md`). He wrote that he is getting frustrated – be brief and kind, never push.
+     Done that evening on his word: nine screenshots uploaded in both sizes (his own upload had failed because the
+     version page opens on the new "Header and Search Results" tab – screenshots belong to "App Previews and
+     Screenshots"). The placeholder icon next to the app's name: every build carries the icon, but no build is
+     attached to version 1.0 – Opus asked whether it may select build 6 there (his yes is needed). Item 12 of
+     `docs/PREHLAD-PLANOV.md` (sleep statistics) was rewritten to his wish: one line per night with four colours
+     (green went to bed, blue fell asleep, pink the alarm, the fourth = when he really got up – its colour is not
+     chosen yet). Uncommitted:
+     `AGENTS.md`, the plan, the overview.
    * **The night of 2026-10-07 → 08 (bugs B24 + B25 + B26, plan §11a and §12):** the building collapsed
      with ~1.5 s of warning (the 30 s budget had shortened the trip); three builds went onto the phone that night
      at his request (23:16, 23:29, 00:07), the night was forgiven three times (`-forgiveNight`) and it ended
@@ -69,9 +118,10 @@ then answer. Remove items here when they are done.
      `git status`. Be brief and kind, and never install while he sleeps.
      **He is sure the app has a bug here and he is right (2026-10-08, plan §12 last row):** three lock-screen videos
      were never seen by the old build. Two holes remain in the installed build (Face ID recognising him later than
-     8 s after the screen lit is never re-checked; the warning can be missed). Four fix options are on the table and
-     he has NOT chosen yet – ask which: the 2-minute test, the late recognition, counting without Face ID, a 10 s
-     sound + vibration. He wants short, strict answers on this topic – no padding.
+     8 s after the screen lit is never re-checked; the warning can be missed). The four fix options of that day are
+     CLOSED (Opus 2026-10-14, on his "decide what helps most"): the late recognition is re-checked (LOCK-W), the
+     12 s hold rule counts use without Face ID, the system-alarm warning of Strict mode rings for the whole 10 s,
+     and the test was run many times – nothing more to build. He wants short, strict answers on this topic – no padding.
      **His "basal test" is built (2026-10-08, `SleepHoleTests/LockScreenTests.swift`, plan §12):** in the app's logic
      the warning leaves 8 s after the lock screen lights up and the building falls 13 s later (21 s in all); the hole
      "Face ID recognises him after the 8 s" is proven by a test (3 known issues in the suite). **The same steps ran
@@ -157,7 +207,7 @@ then answer. Remove items here when they are done.
      Store Connect (08:41, "Upload succeeded"); the phone carries the Debug build 1.0 (4) since 08:45.**
      **Ask first:** (a) did he add build 4 to both tester groups, and did the tester who reported the early bedtime
      get it; (b) how the plans screen reads on the phone – nobody has seen it yet – and whether the green badges are
-     what he meant; (c) his word on the twelve changed texts; (d) his next early night: the bedtime reminders now
+     what he meant; (c) the twelve changed texts are confirmed (2026-10-14); (d) his next early night: the bedtime reminders now
      skip only that evening's weekday (six weekly triggers, untried on a device) – does the reminder of the
      FOLLOWING evening arrive; and were the 15 minutes of setup tight (he finished 24 s before their end); (e) the
      Strict switch is still ON on his phone (that night was stored as strict) – is that what he wants.
@@ -182,8 +232,8 @@ then answer. Remove items here when they are done.
      (the public link said "not accepting new testers" because Apple's review had not finished); the guide in his iCloud Drive (`SleepHole/TESTFLIGHT-NAVOD.md`) now explains the missing step
      (an Internal Testing group holding the friend and the build), the public link for several friends and the
      text for Apple's review – ask what worked and whether he cut the friend's roles to Marketing; raise
-     `CURRENT_PROJECT_VERSION` to 7 before the next upload (6 is uploaded since 2026-10-12 17:11); (2) CARE-2 (calm-hour coins +10 / +11) is confirmed
-     but NOT built – he believed it was; (3) the Dynamic Island / Live Activity try. Never write his sleep values
+     `CURRENT_PROJECT_VERSION` to 7 before the next upload (6 is uploaded since 2026-10-12 17:11); (2) CARE-2 (calm-hour coins +10 / +11 when the phone
+     lies still) is confirmed (again 2026-10-14) but NOT built; (3) the Dynamic Island / Live Activity try. Never write his sleep values
      or the names of his devices and apps into the repo. Everything up to the morning of 2026-10-12 (build 4) is
      committed; he pushes – check `git status` all the same. A build in the Xcode app rewrites the two String Catalogs – restore them with `git checkout`
      before a commit (plan §12, 2026-10-11).
@@ -191,7 +241,7 @@ then answer. Remove items here when they are done.
      of 2026-10-07 → 08 is taken back (his decision 2026-10-08, done on the phone 2026-10-09 12:28 with
      `-revokeForgiveness`):** the record reads `ruins`, the automatic bronze joker of October turns it into a joker
      night, the honest night of 2026-10-09 is untouched; streak / best / built nights 10 → 9, coins 2120 → 1940.
-     Ask only whether the numbers on his phone agree (Stats 9 / 9 / 9 / 1940, the 8th as a joker; Town 9 buildings).
+     The question whether his Stats showed those numbers is closed (2026-10-14 – later nights changed them).
      October's joker is spent – a missed night this month breaks the streak.
      Also still unanswered: did the phone's own 3 s sound play.
    * **Weather animations across Today (plan §10 TOWN-W step 2b) are ON HOLD:** research and the wind data are
@@ -200,19 +250,18 @@ then answer. Remove items here when they are done.
    * **Time Sensitive Notifications – done:** the warning for a switched-off iOS switch works on the phone and the
      Focus test with the switch on passed (owner 2026-10-07). Nothing open here.
    * **R4 – closing the app counts as leaving it:** on the phone since 2026-10-07; reopening in time and a phone
-     restart keep the building (confirmed). Still to prove: swipe away and STAY away → collapse; only one alarm when
-     the app is reopened while the system alarm rings.
-   * **System alarm (F6b):** it rang with the app swiped away (2026-10-04). Still to check: the Developer → System
-     alarm test, the safety alarm after an early confirm, what the system's own stop button says (he saw "snooze").
-   * **Weather (B23):** the owner sees the weather on the phone since 2026-10-09 and believes WeatherKit works –
-     the phone's cache said `metNorway` that day (12:28): the second source (follow-up A2) is proven on the phone,
-     Apple's token is not. Ask what Weather test says under "Answered by" and "Note".
+     restart keep the building (confirmed). Swipe away and STAY away → collapse: confirmed by him 2026-10-14. Still
+     to prove: only one alarm when the app is reopened while the system alarm rings.
+   * **System alarm (F6b):** it rang with the app swiped away (2026-10-04). The safety alarm after an early confirm rings
+     (him, 2026-10-14). Still to check: the Developer → System alarm test, what the system's own stop button says
+     (he saw "snooze").
    * **Five ideas of 2026-10-09 (plan §10 backlog, top item) – considerations, nothing approved:** the town as an
      island on water (M), live weather over the whole screen like the HTC HD2 (= TOWN-W step 2b, M), starting a
      night / nap from the Apple Watch (a spike first), HealthKit "when I really fell asleep" (S–M), a Fantasy Town
      theme (M–L). Do not start any of them without his word; ask which one he wants first.
-1. **The pause is still untried:** no night up to 2026-10-06 → 07 used the "🌙 Pause" (journal). Ask only whether he
-   still wants to try it. Open bugs in plan §11a: B8, B10, B12–B16, B22, B23 (B7 contrast is accepted – two
+1. **The pause is still untried:** he does not want to risk his town (2026-10-14) – Opus suggested a quick test
+   night (Settings → Developer → Quick night: it never touches the town, its pauses cost nothing). Open bugs in
+   plan §11a: B8, B10, B12–B16, B22 (B7 contrast is accepted – two
    follow-ups are listed in plan §10 B7; B11 is solved inside F6b).
 2. **Sleep buddy (P2 + P2b): accepted by the owner 2026-10-04.** His remark: the "arched back" has too few poses –
    leave it until we render our own models (F7).

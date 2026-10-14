@@ -1,6 +1,6 @@
 # SleepHole – prehľad plánov a návrhov
 
-Stav k 2026-10-12 popoludní. Tento dokument je prehľad pre majiteľa: čo je rozrobené, čo je navrhnuté a čo je len
+Stav k 2026-10-14. Tento dokument je prehľad pre majiteľa: čo je rozrobené, čo je navrhnuté a čo je len
 nápad – s odhadom náročnosti a s prioritou. Podrobný plán a zadania pre workerov sú v
 [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) (§10), nákresy k návrhom z 2026-10-10 v
 [`NAVRH-MESTO-STATISTIKY.md`](NAVRH-MESTO-STATISTIKY.md).
@@ -41,16 +41,16 @@ Priority sú **odporúčanie Opusu**. S prehľadom a s poradím si 2026-10-12 s�
 | 1 | **EARLY – „Dnes ísť spať skôr"** | S – M | P0 ✅ | **Hotovo 2026-10-12.** Noc sa dá začať až 3 h pred večierkou, bez postihu, príprava 15 min od štartu. Tvoja noc z 11. na 12. 10. to potvrdila na telefóne (skorší štart, budík, budova, mince). Texty prešli revíziou a šesť drobných úprav z kontroly je spravených a otestovaných. |
 | 2 | **Build 1.0 (4) do TestFlightu** | XS | P0 ✅ | **Hotovo 2026-10-12.** Build 4 je nahraný do App Store Connect (08:41, „Upload succeeded"). Pridať ho do skupín testerov ostáva na tebe – vtedy dostane opravu aj testerka, ktorá problém nahlásila. |
 | 3 | **TODAY – kompaktná obrazovka Dnes** | S – M | P1 ✅ | **Hotovo 2026-10-12.** Obe tlačidlá sú v jednej karte, mačka má 200 bodov, tlačidlá sú nižšie a dva popisy kratšie. Na telefóne si potvrdil, že je všetko nad spodnou lištou aj pri troch riadkoch textu. Hlavička s mestom a teplotou sa nerobila – netreba ju. |
-| 4 | **POP – obyvatelia** | S | P1 | Budovy úrovne 2 a 3 majú dnes 0 obyvateľov – vyzerá to ako chyba. Nové počty podľa druhu budovy, názvy veľkosti mesta, „Mesto v číslach". |
+| 4 | **POP – obyvatelia** | S | P1 | Build 7, krok 7b. Budovy úrovne 2 a 3 majú dnes 0 obyvateľov – vyzerá to ako chyba. Nové počty podľa druhu budovy, názvy veľkosti mesta, „Mesto v číslach". |
 | 5 | **CAL – mesačný kalendár a obdobia** | M | P1 | Skutočný kalendár po mesiacoch a rokoch; priemery a graf za zobrazený mesiac. Dnes po 35 dňoch staršie noci nikde nevidno. |
-| 6 | **CARE-2a – mince za pokojné hodiny (+10)** | S – M | P1 | Potvrdil si to 2026-10-09, postavené to nie je. Každá hodina noci s vypnutou obrazovkou +10 🪙. Hodiny sa počítajú od večierky, aby skorší štart nezarábal viac. |
-| 7 | **App Store stránka – texty a zásady súkromia** | S | P1 | Texty sú v App Store Connect a sedia do písmena, stránka podpory a zásady súkromia sú zverejnené, vekové hodnotenie vyšlo 9+, súkromie je zverejnené ako „Data Not Collected". Ostáva tvoje rozhodnutie: zadarmo alebo platená (zmluva o platených appkách nie je podpísaná), vyhlásenie podľa DSA a výber krajín. |
+| 6 | **CARE-2a – mince za pokojné hodiny (+10)** | S – M | P1 | Potvrdil si to 2026-10-09 a znova 14. 10. (+10 za pokojnú hodinu, +11 keď telefón len leží); postavené to nie je. Každá hodina noci s vypnutou obrazovkou +10 🪙. Hodiny sa počítajú od večierky, aby skorší štart nezarábal viac. |
+| 7 | **App Store stránka – texty a zásady súkromia** | S | P1 | Texty sú v App Store Connect a sedia do písmena, stránka podpory a zásady súkromia sú zverejnené, vekové hodnotenie vyšlo 9+, súkromie je zverejnené ako „Data Not Collected". Vyhlásenie podľa DSA (nie som obchodník) a 175 krajín sú hotové. Novú licenčnú zmluvu Applu si prijal 14. 10. a build 6 je pripojený k verzii 1.0. Ostáva tvoje rozhodnutie o cene (zmluva o platených appkách nie je podpísaná). |
 | 8 | **Riziko pri kontrole Applu** | S | P1 ✅ | **Hotovo 2026-10-12.** Rozbor je v `ROZBOR-APP-REVIEW.md` (dvanásť rizík, záložná cesta, kroky k podaniu). Rozhodol si: podať s tromi signálmi zámku a s priznaním v poznámkach, záložnú detekciu postaviť, kým Apple kontroluje. Čo z rozboru treba spraviť v kóde, je riadok 32. |
-| 9 | **Dlžné skúšky na telefóne** | tvojich 20 – 30 min | P1 | Zavretá appka a nevrátiť sa → zrútenie; systémový budík; synchronizácia na dvoch zariadeniach; pauza. Bez kódu. |
+| 9 | **Dlžné skúšky na telefóne** | tvojich 20 – 30 min | P1 | 14. 10. potvrdené: zavretá appka a nevrátiť sa → zrútenie; poistný budík po skorom potvrdení. Ostáva: pauza (skús ju v rýchlej testovacej noci – mesta sa nedotkne) a test systémového budíka vo Vývojárovi. Dve zariadenia: zatiaľ nikto nehlási problém. Bez kódu. |
 | 10 | **NIGHT – detail noci ako vlastná obrazovka** | M | P2 | Karty namiesto jedného bloku textu, potom časová os noci. Sám si povedal, že detail sa nedá čítať. |
 | 11 | **ZOOM – kamera mesta (chyba B30)** | S | P2 | Veľké mesto sa nedá vidieť celé (od asi 45. noci). Oddialenie rastie s mestom, appka si pamätá pohľad, po novej budove sa naň kamera posunie. |
-| 12 | **Štatistiky zo spánku** | S každá | P2 | Čas zaspávania ako vlastný graf, najlepšie okno na spánok, koľko si naozaj spal, pracovné dni proti víkendom. Tvoj smer „štatistiky, štatistiky, štatistiky". |
-| 13 | **TALK – kamoš hovorí o meste** | M | P2 | Bublina pod mačkou na Dnes: jedna veta denne o meste, sérii a včerajšej noci. Až po POP. |
+| 12 | **Štatistiky zo spánku** | S každá | P2 | **Jeden graf noci, nie viac grafov (tvoje slovo 12. 10.):** na dnešnej čiare každej noci štyri farby – zelená = kedy si šiel spať (ako dnes), modrá = kedy si zaspal (ako dnes), ružová = budíček, štvrtá = kedy si naozaj vstal (jej farbu ešte vyberieme). Všetko spojené v jednej línii, nech na prvý pohľad vidno, ako dlho si spal. Neskôr: najlepšie okno na spánok, pracovné dni proti víkendom. Tvoj smer „štatistiky, štatistiky, štatistiky". |
+| 13 | **TALK – kamoš hovorí o meste** | M | P1 | Chceš to (14. 10.: „už mačka dáva zmysel"): mačka na Dnes hovorí o meste a o tom, čo si „hovoria obyvatelia". Texty píše Opus, ty ich prečítaš na obrazovke Texty. Build 7, krok 7d – po obyvateľoch. |
 | 14 | **TOWN-W krok 3 – dážď a sneh v meste** | M | P2 | Častice nad mestom, ležiaci sneh, sivšia obloha. Počasie appka už pozná. |
 | 15 | **TOWN-W krok 4 – deň a noc v meste** | M | P2 | Mesto podvečer oteplie a v noci stmavne; potom svetlá lámp a okien. |
 | 16 | **CARE-3 – Live Activity / Dynamic Island** | S skúška, M funkcia | P2 | Odpočet noci na zamknutej obrazovke a v ostrovčeku. Skúška ukáže, či sa zobrazí aj nad Fotoaparátom. |
@@ -68,11 +68,14 @@ Priority sú **odporúčanie Opusu**. S prehľadom a s poradím si 2026-10-12 s�
 | 28 | **Robotický hlas hlásateľa** | S – M | P3 | Vlastný hlas v duchu hry M.A.X., vyrobený v telefóne. |
 | 29 | **Téma Fantasy Town** | M – L | P3 | Druhá sada budov. Nie sú to len obrázky – každú budovu treba poskladať. |
 | 30 | **B10 – odpočinok ukončiť skôr** | XS | P3 | Rozhodnutie: smie sa odpočinok potvrdiť v posledných asi 20 % času? |
-| 31 | **Slovenské texty pre všetkých** | S – M | P2 | Appka po slovensky oslovuje každého v mužskom rode („zaspal si", „vstal som", „postavil si"). Buď texty prepísať neutrálne, alebo pridať voľbu oslovenia. Nový návrh Opusu z revízie textov 2026-10-12. |
+| 31 | **Slovenské texty pre všetkých** | S – M | P1 | Tabuľku si schválil 14. 10. – build 7, krok 7c. Appka po slovensky oslovuje každého v mužskom rode („zaspal si", „vstal som", „postavil si"). Buď texty prepísať neutrálne, alebo pridať voľbu oslovenia. Nový návrh Opusu z revízie textov 2026-10-12. |
 | 32 | **Zostavenie 5 pre kontrolu Applu** | S | P0 ✅ | **Hotovo 2026-10-12.** Nahraté do App Store Connect o 14:42 a nainštalované na tvoj telefón. Obsahuje kompaktné Dnes, odkaz na zásady súkromia v Nastavenia → O aplikácii, ostré zostavenie bez vývojárskych vecí (overené na nahratom archíve) a presnejší text povolenia pre systémový budík. 498 testov zelených. |
 | 33 | **Záložná detekcia zamknutia** | M | P1 | Poistka z rozboru rizík: appka by rozlišovala „zamkol som" od „odišiel som" len zdokumentovanými signálmi. Stavia sa, kým Apple kontroluje; nasadí sa len vtedy, keď Apple tri dnešné signály odmietne. Stratila by sa pripomienka a siréna na zamknutej obrazovke. |
 | 34 | **Snímky a podanie do App Store** | S | P1 | Anglické snímky zo simulátora (dve veľkosti), potom podanie s ručným vydaním – schválenie tak nič nezverejní. Pred podaním: skúška appky na iPade a recept „noc za 15 minút" na čistej inštalácii. |
-| 35 | **Budova namiesto mačky na Dnes** | M | P3 | Tvoj nápad z 2026-10-12: hrdinom obrazovky Dnes by bola posledná postavená budova, tiež s reakciou na ťuknutie. Zmrazené do vydania 1.0. |
+| 35 | **Budova namiesto mačky na Dnes** | M | P3 | Nahradené riadkom 13 (14. 10.). Tvoj nápad z 2026-10-12: hrdinom obrazovky Dnes by bola posledná postavená budova, tiež s reakciou na ťuknutie. Zmrazené do vydania 1.0. |
+| 36 | **Osvetlená ulica nie ako nočná stavba** | XS – S | P0 | Tvoja noc z 13. na 14. 10. postavila „Osvetlenú ulicu" – podľa teba vtip, nie budova ani park. Odsúhlasil si 14. 10.: vyradiť ju zo žrebu, každá noc postaví budovu alebo park; lampy pribudnú v uliciach samy neskôr (krok 4 – deň a noc v meste). Build 7, krok 7a – postavené a skontrolované 14. 10. večer (testy zelené), na tvojom telefóne od 17:18. |
+| 37 | **Čínština** | M | P3 | Jediná spätná väzba z TestFlightu (anonym, 13. 10.). Neodporúčam teraz: asi 655 textov + stránka v obchode a snímky, nikto na kontrolu tónu, a pevninská Čína aj tak vyžaduje registráciu ICP. |
+| 38 | **Obrazovka Texty (Vývojár)** | S | P1 | Tvoje želanie z 14. 10.: v Nastavenia → Vývojár vedľa „Plány a návrhy" všetky texty appky, anglicky a slovensky, každý v samostatnom boxe, s hľadaním. Čítaš ich svojím tempom a povieš, čo je zlé. Build 7, krok 7c. |
 | – | Povolené appky počas noci | – | neodporúčam | Vyžaduje Screen Time API – to je proti pevnému pravidlu projektu. |
 
 ## Popis po skupinách
@@ -139,8 +142,11 @@ Krok 2: časová os. Po CAL, lebo sa naň z kalendára kliká.
 
 **11 · ZOOM.** Testeri majú zatiaľ malé mestá, preto P2. Ty to pocítiš prvý.
 
-**12 · Štatistiky zo spánku.** Každá je malý samostatný krok; dajú sa pridávať po jednej. Majú zmysel len pre
-ľudí so zapnutým Apple Health.
+**12 · Štatistiky zo spánku.** Prvý krok je tvoj graf (12. 10. 2026): žiadny samostatný graf zaspávania, ale
+jedna čiara na noc ako dnes, a na nej farby – zelená „šiel si spať" a modrá „zaspal si" ostávajú, ružová je
+budíček a štvrtá ukáže, kedy si naozaj vstal (tvoje „áno" z toho istého večera; jej farbu ešte vyberieme).
+Farby sa môžu ešte zmeniť. Zmysel: na prvý pohľad vidieť, ako dlho si spal. Ďalšie štatistiky sú malé samostatné
+kroky; dajú sa pridávať po jednej. Zaspávanie a dĺžka spánku majú zmysel len pre ľudí so zapnutým Apple Health.
 
 **13 · TALK.** Tvoj príklad: „nemáme ešte hasičov – obyvateľov to môže trápiť; ale máme dva krásne parky". Potrebuje
 obyvateľov (POP) a neskôr sa spojí s obchodom.
@@ -185,6 +191,7 @@ zobudiť a čakať na potvrdenie. Oboje má zmysel rozhodnúť, až keď uvidím
 
 ## Čo potrebujem od teba
 
+* Áno / nie k riadku 36 (osvetlená ulica mimo žrebu) a súhlas s rozsahmi obyvateľov a názvami veľkosti mesta.
 * Zmluva o platených appkách, banka a dane v App Store Connect – spracovanie u Applu trvá dni.
 * Rozhodnutie, či appka začne zadarmo alebo platená (podľa neho vyhlásenie DSA a krajiny).
 * Pohľad na zostavenie 5 na telefóne: Dnes a odkaz na zásady súkromia v Nastaveniach.
