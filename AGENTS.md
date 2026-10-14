@@ -349,12 +349,17 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   allowed from bedtime − 3 h, after a short confirmation, with no penalty – the night counts in full and the morning
   does not change; its setup lasts 15 min from the start**; after the setup, leaving the app → warning after ~3 s and 10 s to return (and at most
   30 s out of the app per night in total – see "Away budget"), else the building collapses (calls excused);
-  **using the phone on the LOCK screen is detected too** (owner 2026-10-07, B25: camera / video from the lock
-  screen) – the screen lit for more than 8 s with the user recognised, or lit for 12 s while the phone is held; it
-  ends with the screen going off. **Since phase CARE (owner 2026-10-09) it brings the building down only in "Strict
-  mode" (Settings, default OFF); by default the app only reminds gently and the building stays** – unlocking into
-  another app from there is leaving the app in both modes. The mode is stored with each night at its start; nights
-  stored before CARE count as strict;
+  **using the phone after a lock is detected too – with DOCUMENTED signals only (owner 2026-10-14, after Apple's
+  ITMS-90699 refused the undocumented lock notifications):** the phone recognises the user (Face ID / Touch ID /
+  code – `protectedDataDidBecomeAvailable`) and stays in use outside the app for 8 s, on the lock screen or in
+  another app (the two cannot be told apart) → "used the phone"; it ends with the lock / screen-off notification or
+  the return to the app. Lock-screen use WITHOUT recognition (the Camera, the phone in the hand) is no longer seen,
+  and unlocking into another app is no longer a separate "leaving" (owner: "the app teaches, it is not a prison").
+  **Since phase CARE (owner 2026-10-09) it brings the building down only in "Strict mode" (Settings, default OFF); by
+  default the app only reminds gently and the building stays.** A phone without a passcode, or without Face ID /
+  Touch ID, cannot tell locking from leaving → a background trip is never counted there (Settings says so); closing
+  the app (R4) still counts. The mode is stored with each night at its start; nights stored before CARE count as
+  strict; **a pause may start only if it ends before confirming opens (owner 2026-10-14);**
   screen off is fine, the app must stay in the foreground; confirm by shake or wake code from wake −30 min;
   **complete when confirmed within 10 min after the wake time (owner 2026-10-12, was 2 min: a tester's first night
   ended "unfinished" because she confirmed a quarter of an hour after the alarm and the app did not say why – the
@@ -416,12 +421,9 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   warning looks like one and speaks kindly (owner's review 2026-10-09):** leaving the app, the closed app and the
   end of a pause keep "⚠️ Pozor! …" in the title, the body says what to do "…, nech dnešná stavba pokračuje" –
   soften what a text says, never the fact that it warns; no threats ("inak sa stavba zrúti") in new texts.
-* **Lock screen without an unlock (owner 2026-10-09, measured with the lock-screen lab, plan §12):** using the phone
-  on the lock screen counts even when Face ID / Touch ID never recognised the user (Camera, anything started from
-  the lock screen): the lock screen lit for 12 s without a break while the phone is held in the hand (it moves) →
-  what follows depends on the mode: by default one calm reminder ("💤 Telefón má teraz voľno"), in Strict mode the
-  warning and the same 13 s (about 25 s from the first touch to the collapse). With the user recognised the 8 s
-  stay. A phone that lies or stands still is never counted, whatever lights its screen.
+* **Lock screen without an unlock (owner 2026-10-09) – WITHDRAWN 2026-10-14:** the 12 s "lit while held" rule needed
+  the undocumented lit-screen signal that Apple refuses (ITMS-90699). Only recognised use counts now (rule R3
+  above); the calm reminder ("💤 Telefón má teraz voľno") and the Strict-mode warning stay for that case.
 * **Built for many users, not only for the owner (owner 2026-10-09: "it is an app for many users – write it down
   and put it into the rules; do not count only with me").** The app is headed for the App Store: **a one-time
   purchase, no in-app purchases, and no data about users is ever collected** – everything stays on the device;
