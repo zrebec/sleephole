@@ -2463,7 +2463,17 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         `backboardd`** (Opus's own check); SleepCore 347 / app 483 tests (only the known `SyncEngineTests` flake),
         i18n 708 keys 0 / 0 / 0 (Opus's own run). Not measured on a device: the 8 s window starts at the recognition
         notification (~0.5 s after a Face ID wake).
-  - [ ] then `CURRENT_PROJECT_VERSION` 7, upload, both tester groups; CAL and CARE-2a stay next in line.
+  - [x] `CURRENT_PROJECT_VERSION` 7 (commit `dbc3bdc`); the Debug build on the owner's phone since 20:05; the
+        Release archive checked (1.0 (7), `strings -a` finds no undocumented name, no plans document); **uploaded
+        2026-10-14 20:11:37 ("Upload succeeded", "EXPORT SUCCEEDED")** – the keychain dialog came again and the
+        owner allowed it at once. The review notes (LOCK DETECTION, STRICT MODE) and the description line about the
+        lock screen were replaced in App Store Connect and saved on his yes.
+  - [x] **Resubmitted 2026-10-14 20:23:** build 6 removed from version 1.0, build 7 ("Ready to Submit" after ~10 min
+        of processing) attached and saved, "Update Review" → "Resubmit to App Review" → "Waiting for Review";
+        "Manually release" verified after the resubmission (MANUAL checked).
+  - [ ] the testers
+        get build 7 only after the owner's own night with it (his decision 2026-10-14). CAL and CARE-2a stay next
+        in line.
 
 ### F6 — Paid Apple Developer Program (owner 2026-10-04: "next phase: F6, analyse it first"; the paid team is confirmed by a signed build)
 **Analysis (Opus, 2026-10-04; sources: the iOS 27 SDK's `AlarmKit.swiftinterface`, Apple's WWDC25 session 230

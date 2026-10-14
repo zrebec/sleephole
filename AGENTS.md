@@ -48,7 +48,10 @@ then answer. Remove items here when they are done.
      a Debug "Texts" screen with every text in its own box. His "bug" (a night ended by a shake 12 s after its
      start) was a QUICK TEST night – its confirm window opens at once; fixed in 7a together with a clear "you can
      confirm from …" line and a refused early shake. The iPad simulator check passed; the 15-minute recipe still
-     needs a person. **Build 6 was SUBMITTED for review that evening on his word ("Waiting for Review", manual release). 7a is built
+     needs a person. **Build 6 was SUBMITTED that evening and REFUSED by Apple's scan (ITMS-90699, undocumented lock notifications) →
+     build 7 (7a–7e, documented lock detection only) is committed, on his phone since 20:05 and uploaded 20:11; next:
+     build 7 RESUBMITTED 20:23 ("Waiting for Review", manual release); the testers only after his night with build 7 –
+     ASK in the morning how the night went (the new lock detection, reminders, alarm, the buddy's bubble).** Earlier: 7a is built
      and reviewed (uncommitted; its Debug build is on his phone since 17:18 – ask what he saw: the "you can confirm
      from …" line, the orange "too early" note after a shake, a quick test night that can be confirmed only in its
      last 30 s); next session: 7b POP.** The `SyncEngineTests` timing tests are
