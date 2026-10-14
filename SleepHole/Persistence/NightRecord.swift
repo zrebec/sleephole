@@ -66,8 +66,11 @@ final class NightRecord {
         sleepSourcesData.flatMap { try? JSONDecoder().decode([SleepAnalysis.SourceSummary].self, from: $0) } ?? []
     }
 
+    /// Quick test nights (debug, or the "bonus" ones started from the same window) open confirming shortly before the wake.
+    var isTestNight: Bool { isDebug || id.hasPrefix("bonus-") }
+
     var window: NightWindow {
-        NightWindow(key: NightKey(keyString)!, bedtime: bedtime, wake: wake, earlyConfirmOverride: isNap ? 0 : nil)
+        NightWindow(key: NightKey(keyString)!, bedtime: bedtime, wake: wake, earlyConfirmOverride: isNap ? 0 : (isTestNight ? NightWindow.testNightConfirmLead : nil))
     }
 
     var rules: SleepRules {

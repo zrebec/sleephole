@@ -159,6 +159,7 @@ struct SyncTests {
         night(a, day: 1)
         a.clock.now = date(2, 12); a.model.refresh()
         a.model.startTestNight(minutes: 1, grace: 1); a.model.startNight()          // a debug night …
+        a.clock.now = date(2, 12) + 40                                                     // confirming opens 30 s before its wake
         a.model.confirm(code: "1234"); a.model.acknowledgeResult()
         a.model.cancelFastNight()
         a.clock.now = date(2, 22, 25); a.model.refresh(); a.model.startNight()       // … and a real one that is running

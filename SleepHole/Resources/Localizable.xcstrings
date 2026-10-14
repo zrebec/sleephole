@@ -10696,6 +10696,38 @@
           }
         }
       }
+    },
+    "You can confirm getting up from %@ – shake your phone or enter your code.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can confirm getting up from %@ – shake your phone or enter your code."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vstávanie potvrdíš od %@ – zatrasením alebo kódom."
+          }
+        }
+      }
+    },
+    "Too early 🌙 Getting up can be confirmed from %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Too early 🌙 Getting up can be confirmed from %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ešte je skoro 🌙 Vstávanie sa dá potvrdiť od %@."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

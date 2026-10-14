@@ -344,6 +344,15 @@ struct NightView: View {
                         }
                     }
                     Text(L("Alarm at \(Fmt.time(rec.wake))")).font(.footnote).foregroundStyle(.secondary)
+                    if now < rec.window.confirmOpens {
+                        if let at = model.earlyShakeAt, now.timeIntervalSince(at) < AppModel.earlyShakeNoteSeconds {
+                            Text(L("Too early 🌙 Getting up can be confirmed from \(Fmt.time(rec.window.confirmOpens))."))
+                                .font(.footnote.weight(.semibold)).foregroundStyle(.orange).multilineTextAlignment(.center)
+                        } else {
+                            Text(L("You can confirm getting up from \(Fmt.time(rec.window.confirmOpens)) – shake your phone or enter your code."))
+                                .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                        }
+                    }
                     Button { soundSheet = true } label: {
                         if let s = model.sleepSound, s.endsAt.map({ $0 > now }) ?? true {
                             Label(s.endsAt.map { L("\(s.ambience.title) · until \(Fmt.time($0))") } ?? L("\(s.ambience.title) · all night"),
@@ -376,6 +385,7 @@ struct NightView: View {
         }
         .background { NightSky() }
         .preferredColorScheme(.dark)
+        .onShake { model.shakeBeforeConfirm() }
     }
 
     /// Seconds out of the app tonight (owner 2026-10-08): a grey footnote while there is plenty of budget, an orange

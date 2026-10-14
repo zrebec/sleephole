@@ -8,7 +8,7 @@ import Testing
     @Test func onlyUnlockedLevels() {
         var rng = SeededGenerator(seed: 1)
         for _ in 0..<200 {
-            let e = BuildingPicker.pick(maxLevel: 1, catalog: catalog, history: [], canUpgradeStreets: true, rng: &rng)
+            let e = BuildingPicker.pick(maxLevel: 1, catalog: catalog, history: [], rng: &rng)
             #expect(e.level == 1)
         }
     }
@@ -17,7 +17,7 @@ import Testing
         var rng = SeededGenerator(seed: 2)
         var counts = [Int: Int]()
         for _ in 0..<4000 {
-            let e = BuildingPicker.pick(maxLevel: 4, catalog: catalog, history: [], canUpgradeStreets: true, rng: &rng)
+            let e = BuildingPicker.pick(maxLevel: 4, catalog: catalog, history: [], rng: &rng)
             counts[e.level, default: 0] += 1
         }
         for level in 1...4 { #expect((850...1150).contains(counts[level] ?? 0), "level \(level): \(counts)") }
@@ -27,7 +27,7 @@ import Testing
         var rng = SeededGenerator(seed: 3)
         var history: [String] = []
         for _ in 0..<300 {
-            let e = BuildingPicker.pick(maxLevel: 3, catalog: catalog, history: history, canUpgradeStreets: true, rng: &rng)
+            let e = BuildingPicker.pick(maxLevel: 3, catalog: catalog, history: history, rng: &rng)
             #expect(!history.suffix(3).contains(e.id))
             history.append(e.id)
         }
@@ -38,19 +38,31 @@ import Testing
         var history: [String] = []
         let l3 = catalog.buildable(level: 3).count
         for _ in 0..<l3 {
-            history.append(BuildingPicker.pick(maxLevel: 3, catalog: catalog, history: history,
-                                               canUpgradeStreets: false, rng: &rng).id)
+            history.append(BuildingPicker.pick(maxLevel: 3, catalog: catalog, history: history, rng: &rng).id)
         }
         let l3Picks = history.filter { $0.hasPrefix("l3-") }
         #expect(Set(l3Picks).count == l3Picks.count)             // no L3 duplicate before all were built
     }
 
-    @Test func litStreetsAreOneItemAndOnlyWhenPossible() {
-        let c2 = BuildingPicker.candidates(level: 2, catalog: catalog, canUpgradeStreets: true)
-        #expect(c2.filter { $0.kind == .roadLit }.count == 1)
-        #expect(c2.count == 9)
-        let none = BuildingPicker.candidates(level: 2, catalog: catalog, canUpgradeStreets: false)
-        #expect(none.allSatisfy { $0.kind != .roadLit })
+    @Test func litStreetsAreNeverCandidates() {
+        for level in 1...4 {
+            #expect(BuildingPicker.candidates(level: level, catalog: catalog).allSatisfy { $0.kind != .roadLit })
+        }
+    }
+
+    @Test func roadLitIsNeverDrawn() {
+        for seed in 1...20 as ClosedRange<UInt64> {
+            var rng = SeededGenerator(seed: seed)
+            var history: [String] = []
+            for n in 0..<150 {
+                for maxLevel in 1...4 {
+                    let e = BuildingPicker.pick(maxLevel: maxLevel, catalog: catalog, history: history, rng: &rng)
+                    #expect(e.kind != .roadLit && !e.id.contains("road-lit"))
+                }
+                history.append(BuildingPicker.pick(maxLevel: Progression.unlockedMaxLevel(builtBefore: n),
+                                                   catalog: catalog, history: history, rng: &rng).id)
+            }
+        }
     }
 }
 
@@ -63,8 +75,7 @@ import Testing
         var history: [String] = []
         for n in 0..<nights {
             let maxLevel = Progression.unlockedMaxLevel(builtBefore: n)
-            let e = BuildingPicker.pick(maxLevel: maxLevel, catalog: catalog, history: history,
-                                        canUpgradeStreets: town.canUpgradeStreets, rng: &rng)
+            let e = BuildingPicker.pick(maxLevel: maxLevel, catalog: catalog, history: history, rng: &rng)
             if e.kind == .roadLit { town.upgradeStreets() } else { town.place(e) }
             history.append(e.id)
         }
@@ -109,7 +120,9 @@ import Testing
     }
 
     @Test func everyDrawnRoadHasASprite() {
-        let town = grownTown(nights: 80)
+        var town = grownTown(nights: 80)
+        town.upgradeStreets()                                 // lit streets only come from stored nights now
+        town.upgradeStreets()
         let roads = town.drawnRoads
         #expect(!town.litRoads.isEmpty)
         for cell in roads {
@@ -159,7 +172,7 @@ import Testing
         var previous = town.drawnRoads
         for n in 0..<60 {
             let e = BuildingPicker.pick(maxLevel: Progression.unlockedMaxLevel(builtBefore: n), catalog: catalog,
-                                        history: history, canUpgradeStreets: town.canUpgradeStreets, rng: &rng)
+                                        history: history, rng: &rng)
             if e.kind == .roadLit { town.upgradeStreets() } else { town.place(e) }
             history.append(e.id)
             let now = town.drawnRoads
@@ -218,7 +231,7 @@ import Testing
     var history: [String] = []
     for n in 0..<nights {
         let e = BuildingPicker.pick(maxLevel: Progression.unlockedMaxLevel(builtBefore: n), catalog: catalog,
-                                    history: history, canUpgradeStreets: town.canUpgradeStreets, rng: &rng)
+                                    history: history, rng: &rng)
         if e.kind == .roadLit { town.upgradeStreets() } else { town.place(e) }
         history.append(e.id)
     }
@@ -229,4 +242,17 @@ import Testing
     items += roads.map { ["id": RoadTiles.spriteId(at: $0, roads: roads, lit: town.litRoads, catalog: catalog),
                           "col": $0.col, "row": $0.row, "size": 1] }
     try JSONSerialization.data(withJSONObject: items).write(to: URL(fileURLWithPath: path))
+}
+
+@Suite struct TestNightWindowTests {
+    @Test func testNightConfirmOpensShortlyBeforeItsWake() {
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        let w = NightWindow(key: NightKey(date: now, calendar: .current), bedtime: now, wake: now + 240,
+                            earlyConfirmOverride: NightWindow.testNightConfirmLead)
+        #expect(!w.canConfirm(at: now + 12))
+        #expect(!w.canConfirm(at: now + 240 - 31))
+        #expect(w.canConfirm(at: now + 240 - 29))
+        #expect(w.canConfirm(at: now + 240))
+        #expect(w.confirmOpens == now + 210)
+    }
 }

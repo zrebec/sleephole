@@ -167,7 +167,7 @@ final class AppModel {
                 let w = settings.schedule.window(containing: cal.startOfDay(for: day) + 12 * 3600, calendar: cal)
                 let built = i                                  // ~every night builds in the demo
                 let e = BuildingPicker.pick(maxLevel: Progression.unlockedMaxLevel(builtBefore: built), catalog: catalog,
-                                            history: history, canUpgradeStreets: town.canUpgradeStreets, rng: &rng)
+                                            history: history, rng: &rng)
                 if e.kind == .roadLit { town.upgradeStreets() } else { town.place(e) }
                 history.append(e.id)
                 let rec = NightRecord(window: w, buildingId: e.id, isDebug: false, setupGrace: 300)
@@ -1022,8 +1022,7 @@ final class AppModel {
         var rng = SystemRandomNumberGenerator()
         let entry = BuildingPicker.pick(
             maxLevel: Progression.unlockedMaxLevel(builtBefore: builtNights), catalog: catalog,
-            history: real.map(\.buildingId), canUpgradeStreets: town().canUpgradeStreets,
-            rng: &rng)
+            history: real.map(\.buildingId), rng: &rng)
         let rec = NightRecord(window: window, buildingId: entry.id, isDebug: isDebug,
                               setupGrace: debugWindow != nil ? debugGrace : SleepRules().setupGrace,
                               idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode)
@@ -1052,6 +1051,17 @@ final class AppModel {
         return true
     }
 
+    /// When a too-early shake was refused (nil = no note); the night screen shows a kind note for `earlyShakeNoteSeconds`.
+    private(set) var earlyShakeAt: Date?
+    static let earlyShakeNoteSeconds: TimeInterval = 5
+
+    /// A shake on the night screen. Once confirming is open the confirm panel's own handler reacts, so this only
+    /// notes a shake that came too early – it logs no event and cannot change a night's outcome.
+    func shakeBeforeConfirm() {
+        guard let rec = active, clock.now < rec.window.confirmOpens else { return }
+        earlyShakeAt = clock.now
+    }
+
     func abandonNight() {
         guard active != nil else { return }
         append(.abandoned)
@@ -1075,7 +1085,7 @@ final class AppModel {
         guard active == nil else { return }
         let now = clock.now
         debugWindow = NightWindow(key: NightKey(date: now, calendar: calendar), bedtime: now,
-                                  wake: now + minutes * 60)
+                                  wake: now + minutes * 60, earlyConfirmOverride: NightWindow.testNightConfirmLead)
         debugGrace = grace
         shownResult = nil
         refresh(now: now)
