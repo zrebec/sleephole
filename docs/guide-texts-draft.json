@@ -1,0 +1,280 @@
+{
+ "pages": [
+  {
+   "n": 1,
+   "art": "🏗️🌙🏘️",
+   "pose": "šťastná",
+   "t_sk": "Každá noc postaví budovu",
+   "t_en": "Every night builds something",
+   "sk": "Ahoj, som tvoja mačka! Večer spolu začneme stavbu, v noci necháš telefón oddychovať a ráno z toho bude budova.",
+   "en": "Hi, I'm your cat! In the evening we start a building, at night your phone rests, and in the morning it's finished."
+  },
+  {
+   "n": 2,
+   "art": "🛏️⏰",
+   "pose": "sedí",
+   "t_sk": "Tvoj rozvrh",
+   "t_en": "Your schedule",
+   "first": "pri prvom spustení pod bublinou výber večierky, budíčka a pripomienky",
+   "sk": "Vyber si večierku a budíček. Prvých 7 dní je týždeň na zmeny – skúšaj, koľko chceš. Potom rozvrh mesiac platí.",
+   "en": "Pick your bedtime and wake-up. The first 7 days are a change week – try as much as you like. Then it stays for a month."
+  },
+  {
+   "n": 3,
+   "art": "👆🌙",
+   "pose": "sedí",
+   "t_sk": "Začni dnešnú stavbu",
+   "t_en": "Start tonight's building",
+   "sk": "Ťukni na „Ísť spať“ od 10 minút pred večierkou do 5 minút po nej. Keď ťa premáha únava, ide to aj 3 hodiny skôr.",
+   "en": "Tap “Go to sleep” from 10 minutes before bedtime until 5 minutes after. Tired sooner? You can start up to 3 hours early."
+  },
+  {
+   "n": 4,
+   "art": "🎧📖",
+   "pose": "žmurká",
+   "t_sk": "Chvíľa na prípravu",
+   "t_en": "A moment to get ready",
+   "sk": "Po štarte máš čas na podcast či rozprávku – do večierky + 5 minút. Ak budeš v inej appke, 15s pred koncom ťa zavolám.",
+   "en": "After the start there's time for a podcast or story, until bedtime + 5 minutes. In another app? I'll call you 15s before the end."
+  },
+  {
+   "n": 5,
+   "art": "📱🔒",
+   "pose": "sedí",
+   "t_sk": "V noci strážim stavbu",
+   "t_en": "At night I guard the building",
+   "sk": "Nechaj SleepHole otvorený a zamkni telefón. Keď odídeš, na návrat máš 10s. Telefonát sa nepočíta.",
+   "en": "Keep SleepHole open and lock your phone. If you leave, you have 10s to come back. Phone calls don't count."
+  },
+  {
+   "n": 6,
+   "art": "🌙⏸️",
+   "pose": "sedí",
+   "t_sk": "Keď potrebuješ chvíľu",
+   "t_en": "When you need a moment",
+   "sk": "Ťukni na 🌙 Pauza a máš 10 minút mimo appky. Prvá pauza za noc je zadarmo, ďalšie stoja mince.",
+   "en": "Tap 🌙 Pause for 10 minutes outside the app. The first pause of a night is free, the next ones cost coins."
+  },
+  {
+   "n": 7,
+   "art": "⏰📳",
+   "pose": "šťastná",
+   "t_sk": "Ráno",
+   "t_en": "Morning",
+   "first": "pri prvom spustení tvoj ranný kód",
+   "sk": "Zatras telefónom alebo zadaj kód – už 30 minút pred budíkom. Do 10 minút po budíku je stavba hotová!",
+   "en": "Shake your phone or enter your code – from 30 minutes before the alarm. Within 10 minutes after it, the building is done!"
+  },
+  {
+   "n": 8,
+   "art": "🪙🏙️",
+   "pose": "šťastná",
+   "t_sk": "Odmeny",
+   "t_en": "Rewards",
+   "sk": "Hotová noc 100–200 🪙, bez pauzy +30, každá pokojná hodina +5. V meste pribúdajú obyvatelia a vyššie budovy.",
+   "en": "A finished night pays 100–200 🪙, +30 without a pause, +5 for every calm hour. Your town gets residents and taller buildings."
+  },
+  {
+   "n": 9,
+   "art": "🛡️🔌",
+   "pose": "žmurká",
+   "t_sk": "Keď sa noc nevydarí",
+   "t_en": "When a night goes wrong",
+   "first": "tlačidlá „Všetky pravidlá“, „Povoliť upozornenia“ a „Začíname 🌙“",
+   "sk": "Nič sa nedeje – žolík ochráni sériu a ďalšia dobrá noc ruinu opraví. Telefón nechaj cez noc na nabíjačke.",
+   "en": "No worries – a joker protects your streak and the next good night repairs a ruin. Keep your phone on the charger overnight."
+  }
+ ],
+ "rules": [
+  {
+   "g_sk": "Rozvrh",
+   "g_en": "Schedule",
+   "items": [
+    [
+     "Večierka a budíček platia každý deň rovnako.",
+     "Bedtime and wake-up are the same every day."
+    ],
+    [
+     "Prvá zmena otvorí týždeň na zmeny (7 dní). Potom rozvrh mesiac platí; skôr ho odomkneš za 2 000 🪙.",
+     "Your first change opens a change week (7 days). Then the schedule stays for a month; unlocking it sooner costs 2,000 🪙."
+    ],
+    [
+     "Zmena uložená večer, keď sa už dá začať stavba, platí od zajtra.",
+     "A change saved in the evening, once tonight's building can start, applies from tomorrow."
+    ],
+    [
+     "Pripomienku, okno odpočinku, zvuky a kód môžeš meniť kedykoľvek.",
+     "The reminder, the nap window, sounds and the code can change any time."
+    ]
+   ]
+  },
+  {
+   "g_sk": "Večer",
+   "g_en": "Evening",
+   "items": [
+    [
+     "„Ísť spať“ ide od 10 minút pred večierkou do 5 minút po nej.",
+     "“Go to sleep” works from 10 minutes before bedtime until 5 minutes after."
+    ],
+    [
+     "Skorší štart ide až 3 hodiny pred večierkou: noc sa počíta celá a budík zazvoní ako vždy.",
+     "An early start works up to 3 hours before bedtime: the night counts in full and the alarm rings as always."
+    ],
+    [
+     "Príprava trvá do večierky + 5 minút, pri skoršom štarte 15 minút od štartu.",
+     "The setup lasts until bedtime + 5 minutes, or 15 minutes from an early start."
+    ],
+    [
+     "Ak si počas prípravy v inej appke, 15s pred jej koncom príde upozornenie.",
+     "If you're in another app during the setup, a notice comes 15s before it ends."
+    ]
+   ]
+  },
+  {
+   "g_sk": "Noc",
+   "g_en": "Night",
+   "items": [
+    [
+     "SleepHole ostáva otvorený; obrazovku môžeš vypnúť a telefón zamknúť.",
+     "SleepHole stays open; you can turn the screen off and lock the phone."
+    ],
+    [
+     "Keď appku opustíš, o pár sekúnd príde upozornenie a na návrat máš 10s. Všetky odchody spolu môžu za noc trvať 30s.",
+     "If you leave the app, a warning comes within seconds and you have 10s to come back. All trips together may last 30s a night."
+    ],
+    [
+     "Zatvorenie appky (potiahnutím nahor) sa počíta ako odchod.",
+     "Closing the app (swiping it away) counts as leaving."
+    ],
+    [
+     "Telefonát sa nepočíta – po hovore sa vráť do appky.",
+     "A phone call doesn't count – come back to the app after it."
+    ],
+    [
+     "Keď telefón odomkneš a používaš ho mimo appky dlhšie ako 8s, jemne ti to pripomenieme.",
+     "If you unlock the phone and use it outside the app for more than 8s, we'll remind you gently."
+    ],
+    [
+     "Prísny režim (Nastavenia, predvolene vypnutý): výstraha systémovým budíkom a pri použití telefónu stavba spadne.",
+     "Strict mode (Settings, off by default): a system-alarm warning, and using the phone brings the building down."
+    ],
+    [
+     "Telefón bez kódu zámku nevie rozlíšiť zamknutie od odchodu, preto tam appka odchody nepočíta (okrem zatvorenia appky).",
+     "Without a passcode the phone can't tell locking from leaving, so trips aren't counted there (closing the app still is)."
+    ]
+   ]
+  },
+  {
+   "g_sk": "Pauza",
+   "g_en": "Pause",
+   "items": [
+    [
+     "🌙 Pauza: 10 minút mimo appky. Prvá za noc zadarmo, potom 50, 100, 150 🪙.",
+     "🌙 Pause: 10 minutes outside the app. The first of a night is free, then 50, 100, 150 🪙."
+    ],
+    [
+     "Pauza sa dá začať, len ak skončí pred ranným potvrdením.",
+     "A pause can start only if it ends before the morning confirmation opens."
+    ],
+    [
+     "Noc bez pauzy: +30 🪙.",
+     "A night without a pause: +30 🪙."
+    ]
+   ]
+  },
+  {
+   "g_sk": "Ráno",
+   "g_en": "Morning",
+   "items": [
+    [
+     "Budík zvoní 2 minúty, aj v tichom režime; ak povolíš systémový budík, zazvoní ako záloha.",
+     "The alarm rings for 2 minutes, also in silent mode; if you allow the system alarm, it rings as a backup."
+    ],
+    [
+     "Vstávanie potvrdíš zatrasením alebo kódom, najskôr 30 minút pred budíkom.",
+     "Confirm you're up by shaking the phone or entering the code, from 30 minutes before the alarm."
+    ],
+    [
+     "Do 10 minút po budíku: hotová budova. Do 60 minút: rozostavaná. Neskôr: ruina.",
+     "Within 10 minutes after the alarm: a finished building. Within 60 minutes: unfinished. Later: ruins."
+    ],
+    [
+     "Ruinu opraví ďalšia hotová noc.",
+     "Your next finished night repairs a ruin."
+    ]
+   ]
+  },
+  {
+   "g_sk": "Mince a mesto",
+   "g_en": "Coins and town",
+   "items": [
+    [
+     "Hotová noc: 100 🪙 (úroveň 1), 120 (2), 150 (3), 200 (4). Rozostavaná: polovica.",
+     "A finished night: 100 🪙 (level 1), 120 (2), 150 (3), 200 (4). Unfinished: half."
+    ],
+    [
+     "Bez pauzy +30, každá pokojná hodina +5, každá 7. hotová noc v rade +200.",
+     "No pause +30, every calm hour +5, every 7th finished night in a row +200."
+    ],
+    [
+     "Pokojná hodina: celá hodina od večierky + 5 minút do budíka bez odchodu z appky, bez použitia telefónu a bez pauzy.",
+     "A calm hour: a whole hour between bedtime + 5 minutes and the alarm with no trip out of the app, no phone use and no pause."
+    ],
+    [
+     "Úrovne: noci 1–5 úroveň 1, 6–15 do úrovne 2, 16–30 do úrovne 3, od 31. noci do úrovne 4.",
+     "Levels: nights 1–5 level 1, 6–15 up to level 2, 16–30 up to level 3, from night 31 up to level 4."
+    ],
+    [
+     "Každá budova má obyvateľov a mesto podľa nich rastie.",
+     "Every building has residents and the town grows with them."
+    ],
+    [
+     "Premenovanie mesta: prvé zadarmo, oprava preklepu do 10 minút, raz za rok zadarmo, inak 5 000 🪙.",
+     "Renaming the town: the first name is free, a typo fix within 10 minutes, once a year free, otherwise 5,000 🪙."
+    ]
+   ]
+  },
+  {
+   "g_sk": "Žolíky",
+   "g_en": "Jokers",
+   "items": [
+    [
+     "Bronzový: 1 noc, raz za mesiac zadarmo; použije sa aj sám pri prvej vynechanej noci.",
+     "Bronze: 1 night, free once a month; it is also used by itself on the first missed night."
+    ],
+    [
+     "Strieborný: 3 noci za 1 000 🪙. Zlatý: 7 nocí za 5 000 🪙. Každý druh raz za mesiac.",
+     "Silver: 3 nights for 1,000 🪙. Gold: 7 nights for 5,000 🪙. Each kind once a month."
+    ],
+    [
+     "Chránená noc sériu nepreruší ani nepredĺži; budova ani mince za ňu nie sú.",
+     "A protected night neither breaks nor extends your streak; it gives no building and no coins."
+    ]
+   ]
+  },
+  {
+   "g_sk": "Odpočinok",
+   "g_en": "Nap",
+   "items": [
+    [
+     "30 alebo 60 minút, v okne 13:00–15:00 (dá sa zmeniť), raz za deň. Hotový +50 🪙, skrátený +25 🪙. Nestavia sa.",
+     "30 or 60 minutes, between 13:00 and 15:00 (changeable), once a day. Complete +50 🪙, cut short +25 🪙. It builds nothing."
+    ]
+   ]
+  },
+  {
+   "g_sk": "Súkromie",
+   "g_en": "Privacy",
+   "items": [
+    [
+     "O tebe nič nezbierame. Službe počasia ide len poloha zvoleného mesta.",
+     "We collect nothing about you. Only the chosen city's location goes to the weather service."
+    ],
+    [
+     "Apple Zdravie appka len číta. iCloud prenáša tvoje mesto len medzi tvojimi zariadeniami.",
+     "The app only reads Apple Health. iCloud carries your town only between your own devices."
+    ]
+   ]
+  }
+ ]
+}

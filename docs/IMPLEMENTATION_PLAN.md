@@ -801,6 +801,7 @@ detection log matches reality. **Stop.**
 **Accept:** a week of real use. **Stop.**
 
 ### LIM — Limits: town rename + schedule changes (owner 2026-09-30) – ✅ implemented 2026-09-30
+**The schedule part is superseded by the change week (build 8, step 8c in §10 REL, owner 2026-10-15); the rename rules below still hold.**
 Owner decisions: rename 1× per **365 days** free, otherwise **5 000 🪙**; schedule (bedtime + wake) free on
 **days 1–3 of every month** (the app asks on those days) and during the **first 7 days** (calibration – for the
 owner counted from this version), otherwise the change **resets the 🔥 streak** (buildings, coins, levels,
@@ -2472,8 +2473,116 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         of processing) attached and saved, "Update Review" → "Resubmit to App Review" → "Waiting for Review";
         "Manually release" verified after the resubmission (MANUAL checked).
   - [ ] the testers
-        get build 7 only after the owner's own night with it (his decision 2026-10-14). CAL and CARE-2a stay next
+        get build 7 only after the owner's own night with it (his decision 2026-10-14). **His night 2026-10-14 → 15 with build 7 is done (§12 of 2026-10-15): complete; the free pause and its two notices worked; Face ID use outside the app was noticed, the lock-screen Camera without Face ID was not (as designed); B31 found.** Adding build 7 to the external group "SE" (What to Test → Submit for Review) was prepared in his Chrome 2026-10-15 and stopped by the session's safety check before the first click – it waits for his explicit yes. CAL and CARE-2a stay next
         in line.
+- [ ] **Build 8 (owner's go 2026-10-15: "start with step 8"):**
+  - [x] **8a – built and reviewed 2026-10-15 (one Sonnet worker + one follow-up); the owner likes the bubble on the
+        phone; B31 ran on the phone: in his 15-minute test night he typed the code on the night screen 11s before the
+        alarm (`confirmedByCode` 09:26:26, wake 09:26:37 – test nights open confirming 30s before the wake, real nights
+        30 min). **Confirmed by him the same morning:** the code went in a few seconds before the real alarm, the
+        notice about the postponed backup system alarm came and "Som hore" switched it off.** (A) **B31:** `FitOrScroll`
+        (`SleepHole/UI/TodayView.swift`) is one `GeometryReader` + `ScrollView` + a private `MinHeightLayout` (proposes
+        max(content, visible height) so the `Spacer` still pushes "Cancel night" down; content without a Spacer stays
+        centred – the result screen did not move), `.scrollBounceBehavior(.basedOnSize)`,
+        `.scrollDismissesKeyboard(.interactively)`; the `scrolling` parameter is gone. Proof in the simulator with the
+        Debug-only `-focusWakeCode`: old code – no keyboard, new code – the keyboard stays up with the cursor in the field
+        (`build/8a/`). The pause row's "a pause no longer fits" shows only while `now < opens`. (B) **Seconds with no
+        space** (owner's rule, now in `AGENTS.md`): 16 keys renamed (EN + SK, `%llds`, `15s`), four positional SK values
+        fixed in the follow-up; his two texts "⏳ Za 15s končí príprava" and "🌙 Dnes idem spať skôr"; `BackupStatsTests`
+        expectations updated. (C) **The cat's bubble:** a comic `SpeechBubbleShape` (solid white / deep-blue paper,
+        2.5 pt outline, the tail to the cat's mouth), 17 pt rounded medium, no line limit, overlay at the cat's top
+        + 80 pt, width min(330, screen − 32); a trailing emoji is glued with a no-break space. Opus's runs: SleepCore 347
+        green; app 483 with one known `SyncEngineTests` timing flake (the worker's two runs: 483 green); i18n 708 keys
+        0 / 0 / 0. Not on the phone, not committed.
+  - [x] **8b – CARE-2a calm-hour coins (owner 2026-10-15: "I'd like calm hours already in B8"; rules confirmed the same
+        morning with +5 instead of +10):** whole hours from max(bedtime, setup end) to the wake time; spoiled by a trip
+        out of the app after the setup, the closed app, `.usedLockScreen`, a pause (a call does not spoil); +5 🪙 per
+        calm hour for complete / unfinished nights; only nights carrying the new marker (from build 8); the result
+        screen says "🌙 Pokojné hodiny: 7 z 8 · +35 🪙"; the guide's coins paragraph mentions it. **Built and reviewed
+        2026-10-15 (one Sonnet worker + one follow-up):** `SleepCore/CalmHours.swift` (`hours(of:rules:)`,
+        `count(log:rules:)`), anchor `max(bedtime + setupGrace, setupEnds)` – Opus's review caught that
+        `max(bedtime, setupEnds)` paid an early start one hour more and the worker had changed
+        `earlyNightIsCompleteAndPaysLikeANormalOne` to fit; reverted, the early and the normal night count the same;
+        `Economy.calmHourBonus = 5`, `Entry.calmHours / calmBonus`; marker `NightRecord.calmHoursRule` (set at the start
+        of real nights; nil = older night), carried by `BackupFile.Night` (backup and the iCloud sync file); Debug-only
+        `-calmDemo` for screenshots. Migration checked without personal data (HEAD with `-seedNights 12`, then the 8b
+        build over it: the store opens, 1880 coins unchanged). SleepCore 363 green (Opus's run), app 485 / 486 (the
+        known `SyncEngineTests` flake), i18n 710 keys 0 / 0 / 0. **8a + 8b on the owner's phone since 09:02.**
+  - [x] **8a on the owner's phone since 2026-10-15 08:27** (Debug build, on his word).
+  - [x] **8c – schedule fine-tuning instead of days 1–3 (owner 2026-10-15, his idea; build 8):** the first change of
+        bedtime / wake opens 7 calendar days of free fine-tuning (the day of the first change + 6), then the schedule is
+        locked for a month (from the day after the tuning until the same day next month, clamped to the month's end);
+        an earlier unlock costs coins and opens a new 7 days. Opus's proposal page (claude.ai artifact, 2026-10-15) adds:
+        the first change opens the window via one confirmation dialog; a new user's first 7 days are the first window;
+        early unlock 1 000 🪙; a schedule change never resets the streak any more (coins only); an evening change (once
+        tonight's building can start, early start included) applies from tomorrow; only bedtime / wake are locked; after
+        the update everyone starts with an unused window; a Today card when tuning is free again replaces the days 1–3
+        card and the "New month" notification. Six questions asked – waits for his answers. Size M, one worker. His notes the same morning: the dates in
+        the app make it easy to explain; he doubts the word "ladenie" (tuning) and will think of a better one; the
+        early-start setup of 15 min (his decision of 2026-10-11) stands; 15 min as the longest configurable setup
+        (build 9) is fine with him. **Name chosen by him (2026-10-15): "týždeň na zmeny"** (EN proposal: "change
+        week") instead of "ladenie". **His answers (2026-10-15 ~10:00): all six recommendations, the early unlock costs
+        2 000 🪙 (not 1 000).** One Sonnet worker started right after. **Built and reviewed 2026-10-15:** `SchedulePolicy`
+        rewritten (`State` open / changeWeek / locked, `plan(opening:)`, `unlock(state:coins:)`, `startsFrom(changedAt:…)`
+        for the evening rule, `PendingSchedule`); stored: `UserProgress.changeWeekStart` (nil = open – every updated user),
+        `ScheduleChange.rule`, `AppSettings.pendingSchedule`, all in `BackupFile` / sync (latest `changeWeekStart` wins);
+        onboarding opens the first week; the paid unlock is a `CoinSpend` "schedule-unlock"; locked pickers are disabled;
+        the "lock ended" card and a one-shot notification (wake + 1 h on `freeFrom`) replace the days-1–3 card and the
+        monthly notification; old texts removed; **`site/index.html` FAQ rewritten – push it together with build 8**
+        (testers on build 7 still have the old rule). Screens checked by Opus (`build/8c/`). SleepCore 374 / app 495 /
+        i18n 714 keys 0 / 0 / 0 (worker; SleepCore and i18n re-run by Opus). Not on the phone yet.
+  - [x] **8e – the real moon phase also without a city (owner's yes 2026-10-15):** today `SkyDrawing.moon` draws the old
+        decorative crescent when no city is set (`look == nil`); the phase needs only the date (the lit side only the
+        hemisphere). After 8c (one simulator job at a time). Size S. One Sonnet worker started ~10:55. **Built and
+        reviewed 2026-10-15:** `Sky.state(at:schedule:calendar:southernHemisphere:)` carries a `MoonLook` at night from the
+        place-free `Astro.moonPhase(at:)`; the lit side from `Sky.isSouthernRegion(Locale.current.region)` (list in
+        `Sky.southernRegions`, unknown → northern); Debug-only `-skyDate YYYY-MM-DD`; screens `build/8e/` (new moon,
+        first quarter, full moon – right). Note for later: in the Town tab the moon can sit behind the header card
+        (also with a city; not new). Opus's run of the whole build 8 tree: SleepCore 377, app 495, i18n 714 keys – all
+        green. Not on the phone yet.
+  - [x] **8d – bug: "⏳ 15s of setup left" always arrives (owner 2026-10-15)** – even with SleepHole in front, the
+        phone unused and the screen off. Cause: `Notifications.scheduleNight` schedules `grace-end` at the night's start
+        and nothing cancels it. Fix: cancel it while the user is with SleepHole (returned / locked inside the app),
+        schedule it again when the user leaves the app during the setup (if setupEnds − 15 s is still ahead). Size S.
+        One Sonnet worker started 2026-10-15 ~09:05 (no owner answer needed). **Built and reviewed the same morning:**
+        `SleepCore/SetupReminder.swift` (`fireDate(setupEnds:now:outsideApp:)`, `outsideApp(after:wasOutside:)` – leaving /
+        lock-screen use / closing = outside; return / relaunch / start / confirm = inside; a lock changes nothing),
+        `AppModel.updateSetupReminder` after every appended event, `Notifications.scheduleNight` no longer schedules
+        `grace-end`; 5 + 5 tests. Finding: a `.locked` event also cancels the pause notices – a user who leaves during a
+        pause and locks another app loses "the pause is over" (backlog, not changed). Opus's run: SleepCore 368, app 491,
+        i18n 710 keys – all green. **On the owner's phone since 2026-10-15 09:49** (his yes).
+- [x] **SKY-TALK – the cat talks about the sky (owner's pick 2026-10-15, option B of five):** phase-based lines only (full
+      moon tonight / in N days, new moon, first and last quarter, waxing / waning, plus solstice and equinox by date) as
+      a new tier of `BuddyTalk`; no change to the moon as "the night's clock" (his rule of 2026-10-04). Size S. Lines
+      with moonrise / moonset times need a moon ephemeris (rise, set, altitude – size M) and wait with the other options
+      he did not pick now: A a sky card on tap (phase name, rise / set, next full moon), C the real tilt of the crescent,
+      D the real moon position with a "waiting moon" outline at the horizon (changes his 2026-10-04 rule), E real stars
+      and constellations – "later, really" (owner). **When: build 8, step 8f (his answer 2026-10-15); 8c + 8e + 8f go onto
+      his phone together.** One Sonnet worker started ~13:00 with Opus's 13 texts (full / new moon tonight, solstices,
+      equinox, full moon tomorrow / in 2–3 days, one line per phase). **Built and reviewed 2026-10-15:**
+      `SleepCore/BuddySky.swift` (tonight = 23:00 local; full / new moon = the evening with ≥ 0.97 / ≤ 0.03 that is the
+      extreme of its neighbours, so exactly one evening per lunation – October 2026: the evening of 25 Oct, the full
+      moon itself falls in the early morning of 26 Oct; quarter band 0.40–0.60; solstices / equinoxes from the new
+      public `Astro.sunLongitude(at:)` crossing 270 / 90 / 0 / 180° during the local day; hemisphere from the city's
+      latitude, else the region), `BuddyTalkInput.southernHemisphere`, 13 keys in `BuddyTalkText.keys`; Debug lines follow
+      `-skyDate`. SleepCore 383 (Opus's run), app 495 (worker), i18n 727 keys 0 / 0 / 0. Not on the phone yet.
+- [ ] **Build 9 (owner 2026-10-15):** the guide **variant B (the cat narrates in the 8a speech bubble)** – 9 swipe
+      pages + a "How SleepHole works" list of every rule (numbers from the code), both languages; **hard acceptance:
+      no page scrolls on the smallest supported iPhone at the default text size** (texts get shortened, details go to
+      the rules list; only very large accessibility text sizes may scroll); the setup length configurable (5 / 10 /
+      15 min; build 8 keeps the constants: 5 min, 15 min after an early start). Opus's proposal page with both variants
+      and the effort table: claude.ai artifact of 2026-10-15. **Text draft (owner's yes to start writing, 2026-10-15):**
+      `docs/guide-texts-draft.json` – 9 pages (title, art, cat pose, SK / EN bubble ≤ ~120 characters, first-launch
+      extras) + the rules list in 9 groups; shown to him as a claude.ai page for review – not approved yet.
+  - [x] **The whole build 8 (8a–8f) on the owner's phone since 2026-10-15 13:47** (his yes; his running nap
+        was checked as finalized first, the database and his JSON backup pulled into the git-ignored
+        `docs/device-logs/2026-10-15-before-8cef/`). He sleeps with it tonight; the upload follows tomorrow on his yes
+        with a "What to Test" list (Opus's change table of 2026-10-15: new / changed / fixed / removed). His idea to skip
+        build 8 "like Windows 9" – Opus advised against: the build number is only a counter and build 8 carries fixes
+        the testers need now; the guide comes as build 9.
+  - [ ] `CURRENT_PROJECT_VERSION` 8, the upload; if build 7 is still "Waiting for Review" then, the owner decides
+        whether to swap it (remove from review, attach 8, resubmit) – B31 is the one concrete 2.1 risk left in the
+        review recipe.
 
 ### F6 — Paid Apple Developer Program (owner 2026-10-04: "next phase: F6, analyse it first"; the paid team is confirmed by a signed build)
 **Analysis (Opus, 2026-10-04; sources: the iOS 27 SDK's `AlarmKit.swiftinterface`, Apple's WWDC25 session 230
@@ -2762,6 +2871,7 @@ Severity: H = can cost a night / a wake-up, M = wrong or annoying, L = cosmetic.
 | B28 | M | S | The lock-screen warning alarm can ring far longer than its 10 s (owner 2026-10-09: 21.5 s, "it rang the whole time"). The ringing alarm interrupts the app's audio session; with the audio gone iOS suspended the app ~4 s later (seen in the lock-screen lab: no one-second lines for 17.4 s), so nothing stopped the alarm at the deadline. A suspended app also learns late that the screen went off – the end of the trip could be logged late. | A UIKit background task from the start of the warning to its end; verify on the phone with the lab. In work 2026-10-09 (plan §10 LOCK-W). |
 | B29 | S | S | Unlocking the phone straight into another app during a night logs two `.leftApp` events for the same trip (seen 2026-10-09 21:02 in the lock-screen lab: `unlockCandidate` after its 5 s window, then the background decision stamped at the earlier background time). **No second warning is sent** (`alreadyCollapsed` is true once a counted trip is open – checked in `AppModel.append`), but the evaluator starts the trip at the earlier stamp: the free window after the unlock shrinks from 5 s to ~1.6 s and the owner has ~9.6 s after the warning instead of 10. The outcome is right. | In `LifecycleMonitor.didEnterBackground`'s delayed decision emit `.leftApp` only when no real leave is open (`!isAway \|\| lockTrip`); a test with both paths. **Fixed 2026-10-10** (one Sonnet worker, two rounds; reviewed by Opus – SleepCore 274, app 361 tests green): the background decision stays silent while an unlock window is pending or a real leave is open, `pendingUnlock` is cleared when its window ends; a trip that an unlock started begins at the END of the 5 s window whichever timer fires first. Not on the phone yet. |
 | B30 | M | S | **A grown town cannot be seen as a whole, by no gesture** (100-night simulation 2026-10-10; numbers from the replay, §12). Pinch zoom-out is capped at scale 10 (`TownScene.maxScale`); the built-up part needs more than that from about night 45 on (11.7 at 60 nights, 15.1 at 100, 28 after a year; the whole ground 20.1 at 100 nights). The first look is capped at 4.5 and shows 82 / 64 / 40 / 31 % of the built-up width at 10 / 30 / 60 / 100 nights – the owner does not mind that ("we can zoom", 2026-10-07 and 2026-10-10). The camera is also not remembered: after a relaunch it returns to the middle of the ground, and the newest building may be off screen. The header card covers the tallest towers. | Phase NEXT / ZOOM (§10), offered to the owner 2026-10-10, not approved yet: the zoom-out cap grows with the town (fits the whole ground), the app remembers the camera across launches, after a night that added a building the camera glides to it. **No automatic fit of the first look** unless he asks; `-townFit` stays a developer switch for screenshots. |
+| B31 | H | S | **The wake code cannot be typed on the night screen before the alarm** (owner's night 2026-10-14 → 15, build 7: he was up early and "the code would not go in"; the journal: back in the app about 20 minutes before the alarm with confirming already open, no other event until `alarmFired`, then `confirmedByCode` seconds later on the alarm screen). Cause (Opus, from the code – not reproduced by taps): `FitOrScroll` is a `ViewThatFits` with two branches (`content(false)` / `ScrollView { content(true) }`); the compact night screen fits without the keyboard, the number pad shrinks the height, the layout switches to the scroll branch, `ConfirmPanel` is created anew (its `@State code` and the field's focus are lost), the keyboard closes, the fit branch fits again – the field can never be typed into. Old: every build with the compact confirm panel (builds 4–7); the shake works (`ConfirmPanel.onShake`), the alarm screen's code works. Also an App Review risk: in the review notes' 15-minute recipe the wake is 12 min after the start, so the panel shows from the start and invites the code. Fix (build 8): one `ScrollView` with a `GeometryReader` min height and `.scrollBounceBehavior(.basedOnSize)` (stable identity; keep the full width), so the keyboard only scrolls; plus hide the pause row's "a pause no longer fits – you can confirm from …" once confirming is open (it still showed after confirming had opened). Verify on the device: type the code before the alarm. |
 | ✅ B18 | H (process) | – | ~70 files had been changed since the last commit (2026-09-30) | done 2026-10-03: 12 commits on `main` (whole files only – what shares files went into one commit); the owner pushes |
 
 **Fixed on 2026-10-03 (same day):** B1 `startAlarmSound()` retries every second and cancels the backup notifications
@@ -2873,6 +2983,8 @@ screen checks.
 | 2026-10-14 | **Evening: build 6 submitted for review; step 7a built and reviewed.** (1) **Submission** on his "podaj build 6 na kontrolu": version 1.0 → "Add for Review" → draft submission with "iOS App 1.0 (6)" → "Submit for Review" → "1 Item Submitted" ("up to 48 hours"); the status reads "Waiting for Review"; "Manually release this version" verified after the submit. (2) **7a (one Sonnet worker):** `BuildingPicker.pick` lost `canUpgradeStreets` and `candidates` drops every `.roadLit` entry (stored nights keep rendering through `TownBuilder` / `upgradeStreets()`); `NightWindow.testNightConfirmLead` = 30 s for quick test nights, applied in `startTestNight` and in `NightRecord.window` (`isTestNight` = `isDebug` or a `bonus-` id); the night screen shows "You can confirm getting up from %@ – shake your phone or enter your code." while `now < confirmOpens`, and a shake before it turns that line into an orange "Too early 🌙 …" note for 5 s (`AppModel.shakeBeforeConfirm`, no event, no outcome change; once the panel shows, only its handler reacts). New tests: `roadLitIsNeverDrawn`, `litStreetsAreNeverCandidates`, `TestNightWindowTests`, `TestNightConfirmTests`; `SyncTests` advances the clock 40 s before confirming its 1-minute test night. Screenshot `build/7a/night-early.png` (Slovak, fits under "Budík o …"). (3) **Opus's own runs:** SleepCore 338 green; app 502 tests with ONE failing `SyncEngineTests` timing test; i18n 657 keys 0 / 0 / 0. (4) **The `SyncEngineTests` timing tests are flaky on this Mac, not broken by 7a:** a clean checkout of HEAD in a temporary worktree passed the suite twice (16–33 s) and then failed it twice (38–41 s, other timing tests: `< 0.45 s`, `readAttempts == 1`); with 7a it failed twice too (59–70 s). The suite runs slower from run to run on a busy Mac and its sub-second expectations break – worth hardening later (backlog), not a release blocker. (5) The overview's rows 37 / 38 were out of order and broke `PlansTests.parsesTheRealDocument` – fixed (the parser wants 1…n). |
 | 2026-10-14 | **Apple refused the binary: ITMS-90699 "Apps are not allowed to listen to device lock notifications".** E-mail to the owner the same evening; App Store Connect shows "1.0 Invalid Binary" and the submission "Unresolved Issues" – an automatic scan of the App Store submission (the same build passed TestFlight and Beta App Review). The Release binary of build 6 contains `com.apple.springboard.lockcomplete`, `.lockstate`, `.hasBlankedScreen` (checked with `strings` on a Release build; the lock-lab names of `LockLab.swift` are already compiled out). This is route (b) of `docs/ROZBOR-APP-REVIEW.md`: **build 7 must use documented signals only** (row 33 of the overview, now P0); hiding or assembling the names at run time stays forbidden (hard rule). What the documented signals give (`LifecycleMonitor` already observes both): `protectedDataWillBecomeUnavailable` = lock / screen off (measured on the owner's phone as fast as `lockcomplete`); `protectedDataDidBecomeAvailable` = the user recognised (Face ID / Touch ID / code) – on the lock screen or after an unlock, the two cannot be told apart. Lost: the lit-screen state (`hasBlankedScreen`), so the 12 s "held without recognition" rule (`HoldDetector`) and lock-screen use without recognition are gone; a phone without a passcode never posts the data signals. Opus's proposal to the owner (not decided): recognised use outside the app for 8 s (data available, app not active) counts as using the phone – gentle mode a reminder, Strict mode the warning + collapse; no passcode → leaving cannot be told from locking → never counted, said honestly in Settings. Also: the review notes in App Store Connect describe the three signals – to be rewritten before the resubmission of build 7. Build 7a (committed `66fe605`) is unaffected. |
 | 2026-10-14 | **Build 7 steps 7b–7e built and reviewed the same evening (four Sonnet workers in a row, the owner asked to "finish the whole build 7 up to the cat").** 7b residents, 7c neutral Slovak texts + Debug "Texts" screen, 7d the buddy talks, 7e documented lock detection only + the pause rule + a 30-minute test night + the `.city` size-name fix (details in §10 REL). The owner's yes to 7e: "if Apple's rules do not let us hide the signals, we cannot – the app teaches, it is not a prison; users who bypass it on purpose will exist, SleepTown can probably be bypassed too". His pause finding (quick test night, events): pause 17:27:13, left the app 17:28:12, alarm 17:30:24, back 17:30:27, confirmed by code 17:30:31 – a 10-minute pause had been offered 3 minutes before the end of the night. Review findings by Opus: the `.city` key (SK "Mesto" instead of "Veľké mesto") in the buddy's sentences; the Today bubble is an overlay (layout unchanged, checked in the diff). Hard rules R3 and "Lock screen without an unlock" in `AGENTS.md` rewritten to the owner's decision. Still open before the resubmission: the new review notes (Opus's draft in the owner's iCloud paste sheet), `CURRENT_PROJECT_VERSION` 7, the upload, the version page, the owner's yes for each outward step. | Device code reads safe: HealthKit checks `isHealthDataAvailable()`, haptics fall back without a Taptic Engine, motion returns early without the sensor; on an iPad with no passcode `protectedData` never changes, so lock-screen use is never "recognised" (fails in the user's favour). **Not checked – no way to tap in the simulator from the command line:** guide pages 2–6, the permission prompts, starting a night by hand, so **the 15-minute recipe on a clean install still needs a person** (or a UI test target the project does not have). |
+| 2026-10-15 | **The owner's first night with build 7 (journal pulled 06:26 into `docs/device-logs/2026-10-15-morning/`, read-only) and App Store Connect read in his Chrome.** (1) **Night 2026-10-14 → 15: complete** (Strict mode on). The free pause worked as he said ("one minute left", then "the pause is over, come back"). One recognised use outside the app (`ownerRecognised` → `usedLockScreen` 8.2 s later) and he came back 7 s after the warning – the building stood. He confirms: the lock-screen Camera without Face ID brings nothing; sharing needs Face ID and then the reminder comes. (2) **B31 (§11a):** up early, the code could not be typed on the night screen (back in the app ~20 min before the alarm; confirmed by code only on the alarm screen) – `ViewThatFits` in `FitOrScroll` recreates `ConfirmPanel` when the keyboard appears. (3) **App Store Connect:** version 1.0 with build 7 is still "Waiting for Review" (since 2026-10-14 20:23); in TestFlight build 7 is "Ready to Submit" in the internal group only; build 6 has 13 installs / 28 sessions / 1 feedback. A banner asks to review the new social-media questions of the age rating (App Information) – the owner's click. (4) **His text fixes** (build 8 list in §10 REL). (5) Adding build 7 to the external group was stopped by the session's safety check before the first click; nothing was changed in App Store Connect. | |
+| 2026-10-15 | **Offline audit (Opus, owner's question: "a week in the mountains without signal – does it work, with the real moon?").** Network use in the shipped app: (1) weather – WeatherKit and MET Norway (`WeatherSource`), refresh every 30 min, a value is hidden 90 min after it was observed (`Weather.staleAfter`), so offline nothing stale shows; (2) the city search – MapKit (`CitySearch`), only while choosing a city; the chosen coordinates are stored and the sun, the moon and its phase are computed on the device (`Astro`, `Sky.state(at:place:)`); (3) the iCloud sync file – iCloud Drive queues it and catches up later; (4) links the user taps (privacy policy, credits, weather attribution). Everything else is local: nights, alarm (own audio + AlarmKit), notifications, HealthKit, motion, the town, coins, stats, backup. Gap: **without a city the moon is the old decorative crescent** (`SkyDrawing.moon` with `look == nil`); the phase itself needs only the date – proposed as 8e. The moon in the Town tab on 2026-10-14 → 15 was the real phase (city set; a waxing crescent, ~13–15 % lit by Opus's own calculation). | |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |
 | 2026-09-29 | `swift test` in SleepCore uses Swift Testing (`import Testing`) fine with the Xcode toolchain. |

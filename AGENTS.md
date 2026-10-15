@@ -20,7 +20,21 @@ Whatever the owner's first message is (even just "Ahoj"), **start your reply by 
 then answer. Remove items here when they are done.
 
 0. **Open phone checks (plan §10 F6 and R4, bug B21 in §11a):**
-   * **NEWEST – 2026-10-14 (plan §12, row of that day; Opus read App Store Connect through his Chrome, changed
+   * **NEWEST – 2026-10-15 morning (plan §12, row of that day):** his first night with build 7 was complete; the pause,
+     the Face ID reminder and "no reminder for the Camera without Face ID" are confirmed by him. **New bug B31 (§11a):**
+     the wake code cannot be typed on the night screen before the alarm (the shake works). Build 1.0 (7) is still
+     "Waiting for Review". **The same morning:** he sent build 7 to the external group "SE" himself (Beta App
+     Review); the age rating's new social-media questions are already answered "No" (Opus read them, nothing to do);
+     **Build 8 (plan §10 REL) – COMPLETE and on his phone since 2026-10-15 13:47:** 8a B31 + seconds "15s" + the cat's
+     comic bubble (he likes it; B31 confirmed by him), 8b calm hours +5 🪙, 8c "týždeň na zmeny" (7 days of changes,
+     then a month locked, early unlock 2 000 🪙, no streak reset, evening change from tomorrow), 8d the setup notice only
+     while outside the app, 8e the real moon phase without a city, 8f the cat talks about the sky (13 lines). Nothing
+     is committed. **Ask in the morning:** (a) how the night went – the calm-hours line, no setup notice, the moon;
+     (b) his feedback on the cat's sky lines; (c) his yes to raise `CURRENT_PROJECT_VERSION` to 8, upload, add build 8
+     to the tester groups with a "What to Test" list, and whether to swap it into the App Store review (build 7 was
+     "Waiting for Review"); (d) the commits (whole files, detailed messages; he pushes – `site/index.html` changed too).
+     Build 9 = the guide variant B (texts in `docs/guide-texts-draft.json`, his review pending) + configurable setup.
+   * **2026-10-14 (plan §12, row of that day; Opus read App Store Connect through his Chrome, changed
      nothing):** the P0 rows of the overview (1, 2, 32) are done and proven. **Apple has updated the Developer
      Program License Agreement – until he (the Account Holder) accepts it on developer.apple.com, no build can be
      uploaded and nothing can be submitted; his own click.** Build 6: 14 of 15 testers installed it (two on iPads –
@@ -262,9 +276,8 @@ then answer. Remove items here when they are done.
      island on water (M), live weather over the whole screen like the HTC HD2 (= TOWN-W step 2b, M), starting a
      night / nap from the Apple Watch (a spike first), HealthKit "when I really fell asleep" (S–M), a Fantasy Town
      theme (M–L). Do not start any of them without his word; ask which one he wants first.
-1. **The pause is still untried:** he does not want to risk his town (2026-10-14) – Opus suggested a quick test
-   night (Settings → Developer → Quick night: it never touches the town, its pauses cost nothing). Open bugs in
-   plan §11a: B8, B10, B12–B16, B22 (B7 contrast is accepted – two
+1. **The pause works (owner 2026-10-15, his real night with build 7: the free pause, "one minute left", then "the
+   pause is over, come back").** Open bugs in plan §11a: B8, B10, B12–B16, B22, B31 (B7 contrast is accepted – two
    follow-ups are listed in plan §10 B7; B11 is solved inside F6b).
 2. **Sleep buddy (P2 + P2b): accepted by the owner 2026-10-04.** His remark: the "arched back" has too few poses –
    leave it until we render our own models (F7).
@@ -373,7 +386,7 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   owner's favour.
 * Levels: nights 1–5 → L1, 6–15 → L1–L2, 16–30 → L1–L3, 31+ → L1–L4 (plan §5.5).
 * Coins 🪙 (owner 2026-10-02): complete night by building level L1 100 / L2 120 / L3 150 / L4 200, unfinished half,
-  +30 for a complete night without a pause, every 7th complete night in a row +200; nap 50 / 25.
+  +30 for a complete night without a pause, every 7th complete night in a row +200; nap 50 / 25; **+5 per calm hour** (owner 2026-10-15, CARE-2a: whole hours from max(bedtime, end of the setup) to the wake time without a trip out of the app, a recognised use or a pause – calls do not spoil an hour; complete and unfinished nights only; nights from build 8 on).
 * **Jokers 🛡️** (owner 2026-10-02, plan D18; changed 2026-10-09): **each kind once per calendar month, independently of
   the others** – bronze 1 night free (also used by itself on the first missed night that would break a streak; one
   bronze a month, by hand or automatic), silver 3 nights 1 000 🪙, gold 7 nights 5 000 🪙. So after the month's bronze
@@ -385,12 +398,11 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   The home screen always shows both "Ísť spať" and "Odpočinok" buttons (disabled outside their windows).
 * UI languages: **English (default) + Slovak** (in-app switch stored in SwiftData `UserProgress.languageRaw`).
   **Every UI string goes through `L("English key")`** (never a bare `Text("…")` literal); the Slovak text (correct
-  diacritics) goes into `SleepHole/Resources/Localizable.xcstrings`. Dates/times via `Fmt`. After adding strings:
+  diacritics) goes into `SleepHole/Resources/Localizable.xcstrings`. Dates/times via `Fmt`. **Seconds are written with NO space after the number – `15s`, `%llds`, in English and Slovak, in every text (owner 2026-10-15: "nowhere with a space, nowhere at all"); minutes stay "10 min".** After adding strings:
   build, then `python3 tools/i18n/keys.py` must report 0 missing / 0 without sk. `I18nTests` fails on any Slovak
   literal left in `SleepHole/`. Code, comments, identifiers, agent docs: **English**.
 * Limits (owner 2026-09-30, plan LIM): renaming the town – first naming free, typo fix 10 min, 1× per 365 days free,
-  else **5 000 🪙**; bedtime / wake changes free on **days 1–3 of every month** and in the **first 7 days**, else
-  the 🔥 streak starts again (nothing else is taken away). Coins = earned − spent (`CoinSpend`), never negative.
+  else **5 000 🪙**; bedtime / wake follow the **change week** ("týždeň na zmeny", owner 2026-10-15, replaces days 1–3 + the streak reset): the first change opens 7 calendar days of free changes (a confirmation first; onboarding opens the first one), then the schedule is locked for a month (free again from the same day next month); an earlier unlock costs **2 000 🪙** and opens a new week; a change saved once tonight's building can start (early start included) applies from tomorrow; a schedule change never resets the streak; only bedtime and wake are limited; after the update to build 8 everyone starts with an unused week. Coins = earned − spent (`CoinSpend`), never negative.
 * Never rename a shipped sprite id (ids are persisted). Add new ones instead.
 * **Sky (owner 2026-10-04):** with a city set, the sun / moon on Today travels a semicircle that spans the screen from
   left to right (centre in the middle, 310 pt down, radius 150 pt) – the sun in the middle means noon. Never shrink
