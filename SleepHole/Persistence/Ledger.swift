@@ -31,8 +31,11 @@ final class ScheduleChange {
     var free: Bool
     /// The night that starts a new streak (NightKey string) – only for changes that were not free.
     var breakKey: String?
+    /// 1 = made under the change-week rule (build 8, never a `breakKey`); nil = made under the old rule.
+    var rule: Int?
 
-    init(at: Date, from: String, to: String, free: Bool, breakKey: String?) {
+    init(at: Date, from: String, to: String, free: Bool, breakKey: String?, rule: Int? = nil) {
+        self.rule = rule
         self.at = at
         self.from = from
         self.to = to

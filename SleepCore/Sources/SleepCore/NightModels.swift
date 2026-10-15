@@ -133,10 +133,15 @@ public struct NightResult: Codable, Equatable, Sendable {
     /// When Apple Health says the owner fell asleep and how long he slept (phase HEALTH). nil = not read / nothing found.
     public let fellAsleepAt: Date?
     public let asleepSeconds: TimeInterval?
+    /// Calm hours of the night and how many whole hours it had (phase CARE-2a). nil = a night from before the rule
+    /// (`calmHoursRule == nil`): it earns no calm-hour coins.
+    public let calmHours: Int?
+    public let calmHoursTotal: Int?
 
     public init(key: NightKey, outcome: Outcome, buildingId: String?, awaySeconds: TimeInterval = 0,
                 startedAt: Date? = nil, confirmedAt: Date? = nil, pauses: Int? = nil, bedtime: Date? = nil,
-                fellAsleepAt: Date? = nil, asleepSeconds: TimeInterval? = nil) {
+                fellAsleepAt: Date? = nil, asleepSeconds: TimeInterval? = nil,
+                calmHours: Int? = nil, calmHoursTotal: Int? = nil) {
         self.key = key
         self.outcome = outcome
         self.buildingId = buildingId
@@ -147,5 +152,7 @@ public struct NightResult: Codable, Equatable, Sendable {
         self.bedtime = bedtime
         self.fellAsleepAt = fellAsleepAt
         self.asleepSeconds = asleepSeconds
+        self.calmHours = calmHours
+        self.calmHoursTotal = calmHoursTotal
     }
 }

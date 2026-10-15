@@ -360,7 +360,7 @@ struct NightDetail: View {
     static func duration(_ t: TimeInterval?) -> String {
         guard let t else { return L("you didn't come back") }
         let s = Int(t.rounded())
-        return s >= 60 ? L("\(s / 60) min \(s % 60) s") : L("\(s) s")
+        return s >= 60 ? L("\(s / 60) min \(s % 60)s") : L("\(s)s")
     }
 
     var body: some View {

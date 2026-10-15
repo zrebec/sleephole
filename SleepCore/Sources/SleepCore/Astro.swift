@@ -55,6 +55,10 @@ public enum Astro {
         return Horizontal(altitude: topo, azimuth: geo.azimuth)
     }
 
+    /// The sun's apparent ecliptic longitude in degrees (0 = March equinox, 90 = June solstice, 180 = September
+    /// equinox, 270 = December solstice).
+    public static func sunLongitude(at t: Date) -> Double { sunEcliptic(at: t).longitude }
+
     public static func moonPhase(at t: Date) -> MoonPhase {
         let m = moonEcliptic(at: t)
         let sunLongitude = sunEcliptic(at: t)

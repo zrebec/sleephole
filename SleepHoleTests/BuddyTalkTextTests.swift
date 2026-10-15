@@ -15,7 +15,10 @@ struct BuddyTalkTextTests {
             .movedIn(buildingId: "x", people: 4), .newSight(buildingId: "x"), .waiting(buildingId: "x"), .dayOff,
             .streakSafe, .bedtimeSoon(at), .week, .streak(3), .newStreak, .size(.village, people: 150),
             .nextSize(missing: 5, .village), .firstNeighbours, .parks(2), .library, .museum, .tallest,
-            .noFireStation, .noHospital, .noPolice, .noSchool, .noTownHall, .fireStation, .hospital, .tonight]
+            .noFireStation, .noHospital, .noPolice, .noSchool, .noTownHall, .fireStation, .hospital, .tonight,
+            .fullMoonTonight, .newMoonTonight, .longestNight, .shortestNight, .equinox, .fullMoonTomorrow,
+            .fullMoonSoon(days: 2)]
+        l += MoonQuarter.allCases.map { .moonPhase($0) }
         l += (0..<BuddyLine.chatterCount).map { .chatter($0) }
         return l
     }

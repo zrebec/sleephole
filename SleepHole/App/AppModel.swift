@@ -84,6 +84,7 @@ final class AppModel {
     ///   -bedtime HH:MM -wake HH:MM    set the schedule
     ///   -ambience silence|brown       set the night sound
     ///   -startTestNight               immediately start a 4-min debug night (screenshots in the simulator)
+    ///   -focusWakeCode                DEBUG: focus the wake-code field when the confirm panel appears (shows the keyboard in the simulator)
     ///   -lockLab                      DEBUG nights only: record the lock-screen lab (Darwin / UIKit signals, motion, a line
     ///                                 per second) to Application Support/lock-lab.log – pull it with devicectl
     ///   -startNap                     screenshots: open the nap window around now and start a nap
@@ -103,6 +104,7 @@ final class AppModel {
     ///   -buddy awake|asleep           force the sleep buddy's state (screenshots)
     ///   -buddyReaction purr|arch|wink show that tap reaction's hold frame (hearts / sparkle too) on Today (screenshots)
     ///   -skyCity "Name,lat,lon"       set the city of the real sky for this run (e.g. "Bratislava,48.1486,17.1077")
+    ///   -skyDate YYYY-MM-DD           pin the sky's day (the moon's phase follows the date)
     ///   -skyTime HH:MM                pin the sky's time of day; -skyArc 0.3 / -skyBody sun|moon|none / -skyMoon 0.5
     ///                                 force the drawn arc / body / moon's lit fraction (see `SkyOverrides`)
     ///   -cityQuery Brat               pre-fill Settings → Sky → city so the real Apple Maps search runs
@@ -115,6 +117,7 @@ final class AppModel {
     ///                                 never under test)
     ///                                 for this run (see `WeatherSimulation`); -openWeatherTest opens Developer → Weather test
     ///   -timeSensitive off|on         SIMULATOR ONLY: pretend that iOS's "Time Sensitive Notifications" switch is off / on
+    ///   -scheduleState open|week|locked   DEBUG builds only: force the change-week state shown in Settings (screenshots)
     ///   -sleepSim N                   use a simulated sleep source (Health stand-in): asleep N minutes after the build
     ///                                 start, a staged night (default 18 when N is missing); switch "Apple Health" on to read it
     ///   -selectChartNight K           Stats: select the night K places before the newest on the sleep chart (0 = newest)
@@ -184,6 +187,24 @@ final class AppModel {
         #endif
         settings.save()
     }
+
+    #if DEBUG
+    /// `-scheduleState open|week|locked` → the forced change-week state (screenshots); nil without the argument.
+    static func launchScheduleState(args: [String] = DevArgs.list) -> SchedulePolicy.State? {
+        guard let i = args.firstIndex(of: "-scheduleState"), args.indices.contains(i + 1) else { return nil }
+        let cal = Calendar.current
+        let now = Date()
+        switch args[i + 1] {
+        case "open": return .open
+        case "week":
+            return .changeWeek(lastDay: NightKey(date: now, calendar: cal).adding(days: 4, calendar: cal))
+        case "locked":
+            let free = NightKey(date: now, calendar: cal).adding(days: 23, calendar: cal)
+            return .locked(lastDay: free.adding(days: -1, calendar: cal), freeFrom: free)
+        default: return nil
+        }
+    }
+    #endif
 
     /// `-sleepSim [minutes]` → the simulated sleep source; nil without the argument.
     static func launchSleepSource(args: [String] = DevArgs.list) -> (any SleepSource)? {
@@ -263,6 +284,9 @@ final class AppModel {
         self.settings = settings
         self.window = settings.schedule.window(containing: clock.now, calendar: .current)
         loadProgress()
+        #if DEBUG
+        if initialSettings == nil { debugScheduleState = Self.launchScheduleState() }
+        #endif
         sync.attach(self)
         if initialSettings == nil, let lang = Self.launchLanguage() { language = lang }
         resumeActiveNight()
@@ -282,6 +306,10 @@ final class AppModel {
             lastReward = entry?.coins ?? 0
             lastStreakBonus = entry?.streakBonus ?? 0
             lastUndisturbedBonus = entry?.undisturbedBonus ?? 0
+            setCalmHours(entry, result: rec.result)
+            if DevArgs.list.contains("-calmDemo") {         // screenshots: a night with 7 of 8 calm hours
+                lastCalmHours = (7, 8); lastCalmBonus = 7 * Economy.calmHourBonus; lastReward += lastCalmBonus
+            }
             phase = .result
         }
         #endif
@@ -536,6 +564,9 @@ final class AppModel {
     private(set) var lastStreakBonus = 0
     /// +30 when the night in `shownResult` was complete without a pause.
     private(set) var lastUndisturbedBonus = 0
+    /// Calm hours of the night on the result screen: how many of how many whole hours, and what they paid.
+    private(set) var lastCalmHours: (calm: Int, total: Int)?
+    private(set) var lastCalmBonus = 0
 
     /// Current 🔥 streak: complete nights in a row up to the most recent night that could be finished.
     var streak: Int {
@@ -555,11 +586,22 @@ final class AppModel {
             return BuddyTalkInput.LastNight(key: r.key, outcome: r.outcome, buildingId: id,
                                             residents: r.outcome == .complete ? b.map(Population.residents(of:)) ?? 0 : 0)
         }
+        var now = now
+        #if DEBUG
+        // dev aid: the sentences follow `-skyDate` like the sky does
+        if let (y, mo, d) = LivingSky.pinnedDay {
+            var parts = calendar.dateComponents([.hour, .minute], from: now)
+            (parts.year, parts.month, parts.day) = (y, mo, d)
+            now = calendar.date(from: parts) ?? now
+        }
+        #endif
+        let south = settings.city.map { $0.place.latitude < 0 }
+            ?? Sky.isSouthernRegion(Locale.current.region?.identifier)
         return BuddyTalk.lines(BuddyTalkInput(
             now: now, calendar: calendar, town: town, lastNight: last, streak: streak,
             bestStreak: Progression.bestStreak(results, calendar: calendar, breaks: streakBreaks),
             builtNights: builtNights, unlockedMaxLevel: Progression.unlockedMaxLevel(builtBefore: builtNights),
-            nextBedtime: window.bedtime > now ? window.bedtime : nil))
+            nextBedtime: window.bedtime > now ? window.bedtime : nil, southernHemisphere: south))
     }
 
     /// Dev aid: `-buddyLine N` starts the buddy's bubble at its N-th sentence (screenshots).
@@ -657,19 +699,17 @@ final class AppModel {
         firstNightBriefed = p.firstNightBriefingAt != nil
         language = p.languageRaw.flatMap(AppLanguage.init(rawValue:)) ?? .fallback
         customTownName = p.townName
-        if p.scheduleCalibrationStart == nil {             // the free first week starts with the first launch
-            p.scheduleCalibrationStart = clock.now
-            save()
-        }
-        scheduleCalibrationStart = p.scheduleCalibrationStart
+        changeWeekStart = p.changeWeekStart
         schedulePromptAnswered = p.schedulePromptMonth
     }
 
-    // MARK: - schedule changes (owner 2026-09-30: free on days 1–3 of a month + the first week, else the streak)
+    // MARK: - schedule changes: the change week (owner 2026-10-15, build 8; `SchedulePolicy`)
 
-    private(set) var scheduleCalibrationStart: Date?
+    /// When the last change week was opened (nil = never, also for everyone who updated from before build 8).
+    private(set) var changeWeekStart: Date?
+    /// The lock whose end the "You can open a change week again" card was answered for (`NightKey` text).
     private(set) var schedulePromptAnswered: String?
-    /// Bumped by "Adjust" on the monthly card → the root view opens Settings.
+    /// Bumped by "Adjust" on the card → the root view opens Settings.
     private(set) var settingsRequest = 0
     /// Bumped to open the Town tab (the Today island did it; `-thenTab island` still does) → RootView switches to it.
     private(set) var townRequest = 0
@@ -685,51 +725,127 @@ final class AppModel {
         return notificationsScrollPending
     }
 
-    func scheduleChangeCost(at t: Date? = nil) -> SchedulePolicy.Change {
-        SchedulePolicy.change(at: t ?? clock.now, calibrationStart: scheduleCalibrationStart, calendar: calendar)
+    /// `open`, the running change week or the lock – derived from the stored date, never from a timer.
+    var scheduleState: SchedulePolicy.State {
+        debugScheduleState ?? SchedulePolicy.state(at: clock.now, weekStart: changeWeekStart, calendar: calendar)
     }
 
-    var nextFreeScheduleChange: Date {
-        SchedulePolicy.nextFreeWindow(after: clock.now, calibrationStart: scheduleCalibrationStart, calendar: calendar)
+    /// The days a change week opened today would have (for the confirmation dialog).
+    var changeWeekPlan: SchedulePolicy.Plan { SchedulePolicy.plan(opening: clock.now, calendar: calendar) }
+
+    /// Debug-only (`-scheduleState open|week|locked`): forces the state for screenshots; nil = the real one.
+    var debugScheduleState: SchedulePolicy.State?
+
+    /// The schedule the pickers start from: the pending times when some wait for their night, else the one in effect.
+    var editableSchedule: Schedule {
+        var s = settings.pendingSchedule?.schedule ?? settings.schedule
+        s.reminderOffsets = settings.schedule.reminderOffsets
+        return s
     }
 
-    var scheduleCalibrationEnds: Date? {
-        SchedulePolicy.calibrationEnds(after: clock.now, calibrationStart: scheduleCalibrationStart)
+    /// The new times are applied once their night has come (the evening rule). Called by `refresh` and before a change.
+    private func applyPendingScheduleIfDue(now: Date) {
+        guard active == nil, let pending = settings.pendingSchedule,
+              pending.isDue(at: now, current: settings.schedule, calendar: calendar) else { return }
+        var s = settings
+        s.schedule = Schedule(bedtime: pending.schedule.bedtime, wake: pending.schedule.wake,
+                              reminderOffsets: settings.schedule.reminderOffsets)
+        s.pendingSchedule = nil
+        settings = s
     }
 
-    /// Saves a new schedule. A new bedtime / wake outside the free window resets the 🔥 streak from tonight
-    /// (a `ScheduleChange` with a `breakKey`); the reminder can change any time for free.
-    func applySchedule(_ new: Schedule) {
+    enum ScheduleResult: Equatable {
+        case unchanged
+        case applied            // the new times are in effect now
+        case fromTomorrow       // saved; they start with the next night (the evening rule)
+        case locked             // refused: the schedule is locked
+    }
+
+    /// Saves a new schedule. Bedtime / wake follow the change week: `open` opens a week (the UI has asked first),
+    /// `changeWeek` is free, `locked` refuses. A change never touches the 🔥 streak. If tonight's building can already
+    /// be started the new times wait for the next night (`SchedulePolicy.startsFrom`); the reminder minutes always
+    /// apply at once. During the first-run guide nothing counts (no week is opened).
+    @discardableResult
+    func applySchedule(_ new: Schedule) -> ScheduleResult {
+        guard active == nil else { return .unchanged }
+        applyPendingScheduleIfDue(now: clock.now)
         let old = settings.schedule
-        guard new != old, active == nil else { return }
-        if (new.bedtime != old.bedtime || new.wake != old.wake), onboardingDone {
-            let free = scheduleChangeCost() != .resetsStreak
-            context.insert(ScheduleChange(at: clock.now, from: "\(old.bedtime)–\(old.wake)",
-                                          to: "\(new.bedtime)–\(new.wake)", free: free,
-                                          breakKey: free ? nil : SchedulePolicy.streakBreak(changedAt: clock.now,
-                                                                                            calendar: calendar).description))
-            save()
+        let base = editableSchedule
+        guard new != base else { return .unchanged }
+        var s = settings
+        s.schedule.reminderOffsets = new.reminderOffsets             // the reminder is free, at once
+        s.pendingSchedule?.schedule.reminderOffsets = new.reminderOffsets
+        guard new.bedtime != base.bedtime || new.wake != base.wake else {
+            settings = s
+            refresh()
+            return .applied
         }
-        settings.schedule = new
+        var result = ScheduleResult.applied
+        if onboardingDone {
+            let state = scheduleState
+            guard SchedulePolicy.allowsChange(state) else { return .locked }
+            if state == .open { openChangeWeek() }
+            context.insert(ScheduleChange(at: clock.now, from: "\(base.bedtime)–\(base.wake)",
+                                          to: "\(new.bedtime)–\(new.wake)", free: true, breakKey: nil, rule: 1))
+            save()
+            if new.bedtime == old.bedtime && new.wake == old.wake {                 // back to the times in effect
+                s.pendingSchedule = nil
+            } else if let from = SchedulePolicy.startsFrom(changedAt: clock.now, current: old, new: new, calendar: calendar) {
+                s.pendingSchedule = PendingSchedule(schedule: new, fromNight: from)
+                result = .fromTomorrow
+            } else {
+                s.schedule = new
+                s.pendingSchedule = nil
+            }
+        } else {
+            s.schedule = new
+            s.pendingSchedule = nil
+        }
+        settings = s
         refresh()
+        return result
     }
 
-    private var monthKey: String {
-        let c = calendar.dateComponents([.year, .month], from: clock.now)
-        return String(format: "%04d-%02d", c.year!, c.month!)
+    private func openChangeWeek() {
+        progress().changeWeekStart = clock.now
+        save()
+        changeWeekStart = clock.now
+        rescheduleReminders()                                         // the "lock ended" notification follows the week
     }
 
-    /// "New month 🌙 Does your bedtime still fit?" on days 1–3 until answered.
-    var showsMonthlySchedulePrompt: Bool {
-        onboardingDone && active == nil && SchedulePolicy.freeDays.contains(calendar.component(.day, from: clock.now))
-            && schedulePromptAnswered != monthKey
+    enum UnlockResult: Equatable { case unlocked, notLocked, notEnoughCoins(missing: Int) }
+
+    /// The paid early unlock (2 000 🪙): only while locked; opens a new change week today (and the usual lock after it).
+    @discardableResult
+    func unlockSchedule() -> UnlockResult {
+        guard active == nil else { return .notLocked }
+        switch SchedulePolicy.unlock(state: scheduleState, coins: coins) {
+        case .notLocked: return .notLocked
+        case .notEnoughCoins(let missing): return .notEnoughCoins(missing: missing)
+        case .ok:
+            spend(SchedulePolicy.unlockPrice, reason: "schedule-unlock")
+            openChangeWeek()
+            debugScheduleState = nil
+            return .unlocked
+        }
+    }
+
+    /// The day the finished lock allows a new week: the card and the notification are for this day (nil = not now).
+    private var lockEndedDay: NightKey? {
+        SchedulePolicy.lockEnded(at: clock.now, weekStart: changeWeekStart, calendar: calendar)
+    }
+
+    /// "You can open a change week again 🌙 Does your bedtime still fit?" – once, after a lock has ended.
+    var showsChangeWeekCard: Bool {
+        onboardingDone && active == nil && (lockEndedDay.map { schedulePromptAnswered != $0.description } ?? false)
     }
 
     /// `adjust` = open Settings to change the schedule.
-    func answerMonthlyPrompt(adjust: Bool) {
-        progress().schedulePromptMonth = monthKey
+    func answerChangeWeekCard(adjust: Bool) {
+        guard let day = lockEndedDay else { return }
+        progress().schedulePromptMonth = day.description
         save()
-        schedulePromptAnswered = monthKey
+        schedulePromptAnswered = day.description
         if adjust { settingsRequest += 1 }
     }
 
@@ -797,9 +913,13 @@ final class AppModel {
     }
 
     func completeOnboarding() {
-        progress().onboardingCompletedAt = clock.now
+        let p = progress()
+        p.onboardingCompletedAt = clock.now
+        if p.changeWeekStart == nil { p.changeWeekStart = clock.now }       // the guide set the first schedule: day 1 of the first change week
         save()
         onboardingDone = true
+        changeWeekStart = p.changeWeekStart
+        rescheduleReminders()
     }
 
     /// The "Tvoja prvá noc" checklist is shown once, before the first REAL night is started.
@@ -823,10 +943,11 @@ final class AppModel {
                           lastFreeRenameAt: p.lastFreeRenameAt, scheduleCalibrationStart: p.scheduleCalibrationStart,
                           spends: spends().map { .init(at: $0.at, amount: $0.amount, reason: $0.reason) },
                           scheduleChanges: scheduleChanges().map {
-                              .init(at: $0.at, from: $0.from, to: $0.to, free: $0.free, breakKey: $0.breakKey)
+                              .init(at: $0.at, from: $0.from, to: $0.to, free: $0.free, breakKey: $0.breakKey, rule: $0.rule)
                           },
                           jokers: jokerRecords().map { .init(at: $0.at, tier: $0.tierRaw, firstNight: $0.firstNight) },
-                          townNameChangedAt: p.townNameChangedAt, schedulePromptMonth: p.schedulePromptMonth)
+                          townNameChangedAt: p.townNameChangedAt, schedulePromptMonth: p.schedulePromptMonth,
+                          changeWeekStart: p.changeWeekStart)
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
@@ -847,12 +968,13 @@ final class AppModel {
         if let d = b.lastFreeRenameAt { p.lastFreeRenameAt = d }
         if let d = b.scheduleCalibrationStart { p.scheduleCalibrationStart = d }
         if let m = b.schedulePromptMonth { p.schedulePromptMonth = m }
+        p.changeWeekStart = b.changeWeekStart                // an older backup has none: the schedule is `open`
         // the backup is the whole truth: an older one (no spends / changes) had none
         try context.delete(model: CoinSpend.self)
         for s in b.spends ?? [] { context.insert(CoinSpend(at: s.at, amount: s.amount, reason: s.reason)) }
         try context.delete(model: ScheduleChange.self)
         for c in b.scheduleChanges ?? [] {
-            context.insert(ScheduleChange(at: c.at, from: c.from, to: c.to, free: c.free, breakKey: c.breakKey))
+            context.insert(ScheduleChange(at: c.at, from: c.from, to: c.to, free: c.free, breakKey: c.breakKey, rule: c.rule))
         }
         try context.delete(model: JokerRecord.self)
         for j in b.jokers ?? [] {
@@ -906,6 +1028,7 @@ final class AppModel {
         }
         guard changed else { return false }
         loadProgress()
+        rescheduleReminders()                            // a week opened on another device moves the "lock ended" notification
         rebuildTown()
         refresh()                                        // `shownResult` stays: the user may be reading this morning's result
         if nightsChanged, settings.usesHealth { Task { await refreshSleepIfIdle() } }
@@ -979,6 +1102,7 @@ final class AppModel {
     func refresh() { refresh(now: clock.now) }
 
     func refresh(now: Date) {
+        applyPendingScheduleIfDue(now: now)
         // the lock-screen warning ends with its promised seconds, at the wake time and with the night
         if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false { endLockWarning() }
         if let rec = active {
@@ -1017,7 +1141,17 @@ final class AppModel {
     /// until that bedtime the reminders repeat weekly on every weekday except tonight's (`Notifications.reminderTriggers`).
     func rescheduleReminders() {
         guard servicesEnabled else { return }
-        Notifications.scheduleReminders(settings.schedule, quietUntil: reminderQuietUntil)
+        Notifications.scheduleReminders(settings.schedule, quietUntil: reminderQuietUntil, lockEndsOn: lockEndNotificationDay)
+    }
+
+    /// The day the schedule lock ends (the first day a change week can be opened again), while a week or a lock runs:
+    /// the day of the one "you can open a change week again" notification. nil = none.
+    private var lockEndNotificationDay: NightKey? {
+        switch SchedulePolicy.state(at: clock.now, weekStart: changeWeekStart, calendar: calendar) {
+        case .open: return nil
+        case .changeWeek: return changeWeekStart.map { SchedulePolicy.plan(opening: $0, calendar: calendar).freeFrom }
+        case .locked(_, let freeFrom): return freeFrom
+        }
     }
 
     /// Tonight's bedtime while its reminder must stay quiet: the running night when it was started early and that
@@ -1049,7 +1183,8 @@ final class AppModel {
             history: real.map(\.buildingId), rng: &rng)
         let rec = NightRecord(window: window, buildingId: entry.id, isDebug: isDebug,
                               setupGrace: debugWindow != nil ? debugGrace : SleepRules().setupGrace,
-                              idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode)
+                              idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode,
+                              calmHoursRule: CalmHours.currentRule)
         rec.append(.started, at: now)
         context.insert(rec)
         save()
@@ -1092,9 +1227,18 @@ final class AppModel {
         if let rec = active { finalize(rec) }
     }
 
+    /// The result screen's calm-hours line: only when the night had at least one calm hour (no blame otherwise).
+    private func setCalmHours(_ entry: Economy.Entry?, result: NightResult?) {
+        lastCalmBonus = entry?.calmBonus ?? 0
+        if let calm = entry?.calmHours, calm > 0, let total = result?.calmHoursTotal { lastCalmHours = (calm, total) }
+        else { lastCalmHours = nil }
+    }
+
     func acknowledgeResult() {
         shownResult = nil
         lastUndisturbedBonus = 0
+        lastCalmHours = nil
+        lastCalmBonus = 0
         levelUp = nil
         newAchievements = []
         finishedWeek = nil
@@ -1423,8 +1567,13 @@ final class AppModel {
         systemAlarmMoved = false
         backupNotificationsOn = true
         if servicesEnabled {
-            Notifications.scheduleNight(setupEnds: setupEnds, wake: rec.wake, alarmFile: settings.alarmSound.fileName)
+            Notifications.scheduleNight(wake: rec.wake, alarmFile: settings.alarmSound.fileName)
         }
+        // the night starts with SleepHole in front: no "setup is running out" reminder until the user leaves it
+        outsideApp = false
+        setupEndsAt = setupEnds
+        setupReminderAt = nil
+        if servicesEnabled { Notifications.cancelSetupReminder() }
         switch systemAlarm.consent {
         case .allowed:
             scheduleSystemAlarm(at: rec.wake + SystemAlarmPlan.afterWake)
@@ -1505,6 +1654,11 @@ final class AppModel {
         if restarted { rec.append(.restartExcused, at: now) }
         rec.append(.appLaunched, at: now)
         save()
+        // a cold launch puts the user in the app: no setup reminder (it is set again if he leaves during the setup)
+        outsideApp = false
+        setupEndsAt = rec.startedAt.map { rec.window.setupEnds(start: $0, rules: rec.rules) }
+        setupReminderAt = nil
+        if servicesEnabled { Notifications.cancelSetupReminder() }
         if closedAt != nil, servicesEnabled { Notifications.cancelClosed() }       // the owner is back
         if closedAt != nil { cancelCollapseNotice() }
         startServices(for: rec)
@@ -1698,6 +1852,7 @@ final class AppModel {
         let lockTripWasOpen = Self.lockScreenTripOpen(rec.log)
         rec.append(kind, at: date)
         save()
+        updateSetupReminder(after: kind, at: date)
         switch kind {
         case .leftApp where lockTripWasOpen && rec.rules.lockScreenCollapses:
             break           // strict: the lock-screen trip is counted and warned about since it began; nothing new
@@ -1767,6 +1922,17 @@ final class AppModel {
         }
     }
 
+    /// The "15s of setup left" reminder is pending only while the user is outside SleepHole during the setup
+    /// (`SetupReminder`, owner 2026-10-15). Observable for tests through `setupReminderAt`.
+    private func updateSetupReminder(after kind: NightEventKind, at date: Date) {
+        outsideApp = SetupReminder.outsideApp(after: kind, wasOutside: outsideApp)
+        let wanted = setupEndsAt.flatMap { SetupReminder.fireDate(setupEnds: $0, now: date, outsideApp: outsideApp) }
+        guard wanted != setupReminderAt else { return }
+        setupReminderAt = wanted
+        guard servicesEnabled else { return }
+        if let wanted { Notifications.setupReminder(at: wanted) } else { Notifications.cancelSetupReminder() }
+    }
+
     /// The last trip-relevant event of the log is `.usedLockScreen`: a lock-screen trip is open.
     static func lockScreenTripOpen(_ log: NightLog) -> Bool {
         let ends: Set<NightEventKind> = [.usedLockScreen, .leftApp, .closedByOwner, .returned, .locked, .confirmed,
@@ -1799,6 +1965,11 @@ final class AppModel {
     private(set) var lastWarning: Warning?
     /// How many gentle lock-screen reminders (`Notifications.lockScreenReminder`) were asked for this app session (tests).
     private(set) var lockRemindersSent = 0
+    /// Setup reminder state (see `updateSetupReminder`): the user is in another app / when the setup ends / when the
+    /// pending "15s of setup left" notification fires (nil = none pending).
+    private var outsideApp = false
+    private var setupEndsAt: Date?
+    private(set) var setupReminderAt: Date?
     /// When the "building collapsed" notice is set to fire for the trip that is running (nil = none). Kept even without
     /// services so tests can see the decision; the notification itself is scheduled only with services.
     private(set) var collapseNoticeAt: Date?
@@ -1866,6 +2037,7 @@ final class AppModel {
                 .last { $0.key.description == rec.keyString }
         lastStreakBonus = entry?.streakBonus ?? 0
         lastUndisturbedBonus = entry?.undisturbedBonus ?? 0
+        setCalmHours(entry, result: rec.result)
         phase = .result
         if servicesEnabled {
             switch result.outcome {

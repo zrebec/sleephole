@@ -84,6 +84,9 @@ struct AppSettings: Codable, Equatable {
         get { voiceOff != true }
         set { voiceOff = newValue ? nil : true }
     }
+    /// New bedtime / wake that wait for a night (change week, evening rule – `SchedulePolicy.startsFrom`): the
+    /// times in `schedule` stay in effect until that night comes. nil = none. Optional so older settings still load.
+    var pendingSchedule: PendingSchedule?
     /// Typed on the alarm screen as an alternative to shaking (D15).
     var wakeCode: String = AppSettings.randomCode()
     /// When the USER last changed any setting on some device (phase SYNC): the newest settings win a merge. Set by

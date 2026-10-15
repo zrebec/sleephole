@@ -135,7 +135,7 @@ final class LifecycleMonitor {
             guard let self, !Task.isCancelled else { return }
             self.pendingLockUse = nil
             let active = self.isAppActive()
-            self.raw("recognised \(Int(Self.lockScreenWindow.components.seconds)) s ago · active=\(active) · locked=\(self.dataLocked)")
+            self.raw("recognised \(Int(Self.lockScreenWindow.components.seconds))s ago · active=\(active) · locked=\(self.dataLocked)")
             if !active, !self.dataLocked, !self.isAway {
                 self.isAway = true; self.lockTrip = true
                 self.emit(.usedLockScreen, "(recognised and not back in time)")

@@ -86,7 +86,7 @@ struct ExtrasTests {
         render(ResultView(), m)
         m.acknowledgeResult()
         #expect(m.achievements.map(\.achievement) == [.firstBuilding, .streak3])
-        #expect(m.coins == 300 + 3 * 30 + 100)
+        #expect(m.coins == 300 + 3 * 30 + 3 * 35 + 100)
         render(StatsView(), m)
         render(AchievementsCard(), m)
         render(NewAchievements(achievements: Achievement.allCases), m)
@@ -193,54 +193,141 @@ struct ExtrasTests {
         render(TownTab().renameTownAlert(isPresented: .constant(true)), m)
     }
 
-    @Test func scheduleChangesAreFreeInTheirWindowsOtherwiseTheStreakStartsAgain() {
-        let (m, clock) = model(store(), at: date(5, 12))                  // calibration: 5.–12. 10.
-        m.completeOnboarding()
-        var s = m.settings.schedule
-        s.bedtime = TimeOfDay(22, 0)
-        #expect(m.scheduleChangeCost() == .free(.calibration) && m.scheduleCalibrationEnds != nil)
-        m.applySchedule(s)                                                 // free: first week
-        #expect(m.scheduleChanges().last?.free == true && m.streakBreaks.isEmpty)
-        s.bedtime = TimeOfDay(22, 30)
-        m.applySchedule(s)
-        for d in 5...14 { night(m, clock, day: d) }
-        clock.now = date(15, 12); m.refresh()
-        #expect(m.streak == 10 && m.scheduleChangeCost() == .resetsStreak)
-        let coins = m.coins
-        s.reminderOffsets = [45]
-        m.applySchedule(s)                                                 // only the reminder: always free
-        #expect(m.streak == 10 && m.settings.schedule.reminderOffsets == [45])
-        s.wake = TimeOfDay(6, 0)
-        m.applySchedule(s)                                                 // outside the window: streak again
-        #expect(m.streak == 0 && m.streakBreaks == [NightKey("2026-10-16")!])
-        #expect(m.coins == coins && m.stats.bestStreak == 10)              // nothing else is taken away
-        #expect(m.nextFreeScheduleChange == cal.date(from: DateComponents(year: 2026, month: 11, day: 1))!)
-        clock.now = date(15, 22, 25); m.refresh(); m.startNight()
-        clock.now = date(16, 6, 1); m.refresh(); m.confirm(code: "1234"); m.acknowledgeResult()
-        #expect(m.streak == 1)
-        m.applySchedule(s)                                                 // unchanged: nothing recorded
-        #expect(m.scheduleChanges().count == 3)
-        for cost in [SchedulePolicy.Change.free(.monthStart), .free(.calibration), .resetsStreak] {
-            #expect(!SettingsView.scheduleRules(cost, nextFree: clock.now, calibrationEnds: clock.now).isEmpty)
-        }
-        render(SettingsView(), m)
-        render(GuideView(replay: true), m)
+    func day(_ month: Int, _ d: Int, _ h: Int = 12, _ mi: Int = 0) -> Date {
+        cal.date(from: DateComponents(year: 2026, month: month, day: d, hour: h, minute: mi))!
     }
 
-    @Test func theMonthlyCardAsksOnDays1to3() {
-        let (m, clock) = model(store(), at: date(15, 12))
-        m.completeOnboarding()
-        #expect(!m.showsMonthlySchedulePrompt)
-        clock.now = cal.date(from: DateComponents(year: 2026, month: 11, day: 2, hour: 9))!
-        #expect(m.showsMonthlySchedulePrompt && m.scheduleChangeCost() == .free(.monthStart))
+    // MARK: the change week (build 8, owner 2026-10-15)
+
+    @Test func theChangeWeekOpensLocksAndUnlocksForCoinsWithoutTouchingTheStreak() {
+        let (m, clock) = model(store(), at: date(5, 12))
+        #expect(m.scheduleState == .open)                                  // before the guide: nothing is running
+        m.completeOnboarding()                                             // the guide set the first schedule: day 1 = 5. 10.
+        #expect(m.scheduleState == .changeWeek(lastDay: NightKey("2026-10-11")!))
+        var s = m.settings.schedule
+        s.bedtime = TimeOfDay(22, 0)
+        #expect(m.applySchedule(s) == .applied)                            // noon: well before the early start of tonight
+        #expect(m.settings.schedule.bedtime == TimeOfDay(22, 0) && m.settings.pendingSchedule == nil)
+        #expect(m.scheduleChanges().last?.free == true && m.scheduleChanges().last?.rule == 1 && m.streakBreaks.isEmpty)
+        s.bedtime = TimeOfDay(22, 30)
+        clock.now = date(8, 12)
+        #expect(m.applySchedule(s) == .applied)                            // as many changes as he likes ...
+        #expect(m.changeWeekStart == date(5, 12) && m.scheduleChanges().count == 2)   // ... and the week is not extended
+        for d in 8...25 { night(m, clock, day: d) }
+        clock.now = date(26, 9); m.refresh()
+        let streak = m.streak, coins = m.coins
+        #expect(streak == 18 && coins >= SchedulePolicy.unlockPrice)
+        #expect(m.scheduleState == .locked(lastDay: NightKey("2026-11-11")!, freeFrom: NightKey("2026-11-12")!))
+        s.wake = TimeOfDay(6, 0)
+        #expect(m.applySchedule(s) == .locked && m.settings.schedule.wake == TimeOfDay(6, 30))   // refused
+        s = m.settings.schedule; s.reminderOffsets = [45]
+        #expect(m.applySchedule(s) == .applied && m.settings.schedule.reminderOffsets == [45])    // the reminder stays free
+        #expect(m.unlockSchedule() == .unlocked)
+        #expect(m.coinsSpent == 2000 && m.spends().last?.reason == "schedule-unlock" && m.coins == coins - 2000)
+        #expect(m.scheduleState == .changeWeek(lastDay: NightKey("2026-11-01")!) && m.changeWeekStart == date(26, 9))
+        #expect(m.unlockSchedule() == .notLocked && m.coinsSpent == 2000)
+        s.wake = TimeOfDay(6, 0)
+        #expect(m.applySchedule(s) == .applied && m.settings.schedule.wake == TimeOfDay(6, 0))
+        #expect(m.streak == streak && m.streakBreaks.isEmpty)               // a change never resets the streak
+        // the lock after the paid week ends on 2. 12. – the card asks once
+        clock.now = day(12, 1, 9); m.refresh()
+        #expect(!m.showsChangeWeekCard && m.scheduleState != .open)
+        clock.now = day(12, 2, 9); m.refresh()
+        #expect(m.scheduleState == .open && m.showsChangeWeekCard)
         render(TodayView(), m)
-        render(MonthlyScheduleCard(), m)
-        m.answerMonthlyPrompt(adjust: true)
-        #expect(!m.showsMonthlySchedulePrompt && m.settingsRequest == 1)
-        clock.now = cal.date(from: DateComponents(year: 2026, month: 12, day: 1, hour: 9))!
-        #expect(m.showsMonthlySchedulePrompt)                              // next month asks again
-        m.answerMonthlyPrompt(adjust: false)
-        #expect(!m.showsMonthlySchedulePrompt && m.settingsRequest == 1)
-        Notifications.scheduleMonthlyCheck(wake: TimeOfDay(23, 30))        // wraps past midnight
+        render(ChangeWeekCard(), m)
+        m.answerChangeWeekCard(adjust: true)
+        #expect(!m.showsChangeWeekCard && m.settingsRequest == 1)
+        clock.now = day(12, 3, 9); m.refresh()
+        #expect(!m.showsChangeWeekCard && m.scheduleState == .open)         // nothing opens by itself, the card came once
+    }
+
+    @Test func theUnlockIsRefusedWithoutEnoughCoinsAndOutsideALock() {
+        let (m, clock) = model(store(), at: date(5, 12))
+        m.completeOnboarding()
+        #expect(m.unlockSchedule() == .notLocked)                           // in the change week
+        clock.now = date(20, 12); m.refresh()
+        #expect(m.scheduleState == .locked(lastDay: NightKey("2026-11-11")!, freeFrom: NightKey("2026-11-12")!))
+        #expect(m.coins == 0 && m.unlockSchedule() == .notEnoughCoins(missing: 2000))
+        #expect(m.coinsSpent == 0 && m.coins == 0)                          // coins never go negative
+    }
+
+    @Test func everyoneWhoUpdatedStartsOpenAndTheFirstChangeOpensAWeek() throws {
+        let c = store()
+        let (old, _) = model(c, at: date(5, 12))
+        let p = try c.mainContext.fetch(FetchDescriptor<UserProgress>()).first!
+        p.onboardingCompletedAt = date(1, 12)                               // an existing user: guide done long ago
+        p.scheduleCalibrationStart = date(1, 12)                            // the old calibration week (ended on 8. 10.)
+        c.mainContext.insert(ScheduleChange(at: date(3, 10), from: "22:30–6:30", to: "23:00–7:00", free: false, breakKey: "2026-10-04"))
+        try c.mainContext.save()
+        _ = old
+        let (m, _) = model(c, at: date(5, 12))
+        #expect(m.onboardingDone && m.changeWeekStart == nil && m.scheduleState == .open)
+        #expect(m.streakBreaks == [NightKey("2026-10-04")!])                // the history stays as it was
+        #expect(!m.showsChangeWeekCard)                                     // no week was ever opened: no "lock ended" card
+        var s = m.settings.schedule
+        s.wake = TimeOfDay(6, 0)
+        #expect(m.applySchedule(s) == .applied)                             // the UI asked first; the model opens the week
+        #expect(m.scheduleState == .changeWeek(lastDay: NightKey("2026-10-11")!))
+        #expect(m.scheduleChanges().map(\.rule) == [nil, 1] && m.streakBreaks == [NightKey("2026-10-04")!])
+    }
+
+    @Test func aChangeFromTheEarlyStartWaitsForTheNextNightAndIsAppliedWhenItComes() {
+        let (m, clock) = model(store(), at: date(5, 12))
+        m.completeOnboarding()
+        clock.now = date(5, 20); m.refresh()                                // 19:30 (early start of tonight) has passed
+        var s = m.settings.schedule
+        s.bedtime = TimeOfDay(23, 0); s.wake = TimeOfDay(7, 0)
+        #expect(m.applySchedule(s) == .fromTomorrow)
+        #expect(m.settings.schedule == Schedule() && m.editableSchedule == s)
+        #expect(m.settings.pendingSchedule == PendingSchedule(schedule: s, fromNight: NightKey("2026-10-07")!))
+        s.reminderOffsets = [10]
+        #expect(m.applySchedule(s) == .applied)                             // only the reminder: at once, for both
+        #expect(m.settings.schedule.reminderOffsets == [10] && m.settings.pendingSchedule?.schedule.reminderOffsets == [10])
+        // back to the times in effect: nothing waits any more
+        var back = Schedule(); back.reminderOffsets = [10]
+        #expect(m.applySchedule(back) == .applied)
+        #expect(m.settings.pendingSchedule == nil && m.settings.schedule.bedtime == TimeOfDay(22, 30))
+        // again, and tonight still runs with the old times
+        #expect(m.applySchedule(s) == .fromTomorrow)
+        clock.now = date(5, 22, 25); m.refresh(); m.startNight()
+        #expect(m.active?.bedtime == date(5, 22, 30))
+        clock.now = date(6, 6, 31); m.refresh(); m.confirm(code: "1234"); m.acknowledgeResult()
+        #expect(m.settings.schedule.bedtime == TimeOfDay(22, 30))           // the morning of the old night: not yet
+        clock.now = date(6, 8); m.refresh()
+        #expect(m.settings.schedule.bedtime == TimeOfDay(23, 0) && m.settings.schedule.wake == TimeOfDay(7, 0))
+        #expect(m.settings.pendingSchedule == nil && m.window.bedtime == date(6, 23))
+        clock.now = date(6, 22, 49); m.refresh()
+        #expect(m.phase == .idle)
+        clock.now = date(6, 22, 50); m.refresh()
+        #expect(m.phase == .canStart)                                       // the new times: start opens 10 min before 23:00
+    }
+
+    @Test func aChangeAfterMidnightAppliesFromTheComingEvening() {
+        let (m, clock) = model(store(), at: date(5, 12))
+        m.completeOnboarding()
+        clock.now = date(6, 2); m.refresh()                                 // the night of 6. 10. began yesterday evening
+        var s = m.settings.schedule
+        s.bedtime = TimeOfDay(23, 0)
+        #expect(m.applySchedule(s) == .fromTomorrow)
+        #expect(m.settings.pendingSchedule?.fromNight == NightKey("2026-10-07")!)    // = the evening of 6. 10.
+        clock.now = date(6, 7, 31); m.refresh()                             // the old night is over
+        #expect(m.settings.schedule.bedtime == TimeOfDay(23, 0) && m.settings.pendingSchedule == nil)
+    }
+
+    @Test func theScheduleSectionAndTheLockEndNotificationRender() {
+        let (m, _) = model(store(), at: date(5, 12))
+        m.completeOnboarding()
+        for state in [SchedulePolicy.State.open, .changeWeek(lastDay: NightKey("2026-10-09")!),
+                      .locked(lastDay: NightKey("2026-11-11")!, freeFrom: NightKey("2026-11-12")!)] {
+            m.debugScheduleState = state
+            render(SettingsView(), m)
+        }
+        #expect(SettingsView.daysLeft(until: NightKey("2026-10-09")!, now: date(5, 12), calendar: cal) == Plural.days(5))
+        #expect(SettingsView.daysLeft(until: NightKey("2026-10-09")!, now: date(9, 12), calendar: cal) == Plural.days(1))
+        #expect(Notifications.monthlyCheckContent().interruptionLevel == .active)
+        Notifications.scheduleLockEnded(on: NightKey("2999-01-01")!, wake: TimeOfDay(23, 30))   // 00:30 – wraps past midnight
+        Notifications.scheduleLockEnded(on: NightKey("2000-01-01")!, wake: TimeOfDay(6, 30))    // in the past: nothing scheduled
+        Notifications.scheduleLockEnded(on: nil, wake: TimeOfDay(6, 30))
     }
 }

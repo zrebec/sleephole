@@ -56,7 +56,8 @@ public enum Sky {
     /// Dusk starts this long before bedtime and ends at bedtime.
     public static let duskLead: TimeInterval = 90 * 60
 
-    public static func state(at t: Date, schedule: Schedule, calendar: Calendar) -> SkyState {
+    public static func state(at t: Date, schedule: Schedule, calendar: Calendar,
+                             southernHemisphere: Bool = false) -> SkyState {
         let bed = DateComponents(hour: schedule.bedtime.hour, minute: schedule.bedtime.minute)
         let wake = DateComponents(hour: schedule.wake.hour, minute: schedule.wake.minute)
         // The last bedtime at or before t, the wake after it and the next bedtime: between two bedtimes there is
@@ -67,7 +68,8 @@ public enum Sky {
 
         let dayStart = w - dawnLead
         if t < dayStart {
-            return SkyState(phase: .night, daylight: 0, glow: 0, arc: fraction(t, prevBed, dayStart))
+            return SkyState(phase: .night, daylight: 0, glow: 0, arc: fraction(t, prevBed, dayStart),
+                            moon: moonLook(at: t, southernHemisphere: southernHemisphere))
         }
         // A very short day: dawn and dusk meet in the middle instead of overlapping.
         let mid = dayStart + nextBed.timeIntervalSince(dayStart) / 2
@@ -118,6 +120,25 @@ public enum Sky {
         let phase = Astro.moonPhase(at: t)
         return MoonLook(illuminated: phase.illuminated, litOnRight: phase.waxing != (place.latitude < 0))
     }
+
+    /// The moon's look without a place: the phase comes from the date alone, only the lit side needs the hemisphere.
+    static func moonLook(at t: Date, southernHemisphere: Bool) -> MoonLook {
+        let phase = Astro.moonPhase(at: t)
+        return MoonLook(illuminated: phase.illuminated, litOnRight: phase.waxing != southernHemisphere)
+    }
+
+    /// Whether a user's region (ISO 3166 code, `Locale.current.region`) lies mostly south of the equator – the only
+    /// offline hint at the hemisphere when no city is set. Unknown / nil → northern.
+    public static func isSouthernRegion(_ code: String?) -> Bool {
+        guard let code else { return false }
+        return southernRegions.contains(code.uppercased())
+    }
+
+    static let southernRegions: Set<String> = [
+        "AU", "NZ", "AR", "CL", "UY", "PY", "BO", "PE", "BR", "ZA", "NA", "BW", "LS", "SZ", "MZ", "MG", "ZW", "ZM",
+        "MW", "AO", "TZ", "RW", "BI", "KE", "ID", "PG", "FJ", "WS", "TO", "VU", "NC", "PF", "SB", "CK", "NU", "TL",
+        "RE", "MU", "SC", "KM", "YT", "FK", "GS", "TV"
+    ]
 
     static func fraction(_ t: Date, _ a: Date, _ b: Date) -> Double {
         let span = b.timeIntervalSince(a)

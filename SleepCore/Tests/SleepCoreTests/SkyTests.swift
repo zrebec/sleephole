@@ -289,6 +289,35 @@ private func utc(_ iso: String) -> Date { try! Date(iso, strategy: .iso8601) }
         let s = Sky.state(at: at(2026, 10, 15, 14), schedule: defaultSchedule, calendar: bratislava)
         #expect(s.body == .sun && s.moon == nil)
         let n = Sky.state(at: at(2026, 10, 15, 3), schedule: defaultSchedule, calendar: bratislava)
-        #expect(n.body == .moon && n.moon == nil)
+        #expect(n.body == .moon && n.moon != nil)   // since 8e the night carries the real phase too
+    }
+}
+
+@Suite struct ScheduleSkyMoonTests {
+    func night(_ day: Int, south: Bool = false) -> SkyState {      // 03:00 Bratislava time: night on the default schedule
+        Sky.state(at: at(2026, 10, day, 3, 0), schedule: defaultSchedule, calendar: bratislava, southernHemisphere: south)
+    }
+
+    @Test func theNightSkyWithoutACityCarriesTheRealPhase() throws {
+        let newMoon = try #require(night(10).moon)          // new moon 10 Oct 2026
+        #expect(newMoon.illuminated < 0.03)
+        let quarter = try #require(night(18).moon)          // first quarter 18 Oct: waxing, about half lit
+        #expect(abs(quarter.illuminated - 0.5) < 0.1 && quarter.litOnRight)
+        let full = try #require(night(26).moon)             // full moon 26 Oct
+        #expect(full.illuminated > 0.97)
+        let waning = try #require(night(3, south: false).moon)   // last quarter 3 Nov is later; 3 Oct is waning gibbous
+        #expect(!waning.litOnRight)
+    }
+
+    @Test func theSouthMirrorsAndTheDayHasNoMoon() throws {
+        #expect(try #require(night(18, south: true).moon).litOnRight == false)
+        let noon = Sky.state(at: at(2026, 10, 18, 12, 0), schedule: defaultSchedule, calendar: bratislava)
+        #expect(noon.moon == nil && noon.body == .sun)
+    }
+
+    @Test func regionsDecideTheHemisphere() {
+        #expect(Sky.isSouthernRegion("AU") && Sky.isSouthernRegion("nz") && Sky.isSouthernRegion("BR"))
+        #expect(!Sky.isSouthernRegion("SK") && !Sky.isSouthernRegion("US") && !Sky.isSouthernRegion(nil))
+        #expect(!Sky.isSouthernRegion("") && !Sky.isSouthernRegion("ZZ"))
     }
 }

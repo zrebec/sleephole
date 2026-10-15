@@ -431,7 +431,7 @@ struct SyncTests {
         for d in [a, b, c] {
             let p = profile(d)
             #expect(p.onboardingCompletedAt == date(1, 13) && p.firstNightBriefingAt == date(1, 14))   // the earliest
-            #expect(p.scheduleCalibrationStart == date(1, 12))                                          // the earliest
+            #expect(p.changeWeekStart == date(3, 13) && d.model.changeWeekStart == date(3, 13))         // the newest change week
             #expect(d.model.onboardingDone && d.model.firstNightBriefed)
         }
         for d in [a, b] {

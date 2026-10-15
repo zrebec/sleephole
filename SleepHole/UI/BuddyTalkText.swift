@@ -35,6 +35,19 @@ enum BuddyTalkText {
         "Someone asked if we'll ever get a cinema. Who knows!",
         "The baker says fresh bread tastes best after a good night's sleep.",
         "Tonight we build again. I'll keep an eye on the site 🐾",
+        "Full moon tonight 🌕 The whole town has a silver night.",
+        "New moon tonight 🌑 The moon has a night off – only the stars are out.",
+        "The longest night of the year – made for a long sleep 🌌",
+        "The shortest night of the year – all the more reason to sleep on time ☀️",
+        "Day and night are equally long today ⚖️",
+        "Full moon tomorrow – the moon can hardly wait 🌕",
+        "Full moon in %lld days 🌕",
+        "A thin moon is growing 🌒 Like our town – a little every night.",
+        "Half a moon tonight 🌓 It grows a little every night.",
+        "The moon is nearly full 🌔 The streets glow softly at night.",
+        "The moon is getting smaller 🌖 The nights get darker and cosier.",
+        "Half a moon, getting smaller 🌗 Soon it takes a rest.",
+        "Just a sliver of moon is left 🌘 It rises late, like a proper sleepyhead.",
     ]
 
     /// The size name for a sentence ("We're a village now"): the same name as the Town header, in lower case.
@@ -75,6 +88,22 @@ enum BuddyTalkText {
             default: L("The baker says fresh bread tastes best after a good night's sleep.")
             }
         case .tonight: L("Tonight we build again. I'll keep an eye on the site 🐾")
+        case .fullMoonTonight: L("Full moon tonight 🌕 The whole town has a silver night.")
+        case .newMoonTonight: L("New moon tonight 🌑 The moon has a night off – only the stars are out.")
+        case .longestNight: L("The longest night of the year – made for a long sleep 🌌")
+        case .shortestNight: L("The shortest night of the year – all the more reason to sleep on time ☀️")
+        case .equinox: L("Day and night are equally long today ⚖️")
+        case .fullMoonTomorrow: L("Full moon tomorrow – the moon can hardly wait 🌕")
+        case let .fullMoonSoon(days): L("Full moon in \(days) days 🌕")
+        case let .moonPhase(q):
+            switch q {
+            case .waxingCrescent: L("A thin moon is growing 🌒 Like our town – a little every night.")
+            case .firstQuarter: L("Half a moon tonight 🌓 It grows a little every night.")
+            case .waxingGibbous: L("The moon is nearly full 🌔 The streets glow softly at night.")
+            case .waningGibbous: L("The moon is getting smaller 🌖 The nights get darker and cosier.")
+            case .lastQuarter: L("Half a moon, getting smaller 🌗 Soon it takes a rest.")
+            case .waningCrescent: L("Just a sliver of moon is left 🌘 It rises late, like a proper sleepyhead.")
+            }
         }
     }
 }

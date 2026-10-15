@@ -222,6 +222,52 @@ struct AppModelTests {
         #expect(h.model.graceEnds! < t0 + 16)                                 // +16 s: after it
     }
 
+    // MARK: the "15s of setup left" reminder (owner 2026-10-15): pending only while the user is in another app
+
+    @Test func setupReminderIsNotPendingWhenTheNightStartsInTheApp() {
+        let h = harness(at: date(5, 22, 25)); h.model.refresh(); h.model.startNight()
+        #expect(h.model.setupReminderAt == nil)
+    }
+
+    @Test func setupReminderFollowsTheUserOutOfAndBackIntoTheApp() {
+        let h = harness(at: date(5, 22, 25)); h.model.refresh(); h.model.startNight()
+        let ends = h.model.graceEnds!
+        h.clock.now = ends - 120
+        h.model.append(.leftApp)
+        #expect(h.model.setupReminderAt == ends - 15)
+        h.clock.now = ends - 100
+        h.model.append(.returned)
+        #expect(h.model.setupReminderAt == nil)
+        h.model.append(.locked)                                   // locked from inside SleepHole: stays cancelled
+        #expect(h.model.setupReminderAt == nil)
+    }
+
+    @Test func lockingWhileInAnotherAppKeepsTheSetupReminder() {
+        let h = harness(at: date(5, 22, 25)); h.model.refresh(); h.model.startNight()
+        let ends = h.model.graceEnds!
+        h.clock.now = ends - 120
+        h.model.append(.leftApp)
+        h.model.append(.locked)
+        #expect(h.model.setupReminderAt == ends - 15)
+        h.model.append(.returned)
+        #expect(h.model.setupReminderAt == nil)
+    }
+
+    @Test func leavingTooLateSchedulesNoSetupReminder() {
+        let h = harness(at: date(5, 22, 25)); h.model.refresh(); h.model.startNight()
+        h.clock.now = h.model.graceEnds! - 10
+        h.model.append(.leftApp)
+        #expect(h.model.setupReminderAt == nil)
+    }
+
+    @Test func aRelaunchDuringTheSetupLeavesNoSetupReminder() {
+        let h = harness(at: date(5, 22, 25)); h.model.refresh(); h.model.startNight()
+        h.clock.now = h.model.graceEnds! - 120
+        h.model.append(.leftApp)
+        let again = harness(at: h.clock.now + 5, container: h.container)
+        #expect(again.model.active != nil && again.model.setupReminderAt == nil)
+    }
+
     @Test func cancelFastNightReturnsToIdle() {
         let h = harness(at: date(5, 15))
         h.model.startTestNight()
@@ -273,22 +319,22 @@ struct AppModelTests {
         let h = harness(at: date(1, 12))
         h.clock.now = date(1, 22, 25); h.model.refresh(); h.model.startNight()
         h.clock.now = date(2, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
-        // complete +100, no pause +30 and the achievement "First building" +50
-        #expect(h.model.coins == 180 && h.model.lastReward == 180 && h.model.newAchievements == [.firstBuilding])
+        // complete +100, no pause +30, 7 calm hours +35 and the achievement "First building" +50
+        #expect(h.model.coins == 215 && h.model.lastReward == 215 && h.model.newAchievements == [.firstBuilding])
         #expect(h.model.lastUndisturbedBonus == 30)
         h.model.acknowledgeResult()
         #expect(h.model.newAchievements.isEmpty)
         playNight(h, day: 2, confirmAfterWake: 30 * 60)                   // unfinished +50 (no bonus)
-        #expect(h.model.coins == 230)
+        #expect(h.model.coins == 300)                                     // +50 +35 calm hours
         h.clock.now = date(3, 15)
         h.model.startTestNight(); h.model.startNight()                    // debug: nothing
         h.clock.now += 240; h.model.refresh(); h.model.confirm()
-        #expect(h.model.coins == 230 && h.model.lastReward == 0 && h.model.newAchievements.isEmpty)
+        #expect(h.model.coins == 300 && h.model.lastReward == 0 && h.model.newAchievements.isEmpty)
         h.model.acknowledgeResult()
         h.model.nextTestNightCounts = true                                // the counted test night pays
         h.model.startTestNight(); h.model.startNight()
         h.clock.now += 240; h.model.refresh(); h.model.confirm()
-        #expect(h.model.coins == 360)                                     // +100 +30
+        #expect(h.model.coins == 430)                                     // +100 +30 (a 4-minute night has no whole hour)
     }
 
     @Test func seventhNightPaysTheStreakBonus() {
@@ -301,9 +347,11 @@ struct AppModelTests {
         #expect(h.model.newAchievements.contains(.streak7) && h.model.lastStreakBonus == 200)
         // the 7th night may already build level 2 (pays 120)
         let level = catalog[h.model.shownResult!.buildingId]!.level
-        #expect(h.model.lastReward == Economy.completeReward(level: level) + 200 + bonus + PausePolicy.undisturbedBonus)
+        #expect(h.model.lastReward == Economy.completeReward(level: level) + 200 + bonus + PausePolicy.undisturbedBonus + 7 * Economy.calmHourBonus)
         let nights = h.model.coreResults().reduce(0) { $0 + Economy.reward($1.outcome, level: catalog[$1.buildingId ?? ""]?.level ?? 1) }
-        #expect(h.model.coins == nights + 7 * PausePolicy.undisturbedBonus + 200 + Achievements.coins(h.model.achievements))
+        let calm = h.model.coreResults().reduce(0) { $0 + ($1.calmHours ?? 0) } * Economy.calmHourBonus
+        #expect(calm == 7 * 7 * Economy.calmHourBonus)
+        #expect(h.model.coins == nights + 7 * PausePolicy.undisturbedBonus + calm + 200 + Achievements.coins(h.model.achievements))
     }
 
     @Test func sleepSoundDuringTheNight() {
@@ -449,7 +497,7 @@ struct AppModelTests {
         h.clock.now = date(6, 6, 31); h.model.refresh()
         #expect(h.model.confirm(code: "1234"))
         #expect(h.model.shownResult?.outcome == .complete && h.model.shownResult?.result?.pauses == 1)
-        #expect(h.model.lastUndisturbedBonus == 0 && h.model.lastReward == 100 + 50)       // no +30; +50 first building
+        #expect(h.model.lastUndisturbedBonus == 0 && h.model.lastReward == 100 + 50 + 6 * Economy.calmHourBonus)   // no +30; +50 first building; the pause spoils one of 7 hours
         #expect(NightReport(log: h.model.shownResult!.log).pauses.count == 1)
     }
 
@@ -697,5 +745,45 @@ struct AppModelTests {
         #expect(h.model.tonightPlayed && !h.model.canStartEarly && h.model.phase == .idle)
         h.clock.now = date(6, 20, 0); h.model.refresh()
         #expect(!h.model.tonightPlayed)                                        // the next evening
+    }
+}
+
+// MARK: - calm hours (build 8, CARE-2a)
+
+@MainActor
+extension AppModelTests {
+    @Test func aNewNightCarriesTheCalmHoursMarkerAndPaysPerHour() {
+        let h = harness(at: date(1, 12))
+        h.clock.now = date(1, 22, 25); h.model.refresh(); h.model.startNight()
+        #expect(h.model.active?.calmHoursRule == CalmHours.currentRule)
+        h.clock.now = date(2, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
+        // started 22:25, setup ends 22:35 → anchor 22:35 → 7 whole hours before 06:30
+        let result = h.model.shownResult?.result
+        #expect(result?.calmHours == 7 && result?.calmHoursTotal == 7)
+        #expect(h.model.lastCalmHours?.calm == 7 && h.model.lastCalmBonus == 7 * Economy.calmHourBonus)
+        #expect(h.model.lastReward == 100 + 30 + 35 + 50)          // night, no pause, calm hours, "First building"
+    }
+
+    @Test func aNightFromBeforeTheRuleEarnsNoCalmHours() {
+        let h = harness(at: date(1, 12))
+        h.clock.now = date(1, 22, 25); h.model.refresh(); h.model.startNight()
+        h.model.active?.calmHoursRule = nil                         // as if it had started in an older build
+        h.clock.now = date(2, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
+        #expect(h.model.lastCalmHours == nil && h.model.lastCalmBonus == 0)
+        #expect(h.model.shownResult?.result?.calmHours == nil)
+        #expect(h.model.lastReward == 100 + 30 + 50)
+    }
+
+    @Test func theBackupAndSyncFileKeepTheMarkerAndAnOldFileLoadsAsNil() throws {
+        let r = NightRecord(window: NightWindow(key: NightKey(date: date(6, 6), calendar: .current), bedtime: date(5, 22, 30),
+                                                wake: date(6, 6, 30)),
+                            buildingId: "x", isDebug: false, setupGrace: 300, calmHoursRule: CalmHours.currentRule)
+        let e = JSONEncoder(); e.dateEncodingStrategy = .iso8601
+        let d = JSONDecoder(); d.dateDecodingStrategy = .iso8601
+        #expect(NightRecord(backup: try d.decode(BackupFile.Night.self, from: try e.encode(r.backup))).calmHoursRule == 1)
+        var json = try JSONSerialization.jsonObject(with: try e.encode(r.backup)) as! [String: Any]
+        json.removeValue(forKey: "calmHoursRule")
+        let old = NightRecord(backup: try d.decode(BackupFile.Night.self, from: try JSONSerialization.data(withJSONObject: json)))
+        #expect(old.calmHoursRule == nil)
     }
 }

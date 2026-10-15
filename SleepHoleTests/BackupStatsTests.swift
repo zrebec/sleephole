@@ -50,23 +50,26 @@ struct BackupStatsTests {
         let a = store()
         let (m1, c1) = model(a, at: date(1, 12))
         for d in 1...4 { night(m1, c1, day: d) }
-        m1.completeOnboarding()
+        m1.completeOnboarding()                                          // opens the first change week
         m1.settings.alarmSound = .ode
         m1.renameTown("Dreamland")                                       // first naming: free, stamps the name (phase SYNC)
-        m1.answerMonthlyPrompt(adjust: false)                            // stores this month as answered
+        c1.now = Calendar.current.date(from: DateComponents(year: 2026, month: 11, day: 20, hour: 9))!   // the week (5.–11. 10.) and the lock (until 11. 11.) are over
+        m1.refresh()
+        m1.answerChangeWeekCard(adjust: false)                           // stores the ended lock as answered
         let data = try m1.makeBackup().encoded()
 
         let b = store()
         let (m2, _) = model(b, at: date(9, 12))
         try m2.restore(try BackupFile.decode(data))
-        #expect(m2.records().count == 4 && m2.builtNights == 4 && m2.coins == 400 + 4 * 30 + 50 + 50)   // + no-pause bonuses + 2 achievements
+        #expect(m2.records().count == 4 && m2.builtNights == 4 && m2.coins == 400 + 4 * 30 + 4 * 35 + 50 + 50)   // + no-pause bonuses + 7 calm hours a night + 2 achievements
         #expect(m2.onboardingDone && m2.settings.alarmSound == .ode)
         #expect(m2.townSnapshot?.buildings.map(\.buildingId) == m1.townSnapshot?.buildings.map(\.buildingId))
         #expect(m2.records().first?.log.has(.confirmedByCode) == true)
         // the two fields phase SYNC added to the backup
         let b1 = m1.makeBackup(), b2 = m2.makeBackup()
-        #expect(b1.townNameChangedAt != nil && b1.schedulePromptMonth == "2026-10")
-        #expect(m2.customTownName == "Dreamland" && m2.schedulePromptAnswered == "2026-10")
+        #expect(b1.townNameChangedAt != nil && b1.schedulePromptMonth == "2026-11-12")
+        #expect(m2.customTownName == "Dreamland" && m2.schedulePromptAnswered == "2026-11-12")
+        #expect(b1.changeWeekStart != nil && m2.changeWeekStart == b1.changeWeekStart)           // build 8: the change week
         // a restore is the user's own act: the restored name is stamped with the moment of the restore (not the old stamp)
         #expect(b2.townNameChangedAt == date(9, 12) && b2.schedulePromptMonth == b1.schedulePromptMonth)
     }
@@ -97,7 +100,7 @@ struct BackupStatsTests {
         for d in 1...5 { night(m, clock, day: d) }                        // 5th night → level 2
         #expect(m.levelUp == nil)                                         // acknowledged
         let s = m.stats
-        #expect(s.builtNights == 5 && s.coins == 500 + 5 * 30 && s.maxLevel == 2 && s.currentStreak == 5)
+        #expect(s.builtNights == 5 && s.coins == 500 + 5 * 30 + 5 * 35 && s.maxLevel == 2 && s.currentStreak == 5)
         #expect(s.averageStart == TimeOfDay(22, 25) && s.averageWake == TimeOfDay(6, 31))   // started 22:25, confirmed 6:31
         render(StatsView(), m)
         render(CalendarGrid(days: s.calendar), m)
@@ -138,13 +141,13 @@ struct BackupStatsTests {
         let k2 = NightKey("2026-10-02")!, k3 = NightKey("2026-10-03")!, k9 = NightKey("2026-10-09")!
         #expect(m.nightRecord(for: k2) != nil && m.nightRecord(for: k9) == nil)
         #expect(m.napRecord(before: k3)?.isNap == true && m.napRecord(before: k2) == nil)
-        #expect(m.townBuilding(for: k2)?.state == .complete && m.coinsEarned(for: k2) == 130)
+        #expect(m.townBuilding(for: k2)?.state == .complete && m.coinsEarned(for: k2) == 130 + 35)
         let r = NightReport(log: m.nightRecord(for: k2)!.log)
         #expect(r.setupTrips.count == 1 && r.screenChecks.count == 1 && r.confirmMethod == .code)
         for k in [k2, k3, k9] { render(NightDetail(key: k), m) }
         render(StatsView(), m)
-        #expect(NightDetail.duration(nil) == "you didn't come back" && NightDetail.duration(181) == "3 min 1 s"
-                && NightDetail.duration(8) == "8 s")
+        #expect(NightDetail.duration(nil) == "you didn't come back" && NightDetail.duration(181) == "3 min 1s"
+                && NightDetail.duration(8) == "8s")
     }
 
     @Test func repairedRuinShowsInTheSheet() {

@@ -7,6 +7,7 @@ enum Plural {
     static func minutes(_ t: TimeInterval) -> String { L("\(Int((t / 60).rounded())) minutes") }
     static func seconds(_ t: TimeInterval) -> String { L("\(Int(t.rounded())) seconds") }
     static func nights(_ n: Int) -> String { L("\(n) nights") }
+    static func days(_ n: Int) -> String { L("\(n) days") }
 }
 
 /// The rules as sentences, generated from the real constants so the guide never lies.
@@ -19,7 +20,7 @@ enum GuideText {
         L("Tired sooner? From \(Int(NightWindow.earlyStartLead / 3600)) h before bedtime you can go to sleep early: the night counts in full, only the night without your phone is longer. You then have \(Plural.minutes(rules.earlySetup)) from the start to set up, and the alarm stays at your wake-up time.")
     }
     static var setup: String {
-        L("For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus \(Plural.minutes(rules.setupGrace)). We'll warn you 15 s before it ends; then come back to SleepHole.")
+        L("For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus \(Plural.minutes(rules.setupGrace)). We'll warn you 15s before it ends; then come back to SleepHole.")
     }
     static var night: String {
         L("You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and \(Plural.seconds(rules.accidentalTolerance)) to come back. All such trips share \(Plural.seconds(rules.awayBudget ?? 0)) per night – when they are used up, the night screen tells you, and leaving again collapses the building.")
@@ -143,7 +144,7 @@ struct GuideView: View {
     private var schedule: some View {
         @Bindable var model = model
         return pageLayout("clock.fill", L("Your schedule")) {
-            Text(L("The same time every day is the base of good sleep. You can change it later in Settings."))
+            Text(L("The same time every day is the base of good sleep. You can change it later in Settings: the first change opens a change week (7 days), after it your schedule stays the same for a month."))
             // first run: saved at once (the guide is always free); replayed from Settings: change it there
             ScheduleFields(schedule: Binding(get: { model.settings.schedule }, set: { model.applySchedule($0) }))
                 .disabled(replay)
@@ -195,7 +196,7 @@ struct GuideView: View {
                 }
             }
             Text(L("Coins 🪙")).font(.headline)
-            Text(L("A complete night = \(Economy.completeReward(level: 1)) 🪙, and more for higher levels (L2 \(Economy.completeReward(level: 2)), L3 \(Economy.completeReward(level: 3)), L4 \(Economy.completeReward(level: 4)) 🪙); unfinished = half. Every \(Economy.streakBonusEvery)th complete night in a row adds a +\(Economy.streakBonus) 🪙 bonus."))
+            Text(L("A complete night = \(Economy.completeReward(level: 1)) 🪙, and more for higher levels (L2 \(Economy.completeReward(level: 2)), L3 \(Economy.completeReward(level: 3)), L4 \(Economy.completeReward(level: 4)) 🪙); unfinished = half. Every \(Economy.streakBonusEvery)th complete night in a row adds a +\(Economy.streakBonus) 🪙 bonus.") + " " + L("Every calm hour of the night (you stay with SleepHole, no pause) adds +\(Economy.calmHourBonus) 🪙."))
                 .foregroundStyle(.secondary)
         }
     }
@@ -236,11 +237,15 @@ struct GuideView: View {
 /// when it is saved (Settings: a draft with "Save", owner 2026-09-30 limits).
 struct ScheduleFields: View {
     @Binding var schedule: Schedule
+    /// The schedule is locked (change week, owner 2026-10-15): bedtime and wake cannot be changed, the reminder can.
+    var timesLocked = false
 
     var body: some View {
         VStack(spacing: 10) {
             DatePicker(L("Bedtime"), selection: time(\.bedtime), displayedComponents: .hourAndMinute)
+                .disabled(timesLocked)
             DatePicker(L("Wake-up"), selection: time(\.wake), displayedComponents: .hourAndMinute)
+                .disabled(timesLocked)
             Stepper(value: reminder, in: 0...120, step: 5) {
                 Text(reminder.wrappedValue == 0 ? L("Reminder: off")
                      : L("Reminder \(reminder.wrappedValue) min before bedtime"))

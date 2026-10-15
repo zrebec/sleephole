@@ -88,7 +88,7 @@ struct DetectionTestView: View {
                 } header: {
                     Text(L("Night simulation"))
                 } footer: {
-                    Text(L("Setup is shortened to 10 s (5 min in the app). After it the building collapses if the app is in the background for more than 10 s. Locking the phone is fine."))
+                    Text(L("Setup is shortened to 10s (5 min in the app). After it the building collapses if the app is in the background for more than 10s. Locking the phone is fine."))
                 }
             }
 
@@ -128,9 +128,9 @@ struct DetectionTestView: View {
                 Label(L("The building stands ✅"), systemImage: "building.2.fill").foregroundStyle(.green)
             }
             if graceLeft > 0 {
-                Text(L("Setup: \(Int(graceLeft.rounded(.up))) s left")).font(.caption)
+                Text(L("Setup: \(Int(graceLeft.rounded(.up)))s left")).font(.caption)
             }
-            Text(L("Total time away: \(Int(NightEvaluator.awaySeconds(night))) s")).font(.caption)
+            Text(L("Total time away: \(Int(NightEvaluator.awaySeconds(night)))s")).font(.caption)
             Button(L("New simulation")) { test.night = test.newNight() }.font(.caption)
         }
     }

@@ -45,7 +45,8 @@ enum Notifications {
     /// Daily reminders before bedtime (time sensitive: owner 2026-10-04 – they should reach him in a Focus too).
     /// With `quietUntil` (tonight's bedtime, a night started early) each reminder becomes six weekly ones – every
     /// weekday except tonight's – so the running night is not interrupted and the others keep repeating on their own.
-    static func scheduleReminders(_ schedule: Schedule, quietUntil: Date? = nil, calendar: Calendar = .current) {
+    static func scheduleReminders(_ schedule: Schedule, quietUntil: Date? = nil, lockEndsOn: NightKey? = nil,
+                                  calendar: Calendar = .current) {
         center.removePendingNotificationRequests(withIdentifiers: (0..<10).flatMap(reminderIds))
         for (i, offset) in schedule.reminderOffsets.enumerated() where offset > 0 {
             let content = reminderContent(i, bedtime: schedule.bedtime, offset: offset)
@@ -54,7 +55,7 @@ enum Notifications {
                 center.add(UNNotificationRequest(identifier: reminderId(i) + plan.suffix, content: content, trigger: trigger))
             }
         }
-        scheduleMonthlyCheck(wake: schedule.wake)
+        scheduleLockEnded(on: lockEndsOn, wake: schedule.wake)
     }
 
     /// Pure: the repeating triggers of one reminder. Without `quietUntil` one daily trigger (hour + minute, suffix "");
@@ -83,28 +84,31 @@ enum Notifications {
                 sound: .default, urgent: isTimeSensitive(reminderId(index)))
     }
 
-    /// On the 1st of every month, an hour after wake-up: the free window to change the schedule (days 1–3).
-    static func scheduleMonthlyCheck(wake: TimeOfDay) {
-        let total = (wake.hour * 60 + wake.minute + 60) % (24 * 60)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: DateComponents(day: 1, hour: total / 60, minute: total % 60),
-                                                    repeats: true)
-        center.add(UNNotificationRequest(identifier: monthlyCheckId, content: monthlyCheckContent(), trigger: trigger))
+    /// One notification on the day the schedule lock ends (owner 2026-10-15: you can open a change week again), an hour
+    /// after wake-up like the old monthly one. nil / a day in the past removes it.
+    static func scheduleLockEnded(on day: NightKey?, wake: TimeOfDay, now: Date = Date()) {
+        center.removePendingNotificationRequests(withIdentifiers: [monthlyCheckId])
+        guard let day else { return }
+        let total = (wake.hour * 60 + wake.minute + 60) % (24 * 60)      // the same time of day as the old monthly one
+        let c = DateComponents(year: day.year, month: day.month, day: day.day, hour: total / 60, minute: total % 60)
+        guard let fire = Calendar.current.date(from: c), fire > now else { return }
+        center.add(UNNotificationRequest(identifier: monthlyCheckId, content: monthlyCheckContent(),
+                                         trigger: UNCalendarNotificationTrigger(dateMatching: c, repeats: false)))
     }
 
     static let monthlyCheckId = "schedule-month"
 
     static func monthlyCheckContent() -> UNMutableNotificationContent {
-        content(title: L("New month 🌙"), body: L("Does your bedtime still fit you? Until the 3rd you can change it for free."),
+        content(title: L("You can open a change week again 🌙"), body: L("Does your bedtime still fit?"),
                 sound: .default, urgent: isTimeSensitive(monthlyCheckId))
     }
 
     /// Scheduled when a night starts: end-of-setup warning + backup alarm (only matters if the app dies). The five
     /// backup notifications are ALWAYS scheduled – also next to the system alarm (AlarmKit, phase F6b), which must
     /// not be the only thing between the owner and a missed morning until it has proven itself on the phone.
-    static func scheduleNight(setupEnds: Date, wake: Date, alarmFile: String) {
-        // owner 2026-09-30: warn 15 s before the setup time runs out
-        schedule("grace-end", at: setupEnds - 15, title: L("⏳ 15 s of setup left"),
-                 body: L("Come back to SleepHole and switch the screen off 🌙"), sound: .default)
+    static func scheduleNight(wake: Date, alarmFile: String) {
+        // The "15s of setup left" reminder is NOT scheduled here any more (owner 2026-10-15): it is pending only
+        // while the user is in another app during the setup – see `setupReminder(at:)` and `SetupReminder`.
         // One notification sounds for at most 30 s and only once – if the app died at night that was the whole
         // alarm. A chain keeps ringing for ~2.5 min (audit 2026-10-03, B3). The app cancels them all as soon as
         // its own alarm really rings.
@@ -114,6 +118,13 @@ enum Notifications {
                      sound: UNNotificationSound(named: UNNotificationSoundName(alarmFile)))
         }
     }
+
+    /// owner 2026-09-30: warn 15 s before the setup time runs out – but only a user who is in another app (2026-10-15).
+    static func setupReminder(at fire: Date) {
+        schedule("grace-end", at: fire, title: L("⏳ 15s of setup left"),
+                 body: L("Come back to SleepHole and switch the screen off 🌙"), sound: .default)
+    }
+    static func cancelSetupReminder() { cancel(["grace-end"]) }
 
     static let backupAlarmOffsets: [TimeInterval] = [30, 60, 90, 120, 150]
     static let backupAlarmIds = ["alarm-backup"] + (2...backupAlarmOffsets.count).map { "alarm-backup-\($0)" }

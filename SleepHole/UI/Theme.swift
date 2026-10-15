@@ -128,14 +128,29 @@ struct LivingSky: View {
         return p.count == 2 ? (p[0], p[1]) : nil
     }()
 
+    /// Dev aid: `-skyDate 2026-10-10` pins the sky's calendar day (the moon's phase follows the date).
+    static let pinnedDay: (Int, Int, Int)? = {
+        let a = DevArgs.list
+        guard let i = a.firstIndex(of: "-skyDate"), a.indices.contains(i + 1) else { return nil }
+        let p = a[i + 1].split(separator: "-").compactMap { Int($0) }
+        return p.count == 3 ? (p[0], p[1], p[2]) : nil
+    }()
+
     /// The sky now: the real one above the city when there is one (cached per minute), else the schedule's.
     static func state(at date: Date, settings: AppSettings, overrides: SkyOverrides = .launch) -> SkyState {
         var t = date
         if let (h, m) = pinnedTime {
             t = Calendar.current.date(bySettingHour: h, minute: m, second: 0, of: date) ?? date
         }
+        if let (y, mo, d) = pinnedDay {
+            let c = Calendar.current
+            var parts = c.dateComponents([.hour, .minute], from: t)
+            (parts.year, parts.month, parts.day) = (y, mo, d)
+            t = c.date(from: parts) ?? t
+        }
         let state = settings.city.map { RealSky.state(at: t, place: $0.place) }
-            ?? Sky.state(at: t, schedule: settings.schedule, calendar: .current)
+            ?? Sky.state(at: t, schedule: settings.schedule, calendar: .current,
+                         southernHemisphere: Sky.isSouthernRegion(Locale.current.region?.identifier))
         return overrides.apply(to: state)
     }
 

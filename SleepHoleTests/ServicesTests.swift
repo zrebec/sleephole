@@ -167,7 +167,7 @@ struct ServicesTests {
 
     @Test func notificationsScheduleAndCancel() {
         Notifications.scheduleReminders(Schedule(reminderOffsets: [30, 0]))
-        Notifications.scheduleNight(setupEnds: Date() + 300, wake: Date() + 3600, alarmFile: "alarm_gentle.caf")
+        Notifications.scheduleNight(wake: Date() + 3600, alarmFile: "alarm_gentle.caf")
         Notifications.nudge(tolerance: 10)
         Notifications.cancelNudge()
         Notifications.cancelBackupAlarm()

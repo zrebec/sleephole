@@ -29,6 +29,9 @@ final class NightRecord {
     /// the phone on the lock screen is a trip out of the app, false = gentle (logged, never counted). nil = a night
     /// from before the switch existed: it keeps today's meaning, strict.
     var strictLockScreen: Bool?
+    /// The calm-hour rule the night started under (`CalmHours.currentRule`, build 8, owner 2026-10-15). nil = an older
+    /// night (and every nap): it earns no calm-hour coins, so the balance never jumps. Optional, so the store migrates.
+    var calmHoursRule: Int?
     /// What the sleep source (Apple Health, phase HEALTH) said about this night. All optional so the store migrates.
     var fellAsleepAt: Date?
     var sleepEndedAt: Date?
@@ -45,7 +48,7 @@ final class NightRecord {
     /// `idPrefix`: "bonus" for a test night that counts for the town (one-shot, owner request) –
     /// a unique id so it never collides with the real night of the same date.
     init(window: NightWindow, buildingId: String, isDebug: Bool, setupGrace: TimeInterval, idPrefix: String? = nil,
-         isNap: Bool = false, strictLockScreen: Bool? = nil) {
+         isNap: Bool = false, strictLockScreen: Bool? = nil, calmHoursRule: Int? = nil) {
         self.keyString = window.key.description
         let stamp = Int(Date().timeIntervalSince1970)
         self.isNap = isNap
@@ -59,6 +62,7 @@ final class NightRecord {
         self.setupGrace = setupGrace
         self.pauses = 0
         self.strictLockScreen = strictLockScreen
+        self.calmHoursRule = calmHoursRule
     }
 
     /// What every source said about this night (empty when nothing is stored).
@@ -100,8 +104,11 @@ final class NightRecord {
 
     var result: NightResult? {
         guard let outcome else { return nil }
+        // replayed from the log like the rest of the balance; only nights that started under the rule
+        let calm = calmHoursRule != nil && !isNap && outcome.isBuildNight ? CalmHours.count(log: log, rules: rules) : nil
         return NightResult(key: window.key, outcome: outcome, buildingId: buildingId, awaySeconds: awaySeconds,
                            startedAt: startedAt, confirmedAt: confirmedAt, pauses: pauses, bedtime: bedtime,
-                           fellAsleepAt: fellAsleepAt, asleepSeconds: asleepSeconds)
+                           fellAsleepAt: fellAsleepAt, asleepSeconds: asleepSeconds,
+                           calmHours: calm?.calm, calmHoursTotal: calm?.total)
     }
 }

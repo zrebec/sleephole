@@ -128,7 +128,7 @@ import Testing
         let t = town([("l1-house-a", .complete), ("l2-park-small", .complete), ("l2-library-a", .complete)])
         let a = lines(input(day: 14, town: t, level: 3)), b = lines(input(day: 14, hour: 20, town: t, level: 3))
         #expect(a == b)
-        let others = (15...25).map { lines(input(day: $0, town: t, level: 3)) }
+        let others = (15...21).map { lines(input(day: $0, town: t, level: 3)) }   // ordinary moon days: the sky adds one tier-5 line each
         #expect(others.contains { $0 != a })
         #expect(Set(others.map { $0.map(\.tier) }).count == 1)    // tiers stay the same
     }

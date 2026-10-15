@@ -6,9 +6,14 @@ import SwiftUI
 struct BuddyBubble: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var scheme
     let now: Date
     @State private var lines: [BuddyLine] = []
     @State private var index = AppModel.forcedBuddyLine ?? 0
+
+    /// Solid colours, no transparency (owner): white paper with dark ink by day, a deep blue paper with white ink at night.
+    private var paper: Color { scheme == .dark ? Color(red: 0.17, green: 0.19, blue: 0.30) : .white }
+    private var ink: Color { scheme == .dark ? .white : Color(red: 0.10, green: 0.11, blue: 0.18) }
 
     var body: some View {
         Group {
@@ -19,16 +24,19 @@ struct BuddyBubble: View {
                     let go = { index = BuddyTalk.next(after: i, count: lines.count) }
                     if reduceMotion { go() } else { withAnimation(.easeInOut(duration: Motion.t(0.3))) { go() } }
                 } label: {
+                    // a comic speech bubble (owner 2026-10-15: "the font is terribly small"): solid, outlined, readable
                     Text(sentence)
-                        .font(.footnote)
-                        .foregroundStyle(.primary)
+                        .font(.system(size: 17, weight: .medium, design: .rounded))
+                        .foregroundStyle(ink)
                         .multilineTextAlignment(.leading)
-                        .lineLimit(4)
-                        .minimumScaleFactor(0.85)
                         .fixedSize(horizontal: false, vertical: true)
-                        .padding(.horizontal, 12).padding(.vertical, 9)
-                        .glassCard(cornerRadius: 16)
-                        .background(alignment: .topLeading) { BubbleTail().offset(x: 30, y: -8) }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 11 + SpeechBubbleShape.tailHeight).padding(.bottom, 12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background {
+                            SpeechBubbleShape().fill(paper)
+                            SpeechBubbleShape().stroke(ink.opacity(0.85), style: StrokeStyle(lineWidth: 2.5, lineJoin: .round))
+                        }
                         .id(i)
                         .transition(reduceMotion ? .identity : .opacity.combined(with: .scale(scale: 0.94, anchor: .top)))
                 }
@@ -45,25 +53,39 @@ struct BuddyBubble: View {
     private func reload() { lines = model.buddyLines(now: now) }
 
     private func text(_ line: BuddyLine) -> String {
-        BuddyTalkText.text(for: line) { id in model.catalog?[id]?.displayName ?? L("building") }
+        Self.gluingTrailingEmoji(BuddyTalkText.text(for: line) { id in model.catalog?[id]?.displayName ?? L("building") })
+    }
+
+    /// A trailing emoji ("… posed for it 🐾") never wraps onto a line of its own: the space before it becomes a
+    /// no-break space. Display only – the catalog texts stay as they are.
+    static func gluingTrailingEmoji(_ s: String) -> String {
+        guard let last = s.last, last.unicodeScalars.contains(where: { $0.properties.isEmojiPresentation }) else { return s }
+        var t = s
+        t.removeLast()
+        guard t.last == " " else { return s }
+        t.removeLast()
+        return t + "\u{00A0}" + String(last)
     }
 }
 
-/// The little tail of the bubble, pointing down towards the cat.
-private struct BubbleTail: View {
-    @Environment(\.colorScheme) private var scheme
-    var body: some View {
-        Triangle()
-            .fill(CardBacking.color(dark: scheme == .dark).opacity(0.9))
-            .frame(width: 14, height: 9)
-            .scaleEffect(y: -1)               // points up, towards the cat
-    }
-    private struct Triangle: Shape {
-        func path(in r: CGRect) -> Path {
-            var p = Path()
-            p.move(to: CGPoint(x: r.minX, y: r.minY)); p.addLine(to: CGPoint(x: r.maxX, y: r.minY))
-            p.addLine(to: CGPoint(x: r.minX + r.width * 0.3, y: r.maxY)); p.closeSubpath()
-            return p
-        }
+/// A rounded speech bubble whose tail rises from its top edge, slightly left of the centre, towards the cat's mouth
+/// (the bubble is centred under the cat's head). The shape includes the tail's height at the top.
+struct SpeechBubbleShape: Shape {
+    static let tailHeight: CGFloat = 16
+    func path(in rect: CGRect) -> Path {
+        let r: CGFloat = 20, t = rect.minY + Self.tailHeight
+        let tipX = rect.midX - 6, baseL = rect.midX - 8, baseR = rect.midX + 14
+        var p = Path()
+        p.move(to: CGPoint(x: rect.minX + r, y: t))
+        p.addLine(to: CGPoint(x: baseL, y: t))
+        p.addLine(to: CGPoint(x: tipX, y: rect.minY + 1))
+        p.addLine(to: CGPoint(x: baseR, y: t))
+        p.addLine(to: CGPoint(x: rect.maxX - r, y: t))
+        p.addArc(tangent1End: CGPoint(x: rect.maxX, y: t), tangent2End: CGPoint(x: rect.maxX, y: t + r), radius: r)
+        p.addArc(tangent1End: CGPoint(x: rect.maxX, y: rect.maxY), tangent2End: CGPoint(x: rect.maxX - r, y: rect.maxY), radius: r)
+        p.addArc(tangent1End: CGPoint(x: rect.minX, y: rect.maxY), tangent2End: CGPoint(x: rect.minX, y: rect.maxY - r), radius: r)
+        p.addArc(tangent1End: CGPoint(x: rect.minX, y: t), tangent2End: CGPoint(x: rect.minX + r, y: t), radius: r)
+        p.closeSubpath()
+        return p
     }
 }

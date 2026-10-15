@@ -42,6 +42,9 @@ public enum Economy {
         }
     }
 
+    /// Coins for every calm hour of a complete or unfinished night (owner 2026-10-15, phase CARE-2a; `CalmHours`).
+    public static let calmHourBonus = 5
+
     public struct Entry: Equatable, Sendable {
         public let key: NightKey
         public let outcome: Outcome
@@ -49,6 +52,9 @@ public enum Economy {
         public let streakBonus: Int
         /// +30 for a complete night without a pause (only nights played with the pause rules).
         public let undisturbedBonus: Int
+        /// Calm hours of the night and their pay (+`calmHourBonus` each); 0 for nights from before build 8.
+        public let calmHours: Int
+        public let calmBonus: Int
     }
 
     /// One entry per result in chronological order, with the streak bonus where it was earned.
@@ -71,9 +77,11 @@ public enum Economy {
             case .ruins, .missed: run = 0
             }
             let undisturbed = r.outcome == .complete && r.pauses == 0 ? PausePolicy.undisturbedBonus : 0
-            let coins = reward(r.outcome, level: level(of: r, catalog: catalog)) + bonus + undisturbed
+            let calmHours = r.outcome.isBuildNight ? r.calmHours ?? 0 : 0
+            let calmBonus = calmHours * calmHourBonus
+            let coins = reward(r.outcome, level: level(of: r, catalog: catalog)) + bonus + undisturbed + calmBonus
             out.append(Entry(key: r.key, outcome: r.outcome, coins: coins, streakBonus: bonus,
-                             undisturbedBonus: undisturbed))
+                             undisturbedBonus: undisturbed, calmHours: calmHours, calmBonus: calmBonus))
             prev = r.key
         }
         return out

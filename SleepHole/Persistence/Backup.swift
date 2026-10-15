@@ -28,6 +28,8 @@ struct BackupFile: Codable, Equatable {
     // phase SYNC (2026-10-10) – optional, older backups still load
     var townNameChangedAt: Date? = nil
     var schedulePromptMonth: String? = nil
+    /// Build 8 (change week, owner 2026-10-15): when the last change week was opened. Optional → older files load.
+    var changeWeekStart: Date? = nil
 
     struct Joker: Codable, Equatable {
         var at: Date
@@ -47,6 +49,7 @@ struct BackupFile: Codable, Equatable {
         var to: String
         var free: Bool
         var breakKey: String?
+        var rule: Int? = nil        // 1 = made under the change-week rule (build 8); nil = the old rule
     }
 
     struct Night: Codable, Equatable {
@@ -66,6 +69,7 @@ struct BackupFile: Codable, Equatable {
         var finalizedAt: Date?
         var pauses: Int? = nil          // nil in backups from before the pause (2026-10-03) = old rules
         var strictLockScreen: Bool? = nil   // nil = a night from before Strict mode existed (2026-10-09) = strict
+        var calmHoursRule: Int? = nil       // nil = a night from before the calm hours (build 8, 2026-10-15): no calm-hour coins
         // what the sleep source said (phase HEALTH) – all optional, older backups still load
         var fellAsleepAt: Date? = nil
         var sleepEndedAt: Date? = nil
@@ -103,6 +107,7 @@ extension NightRecord {
                          buildingId: buildingId, events: log.events, setupGrace: setupGrace, outcomeRaw: outcomeRaw,
                          awaySeconds: awaySeconds, startedAt: startedAt, confirmedAt: confirmedAt,
                          finalizedAt: finalizedAt, pauses: pauses, strictLockScreen: strictLockScreen,
+                         calmHoursRule: calmHoursRule,
                          fellAsleepAt: fellAsleepAt, sleepEndedAt: sleepEndedAt, asleepSeconds: asleepSeconds,
                          awakeSeconds: awakeSeconds, sleepSourceName: sleepSourceName, sleepReadAt: sleepReadAt,
                          sleepSourcesData: sleepSourcesData, sleepRuleVersion: sleepRuleVersion)
@@ -142,6 +147,7 @@ extension NightRecord {
         finalizedAt = n.finalizedAt
         pauses = n.pauses
         strictLockScreen = n.strictLockScreen
+        calmHoursRule = n.calmHoursRule
     }
 }
 

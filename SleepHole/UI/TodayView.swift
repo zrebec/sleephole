@@ -84,7 +84,7 @@ struct HomeView: View {
                 VStack(spacing: 16) {
                     if let expiry = AppExpiry.date, AppExpiry.isSoon(at: now) { ExpiryCard(expiry: expiry, now: now) }
                     if let at = model.safetyAlarmAt, at > now { SafetyAlarmCard(at: at) }
-                    if model.showsMonthlySchedulePrompt { MonthlyScheduleCard().appearIn(delay: 0) }
+                    if model.showsChangeWeekCard { ChangeWeekCard().appearIn(delay: 0) }
                     StatusBadges().appearIn(delay: 0.05)
                     // the hero (plan P2b): only the cat – the town has its own tab. A tap pets it (purr, arched back, wink).
                     // Centred on cat + bed (the canvas is not centred on them); the arch's tail reaches above the box,
@@ -93,11 +93,11 @@ struct HomeView: View {
                         BuddyView(state: model.buddyState(at: now), cloud: true, onPet: { model.petBuddy() },
                                   hold: AppModel.forcedBuddyReaction)
                             .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.5) })
-                        .overlay(alignment: .bottom) {
+                        .overlay(alignment: .top) {
                             // the buddy talks (phase TALK): an overlay, so Today's layout does not change
                             BuddyBubble(now: now)
-                                .frame(width: 250)
-                                .offset(y: 20)
+                                .containerRelativeFrame(.horizontal) { w, _ in min(330, w - 32) }
+                                .offset(y: 80)
                         }
                         .padding(.top, 25)
                         .padding(.bottom, 14)
@@ -179,21 +179,20 @@ struct HomeView: View {
     }
 }
 
-/// Days 1–3 of every month (owner 2026-09-30): "does your bedtime still fit?" – changing it is free now.
-struct MonthlyScheduleCard: View {
+/// Shown once when a schedule lock has ended (owner 2026-10-15): "does your bedtime still fit?" – a new change week
+/// can be opened now.
+struct ChangeWeekCard: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        let s = model.settings.schedule
         VStack(alignment: .leading, spacing: 10) {
-            Text(L("New month 🌙")).font(.headline)
-            Text(L("Do bedtime \(Fmt.time(s.bedtime)) and wake-up \(Fmt.time(s.wake)) still fit you? Until the 3rd you can change them for free."))
-                .font(.subheadline)
+            Text(L("You can open a change week again 🌙")).font(.headline)
+            Text(L("Does your bedtime still fit?")).font(.subheadline)
             HStack {
-                Button(L("It fits")) { model.answerMonthlyPrompt(adjust: false) }
+                Button(L("It fits")) { model.answerChangeWeekCard(adjust: false) }
                     .buttonStyle(.bordered)
                 Spacer()
-                Button(L("Adjust")) { model.answerMonthlyPrompt(adjust: true) }
+                Button(L("Adjust")) { model.answerChangeWeekCard(adjust: true) }
                     .buttonStyle(.borderedProminent)
             }
         }
@@ -277,15 +276,42 @@ extension View {
 // MARK: - night
 
 /// The full-height layout when everything fits; scrolls only when it does not (e.g. with the confirm panel on a
-/// small phone). A plain ScrollView made the night screen narrow and always scrollable (owner 2026-09-30).
+/// small phone, or with the keyboard up). A plain ScrollView made the night screen narrow and always scrollable
+/// (owner 2026-09-30). It is ONE ScrollView with ONE view identity: an earlier `ViewThatFits` switched between a fixed
+/// and a scrolling copy when the keyboard appeared, so the confirm panel was rebuilt and its code field lost
+/// its text and focus (bug B31, 2026-10-15).
 struct FitOrScroll<Content: View>: View {
-    @ViewBuilder let content: (_ scrolling: Bool) -> Content
+    @ViewBuilder let content: () -> Content
 
     var body: some View {
-        ViewThatFits(in: .vertical) {
-            content(false)
-            ScrollView { content(true) }.scrollBounceBehavior(.basedOnSize)
+        GeometryReader { geo in
+            ScrollView {
+                MinHeightLayout(minHeight: geo.size.height) { content() }
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            .scrollDismissesKeyboard(.interactively)
         }
+    }
+}
+
+/// Gives its single child at least `minHeight` – by PROPOSING that height, so a `Spacer` inside it really expands
+/// (a plain `.frame(minHeight:)` would only enlarge the frame around the child). Taller content keeps its own height;
+/// content that does not fill the space is centred.
+private struct MinHeightLayout: Layout {
+    let minHeight: CGFloat
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        guard let child = subviews.first else { return .zero }
+        let ideal = child.sizeThatFits(ProposedViewSize(width: proposal.width, height: nil))
+        return CGSize(width: proposal.width ?? ideal.width, height: max(ideal.height, minHeight))
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        guard let child = subviews.first else { return }
+        // content without a Spacer stays centred, as `ViewThatFits` did (the result screen); with one it fills
+        let size = child.sizeThatFits(ProposedViewSize(width: bounds.width, height: bounds.height))
+        child.place(at: CGPoint(x: bounds.minX, y: bounds.minY + max(0, bounds.height - size.height) / 2),
+                    anchor: .topLeading, proposal: ProposedViewSize(width: bounds.width, height: size.height))
     }
 }
 
@@ -309,7 +335,7 @@ struct NightView: View {
                 let progress = min(1, max(0, now.timeIntervalSince(rec.startedAt ?? now) / max(1, total)))
                 // morning: the confirm panel needs room → smaller site, so the screen still fits without scrolling
                 let compact = rec.window.canConfirm(at: now)
-                FitOrScroll { scrolling in
+                FitOrScroll {
                 VStack(spacing: compact ? 12 : 16) {
                     // well below the Dynamic Island – it grows when e.g. a podcast plays (owner 2026-09-30)
                     Text(Fmt.time(now)).font(.system(size: compact ? 52 : 64, weight: .thin, design: .rounded))
@@ -323,7 +349,7 @@ struct NightView: View {
                     } else if rec.isNap {
                         NapResting(progress: progress, buddy: model.buddyState(at: now))
                         if let graceEnds = model.graceEnds, graceEnds > now {
-                            Text(L("Setup: \(Int(graceEnds.timeIntervalSince(now).rounded(.up))) s left for a story or sound"))
+                            Text(L("Setup: \(Int(graceEnds.timeIntervalSince(now).rounded(.up)))s left for a story or sound"))
                                 .font(.callout).foregroundStyle(.yellow)
                         } else {
                             Text(L("Lock your phone and have a nice rest 🧸")).font(.callout).foregroundStyle(.secondary)
@@ -339,7 +365,7 @@ struct NightView: View {
                         if let graceEnds = model.graceEnds, graceEnds > now {
                             let left = Int(graceEnds.timeIntervalSince(now).rounded(.up))
                             Text(left >= 60 ? L("Setup until \(Fmt.time(graceEnds)) (\(Plural.minutes(Double(left))) left)")
-                                            : L("Setup: \(left) s left for a podcast or story"))
+                                            : L("Setup: \(left)s left for a podcast or story"))
                                 .font(.callout).foregroundStyle(.yellow)
                         } else if let pauseEnds {
                             Text(L("Pause: \(Self.countdown(pauseEnds.timeIntervalSince(now))) left – you can leave SleepHole now"))
@@ -375,7 +401,7 @@ struct NightView: View {
                     if rec.window.canConfirm(at: now) {
                         ConfirmPanel()
                     }
-                    if !scrolling { Spacer(minLength: 0) }
+                    Spacer(minLength: 0)
                     Button(rec.isNap ? L("End nap") : L("Cancel night"), role: .destructive) { confirmAbandon = true }
                         .font(.footnote)
                         .confirmationDialog(rec.isNap ? L("End the nap? It won't earn coins.")
@@ -401,14 +427,14 @@ struct NightView: View {
         if let use = model.awayBudgetUse(at: now), use.used >= 1 {
             switch model.awayBudgetState(at: now) {
             case .low:
-                Text(L("Out of the app tonight: \(Int(use.used)) s of \(Int(use.budget)) s – the next trip may be your last 🌙"))
+                Text(L("Out of the app tonight: \(Int(use.used))s of \(Int(use.budget))s – the next trip may be your last 🌙"))
                     .font(.footnote.weight(.semibold)).foregroundStyle(.orange).multilineTextAlignment(.center)
             case .spent:
-                Text(L("Tonight's \(Int(use.budget)) s out of the app are used up – please stay with SleepHole now: one more trip and tonight's building comes down 🌙"))
+                Text(L("Tonight's \(Int(use.budget))s out of the app are used up – please stay with SleepHole now: one more trip and tonight's building comes down 🌙"))
                     .font(.callout.weight(.semibold)).foregroundStyle(.orange).multilineTextAlignment(.center)
             default:
                 if !warningsOnly {
-                    Text(L("Out of the app tonight: \(Int(use.used)) s of \(Int(use.budget)) s"))
+                    Text(L("Out of the app tonight: \(Int(use.used))s of \(Int(use.budget))s"))
                         .font(.footnote).foregroundStyle(.secondary)
                 }
             }
@@ -424,8 +450,11 @@ struct NightView: View {
         case .nap?, .collapsed?, .setup?, .running?:
             EmptyView()
         case .tooLate(let opens)?:
-            Text(L("A pause no longer fits – you can confirm getting up from \(Fmt.time(opens))."))
-                .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
+            // only until confirming opens – afterwards the line would be stale ("from 6:30" at 6:40)
+            if now < opens {
+                Text(L("A pause no longer fits – you can confirm getting up from \(Fmt.time(opens))."))
+                    .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
+            }
         case .notEnoughCoins(let missing)?:
             Text(L("🌙 Next pause: \(price) 🪙 (\(missing) 🪙 short)")).font(.footnote).foregroundStyle(.secondary)
         case nil:
@@ -639,6 +668,7 @@ struct ConfirmPanel: View {
     @Environment(AppModel.self) private var model
     @State private var code = ""
     @State private var wrong = false
+    @FocusState private var codeFocused: Bool
 
     var body: some View {
         VStack(spacing: 12) {
@@ -650,6 +680,7 @@ struct ConfirmPanel: View {
                     .textFieldStyle(.roundedBorder)
                     .frame(maxWidth: 140)
                     .multilineTextAlignment(.center)
+                    .focused($codeFocused)
                 Button(L("I'm up")) {
                     wrong = !model.confirm(code: code)
                     if wrong { code = "" }
@@ -663,6 +694,10 @@ struct ConfirmPanel: View {
         .padding()
         .glassCard()
         .onShake { model.confirm() }
+        .onAppear {
+            // Debug aid for the simulator (B31 proof): focus the code field so the software keyboard shows up
+            if DevArgs.list.contains("-focusWakeCode") { codeFocused = true }
+        }
     }
 }
 
@@ -677,7 +712,7 @@ struct ResultView: View {
     var body: some View {
         if let rec = model.shownResult, let outcome = rec.outcome {
             let name = model.catalog?[rec.buildingId]?.displayName ?? L("building")
-            FitOrScroll { _ in
+            FitOrScroll {
             VStack(spacing: 18) {
                 if rec.isNap {
                     Text(verbatim: outcome == .complete ? "😴" : outcome == .unfinished ? "🥱" : "🧸").font(.system(size: 90))
@@ -727,6 +762,10 @@ struct ResultView: View {
                         }
                         if model.lastUndisturbedBonus > 0 {
                             Text(L("including +\(model.lastUndisturbedBonus) for a night without a pause 🌙"))
+                                .font(.footnote).cardCaption()
+                        }
+                        if let calm = model.lastCalmHours {
+                            Text(L("🌙 Calm hours: \(calm.calm) of \(calm.total) · +\(model.lastCalmBonus) 🪙"))
                                 .font(.footnote).cardCaption()
                         }
                     }

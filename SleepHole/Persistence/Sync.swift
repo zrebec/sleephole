@@ -158,9 +158,9 @@ enum SyncStore {
 
     static func mergeScheduleChanges(_ remote: [BackupFile.Change], into context: ModelContext) throws -> Bool {
         union(remote, local: try context.fetch(FetchDescriptor<ScheduleChange>()), matches: {
-            $0.from == $1.from && $0.to == $1.to && $0.free == $1.free && $0.breakKey == $1.breakKey
+            $0.from == $1.from && $0.to == $1.to && $0.free == $1.free && $0.breakKey == $1.breakKey && $0.rule == $1.rule
                 && SyncMerge.sameMoment($0.at, $1.at)
-        }, add: { context.insert(ScheduleChange(at: $0.at, from: $0.from, to: $0.to, free: $0.free, breakKey: $0.breakKey)) })
+        }, add: { context.insert(ScheduleChange(at: $0.at, from: $0.from, to: $0.to, free: $0.free, breakKey: $0.breakKey, rule: $0.rule)) })
     }
 }
 
@@ -193,6 +193,7 @@ extension UserProgress {
         }
         take(lastRenameAt, SyncMerge.latest(lastRenameAt, file.lastRenameAt)) { lastRenameAt = $0 }
         take(lastFreeRenameAt, SyncMerge.latest(lastFreeRenameAt, file.lastFreeRenameAt)) { lastFreeRenameAt = $0 }
+        take(changeWeekStart, SyncMerge.latest(changeWeekStart, file.changeWeekStart)) { changeWeekStart = $0 }   // the newest week
         let month = [schedulePromptMonth, file.schedulePromptMonth].compactMap { $0 }.max()
         if month != schedulePromptMonth { schedulePromptMonth = month; changed = true }
         return changed

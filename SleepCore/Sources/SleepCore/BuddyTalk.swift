@@ -25,6 +25,10 @@ public enum BuddyLine: Equatable, Sendable {
     case tallest
     case noFireStation, noHospital, noPolice, noSchool, noTownHall
     case fireStation, hospital
+    // tier 2/4/5 – the real sky (phase and date only, phase 8f)
+    case fullMoonTonight, newMoonTonight, longestNight, shortestNight, equinox
+    case fullMoonTomorrow, fullMoonSoon(days: Int)
+    case moonPhase(MoonQuarter)
     // tier 5 – everyday chatter
     case chatter(Int)
     case tonight
@@ -35,11 +39,12 @@ public enum BuddyLine: Equatable, Sendable {
     public var tier: Int {
         switch self {
         case .movedIn, .newSight, .waiting, .dayOff, .streakSafe: 1
-        case .bedtimeSoon: 2
+        case .bedtimeSoon, .fullMoonTonight, .newMoonTonight, .longestNight, .shortestNight, .equinox: 2
         case .week, .streak, .newStreak: 3
         case .size, .nextSize, .firstNeighbours, .parks, .library, .museum, .tallest,
-             .noFireStation, .noHospital, .noPolice, .noSchool, .noTownHall, .fireStation, .hospital: 4
-        case .chatter, .tonight: 5
+             .noFireStation, .noHospital, .noPolice, .noSchool, .noTownHall, .fireStation, .hospital,
+             .fullMoonTomorrow, .fullMoonSoon: 4
+        case .chatter, .tonight, .moonPhase: 5
         }
     }
 }
@@ -66,6 +71,11 @@ extension TownSize {
     }
 }
 
+/// The six everyday moon phases of the buddy's sky sentence (bands in `BuddySky`).
+public enum MoonQuarter: Equatable, Sendable, CaseIterable {
+    case waxingCrescent, firstQuarter, waxingGibbous, waningGibbous, lastQuarter, waningCrescent
+}
+
 public struct BuddyTalkInput: Sendable {
     /// The last finalized REAL night (no debug night, no nap) with what it produced.
     public struct LastNight: Sendable {
@@ -87,9 +97,13 @@ public struct BuddyTalkInput: Sendable {
     public var builtNights: Int
     public var unlockedMaxLevel: Int
     public var nextBedtime: Date?
+    /// The user's hemisphere (a city's latitude < 0, else the region) – decides which solstice is the longest night.
+    public var southernHemisphere: Bool
 
     public init(now: Date, calendar: Calendar, town: TownSnapshot, lastNight: LastNight?, streak: Int,
-                bestStreak: Int, builtNights: Int, unlockedMaxLevel: Int, nextBedtime: Date?) {
+                bestStreak: Int, builtNights: Int, unlockedMaxLevel: Int, nextBedtime: Date?,
+                southernHemisphere: Bool = false) {
+        self.southernHemisphere = southernHemisphere
         self.now = now; self.calendar = calendar; self.town = town; self.lastNight = lastNight
         self.streak = streak; self.bestStreak = bestStreak; self.builtNights = builtNights
         self.unlockedMaxLevel = unlockedMaxLevel; self.nextBedtime = nextBedtime
@@ -139,6 +153,8 @@ public enum BuddyTalk {
         }
         // tier 2
         if let b = i.nextBedtime, b > i.now, b.timeIntervalSince(i.now) <= bedtimeLead { c.append(.bedtimeSoon(b)) }
+        // the real sky: tiers 2, 4 and 5
+        c += BuddySky.lines(day: today, calendar: i.calendar, southernHemisphere: i.southernHemisphere)
         // tier 3
         if i.streak >= 7, i.streak % 7 == 0 { c.append(.week) }
         if i.streak >= 2 { c.append(.streak(i.streak)) }

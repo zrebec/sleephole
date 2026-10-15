@@ -28,8 +28,8 @@ public enum Progression {
 
     /// Consecutive nights ending `.complete`, counted backwards from `lastNight`.
     /// `.unfinished` neither extends nor breaks the streak (gentle); `.ruins`, `.missed` and nights
-    /// without any result break it. `breaks`: nights that start a new streak (a paid schedule change,
-    /// `SchedulePolicy.streakBreak`) – older nights don't count.
+    /// without any result break it. `breaks`: nights that start a new streak (the schedule changes of
+    /// builds before the change week, 2026-10-15, stored a `breakKey`; new ones never do) – older nights don't count.
     public static func currentStreak(_ results: [NightResult], lastNight: NightKey, calendar: Calendar,
                                      breaks: [NightKey] = []) -> Int {
         let byKey = Dictionary(results.map { ($0.key, $0.outcome) }, uniquingKeysWith: { _, b in b })

@@ -15,7 +15,12 @@ struct SettingsView: View {
     @State private var renaming = false
     /// The schedule being edited (nil = not edited); saved only with "Save" (owner 2026-09-30 limits).
     @State private var scheduleDraft: Schedule?
+    #if DEBUG
+    @State private var confirmSchedule = DevArgs.list.contains("-openScheduleDialog")   // screenshots of the first-change dialog
+    #else
     @State private var confirmSchedule = false
+    #endif
+    @State private var confirmUnlock = false
     #if DEBUG
     /// Dev aid: `-openSoundTest` opens Developer → Sound effects test at once (screenshots; `-scrollTo cat` shows the cat).
     @State private var soundTest = DevArgs.list.contains("-openSoundTest")
@@ -78,9 +83,11 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    ScheduleFields(schedule: Binding(get: { scheduleDraft ?? model.settings.schedule },
-                                                     set: { scheduleDraft = $0 }))
-                    if let draft = scheduleDraft, draft != model.settings.schedule {
+                    scheduleStatus.id("schedule")
+                    ScheduleFields(schedule: Binding(get: { scheduleDraft ?? model.editableSchedule },
+                                                     set: { scheduleDraft = $0 }),
+                                   timesLocked: !SchedulePolicy.allowsChange(model.scheduleState))
+                    if let draft = scheduleDraft, draft != model.editableSchedule {
                         HStack {
                             Button(L("Cancel")) { scheduleDraft = nil }
                                 .buttonStyle(.borderless)
@@ -93,19 +100,29 @@ struct SettingsView: View {
                 } header: {
                     Text(L("Schedule"))
                 } footer: {
-                    Text(Self.scheduleRules(model.scheduleChangeCost(), nextFree: model.nextFreeScheduleChange,
-                                            calibrationEnds: model.scheduleCalibrationEnds))
+                    if model.settings.pendingSchedule != nil {
+                        Text(L("The new times apply from tomorrow – tonight's building can already start."))
+                    }
                 }
                 .disabled(nightRunning)
-                .confirmationDialog(L("Save the new schedule?"), isPresented: $confirmSchedule,
+                .confirmationDialog(L("Start a change week?"), isPresented: $confirmSchedule,
                                     titleVisibility: .visible) {
-                    Button(L("Save and start the streak again"), role: .destructive) {
+                    Button(L("Start the change week")) {
                         if let draft = scheduleDraft { model.applySchedule(draft) }
                         scheduleDraft = nil
                     }
+                    Button(L("Not yet"), role: .cancel) {}
+                } message: {
+                    let plan = model.changeWeekPlan
+                    Text(L("For 7 days (until \(Fmt.fullDate(plan.lastDay))) you can try different times. After that your schedule stays until \(Fmt.fullDate(plan.lockLastDay)) – changing it sooner costs 2,000 🪙."))
+                }
+                .confirmationDialog(L("Unlock your schedule for 2,000 🪙?"), isPresented: $confirmUnlock,
+                                    titleVisibility: .visible) {
+                    Button(L("Unlock now · 2,000 🪙")) { model.unlockSchedule() }
                     Button(L("Cancel"), role: .cancel) {}
                 } message: {
-                    Text(L("Outside the free window a new bedtime or wake-up starts your 🔥 streak of \(Plural.nights(model.streak)) again. Your buildings, coins and levels stay. Free changes: from \(Fmt.fullDate(NightKey(date: model.nextFreeScheduleChange, calendar: .current))), days 1–3 of every month."))
+                    let plan = model.changeWeekPlan
+                    Text(L("A new change week opens (until \(Fmt.fullDate(plan.lastDay))). After it your schedule stays until \(Fmt.fullDate(plan.lockLastDay))."))
                 }
 
                 Section {
@@ -177,7 +194,7 @@ struct SettingsView: View {
                 } footer: {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(L("Without notifications you won't get the “SleepHole must stay open” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed."))
-                        Text(L("The system alarm is a second backup next to the backup notifications: it rings in silent mode and during a Focus even if iOS has closed SleepHole – 30 s after your wake time, or when SleepHole's own alarm stops after 2 minutes."))
+                        Text(L("The system alarm is a second backup next to the backup notifications: it rings in silent mode and during a Focus even if iOS has closed SleepHole – 30s after your wake time, or when SleepHole's own alarm stops after 2 minutes."))
                     }
                 }
 
@@ -302,9 +319,9 @@ struct SettingsView: View {
                 Section(L("Developer")) {
                     NavigationLink(L("Plans and proposals")) { PlansView() }
                     NavigationLink(L("Texts")) { TextsView() }
-                    Button(L("Quick night (4 min, \(Int(AppModel.debugGrace)) s setup)")) { model.startTestNight() }
+                    Button(L("Quick night (4 min, \(Int(AppModel.debugGrace))s setup)")) { model.startTestNight() }
                         .disabled(nightRunning)
-                    Button(L("Test night (30 min, \(Int(AppModel.debugGrace)) s setup)")) { model.startTestNight(minutes: 30) }
+                    Button(L("Test night (30 min, \(Int(AppModel.debugGrace))s setup)")) { model.startTestNight(minutes: 30) }
                         .disabled(nightRunning)
                     Button(L("Test night (15 min, 5 min setup)")) { model.startTestNight(minutes: 15, grace: 300) }
                         .disabled(nightRunning)
@@ -327,6 +344,7 @@ struct SettingsView: View {
                 if args.contains("sounds") { proxy.scrollTo("sounds", anchor: UnitPoint(x: 0.5, y: -0.004)) }
                 if args.contains("health") { proxy.scrollTo("health", anchor: .top) }
                 if args.contains("icloud") { proxy.scrollTo("icloud", anchor: .top) }
+                if args.contains("schedule") { proxy.scrollTo("schedule", anchor: .top) }
                 if args.contains("sky") { proxy.scrollTo("sky", anchor: .top) }
                 if args.contains("about") { proxy.scrollTo("about", anchor: .top) }
                 if args.contains("notifications") { proxy.scrollTo("notifications", anchor: .top) }
@@ -391,27 +409,46 @@ struct SettingsView: View {
 }
 
 extension SettingsView {
-    /// A new bedtime / wake that costs the streak asks first (only when there is a streak to lose).
+    /// What state the schedule is in (change week, owner 2026-10-15) and, while it is locked, the paid unlock.
+    @ViewBuilder var scheduleStatus: some View {
+        switch model.scheduleState {
+        case .open:
+            Text(L("You can change your schedule. The first change opens a change week (7 days); after it your schedule stays the same for a month."))
+                .font(.footnote).foregroundStyle(.secondary)
+        case .changeWeek(let lastDay):
+            Text(L("🔧 Change week: \(Self.daysLeft(until: lastDay, now: model.clock.now)) left (until \(Fmt.fullDate(lastDay))). Change it as often as you like."))
+                .font(.footnote)
+        case .locked(let lastDay, let freeFrom):
+            Text(L("🔒 Your schedule is set until \(Fmt.fullDate(lastDay)). A free change week again from \(Fmt.fullDate(freeFrom))."))
+                .font(.footnote)
+            let missing = max(0, SchedulePolicy.unlockPrice - model.coins)
+            Button(L("Unlock now · 2,000 🪙")) { confirmUnlock = true }
+                .disabled(missing > 0)
+            if missing > 0 {
+                Text(L("You have \(model.coins) 🪙 – \(missing) more needed."))
+                    .font(.footnote).foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    /// Whole days from today up to and including `lastDay` ("3 days", "1 day").
+    static func daysLeft(until lastDay: NightKey, now: Date, calendar: Calendar = .current) -> String {
+        let today = NightKey(date: now, calendar: calendar)
+        var n = 0
+        var k = today
+        while k < lastDay && n < 40 { k = k.adding(days: 1, calendar: calendar); n += 1 }
+        return Plural.days(n + 1)
+    }
+
+    /// A new bedtime / wake in `open` asks first (it opens a change week); in a change week it is saved at once.
     func saveSchedule(_ draft: Schedule) {
-        let old = model.settings.schedule
+        let old = model.editableSchedule
         let timesChanged = draft.bedtime != old.bedtime || draft.wake != old.wake
-        if timesChanged, model.scheduleChangeCost() == .resetsStreak, model.streak > 0 {
+        if timesChanged, model.scheduleState == .open {
             confirmSchedule = true
         } else {
             model.applySchedule(draft)
             scheduleDraft = nil
-        }
-    }
-
-    static func scheduleRules(_ cost: SchedulePolicy.Change, nextFree: Date, calibrationEnds: Date?) -> String {
-        switch cost {
-        case .free(.monthStart):
-            return L("Days 1–3 of the month: you can change bedtime and wake-up for free now.")
-        case .free(.calibration):
-            let end = calibrationEnds.map { Fmt.fullDate(NightKey(date: $0, calendar: .current)) } ?? ""
-            return L("Your first week: bedtime and wake-up can be changed for free until \(end).")
-        case .resetsStreak:
-            return L("Bedtime and wake-up can be changed for free on days 1–3 of every month (next: \(Fmt.fullDate(NightKey(date: nextFree, calendar: .current)))). Changing them now starts your 🔥 streak again. The reminder can change any time.")
         }
     }
 
@@ -444,7 +481,7 @@ struct NightLogView: View {
                 VStack(alignment: .leading) {
                     Text(verbatim: rec.keyString + (rec.isNap ? " · " + L("nap") : "") + (rec.isDebug ? " · test" : "")
                          + " · " + (rec.outcome?.rawValue ?? L("in progress")))
-                    Text(L("\(rec.buildingId) · away \(Int(rec.awaySeconds)) s")).font(.caption).foregroundStyle(.secondary)
+                    Text(L("\(rec.buildingId) · away \(Int(rec.awaySeconds))s")).font(.caption).foregroundStyle(.secondary)
                 }
             }
         }

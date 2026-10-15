@@ -223,7 +223,7 @@ struct ViewsTests {
         m.startPause()
         render(TodayView(), m)                                      // pause running, the crane rests
         clock.now = date(6, 1, 20); m.append(.leftApp); clock.now += 9; m.append(.returned)
-        render(TodayView(), m)                                      // "Out of the app tonight: 9 s of 30 s", 2nd pause too dear
+        render(TodayView(), m)                                      // "Out of the app tonight: 9s of 30s", 2nd pause too dear
         clock.now = date(6, 6, 31); m.refresh(); m.confirm(code: "1234")
         render(TodayView(), m)                                      // result without the no-pause bonus
         m.acknowledgeResult()
