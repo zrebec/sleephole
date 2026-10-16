@@ -473,6 +473,50 @@ struct AppModelTests {
         #expect(other.model.streak == 11)
     }
 
+    // MARK: store writes redraw row-derived values (B32)
+
+    /// A ruined last night after a run of complete nights, this month's automatic bronze already used.
+    private func ruinedMorning() -> Harness {
+        let h = harness(at: date(2, 12))
+        for d in 2...6 { playNight(h, day: d) }
+        for d in 8...12 { playNight(h, day: d) }               // the night 7 -> 8 was missed (automatic bronze)
+        #expect(playNight(h, day: 13, leaveFor: 3600) == .ruins)
+        h.clock.now = date(14, 12); h.model.refresh()
+        return h
+    }
+
+    final class Flag: @unchecked Sendable { var set = false }
+
+    /// Runs `change` and reports whether Observation notified a reader of `read`.
+    private func notified<T>(_ read: @escaping () -> T, _ change: () -> Void) -> Bool {
+        let flag = Flag()
+        withObservationTracking({ _ = read() }, onChange: { flag.set = true })
+        change()
+        return flag.set
+    }
+
+    @Test func aJokerRedrawsTheStreakBadge() {
+        let h = ruinedMorning()
+        #expect(h.model.streak == 0)
+        let m = h.model
+        #expect(notified({ m.streak }, { m.useJoker(.silver) }))
+        #expect(m.streak == 10)
+    }
+
+    @Test func aJokerRedrawsCoinsAndTheActiveJoker() {
+        let h = ruinedMorning()
+        let m = h.model
+        let before = m.coins
+        #expect(before >= 1000)
+        #expect(notified({ m.coins }, { m.useJoker(.silver) }))
+        #expect(m.coins == before - 1000)
+        let h2 = ruinedMorning()
+        let m2 = h2.model
+        #expect(m2.activeJoker == nil)
+        #expect(notified({ m2.activeJoker }, { m2.useJoker(.silver) }))
+        #expect(m2.activeJoker?.tier == .silver)
+    }
+
     // MARK: night pause + budget (D17, audit B4)
 
     @Test func aPauseLetsYouLeaveForTenMinutes() {

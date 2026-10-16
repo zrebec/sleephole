@@ -12,7 +12,8 @@ struct BuddyTalkTextTests {
 
     private var everyLine: [BuddyLine] {
         var l: [BuddyLine] = [
-            .movedIn(buildingId: "x", people: 4), .newSight(buildingId: "x"), .waiting(buildingId: "x"), .dayOff,
+            .movedIn(buildingId: "x", people: 4), .newSight(buildingId: "x"), .waiting(buildingId: "x"), .ruined(buildingId: "x", repairsTonight: true),
+            .ruined(buildingId: "x", repairsTonight: false),
             .streakSafe, .bedtimeSoon(at), .week, .streak(3), .newStreak, .size(.village, people: 150),
             .nextSize(missing: 5, .village), .firstNeighbours, .parks(2), .library, .museum, .tallest,
             .noFireStation, .noHospital, .noPolice, .noSchool, .noTownHall, .fireStation, .hospital, .tonight,
@@ -81,5 +82,21 @@ struct BuddyTalkTextTests {
             let locs = try #require((strings[k]?["localizations"]) as? [String: Any], "no catalog entry: \(k)")
             #expect(locs["sk"] != nil, "no sk: \(k)")
         }
+    }
+}
+
+@Suite struct BuddyNewsLogTests {
+    @Test func aNewsLineLeadsOncePerDay() throws {
+        let d = try #require(UserDefaults(suiteName: "BuddyNewsLogTests"))
+        d.removePersistentDomain(forName: "BuddyNewsLogTests")
+        let log = BuddyNewsLog(calendar: Calendar.current, defaults: d)
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        #expect(log.ledToday(now: now).isEmpty)
+        log.markLed(.ruined(buildingId: "x", repairsTonight: true), now: now)
+        log.markLed(.equinox, now: now)
+        #expect(log.ledToday(now: now) == [BuddyLine.ruined(buildingId: "x", repairsTonight: true).newsKey, BuddyLine.equinox.newsKey])
+        // the next calendar day starts afresh
+        #expect(log.ledToday(now: now.addingTimeInterval(2 * 86_400)).isEmpty)
+        d.removePersistentDomain(forName: "BuddyNewsLogTests")
     }
 }

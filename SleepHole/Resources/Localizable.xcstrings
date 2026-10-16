@@ -11097,18 +11097,34 @@
         }
       }
     },
-    "The builders took a day off. Tonight we try again 🌙": {
+    "Last night's building – %@ – lies in ruins. If tonight goes well, the builders will repair it 🔧": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The builders took a day off. Tonight we try again 🌙"
+            "value": "Last night's building – %@ – lies in ruins. If tonight goes well, the builders will repair it 🔧"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stavbári si dali voľno. Dnes v noci to skúsime znova 🌙"
+            "value": "Včerajšia stavba – %@ – je v ruinách. Ak sa dnešná noc vydarí, stavbári ju opravia 🔧"
+          }
+        }
+      }
+    },
+    "Last night's building – %@ – lies in ruins. The builders will repair it when its turn comes 🔧": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last night's building – %@ – lies in ruins. The builders will repair it when its turn comes 🔧"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Včerajšia stavba – %@ – je v ruinách. Stavbári ju opravia, keď na ňu príde rad 🔧"
           }
         }
       }
@@ -11468,7 +11484,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Múzeum má nový obraz: mačka spí na obláčiku. Ktovie, kto im stál modelom 🐾"
+            "value": "Múzeum má nový obraz: mačka spí na obláčiku. Ktovie, kto im bol modelom 🐾"
           }
         }
       }
@@ -12033,18 +12049,18 @@
         }
       }
     },
-    "Start the change week": {
+    "Confirm": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Start the change week"
+            "value": "Confirm"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Začať týždeň na zmeny"
+            "value": "Potvrdiť"
           }
         }
       }

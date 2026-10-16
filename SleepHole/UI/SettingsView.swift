@@ -105,13 +105,14 @@ struct SettingsView: View {
                     }
                 }
                 .disabled(nightRunning)
-                .confirmationDialog(L("Start a change week?"), isPresented: $confirmSchedule,
-                                    titleVisibility: .visible) {
-                    Button(L("Start the change week")) {
+                // An alert (not a dialog): modal, both buttons always visible, no tap outside dismisses it.
+                .alert(L("Start a change week?"), isPresented: $confirmSchedule) {
+                    Button(L("Confirm")) {
                         if let draft = scheduleDraft { model.applySchedule(draft) }
                         scheduleDraft = nil
                     }
-                    Button(L("Not yet"), role: .cancel) {}
+                    // Same undo as the section's "Cancel": drop the draft, the pickers show the stored times again.
+                    Button(L("Cancel"), role: .cancel) { scheduleDraft = nil }
                 } message: {
                     let plan = model.changeWeekPlan
                     Text(L("For 7 days (until \(Fmt.fullDate(plan.lastDay))) you can try different times. After that your schedule stays until \(Fmt.fullDate(plan.lockLastDay)) – changing it sooner costs 2,000 🪙."))

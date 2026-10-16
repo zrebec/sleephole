@@ -328,8 +328,14 @@ final class AppModel {
 
     // MARK: - queries
 
+    /// Bumped after every write to the store. SwiftData rows are not observed by SwiftUI, and `refresh()` assigns
+    /// equal values (no notification), so every fetch helper below reads this: a save redraws every view whose
+    /// value is derived from stored rows (streak, coins, jokers, stats, the buddy's lines …).
+    private(set) var dataRevision = 0
+
     func records() -> [NightRecord] {
-        (try? context.fetch(FetchDescriptor<NightRecord>(sortBy: [SortDescriptor(\.bedtime)]))) ?? []
+        _ = dataRevision
+        return (try? context.fetch(FetchDescriptor<NightRecord>(sortBy: [SortDescriptor(\.bedtime)]))) ?? []
     }
 
     /// Finalized real nights, oldest first (debug nights never count).
@@ -417,7 +423,7 @@ final class AppModel {
             night.sleepRuleVersion = SleepAnalysis.ruleVersion
             changed = true
         }
-        if changed { try? context.save(); sleepReads += 1 }
+        if changed { try? context.save(); dataRevision += 1; sleepReads += 1 }
     }
 
     /// The real results as every rule sees them: nights protected by a joker are `.excused` (owner 2026-10-02).
@@ -431,7 +437,8 @@ final class AppModel {
     }
 
     func jokerRecords() -> [JokerRecord] {
-        (try? context.fetch(FetchDescriptor<JokerRecord>(sortBy: [SortDescriptor(\.at)]))) ?? []
+        _ = dataRevision
+        return (try? context.fetch(FetchDescriptor<JokerRecord>(sortBy: [SortDescriptor(\.at)]))) ?? []
     }
 
     /// The night a joker switched on now would start with (last night if it went wrong, else tonight).
@@ -516,7 +523,8 @@ final class AppModel {
     var coinsSpent: Int { spends().reduce(0) { $0 + $1.amount } }
 
     func spends() -> [CoinSpend] {
-        (try? context.fetch(FetchDescriptor<CoinSpend>(sortBy: [SortDescriptor(\.at)]))) ?? []
+        _ = dataRevision
+        return (try? context.fetch(FetchDescriptor<CoinSpend>(sortBy: [SortDescriptor(\.at)]))) ?? []
     }
 
     private func spend(_ amount: Int, reason: String) {
@@ -526,7 +534,8 @@ final class AppModel {
 
     /// Schedule changes, oldest first; the ones that were not free reset the streak (`streakBreaks`).
     func scheduleChanges() -> [ScheduleChange] {
-        (try? context.fetch(FetchDescriptor<ScheduleChange>(sortBy: [SortDescriptor(\.at)]))) ?? []
+        _ = dataRevision
+        return (try? context.fetch(FetchDescriptor<ScheduleChange>(sortBy: [SortDescriptor(\.at)]))) ?? []
     }
 
     var streakBreaks: [NightKey] { scheduleChanges().compactMap { $0.breakKey.flatMap(NightKey.init) } }
@@ -576,7 +585,7 @@ final class AppModel {
         return Progression.currentStreak(results, lastNight: last, calendar: calendar, breaks: streakBreaks)
     }
 
-    /// The sleep buddy's sentences of the day (phase TALK): the first is the sentence of the day, a tap steps on.
+    /// The sleep buddy's AVAILABLE sentences now (phase TALK); the bubble draws from them at random (`BuddyBag`).
     func buddyLines(now: Date) -> [BuddyLine] {
         let town = townSnapshot ?? buildSnapshot()
         let results = coreResults()
@@ -604,7 +613,8 @@ final class AppModel {
             nextBedtime: window.bedtime > now ? window.bedtime : nil, southernHemisphere: south))
     }
 
-    /// Dev aid: `-buddyLine N` starts the buddy's bubble at its N-th sentence (screenshots).
+    /// Dev aid: `-buddyLine N` opens the buddy's bubble with the N-th available sentence (tier order, modulo the count;
+    /// screenshots). Taps afterwards are random as usual.
     static let forcedBuddyLine: Int? = {
         let a = DevArgs.list
         guard let i = a.firstIndex(of: "-buddyLine"), a.indices.contains(i + 1) else { return nil }
@@ -686,10 +696,12 @@ final class AppModel {
     private(set) var firstNightBriefed = false
 
     private func progress() -> UserProgress {
+        _ = dataRevision
         if let p = try? context.fetch(FetchDescriptor<UserProgress>()).first { return p }
         let p = UserProgress()
         context.insert(p)
-        save()
+        try? context.save()          // no `dataRevision` bump: this may run inside a view body (lazy default row)
+        sync.noteLocalChange()
         return p
     }
 
@@ -2058,6 +2070,7 @@ final class AppModel {
 
     private func save() {
         try? context.save()
+        dataRevision += 1
         sync.noteLocalChange()
     }
 }

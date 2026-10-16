@@ -1,15 +1,19 @@
 import SleepCore
 import SwiftUI
 
-/// The sleep buddy's speech bubble on Today (phase TALK, owner 2026-10-14): one sentence of the day about the town;
-/// a tap shows the next one and, after the last, the first again. An overlay – it never changes Today's layout.
+/// The sleep buddy's speech bubble on Today (phase TALK, owner 2026-10-14): a sentence about the town. It opens with
+/// the news of the day (once a day each), then every tap shows a random sentence not heard yet in the round
+/// (`BuddyBag`, owner 2026-10-15). An overlay – it never changes Today's layout.
 struct BuddyBubble: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.colorScheme) private var scheme
+    @Environment(\.scenePhase) private var scenePhase
     let now: Date
+    /// The sentences available now (refreshed on every tick; the bag keeps its own state).
     @State private var lines: [BuddyLine] = []
-    @State private var index = AppModel.forcedBuddyLine ?? 0
+    @State private var bag = BuddyBag()
+    @State private var usedForced = false
 
     /// Solid colours, no transparency (owner): white paper with dark ink by day, a deep blue paper with white ink at night.
     private var paper: Color { scheme == .dark ? Color(red: 0.17, green: 0.19, blue: 0.30) : .white }
@@ -17,11 +21,10 @@ struct BuddyBubble: View {
 
     var body: some View {
         Group {
-            if !lines.isEmpty {
-                let i = min(index, lines.count - 1)
-                let sentence = text(lines[i])
+            if let line = bag.current {
+                let sentence = text(line)
                 Button {
-                    let go = { index = BuddyTalk.next(after: i, count: lines.count) }
+                    let go = { var g = SystemRandomNumberGenerator(); bag.next(available: lines, using: &g) }
                     if reduceMotion { go() } else { withAnimation(.easeInOut(duration: Motion.t(0.3))) { go() } }
                 } label: {
                     // a comic speech bubble (owner 2026-10-15: "the font is terribly small"): solid, outlined, readable
@@ -37,7 +40,7 @@ struct BuddyBubble: View {
                             SpeechBubbleShape().fill(paper)
                             SpeechBubbleShape().stroke(ink.opacity(0.85), style: StrokeStyle(lineWidth: 2.5, lineJoin: .round))
                         }
-                        .id(i)
+                        .id(line)
                         .transition(reduceMotion ? .identity : .opacity.combined(with: .scale(scale: 0.94, anchor: .top)))
                 }
                 .buttonStyle(.plain)
@@ -45,12 +48,29 @@ struct BuddyBubble: View {
                 .accessibilityHint(L("next sentence"))
             }
         }
-        .onAppear { reload() }
-        .onChange(of: now) { _, _ in reload() }
-        .onChange(of: model.townVersion) { _, _ in reload() }
+        .onAppear { reload(fresh: true) }
+        .onChange(of: scenePhase) { _, p in if p == .active { reload(fresh: true) } }
+        .onChange(of: now) { _, _ in reload(fresh: false) }
+        .onChange(of: model.townVersion) { _, _ in reload(fresh: false) }
     }
 
-    private func reload() { lines = model.buddyLines(now: now) }
+    /// `fresh`: the bubble starts showing (Today appears / the app returns) → open with the news or a random line.
+    /// Otherwise only the available set is refreshed; the sentence on screen never changes by itself (unless the
+    /// bubble has nothing to show yet).
+    private func reload(fresh: Bool) {
+        lines = model.buddyLines(now: now)
+        guard fresh || bag.current == nil else { return }
+        let log = BuddyNewsLog(calendar: .current)
+        var g = SystemRandomNumberGenerator()
+        if let forced = AppModel.forcedBuddyLine, !usedForced, !lines.isEmpty {
+            usedForced = true
+            bag.force(lines[forced % lines.count])
+            return
+        }
+        if let line = bag.open(available: lines, ledToday: log.ledToday(now: now), using: &g), line.isNews {
+            log.markLed(line, now: now)
+        }
+    }
 
     private func text(_ line: BuddyLine) -> String {
         Self.gluingTrailingEmoji(BuddyTalkText.text(for: line) { id in model.catalog?[id]?.displayName ?? L("building") })
@@ -87,5 +107,27 @@ struct SpeechBubbleShape: Shape {
         p.addArc(tangent1End: CGPoint(x: rect.minX, y: t), tangent2End: CGPoint(x: rect.minX + r, y: t), radius: r)
         p.closeSubpath()
         return p
+    }
+}
+
+/// Which news sentences already opened the bubble today – a per-device convenience in `UserDefaults` (a failure to
+/// read or write only means a news line may lead again).
+struct BuddyNewsLog {
+    var calendar: Calendar
+    var defaults: UserDefaults = .standard
+    static let key = "buddy.newsLed"
+
+    private func day(_ now: Date) -> String { NightKey(date: now, calendar: calendar).description }
+
+    func ledToday(now: Date) -> Set<String> {
+        guard let d = defaults.dictionary(forKey: Self.key), d["day"] as? String == day(now),
+              let keys = d["keys"] as? [String] else { return [] }
+        return Set(keys)
+    }
+
+    func markLed(_ line: BuddyLine, now: Date) {
+        var keys = ledToday(now: now)
+        keys.insert(line.newsKey)
+        defaults.set(["day": day(now), "keys": Array(keys).sorted()] as [String: Any], forKey: Self.key)
     }
 }

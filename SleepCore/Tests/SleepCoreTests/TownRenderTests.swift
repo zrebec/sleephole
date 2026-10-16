@@ -64,6 +64,27 @@ import Testing
         #expect(lit.buildings[0].state == .ruins)
     }
 
+    @Test func helpedByCompleteNightPicksTheSameBuildingAsBuild() {
+        let before = results([("l1-house-a-0", .ruins), ("l2-road-lit-we", .ruins), ("l1-house-b-0", .ruins),
+                              ("l1-house-c-0", .unfinished), ("l1-house-d-0", .unfinished)])
+        let town = TownBuilder.build(results: before, catalog: catalog)
+        let tonight = before.last!.key.adding(days: 1, calendar: bratislava)
+        // unfinished before ruins, the oldest first
+        #expect(TownBuilder.helpedByCompleteNight(in: town, before: tonight) == 3)
+        // only ruins left: the lit-street ruin (index 1, generic sprite) is skipped
+        var ruinsOnly = town
+        ruinsOnly.buildings[3].state = .complete; ruinsOnly.buildings[4].state = .complete
+        #expect(TownBuilder.helpedByCompleteNight(in: ruinsOnly, before: tonight) == 0)
+        ruinsOnly.buildings[0].state = .complete
+        #expect(TownBuilder.helpedByCompleteNight(in: ruinsOnly, before: tonight) == 2)
+        ruinsOnly.buildings[2].state = .complete
+        #expect(TownBuilder.helpedByCompleteNight(in: ruinsOnly, before: tonight) == nil)
+        // build repairs the very building the helper names
+        let after = TownBuilder.build(results: before + [NightResult(key: tonight, outcome: .complete,
+                                                                     buildingId: "l1-house-e-0")], catalog: catalog)
+        #expect(after.buildings[3].completedLater && after.buildings[0].state == .ruins)
+    }
+
     @Test func litStreetsUpgradeRoadsOrBecomeARuin() {
         var items: [(String, Outcome)] = (0..<6).map { _ in ("l1-house-a-0", .complete) }
         items.append(("l2-road-lit-we", .complete))

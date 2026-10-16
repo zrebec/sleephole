@@ -2,12 +2,12 @@ import Foundation
 
 /// One sentence of the sleep buddy (owner 2026-10-14, phase TALK). The core decides WHICH sentences apply and in
 /// which order; the app turns each case into a localized text.
-public enum BuddyLine: Equatable, Sendable {
+public enum BuddyLine: Hashable, Sendable {
     // tier 1 – last night (the morning after only)
     case movedIn(buildingId: String, people: Int)
     case newSight(buildingId: String)
     case waiting(buildingId: String)
-    case dayOff
+    case ruined(buildingId: String, repairsTonight: Bool)
     case streakSafe
     // tier 2 – bedtime
     case bedtimeSoon(Date)
@@ -38,7 +38,7 @@ public enum BuddyLine: Equatable, Sendable {
 
     public var tier: Int {
         switch self {
-        case .movedIn, .newSight, .waiting, .dayOff, .streakSafe: 1
+        case .movedIn, .newSight, .waiting, .ruined, .streakSafe: 1
         case .bedtimeSoon, .fullMoonTonight, .newMoonTonight, .longestNight, .shortestNight, .equinox: 2
         case .week, .streak, .newStreak: 3
         case .size, .nextSize, .firstNeighbours, .parks, .library, .museum, .tallest,
@@ -47,6 +47,13 @@ public enum BuddyLine: Equatable, Sendable {
         case .chatter, .tonight, .moonPhase: 5
         }
     }
+
+    /// News (owner 2026-10-15): what last night produced (tier 1) and what is about to happen (tier 2). A news line
+    /// may open the bubble, once a day.
+    public var isNews: Bool { tier <= 2 }
+
+    /// A stable text key of the line (used to remember which news already led today).
+    public var newsKey: String { String(describing: self) }
 }
 
 extension TownSize {
@@ -72,7 +79,7 @@ extension TownSize {
 }
 
 /// The six everyday moon phases of the buddy's sky sentence (bands in `BuddySky`).
-public enum MoonQuarter: Equatable, Sendable, CaseIterable {
+public enum MoonQuarter: Hashable, Sendable, CaseIterable {
     case waxingCrescent, firstQuarter, waxingGibbous, waningGibbous, lastQuarter, waningCrescent
 }
 
@@ -114,22 +121,12 @@ public enum BuddyTalk {
     /// "Bedtime is soon" window.
     public static let bedtimeLead: TimeInterval = 2 * 3600
 
-    /// The ordered sentences of the day: by tier, shuffled inside a tier from a generator seeded with the DAY
-    /// (same day → same order on every device). The first one is the sentence of the day.
+    /// The sentences that are AVAILABLE now (by the town, the residents, the buildings, the level, the sky), in a
+    /// fixed order by tier. The order means nothing: the bubble draws from them at random (`BuddyBag`).
     public static func lines(_ input: BuddyTalkInput) -> [BuddyLine] {
         let today = NightKey(date: input.now, calendar: input.calendar)
-        var rng = SeededGenerator(seed: Population.fnv1a64("buddy|\(today.description)"))
         let candidates = candidateLines(input, today: today)
-        var out: [BuddyLine] = []
-        for tier in 1...5 {
-            out += shuffled(candidates.filter { $0.tier == tier }, &rng)
-        }
-        return out
-    }
-
-    /// The index after `index`, wrapping around to the first sentence.
-    public static func next(after index: Int, count: Int) -> Int {
-        count <= 0 ? 0 : (index + 1) % count
+        return (1...5).flatMap { tier in candidates.filter { $0.tier == tier } }
     }
 
     static func candidateLines(_ i: BuddyTalkInput, today: NightKey) -> [BuddyLine] {
@@ -146,7 +143,16 @@ public enum BuddyTalk {
                 }
             case .unfinished:
                 if let id = n.buildingId { c.append(.waiting(buildingId: id)) }
-            case .ruins: c.append(.dayOff)
+            case .ruins:
+                // Name the collapsed building and tell the truth about its repair (the same rule as the town's).
+                if let idx = i.town.buildings.firstIndex(where: { $0.nightKey == n.key && $0.state == .ruins }) {
+                    let b = i.town.buildings[idx]
+                    if b.placement.catalogId == b.buildingId {
+                        let tonight = today.adding(days: 1, calendar: i.calendar)
+                        let helped = TownBuilder.helpedByCompleteNight(in: i.town, before: tonight)
+                        c.append(.ruined(buildingId: b.buildingId, repairsTonight: helped == idx))
+                    }
+                }
             case .excused: c.append(.streakSafe)
             case .missed: break
             }
@@ -189,15 +195,53 @@ public enum BuddyTalk {
         if !soon { c.append(.tonight) }
         return c
     }
+}
 
-    /// Fisher–Yates with our own generator (the standard library's `shuffled(using:)` may change between releases).
-    private static func shuffled(_ a: [BuddyLine], _ rng: inout SeededGenerator) -> [BuddyLine] {
-        var a = a
-        guard a.count > 1 else { return a }
-        for k in stride(from: a.count - 1, to: 0, by: -1) {
-            let j = Int(rng.next() % UInt64(k + 1))
-            a.swapAt(k, j)
+/// The state of the buddy's bubble (owner 2026-10-15): the news of the day first, then a random sentence without
+/// repeats – a shuffle bag. A round ends when every available sentence has been heard; the next one starts at once
+/// (never with the sentence on screen). The set of available sentences may change at any moment: sentences that
+/// disappear are never shown, new ones join the round, and the sentence on screen never changes by itself.
+public struct BuddyBag: Sendable {
+    /// The sentence on screen.
+    public private(set) var current: BuddyLine?
+    /// What this round has shown already.
+    private var heard: Set<BuddyLine> = []
+
+    public init() {}
+
+    /// A fresh start (Today appears / the app returns): a news line that has not led today leads (tier 1 before
+    /// tier 2, random among equals), otherwise a random available sentence. `ledToday` holds the `newsKey`s that led.
+    @discardableResult
+    public mutating func open<G: RandomNumberGenerator>(available: [BuddyLine], ledToday: Set<String>,
+                                                       using g: inout G) -> BuddyLine? {
+        heard = []
+        let news = available.filter { $0.isNews && !ledToday.contains($0.newsKey) }
+        let pool: [BuddyLine]
+        if let tier = news.map(\.tier).min() { pool = news.filter { $0.tier == tier } } else { pool = available }
+        return show(pool.randomElement(using: &g))
+    }
+
+    /// A tap: a random available sentence not yet heard in this round and not the one on screen.
+    @discardableResult
+    public mutating func next<G: RandomNumberGenerator>(available: [BuddyLine], using g: inout G) -> BuddyLine? {
+        let avail = Set(available)
+        heard = heard.intersection(avail)      // gone sentences are forgotten, new ones are simply not heard yet
+        var pool = available.filter { !heard.contains($0) && $0 != current }
+        if pool.isEmpty {                      // the round is over: a new one, never starting with the line on screen
+            heard = current.map { [$0] } ?? []
+            pool = available.filter { $0 != current }
         }
-        return a
+        guard let pick = pool.randomElement(using: &g) else { return current }   // only one sentence exists
+        return show(pick)
+    }
+
+    /// Shows a given sentence (the Debug `-buddyLine` aid).
+    @discardableResult
+    public mutating func force(_ line: BuddyLine) -> BuddyLine? { show(line) }
+
+    private mutating func show(_ line: BuddyLine?) -> BuddyLine? {
+        current = line
+        if let line { heard.insert(line) }
+        return line
     }
 }

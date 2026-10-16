@@ -47,13 +47,11 @@ public enum TownBuilder {
             }
             // A complete night also helps ONE older building (gentle bonus): first it finishes the oldest
             // unfinished building, otherwise it repairs the oldest ruin (not lit-street ruins – nothing to rebuild).
-            if r.outcome == .complete {
-                if let i = town.buildings.firstIndex(where: { $0.state == .unfinished && $0.nightKey < r.key }) {
+            if r.outcome == .complete, let i = helpedByCompleteNight(in: town, before: r.key) {
+                if town.buildings[i].state == .unfinished {
                     town.buildings[i].state = .complete
                     town.buildings[i].completedLater = true
-                } else if let i = town.buildings.firstIndex(where: {
-                    $0.state == .ruins && $0.nightKey < r.key && $0.placement.catalogId == $0.buildingId
-                }) {
+                } else {
                     town.buildings[i].state = .complete
                     town.buildings[i].repairedLater = true
                     town.repairs.append(r.key)
@@ -61,6 +59,16 @@ public enum TownBuilder {
             }
         }
         return town
+    }
+
+    /// The older building a COMPLETE night with this key helps (index into `town.buildings`): the oldest unfinished
+    /// one, otherwise the oldest repairable ruin (lit-street ruins, drawn with the generic sprite, never). Shared
+    /// with the sleep buddy so the cat and the town cannot disagree.
+    public static func helpedByCompleteNight(in town: TownSnapshot, before key: NightKey) -> Int? {
+        if let i = town.buildings.firstIndex(where: { $0.state == .unfinished && $0.nightKey < key }) { return i }
+        return town.buildings.firstIndex(where: {
+            $0.state == .ruins && $0.nightKey < key && $0.placement.catalogId == $0.buildingId
+        })
     }
 
     private static func append(_ town: inout TownSnapshot, entry: CatalogEntry, buildingId: String,

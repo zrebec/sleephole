@@ -31,9 +31,52 @@ import Testing
         #expect(lines(input(last: last(.complete))).contains(.movedIn(buildingId: "l1-house-a", people: 4)))
         #expect(lines(input(last: last(.complete, id: "l2-park-small", res: 0))).contains(.newSight(buildingId: "l2-park-small")))
         #expect(lines(input(last: last(.unfinished))).contains(.waiting(buildingId: "l1-house-a")))
-        #expect(lines(input(last: last(.ruins))).contains(.dayOff))
         #expect(lines(input(last: last(.excused, id: nil))).contains(.streakSafe))
-        #expect(!lines(input(last: last(.missed, id: nil))).contains(.dayOff))
+        #expect(!lines(input(last: last(.missed, id: nil))).contains { $0.tier == 1 })
+    }
+
+    private func ruinTown(older: [(String, BuildingState)] = [], lastId: String = "l1-house-a",
+                          catalogId: String? = nil, lastDay: Int = 14) -> TownSnapshot {
+        var t = TownSnapshot()
+        for (n, e) in older.enumerated() {
+            t.buildings.append(TownBuilding(placement: Placement(catalogId: e.0, origin: Cell(n, 0), size: 1),
+                                            nightKey: NightKey(year: 2026, month: 9, day: n + 1),
+                                            buildingId: e.0, state: e.1))
+        }
+        t.buildings.append(TownBuilding(placement: Placement(catalogId: catalogId ?? lastId, origin: Cell(9, 9), size: 1),
+                                        nightKey: NightKey(year: 2026, month: 10, day: lastDay),
+                                        buildingId: lastId, state: .ruins))
+        return t
+    }
+    private func ruinedLine(_ t: TownSnapshot, last l: BuddyTalkInput.LastNight? = nil) -> [BuddyLine] {
+        lines(input(town: t, last: l ?? last(.ruins))).filter { $0.tier == 1 }
+    }
+
+    @Test func ruinsNameTheBuildingAndTellTheTruthAboutRepair() {
+        // nothing older to help → tonight repairs it
+        #expect(ruinedLine(ruinTown()) == [.ruined(buildingId: "l1-house-a", repairsTonight: true)])
+        // an older unfinished building goes first
+        #expect(ruinedLine(ruinTown(older: [("l1-house-b", .unfinished)]))
+                == [.ruined(buildingId: "l1-house-a", repairsTonight: false)])
+        // an older repairable ruin goes first
+        #expect(ruinedLine(ruinTown(older: [("l1-house-b", .ruins)]))
+                == [.ruined(buildingId: "l1-house-a", repairsTonight: false)])
+        // an older lit-street ruin is never repaired → does not count
+        var lit = ruinTown(older: [("l2-road-lit-we", .ruins)])
+        lit.buildings[0] = TownBuilding(placement: Placement(catalogId: "o-ruin-1", origin: Cell(0, 0), size: 1),
+                                        nightKey: lit.buildings[0].nightKey, buildingId: "l2-road-lit-we", state: .ruins)
+        #expect(ruinedLine(lit) == [.ruined(buildingId: "l1-house-a", repairsTonight: true)])
+    }
+
+    @Test func ruinsWithoutRepairableBuildingSayNothingInTierOne() {
+        var litTown = ruinTown(older: [("l1-house-b", .complete)], lastId: "l2-road-lit-we", catalogId: "o-ruin-1")
+        #expect(ruinedLine(litTown).isEmpty)
+        litTown.buildings.removeLast()
+        #expect(ruinedLine(litTown).isEmpty)                       // building missing
+        // not last night's morning → no line
+        #expect(ruinedLine(ruinTown(), last: last(.ruins, day: 13)).isEmpty)
+        // a missed night → no ruined line
+        #expect(ruinedLine(ruinTown(), last: last(.missed, id: nil)).isEmpty)
     }
 
     @Test func lastNightOnlyOnItsMorning() {
@@ -124,18 +167,109 @@ import Testing
         #expect(Set(tiers) == [1, 2, 3, 4, 5])
     }
 
-    @Test func sameDaySameOrderOtherDayMayDiffer() {
+    @Test func availableLinesAreInTierOrder() {
         let t = town([("l1-house-a", .complete), ("l2-park-small", .complete), ("l2-library-a", .complete)])
-        let a = lines(input(day: 14, town: t, level: 3)), b = lines(input(day: 14, hour: 20, town: t, level: 3))
-        #expect(a == b)
-        let others = (15...21).map { lines(input(day: $0, town: t, level: 3)) }   // ordinary moon days: the sky adds one tier-5 line each
-        #expect(others.contains { $0 != a })
-        #expect(Set(others.map { $0.map(\.tier) }).count == 1)    // tiers stay the same
+        let a = lines(input(day: 14, town: t, level: 3))
+        #expect(a == lines(input(day: 14, hour: 20, town: t, level: 3)))
+        #expect(a.map(\.tier) == a.map(\.tier).sorted())
     }
 
-    @Test func wrapAround() {
-        #expect(BuddyTalk.next(after: 0, count: 3) == 1)
-        #expect(BuddyTalk.next(after: 2, count: 3) == 0)
-        #expect(BuddyTalk.next(after: 0, count: 0) == 0)
+    // MARK: the bag (owner 2026-10-15)
+
+    private let l1 = BuddyLine.chatter(0), l2 = BuddyLine.chatter(1), l3 = BuddyLine.chatter(2), l4 = BuddyLine.chatter(3)
+    private let news1 = BuddyLine.ruined(buildingId: "l1-house-a", repairsTonight: true), news2 = BuddyLine.equinox
+
+    @Test func newsLeadsTierOneBeforeTwo() {
+        for seed in 0..<20 {
+            var g = SeededGenerator(seed: UInt64(seed)); var bag = BuddyBag()
+            #expect(bag.open(available: [l1, news2, l2, news1], ledToday: [], using: &g) == news1)
+            var g2 = SeededGenerator(seed: UInt64(seed)); var bag2 = BuddyBag()
+            #expect(bag2.open(available: [l1, news2, l2], ledToday: [], using: &g2) == news2)
+        }
+    }
+
+    @Test func newsThatLedTodayDoesNotLeadAgain() {
+        var openers = Set<BuddyLine>()
+        for seed in 0..<40 {
+            var g = SeededGenerator(seed: UInt64(seed)); var bag = BuddyBag()
+            openers.insert(bag.open(available: [l1, l2, news1], ledToday: [news1.newsKey], using: &g)!)
+        }
+        #expect(openers == [l1, l2, news1])     // no longer forced: a plain random opener
+        for seed in 0..<20 {
+            var g = SeededGenerator(seed: UInt64(seed))
+            var bag2 = BuddyBag()
+            // tier 1 already led, tier 2 still may
+            #expect(bag2.open(available: [l1, news1, news2], ledToday: [news1.newsKey], using: &g) == news2)
+        }
+    }
+
+    @Test func withoutNewsTheOpenerIsFromTheAvailableSet() {
+        var seen = Set<BuddyLine>()
+        for seed in 0..<60 {
+            var g = SeededGenerator(seed: UInt64(seed)); var bag = BuddyBag()
+            if let o = bag.open(available: [l1, l2, l3], ledToday: [], using: &g) { seen.insert(o) }
+        }
+        #expect(seen == [l1, l2, l3])
+        var g = SeededGenerator(seed: 1); var empty = BuddyBag()
+        #expect(empty.open(available: [], ledToday: [], using: &g) == nil)
+    }
+
+    @Test func noRepeatWithinARoundAndEveryLineOnce() {
+        for seed in 0..<30 {
+            var g = SeededGenerator(seed: UInt64(seed)); var bag = BuddyBag()
+            let all = [l1, l2, l3, l4]
+            var round = [bag.open(available: all, ledToday: [], using: &g)!]
+            for _ in 0..<3 { round.append(bag.next(available: all, using: &g)!) }
+            #expect(Set(round) == Set(all))
+        }
+    }
+
+    @Test func aNewRoundNeverStartsWithTheLineOnScreen() {
+        for seed in 0..<50 {
+            var g = SeededGenerator(seed: UInt64(seed)); var bag = BuddyBag()
+            let all = [l1, l2, l3]
+            var prev = bag.open(available: all, ledToday: [], using: &g)!
+            for _ in 0..<30 {
+                let n = bag.next(available: all, using: &g)!
+                #expect(n != prev)
+                prev = n
+            }
+        }
+    }
+
+    @Test func aSingleLineStays() {
+        var g = SeededGenerator(seed: 3); var bag = BuddyBag()
+        #expect(bag.open(available: [l1], ledToday: [], using: &g) == l1)
+        #expect(bag.next(available: [l1], using: &g) == l1)
+    }
+
+    @Test func vanishedLinesAreNotShownAndNewOnesJoin() {
+        for seed in 0..<30 {
+            var g = SeededGenerator(seed: UInt64(seed)); var bag = BuddyBag()
+            _ = bag.open(available: [l1, l2, l3], ledToday: [], using: &g)
+            let shown = bag.current!
+            // l3 disappears, l4 appears – the line on screen is untouched until a tap
+            let now = [l1, l2, l4]
+            #expect(bag.current == shown)
+            let n = bag.next(available: now, using: &g)!
+            #expect(now.contains(n) && n != shown)
+            // the second tap still has an unheard line (l4 joined) before any line repeats
+            let m = bag.next(available: now, using: &g)!
+            #expect(now.contains(m) && m != n)
+        }
+    }
+
+    @Test func aTickDoesNotResetWhatWasHeard() {
+        var g = SeededGenerator(seed: 5); var bag = BuddyBag()
+        let all = [l1, l2, l3]
+        var round = [bag.open(available: all, ledToday: [], using: &g)!]
+        round.append(bag.next(available: all, using: &g)!)
+        round.append(bag.next(available: all, using: &g)!)
+        #expect(Set(round).count == 3)
+    }
+
+    @Test func forceShowsTheGivenLine() {
+        var bag = BuddyBag()
+        #expect(bag.force(l2) == l2 && bag.current == l2)
     }
 }

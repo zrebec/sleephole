@@ -10,7 +10,8 @@ enum BuddyTalkText {
         "%@ already has %lld residents.",
         "The whole town is talking about something new: %@.",
         "%@ is waiting for its last bricks – no rush, tonight is a new chance.",
-        "The builders took a day off. Tonight we try again 🌙",
+        "Last night's building – %@ – lies in ruins. If tonight goes well, the builders will repair it 🔧",
+        "Last night's building – %@ – lies in ruins. The builders will repair it when its turn comes 🔧",
         "Your streak was safe – the town waited for you.",
         "Bedtime is at %@. The builders are already putting on their helmets.",
         "A whole week of good nights – the town is throwing a little party 🎉",
@@ -60,7 +61,10 @@ enum BuddyTalkText {
         case let .movedIn(id, people): L("\(buildingName(id)) already has \(people) residents.")
         case let .newSight(id): L("The whole town is talking about something new: \(buildingName(id)).")
         case let .waiting(id): L("\(buildingName(id)) is waiting for its last bricks – no rush, tonight is a new chance.")
-        case .dayOff: L("The builders took a day off. Tonight we try again 🌙")
+        case let .ruined(id, repairsTonight):
+            repairsTonight
+                ? L("Last night's building – \(buildingName(id)) – lies in ruins. If tonight goes well, the builders will repair it 🔧")
+                : L("Last night's building – \(buildingName(id)) – lies in ruins. The builders will repair it when its turn comes 🔧")
         case .streakSafe: L("Your streak was safe – the town waited for you.")
         case let .bedtimeSoon(at): L("Bedtime is at \(Fmt.time(at)). The builders are already putting on their helmets.")
         case .week: L("A whole week of good nights – the town is throwing a little party 🎉")
