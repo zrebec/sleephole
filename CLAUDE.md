@@ -2,8 +2,10 @@
 
 ## Claude Code specifics
 
-* Start every session by reading `docs/IMPLEMENTATION_PLAN.md` (status board §0) — you have no memory of
-  earlier sessions; the plan is the memory. Update §0 and §12 at each checkpoint.
+* Start every session by reading `docs/IMPLEMENTATION_PLAN.md` (status board §0 and the roadmap by build §0b) —
+  you have no memory of earlier sessions; the plan is the memory. Update §0 / §0b and §12 at each checkpoint.
+* **One build at a time (owner 2026-10-16):** work only on the steps of the build in work; a new idea goes into §0b
+  in one line and waits for his word. Keep the agenda in `AGENTS.md` short – history belongs in §12.
 * Reply to the owner in **Slovak**; write code and docs in English.
 * The sprite renderer (`tools/render/render_sprites.swift`, SceneKit + ModelIO) must be run with the Bash
   sandbox disabled — inside the sandbox ModelIO silently loads empty models.
