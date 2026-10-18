@@ -97,8 +97,8 @@ struct SettingsView: View {
                                 .buttonStyle(.borderedProminent)
                         }
                     }
-                    Button(L("How it works")) { showGuide = true }
-                    Button(L("How SleepHole works")) { showRules = true }
+                    Button(L("Guide")) { showGuide = true }
+                    Button(L("All rules")) { showRules = true }
                 } header: {
                     Text(L("Schedule"))
                 } footer: {

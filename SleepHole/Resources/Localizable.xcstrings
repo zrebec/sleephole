@@ -4217,6 +4217,22 @@
         }
       }
     },
+    "Guide": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guide"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprievodca"
+          }
+        }
+      }
+    },
     "Have a nice rest": {
       "localizations": {
         "en": {
@@ -4245,22 +4261,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Silný dážď"
-          }
-        }
-      }
-    },
-    "How it works": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "How it works"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ako to funguje"
           }
         }
       }
