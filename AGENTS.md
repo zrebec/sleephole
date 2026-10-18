@@ -26,7 +26,11 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    1.0 (8) 2026-10-18 07:04, "What to Test" saved, in both tester groups – SE added by him). **His phone runs the whole
    build 9 (9a–9f, Debug) since 2026-10-18 09:03**, installed over the app (data kept; full backup first in the git-ignored
    `docs/device-logs/2026-10-18-pred-buildom-9/` and his iCloud `SleepHole/Zalohy/2026-10-18-pred-buildom-9/`). He has
-   `docs/TEST-BUILD-9.md`. Build 9 is committed (`75339b5`, `15e6b7d`, the docs commit of that morning; he pushes). **Next:** (a) his daytime checks (the guide again, the rules
+   `docs/TEST-BUILD-9.md`. Build 9 is committed (`75339b5`, `15e6b7d`, the docs commit of that morning) and pushed by him (2026-10-18 ~11:05). **9g** (his yes 2026-10-18): the
+   Settings rows "Guide" / "All rules" – on his phone since ~10:55, uncommitted ("not yet"). **9h** (his review 11:05): the
+   guide follows the display – no bubble, the largest text that fits, line height 1.5 where it fits – on his phone since 11:46, uncommitted.
+   **9i** (his word ~12:10): B33 + the Strict-mode warning lasts 15s, ringing until the collapse – on his phone since 13:56,
+   his lab night 14:00 confirmed it (~15s of sound, then the collapse), uncommitted. **Next:** (a) his daytime checks (the guide again, the rules
    list, the setup time, the solid tab bar); his optional clean first install (the backup and the steps were given to him
    2026-10-18 – the iCloud switch for SleepHole off first, else the sync marks the guide done and the guide's change week
    can move his own); (b) the morning of 2026-10-19 – pull the journal (read-only): no `.usedLockScreen` after the alarm
@@ -34,22 +38,23 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    upload (he runs the export command himself – the session's auto-mode check refuses it to Opus), the testers.
    His wish for later: when a bad night comes he will check the cat's ruins line; next month the bronze joker → the
    cat's "streak was safe" line.
-2. **Apple's review:** build 7 is still "Waiting for Review" (2026-10-18). The notes for build 9 are written
-   (`docs/REVIEW-NOTES.md`: the times set in the first-run guide; proven by the hosted test `reviewRecipeWorksOnAFreshInstall`);
-   App Store Connect is changed only on his yes; a person should still try the recipe once on a clean device. **When build 8 (or its successor) goes to review, repeat this whole agenda to
+2. **Apple's review:** build 7 is still "Waiting for Review" (2026-10-18). **His yes 2026-10-18:** once build 9 is uploaded,
+   a second tester tries `docs/REVIEW-NOTES.md` on their own phone (build 9 from TestFlight, no SleepHole before – the clean device),
+   then build 7 leaves the review and build 9 goes in with those notes (the App Store Connect clicks are his, or his yes per
+   action). **When build 8 (or its successor) goes to review, repeat this whole agenda to
    him (his request 2026-10-16).**
 3. **His streak:** the night of 2026-10-15 → 16 collapsed (one trip of 13.15s; Notification Center counts as leaving on
    iOS 26); the silver joker saved it (1 000 🪙). October's bronze and silver are used and he will not buy the gold – the
    next failed night this month breaks the streak. Be kind about it.
 4. **Waiting for his word:** the reroll during the setup (his idea, roadmap build 10) – Opus recommends 100 🪙, +100 for
-   each further reroll of the same night, none free; the roadmap builds 9–12 (plan §0b); the guide texts
-   `docs/guide-texts-draft.json` with page 6 and the FAQ entry about Notification Center (build 9); the eight questions
+   each further reroll of the same night, none free; the roadmap builds 10–12 (plan §0b); the eight questions
    at the end of `docs/NAVRH-MESTO-STATISTIKY.md` (they shape builds 10–12); still open from 2026-10-14: the seller name
    on the Business page (it differs from the copyright name), what "a little tuning of the home screen UI" and "some AI
    optimisation" mean, what "like a wiper on a car" means (weather over Today).
-5. **Owed device checks:** the review recipe on a clean install (a person, not his phone); R4 – only one alarm when the
-   app is reopened while the system alarm rings; Developer → System alarm test – what the system's own stop button says.
-6. **Open bugs (plan §11a):** B8, B10, B12–B16, B22, B26, B30; B27 / B28 (Strict-mode warning alarm) to re-check.
+5. **Owed device checks:** the review recipe on a clean install (the second tester, see 2); R4 – the app killed by iOS in the night
+   and opened while the SYSTEM alarm rings → only one alarm (his normal mornings ring one – 2026-10-18; this rarer case is
+   untried); Developer → System alarm test – what the system's own stop button says (B27).
+6. **Open bugs (plan §11a):** B8, B10, B30; B27 to re-check. B28 and B33 (9i) proven fixed on his phone 2026-10-18. B12–B16, B22, B26 are fixed in build 9 (tests – his night will tell).
 7. **Standing notes:** the app is free for now (price 0 since 2026-10-12; a price only after an accountant – never push;
    his reasons stay out of this public repo); the Strict switch is ON on his phone; App Store Connect can be read in his
    Chrome – every change needs his yes, agreements, bank, tax and legal declarations stay his own clicks.
@@ -170,7 +175,9 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   100, the 4th 150 (+50 each, charged at the start, only if the coins are there); a complete night with no pause pays
   **+30 🪙** (so up to 130 for a level-1 night); the building stays complete. A pause must never turn into a habit.
 * **Away budget (owner 2026-10-03):** outside pauses and calls, all trips out of the app after the setup share **30 s
-  per night** (`SleepRules.awayBudget`); one trip is still limited to 3 s notice + 10 s. **No collapse without a
+  per night** (`SleepRules.awayBudget`); one trip is still limited to 3 s notice + 10 s – **except using the phone in
+  Strict mode (owner 2026-10-18, build 9i, B33): 3 s + 15 s, and the warning alarm rings until the collapse (it starts
+  ~2.5 s late); stored with each night, older nights keep 3 + 10 s.** **No collapse without a
   real warning (owner 2026-10-07, B24):** a trip that starts while some of the 30 s is left is always a full trip
   with the full warning – the budget never shortens it; the night screen says in orange when the budget is low and
   when it is used up, and only a trip that starts after that collapses the building at once. Nights stored before

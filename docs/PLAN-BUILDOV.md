@@ -20,7 +20,7 @@ Stav k 18. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 | Build | Téma | Stav |
 |---|---|---|
 | 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
-| 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | 9a–9f postavené a skontrolované; v tvojom telefóne od 18. 10. 09:03; ďalej tvoja noc, commit, nahratie |
+| 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | 9a–9f postavené, v tvojom telefóne od 18. 10. 09:03, commitnuté; 9g, 9h, 9i pridané tebou, v telefóne (9i od 13:56); ďalej tvoja noc, nahratie, build 9 namiesto 7 na kontrolu |
 | 10 | Štatistiky a nový žreb | návrh |
 | 11 | Mesto | návrh |
 | 12 | Živé mesto | návrh |
@@ -75,6 +75,11 @@ B12, B13, B14, B15, B16, B22 a B26.
 | 9d | nové | FAQ na webe: Centrum hlásení je odchod z appky | commitnuté (`454c43d`), ide von tvojím pushom |
 | 9e | zmenené | návod pre Apple: časy v sprievodcovi (`docs/REVIEW-NOTES.md`) + automatický test | hotové, testy; do App Store Connect až s tvojím áno |
 | 9f | opravené | B12, B13, B14, B15, B16, B22, B26 | hotové, testy |
+| 9g | zmenené | Nastavenia: riadky „Sprievodca“ a „Všetky pravidlá“ (tvoje áno 18. 10.) | hotové, testy, v telefóne od 18. 10. ~10:55 |
+| 9h | zmenené | Sprievodca podľa displeja: bez bubliny, čo najväčšie písmo, riadkovanie 1,5 kde sa zmestí, rozostupy (tvoje výhrady 18. 10.) | hotové, testy, v telefóne od 18. 10. 11:46 |
+| 9i | opravené | B33 + varovanie prísneho režimu trvá 15s a zvoní až do zrútenia (tvoje slovo 18. 10.) | hotové, testy, v telefóne od 18. 10. 13:56; tvoj test 14:00: zvonil ~15s, potom zrútenie ✓ |
+
+**Tvoje odpovede 18. 10.:** spodná lišta plná je OK; build 7 zajtra vymeníme za build 9 a dáme k nemu nový návod pre Apple – najprv ho vyskúša druhý tester na svojom telefóne (build 9 z TestFlightu). **B28 je overená na tvojom telefóne** (test 18. 10. 12:00–12:06: „Zastaviť“, zhasnutie aj nechať tak – appka budík vypne načas). Test našiel **B33**: varovanie sľubuje 10s, ale zvoní len ~7,5s (začne o 2,5s neskôr a stíchne 3s pred zrútením) – tvoje rozhodnutie: 15s a zvoniť až do zrútenia, ide do buildu 9 ako krok 9i. **9i je v telefóne od 13:56 a tvoj test o 14:00 to potvrdil:** varovanie nechané tak zvonilo ~15s, potom testovacia stavba spadla a hlásenie prišlo aj na hodinky.
 
 ## Build 10 – Štatistiky a nový žreb (návrh)
 
@@ -111,7 +116,7 @@ skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón l
 - počasie cez celú obrazovku Dnes (najprv vysvetli „ako stierač na aute“)
 - láskavý posun večierky po viacerých skorších nociach; skoršie ukončenie odpočinku (B10)
 - najnovšia budova namiesto mačky na Dnes; čínština (teraz neodporúčané); výskumné centrum
-- batéria (B8); varovný budík prísneho režimu (B27, B28) znova preveriť
+- batéria (B8); testovací systémový budík (B27) znova preveriť
 
 ## Vydanie v App Store
 
