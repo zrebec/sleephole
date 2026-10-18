@@ -30,6 +30,14 @@ public struct SleepRules: Codable, Equatable, Sendable {
     /// it starts while Strict mode is off ("care instead of enforcement", owner 2026-10-09): such a lock-screen
     /// trip stays in the journal but is no away time. A `.leftApp` inside it is a normal counted trip from then on.
     public var lockScreenCollapses = true
+    /// The seconds of warning a lock-screen trip (`.usedLockScreen`, Strict mode) gets after the `noticeDelay`
+    /// (owner 2026-10-18, B33: the system alarm sounds ~2.5 s late, so 10 s were not enough). The default 10 equals
+    /// `accidentalTolerance` = the behaviour of every night stored before; the app starts new nights with 15
+    /// (`SleepRules.lockScreenToleranceNow`). A trip out of the app (`.leftApp`, `.closedByOwner`) keeps
+    /// `accidentalTolerance`.
+    public var lockScreenTolerance: TimeInterval = 10
+    /// The lock-screen tolerance of the nights that start now.
+    public static let lockScreenToleranceNow: TimeInterval = 15
     public init() {}
 }
 
@@ -44,26 +52,33 @@ public enum NightEvaluator {
     /// With `rules.lockScreenCollapses == false` a lock-screen trip is no away time; a `.leftApp` inside it starts
     /// the counted trip at that moment.
     public static func awayIntervals(_ log: NightLog, rules: SleepRules = SleepRules()) -> [(Date, Date)] {
+        awayTrips(log, rules: rules).map { ($0.from, $0.to) }
+    }
+
+    /// The same intervals with the kind of the event that started each trip (`lockScreen`: it began with
+    /// `.usedLockScreen`, so it gets the lock-screen allowance).
+    static func awayTrips(_ log: NightLog, rules: SleepRules = SleepRules()) -> [(from: Date, to: Date, lockScreen: Bool)] {
         guard let start = log.startedAt else { return [] }
         let end = log.window.wake
-        var away: [(Date, Date)] = [], calls: [(Date, Date)] = []
+        var away: [(Date, Date, Bool)] = [], calls: [(Date, Date)] = []
         var awaySince: Date?, callSince: Date?
+        var sinceLock = false           // the open trip began with a lock-screen use
         var closed = false              // the open interval is owned by a closure: the relaunch ends it
         for e in log.sortedEvents {
             switch e.kind {
             case .usedLockScreen where !rules.lockScreenCollapses:
                 break               // gentle mode: logged, but no away time
             case .leftApp, .usedLockScreen:
-                awaySince = awaySince ?? e.at
+                if awaySince == nil { awaySince = e.at; sinceLock = e.kind == .usedLockScreen }
             case .closedByOwner:
-                awaySince = awaySince ?? e.at
+                if awaySince == nil { awaySince = e.at; sinceLock = false }
                 closed = true
             case .returned, .locked, .confirmed:
-                if let s = awaySince { away.append((s, e.at)); awaySince = nil }
+                if let s = awaySince { away.append((s, e.at, sinceLock)); awaySince = nil }
                 closed = false
             case .appLaunched:
                 if closed, let s = awaySince {
-                    away.append((s, e.at))      // the owner opened the app again
+                    away.append((s, e.at, sinceLock))      // the owner opened the app again
                 }
                 awaySince = nil     // otherwise the app was killed – unknown what happened → owner's favour
                 closed = false
@@ -81,13 +96,14 @@ public enum NightEvaluator {
                 break
             }
         }
-        if let s = awaySince { away.append((s, end)) }      // left (or closed) and never came back
+        if let s = awaySince { away.append((s, end, sinceLock)) }      // left (or closed) and never came back
         if let s = callSince { calls.append((s, end)) }
         return away
-            .map { (max($0.0, start), min($0.1, end)) }
+            .map { (max($0.0, start), min($0.1, end), $0.2) }
             .filter { $0.0 < $0.1 }
-            .flatMap { subtract(calls + log.pauseIntervals, from: $0) }
+            .flatMap { t in subtract(calls + log.pauseIntervals, from: (t.0, t.1)).map { ($0.0, $0.1, t.2) } }
             .sorted { $0.0 < $1.0 }
+            .map { (from: $0.0, to: $0.1, lockScreen: $0.2) }
     }
 
     public static func awaySeconds(_ log: NightLog, rules: SleepRules = SleepRules()) -> TimeInterval {
@@ -101,10 +117,10 @@ public enum NightEvaluator {
         guard let start = log.startedAt else { return nil }
         let graceEnd = log.window.setupEnds(start: start, rules: rules)
         var used: TimeInterval = 0                       // seconds away after the setup so far
-        for (a, b) in awayIntervals(log, rules: rules) {
+        for (a, b, lockScreen) in awayTrips(log, rules: rules) {
             let from = max(a, graceEnd)
             guard b > from else { continue }
-            let allowed = allowance(rules, used: used)
+            let allowed = allowance(rules, used: used, lockScreen: lockScreen)
             if b.timeIntervalSince(from) > allowed { return from + allowed }
             used += b.timeIntervalSince(from)
         }
@@ -113,8 +129,8 @@ public enum NightEvaluator {
 
     /// How long one more trip may last: a full trip (never cut short by the budget) while some budget is left
     /// when it starts, nothing once the budget is used up.
-    static func allowance(_ rules: SleepRules, used: TimeInterval) -> TimeInterval {
-        let perTrip = rules.accidentalTolerance + rules.noticeDelay
+    static func allowance(_ rules: SleepRules, used: TimeInterval, lockScreen: Bool = false) -> TimeInterval {
+        let perTrip = (lockScreen ? rules.lockScreenTolerance : rules.accidentalTolerance) + rules.noticeDelay
         guard let budget = rules.awayBudget else { return perTrip }
         return used < budget ? perTrip : 0
     }
@@ -140,9 +156,11 @@ public enum NightEvaluator {
     }
 
     /// How long a trip that starts at `t` may last before the building collapses (for the "Come back" warning):
-    /// 13 s while budget is left, 0 when it is used up.
-    public static func allowance(_ log: NightLog, rules: SleepRules = SleepRules(), at t: Date) -> TimeInterval {
-        allowance(rules, used: awayAfterSetup(log, rules: rules, until: t))
+    /// 13 s (a lock-screen trip: `noticeDelay + lockScreenTolerance`, 18 s for new nights) while budget is left,
+    /// 0 when it is used up.
+    public static func allowance(_ log: NightLog, rules: SleepRules = SleepRules(), at t: Date,
+                                 lockScreen: Bool = false) -> TimeInterval {
+        allowance(rules, used: awayAfterSetup(log, rules: rules, until: t), lockScreen: lockScreen)
     }
 
     /// Outcome (owner rules of 2026-09-29):

@@ -1220,7 +1220,8 @@ final class AppModel {
         let rec = NightRecord(window: window, buildingId: entry.id, isDebug: isDebug,
                               setupGrace: debugWindow != nil ? debugGrace : settings.setupGrace,
                               idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode,
-                              calmHoursRule: CalmHours.currentRule)
+                              calmHoursRule: CalmHours.currentRule,
+                              lockScreenTolerance: SleepRules.lockScreenToleranceNow)
         rec.append(.started, at: now)
         context.insert(rec)
         save()
@@ -1501,25 +1502,27 @@ final class AppModel {
     @ObservationIgnored private var keepAliveToken: Int?
 
     /// Rings the warning for `seconds`: the system alarm when allowed (it covers the Camera), else the app's own sound.
-    private func startLockWarning(seconds: TimeInterval, at date: Date) {
+    /// `shown` = the seconds the title / notification promise; `ringFor` = the whole trip allowance (from the trip's
+    /// start), so the warning rings until the real collapse moment (B33: the alarm starts sounding ~2.5 s late).
+    private func startLockWarning(shown seconds: TimeInterval, ringFor: TimeInterval, at date: Date) {
         endLockWarning()
-        lockWarningDeadline = date + seconds
+        lockWarningDeadline = date + ringFor
         // B28: the system alarm interrupts our audio session and iOS then suspends the app ~4 s later, so the deadline
         // would never run; a background task keeps it alive until the warning has ended
         keepAliveToken = keepAlive.begin(name: "lock-warning") { [weak self] in self?.keepAliveExpired() }
         lockLab.note("keep-alive began")
-        lockLab.note("lock warning started · system=\(systemAlarm.consent == .allowed) · seconds=\(Int(seconds))")
+        lockLab.note("lock warning started · system=\(systemAlarm.consent == .allowed) · seconds=\(Int(seconds)) · ringFor=\(Int(ringFor))")
         if systemAlarm.consent == .allowed {
             lockWarningIsSystem = true
             let file = "alarm_alert.caf"                  // the file the app's own warning sound uses
             let shown = Int(seconds)                      // the same number the notification shows
             enqueueSystemAlarm { [weak self] in _ = await self?.systemAlarm.ringWarning(soundFile: file, seconds: shown) }
         } else if servicesEnabled {
-            SoundFX.previewAlarm("alarm_alert", seconds: seconds)
+            SoundFX.previewAlarm("alarm_alert", seconds: ringFor)
         }
         if servicesEnabled {
             lockWarningTask = Task { [weak self] in
-                try? await Task.sleep(for: .seconds(seconds))
+                try? await Task.sleep(for: .seconds(ringFor))
                 guard !Task.isCancelled else { return }
                 self?.refresh()
             }
@@ -1919,12 +1922,15 @@ final class AppModel {
                 // for a warning (left = 0) and the building has already collapsed
                 // owner 2026-10-09: the collapse always comes with a notice, scheduled now because the app may be dead
                 // or suspended when it happens (also with the budget used up: then it fires at once)
-                if let fire = Notifications.collapseNoticeTime(log: rec.log, rules: rec.rules,
-                                                               at: date, alreadyCollapsed: alreadyCollapsed) {
+                let lockTrip = kind == .usedLockScreen
+                if let fire = Notifications.collapseNoticeTime(log: rec.log, rules: rec.rules, at: date,
+                                                               alreadyCollapsed: alreadyCollapsed, lockScreen: lockTrip) {
                     collapseNoticeAt = fire
                     if servicesEnabled { Notifications.collapsed(isNap: rec.isNap, at: fire) }
                 }
-                let left = NightEvaluator.allowance(rec.log, rules: rec.rules, at: date) - rec.rules.noticeDelay
+                // the whole trip (lock-screen trips are longer: 3 s + 15 s) and the seconds the warning promises
+                let tripAllowance = NightEvaluator.allowance(rec.log, rules: rec.rules, at: date, lockScreen: lockTrip)
+                let left = tripAllowance - rec.rules.noticeDelay
                 guard left >= 1 else { break }                // the warning would come too late
                 nudgesSent += 1
                 lastNudgeSeconds = Int(left)
@@ -1937,7 +1943,7 @@ final class AppModel {
                     waitingForReturn = true
                     lastWarning = .lockScreen
                     if servicesEnabled { Notifications.lockScreenNudge(tolerance: left) }
-                    startLockWarning(seconds: left, at: date)
+                    startLockWarning(shown: left, ringFor: tripAllowance, at: date)
                 } else {
                     waitingForReturn = true
                     lastWarning = .comeBack

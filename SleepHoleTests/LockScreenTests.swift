@@ -365,23 +365,23 @@ struct LockScreenTests {
         s.clock.now = t + s.window                                          // 5
         await wait(0.4)
         #expect(s.kinds.contains(.usedLockScreen))
-        let secondsToWarning = 8.0, promised = 10, warningToCollapse = 13.0  // 6
+        let secondsToWarning = 8.0, promised = 15, warningToCollapse = 18.0  // 6
         #expect(s.window == secondsToWarning)
         #expect(s.model.nudgesSent == 1)
         #expect(s.model.lastWarning == .lockScreen)
         #expect(s.model.lastNudgeSeconds == promised)
-        #expect(s.model.collapsedAt == t + secondsToWarning + warningToCollapse)   // T + 21
+        #expect(s.model.collapsedAt == t + secondsToWarning + warningToCollapse)   // T + 26
         #expect(s.model.collapsedAt!.timeIntervalSince(t + secondsToWarning) >= Double(promised))
-        s.comeBack(at: t + 25)                                              // 7
-        #expect(s.model.collapsedAt == t + 21)                              // 8
+        s.comeBack(at: t + 30)                                              // 7
+        #expect(s.model.collapsedAt == t + 26)                              // 8
         #expect(s.model.collapsedAt! < s.clock.now)
         s.clock.now = s.t0 + 4 * 60; s.model.refresh()
         #expect(s.model.confirm(code: "1234"))
         #expect(s.model.shownResult?.outcome == .ruins)
     }
 
-    @Test(arguments: [(20.5, false), (21.5, true)])
-    func theRealLimitIs21SecondsAfterTheScreenLights(returnAfter: Double, collapses: Bool) async {
+    @Test(arguments: [(25.5, false), (26.5, true)])
+    func theRealLimitIs26SecondsAfterTheScreenLights(returnAfter: Double, collapses: Bool) async {
         let s = Scene(self)
         _ = s.startAndLock()
         let t = s.wakeLockScreen()
@@ -390,7 +390,7 @@ struct LockScreenTests {
         await wait(0.05)
         s.comeBack(at: t + returnAfter)
         #expect((s.model.collapsedAt != nil) == collapses)
-        if collapses { #expect(s.model.collapsedAt == t + 21) }
+        if collapses { #expect(s.model.collapsedAt == t + 26) }
     }
 
     // MARK: - one notification per trip
@@ -417,9 +417,9 @@ struct LockScreenTests {
 
     @Test func theWarningRingsAsASystemAlarmWithTheAppsOwnSound() async {
         let (s, alarm, t) = await ringingScene()
-        #expect(alarm.events.last == .ringWarning("alarm_alert.caf", 10))
+        #expect(alarm.events.last == .ringWarning("alarm_alert.caf", 15))
         #expect(alarm.warningRings == 1 && alarm.warningStops == 0)
-        #expect(s.model.lockWarningDeadline == t + 18)
+        #expect(s.model.lockWarningDeadline == t + 26)
     }
 
     @Test func theScreenGoingOffStopsTheWarningAndTheBuildingStands() async {
@@ -441,18 +441,15 @@ struct LockScreenTests {
         #expect(s.model.collapsedAt == nil)
     }
 
-    @Test func ifNothingHappensTheAppStopsTheWarningAtTheDeadlineAndTheBuildingCollapsesAtThirteenSeconds() async {
+    @Test func ifNothingHappensTheAppStopsTheWarningAtTheDeadlineAndTheBuildingCollapsesAtEighteenSeconds() async {
         let (s, alarm, t) = await ringingScene()
-        s.clock.now = t + 17; s.model.refresh()
+        s.clock.now = t + 25; s.model.refresh()
         await s.model.systemAlarmIdle()
         #expect(alarm.warningStops == 0)
-        s.clock.now = t + 18; s.model.refresh()
+        s.clock.now = t + 26; s.model.refresh()
         await s.model.systemAlarmIdle()
         #expect(alarm.warningStops == 1)
-        s.clock.now = t + 20; s.model.refresh()
-        #expect(s.model.collapsedAt! > s.clock.now)                         // not yet
-        s.clock.now = t + 21; s.model.refresh()
-        #expect(s.model.collapsedAt == t + 21 && s.model.collapsedAt! <= s.clock.now)   // 8 + 13, as ever
+        #expect(s.model.collapsedAt == t + 26 && s.model.collapsedAt! <= s.clock.now)   // 8 + 3 + 15: the alarm rings to the collapse (B33)
         await s.model.systemAlarmIdle()
         #expect(alarm.warningStops == 1)
     }
@@ -472,7 +469,7 @@ struct LockScreenTests {
         s.rig.monitor.dataProtectionChanged(locked: true)
         await s.model.systemAlarmIdle()
         #expect(alarm.scheduled == [wakeAlarm!])                            // scheduled once, at the start
-        #expect(!alarm.events.drop { $0 != .ringWarning("alarm_alert.caf", 10) }.contains(.cancel))
+        #expect(!alarm.events.drop { $0 != .ringWarning("alarm_alert.caf", 15) }.contains(.cancel))
         #expect(s.model.systemAlarmAt == wakeAlarm && s.model.safetyAlarmAt == nil)
     }
 
@@ -498,7 +495,7 @@ struct LockScreenTests {
 
     @Test func theWarningCarriesTheSecondsTheOwnerHasLeft() async {
         let (_, alarm, _) = await ringingScene()
-        #expect(alarm.events.contains(.ringWarning("alarm_alert.caf", 10)))
+        #expect(alarm.events.contains(.ringWarning("alarm_alert.caf", 15)))
     }
 
     @Test func aLockScreenWarningBeginsExactlyOneKeepAliveThatEndsWhenTheScreenGoesOff() async {
@@ -522,10 +519,10 @@ struct LockScreenTests {
     @Test func theKeepAliveEndsAtTheDeadlineAfterTheStop() async {
         let ka = FakeKeepAlive()
         let (s, alarm, t) = await ringingScene(keepAlive: ka)
-        s.clock.now = t + 17; s.model.refresh()
+        s.clock.now = t + 25; s.model.refresh()
         await s.model.systemAlarmIdle()
         #expect(ka.open == 1 && alarm.warningStops == 0)
-        s.clock.now = t + 18; s.model.refresh()
+        s.clock.now = t + 26; s.model.refresh()
         await s.model.systemAlarmIdle()
         #expect(ka.began == 1 && ka.open == 0 && alarm.warningStops == 1)
     }
@@ -623,7 +620,7 @@ struct LockScreenTests {
         m.append(.returned, at: g + 66)
         #expect(m.collapseNoticeAt == nil)
         m.append(.usedLockScreen, at: g + 100)
-        #expect(m.collapseNoticeAt == g + 113)
+        #expect(m.collapseNoticeAt == g + 118)               // a lock-screen trip: 3 + 15 s
         m.append(.locked, at: g + 105)
         #expect(m.collapseNoticeAt == nil)
     }
@@ -720,8 +717,8 @@ struct LockScreenTests {
             await m.systemAlarmIdle()
             #expect(alarm.warningRings == 0, "\(consent)")
             #expect(m.nudgesSent == 1 && m.lastWarning == .lockScreen, "\(consent)")
-            #expect(m.lockWarningDeadline == t + 10, "\(consent)")         // the app's own sound would play for 10 s
-            clock.now = t + 10; m.refresh()
+            #expect(m.lockWarningDeadline == t + 18, "\(consent)")         // the app's own sound plays until the collapse moment
+            clock.now = t + 18; m.refresh()
             #expect(m.lockWarningDeadline == nil && alarm.warningStops == 0, "\(consent)")
         }
     }

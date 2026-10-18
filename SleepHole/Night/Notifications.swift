@@ -213,11 +213,12 @@ enum Notifications {
     /// When the collapse notice of a trip starting at `date` should fire, or nil when no trip can collapse the night
     /// then: inside the setup time, inside a pause, at / after the wake time, after a collapse, or when the trip's
     /// allowance reaches the wake time (away time is clipped there). With the budget used up the allowance is 0 → `date`.
-    static func collapseNoticeTime(log: NightLog, rules: SleepRules, at date: Date, alreadyCollapsed: Bool) -> Date? {
+    static func collapseNoticeTime(log: NightLog, rules: SleepRules, at date: Date, alreadyCollapsed: Bool,
+                                   lockScreen: Bool = false) -> Date? {
         guard !alreadyCollapsed, let start = log.startedAt,
               date >= log.window.setupEnds(start: start, rules: rules), date < log.window.wake,
               PausePolicy.activeUntil(log, at: date) == nil else { return nil }
-        let fire = date + NightEvaluator.allowance(log, rules: rules, at: date)
+        let fire = date + NightEvaluator.allowance(log, rules: rules, at: date, lockScreen: lockScreen)
         return fire < log.window.wake ? fire : nil
     }
 

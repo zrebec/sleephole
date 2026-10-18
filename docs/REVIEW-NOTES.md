@@ -1,10 +1,11 @@
 # App Review notes – the source text (build 9)
 
 The text below goes into App Store Connect → the version → App Review Information → **Notes** when build 9 (or a
-later build) is submitted. Only the section "A WHOLE NIGHT IN ABOUT 15 MINUTES" changed against the notes saved with
-build 7 (read from App Store Connect 2026-10-18): since build 8 a bedtime / wake change made in Settings once
+later build) is submitted. Two changes against the notes saved with build 7 (read from App Store Connect 2026-10-18):
+(1) the section "A WHOLE NIGHT IN ABOUT 15 MINUTES" – since build 8 a bedtime / wake change made in Settings once
 tonight's building can start (from bedtime − 3 h) applies from tomorrow, so the reviewer sets the times in the
-first-run guide, where they apply at once (plan §12, 2026-10-16, point 6). The rest is the build-7 text unchanged.
+first-run guide, where they apply at once (plan §12, 2026-10-16, point 6); (2) STRICT MODE – the warning lasts 15 seconds
+(was 10; build 9i, owner 2026-10-18). The rest is the build-7 text unchanged.
 Changing the field in App Store Connect needs the owner's yes; keep this file and the field identical.
 
 ---
@@ -25,7 +26,7 @@ LOCK DETECTION (changed in build 7 after ITMS-90699 on build 6)
 The rule of a night is that the phone rests. The app observes only its own state, with documented UIApplication notifications only: background / foreground, and protectedDataWillBecomeUnavailable / protectedDataDidBecomeAvailable to tell locking the phone from leaving the app. It no longer observes any system lock or display notification. It never blocks or limits other apps and does not use Screen Time APIs. On a device without a passcode with Face ID or Touch ID, leaving the app is not counted (Settings says so).
 
 STRICT MODE (Settings, off by default)
-By default, using the phone at night (the device recognised the user and stays in use outside the app for 8 seconds) brings one calm notification. With Strict mode on, a short warning rings as an AlarmKit alarm with a countdown; the app ends it when the phone is locked again, when the user returns to the app, or after 10 seconds. If the phone stays in use, tonight's building is lost.
+By default, using the phone at night (the device recognised the user and stays in use outside the app for 8 seconds) brings one calm notification. With Strict mode on, a short warning rings as an AlarmKit alarm with a countdown; the app ends it when the phone is locked again, when the user returns to the app, or after 15 seconds. If the phone stays in use, tonight's building is lost.
 
 ALARMKIT (iOS 26 and later)
 A backup system alarm at the wake-up time, in case iOS closed the app during the night, and the Strict mode warning above.

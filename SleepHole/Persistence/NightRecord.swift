@@ -32,6 +32,9 @@ final class NightRecord {
     /// The calm-hour rule the night started under (`CalmHours.currentRule`, build 8, owner 2026-10-15). nil = an older
     /// night (and every nap): it earns no calm-hour coins, so the balance never jumps. Optional, so the store migrates.
     var calmHoursRule: Int?
+    /// The seconds of warning a lock-screen trip got when the night started (`SleepRules.lockScreenTolerance`, build 9,
+    /// owner 2026-10-18, B33). nil = an older night (and every nap): it keeps 10. Optional, so the store migrates.
+    var lockScreenTolerance: Double?
     /// What the sleep source (Apple Health, phase HEALTH) said about this night. All optional so the store migrates.
     var fellAsleepAt: Date?
     var sleepEndedAt: Date?
@@ -48,7 +51,8 @@ final class NightRecord {
     /// `idPrefix`: "bonus" for a test night that counts for the town (one-shot, owner request) –
     /// a unique id so it never collides with the real night of the same date.
     init(window: NightWindow, buildingId: String, isDebug: Bool, setupGrace: TimeInterval, idPrefix: String? = nil,
-         isNap: Bool = false, strictLockScreen: Bool? = nil, calmHoursRule: Int? = nil) {
+         isNap: Bool = false, strictLockScreen: Bool? = nil, calmHoursRule: Int? = nil,
+         lockScreenTolerance: Double? = nil) {
         self.keyString = window.key.description
         let stamp = Int(Date().timeIntervalSince1970)
         self.isNap = isNap
@@ -63,6 +67,7 @@ final class NightRecord {
         self.pauses = 0
         self.strictLockScreen = strictLockScreen
         self.calmHoursRule = calmHoursRule
+        self.lockScreenTolerance = lockScreenTolerance
     }
 
     /// What every source said about this night (empty when nothing is stored).
@@ -82,6 +87,7 @@ final class NightRecord {
         r.setupGrace = setupGrace
         if pauses == nil { r.awayBudget = nil }
         r.lockScreenCollapses = strictLockScreen ?? true
+        r.lockScreenTolerance = lockScreenTolerance ?? 10
         return r
     }
 

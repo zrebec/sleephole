@@ -831,6 +831,30 @@ extension AppModelTests {
         #expect(old.calmHoursRule == nil)
     }
 
+    // MARK: the lock-screen tolerance travels with the night (build 9i, owner 2026-10-18, B33)
+
+    @Test func aNewNightStoresTheLockScreenToleranceAndAnOldOneKeeps13Seconds() {
+        let h = harness(at: date(1, 12))
+        h.clock.now = date(1, 22, 25); h.model.refresh(); h.model.startNight()
+        #expect(h.model.active?.lockScreenTolerance == 15)
+        #expect(h.model.active?.rules.lockScreenTolerance == 15)
+        h.model.active?.lockScreenTolerance = nil                   // a night stored before build 9i
+        #expect(h.model.active?.rules.lockScreenTolerance == 10)
+    }
+
+    @Test func theBackupKeepsTheLockScreenToleranceAndAnOldFileLoadsAsNil() throws {
+        let r = NightRecord(window: NightWindow(key: NightKey(date: date(6, 6), calendar: .current), bedtime: date(5, 22, 30),
+                                                wake: date(6, 6, 30)),
+                            buildingId: "x", isDebug: false, setupGrace: 300, lockScreenTolerance: 15)
+        let e = JSONEncoder(); e.dateEncodingStrategy = .iso8601
+        let d = JSONDecoder(); d.dateDecodingStrategy = .iso8601
+        #expect(NightRecord(backup: try d.decode(BackupFile.Night.self, from: try e.encode(r.backup))).lockScreenTolerance == 15)
+        var json = try JSONSerialization.jsonObject(with: try e.encode(r.backup)) as! [String: Any]
+        json.removeValue(forKey: "lockScreenTolerance")
+        let old = NightRecord(backup: try d.decode(BackupFile.Night.self, from: try JSONSerialization.data(withJSONObject: json)))
+        #expect(old.lockScreenTolerance == nil && old.rules.lockScreenTolerance == 10)
+    }
+
     // MARK: the setup time is a setting (build 9b, owner 2026-10-15)
 
     @Test func setupTimeDefaultsTo5AndAnOldSettingsFileDecodesAsFive() throws {

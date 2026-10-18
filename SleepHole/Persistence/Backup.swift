@@ -69,6 +69,7 @@ struct BackupFile: Codable, Equatable {
         var finalizedAt: Date?
         var pauses: Int? = nil          // nil in backups from before the pause (2026-10-03) = old rules
         var strictLockScreen: Bool? = nil   // nil = a night from before Strict mode existed (2026-10-09) = strict
+        var lockScreenTolerance: Double? = nil   // nil = a night from before build 9 (2026-10-18): a lock-screen trip gets 10 s
         var calmHoursRule: Int? = nil       // nil = a night from before the calm hours (build 8, 2026-10-15): no calm-hour coins
         // what the sleep source said (phase HEALTH) – all optional, older backups still load
         var fellAsleepAt: Date? = nil
@@ -107,7 +108,7 @@ extension NightRecord {
                          buildingId: buildingId, events: log.events, setupGrace: setupGrace, outcomeRaw: outcomeRaw,
                          awaySeconds: awaySeconds, startedAt: startedAt, confirmedAt: confirmedAt,
                          finalizedAt: finalizedAt, pauses: pauses, strictLockScreen: strictLockScreen,
-                         calmHoursRule: calmHoursRule,
+                         lockScreenTolerance: lockScreenTolerance, calmHoursRule: calmHoursRule,
                          fellAsleepAt: fellAsleepAt, sleepEndedAt: sleepEndedAt, asleepSeconds: asleepSeconds,
                          awakeSeconds: awakeSeconds, sleepSourceName: sleepSourceName, sleepReadAt: sleepReadAt,
                          sleepSourcesData: sleepSourcesData, sleepRuleVersion: sleepRuleVersion)
@@ -148,6 +149,7 @@ extension NightRecord {
         pauses = n.pauses
         strictLockScreen = n.strictLockScreen
         calmHoursRule = n.calmHoursRule
+        lockScreenTolerance = n.lockScreenTolerance
     }
 }
 

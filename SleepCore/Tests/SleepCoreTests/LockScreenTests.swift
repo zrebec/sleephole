@@ -163,3 +163,60 @@ import Testing
         #expect(!t[1].notCounted && !t[1].onLockScreen && t[1].duration == 8)
     }
 }
+
+/// B33 (owner 2026-10-18): a lock-screen trip gets `noticeDelay + lockScreenTolerance` (3 + 15 = 18 s) with the new
+/// rule; a trip out of the app keeps 13 s; a night stored before (tolerance 10) keeps 13 s for both.
+@Suite struct LockScreenToleranceTests {
+    var rules15: SleepRules { var r = SleepRules(); r.lockScreenTolerance = SleepRules.lockScreenToleranceNow; return r }
+    func sec(_ s: Double) -> Double { s / 60 }
+    func trip(_ kind: NightEventKind, _ seconds: Double, at minute: Double = 100) -> NightLog {
+        log([(0, .started), (minute, kind), (minute + sec(seconds), .returned), (wakeMinutes, .confirmed)])
+    }
+
+    @Test func nowIs15AndDefaultIs10() {
+        #expect(SleepRules.lockScreenToleranceNow == 15)
+        #expect(SleepRules().lockScreenTolerance == 10)
+    }
+
+    @Test func lockTripOf17SecondsKeepsTheBuilding() {
+        #expect(NightEvaluator.collapsedAt(trip(.usedLockScreen, 17.9), rules: rules15) == nil)
+    }
+
+    @Test func lockTripOf18SecondsCollapsesAtExactly18() {
+        let l = trip(.usedLockScreen, 18.1)
+        #expect(NightEvaluator.collapsedAt(l, rules: rules15) == night.bedtime + 100 * 60 + 18)
+    }
+
+    @Test func oldRuleKeeps13ForTheLockScreen() {
+        #expect(NightEvaluator.collapsedAt(trip(.usedLockScreen, 12.9)) == nil)
+        #expect(NightEvaluator.collapsedAt(trip(.usedLockScreen, 13.1)) == night.bedtime + 100 * 60 + 13)
+    }
+
+    @Test func leftAppStays13WithTheNewRule() {
+        #expect(NightEvaluator.collapsedAt(trip(.leftApp, 12.9), rules: rules15) == nil)
+        #expect(NightEvaluator.collapsedAt(trip(.leftApp, 13.1), rules: rules15) == night.bedtime + 100 * 60 + 13)
+    }
+
+    @Test func aLeftAppInsideALockTripKeepsTheLockAllowance() {
+        let l = log([(0, .started), (100, .usedLockScreen), (100 + sec(5), .leftApp),
+                     (100 + sec(17), .returned), (wakeMinutes, .confirmed)])
+        #expect(NightEvaluator.collapsedAt(l, rules: rules15) == nil)
+    }
+
+    @Test func budgetLeftMakesItAFullLockTripEvenIfSmaller() {
+        // 25 s used by an earlier trip (budget 30): a lock trip is still a full 18 s one
+        let l = log([(0, .started), (50, .leftApp), (50 + sec(12), .returned), (60, .leftApp), (60 + sec(12), .returned),
+                     (100, .usedLockScreen), (100 + sec(17), .returned), (wakeMinutes, .confirmed)])
+        #expect(NightEvaluator.allowance(l, rules: rules15, at: night.bedtime + 100 * 60, lockScreen: true) == 18)
+        #expect(NightEvaluator.collapsedAt(l, rules: rules15) == nil)
+    }
+
+    @Test func budgetUsedUpCollapsesAtOnce() {
+        let l = log([(0, .started), (50, .leftApp), (50 + sec(13), .returned), (60, .leftApp), (60 + sec(13), .returned),
+                     (70, .leftApp), (70 + sec(5), .returned),
+                     (100, .usedLockScreen), (100 + sec(5), .returned), (wakeMinutes, .confirmed)])
+        let at = night.bedtime + 100 * 60
+        #expect(NightEvaluator.allowance(l, rules: rules15, at: at, lockScreen: true) == 0)
+        #expect(NightEvaluator.collapsedAt(l, rules: rules15) == at)
+    }
+}
