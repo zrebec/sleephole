@@ -22,17 +22,19 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 8 is in work (plan §0b, §10 REL).** 8a–8f are committed; 8g–8k are built and reviewed, not committed. **His
+1. **Build 8 is in work (plan §0b, §10 REL).** 8a–8k are committed (8g–8k in `0c4b08a`, the docs in `8e0a5d3`, 2026-10-16;
+   he pushes). **His
    phone runs the whole build 8 (8a–8k, Debug) since 2026-10-16 14:54** (on his word; the 11:04 install had gone OVER
    the TestFlight build 7 he put on during the night – switching builds never needs an uninstall, and an uninstall
    deletes the town). His daytime checks passed and 8k is confirmed by him (plan §12). He has `docs/TEST-BUILD-8.md`
    (also in his iCloud `SleepHole/`). **Next, in this order:**
-   (a) **the morning of 2026-10-17 – ask him and check in the journal (read-only):** no Notification Center (a pause
-   if anything); the wake code typed on the night screen before the alarm, if he was up early; the calm-hours line on
-   the result screen (he checks it carefully); the streak at 16; the cat's first line about the new building. Already
-   confirmed by him: the setup notice stays away in the app, the moon, Strict mode as it is;
-   (b) commit 8g–8k (whole files, detailed messages; he pushes);
-   (c) `CURRENT_PROJECT_VERSION` 8, the upload, the tester groups with a "What to Test" list (his clicks or his yes).
+   (a) **two real nights with build 8 are done (16 → 17, 17 → 18, both complete; journal 2026-10-18, plan §12):** no
+   trip after the setup, streak 17, 8 of 8 calm hours (+40) each night by the replay, the cat's news today was the new
+   house; his answers 2026-10-18: the wake code went in on the night screen (B31 🟢), the calm-hours line read 8 of 8
+   · +40 (🟢);
+   (b) **in work 2026-10-18 on his word ("dnes skutočne musí ísť von build 8"):** `CURRENT_PROJECT_VERSION` 8 + tests +
+   Release archive (a Sonnet worker) → the upload (Opus, his Mac's keychain dialog) → the tester groups with a "What to
+   Test" list (his clicks or his yes). Then build 9 (his wish: "if 8 is OK, we go to 9").
    His wish for later: when a bad night comes he will check the cat's ruins line; next month the bronze joker → the
    cat's "streak was safe" line.
 2. **Apple's review:** build 7 stays in review (Opus's decision 2026-10-16 on his delegation). Before build 8 or 9 is
