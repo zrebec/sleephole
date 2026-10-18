@@ -20,7 +20,7 @@ Stav k 18. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 | Build | Téma | Stav |
 |---|---|---|
 | 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
-| 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | 9a–9f postavené, v tvojom telefóne od 18. 10. 09:03, commitnuté; 9g, 9h, 9i pridané tebou, v telefóne (9i od 13:56); ďalej tvoja noc, nahratie, build 9 namiesto 7 na kontrolu |
+| 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | 9a–9f postavené, v tvojom telefóne od 18. 10. 09:03, commitnuté; 9g–9k pridané tebou; 9g–9i v telefóne a commitnuté, 9j–9m v telefóne (9m od 16:35); ďalej tvoja noc, nahratie, build 9 namiesto 7 na kontrolu |
 | 10 | Štatistiky a nový žreb | návrh |
 | 11 | Mesto | návrh |
 | 12 | Živé mesto | návrh |
@@ -78,6 +78,12 @@ B12, B13, B14, B15, B16, B22 a B26.
 | 9g | zmenené | Nastavenia: riadky „Sprievodca“ a „Všetky pravidlá“ (tvoje áno 18. 10.) | hotové, testy, v telefóne od 18. 10. ~10:55 |
 | 9h | zmenené | Sprievodca podľa displeja: bez bubliny, čo najväčšie písmo, riadkovanie 1,5 kde sa zmestí, rozostupy (tvoje výhrady 18. 10.) | hotové, testy, v telefóne od 18. 10. 11:46 |
 | 9i | opravené | B33 + varovanie prísneho režimu trvá 15s a zvoní až do zrútenia (tvoje slovo 18. 10.) | hotové, testy, v telefóne od 18. 10. 13:56; tvoj test 14:00: zvonil ~15s, potom zrútenie ✓ |
+| 9j | zmenené | aj odchod z appky (a zatvorenie appky) má 15s namiesto 10s; staré noci po starom, limit 30s za noc ostáva (tvoje áno 18. 10.) | hotové, testy, v telefóne od 18. 10. 14:29 |
+| 9k | zmenené | kratšie strany sprievodcu vycentrované na výšku (tvoje áno 18. 10.) | hotové, testy, v telefóne od 18. 10. 15:22 |
+| 9l | opravené + nové | graf nocí kompletný (B34: chýbalo 6 začatých nocí) a bohatší: aj vstávanie – potvrdenie budíka, inak koniec spánku z Apple Health – žltou čiarou od zaspatia (tvoje želanie 18. 10.) | hotové, testy, v telefóne od 18. 10. 15:49 |
+| 9m | opravené | sprievodca otvorený z Nastavení: večierka, budík aj pripomenutie sa dajú nastaviť priamo v ňom, podľa pravidiel týždňa na zmeny (tvoje želanie 18. 10., ako SleepTown) | hotové, testy, v telefóne od 18. 10. 16:35, doplnok „platí od zajtra“ od 16:58 |
+| 9n | zmenené | graf nocí vo variante A: spánok tichou modrou namiesto žltej, začiatok vždy vo farbe kalendára, body zaspatia a vstávania len pri vybranej noci, noc bez Apple Zdravia prechodom vo farbe výsledku, pod grafom najprv značky, potom slová (tvoje rozhodnutie 18. 10.) + pravidelnosť s hodinami a slovom podľa čísla | hotové, testy, v telefóne od 18. 10. 18:10 |
+| 9o | opravené | B35: preinštalovanie appky s vypnutým iCloudom už neotvorí nový týždeň na zmeny (tvoje áno 18. 10.) | hotové, testy, v telefóne od 18. 10. 18:20; tvoj test preinštalovania zajtra |
 
 **Tvoje odpovede 18. 10.:** spodná lišta plná je OK; build 7 zajtra vymeníme za build 9 a dáme k nemu nový návod pre Apple – najprv ho vyskúša druhý tester na svojom telefóne (build 9 z TestFlightu). **B28 je overená na tvojom telefóne** (test 18. 10. 12:00–12:06: „Zastaviť“, zhasnutie aj nechať tak – appka budík vypne načas). Test našiel **B33**: varovanie sľubuje 10s, ale zvoní len ~7,5s (začne o 2,5s neskôr a stíchne 3s pred zrútením) – tvoje rozhodnutie: 15s a zvoniť až do zrútenia, ide do buildu 9 ako krok 9i. **9i je v telefóne od 13:56 a tvoj test o 14:00 to potvrdil:** varovanie nechané tak zvonilo ~15s, potom testovacia stavba spadla a hlásenie prišlo aj na hodinky.
 
@@ -93,6 +99,8 @@ ako pri pauze – aby si to človek rozmyslel a nežreboval až do mrakodrapu. *
 Ak sa zmestí, aj zoznam chýb v appke (Nastavenia → Vývoj, ako „Plány a návrhy“) – tvoj nápad zo 16. 10.; len na
 čítanie z jedného .md súboru. Návrh Claude: obrazovka „Plány a návrhy“ bude čítať tento plán buildov namiesto starého
 prehľadu z 12. 10. (čaká na tvoje slovo).
+
+**Voľné noci (tvoje želanie 18. 10.):** dve noci v týždni voľno, ako to má SleepTown – väčšina ľudí chodí v piatok a sobotu spať inak. Claude navrhuje build 10; treba rozhodnúť, či ide o voľné noci, alebo o iný rozvrh pre tie noci.
 
 Navrch prístupnosť (VoiceOver, väčšie písmo) na obrazovkách Dnes, noc a Štatistiky – appka je pre veľa ľudí.
 

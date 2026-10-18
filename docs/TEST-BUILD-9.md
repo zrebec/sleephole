@@ -32,6 +32,8 @@ nemaže.
 4. **Výsledok noci:** pokojné hodiny ako doteraz (pri 5 min príprave 21:35–05:35 = 8 hodín).
 5. **Prísny režim (9i, v telefóne od 18. 10. 13:56):** keď ťa Face ID rozpozná a ostaneš 8s mimo appky, varovný budík teraz
    zvoní 15s a až do zrútenia (predtým ~7,5s). V ostrej noci to netreba skúšať – testovacia noc o 14:00 to potvrdila.
+   **Odchod z appky (9j, od 14:29):** aj odchod do inej appky alebo zatvorenie appky má teraz 15s na návrat
+   (predtým 10s); limit 30s mimo appky za noc ostáva – dva celé odchody ho minú. Netreba to skúšať naostro.
 6. **Centrum hlásení nesťahuj** – stále je to odchod z appky (to sa nemení, len to už hovorí sprievodca aj pravidlá).
 
 Ráno mi nič neposielaj – denník si stiahnem sám (len čítam) a porovnám s tým, čo si videl.

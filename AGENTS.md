@@ -22,20 +22,20 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 9 is in work (plan §0b, §10 REL).** Build 8 is finished (two real nights, committed `b7d5f75`, uploaded as
-   1.0 (8) 2026-10-18 07:04, "What to Test" saved, in both tester groups – SE added by him). **His phone runs the whole
-   build 9 (9a–9f, Debug) since 2026-10-18 09:03**, installed over the app (data kept; full backup first in the git-ignored
-   `docs/device-logs/2026-10-18-pred-buildom-9/` and his iCloud `SleepHole/Zalohy/2026-10-18-pred-buildom-9/`). He has
-   `docs/TEST-BUILD-9.md`. Build 9 is committed (`75339b5`, `15e6b7d`, the docs commit of that morning) and pushed by him (2026-10-18 ~11:05). **9g** (his yes 2026-10-18): the
-   Settings rows "Guide" / "All rules" – on his phone since ~10:55, uncommitted ("not yet"). **9h** (his review 11:05): the
-   guide follows the display – no bubble, the largest text that fits, line height 1.5 where it fits – on his phone since 11:46, uncommitted.
-   **9i** (his word ~12:10): B33 + the Strict-mode warning lasts 15s, ringing until the collapse – on his phone since 13:56,
-   his lab night 14:00 confirmed it (~15s of sound, then the collapse), uncommitted. **Next:** (a) his daytime checks (the guide again, the rules
-   list, the setup time, the solid tab bar); his optional clean first install (the backup and the steps were given to him
-   2026-10-18 – the iCloud switch for SleepHole off first, else the sync marks the guide done and the guide's change week
-   can move his own); (b) the morning of 2026-10-19 – pull the journal (read-only): no `.usedLockScreen` after the alarm
-   (B26), the return stamped at `willEnterForeground`, calm hours; (c) `CURRENT_PROJECT_VERSION` 9 (a fix found by the night gets its own commit first), the
-   upload (he runs the export command himself – the session's auto-mode check refuses it to Opus), the testers.
+1. **Build 9 is in work (plan §0b, §10 REL).** Build 8 is finished (committed `b7d5f75`, uploaded as 1.0 (8) 2026-10-18,
+   in both tester groups). **His phone runs the whole build 9 – steps 9a–9o (Debug) – since 2026-10-18 18:20**, all
+   committed (9a–9f `75339b5`/`15e6b7d`, 9g `e595db6`, 9h `ae04425`, 9i `8c6dca0`, 9j–9o `3a2647b`, docs commits; he
+   pushes). His additions that day: 9g Settings rows "Guide" / "All rules"; 9h the guide follows the display; 9i B33 +
+   15s Strict warning (his lab 14:00 ✓); 9j 15s for leaving the app too; 9k shorter guide pages centred; 9l the chart
+   complete (B34) + getting up; 9m the schedule settable in the replayed guide (+ "from tomorrow"); 9n the chart in
+   variant A (no yellow, calendar-coloured start dots, legend first, regularity with a clock); 9o B35 (a reinstall with
+   iCloud off opened a new change week). He has `docs/TEST-BUILD-9.md`. **Next:** (a) the morning of 2026-10-19 – pull the
+   journal (read-only): no `.usedLockScreen` after the alarm (B26), the return at `willEnterForeground`, calm hours, the
+   15s rules; (b) `CURRENT_PROJECT_VERSION` 9 (a fix found by the night gets its own commit first), the upload (he runs
+   the export command himself – the session's auto-mode check refuses it to Opus), "What to Test" with the 15-minute
+   recipe + how to send feedback + three questions (Opus drafts EN / SK), the testers; his yes asked: expire builds 1–7
+   after build 9; (c) his reinstall test of B35 on the phone in the daytime (steps in plan §12 2026-10-18, expected: the
+   change week still ends 22 Oct); (d) his daytime checks (the guide, the rules list, the chart, the setup time).
    His wish for later: when a bad night comes he will check the cat's ruins line; next month the bronze joker → the
    cat's "streak was safe" line.
 2. **Apple's review:** build 7 is still "Waiting for Review" (2026-10-18). **His yes 2026-10-18:** once build 9 is uploaded,
@@ -46,7 +46,8 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 3. **His streak:** the night of 2026-10-15 → 16 collapsed (one trip of 13.15s; Notification Center counts as leaving on
    iOS 26); the silver joker saved it (1 000 🪙). October's bronze and silver are used and he will not buy the gold – the
    next failed night this month breaks the streak. Be kind about it.
-4. **Waiting for his word:** the reroll during the setup (his idea, roadmap build 10) – Opus recommends 100 🪙, +100 for
+4. **Waiting for his word:** nights off (his wish 2026-10-18 – two nights a week, like SleepTown; Opus proposes build 10;
+   days off vs a second schedule for those nights?); the reroll during the setup (his idea, roadmap build 10) – Opus recommends 100 🪙, +100 for
    each further reroll of the same night, none free; the roadmap builds 10–12 (plan §0b); the eight questions
    at the end of `docs/NAVRH-MESTO-STATISTIKY.md` (they shape builds 10–12); still open from 2026-10-14: the seller name
    on the Business page (it differs from the copyright name), what "a little tuning of the home screen UI" and "some AI
@@ -54,7 +55,7 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 5. **Owed device checks:** the review recipe on a clean install (the second tester, see 2); R4 – the app killed by iOS in the night
    and opened while the SYSTEM alarm rings → only one alarm (his normal mornings ring one – 2026-10-18; this rarer case is
    untried); Developer → System alarm test – what the system's own stop button says (B27).
-6. **Open bugs (plan §11a):** B8, B10, B30; B27 to re-check. B28 and B33 (9i) proven fixed on his phone 2026-10-18. B12–B16, B22, B26 are fixed in build 9 (tests – his night will tell).
+6. **Open bugs (plan §11a):** B8, B10, B30; B27 to re-check. B28 and B33 (9i) proven fixed on his phone 2026-10-18; B34 (9l), B35 (9o – his reinstall test owed) and B12–B16, B22, B26 are fixed in build 9 (tests – his night will tell).
 7. **Standing notes:** the app is free for now (price 0 since 2026-10-12; a price only after an accountant – never push;
    his reasons stay out of this public repo); the Strict switch is ON on his phone; App Store Connect can be read in his
    Chrome – every change needs his yes, agreements, bank, tax and legal declarations stay his own clicks.
@@ -123,7 +124,7 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
 * Night rules **R3** (plan D15 + findings 2026-09-29/30): start only bedtime −10…+5 min; setup until
   max(start, bedtime) + the setup time (Settings, 5 / 10 / 15 min, default 5 – build 9, owner 2026-10-15; stored with the night at its start); **an early start ("Go to sleep early today", owner 2026-10-11, plan §10 EARLY) is
   allowed from bedtime − 3 h, after a short confirmation, with no penalty – the night counts in full and the morning
-  does not change; its setup lasts 15 min from the start**; after the setup, leaving the app → warning after ~3 s and 10 s to return (and at most
+  does not change; its setup lasts 15 min from the start**; after the setup, leaving the app → warning after ~3 s and 15 s to return (10 s for nights stored before build 9j – owner 2026-10-18) (and at most
   30 s out of the app per night in total – see "Away budget"), else the building collapses (calls excused);
   **using the phone after a lock is detected too – with DOCUMENTED signals only (owner 2026-10-14, after Apple's
   ITMS-90699 refused the undocumented lock notifications):** the phone recognises the user (Face ID / Touch ID /
@@ -175,9 +176,9 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   100, the 4th 150 (+50 each, charged at the start, only if the coins are there); a complete night with no pause pays
   **+30 🪙** (so up to 130 for a level-1 night); the building stays complete. A pause must never turn into a habit.
 * **Away budget (owner 2026-10-03):** outside pauses and calls, all trips out of the app after the setup share **30 s
-  per night** (`SleepRules.awayBudget`); one trip is still limited to 3 s notice + 10 s – **except using the phone in
-  Strict mode (owner 2026-10-18, build 9i, B33): 3 s + 15 s, and the warning alarm rings until the collapse (it starts
-  ~2.5 s late); stored with each night, older nights keep 3 + 10 s.** **No collapse without a
+  per night** (`SleepRules.awayBudget`); one trip is still limited to 3 s notice + 15 s (owner 2026-10-18: build 9i for using the phone in Strict
+  mode – B33, the warning alarm rings until the collapse, it starts ~2.5 s late; build 9j for leaving the app; stored
+  with each night and nap, older nights keep 3 + 10 s); two full trips can use the budget up. **No collapse without a
   real warning (owner 2026-10-07, B24):** a trip that starts while some of the 30 s is left is always a full trip
   with the full warning – the budget never shortens it; the night screen says in orange when the budget is low and
   when it is used up, and only a trip that starts after that collapses the building at once. Nights stored before
