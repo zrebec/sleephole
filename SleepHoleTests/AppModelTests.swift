@@ -830,4 +830,36 @@ extension AppModelTests {
         let old = NightRecord(backup: try d.decode(BackupFile.Night.self, from: try JSONSerialization.data(withJSONObject: json)))
         #expect(old.calmHoursRule == nil)
     }
+
+    // MARK: the setup time is a setting (build 9b, owner 2026-10-15)
+
+    @Test func setupTimeDefaultsTo5AndAnOldSettingsFileDecodesAsFive() throws {
+        #expect(AppSettings().setupMinutes == 5 && AppSettings().setupGrace == 300)
+        var json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(AppSettings())) as? [String: Any])
+        json.removeValue(forKey: "setupMinutesRaw")
+        let old = try JSONDecoder().decode(AppSettings.self, from: JSONSerialization.data(withJSONObject: json))
+        #expect(old.setupMinutes == 5)
+    }
+
+    @Test func aNightStartedWithTenMinutesOfSetupStoresItAndEndsTenMinutesAfterBedtime() {
+        let h = harness(at: date(5, 22, 25)); h.model.settings.setupMinutes = 10
+        h.model.refresh(); h.model.startNight()
+        #expect(h.model.active?.setupGrace == 600)
+        #expect(h.model.graceEnds == date(5, 22, 40))                        // bedtime 22:30 + 10 min
+        h.model.settings.setupMinutes = 15                                    // a running night keeps its own value
+        #expect(h.model.active?.setupGrace == 600 && h.model.graceEnds == date(5, 22, 40))
+        #expect(h.model.nextNightRules.setupGrace == 900)
+    }
+
+    @Test func anEarlyStartKeeps15MinutesWhateverTheSetting() {
+        let h = harness(at: date(5, 21, 0)); h.model.settings.setupMinutes = 10
+        h.model.refresh(); h.model.startNight(early: true)
+        #expect(h.model.graceEnds == date(5, 21, 15))
+    }
+
+    @Test func theSetupTimeSurvivesABackup() throws {
+        let h = harness(at: date(5, 22, 25)); h.model.settings.setupMinutes = 15
+        let decoded = try BackupFile.decode(try h.model.makeBackup().encoded())
+        #expect(decoded.settings.setupMinutes == 15)
+    }
 }

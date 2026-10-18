@@ -1251,13 +1251,13 @@ struct SyncEngineTests {
         #expect(try b.model.mergeSync([a.model.makeSyncFile()]))                     // B takes the restored name
         #expect(a.model.townName == "Old" && b.model.townName == "Old" && townNameStamp(b) == date(6, 10))
 
-        // a backup without a name leaves the name and its stamp alone
+        // a backup without a name clears the name and its stamp (B12: the backup is the whole truth)
         var nameless = a.model.makeBackup()
         nameless.townName = nil
         a.clock.now = date(7, 10)
         try a.model.restore(nameless)
-        #expect(a.model.townName == "Old")
-        #expect(townNameStamp(a) == date(6, 10))
+        #expect(a.model.customTownName == nil)
+        #expect(townNameStamp(a) == nil)
     }
 }
 

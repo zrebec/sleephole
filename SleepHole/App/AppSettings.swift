@@ -52,6 +52,16 @@ struct AppSettings: Codable, Equatable {
         get { syncOff != true }
         set { syncOff = newValue ? nil : true }
     }
+    /// Setup time of a normal start in minutes (build 9, owner 2026-10-15): 5 / 10 / 15, nil = 5. Copied into every
+    /// night when it starts (`NightRecord.setupGrace`), so a change never touches a running or past night. Optional
+    /// so settings saved by older builds (and old backups) load as 5.
+    var setupMinutesRaw: Int?
+    static let setupMinuteOptions = [5, 10, 15]
+    var setupMinutes: Int {
+        get { Self.setupMinuteOptions.contains(setupMinutesRaw ?? 5) ? (setupMinutesRaw ?? 5) : 5 }
+        set { setupMinutesRaw = newValue }
+    }
+    var setupGrace: TimeInterval { Double(setupMinutes) * 60 }
     /// Afternoon rest. Optional in the JSON so settings saved by older builds still load.
     var napPlan: NapPlan?
     var nap: NapPlan {

@@ -498,13 +498,13 @@ struct ClosureTests {
         #expect(L("⚠️ Heads up! SleepHole was closed") == "⚠️ Heads up! SleepHole was closed")
         #expect(L("Open it within \(10) seconds so tonight's building goes on 🏗️") == "Open it within 10 seconds so tonight's building goes on 🏗️")
         #expect(L("closed the app") == "closed the app")
-        #expect(GuideText.night.contains("Closing SleepHole (swiping it away) counts like leaving it."))
+        #expect(GuideText.ruleGroups[2].items.contains("Closing the app (swiping it away) counts as leaving."))
         Lang.current = .sk
         #expect(L("⚠️ Heads up! SleepHole was closed") == "⚠️ Pozor! SleepHole sa zavrela")
         #expect(L("Open it within \(10) seconds so tonight's building goes on 🏗️") == "Otvor ju do 10 sekúnd, nech dnešná stavba pokračuje 🏗️")
         #expect(L("closed the app") == "zavretá appka")
-        #expect(GuideText.night.contains("Zavretie SleepHole (potiahnutím preč) sa počíta ako odchod z appky."))
-        #expect(GuideText.night.contains("10 sekúnd") && GuideText.night.contains("30 sekúnd"))   // the rest of the rule is intact
+        #expect(GuideText.ruleGroups[2].items.contains("Zatvorenie appky (potiahnutím nahor) sa počíta ako odchod."))
+        #expect(GuideText.ruleGroups[2].items[1].contains("10s") && GuideText.ruleGroups[2].items[1].contains("30s"))   // the rest of the rule is intact
     }
 
     @Test func theClosedNoticesAreNightNoticesAndTimeSensitive() {

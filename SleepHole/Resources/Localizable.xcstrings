@@ -229,6 +229,58 @@
         }
       }
     },
+    "%lld hours": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hour"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hours"
+                }
+              }
+            }
+          }
+        },
+        "sk": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hodinu"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hodiny"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hodiny"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hodín"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lld min": {
       "localizations": {
         "en": {
@@ -413,6 +465,22 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%lld or %lld minutes, between %@ and %@ (changeable), once a day. Complete +%lld 🪙, cut short +%lld 🪙. It builds nothing.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld or %lld minutes, between %@ and %@ (changeable), once a day. Complete +%lld 🪙, cut short +%lld 🪙. It builds nothing."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld alebo %lld minút, v okne %@–%@ (dá sa zmeniť), raz za deň. Hotový +%lld 🪙, skrátený +%lld 🪙. Nestavia sa."
           }
         }
       }
@@ -709,6 +777,150 @@
         }
       }
     },
+    "A calm hour: a whole hour between the end of the setup and the alarm with no trip out of the app, no phone use and no pause.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A calm hour: a whole hour between the end of the setup and the alarm with no trip out of the app, no phone use and no pause."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokojná hodina: celá hodina od konca prípravy do budíka bez odchodu z appky, bez použitia telefónu a bez pauzy."
+          }
+        }
+      }
+    },
+    "A change saved in the evening, once tonight's building can start, applies from tomorrow.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A change saved in the evening, once tonight's building can start, applies from tomorrow."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zmena uložená večer, keď sa už dá začať stavba, platí od zajtra."
+          }
+        }
+      }
+    },
+    "A finished night pays %@–%@ 🪙, +%lld without a pause, +%lld for every calm hour. Your town gets residents and taller buildings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A finished night pays %@–%@ 🪙, +%lld without a pause, +%lld for every calm hour. Your town gets residents and taller buildings."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová noc %@–%@ 🪙, bez pauzy +%lld, každá pokojná hodina +%lld. V meste pribúdajú obyvatelia a vyššie budovy."
+          }
+        }
+      }
+    },
+    "A finished night: %@ 🪙 (level 1), %@ (2), %@ (3), %@ (4). Unfinished: half.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A finished night: %@ 🪙 (level 1), %@ (2), %@ (3), %@ (4). Unfinished: half."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová noc: %@ 🪙 (úroveň 1), %@ (2), %@ (3), %@ (4). Rozostavaná: polovica."
+          }
+        }
+      }
+    },
+    "A moment to get ready": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A moment to get ready"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chvíľa na prípravu"
+          }
+        }
+      }
+    },
+    "A night without a pause: +%lld 🪙.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A night without a pause: +%lld 🪙."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noc bez pauzy: +%lld 🪙."
+          }
+        }
+      }
+    },
+    "A pause can start only if it ends before the morning confirmation opens.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A pause can start only if it ends before the morning confirmation opens."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pauza sa dá začať, len ak skončí pred ranným potvrdením."
+          }
+        }
+      }
+    },
+    "A phone call doesn't count – come back to the app after it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A phone call doesn't count – come back to the app after it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefonát sa nepočíta – po hovore sa vráť do appky."
+          }
+        }
+      }
+    },
+    "A protected night neither breaks nor extends your streak; it gives no building and no coins.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A protected night neither breaks nor extends your streak; it gives no building and no coins."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chránená noc sériu nepreruší ani nepredĺži; budova ani mince za ňu nie sú."
+          }
+        }
+      }
+    },
     "A Tibetan singing bowl, the strikes come closer together.": {
       "localizations": {
         "en": {
@@ -757,6 +969,758 @@
         }
       }
     },
+    "After the start there's time for a podcast or story, until bedtime + %@. In another app? I'll call you %@ before the end.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After the start there's time for a podcast or story, until bedtime + %@. In another app? I'll call you %@ before the end."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po štarte máš čas na podcast či rozprávku – do večierky + %@. Ak budeš v inej appke, %@ pred koncom ťa zavolám."
+          }
+        }
+      }
+    },
+    "All rules": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All rules"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Všetky pravidlá"
+          }
+        }
+      }
+    },
+    "An early start works up to %@ before bedtime: the night counts in full and the alarm rings as always.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "An early start works up to %@ before bedtime: the night counts in full and the alarm rings as always."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skorší štart ide až %@ pred večierkou: noc sa počíta celá a budík zazvoní ako vždy."
+          }
+        }
+      }
+    },
+    "At night I guard the building": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At night I guard the building"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V noci strážim stavbu"
+          }
+        }
+      }
+    },
+    "Bedtime and wake-up are the same every day.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedtime and wake-up are the same every day."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večierka a budíček platia každý deň rovnako."
+          }
+        }
+      }
+    },
+    "Bronze: %@, free once a month; it is also used by itself on the first missed night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bronze: %@, free once a month; it is also used by itself on the first missed night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bronzový: %@, raz za mesiac zadarmo; použije sa aj sám pri prvej vynechanej noci."
+          }
+        }
+      }
+    },
+    "Closing the app (swiping it away) counts as leaving.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Closing the app (swiping it away) counts as leaving."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatvorenie appky (potiahnutím nahor) sa počíta ako odchod."
+          }
+        }
+      }
+    },
+    "Coins and town": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coins and town"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mince a mesto"
+          }
+        }
+      }
+    },
+    "Confirm you're up by shaking the phone or entering the code, from %@ before the alarm.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirm you're up by shaking the phone or entering the code, from %@ before the alarm."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vstávanie potvrdíš zatrasením alebo kódom, najskôr %@ pred budíkom."
+          }
+        }
+      }
+    },
+    "Evening": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evening"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večer"
+          }
+        }
+      }
+    },
+    "Every building has residents and the town grows with them.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every building has residents and the town grows with them."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každá budova má obyvateľov a mesto podľa nich rastie."
+          }
+        }
+      }
+    },
+    "Every night builds something": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every night builds something"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každá noc postaví budovu"
+          }
+        }
+      }
+    },
+    "Hi, I'm your cat! In the evening we start a building, at night your phone rests, and in the morning it's finished.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hi, I'm your cat! In the evening we start a building, at night your phone rests, and in the morning it's finished."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ahoj, som tvoja mačka! Večer spolu začneme stavbu, v noci necháš telefón oddychovať a ráno z toho bude budova."
+          }
+        }
+      }
+    },
+    "How SleepHole works": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How SleepHole works"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ako funguje SleepHole"
+          }
+        }
+      }
+    },
+    "If you leave the app, a warning comes within seconds and you have %@ to come back. All trips together may last %@ a night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you leave the app, a warning comes within seconds and you have %@ to come back. All trips together may last %@ a night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keď appku opustíš, o pár sekúnd príde upozornenie a na návrat máš %@. Všetky odchody spolu môžu za noc trvať %@."
+          }
+        }
+      }
+    },
+    "If you unlock the phone and use it outside the app for more than %@, we'll remind you gently.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you unlock the phone and use it outside the app for more than %@, we'll remind you gently."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keď telefón odomkneš a používaš ho mimo appky dlhšie ako %@, jemne ti to pripomenieme."
+          }
+        }
+      }
+    },
+    "If you're in another app during the setup, a notice comes %@ before it ends.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you're in another app during the setup, a notice comes %@ before it ends."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ak si počas prípravy v inej appke, %@ pred jej koncom príde upozornenie."
+          }
+        }
+      }
+    },
+    "Jokers": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jokers"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Žolíky"
+          }
+        }
+      }
+    },
+    "Keep SleepHole open and lock your phone. If you leave, you have %@ to come back. Phone calls don't count.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep SleepHole open and lock your phone. If you leave, you have %@ to come back. Phone calls don't count."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nechaj SleepHole otvorený a zamkni telefón. Keď odídeš, na návrat máš %@. Telefonát sa nepočíta."
+          }
+        }
+      }
+    },
+    "Levels: nights 1–%lld level 1, %lld–%lld up to level 2, %lld–%lld up to level 3, from night %lld up to level 4.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Levels: nights 1–%lld level 1, %lld–%lld up to level 2, %lld–%lld up to level 3, from night %lld up to level 4."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Úrovne: noci 1–%lld úroveň 1, %lld–%lld do úrovne 2, %lld–%lld do úrovne 3, od %lld. noci do úrovne 4."
+          }
+        }
+      }
+    },
+    "No pause +%lld, every calm hour +%lld, every %lldth finished night in a row +%lld.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No pause +%lld, every calm hour +%lld, every %lldth finished night in a row +%lld."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez pauzy +%lld, každá pokojná hodina +%lld, každá %lld. hotová noc v rade +%lld."
+          }
+        }
+      }
+    },
+    "No worries – a joker protects your streak and the next good night repairs a ruin. Keep your phone on the charger overnight.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No worries – a joker protects your streak and the next good night repairs a ruin. Keep your phone on the charger overnight."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nič sa nedeje – žolík ochráni sériu a ďalšia dobrá noc ruinu opraví. Telefón nechaj cez noc na nabíjačke."
+          }
+        }
+      }
+    },
+    "On iOS 26, pulling down Notification Center counts as leaving the app – use 🌙 Pause to read a message.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On iOS 26, pulling down Notification Center counts as leaving the app – use 🌙 Pause to read a message."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stiahnuté Centrum hlásení sa na iOS 26 počíta ako odchod z appky – na prečítanie správy použi 🌙 Pauzu."
+          }
+        }
+      }
+    },
+    "Pause": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pauza"
+          }
+        }
+      }
+    },
+    "Pick your bedtime and wake-up. The first %@ are a change week – try as much as you like. Then it stays for a month.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick your bedtime and wake-up. The first %@ are a change week – try as much as you like. Then it stays for a month."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vyber si večierku a budíček. Prvých %@ je týždeň na zmeny – skúšaj, koľko chceš. Potom rozvrh mesiac platí."
+          }
+        }
+      }
+    },
+    "Privacy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Súkromie"
+          }
+        }
+      }
+    },
+    "Renaming the town: the first name is free, a typo fix within %@, once a year free, otherwise %@ 🪙.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renaming the town: the first name is free, a typo fix within %@, once a year free, otherwise %@ 🪙."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premenovanie mesta: prvé zadarmo, oprava preklepu do %@, raz za rok zadarmo, inak %@ 🪙."
+          }
+        }
+      }
+    },
+    "Rewards": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rewards"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odmeny"
+          }
+        }
+      }
+    },
+    "Shake your phone or enter your code – from %@ before the alarm. Within %@ after it, the building is done!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shake your phone or enter your code – from %@ before the alarm. Within %@ after it, the building is done!"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatras telefónom alebo zadaj kód – už %@ pred budíkom. Do %@ po budíku je stavba hotová!"
+          }
+        }
+      }
+    },
+    "Silver: %@ for %@ 🪙. Gold: %@ for %@ 🪙. Each kind once a month.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silver: %@ for %@ 🪙. Gold: %@ for %@ 🪙. Each kind once a month."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strieborný: %@ za %@ 🪙. Zlatý: %@ za %@ 🪙. Každý druh raz za mesiac."
+          }
+        }
+      }
+    },
+    "SleepHole stays open; you can turn the screen off and lock the phone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole stays open; you can turn the screen off and lock the phone."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole ostáva otvorený; obrazovku môžeš vypnúť a telefón zamknúť."
+          }
+        }
+      }
+    },
+    "Strict mode (Settings, off by default): a system-alarm warning, and using the phone brings the building down.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strict mode (Settings, off by default): a system-alarm warning, and using the phone brings the building down."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prísny režim (Nastavenia, predvolene vypnutý): výstraha systémovým budíkom a pri použití telefónu stavba spadne."
+          }
+        }
+      }
+    },
+    "Tap “Go to sleep” from %@ before bedtime until %@ after it. Tired sooner? You can start up to %@ early.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap “Go to sleep” from %@ before bedtime until %@ after it. Tired sooner? You can start up to %@ early."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ťukni na „Ísť spať“ od %@ pred večierkou do %@ po nej. Keď ťa premáha únava, ide to aj %@ skôr."
+          }
+        }
+      }
+    },
+    "The alarm rings for %@, also in silent mode; if you allow the system alarm, it rings as a backup.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The alarm rings for %@, also in silent mode; if you allow the system alarm, it rings as a backup."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budík zvoní %@, aj v tichom režime; ak povolíš systémový budík, zazvoní ako záloha."
+          }
+        }
+      }
+    },
+    "The app only reads Apple Health. iCloud carries your town only between your own devices.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The app only reads Apple Health. iCloud carries your town only between your own devices."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Zdravie appka len číta. iCloud prenáša tvoje mesto len medzi tvojimi zariadeniami."
+          }
+        }
+      }
+    },
+    "The reminder, the nap window, sounds and the code can change any time.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The reminder, the nap window, sounds and the code can change any time."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pripomienku, okno odpočinku, zvuky a kód môžeš meniť kedykoľvek."
+          }
+        }
+      }
+    },
+    "The setup lasts until bedtime + your setup time (%lld, %lld or %lld minutes in Settings), or %@ from an early start.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The setup lasts until bedtime + your setup time (%lld, %lld or %lld minutes in Settings), or %@ from an early start."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Príprava trvá do večierky + zvolený čas (%lld, %lld alebo %lld minút v Nastaveniach), pri skoršom štarte %@ od štartu."
+          }
+        }
+      }
+    },
+    "Tips": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tips"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tipy"
+          }
+        }
+      }
+    },
+    "Want to read a message? Tap 🌙 Pause – %@ outside the app, the first one each night is free.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Want to read a message? Tap 🌙 Pause – %@ outside the app, the first one each night is free."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chceš si prečítať správu? Ťukni na 🌙 Pauza – %@ mimo appky, prvá za noc je zadarmo."
+          }
+        }
+      }
+    },
+    "We collect nothing about you. Only the chosen city's location goes to the weather service.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We collect nothing about you. Only the chosen city's location goes to the weather service."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O tebe nič nezbierame. Službe počasia ide len poloha zvoleného mesta."
+          }
+        }
+      }
+    },
+    "When a night goes wrong": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When a night goes wrong"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keď sa noc nevydarí"
+          }
+        }
+      }
+    },
+    "When you need a moment": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When you need a moment"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keď potrebuješ chvíľu"
+          }
+        }
+      }
+    },
+    "Within %@ after the alarm: a finished building. Within %@: unfinished. Later: ruins.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Within %@ after the alarm: a finished building. Within %@: unfinished. Later: ruins."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do %@ po budíku: hotová budova. Do %@: rozostavaná. Neskôr: ruina."
+          }
+        }
+      }
+    },
+    "Without a passcode the phone can't tell locking from leaving, so trips aren't counted there (closing the app still is).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Without a passcode the phone can't tell locking from leaving, so trips aren't counted there (closing the app still is)."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefón bez kódu zámku nevie rozlíšiť zamknutie od odchodu, preto tam appka odchody nepočíta (okrem zatvorenia appky)."
+          }
+        }
+      }
+    },
+    "Your first change opens a change week (%@). Then the schedule stays for a month; unlocking it sooner costs %@ 🪙.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your first change opens a change week (%@). Then the schedule stays for a month; unlocking it sooner costs %@ 🪙."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prvá zmena otvorí týždeň na zmeny (%@). Potom rozvrh mesiac platí; skôr ho odomkneš za %@ 🪙."
+          }
+        }
+      }
+    },
+    "Your next finished night repairs a ruin.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your next finished night repairs a ruin."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruinu opraví ďalšia hotová noc."
+          }
+        }
+      }
+    },
+    "“Go to sleep” works from %@ before bedtime until %@ after it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“Go to sleep” works from %@ before bedtime until %@ after it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Ísť spať“ ide od %@ pred večierkou do %@ po nej."
+          }
+        }
+      }
+    },
     "🌙 Calm hours: %lld of %lld · +%lld 🪙": {
       "localizations": {
         "en": {
@@ -769,38 +1733,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "🌙 Pokojné hodiny: %1$lld z %2$lld · +%3$lld 🪙"
-          }
-        }
-      }
-    },
-    "Every calm hour of the night (you stay with SleepHole, no pause) adds +%lld 🪙.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every calm hour of the night (you stay with SleepHole, no pause) adds +%lld 🪙."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Každá pokojná hodina noci (ostaneš so SleepHole, bez pauzy) pridá +%lld 🪙."
-          }
-        }
-      }
-    },
-    "A complete night = %lld 🪙, and more for higher levels (L2 %lld, L3 %lld, L4 %lld 🪙); unfinished = half. Every %lldth complete night in a row adds a +%lld 🪙 bonus.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A complete night = %lld 🪙, and more for higher levels (L2 %lld, L3 %lld, L4 %lld 🪙); unfinished = half. Every %lldth complete night in a row adds a +%lld 🪙 bonus."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hotová noc = %1$lld 🪙 a vyššie levely viac (L2 %2$lld, L3 %3$lld, L4 %4$lld 🪙); rozostavaná = polovica. Každá %5$lld. hotová noc v rade pridá bonus +%6$lld 🪙."
           }
         }
       }
@@ -2037,22 +2969,6 @@
         }
       }
     },
-    "Closing SleepHole (swiping it away) counts like leaving it.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Closing SleepHole (swiping it away) counts like leaving it."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zavretie SleepHole (potiahnutím preč) sa počíta ako odchod z appky."
-          }
-        }
-      }
-    },
     "Cloud cover": {
       "localizations": {
         "en": {
@@ -2113,22 +3029,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mince"
-          }
-        }
-      }
-    },
-    "Coins 🪙": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Coins 🪙"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mince 🪙"
           }
         }
       }
@@ -2629,22 +3529,6 @@
         }
       }
     },
-    "Tired sooner? From %lld h before bedtime you can go to sleep early: the night counts in full, only the night without your phone is longer. You then have %@ from the start to set up, and the alarm stays at your wake-up time.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tired sooner? From %lld h before bedtime you can go to sleep early: the night counts in full, only the night without your phone is longer. You then have %@ from the start to set up, and the alarm stays at your wake-up time."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chce sa ti spať skôr? Dnešnú stavbu môžeš začať už %lld h pred večierkou: noc sa počíta celá, len bez telefónu budeš dlhšie. Na prípravu máš vtedy %@ od štartu a budík zazvoní ako vždy."
-          }
-        }
-      }
-    },
     "When you go to bed and fall asleep": {
       "localizations": {
         "en": {
@@ -2821,22 +3705,6 @@
         }
       }
     },
-    "Every evening you start a building. Leave your phone alone at night and get up on time, and the building gets finished – your nights grow into a town.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every evening you start a building. Leave your phone alone at night and get up on time, and the building gets finished – your nights grow into a town."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Každý večer začneš stavať budovu. Keď v noci necháš telefón na pokoji a ráno vstaneš načas, budova sa dokončí – a z tvojich nocí rastie mesto."
-          }
-        }
-      }
-    },
     "Every night counts – your town keeps growing 🌱": {
       "localizations": {
         "en": {
@@ -2849,22 +3717,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Každá noc sa počíta – tvoje mesto rastie ďalej 🌱"
-          }
-        }
-      }
-    },
-    "Every night that builds something (complete or unfinished) moves you forward:": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every night that builds something (complete or unfinished) moves you forward:"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Každá noc, ktorá postaví budovu (hotovú či rozostavanú), ťa posunie ďalej:"
           }
         }
       }
@@ -3041,22 +3893,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Na %1$@ môžeš odísť zo SleepHole. Táto pauza stojí %2$lld 🪙."
-          }
-        }
-      }
-    },
-    "For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus %@. We'll warn you 15s before it ends; then come back to SleepHole.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus %@. We'll warn you 15s before it ends; then come back to SleepHole."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Na prípravu (podcast, rozprávka, selfie…) máš čas od štartu až do večierky a ešte %@ po nej. 15s pred koncom ťa upozorníme, potom sa vráť do SleepHole."
           }
         }
       }
@@ -3413,22 +4249,6 @@
         }
       }
     },
-    "How a night works": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "How a night works"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ako prebieha noc"
-          }
-        }
-      }
-    },
     "How it works": {
       "localizations": {
         "en": {
@@ -3521,22 +4341,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Choroba alebo dovolenka?"
-          }
-        }
-      }
-    },
-    "In the afternoon you can take a nap (30 or 60 min) – only between %@–%@ (changeable), once a day. Same rules as at night, %@ to set up, an alarm at the end. A complete nap = +%lld 🪙, it doesn't build.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "In the afternoon you can take a nap (30 or 60 min) – only between %@–%@ (changeable), once a day. Same rules as at night, %@ to set up, an alarm at the end. A complete nap = +%lld 🪙, it doesn't build."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Popoludní si môžeš dať odpočinok (30 alebo 60 min) – iba v okne %1$@–%2$@ (dá sa zmeniť), raz denne. Platí to isté ako v noci, na prípravu máš %3$@, na konci zazvoní budík. Hotový odpočinok = +%4$lld 🪙, budovu nestavia."
           }
         }
       }
@@ -3813,6 +4617,38 @@
         }
       }
     },
+    "Setup time": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Setup time"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas na prípravu"
+          }
+        }
+      }
+    },
+    "How long you have after “Go to sleep” to finish what you are doing, counted from your bedtime. After an early start the setup is always 15 min.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How long you have after “Go to sleep” to finish what you are doing, counted from your bedtime. After an early start the setup is always 15 min."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koľko času máš po „Ísť spať“ na dokončenie toho, čo robíš – počíta sa od večierky. Po skoršom štarte je príprava vždy 15 min."
+          }
+        }
+      }
+    },
     "Length": {
       "localizations": {
         "en": {
@@ -3889,70 +4725,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Level %lld odomknutý!"
-          }
-        }
-      }
-    },
-    "Level 1": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Level 1"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Level 1"
-          }
-        }
-      }
-    },
-    "Level 2": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Level 2"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Level 2"
-          }
-        }
-      }
-    },
-    "Level 3": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Level 3"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Level 3"
-          }
-        }
-      }
-    },
-    "Level 4": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Level 4"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Level 4"
           }
         }
       }
@@ -4325,22 +5097,6 @@
         }
       }
     },
-    "Nap: %lld min, between %@ and %@ (change it in Settings).": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nap: %lld min, between %@ and %@ (change it in Settings)."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Odpočinok: %1$lld min, medzi %2$@ a %3$@ (zmeníš v Nastaveniach)."
-          }
-        }
-      }
-    },
     "Naps": {
       "localizations": {
         "en": {
@@ -4353,22 +5109,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odpočinky"
-          }
-        }
-      }
-    },
-    "Need the bathroom or a few minutes on your phone? Tap 🌙 Pause on the night screen: %@ outside SleepHole. The first pause of a night is free, each further one costs %lld 🪙 more. A night without any pause pays +%lld 🪙.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Need the bathroom or a few minutes on your phone? Tap 🌙 Pause on the night screen: %@ outside SleepHole. The first pause of a night is free, each further one costs %lld 🪙 more. A night without any pause pays +%lld 🪙."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Potrebuješ na WC alebo pár minút na mobile? Ťukni na nočnej obrazovke na 🌙 Pauza: %1$@ mimo SleepHole. Prvá pauza za noc je zadarmo, každá ďalšia stojí o %2$lld 🪙 viac. Noc bez pauzy dáva +%3$lld 🪙."
           }
         }
       }
@@ -4869,22 +5609,6 @@
         }
       }
     },
-    "Notifications and tips": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notifications and tips"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Upozornenia a tipy"
-          }
-        }
-      }
-    },
     "OK": {
       "localizations": {
         "en": {
@@ -5157,22 +5881,6 @@
         }
       }
     },
-    "Phone calls don't count – just come back to the app after the call.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Phone calls don't count – just come back to the app after the call."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Telefonát sa nepočíta – po hovore sa len vráť do appky."
-          }
-        }
-      }
-    },
     "Phone locked": {
       "localizations": {
         "en": {
@@ -5397,22 +6105,6 @@
         }
       }
     },
-    "You can start building from %@ before bedtime until %@ after it. Later than that the night counts as missed.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You can start building from %@ before bedtime until %@ after it. Later than that the night counts as missed."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stavbu môžeš začať od %1$@ pred večierkou do %2$@ po nej. Neskôr sa noc počíta ako vynechaná."
-          }
-        }
-      }
-    },
     "You've already built tonight 🌙 You can build again tomorrow from %@.": {
       "localizations": {
         "en": {
@@ -5473,6 +6165,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "🌙 Dnes idem spať skôr"
+          }
+        }
+      }
+    },
+    "🌙 Pause: %@ outside the app. The first of a night is free, then %@, %@, %@ 🪙.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌙 Pause: %@ outside the app. The first of a night is free, then %@, %@, %@ 🪙."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌙 Pauza: %@ mimo appky. Prvá za noc zadarmo, potom %@, %@, %@ 🪙."
           }
         }
       }
@@ -7209,22 +7917,6 @@
         }
       }
     },
-    "The alarm rings for at most %@. Confirm you're up by shaking the phone or entering the code – at the earliest %@ before wake-up.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The alarm rings for at most %@. Confirm you're up by shaking the phone or entering the code – at the earliest %@ before wake-up."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Budík zvoní najviac %1$@. Vstávanie potvrdíš zatrasením telefónu alebo kódom – najskôr %2$@ pred budíčkom."
-          }
-        }
-      }
-    },
     "The app didn't run that night – nothing was built.": {
       "localizations": {
         "en": {
@@ -7385,22 +8077,6 @@
         }
       }
     },
-    "The goal is simple: go to bed and get up at the same time every day. 💙": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The goal is simple: go to bed and get up at the same time every day. 💙"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cieľ je jednoduchý: chodiť spať a vstávať každý deň v rovnakom čase. 💙"
-          }
-        }
-      }
-    },
     "The search uses Apple Maps. SleepHole never asks for your location.": {
       "localizations": {
         "en": {
@@ -7541,22 +8217,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tieto skladby sú voľné dielo, v SleepHole nanovo syntetizované. „Budíček“ a „Poplach“ sú vlastné skladby."
-          }
-        }
-      }
-    },
-    "They remind you of bedtime, tell you in time when tonight's building needs you, and act as a backup alarm.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "They remind you of bedtime, tell you in time when tonight's building needs you, and act as a backup alarm."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pripomenú večierku, včas dajú vedieť, keď ťa dnešná stavba potrebuje, a sú záložným budíkom."
           }
         }
       }
@@ -7785,22 +8445,6 @@
         }
       }
     },
-    "Town and levels": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Town and levels"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mesto a levely"
-          }
-        }
-      }
-    },
     "Town journal": {
       "localizations": {
         "en": {
@@ -7977,22 +8621,6 @@
         }
       }
     },
-    "SleepHole also notices when you unlock the phone and keep using it for a few seconds (lock-screen camera, widgets, another app). It reminds you gently and the building stays. With Strict mode on (Settings), the phone rings after 8 seconds and the building comes down if you keep using it – locking the phone silences it.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SleepHole also notices when you unlock the phone and keep using it for a few seconds (lock-screen camera, widgets, another app). It reminds you gently and the building stays. With Strict mode on (Settings), the phone rings after 8 seconds and the building comes down if you keep using it – locking the phone silences it."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SleepHole si všimne aj to, keď telefón odomkneš a pár sekúnd ho používaš (fotoaparát zo zamknutej obrazovky, widgety, iná appka). Jemne ti to pripomenie a stavba zostáva. So zapnutým Prísnym režimom (Nastavenia) telefón po 8 sekundách zazvoní a stavba spadne, ak ho používaš ďalej – zamknutie telefónu ho utíši."
-          }
-        }
-      }
-    },
     "Vibration test": {
       "localizations": {
         "en": {
@@ -8133,22 +8761,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vitaj späť! Dobrý oddych."
-          }
-        }
-      }
-    },
-    "Welcome to SleepHole": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Welcome to SleepHole"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vitaj v SleepHole"
           }
         }
       }
@@ -8357,22 +8969,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dnes do %1$@ · hotový odpočinok +%2$lld 🪙"
-          }
-        }
-      }
-    },
-    "You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and %@ to come back. All such trips share %@ per night – when they are used up, the night screen tells you, and leaving again collapses the building.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and %@ to come back. All such trips share %@ per night – when they are used up, the night screen tells you, and leaving again collapses the building."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Displej môžeš vypnúť, ale SleepHole musí zostať otvorená. Ak prepneš do inej appky, dostaneš upozornenie a %1$@ na návrat. Všetky takéto odchody majú spolu %2$@ za noc – keď sa minú, obrazovka noci ti to povie a ďalší odchod stavbu zrúti."
           }
         }
       }
@@ -8745,22 +9341,6 @@
         }
       }
     },
-    "after %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "after %@"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "po %@"
-          }
-        }
-      }
-    },
     "allowed ✓": {
       "localizations": {
         "en": {
@@ -8873,38 +9453,6 @@
         }
       }
     },
-    "confirmed within %@ after wake-up": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "confirmed within %@ after wake-up"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "potvrdíš do %@ po budíčku"
-          }
-        }
-      }
-    },
-    "confirmed within %@ after wake-up – your next good night finishes it": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "confirmed within %@ after wake-up – your next good night finishes it"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "potvrdíš do %@ po budíčku – ďalšia dobrá noc ju dostavia"
-          }
-        }
-      }
-    },
     "current streak": {
       "localizations": {
         "en": {
@@ -9013,22 +9561,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "výborná 🌟"
-          }
-        }
-      }
-    },
-    "from the start": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "from the start"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "od začiatku"
           }
         }
       }
@@ -9353,22 +9885,6 @@
         }
       }
     },
-    "the building collapsed, you cancelled the night, or you didn't confirm getting up. Your next complete night repairs it 🛠️ (unless an unfinished building is waiting), otherwise flowers grow over it 🌸": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "the building collapsed, you cancelled the night, or you didn't confirm getting up. Your next complete night repairs it 🛠️ (unless an unfinished building is waiting), otherwise flowers grow over it 🌸"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "stavba sa zrútila, noc bola zrušená alebo vstávanie nebolo potvrdené. Ďalšia hotová noc ju opraví 🛠️ (ak nečaká rozostavaná budova), inak časom zarastie kvetmi 🌸"
-          }
-        }
-      }
-    },
     "town hall, school, fire station, police, hospital": {
       "localizations": {
         "en": {
@@ -9673,22 +10189,6 @@
         }
       }
     },
-    "🏢 Complete": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🏢 Complete"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🏢 Hotová"
-          }
-        }
-      }
-    },
     "👀 Screen checks: %lld×": {
       "localizations": {
         "en": {
@@ -9749,38 +10249,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "😴 Odpočinok (%lld min)"
-          }
-        }
-      }
-    },
-    "🚧 Unfinished": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🚧 Unfinished"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🚧 Rozostavaná"
-          }
-        }
-      }
-    },
-    "🧱 Ruins": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🧱 Ruins"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🧱 Ruina"
           }
         }
       }
@@ -9973,22 +10441,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Otvor ju do %lld sekúnd, nech dnešná stavba pokračuje 🏗️"
-          }
-        }
-      }
-    },
-    "If you leave the app, you'll get a “SleepHole must stay open” alert.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "If you leave the app, you'll get a “SleepHole must stay open” alert."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ak odídeš z appky, príde upozornenie „SleepHole musí zostať otvorená“."
           }
         }
       }
@@ -12141,22 +12593,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sedí ti večierka?"
-          }
-        }
-      }
-    },
-    "The same time every day is the base of good sleep. You can change it later in Settings: the first change opens a change week (7 days), after it your schedule stays the same for a month.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The same time every day is the base of good sleep. You can change it later in Settings: the first change opens a change week (7 days), after it your schedule stays the same for a month."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rovnaký čas každý deň je základ dobrého spánku. Neskôr ho zmeníš v Nastaveniach: prvá zmena otvorí týždeň na zmeny (7 dní), potom ostane rozvrh mesiac rovnaký."
           }
         }
       }

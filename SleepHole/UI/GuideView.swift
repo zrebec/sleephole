@@ -6,71 +6,43 @@ import UserNotifications
 enum Plural {
     static func minutes(_ t: TimeInterval) -> String { L("\(Int((t / 60).rounded())) minutes") }
     static func seconds(_ t: TimeInterval) -> String { L("\(Int(t.rounded())) seconds") }
+    static func hours(_ t: TimeInterval) -> String { L("\(Int((t / 3600).rounded())) hours") }
     static func nights(_ n: Int) -> String { L("\(n) nights") }
     static func days(_ n: Int) -> String { L("\(n) days") }
 }
 
-/// The rules as sentences, generated from the real constants so the guide never lies.
-enum GuideText {
-    static let rules = SleepRules()
-    static var startWindow: String {
-        L("You can start building from \(Plural.minutes(NightWindow.startLead)) before bedtime until \(Plural.minutes(rules.startDeadline)) after it. Later than that the night counts as missed.")
-    }
-    static var earlyStart: String {
-        L("Tired sooner? From \(Int(NightWindow.earlyStartLead / 3600)) h before bedtime you can go to sleep early: the night counts in full, only the night without your phone is longer. You then have \(Plural.minutes(rules.earlySetup)) from the start to set up, and the alarm stays at your wake-up time.")
-    }
-    static var setup: String {
-        L("For setup (podcast, bedtime story, selfies…) you have from the start until bedtime plus \(Plural.minutes(rules.setupGrace)). We'll warn you 15s before it ends; then come back to SleepHole.")
-    }
-    static var night: String {
-        L("You can turn the screen off, but SleepHole must stay open. If you switch to another app, you get a warning and \(Plural.seconds(rules.accidentalTolerance)) to come back. All such trips share \(Plural.seconds(rules.awayBudget ?? 0)) per night – when they are used up, the night screen tells you, and leaving again collapses the building.")
-            + " " + L("Closing SleepHole (swiping it away) counts like leaving it.")
-            + " " + L("SleepHole also notices when you unlock the phone and keep using it for a few seconds (lock-screen camera, widgets, another app). It reminds you gently and the building stays. With Strict mode on (Settings), the phone rings after 8 seconds and the building comes down if you keep using it – locking the phone silences it.")
-    }
-    static var pause: String {
-        L("Need the bathroom or a few minutes on your phone? Tap 🌙 Pause on the night screen: \(Plural.minutes(PausePolicy.duration)) outside SleepHole. The first pause of a night is free, each further one costs \(PausePolicy.priceStep) 🪙 more. A night without any pause pays +\(PausePolicy.undisturbedBonus) 🪙.")
-    }
-    static var calls: String { L("Phone calls don't count – just come back to the app after the call.") }
-    static var nap: String {
-        let p = NapPlan.default
-        return L("In the afternoon you can take a nap (30 or 60 min) – only between \(Fmt.time(p.windowStart))–\(Fmt.time(p.windowEnd)) (changeable), once a day. Same rules as at night, \(Plural.minutes(NapPlan.rules.setupGrace)) to set up, an alarm at the end. A complete nap = +\(NapPlan.reward(.complete)) 🪙, it doesn't build.")
-    }
-    static var alarm: String {
-        L("The alarm rings for at most \(Plural.minutes(rules.alarmDuration)). Confirm you're up by shaking the phone or entering the code – at the earliest \(Plural.minutes(NightWindow.earlyConfirm)) before wake-up.")
-    }
-    static var outcomes: [(String, String)] {
-        [(L("🏢 Complete"), L("confirmed within \(Plural.minutes(NightWindow.onTimeConfirm)) after wake-up")),
-         (L("🚧 Unfinished"), L("confirmed within \(Plural.minutes(NightWindow.lateConfirm)) after wake-up – your next good night finishes it")),
-         (L("🧱 Ruins"), L("the building collapsed, you cancelled the night, or you didn't confirm getting up. Your next complete night repairs it 🛠️ (unless an unfinished building is waiting), otherwise flowers grow over it 🌸"))]
-    }
-    /// title, what the level unlocks, when.
-    static var levels: [(title: String, what: String, when: String)] {
-        let t = Progression.thresholds
-        return [(L("Level 1"), L("houses and apartment blocks"), L("from the start")),
-                (L("Level 2"), L("parks, lit streets, museums, libraries"), L("after \(Plural.nights(t[1].minBuilt))")),
-                (L("Level 3"), L("town hall, school, fire station, police, hospital"), L("after \(Plural.nights(t[2].minBuilt))")),
-                (L("Level 4"), L("skyscrapers"), L("after \(Plural.nights(t[3].minBuilt))"))]
-    }
-}
-
-/// First-run guide ("sprievodca"). `replay` = opened again from Settings (no permission step result needed).
+/// First-run guide: nine swipe pages the sleep buddy narrates in a comic speech bubble (owner 2026-10-18, build 9c).
+/// `replay` = opened again from Settings (the times are then changed in Settings, the guide does not finish anything).
 struct GuideView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     var replay = false
-    @State private var page = 0
+    @State private var page: Int
     @State private var notificationsAllowed: Bool?
-    static let pageCount = 6
+    @State private var showRules: Bool
+    static let pageCount = GuideText.pageCount
+
+    init(replay: Bool = false) {
+        self.replay = replay
+        // Debug launch arguments for screenshots: `-guidePage N` (1-based), `-guideRules` (the rules sheet).
+        let a = DevArgs.list
+        let n = a.firstIndex(of: "-guidePage").flatMap { a.indices.contains($0 + 1) ? Int(a[$0 + 1]) : nil } ?? 1
+        _page = State(initialValue: min(max(n, 1), GuideText.pageCount) - 1)
+        _showRules = State(initialValue: a.contains("-guideRules"))
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             TabView(selection: $page) {
-                welcome.tag(0)
-                schedule.tag(1)
-                nightRules.tag(2)
-                morning.tag(3)
-                levels.tag(4)
-                tips.tag(5)
+                ForEach(0..<Self.pageCount, id: \.self) { i in
+                    ScrollView {
+                        GuidePageView(index: i, replay: replay, notificationsAllowed: $notificationsAllowed,
+                                      showRules: $showRules)
+                            .padding(.bottom, GuideLayout.dotsHeight)
+                    }
+                    .scrollBounceBehavior(.basedOnSize)
+                    .tag(i)
+                }
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
@@ -83,10 +55,15 @@ struct GuideView: View {
                     Button(replay ? L("Close") : L("Let's start 🌙")) { finish() }.buttonStyle(.borderedProminent)
                 }
             }
-            .padding()
+            .padding(.horizontal).padding(.vertical, GuideLayout.buttonBarPadding)
         }
         .background { NightSky().opacity(0.9) }
         .preferredColorScheme(.dark)
+        .sheet(isPresented: $showRules) { RulesView() }
+        .task {
+            let settings = await UNUserNotificationCenter.current().notificationSettings()
+            notificationsAllowed = settings.authorizationStatus == .authorized ? true : nil
+        }
     }
 
     func finish() {
@@ -105,131 +82,115 @@ struct GuideView: View {
             await model.refreshTimeSensitive()
         }
     }
+}
 
-    // MARK: pages
+/// Fixed sizes around a guide page, shared with the test that proves no page scrolls on a 375 × 667 pt iPhone SE.
+enum GuideLayout {
+    /// Room kept under a page's content for the page dots.
+    static let dotsHeight: CGFloat = 34
+    static let buttonBarPadding: CGFloat = 12
+}
 
-    private func pageLayout<C: View>(_ icon: String, _ title: String, @ViewBuilder content: () -> C) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Image(systemName: icon).font(.system(size: 44)).foregroundStyle(.yellow)
-                    .frame(maxWidth: .infinity)
-                Text(title).font(.largeTitle.bold()).frame(maxWidth: .infinity)
-                content()
+/// One guide page: title, art row, the sleep buddy and its sentence in a comic bubble, and the page's own extras.
+/// The content is sized to fit the smallest supported iPhone at the default text size without scrolling.
+struct GuidePageView: View {
+    @Environment(AppModel.self) private var model
+    let index: Int
+    var replay = false
+    @Binding var notificationsAllowed: Bool?
+    @Binding var showRules: Bool
+
+    private var content: GuideText.Page { GuideText.page(index, setup: model.settings.setupGrace) }
+    /// Pages with extras show a smaller cat.
+    private var catHeight: CGFloat {
+        switch index {
+        case 0: 130
+        case 1: 100
+        case 6, 8: 170
+        default: 200
+        }
+    }
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Text(content.title).font(.title.bold()).multilineTextAlignment(.center)
+                .minimumScaleFactor(0.8).fixedSize(horizontal: false, vertical: true)
+            Text(content.art).font(.system(size: index == 1 ? 34 : 40))
+            Image(content.cat).resizable().scaledToFit().frame(height: catHeight)
+                .accessibilityHidden(true)
+            GuideBubble(text: content.text)
+            extras
+        }
+        .padding(.horizontal, 20).padding(.top, 12)
+        .frame(maxWidth: .infinity)
+    }
+
+    @ViewBuilder private var extras: some View {
+        switch index {
+        case 0:
+            LanguagePicker().padding(.top, 4)
+        case 1:
+            @Bindable var model = model
+            VStack(spacing: 6) {
+                // first run: saved at once (the guide is always free); replayed from Settings: change it there
+                ScheduleFields(schedule: Binding(get: { model.settings.schedule }, set: { model.applySchedule($0) }))
+                    .disabled(replay)
+                if replay {
+                    Text(L("You change your schedule in Settings.")).font(.footnote).foregroundStyle(.secondary)
+                }
             }
-            .padding(24)
-            .padding(.bottom, 40)
-        }
-        .scrollBounceBehavior(.basedOnSize)
-    }
-
-    private func row(_ icon: String, _ text: String) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon).frame(width: 26).foregroundStyle(.yellow)
-            Text(text).font(.body.leading(.loose)).fixedSize(horizontal: false, vertical: true)
-        }
-    }
-
-    private var welcome: some View {
-        pageLayout("moon.stars.fill", L("Welcome to SleepHole")) {
-            LanguagePicker()
-            BuildingImage(id: "l1-house-a-a", maxHeight: 170).frame(maxWidth: .infinity)
-            Text(L("Every evening you start a building. Leave your phone alone at night and get up on time, and the building gets finished – your nights grow into a town."))
-                .font(.title3)
-            Text(L("The goal is simple: go to bed and get up at the same time every day. 💙"))
-                .font(.title3)
-                .foregroundStyle(.secondary)
-        }
-    }
-
-    private var schedule: some View {
-        @Bindable var model = model
-        return pageLayout("clock.fill", L("Your schedule")) {
-            Text(L("The same time every day is the base of good sleep. You can change it later in Settings: the first change opens a change week (7 days), after it your schedule stays the same for a month."))
-            // first run: saved at once (the guide is always free); replayed from Settings: change it there
-            ScheduleFields(schedule: Binding(get: { model.settings.schedule }, set: { model.applySchedule($0) }))
-                .disabled(replay)
-                .padding().background(.thinMaterial, in: RoundedRectangle(cornerRadius: 14))
-            if replay {
-                Text(L("You change your schedule in Settings.")).font(.footnote).foregroundStyle(.secondary)
-            }
-            Text(L("Nap: \(model.settings.nap.minutes) min, between \(Fmt.time(model.settings.nap.windowStart)) and \(Fmt.time(model.settings.nap.windowEnd)) (change it in Settings)."))
-                .font(.footnote).foregroundStyle(.secondary)
-        }
-    }
-
-    private var nightRules: some View {
-        pageLayout("hammer.fill", L("How a night works")) {
-            row("clock.badge.checkmark", GuideText.startWindow)
-            row("moon.stars.fill", GuideText.earlyStart)
-            row("headphones", GuideText.setup)
-            row("lock.iphone", GuideText.night)
-            row("moon.zzz.fill", GuideText.pause)
-            row("phone.fill", GuideText.calls)
-            row("bed.double.fill", GuideText.nap)
-            row("bell.badge", L("If you leave the app, you'll get a “SleepHole must stay open” alert."))
-        }
-    }
-
-    private var morning: some View {
-        pageLayout("sun.max.fill", L("Morning")) {
-            row("alarm.fill", GuideText.alarm)
+            .padding(12)
+            .background(Color(red: 0.12, green: 0.14, blue: 0.24), in: RoundedRectangle(cornerRadius: 14))
+        case 6:
             HStack {
                 Text(L("Your code:"))
                 Text(model.settings.wakeCode).font(.title.monospacedDigit().bold())
             }
-            ForEach(GuideText.outcomes, id: \.0) { title, text in
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title).font(.headline)
-                    Text(text).foregroundStyle(.secondary)
+        case 8:
+            VStack(spacing: 10) {
+                Button { showRules = true } label: {
+                    Label(L("All rules"), systemImage: "list.bullet").frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.bordered)
+                Button {
+                    Task {
+                        notificationsAllowed = await Notifications.requestAuthorization()
+                        await model.refreshTimeSensitive()
+                    }
+                } label: {
+                    Label(notificationsAllowed == true ? L("Notifications allowed ✓") : L("Allow notifications"),
+                          systemImage: "bell.fill")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+                .disabled(notificationsAllowed == true)
             }
+            .controlSize(.large)
+            .padding(.top, 4)
+        default:
+            EmptyView()
         }
     }
+}
 
-    private var levels: some View {
-        pageLayout("star.fill", L("Town and levels")) {
-            Text(L("Every night that builds something (complete or unfinished) moves you forward:"))
-            ForEach(GuideText.levels, id: \.title) { level in
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(level.title).font(.headline)
-                    Text(verbatim: "\(level.what) – \(level.when)").foregroundStyle(.secondary)
-                }
-            }
-            Text(L("Coins 🪙")).font(.headline)
-            Text(L("A complete night = \(Economy.completeReward(level: 1)) 🪙, and more for higher levels (L2 \(Economy.completeReward(level: 2)), L3 \(Economy.completeReward(level: 3)), L4 \(Economy.completeReward(level: 4)) 🪙); unfinished = half. Every \(Economy.streakBonusEvery)th complete night in a row adds a +\(Economy.streakBonus) 🪙 bonus.") + " " + L("Every calm hour of the night (you stay with SleepHole, no pause) adds +\(Economy.calmHourBonus) 🪙."))
-                .foregroundStyle(.secondary)
-        }
-    }
+/// The sleep buddy's comic speech bubble on a guide page: the tail points up to the cat, solid colours (no transparency).
+struct GuideBubble: View {
+    let text: String
 
-    private var tips: some View {
-        pageLayout("checklist", L("Notifications and tips")) {
-            Button {
-                Task {
-                    notificationsAllowed = await Notifications.requestAuthorization()
-                    await model.refreshTimeSensitive()
-                }
-            } label: {
-                Label(notificationsAllowed == true ? L("Notifications allowed ✓") : L("Allow notifications"),
-                      systemImage: "bell.fill")
-                    .frame(maxWidth: .infinity)
+    var body: some View {
+        Text(text)
+            .font(.system(size: 17, weight: .medium, design: .rounded))
+            .foregroundStyle(SpeechBubbleShape.ink(.dark))
+            .multilineTextAlignment(.leading)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.horizontal, 16)
+            .padding(.top, 11 + SpeechBubbleShape.tailHeight).padding(.bottom, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background {
+                SpeechBubbleShape().fill(SpeechBubbleShape.paper(.dark))
+                SpeechBubbleShape().stroke(SpeechBubbleShape.ink(.dark).opacity(0.85),
+                                           style: StrokeStyle(lineWidth: 2.5, lineJoin: .round))
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(notificationsAllowed == true)
-            Text(L("They remind you of bedtime, tell you in time when tonight's building needs you, and act as a backup alarm."))
-                .font(.footnote).foregroundStyle(.secondary)
-            row("key.fill", L("Keep a passcode with Face ID or Touch ID on your iPhone – without them the app can't tell locking the phone from leaving the app."))
-            row("battery.100.bolt", L("Keep your phone on the charger overnight."))
-            row("moon.zzz.fill", L("The SleepHole alarm also rings in Do Not Disturb or Sleep focus, and the “SleepHole must stay open” warning arrives there too. If iOS asks about time-sensitive notifications from SleepHole, keep them allowed."))
-            row("speaker.wave.2.fill", L("The alarm rings even in silent mode. Pick the sound in Settings."))
-            row("arrow.down.circle", L("iOS may install an update at night and restart your phone. The building is safe (it counts in your favour), but the in-app alarm can't ring then – the system alarm (if you allowed it) and the backup notifications ring instead. For calmer nights: Settings → General → Software Update → Automatic Updates → turn off installing."))
-            if AppExpiry.date != nil {   // only builds installed from Xcode carry a profile; TestFlight / App Store have none
-                row("arrow.clockwise", L("SleepHole's signature runs out after a while – then connect your iPhone to the Mac and install SleepHole again. Your data stays."))
-            }
-        }
-        .task {
-            let settings = await UNUserNotificationCenter.current().notificationSettings()
-            notificationsAllowed = settings.authorizationStatus == .authorized ? true : nil
-        }
     }
 }
 
@@ -284,7 +245,7 @@ struct FirstNightBriefing: View {
             List {
                 Section {
                     Label(early ? L("You have \(Plural.minutes(GuideText.rules.earlySetup)) from now for a podcast or story.")
-                                : L("You have until bedtime + \(Plural.minutes(GuideText.rules.setupGrace)) for a podcast or story."),
+                                : L("You have until bedtime + \(Plural.minutes(model.settings.setupGrace)) for a podcast or story."),
                           systemImage: "headphones")
                     Label(L("Then come back to SleepHole and lock your phone."), systemImage: "lock.iphone")
                     Label(L("Keep your phone on the charger."), systemImage: "battery.100.bolt")

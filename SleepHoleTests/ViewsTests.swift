@@ -232,6 +232,6 @@ struct ViewsTests {
         render(ExpiryCard(expiry: clock.now + 20 * 3600, now: clock.now), m)
         render(ExpiryCard(expiry: clock.now + 600, now: clock.now), m)
         #expect(NightView.countdown(588) == "9:48" && NightView.countdown(-3) == "0:00")
-        #expect(!GuideText.pause.isEmpty && !GuideText.night.isEmpty)
+        #expect(GuideText.ruleGroups.count == 10 && GuideText.ruleGroups.allSatisfy { !$0.items.isEmpty })
     }
 }

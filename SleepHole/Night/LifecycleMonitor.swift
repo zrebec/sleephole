@@ -14,6 +14,9 @@ import UIKit
 ///    after unlocking into another app (the two cannot be told apart). If the app is still not in front
 ///    `lockScreenWindow` later, the phone is being used → `.usedLockScreen`.
 /// On `didEnterBackground` the monitor waits `decisionDelay` and then decides lock vs. left-app.
+/// The return to the app is counted at `willEnterForeground` (measured on iOS 26: it arrives ~0.8 s before
+/// `didBecomeActive`, and the user is back at that moment); `didBecomeActive` alone (the app only went inactive –
+/// a system sheet, Control Center) still reports `.returned`.
 /// Every raw signal is also reported via `onRaw` for the F2 spike log.
 @MainActor
 final class LifecycleMonitor {
@@ -44,6 +47,9 @@ final class LifecycleMonitor {
     private var pendingBackground: Task<Void, Never>?
     /// The window after a recognition while the app is not in front.
     private var pendingLockUse: Task<Void, Never>?
+    /// `.returned` / "short background ignored" was already handled at `willEnterForeground`; the `didBecomeActive`
+    /// that follows must not report it again. Reset when the app resigns active or enters the background.
+    private var foregroundHandled = false
     private var isAway = false {
         didSet { if !isAway { lockTrip = false } }
     }
@@ -67,9 +73,12 @@ final class LifecycleMonitor {
                 MainActor.assumeIsolated { handler() }
             })
         }
-        observe(UIApplication.willResignActiveNotification) { [weak self] in self?.raw("willResignActive") }
+        observe(UIApplication.willResignActiveNotification) { [weak self] in
+            self?.raw("willResignActive")
+            self?.foregroundHandled = false
+        }
         observe(UIApplication.didEnterBackgroundNotification) { [weak self] in self?.didEnterBackground() }
-        observe(UIApplication.willEnterForegroundNotification) { [weak self] in self?.raw("willEnterForeground") }
+        observe(UIApplication.willEnterForegroundNotification) { [weak self] in self?.willEnterForeground() }
         observe(UIApplication.didBecomeActiveNotification) { [weak self] in self?.didBecomeActive() }
         observe(UIApplication.protectedDataWillBecomeUnavailableNotification) { [weak self] in
             self?.dataProtectionChanged(locked: true)
@@ -148,6 +157,7 @@ final class LifecycleMonitor {
         let brightness = UIApplication.shared.connectedScenes.compactMap { ($0 as? UIWindowScene)?.screen.brightness }.first ?? -1
         raw(String(format: "didEnterBackground · protectedData=%@ · brightness=%.2f · calls=%d",
                    UIApplication.shared.isProtectedDataAvailable ? "yes" : "no", brightness, activeCalls.count))
+        foregroundHandled = false
         pendingBackground?.cancel()
         pendingBackground = Task { [weak self] in
             try? await Task.sleep(for: self?.backgroundDelay ?? Self.decisionDelay)
@@ -169,8 +179,21 @@ final class LifecycleMonitor {
         }
     }
 
-    private func didBecomeActive() {
+    /// The user is back (B-return, owner 2026-10-16): counted now, not 0.8 s later at `didBecomeActive`.
+    func willEnterForeground() {
+        raw("willEnterForeground")
+        foregroundHandled = true
+        returnToApp()
+    }
+
+    func didBecomeActive() {
         raw("didBecomeActive")
+        pendingLockUse?.cancel(); pendingLockUse = nil
+        if foregroundHandled { foregroundHandled = false; return }     // already counted at willEnterForeground
+        returnToApp()
+    }
+
+    private func returnToApp() {
         pendingLockUse?.cancel(); pendingLockUse = nil
         if pendingBackground != nil {     // came back before the decision → nothing happened
             pendingBackground?.cancel(); pendingBackground = nil

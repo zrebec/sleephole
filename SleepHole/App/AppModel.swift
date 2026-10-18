@@ -503,10 +503,22 @@ final class AppModel {
             .last { $0.key == key }?.coins
     }
 
+    /// The results Stats averages over. A counted test night (`bonus-…`) stays a night of the streak, the town and the
+    /// coins, but its clock times are artificial (a daytime start), so they never enter the TIME statistics –
+    /// average start / getting up, regularity, falling asleep, sleep length (B13).
+    func statsInput() -> [NightResult] {
+        let testKeys = Set(records().filter { $0.isTestNight && !$0.isNap }.map(\.keyString))
+        return coreResults().map { r in
+            guard testKeys.contains(r.key.description) else { return r }
+            return NightResult(key: r.key, outcome: r.outcome, buildingId: r.buildingId, awaySeconds: r.awaySeconds,
+                               pauses: r.pauses, calmHours: r.calmHours, calmHoursTotal: r.calmHoursTotal)
+        }
+    }
+
     /// Everything for the Štatistiky tab.
     var stats: StatsSummary {
         _ = sleepReads                              // a finished Health read redraws Stats (SwiftData rows are not observed)
-        return Stats.summary(coreResults(), today: NightKey(date: clock.now, calendar: calendar),
+        return Stats.summary(statsInput(), today: NightKey(date: clock.now, calendar: calendar),
                              calendar: calendar, breaks: streakBreaks, catalog: catalog)
     }
 
@@ -705,11 +717,15 @@ final class AppModel {
         return p
     }
 
+    private var loadingProgress = false
+
     private func loadProgress() {
         let p = progress()
         onboardingDone = p.onboardingCompletedAt != nil
         firstNightBriefed = p.firstNightBriefingAt != nil
+        loadingProgress = true                       // reading the stored choice must never write the default back (B12)
         language = p.languageRaw.flatMap(AppLanguage.init(rawValue:)) ?? .fallback
+        loadingProgress = false
         customTownName = p.townName
         changeWeekStart = p.changeWeekStart
         schedulePromptAnswered = p.schedulePromptMonth
@@ -916,7 +932,7 @@ final class AppModel {
             Lang.current = language
             guard language != oldValue else { return }
             let p = progress()
-            if p.languageRaw != language.rawValue {
+            if !loadingProgress && p.languageRaw != language.rawValue {
                 p.languageRaw = language.rawValue
                 save()
             }
@@ -971,11 +987,12 @@ final class AppModel {
         let p = progress()
         p.onboardingCompletedAt = b.onboardingCompletedAt
         p.firstNightBriefingAt = b.firstNightBriefingAt
-        if let lang = b.language, AppLanguage(rawValue: lang) != nil { p.languageRaw = lang }
-        if let name = b.townName {
-            p.townName = name
-            p.townNameChangedAt = clock.now                  // a restore is the user's own act: the name counts as just written
-        }
+        // the backup is the whole truth: a missing language or town name clears the current one (nil → the app's
+        // default language / "My Town"); an unknown language code is cleared too (B12)
+        p.languageRaw = b.language.flatMap { AppLanguage(rawValue: $0) != nil ? $0 : nil }
+        p.townName = b.townName
+        // a restore is the user's own act: the name counts as just written; no name, no stamp
+        p.townNameChangedAt = b.townName == nil ? nil : clock.now
         if let d = b.lastRenameAt { p.lastRenameAt = d }
         if let d = b.lastFreeRenameAt { p.lastFreeRenameAt = d }
         if let d = b.scheduleCalibrationStart { p.scheduleCalibrationStart = d }
@@ -1180,6 +1197,13 @@ final class AppModel {
         return tonight.bedtime
     }
 
+    /// The rules a night started now would get (the setup time from Settings) – for texts about tonight's setup.
+    var nextNightRules: SleepRules {
+        var r = SleepRules()
+        r.setupGrace = settings.setupGrace
+        return r
+    }
+
     // MARK: - actions
 
     func startNight(early: Bool = false) {
@@ -1194,7 +1218,7 @@ final class AppModel {
             maxLevel: Progression.unlockedMaxLevel(builtBefore: builtNights), catalog: catalog,
             history: real.map(\.buildingId), rng: &rng)
         let rec = NightRecord(window: window, buildingId: entry.id, isDebug: isDebug,
-                              setupGrace: debugWindow != nil ? debugGrace : SleepRules().setupGrace,
+                              setupGrace: debugWindow != nil ? debugGrace : settings.setupGrace,
                               idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode,
                               calmHoursRule: CalmHours.currentRule)
         rec.append(.started, at: now)
@@ -1857,6 +1881,12 @@ final class AppModel {
 
     func append(_ kind: NightEventKind, at date: Date) {
         guard let rec = active else { return }
+        // B26: picking up the ringing phone (lit lock screen + Face ID) is not "using the phone" – nothing from the
+        // lock screen counts at or after the alarm / the wake time; it stays in the raw log only
+        if kind == .usedLockScreen, date >= (rec.log.first(.alarmFired)?.at ?? rec.wake) {
+            lockLab.note("(usedLockScreen at/after the alarm ignored)")
+            return
+        }
         // Must be evaluated BEFORE the event is stored: an open `.leftApp` interval counts until the
         // wake time, so afterwards the building always looks collapsed and no warning was ever sent
         // (bug found by the owner 2026-09-29).
@@ -1990,7 +2020,26 @@ final class AppModel {
 
     private func buzz(_ h: Haptic) {
         haptics.append(h)
-        if servicesEnabled { Haptics.play(h) }
+        guard servicesEnabled else { return }
+        // iOS plays haptics only in the foreground: the return is counted at willEnterForeground, when the app is not
+        // active yet – the vibration waits for the next didBecomeActive
+        if UIApplication.shared.applicationState != .active {
+            pendingHaptic = h
+            if reliefObserver == nil {
+                reliefObserver = NotificationCenter.default.addObserver(
+                    forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+                    MainActor.assumeIsolated { self?.playPendingHaptic() }
+                }
+            }
+            return
+        }
+        Haptics.play(h)
+    }
+    private var pendingHaptic: Haptic?
+    private var reliefObserver: NSObjectProtocol?
+    private func playPendingHaptic() {
+        if let o = reliefObserver { NotificationCenter.default.removeObserver(o); reliefObserver = nil }
+        if let h = pendingHaptic { pendingHaptic = nil; Haptics.play(h) }
     }
 
     /// Sound effect (Settings → Sound effects); `after` seconds late so effects can follow an animation.

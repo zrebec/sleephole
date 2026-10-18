@@ -4,12 +4,25 @@ struct RootView: View {
     @Environment(AppModel.self) private var model
     /// `-openTab town|settings` (screenshots)
     @State private var tab: Int = {
-        let a = DevArgs.list
-        return a.contains("town") ? 1 : a.contains("stats") ? 2 : a.contains("settings") ? 3 : 0
+        switch DevArgs.value(after: "-openTab") {
+        case "town": return 1
+        case "stats": return 2
+        case "settings": return 3
+        default: return 0
+        }
     }()
     /// Screenshot / agent modes skip the first-run guide.
     private let screenshotMode = DevArgs.list.contains {
         $0 == "-seedNights" || $0 == "-startTestNight" || $0 == "-screenshot"
+    }
+
+    /// The tab bar on iOS 18 and below (and wherever UIKit still draws it): an opaque bar (B15).
+    private static func solidTabBar() {
+        let a = UITabBarAppearance()
+        a.configureWithOpaqueBackground()
+        a.backgroundColor = .systemBackground
+        UITabBar.appearance().standardAppearance = a
+        UITabBar.appearance().scrollEdgeAppearance = a
     }
 
     var body: some View {
@@ -23,13 +36,16 @@ struct RootView: View {
             Tab(L("Settings"), systemImage: "gearshape.fill", value: 3) { SettingsView().id(lang) }
         }
         .environment(\.locale, lang.locale)
+        // a solid tab bar (B15, owner: no transparency): the iOS 26 glass bar refracted the text scrolled under it
+        .toolbarBackground(.visible, for: .tabBar)
+        .toolbarBackground(Color(uiColor: .systemBackground), for: .tabBar)
         .onChange(of: model.settingsRequest) { _, _ in tab = 3 }          // "Adjust" on the monthly card
         // the Today island. NOT inside withAnimation: an animated selection change left the TabView half-switched
         // (owner bug 2026-10-03: the sleeping cat of Today stayed on screen over the Town; in the simulator the tab
         // did not switch at all)
         .onChange(of: model.townRequest) { _, _ in tab = 1 }
         .onChange(of: model.notificationsRequest) { _, _ in tab = 3 }     // the warning triangle on Today (no animation!)
-        .onAppear { model.settings.theme.apply() }
+        .onAppear { model.settings.theme.apply(); Self.solidTabBar() }
         .task {
             // dev aid (see AppModel.applyLaunchArguments): `-thenTab 1|island|abandon`
             let a = DevArgs.list

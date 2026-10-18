@@ -46,7 +46,7 @@ struct LevelUpCard: View {
         VStack(spacing: 14) {
             Text(verbatim: "🎉").font(.system(size: 54))
             Text(L("Level \(level) unlocked!")).font(.largeTitle.bold())
-            Text(GuideText.levels[safe: level - 1]?.what ?? "")
+            Text(GuideText.levelUnlocks[safe: level - 1] ?? "")
                 .multilineTextAlignment(.center).cardCaption()
             HStack(spacing: 6) {
                 ForEach(samples) { BuildingImage(id: $0.id, maxHeight: 90) }

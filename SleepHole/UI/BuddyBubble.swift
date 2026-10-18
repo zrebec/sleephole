@@ -16,8 +16,8 @@ struct BuddyBubble: View {
     @State private var usedForced = false
 
     /// Solid colours, no transparency (owner): white paper with dark ink by day, a deep blue paper with white ink at night.
-    private var paper: Color { scheme == .dark ? Color(red: 0.17, green: 0.19, blue: 0.30) : .white }
-    private var ink: Color { scheme == .dark ? .white : Color(red: 0.10, green: 0.11, blue: 0.18) }
+    private var paper: Color { SpeechBubbleShape.paper(scheme) }
+    private var ink: Color { SpeechBubbleShape.ink(scheme) }
 
     var body: some View {
         Group {
@@ -92,6 +92,9 @@ struct BuddyBubble: View {
 /// (the bubble is centred under the cat's head). The shape includes the tail's height at the top.
 struct SpeechBubbleShape: Shape {
     static let tailHeight: CGFloat = 16
+    /// Solid colours, no transparency (owner): white paper with dark ink by day, a deep blue paper with white ink at night.
+    static func paper(_ scheme: ColorScheme) -> Color { scheme == .dark ? Color(red: 0.17, green: 0.19, blue: 0.30) : .white }
+    static func ink(_ scheme: ColorScheme) -> Color { scheme == .dark ? .white : Color(red: 0.10, green: 0.11, blue: 0.18) }
     func path(in rect: CGRect) -> Path {
         let r: CGFloat = 20, t = rect.minY + Self.tailHeight
         let tipX = rect.midX - 6, baseL = rect.midX - 8, baseR = rect.midX + 14

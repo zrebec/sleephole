@@ -170,6 +170,64 @@ struct LockScreenTests {
         #expect(!r.raw.contains { $0.contains("darwin") })
     }
 
+    // MARK: - the return is counted at willEnterForeground (build 9a)
+
+    @Test func returnIsCountedAtWillEnterForegroundAndNotTwice() async {
+        let r = Rig()
+        r.monitor.didEnterBackground()
+        await waitUntil { r.events.contains(.leftApp) }
+        let before = Date()
+        r.active = true
+        r.monitor.willEnterForeground()
+        #expect(r.events.filter { $0 == .returned }.count == 1)
+        #expect(r.stamps.last(where: { $0.0 == .returned })!.1 >= before)
+        r.monitor.didBecomeActive()                                  // ~0.8 s later: nothing more
+        #expect(r.events.filter { $0 == .returned }.count == 1)
+    }
+
+    @Test func willEnterForegroundBeforeTheDecisionEmitsNothing() async {
+        let r = Rig()
+        r.monitor.backgroundDelay = .seconds(5)
+        r.monitor.didEnterBackground()
+        r.active = true
+        r.monitor.willEnterForeground()
+        r.monitor.didBecomeActive()
+        #expect(r.events.isEmpty)
+        #expect(r.raw.contains("(short background ignored)"))
+    }
+
+    @Test func didBecomeActiveAloneStillReturns() {
+        let r = Rig()
+        r.monitor.didBecomeActive()
+        #expect(r.events == [.returned])
+    }
+
+    @Test func aLockScreenTripEndsAtWillEnterForeground() async {
+        let r = Rig()
+        r.monitor.dataProtectionChanged(locked: true)
+        r.monitor.dataProtectionChanged(locked: false)
+        await waitUntil { r.events.contains(.usedLockScreen) }
+        r.active = true
+        r.monitor.willEnterForeground()
+        #expect(r.events.last == .returned)
+        r.monitor.didBecomeActive()
+        #expect(r.events.filter { $0 == .returned }.count == 1)
+    }
+
+    // MARK: - B26: nothing from the lock screen counts at or after the alarm
+
+    @Test func lockScreenUseAtOrAfterTheWakeTimeIsNotStored() {
+        let (m, _) = model(at: date(5, 22, 25))
+        m.refresh(); m.startNight()
+        let wake = date(6, 6, 30)
+        m.append(.usedLockScreen, at: wake + 5)
+        #expect(m.active?.log.events.contains { $0.kind == .usedLockScreen } == false)
+        #expect(m.nudgesSent == 0 && m.lastWarning == nil)
+        m.append(.usedLockScreen, at: wake - 120)                    // shortly before: still a trip
+        #expect(m.active?.log.events.contains { $0.kind == .usedLockScreen } == true)
+        #expect(m.nudgesSent == 1 && m.lastWarning == .lockScreen)
+    }
+
     // MARK: - AppModel: no warning after the wake time
 
     func date(_ d: Int, _ h: Int, _ m: Int = 0) -> Date {

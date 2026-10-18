@@ -74,6 +74,46 @@ struct BackupStatsTests {
         #expect(b2.townNameChangedAt == date(9, 12) && b2.schedulePromptMonth == b1.schedulePromptMonth)
     }
 
+    @Test func restoreClearsAMissingTownNameAndLanguage() throws {            // B12: the backup is the whole truth
+        let (empty, _) = model(store(), at: date(1, 12))
+        let data = try empty.makeBackup().encoded()                              // a backup with no name and no language
+        let file = try BackupFile.decode(data)
+        #expect(file.townName == nil && file.language == nil)
+
+        let (m, _) = model(store(), at: date(9, 12))
+        m.renameTown("Dreamland"); m.language = .sk
+        #expect(m.customTownName == "Dreamland" && m.makeBackup().language == AppLanguage.sk.rawValue)
+        try m.restore(file)
+        #expect(m.customTownName == nil && m.makeBackup().townName == nil && m.makeBackup().language == nil)
+        #expect(m.language == .fallback)                                         // no language stored → the app's default
+
+        var bad = file; bad.language = "xx"                                      // an unknown code is cleared too
+        m.language = .sk
+        try m.restore(bad)
+        #expect(m.makeBackup().language == nil)
+    }
+
+    @Test func aCountedTestNightStaysOutOfTheTimeStatistics() throws {          // B13
+        let (m, c) = model(store(), at: date(1, 12))
+        for d in 1...3 { night(m, c, day: d) }
+        let before = m.stats
+        #expect(before.averageStart != nil && before.regularityMinutes != nil)
+        c.now = date(4, 15)                                                      // a counted test night in the daytime
+        m.refresh()
+        m.nextTestNightCounts = true
+        m.startTestNight(minutes: 15, grace: 300); m.startNight()
+        c.now += 15 * 60; m.refresh()
+        #expect(m.confirm())
+        m.acknowledgeResult()
+        let rec = try #require(m.records().first { $0.id.hasPrefix("bonus-") })
+        #expect(rec.isTestNight && rec.startedAt != nil)
+        let after = m.stats
+        #expect(m.builtNights == 4 && after.builtNights == 4)                    // it still counts as a built night
+        #expect(after.averageStart == before.averageStart && after.averageWake == before.averageWake)
+        #expect(after.regularityMinutes == before.regularityMinutes)
+        #expect(after.series.first { $0.key == rec.window.key }?.startMinutes == nil)
+    }
+
     @Test func restoreIsRefusedDuringANightAndForNewerFiles() throws {
         let (m, clock) = model(store(), at: date(1, 22, 25))
         var b = m.makeBackup()

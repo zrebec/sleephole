@@ -4,6 +4,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @State private var showGuide = false
+    @State private var showRules = false
     @State private var notificationStatus = "…"
     /// The system alarm's consent (phase F6b); read when the screen opens and after every change.
     @State private var alarmConsent: SystemAlarmConsent = .unavailable
@@ -97,6 +98,7 @@ struct SettingsView: View {
                         }
                     }
                     Button(L("How it works")) { showGuide = true }
+                    Button(L("How SleepHole works")) { showRules = true }
                 } header: {
                     Text(L("Schedule"))
                 } footer: {
@@ -125,6 +127,20 @@ struct SettingsView: View {
                     let plan = model.changeWeekPlan
                     Text(L("A new change week opens (until \(Fmt.fullDate(plan.lastDay))). After it your schedule stays until \(Fmt.fullDate(plan.lockLastDay))."))
                 }
+
+                Section {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(L("Setup time"))
+                        Picker(L("Setup time"), selection: $model.settings.setupMinutes) {
+                            ForEach(AppSettings.setupMinuteOptions, id: \.self) { Text(L("\($0) min")).tag($0) }
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
+                    }
+                } footer: {
+                    Text(L("How long you have after “Go to sleep” to finish what you are doing, counted from your bedtime. After an early start the setup is always 15 min."))
+                }
+                .disabled(nightRunning)
 
                 Section {
                     Picker(L("Length"), selection: $model.settings.nap.minutes) {
@@ -341,14 +357,14 @@ struct SettingsView: View {
                 #endif
             }
             .onAppear {                                   // `-scrollTo sounds|sky` (screenshots)
-                let args = DevArgs.list
-                if args.contains("sounds") { proxy.scrollTo("sounds", anchor: UnitPoint(x: 0.5, y: -0.004)) }
-                if args.contains("health") { proxy.scrollTo("health", anchor: .top) }
-                if args.contains("icloud") { proxy.scrollTo("icloud", anchor: .top) }
-                if args.contains("schedule") { proxy.scrollTo("schedule", anchor: .top) }
-                if args.contains("sky") { proxy.scrollTo("sky", anchor: .top) }
-                if args.contains("about") { proxy.scrollTo("about", anchor: .top) }
-                if args.contains("notifications") { proxy.scrollTo("notifications", anchor: .top) }
+                let target = DevArgs.value(after: "-scrollTo")
+                if target == "sounds" { proxy.scrollTo("sounds", anchor: UnitPoint(x: 0.5, y: -0.004)) }
+                if target == "health" { proxy.scrollTo("health", anchor: .top) }
+                if target == "icloud" { proxy.scrollTo("icloud", anchor: .top) }
+                if target == "schedule" { proxy.scrollTo("schedule", anchor: .top) }
+                if target == "sky" { proxy.scrollTo("sky", anchor: .top) }
+                if target == "about" { proxy.scrollTo("about", anchor: .top) }
+                if target == "notifications" { proxy.scrollTo("notifications", anchor: .top) }
                 // opened by the warning triangle on Today: the tab switch just created this view
                 if model.takeNotificationsScroll() { scrollToNotifications(proxy) }
             }
@@ -368,6 +384,7 @@ struct SettingsView: View {
             #endif
             .renameTownAlert(isPresented: $renaming)
             .sheet(isPresented: $showGuide) { GuideView(replay: true) }
+            .sheet(isPresented: $showRules) { RulesView() }
             .task {
                 notificationStatus = await Notifications.statusText()
                 alarmConsent = model.systemAlarm.consent
@@ -589,7 +606,7 @@ struct SoundEffectsTestView: View {
             }
         }
         .onAppear {                                       // `-scrollTo cat` (screenshots)
-            if DevArgs.list.contains("cat") { proxy.scrollTo("cat", anchor: .center) }
+            if DevArgs.value(after: "-scrollTo") == "cat" { proxy.scrollTo("cat", anchor: .center) }
         }
         }
         .navigationTitle(L("Sound effects test"))

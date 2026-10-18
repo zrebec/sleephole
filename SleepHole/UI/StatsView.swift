@@ -25,7 +25,9 @@ struct StatsView: View {
                         CalendarGrid(days: s.calendar, selected: $selectedDay)
                         if let key = selectedDay {
                             Divider()
-                            NightDetail(key: key).id("detail")
+                            // the scroll target includes some air above the header, so after the auto-scroll the
+                            // navigation bar does not cover the header's first line (B15)
+                            NightDetail(key: key).padding(.top, Self.detailTopInset).id("detail")
                         } else {
                             Text(L("Tap a day to see how that night went.")).font(.footnote).cardCaption()
                         }
@@ -76,10 +78,10 @@ struct StatsView: View {
             }
             .skyBackground()
             .onAppear {                                   // `-scrollTo journal|achievements` (screenshots)
-                let args = DevArgs.list
-                for id in ["journal", "achievements", "chart", "average"] where args.contains(id) { proxy.scrollTo(id, anchor: .top) }
-                if args.contains("detail") {                // after `-selectLastNight` has opened the detail card
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { proxy.scrollTo("detail", anchor: UnitPoint(x: 0.5, y: -0.006)) }
+                let target = DevArgs.value(after: "-scrollTo")
+                for id in ["journal", "achievements", "chart", "average"] where target == id { proxy.scrollTo(id, anchor: .top) }
+                if target == "detail" {                // after `-selectLastNight` has opened the detail card
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { proxy.scrollTo("detail", anchor: .top) }
                 }
             }
             .onChange(of: selectedDay) { _, day in
@@ -98,6 +100,9 @@ struct StatsView: View {
     }
 
     /// `-selectChartNight K` → the night K places before the newest one is selected on the chart (screenshots).
+    /// Air above the night detail's header, inside its scroll target.
+    static let detailTopInset: CGFloat = 28
+
     static func launchChartNight(_ series: [NightPoint], args: [String] = DevArgs.list) -> NightKey? {
         guard let i = args.firstIndex(of: "-selectChartNight"), i + 1 < args.count, let back = Int(args[i + 1]),
               series.indices.contains(series.count - 1 - back) else { return nil }
