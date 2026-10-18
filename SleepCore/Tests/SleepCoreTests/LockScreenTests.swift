@@ -220,3 +220,54 @@ import Testing
         #expect(NightEvaluator.collapsedAt(l, rules: rules15) == at)
     }
 }
+
+/// Step 9j (owner 2026-10-18): a trip out of the app gets 3 s + 15 s for the nights that start now.
+@Suite struct TripToleranceTests {
+    var rules: SleepRules { SleepRules.forNewNights }
+    func sec(_ s: Double) -> Double { s / 60 }
+    func trip(_ kind: NightEventKind, _ seconds: Double, at minute: Double = 100) -> NightLog {
+        log([(0, .started), (minute, kind), (minute + sec(seconds), .returned), (wakeMinutes, .confirmed)])
+    }
+
+    @Test func newNightsHave15And15() {
+        #expect(rules.accidentalTolerance == 15)
+        #expect(rules.lockScreenTolerance == 15)
+        #expect(SleepRules.accidentalToleranceNow == 15)
+        #expect(SleepRules().accidentalTolerance == 10)
+    }
+
+    @Test func leftAppCollapsesAtExactly18() {
+        #expect(NightEvaluator.collapsedAt(trip(.leftApp, 17.9), rules: rules) == nil)
+        #expect(NightEvaluator.collapsedAt(trip(.leftApp, 18.1), rules: rules) == night.bedtime + 100 * 60 + 18)
+    }
+
+    @Test func defaultRulesKeep13() {
+        #expect(NightEvaluator.collapsedAt(trip(.leftApp, 12.9)) == nil)
+        #expect(NightEvaluator.collapsedAt(trip(.leftApp, 13.1)) == night.bedtime + 100 * 60 + 13)
+    }
+
+    @Test func closedByOwnerGets18() {
+        #expect(NightEvaluator.collapsedAt(trip(.closedByOwner, 17.9), rules: rules) == nil)
+        #expect(NightEvaluator.collapsedAt(trip(.closedByOwner, 18.1), rules: rules) == night.bedtime + 100 * 60 + 18)
+    }
+
+    @Test func twoFullTripsAreAllowedThenTheBudgetIsSpent() {
+        let two = log([(0, .started), (50, .leftApp), (50 + sec(17), .returned), (60, .leftApp), (60 + sec(17), .returned),
+                       (wakeMinutes, .confirmed)])
+        #expect(NightEvaluator.collapsedAt(two, rules: rules) == nil)
+        let at = night.bedtime + 70 * 60
+        let three = log([(0, .started), (50, .leftApp), (50 + sec(17), .returned), (60, .leftApp), (60 + sec(17), .returned),
+                         (70, .leftApp), (70 + sec(1), .returned), (wakeMinutes, .confirmed)])
+        #expect(NightEvaluator.allowance(three, rules: rules, at: at) == 0)
+        #expect(NightEvaluator.collapsedAt(three, rules: rules) == at)
+    }
+
+    @Test func lowAppearsWhenLessThan18IsLeft() {
+        func state(_ used: Double) -> AwayBudgetState? {
+            let l = log([(0, .started), (50, .leftApp), (50 + sec(used), .returned)])
+            return NightEvaluator.budgetState(l, rules: rules, at: night.bedtime + 60 * 60)
+        }
+        #expect(state(12) == .fine)         // 18 s left = one full trip
+        #expect(state(13) == .low)          // 17 s left
+    }
+}

@@ -81,9 +81,9 @@ struct ClosureTests {
         h.clock.now = date(6, 2, 0)
         h.model.appWillTerminate()
         #expect(h.model.active?.log.has(.closedByOwner) == true)
-        #expect(h.model.nudgesSent == 1 && h.model.lastNudgeSeconds == 10)            // "open it within 10 seconds"
+        #expect(h.model.nudgesSent == 1 && h.model.lastNudgeSeconds == 15)            // "open it within 10 seconds"
         #expect(h.model.active?.log.openClosure == date(6, 2, 0))
-        #expect(h.model.collapsedAt == date(6, 2, 0) + 13)                           // a trip that never ends collapses
+        #expect(h.model.collapsedAt == date(6, 2, 0) + 18)                           // a trip that never ends collapses
     }
 
     @Test func theEventIsInTheStoreTheMomentTheNoticeReturns() {
@@ -104,8 +104,8 @@ struct ClosureTests {
         }
         h.clock.now = date(6, 2, 0)
         h.model.appWillTerminate()
-        #expect(h.model.nudgesSent == 3 && h.model.lastNudgeSeconds == 10)           // a full trip: the full warning
-        #expect(h.model.collapsedAt == date(6, 2, 0) + 13)
+        #expect(h.model.nudgesSent == 3 && h.model.lastNudgeSeconds == 15)           // a full trip: the full warning
+        #expect(h.model.collapsedAt == date(6, 2, 0) + 18)
     }
 
     @Test func withTheBudgetUsedUpNoWarningIsSentAndTheClosureCollapsesAtOnce() {
@@ -260,7 +260,7 @@ struct ClosureTests {
         #expect(m.awayBudgetUse()?.used == 5)                            // …the 5 s after its end are charged
         let late = tonight()
         let l = closeAndReopen(late, closedAt: date(5, 22, 28), after: 7 * 60 + 20)  // back 20 s after its end
-        #expect(l.collapsedAt == date(5, 22, 35) + 13)
+        #expect(l.collapsedAt == date(5, 22, 35) + 18)
     }
 
     @Test func aClosureDuringAPauseTakesThePausePath() {
@@ -277,7 +277,7 @@ struct ClosureTests {
         let late = tonight()
         late.clock.now = date(6, 2, 0); late.model.startPause()
         let l = closeAndReopen(late, closedAt: date(6, 2, 1), after: 9 * 60 + 20)    // back at 2:10:20
-        #expect(l.collapsedAt == date(6, 2, 10) + 13)
+        #expect(l.collapsedAt == date(6, 2, 10) + 18)
     }
 
     @Test func leftThenClosedWarnsOnlyOnce() {
@@ -287,7 +287,7 @@ struct ClosureTests {
         let first = h.model!
         let m = closeAndReopen(h, closedAt: date(6, 2, 0, 2), after: 30)             // back 32 s after leaving
         #expect(first.nudgesSent == 1)                                   // the trip already carries its warning
-        #expect(m.collapsedAt == date(6, 2, 0) + 13)                     // counted from the leaving
+        #expect(m.collapsedAt == date(6, 2, 0) + 18)                     // counted from the leaving
     }
 
     @Test func closingAfterTheBuildingCollapsedDoesNotWarnAgain() {
@@ -343,7 +343,7 @@ struct ClosureTests {
     @Test func openingTheAppAfterAMinuteCollapsesTheBuilding() {
         let h = tonight()
         let m = closeAndReopen(h, closedAt: date(6, 2, 0), after: 60)
-        #expect(m.collapsedAt == date(6, 2, 0) + 13)                     // at the same moment a 60 s trip would
+        #expect(m.collapsedAt == date(6, 2, 0) + 18)                     // at the same moment a 60 s trip would
         h.clock.now = date(6, 6, 31); m.refresh()
         #expect(m.confirm(code: "1234"))
         #expect(m.shownResult?.outcome == .ruins)
@@ -363,7 +363,7 @@ struct ClosureTests {
         let h = tonight()
         let m = closeAndReopen(h, closedAt: date(6, 2, 0), after: 4 * 3600 + 45 * 60)    // 6:45, the alarm time
         m.refresh()
-        #expect(m.phase == .alarm && m.collapsedAt == date(6, 2, 0) + 13)
+        #expect(m.phase == .alarm && m.collapsedAt == date(6, 2, 0) + 18)
         #expect(m.confirm(code: "1234"))
         #expect(m.shownResult?.outcome == .ruins)
     }
@@ -388,11 +388,11 @@ struct ClosureTests {
         let closedAt = date(6, 2, 0)
         let m = closeAndReopen(h, closedAt: closedAt, after: 60, boot: date(5, 8, 0))    // the phone booted yesterday
         #expect(m.active!.log.has(.restartExcused) == false)
-        #expect(m.collapsedAt == closedAt + 13)
+        #expect(m.collapsedAt == closedAt + 18)
         // an unknown boot time (sysctl failed) counts for nothing either
         let h2 = tonight()
         let m2 = closeAndReopen(h2, closedAt: closedAt, after: 60, boot: nil)
-        #expect(m2.active!.log.has(.restartExcused) == false && m2.collapsedAt == closedAt + 13)
+        #expect(m2.active!.log.has(.restartExcused) == false && m2.collapsedAt == closedAt + 18)
     }
 
     @Test func aDeathWithoutTheNoticeStaysInTheOwnersFavour() {
@@ -441,7 +441,7 @@ struct ClosureTests {
         h.model.appWillTerminate()
         #expect(h.model.nudgesSent == 1 && h.model.active?.log.has(.closedByOwner) == true)
         let m = closeAndReopen(h, closedAt: date(8, 13, 41), after: 60)
-        #expect(m.collapsedAt == date(8, 13, 41) + 13)
+        #expect(m.collapsedAt == date(8, 13, 41) + 18)
         h.clock.now = date(8, 14, 1); m.refresh()
         m.confirm()
         #expect(m.shownResult?.outcome == .ruins)
@@ -504,7 +504,7 @@ struct ClosureTests {
         #expect(L("Open it within \(10) seconds so tonight's building goes on 🏗️") == "Otvor ju do 10 sekúnd, nech dnešná stavba pokračuje 🏗️")
         #expect(L("closed the app") == "zavretá appka")
         #expect(GuideText.ruleGroups[2].items.contains("Zatvorenie appky (potiahnutím nahor) sa počíta ako odchod."))
-        #expect(GuideText.ruleGroups[2].items[1].contains("10s") && GuideText.ruleGroups[2].items[1].contains("30s"))   // the rest of the rule is intact
+        #expect(GuideText.ruleGroups[2].items[1].contains("15s") && GuideText.ruleGroups[2].items[1].contains("30s"))   // the rest of the rule is intact
     }
 
     @Test func theClosedNoticesAreNightNoticesAndTimeSensitive() {

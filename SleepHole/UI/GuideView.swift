@@ -14,7 +14,7 @@ enum Plural {
 }
 
 /// First-run guide: nine swipe pages the sleep buddy narrates (owner 2026-10-18, build 9c).
-/// `replay` = opened again from Settings (the times are then changed in Settings, the guide does not finish anything).
+/// `replay` = opened again from Settings (the times are then edited under the change-week rules, the guide does not finish anything).
 struct GuideView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -32,10 +32,13 @@ struct GuideView: View {
         let n = a.firstIndex(of: "-guidePage").flatMap { a.indices.contains($0 + 1) ? Int(a[$0 + 1]) : nil } ?? 1
         _page = State(initialValue: min(max(n, 1), GuideText.pageCount) - 1)
         _showRules = State(initialValue: a.contains("-guideRules"))
+        #if DEBUG
+        if a.contains("-guideReplay") { self.replay = true }      // screenshots: the guide as opened from Settings
+        #endif
     }
 
     private struct PickKey: Hashable {
-        var width: CGFloat, room: CGFloat, language: AppLanguage, replay: Bool, setup: TimeInterval
+        var width: CGFloat, room: CGFloat, language: AppLanguage, replay: Bool, setup: TimeInterval, locked: Bool
     }
 
     var body: some View {
@@ -43,12 +46,15 @@ struct GuideView: View {
             GeometryReader { proxy in
                 let room = proxy.size.height - GuideLayout.dotsHeight
                 let key = PickKey(width: proxy.size.width, room: room, language: model.language, replay: replay,
-                                  setup: model.settings.setupGrace)
+                                  setup: model.settings.setupGrace, locked: !SchedulePolicy.allowsChange(model.scheduleState))
                 TabView(selection: $page) {
                     ForEach(0..<Self.pageCount, id: \.self) { i in
                         ScrollView {
                             GuidePageView(index: i, replay: replay, style: style ?? .smallest,
                                           notificationsAllowed: $notificationsAllowed, showRules: $showRules)
+                                // shorter pages sit in the vertical middle of the room above the dots (9k);
+                                // room + dots = the scroll view's height, so a page that fits never scrolls
+                                .frame(minHeight: max(room, 0))
                                 .padding(.bottom, GuideLayout.dotsHeight)
                         }
                         .scrollBounceBehavior(.basedOnSize)
@@ -233,11 +239,12 @@ struct GuidePageView: View {
         case 1:
             @Bindable var model = model
             VStack(spacing: 6) {
-                // first run: saved at once (the guide is always free); replayed from Settings: change it there
-                ScheduleFields(schedule: Binding(get: { model.settings.schedule }, set: { model.applySchedule($0) }))
-                    .disabled(replay)
                 if replay {
-                    Text(L("You change your schedule in Settings.")).font(.footnote).foregroundStyle(.secondary)
+                    // opened again from Settings: the same editor and rules as Settings → Schedule
+                    ScheduleEditor(compact: true)
+                } else {
+                    // first run: saved at once (the guide is always free)
+                    ScheduleFields(schedule: Binding(get: { model.settings.schedule }, set: { model.applySchedule($0) }))
                 }
             }
             .padding(12)

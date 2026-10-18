@@ -164,7 +164,7 @@ struct AppModelTests {
     @Test func collapseIsVisibleLive() {
         let h = harness(at: date(5, 22, 25)); h.model.refresh(); h.model.startNight()
         h.clock.now = date(5, 23); h.model.append(.leftApp)
-        #expect(h.model.collapsedAt == date(5, 23) + 13)       // ~3 s to notice + 10 s to return
+        #expect(h.model.collapsedAt == date(5, 23) + 18)       // ~3 s to notice + 15 s to return (9j)
     }
 
     @Test func lateConfirmIsUnfinishedAndMissingConfirmIsRuins() {
@@ -564,14 +564,14 @@ struct AppModelTests {
         h.clock.now = date(5, 22, 25); h.model.refresh(); h.model.startNight()
         for i in 0..<2 {                                                   // 2 × 12 s = 24 s of 30 s
             h.clock.now = date(6, 1, i); h.model.append(.leftApp)
-            #expect(h.model.lastNudgeSeconds == 10)
+            #expect(h.model.lastNudgeSeconds == 15)
             h.clock.now += 12; h.model.append(.returned)
         }
         #expect(h.model.nudgesSent == 2 && h.model.collapsedAt == nil)
         #expect(h.model.awayBudgetUse()?.used == 24 && h.model.awayBudgetUse()?.budget == 30)
         #expect(h.model.awayBudgetState(at: date(6, 1, 9)) == .low)        // 6 s left: less than one full trip
         h.clock.now = date(6, 1, 10); h.model.append(.leftApp)             // budget left → a full trip, the full warning
-        #expect(h.model.nudgesSent == 3 && h.model.lastNudgeSeconds == 10)
+        #expect(h.model.nudgesSent == 3 && h.model.lastNudgeSeconds == 15)
         h.clock.now += 8; h.model.append(.returned)
         #expect(h.model.collapsedAt == nil && h.model.awayBudgetUse()?.used == 32)
         #expect(h.model.awayBudgetState() == .spent)
@@ -853,6 +853,38 @@ extension AppModelTests {
         json.removeValue(forKey: "lockScreenTolerance")
         let old = NightRecord(backup: try d.decode(BackupFile.Night.self, from: try JSONSerialization.data(withJSONObject: json)))
         #expect(old.lockScreenTolerance == nil && old.rules.lockScreenTolerance == 10)
+    }
+
+    // MARK: a trip out of the app gets 3s + 15s (build 9j, owner 2026-10-18)
+
+    @Test func aNewNightStoresTheTripToleranceAndAnOldOneKeeps13Seconds() {
+        let h = harness(at: date(1, 12))
+        h.clock.now = date(1, 22, 25); h.model.refresh(); h.model.startNight()
+        #expect(h.model.active?.accidentalTolerance == 15)
+        #expect(h.model.active?.rules.accidentalTolerance == 15)
+        h.model.active?.accidentalTolerance = nil                   // a night stored before build 9j
+        #expect(h.model.active?.rules.accidentalTolerance == 10)
+        #expect(h.model.nextNightRules.accidentalTolerance == 15 && h.model.nextNightRules.lockScreenTolerance == 15)
+    }
+
+    @Test func aNewNapStoresBothTolerances() {
+        let h = harness(at: date(5, 13, 30))
+        h.model.startNap()
+        #expect(h.model.active?.isNap == true)
+        #expect(h.model.active?.accidentalTolerance == 15 && h.model.active?.lockScreenTolerance == 15)
+    }
+
+    @Test func theBackupKeepsTheTripToleranceAndAnOldFileLoadsAsNil() throws {
+        let r = NightRecord(window: NightWindow(key: NightKey(date: date(6, 6), calendar: .current), bedtime: date(5, 22, 30),
+                                                wake: date(6, 6, 30)),
+                            buildingId: "x", isDebug: false, setupGrace: 300, accidentalTolerance: 15)
+        let e = JSONEncoder(); e.dateEncodingStrategy = .iso8601
+        let d = JSONDecoder(); d.dateDecodingStrategy = .iso8601
+        #expect(NightRecord(backup: try d.decode(BackupFile.Night.self, from: try e.encode(r.backup))).accidentalTolerance == 15)
+        var json = try JSONSerialization.jsonObject(with: try e.encode(r.backup)) as! [String: Any]
+        json.removeValue(forKey: "accidentalTolerance")
+        let old = NightRecord(backup: try d.decode(BackupFile.Night.self, from: try JSONSerialization.data(withJSONObject: json)))
+        #expect(old.accidentalTolerance == nil && old.rules.accidentalTolerance == 10)
     }
 
     // MARK: the setup time is a setting (build 9b, owner 2026-10-15)

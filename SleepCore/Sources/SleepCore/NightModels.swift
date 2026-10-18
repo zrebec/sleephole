@@ -137,11 +137,17 @@ public struct NightResult: Codable, Equatable, Sendable {
     /// (`calmHoursRule == nil`): it earns no calm-hour coins.
     public let calmHours: Int?
     public let calmHoursTotal: Int?
+    /// End of sleep from Apple Health – the chart's getting-up mark when there is no confirmation (9l).
+    public let sleepEndedAt: Date?
+    /// A counted test night (`bonus-…`): its clock times are artificial (a daytime start), so the time statistics
+    /// and the chart skip them (B13). nil / false = a real night.
+    public let isTestNight: Bool?
 
     public init(key: NightKey, outcome: Outcome, buildingId: String?, awaySeconds: TimeInterval = 0,
                 startedAt: Date? = nil, confirmedAt: Date? = nil, pauses: Int? = nil, bedtime: Date? = nil,
                 fellAsleepAt: Date? = nil, asleepSeconds: TimeInterval? = nil,
-                calmHours: Int? = nil, calmHoursTotal: Int? = nil) {
+                calmHours: Int? = nil, calmHoursTotal: Int? = nil,
+                sleepEndedAt: Date? = nil, isTestNight: Bool? = nil) {
         self.key = key
         self.outcome = outcome
         self.buildingId = buildingId
@@ -154,5 +160,13 @@ public struct NightResult: Codable, Equatable, Sendable {
         self.asleepSeconds = asleepSeconds
         self.calmHours = calmHours
         self.calmHoursTotal = calmHoursTotal
+        self.sleepEndedAt = sleepEndedAt
+        self.isTestNight = isTestNight
+    }
+
+    /// The same night without its clock times (what the time statistics see of a counted test night).
+    public var withoutClockTimes: NightResult {
+        NightResult(key: key, outcome: outcome, buildingId: buildingId, awaySeconds: awaySeconds, pauses: pauses,
+                    calmHours: calmHours, calmHoursTotal: calmHoursTotal, isTestNight: isTestNight)
     }
 }

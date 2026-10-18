@@ -111,7 +111,51 @@ struct BackupStatsTests {
         #expect(m.builtNights == 4 && after.builtNights == 4)                    // it still counts as a built night
         #expect(after.averageStart == before.averageStart && after.averageWake == before.averageWake)
         #expect(after.regularityMinutes == before.regularityMinutes)
-        #expect(after.series.first { $0.key == rec.window.key }?.startMinutes == nil)
+        // the test night's OWN result has no times (a real night with the same key keeps its own – B34)
+        #expect(m.statsInput().filter { $0.isTestNight == true }.allSatisfy { $0.startedAt == nil && $0.confirmedAt == nil })
+    }
+
+    @Test func aDeveloperQuickNightDoesNotStripARealNightsTimes() throws {       // B34 (a)
+        let (m, c) = model(store(), at: date(1, 12))
+        for d in 1...3 { night(m, c, day: d) }
+        let real = try #require(m.realResults().last)
+        let key = real.window.key
+        c.now = date(key.day, 15); m.refresh()                                   // a quick night on that very morning's date
+        m.startTestNight(minutes: 15, grace: 300); m.startNight()
+        let debug = try #require(m.records().first { $0.isDebug })
+        #expect(debug.keyString == real.keyString)                               // the same key as the real night
+        let p = try #require(m.stats.series.first { $0.key == key })
+        #expect(p.startMinutes != nil && p.upMinutes != nil)
+        #expect(m.stats.averageStart != nil && m.stats.averageWake != nil)
+    }
+
+    @Test func aCountedTestNightAndARealNightWithTheSameKeyAreToldApart() throws {   // B13 + B34
+        let (m, c) = model(store(), at: date(1, 12))
+        for d in 1...2 { night(m, c, day: d) }
+        let real = try #require(m.realResults().last)
+        c.now = date(real.window.key.day, 15); m.refresh()
+        m.nextTestNightCounts = true
+        m.startTestNight(minutes: 15, grace: 300); m.startNight()
+        c.now += 15 * 60; m.refresh()
+        #expect(m.confirm())
+        m.acknowledgeResult()
+        let results = m.statsInput().filter { $0.key == real.window.key }
+        #expect(results.count == 2)
+        #expect(results.filter { $0.startedAt != nil }.count == 1)               // the real one keeps its times
+        #expect(results.filter { $0.isTestNight == true && $0.startedAt == nil }.count == 1)
+    }
+
+    @Test func aJokerProtectedStartedNightShowsItsTimes() throws {                // B34 (b)
+        let (m, c) = model(store(), at: date(1, 12))
+        night(m, c, day: 1)
+        night(m, c, day: 2, confirmAfter: 3 * 3600)                              // ignored the alarm → ruins
+        night(m, c, day: 3)
+        c.now = date(5, 12); m.refresh()
+        let ruined = try #require(m.realResults().first { $0.outcome == .ruins })
+        let p = try #require(m.stats.series.first { $0.key == ruined.window.key })
+        #expect(m.coreResults().first { $0.key == ruined.window.key }?.outcome == .excused)
+        #expect(p.startMinutes != nil && p.outcome == .excused)
+        #expect(m.stats.builtNights == 2)
     }
 
     @Test func restoreIsRefusedDuringANightAndForNewerFiles() throws {

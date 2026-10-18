@@ -68,8 +68,14 @@ public enum Jokers {
         let good = Set(results.filter { $0.outcome.isBuildNight }.map(\.key))
         func isBad(_ key: NightKey) -> Bool { !good.contains(key) && !excused.contains(key) }
         func excuse(_ key: NightKey) {
+            // a night that WAS started keeps its clock times (it shows on the chart, counts in the time averages);
+            // nothing else of it survives – no building, coins, calm hours, pauses (9l)
+            let started = out.last { $0.key == key && $0.startedAt != nil && $0.isTestNight != true }
             out.removeAll { $0.key == key }
-            out.append(NightResult(key: key, outcome: .excused, buildingId: nil))
+            out.append(NightResult(key: key, outcome: .excused, buildingId: nil,
+                                   startedAt: started?.startedAt, confirmedAt: started?.confirmedAt,
+                                   bedtime: started?.bedtime, fellAsleepAt: started?.fellAsleepAt,
+                                   asleepSeconds: started?.asleepSeconds, sleepEndedAt: started?.sleepEndedAt))
             excused.insert(key)
         }
         func outcome(_ key: NightKey) -> Outcome? {

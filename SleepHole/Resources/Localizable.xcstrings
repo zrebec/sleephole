@@ -3529,54 +3529,6 @@
         }
       }
     },
-    "When you go to bed and fall asleep": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "When you go to bed and fall asleep"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kedy si líhaš a kedy zaspíš"
-          }
-        }
-      }
-    },
-    "Each bar runs from the build start to falling asleep – the shorter, the sooner you slept. The dashed line is your bedtime.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Each bar runs from the build start to falling asleep – the shorter, the sooner you slept. The dashed line is your bedtime."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Každý stĺpec vedie od začiatku stavby po zaspatie – čím je kratší, tým skôr prišiel spánok. Prerušovaná čiara je tvoja večierka."
-          }
-        }
-      }
-    },
-    "Dots = build start, line = bedtime.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dots = build start, line = bedtime."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Body = začiatok stavby, čiara = večierka."
-          }
-        }
-      }
-    },
     "Drops tapping on the tent, now and then a big drip from a tree.": {
       "localizations": {
         "en": {
@@ -9005,22 +8957,6 @@
         }
       }
     },
-    "You change your schedule in Settings.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You change your schedule in Settings."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rozvrh zmeníš v Nastaveniach."
-          }
-        }
-      }
-    },
     "You confirmed early – the alarm stays on in case you fall asleep again.": {
       "localizations": {
         "en": {
@@ -12645,6 +12581,182 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "%@ · start %@ · asleep %@ · after %lld min · up %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · start %@ · asleep %@ · after %lld min · up %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · začiatok %2$@ · spánok prišiel %3$@ · po %4$lld min · vstal %5$@"
+          }
+        }
+      }
+    },
+    "%@ · start %@ · up %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · start %@ · up %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · začiatok %2$@ · vstal %3$@"
+          }
+        }
+      }
+    },
+    "When you go to bed, fall asleep and get up": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When you go to bed, fall asleep and get up"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kedy ideš spať, zaspávaš a vstávaš"
+          }
+        }
+      }
+    },
+    "Your first change opens a 7-day change week.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your first change opens a 7-day change week."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prvá zmena otvorí 7-dňový týždeň na zmeny."
+          }
+        }
+      }
+    },
+    "🔧 Change week: %@ left. Change freely.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔧 Change week: %@ left. Change freely."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔧 Týždeň na zmeny: ešte %@. Meň, ako chceš."
+          }
+        }
+      }
+    },
+    "🔒 Set until %@. Free change from %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Set until %@. Free change from %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Platí do %@. Zmena zadarmo od %@."
+          }
+        }
+      }
+    },
+    "The start dot has the night's colour from the calendar. The indigo part runs to falling asleep – the shorter, the sooner you slept. Blue is your sleep until you got up (your confirmation, else Apple Health). The dashed lines are your bedtime and wake-up.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The start dot has the night's colour from the calendar. The indigo part runs to falling asleep – the shorter, the sooner you slept. Blue is your sleep until you got up (your confirmation, else Apple Health). The dashed lines are your bedtime and wake-up."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodka začiatku má farbu noci z kalendára. Indigová časť vedie po zaspatie – čím je kratšia, tým skôr prišiel spánok. Modrá je tvoj spánok až po vstávanie (tvoje potvrdenie, inak Apple Zdravie). Prerušované čiary sú tvoja večierka a čas vstávania."
+          }
+        }
+      }
+    },
+    "The start dot has the night's colour from the calendar. The line runs from the start to getting up and fades towards the morning. The dashed lines are your bedtime and wake-up.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The start dot has the night's colour from the calendar. The line runs from the start to getting up and fades towards the morning. The dashed lines are your bedtime and wake-up."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodka začiatku má farbu noci z kalendára. Čiara vedie od začiatku po vstávanie a k ránu bledne. Prerušované čiary sú tvoja večierka a čas vstávania."
+          }
+        }
+      }
+    },
+    "Falling asleep": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Falling asleep"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zaspávanie"
+          }
+        }
+      }
+    },
+    "Sleep": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sleep"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spánok"
+          }
+        }
+      }
+    },
+    "Without Apple Health": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Without Apple Health"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez Apple Zdravia"
           }
         }
       }

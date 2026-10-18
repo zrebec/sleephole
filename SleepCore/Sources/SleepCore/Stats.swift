@@ -35,8 +35,12 @@ public struct NightPoint: Equatable, Sendable {
     public let wakeMinutes: Double?      // minutes after 00:00
     public let asleepMinutes: Double?    // fell asleep, on the same axis as `startMinutes` (minutes after 12:00)
     public let outcome: Outcome
+    /// Getting up on the chart's axis (minutes after 12:00): the confirmation, else the end of sleep (Apple Health).
+    public let upMinutes: Double?
 
-    public init(key: NightKey, startMinutes: Double?, wakeMinutes: Double?, asleepMinutes: Double?, outcome: Outcome) {
+    public init(key: NightKey, startMinutes: Double?, wakeMinutes: Double?, asleepMinutes: Double?, outcome: Outcome,
+                upMinutes: Double? = nil) {
+        self.upMinutes = upMinutes
         self.key = key
         self.startMinutes = startMinutes
         self.wakeMinutes = wakeMinutes
@@ -70,7 +74,8 @@ public enum Stats {
                        startMinutes: r.startedAt.map { (minutesOfDay($0, calendar) + 720).truncatingRemainder(dividingBy: 1440) },
                        wakeMinutes: r.confirmedAt.map { minutesOfDay($0, calendar) },
                        asleepMinutes: r.fellAsleepAt.map { (minutesOfDay($0, calendar) + 720).truncatingRemainder(dividingBy: 1440) },
-                       outcome: r.outcome)
+                       outcome: r.outcome,
+                       upMinutes: gettingUp(r).map { (minutesOfDay($0, calendar) + 720).truncatingRemainder(dividingBy: 1440) })
         }
         return StatsSummary(
             currentStreak: Progression.currentStreak(sorted, lastNight: last, calendar: calendar, breaks: breaks),
@@ -87,6 +92,9 @@ public enum Stats {
             calendar: days,
             series: Array(series))
     }
+
+    /// When the night ended for the chart: the confirmation (shake / code), else the end of sleep from Apple Health.
+    public static func gettingUp(_ r: NightResult) -> Date? { r.confirmedAt ?? r.sleepEndedAt }
 
     /// How regular the build starts are: the standard deviation, in minutes, of "start − that night's bedtime"
     /// (2026-10-03: moving the bedtime by half an hour looked like ±13 min although every start was

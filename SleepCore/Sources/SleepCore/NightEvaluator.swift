@@ -13,6 +13,8 @@ public struct SleepRules: Codable, Equatable, Sendable {
     public var earlySetup: TimeInterval = 15 * 60
     /// After the grace period ANY user-initiated background collapses the building (like SleepTown),
     /// except for this tiny tolerance for an accidental swipe.
+    /// The default 10 is the rule of every night stored before build 9j; the app starts new nights and naps
+    /// with 15 (`accidentalToleranceNow`, owner 2026-10-18) – see `SleepRules.forNewNights`.
     public var accidentalTolerance: TimeInterval = 10
     /// Detecting "left the app" takes ~3 s (lock signals arrive late); the owner gets the full
     /// `accidentalTolerance` AFTER the warning notification (owner, 2026-09-29).
@@ -31,13 +33,21 @@ public struct SleepRules: Codable, Equatable, Sendable {
     /// trip stays in the journal but is no away time. A `.leftApp` inside it is a normal counted trip from then on.
     public var lockScreenCollapses = true
     /// The seconds of warning a lock-screen trip (`.usedLockScreen`, Strict mode) gets after the `noticeDelay`
-    /// (owner 2026-10-18, B33: the system alarm sounds ~2.5 s late, so 10 s were not enough). The default 10 equals
-    /// `accidentalTolerance` = the behaviour of every night stored before; the app starts new nights with 15
-    /// (`SleepRules.lockScreenToleranceNow`). A trip out of the app (`.leftApp`, `.closedByOwner`) keeps
-    /// `accidentalTolerance`.
+    /// (owner 2026-10-18, B33: the system alarm sounds ~2.5 s late, so 10 s were not enough). The default 10 =
+    /// every night stored before; new nights get 15 (`SleepRules.lockScreenToleranceNow`). A trip out of the app
+    /// (`.leftApp`, `.closedByOwner`) uses `accidentalTolerance` (also 15 for new nights, build 9j).
     public var lockScreenTolerance: TimeInterval = 10
     /// The lock-screen tolerance of the nights that start now.
     public static let lockScreenToleranceNow: TimeInterval = 15
+    /// The tolerance of a trip out of the app for the nights that start now (owner 2026-10-18, build 9j).
+    public static let accidentalToleranceNow: TimeInterval = 15
+    /// The rules a night or nap started now gets (before its own setup time).
+    public static var forNewNights: SleepRules {
+        var r = SleepRules()
+        r.accidentalTolerance = accidentalToleranceNow
+        r.lockScreenTolerance = lockScreenToleranceNow
+        return r
+    }
     public init() {}
 }
 

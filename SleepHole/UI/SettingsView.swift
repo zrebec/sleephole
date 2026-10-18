@@ -14,14 +14,6 @@ struct SettingsView: View {
     @State private var pendingRestore: BackupFile?
     @State private var backupMessage: String?
     @State private var renaming = false
-    /// The schedule being edited (nil = not edited); saved only with "Save" (owner 2026-09-30 limits).
-    @State private var scheduleDraft: Schedule?
-    #if DEBUG
-    @State private var confirmSchedule = DevArgs.list.contains("-openScheduleDialog")   // screenshots of the first-change dialog
-    #else
-    @State private var confirmSchedule = false
-    #endif
-    @State private var confirmUnlock = false
     #if DEBUG
     /// Dev aid: `-openSoundTest` opens Developer → Sound effects test at once (screenshots; `-scrollTo cat` shows the cat).
     @State private var soundTest = DevArgs.list.contains("-openSoundTest")
@@ -84,19 +76,7 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    scheduleStatus.id("schedule")
-                    ScheduleFields(schedule: Binding(get: { scheduleDraft ?? model.editableSchedule },
-                                                     set: { scheduleDraft = $0 }),
-                                   timesLocked: !SchedulePolicy.allowsChange(model.scheduleState))
-                    if let draft = scheduleDraft, draft != model.editableSchedule {
-                        HStack {
-                            Button(L("Cancel")) { scheduleDraft = nil }
-                                .buttonStyle(.borderless)
-                            Spacer()
-                            Button(L("Save")) { saveSchedule(draft) }
-                                .buttonStyle(.borderedProminent)
-                        }
-                    }
+                    ScheduleEditor()
                     Button(L("Guide")) { showGuide = true }
                     Button(L("All rules")) { showRules = true }
                 } header: {
@@ -107,26 +87,6 @@ struct SettingsView: View {
                     }
                 }
                 .disabled(nightRunning)
-                // An alert (not a dialog): modal, both buttons always visible, no tap outside dismisses it.
-                .alert(L("Start a change week?"), isPresented: $confirmSchedule) {
-                    Button(L("Confirm")) {
-                        if let draft = scheduleDraft { model.applySchedule(draft) }
-                        scheduleDraft = nil
-                    }
-                    // Same undo as the section's "Cancel": drop the draft, the pickers show the stored times again.
-                    Button(L("Cancel"), role: .cancel) { scheduleDraft = nil }
-                } message: {
-                    let plan = model.changeWeekPlan
-                    Text(L("For 7 days (until \(Fmt.fullDate(plan.lastDay))) you can try different times. After that your schedule stays until \(Fmt.fullDate(plan.lockLastDay)) – changing it sooner costs 2,000 🪙."))
-                }
-                .confirmationDialog(L("Unlock your schedule for 2,000 🪙?"), isPresented: $confirmUnlock,
-                                    titleVisibility: .visible) {
-                    Button(L("Unlock now · 2,000 🪙")) { model.unlockSchedule() }
-                    Button(L("Cancel"), role: .cancel) {}
-                } message: {
-                    let plan = model.changeWeekPlan
-                    Text(L("A new change week opens (until \(Fmt.fullDate(plan.lastDay))). After it your schedule stays until \(Fmt.fullDate(plan.lockLastDay))."))
-                }
 
                 Section {
                     VStack(alignment: .leading, spacing: 6) {
@@ -427,28 +387,6 @@ struct SettingsView: View {
 }
 
 extension SettingsView {
-    /// What state the schedule is in (change week, owner 2026-10-15) and, while it is locked, the paid unlock.
-    @ViewBuilder var scheduleStatus: some View {
-        switch model.scheduleState {
-        case .open:
-            Text(L("You can change your schedule. The first change opens a change week (7 days); after it your schedule stays the same for a month."))
-                .font(.footnote).foregroundStyle(.secondary)
-        case .changeWeek(let lastDay):
-            Text(L("🔧 Change week: \(Self.daysLeft(until: lastDay, now: model.clock.now)) left (until \(Fmt.fullDate(lastDay))). Change it as often as you like."))
-                .font(.footnote)
-        case .locked(let lastDay, let freeFrom):
-            Text(L("🔒 Your schedule is set until \(Fmt.fullDate(lastDay)). A free change week again from \(Fmt.fullDate(freeFrom))."))
-                .font(.footnote)
-            let missing = max(0, SchedulePolicy.unlockPrice - model.coins)
-            Button(L("Unlock now · 2,000 🪙")) { confirmUnlock = true }
-                .disabled(missing > 0)
-            if missing > 0 {
-                Text(L("You have \(model.coins) 🪙 – \(missing) more needed."))
-                    .font(.footnote).foregroundStyle(.secondary)
-            }
-        }
-    }
-
     /// Whole days from today up to and including `lastDay` ("3 days", "1 day").
     static func daysLeft(until lastDay: NightKey, now: Date, calendar: Calendar = .current) -> String {
         let today = NightKey(date: now, calendar: calendar)
@@ -456,18 +394,6 @@ extension SettingsView {
         var k = today
         while k < lastDay && n < 40 { k = k.adding(days: 1, calendar: calendar); n += 1 }
         return Plural.days(n + 1)
-    }
-
-    /// A new bedtime / wake in `open` asks first (it opens a change week); in a change week it is saved at once.
-    func saveSchedule(_ draft: Schedule) {
-        let old = model.editableSchedule
-        let timesChanged = draft.bedtime != old.bedtime || draft.wake != old.wake
-        if timesChanged, model.scheduleState == .open {
-            confirmSchedule = true
-        } else {
-            model.applySchedule(draft)
-            scheduleDraft = nil
-        }
     }
 
     func napTime(_ path: WritableKeyPath<NapPlan, TimeOfDay>) -> Binding<Date> {

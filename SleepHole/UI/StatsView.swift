@@ -49,8 +49,8 @@ struct StatsView: View {
                         regularity(s.regularityMinutes)
                     }
                     .id("average")
-                    card(showsSleep(s) ? L("When you go to bed and fall asleep") : L("When you start and get up")) {
-                        NightChart(points: s.series, bedtime: model.settings.schedule, showsSleep: showsSleep(s),
+                    card(showsSleep(s) ? L("When you go to bed, fall asleep and get up") : L("When you start and get up")) {
+                        NightChart(points: Self.chartSeries(s.series), bedtime: model.settings.schedule, showsSleep: showsSleep(s),
                                    initialSelection: Self.launchChartNight(s.series)) { key in
                             if selectedDay == key { withAnimation { proxy.scrollTo("detail", anchor: .top) } }
                             else { selectedDay = key }
@@ -109,6 +109,11 @@ struct StatsView: View {
         return series[series.count - 1 - back].key
     }
 
+    /// `-hideSleepFor N` (Debug) → the N newest nights lose their Health values on the chart.
+    static func chartSeries(_ series: [NightPoint], args: [String] = DevArgs.list) -> [NightPoint] {
+        NightChart.hidingSleep(series, count: DevArgs.value(after: "-hideSleepFor", in: args).flatMap(Int.init) ?? 0)
+    }
+
     static func showsSleep(_ s: StatsSummary, on: Bool) -> Bool {
         on && s.series.contains { $0.asleepMinutes != nil }
     }
@@ -145,12 +150,23 @@ struct StatsView: View {
         .frame(maxWidth: .infinity)
     }
 
+    enum RegularityLevel: Equatable { case excellent, good, varies }
+
+    /// The word follows the number the user sees: the level comes from the rounded minutes (≤15 excellent, ≤30 good).
+    static func regularityLevel(_ minutes: Double) -> RegularityLevel {
+        let r = Int(minutes.rounded())
+        return r <= 15 ? .excellent : r <= 30 ? .good : .varies
+    }
+
     @ViewBuilder
     private func regularity(_ minutes: Double?) -> some View {
         if let m = minutes {
-            let (text, color): (String, Color) = m <= 15 ? (L("excellent 🌟"), Color.readableGreen) : m <= 30 ? (L("good 👍"), Color.readableYellow)
-                : (L("varies – try to start at the same time 🌙"), Color.readableOrange)
-            Label(L("Regularity: ±\(Int(m.rounded())) min – \(text)"), systemImage: "metronome.fill")
+            let (text, color): (String, Color) = switch Self.regularityLevel(m) {
+            case .excellent: (L("excellent 🌟"), Color.readableGreen)
+            case .good: (L("good 👍"), Color.readableYellow)
+            case .varies: (L("varies – try to start at the same time 🌙"), Color.readableOrange)
+            }
+            Label(L("Regularity: ±\(Int(m.rounded())) min – \(text)"), systemImage: "clock.fill")
                 .font(.subheadline).foregroundStyle(color)
         } else {
             Text(L("You'll see your regularity after 2 nights.")).font(.subheadline).cardCaption()
@@ -241,6 +257,8 @@ struct NightChart: View {
         _selected = State(initialValue: initialSelection)
     }
 
+    @Environment(\.colorScheme) private var scheme
+
     private static let barColor = Color(red: 0.40, green: 0.47, blue: 0.82)         // solid, reads on light and dark skies
 
     // MARK: pure rules (unit-tested)
@@ -262,10 +280,85 @@ struct NightChart: View {
         guard let p else { return L("Tap a night to see it.") }
         let date = Fmt.dayMonth(p.key)
         let start = p.startMinutes.map(clock(afterNoon:)) ?? "–"
+        let up = p.upMinutes.map(clock(afterNoon:))
         if showsSleep, let asleep = p.asleepMinutes {
-            return L("\(date) · start \(start) · asleep \(clock(afterNoon: asleep)) · after \(NightDetail.minutesToSleep(startMinutes: p.startMinutes, asleepMinutes: asleep)) min")
+            let after = NightDetail.minutesToSleep(startMinutes: p.startMinutes, asleepMinutes: asleep)
+            if let up {
+                return L("\(date) · start \(start) · asleep \(clock(afterNoon: asleep)) · after \(after) min · up \(up)")
+            }
+            return L("\(date) · start \(start) · asleep \(clock(afterNoon: asleep)) · after \(after) min")
         }
+        if let up { return L("\(date) · start \(start) · up \(up)") }
         return L("\(date) · start \(start)")
+    }
+
+    /// The y axis (minutes after 12:00) in whole 2 h steps: from the earliest to the latest mark (bedtime and wake
+    /// time included), at least `minSpan` long, so the evening and the morning both fit.
+    static func yDomain(points: [NightPoint], bed: Double, wake: Double, minSpan: Double = 480) -> ClosedRange<Double> {
+        let values = points.flatMap { [$0.startMinutes, $0.asleepMinutes, $0.upMinutes] }.compactMap { $0 } + [bed, wake]
+        var lo = ((values.min() ?? bed) / 120).rounded(.down) * 120
+        var hi = ((values.max() ?? wake) / 120).rounded(.up) * 120
+        if hi - lo < minSpan { hi = lo + minSpan }
+        lo = max(lo, 0)
+        return lo...hi
+    }
+
+    /// Whole-hour labels: every 2 h (every 4 h when the domain is longer than 14 h, so the labels stay readable).
+    static func yTicks(_ domain: ClosedRange<Double>) -> [Double] {
+        let step: Double = domain.upperBound - domain.lowerBound > 840 ? 240 : 120
+        let first = (domain.lowerBound / step).rounded(.up) * step
+        return Array(stride(from: first, through: domain.upperBound, by: step))
+    }
+
+    /// The blue of sleep (falling asleep → getting up) and of the dashed wake line; theme-aware, ≥ 3 : 1 on the card.
+    static func sleepBlue(dark: Bool) -> Color {
+        dark ? Color(red: 0x8D / 255, green: 0xB4 / 255, blue: 0xF2 / 255) : Color(red: 0x3E / 255, green: 0x6F / 255, blue: 0xC9 / 255)
+    }
+    static let sleepLineOpacity = (dark: 0.8, light: 0.75)
+    /// The gradient of a night without Apple Health fades to this opacity at getting up.
+    static let gradientTopOpacity = 0.25
+
+    /// The ring around the start dot: the card's own colour, so a joker's pale indigo dot stays visible on the indigo bar.
+    static func ringColor(dark: Bool) -> Color { CardBacking.color(dark: dark) }
+
+    /// A night without Apple Health (or with the switch off) that has a start and a getting up is drawn as one
+    /// gradient line in the night's outcome colour – never as "sleep".
+    static func drawsGradient(_ p: NightPoint, showsSleep: Bool) -> Bool {
+        p.startMinutes != nil && p.upMinutes != nil && (!showsSleep || p.asleepMinutes == nil)
+    }
+
+    /// The blue sleep line (falling asleep → getting up) exists only with Health data and a getting up.
+    static func drawsSleepLine(_ p: NightPoint, showsSleep: Bool) -> Bool {
+        showsSleep && p.asleepMinutes != nil && p.upMinutes != nil
+    }
+
+    /// Bottom (start) full colour, top (getting up) the same colour faded.
+    static func gradientColors(_ outcome: Outcome) -> [Color] {
+        let c = CalendarGrid.color(outcome)
+        return [c, c.opacity(gradientTopOpacity)]
+    }
+
+    enum LegendItem: Equatable { case fallingAsleep, sleep, withoutHealth, outcome(Outcome) }
+
+    /// The chips under the chart: only marks that really appear in it.
+    static func legendItems(points: [NightPoint], showsSleep: Bool) -> [LegendItem] {
+        var items: [LegendItem] = []
+        if showsSleep, points.contains(where: { $0.startMinutes != nil && $0.asleepMinutes != nil }) { items.append(.fallingAsleep) }
+        if points.contains(where: { drawsSleepLine($0, showsSleep: showsSleep) }) { items.append(.sleep) }
+        if showsSleep, points.contains(where: { drawsGradient($0, showsSleep: true) }) { items.append(.withoutHealth) }
+        for o in [Outcome.complete, .unfinished, .ruins, .excused]
+        where points.contains(where: { $0.startMinutes != nil && $0.outcome == o }) { items.append(.outcome(o)) }
+        return items
+    }
+
+    /// Debug: `-hideSleepFor N` drops the Health values of the N newest nights (screenshots of the no-Health look).
+    static func hidingSleep(_ series: [NightPoint], count: Int) -> [NightPoint] {
+        guard count > 0 else { return series }
+        return series.enumerated().map { i, p in
+            i < series.count - count ? p
+                : NightPoint(key: p.key, startMinutes: p.startMinutes, wakeMinutes: p.wakeMinutes, asleepMinutes: nil,
+                             outcome: p.outcome, upMinutes: p.upMinutes)
+        }
     }
 
     /// Clock time of a minute count after 12:00.
@@ -278,8 +371,12 @@ struct NightChart: View {
             Text(L("The chart fills up after your first nights.")).font(.subheadline).cardCaption()
         } else {
             let bed = Double((bedtime.bedtime.hour * 60 + bedtime.bedtime.minute + 720) % 1440)
+            let wakeAt = Double((bedtime.wake.hour * 60 + bedtime.wake.minute + 720) % 1440)
+            let domain = Self.yDomain(points: points, bed: bed, wake: wakeAt)
             let step = Self.labelStep(count: points.count)
             let chosen = points.first { $0.key == selected }
+            let dark = scheme == .dark
+            let blue = Self.sleepBlue(dark: dark)
             VStack(alignment: .leading, spacing: 8) {
                 Text(Self.callout(chosen, showsSleep: showsSleep)).font(.footnote).monospacedDigit()
                     .fixedSize(horizontal: false, vertical: true)
@@ -290,6 +387,8 @@ struct NightChart: View {
                 Chart {
                     RuleMark(y: .value(L("Bedtime"), bed))
                         .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4])).foregroundStyle(.indigo.opacity(0.6))
+                    RuleMark(y: .value(L("Getting up"), wakeAt))
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4])).foregroundStyle(blue.opacity(0.6))
                     if let i = points.firstIndex(where: { $0.key == selected }) {
                         RuleMark(x: .value(L("Night"), i))                               // behind the selected night
                             .lineStyle(StrokeStyle(lineWidth: 2)).foregroundStyle(Color.gray)
@@ -303,17 +402,38 @@ struct NightChart: View {
                                 .foregroundStyle(Self.barColor)
                                 .accessibilityLabel(label)
                         }
-                        if let s = p.startMinutes {
-                            PointMark(x: .value(L("Night"), i), y: .value(L("Start"), s))
-                                .foregroundStyle(CalendarGrid.color(p.outcome))
-                                .symbolSize(on ? 150 : 55)
+                        if Self.drawsSleepLine(p, showsSleep: showsSleep), let a = p.asleepMinutes, let up = p.upMinutes {
+                            RuleMark(x: .value(L("Night"), i), yStart: .value(L("Fell asleep"), a), yEnd: .value(L("Getting up"), up))
+                                .lineStyle(StrokeStyle(lineWidth: on ? 5 : 3, lineCap: .round))
+                                .foregroundStyle(blue.opacity(dark ? Self.sleepLineOpacity.dark : Self.sleepLineOpacity.light))
+                                .accessibilityLabel(label)
+                        } else if Self.drawsGradient(p, showsSleep: showsSleep), let s = p.startMinutes, let up = p.upMinutes {
+                            RuleMark(x: .value(L("Night"), i), yStart: .value(L("Start"), s), yEnd: .value(L("Getting up"), up))
+                                .lineStyle(StrokeStyle(lineWidth: on ? 5 : 3, lineCap: .round))
+                                .foregroundStyle(LinearGradient(colors: Self.gradientColors(p.outcome), startPoint: .bottom, endPoint: .top))
                                 .accessibilityLabel(label)
                         }
-                        if showsSleep, let a = p.asleepMinutes {
+                        if let s = p.startMinutes {
+                            let size: Double = on ? 150 : 55
+                            PointMark(x: .value(L("Night"), i), y: .value(L("Start"), s))      // the ring in the card's colour
+                                .foregroundStyle(Self.ringColor(dark: dark))
+                                .symbolSize(pow(size.squareRoot() + 4, 2))
+                            PointMark(x: .value(L("Night"), i), y: .value(L("Start"), s))
+                                .foregroundStyle(CalendarGrid.color(p.outcome))
+                                .symbolSize(size)
+                                .accessibilityLabel(label)
+                        }
+                        if on, showsSleep, let a = p.asleepMinutes {
                             PointMark(x: .value(L("Night"), i), y: .value(L("Fell asleep"), a))
                                 .foregroundStyle(Color.blue)
                                 .symbol(.diamond)
-                                .symbolSize(on ? 150 : 55)
+                                .symbolSize(150)
+                                .accessibilityLabel(label)
+                        }
+                        if on, let up = p.upMinutes {
+                            PointMark(x: .value(L("Night"), i), y: .value(L("Getting up"), up))
+                                .foregroundStyle(Self.drawsGradient(p, showsSleep: showsSleep) ? CalendarGrid.color(p.outcome) : blue)
+                                .symbolSize(150)
                                 .accessibilityLabel(label)
                         }
                     }
@@ -328,14 +448,14 @@ struct NightChart: View {
                     }
                 }
                 .chartYAxis {
-                    AxisMarks(values: .automatic(desiredCount: 4)) { v in
+                    AxisMarks(values: Self.yTicks(domain)) { v in
                         AxisGridLine()
                         AxisValueLabel {
                             if let m = v.as(Double.self) { Text(Self.clock(afterNoon: m)) }
                         }
                     }
                 }
-                .chartYScale(domain: .automatic(includesZero: false))
+                .chartYScale(domain: domain)
                 .chartOverlay { proxy in
                     GeometryReader { geo in
                         Rectangle().fill(.clear).contentShape(Rectangle())
@@ -348,13 +468,85 @@ struct NightChart: View {
                     }
                 }
                 .frame(height: 180)
-                Text(showsSleep ? L("Each bar runs from the build start to falling asleep – the shorter, the sooner you slept. The dashed line is your bedtime.")
-                                : L("Dots = build start, line = bedtime.")).font(.caption).cardCaption()
+                legend
+                Text(showsSleep ? L("The start dot has the night's colour from the calendar. The indigo part runs to falling asleep – the shorter, the sooner you slept. Blue is your sleep until you got up (your confirmation, else Apple Health). The dashed lines are your bedtime and wake-up.")
+                                : L("The start dot has the night's colour from the calendar. The line runs from the start to getting up and fades towards the morning. The dashed lines are your bedtime and wake-up.")).font(.caption).cardCaption()
             }
         }
     }
 
     static func clock(_ minutes: Double) -> String { Fmt.time(minutesOfDay: Int(minutes.rounded())) }
+
+    /// Chips of the marks FIRST, then the words.
+    private var legend: some View {
+        let dark = scheme == .dark
+        let blue = Self.sleepBlue(dark: dark)
+        return ChipFlow(spacing: 12, lineSpacing: 6) {
+            ForEach(Self.legendItems(points: points, showsSleep: showsSleep), id: \.self) { item in
+                HStack(spacing: 5) {
+                    switch item {
+                    case .fallingAsleep:
+                        Capsule().fill(Self.barColor).frame(width: 5, height: 14)
+                        Text(L("Falling asleep"))
+                    case .sleep:
+                        Capsule().fill(blue.opacity(dark ? Self.sleepLineOpacity.dark : Self.sleepLineOpacity.light)).frame(width: 3, height: 14)
+                        Text(L("Sleep"))
+                    case .withoutHealth:
+                        Capsule().fill(LinearGradient(colors: Self.gradientColors(.complete), startPoint: .bottom, endPoint: .top))
+                            .frame(width: 3, height: 14)
+                        Text(L("Without Apple Health"))
+                    case .outcome(let o):
+                        Circle().fill(CalendarGrid.color(o)).frame(width: 9, height: 9)
+                            .overlay(Circle().stroke(Self.ringColor(dark: dark), lineWidth: 1))
+                        Text(Self.outcomeName(o))
+                    }
+                }
+            }
+        }
+        .font(.caption2)
+        .accessibilityElement(children: .combine)
+    }
+
+    static func outcomeName(_ o: Outcome) -> String {
+        switch o {
+        case .complete: L("complete")
+        case .unfinished: L("unfinished")
+        case .ruins: L("ruins")
+        case .excused: L("joker 🛡️")
+        case .missed: ""
+        }
+    }
+}
+
+extension NightChart.LegendItem: Hashable {}
+
+/// Wraps its children into lines, left to right (the chart legend).
+private struct ChipFlow: Layout {
+    var spacing: CGFloat
+    var lineSpacing: CGFloat
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        arrange(width: proposal.width ?? .infinity, subviews: subviews).size
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        let r = arrange(width: bounds.width, subviews: subviews)
+        for (i, f) in r.frames.enumerated() {
+            subviews[i].place(at: CGPoint(x: bounds.minX + f.minX, y: bounds.minY + f.minY), proposal: ProposedViewSize(f.size))
+        }
+    }
+
+    private func arrange(width: CGFloat, subviews: Subviews) -> (size: CGSize, frames: [CGRect]) {
+        var frames: [CGRect] = []
+        var x: CGFloat = 0, y: CGFloat = 0, rowH: CGFloat = 0, maxW: CGFloat = 0
+        for v in subviews {
+            let sz = v.sizeThatFits(.unspecified)
+            if x > 0, x + sz.width > width { x = 0; y += rowH + lineSpacing; rowH = 0 }
+            frames.append(CGRect(origin: CGPoint(x: x, y: y), size: sz))
+            x += sz.width + spacing; rowH = max(rowH, sz.height); maxW = max(maxW, x - spacing)
+        }
+        return (CGSize(width: maxW, height: y + rowH), frames)
+    }
 }
 
 /// The story of one night (plus that afternoon's nap).

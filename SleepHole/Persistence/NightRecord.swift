@@ -33,8 +33,11 @@ final class NightRecord {
     /// night (and every nap): it earns no calm-hour coins, so the balance never jumps. Optional, so the store migrates.
     var calmHoursRule: Int?
     /// The seconds of warning a lock-screen trip got when the night started (`SleepRules.lockScreenTolerance`, build 9,
-    /// owner 2026-10-18, B33). nil = an older night (and every nap): it keeps 10. Optional, so the store migrates.
+    /// owner 2026-10-18, B33). nil = an older night (and every nap before build 9j): it keeps 10. Optional, so the store migrates.
     var lockScreenTolerance: Double?
+    /// The seconds of warning a trip out of the app got when the night started (`SleepRules.accidentalTolerance`,
+    /// build 9j, owner 2026-10-18). nil = stored before: 10. Optional, so the store migrates.
+    var accidentalTolerance: Double?
     /// What the sleep source (Apple Health, phase HEALTH) said about this night. All optional so the store migrates.
     var fellAsleepAt: Date?
     var sleepEndedAt: Date?
@@ -52,7 +55,7 @@ final class NightRecord {
     /// a unique id so it never collides with the real night of the same date.
     init(window: NightWindow, buildingId: String, isDebug: Bool, setupGrace: TimeInterval, idPrefix: String? = nil,
          isNap: Bool = false, strictLockScreen: Bool? = nil, calmHoursRule: Int? = nil,
-         lockScreenTolerance: Double? = nil) {
+         lockScreenTolerance: Double? = nil, accidentalTolerance: Double? = nil) {
         self.keyString = window.key.description
         let stamp = Int(Date().timeIntervalSince1970)
         self.isNap = isNap
@@ -68,6 +71,7 @@ final class NightRecord {
         self.strictLockScreen = strictLockScreen
         self.calmHoursRule = calmHoursRule
         self.lockScreenTolerance = lockScreenTolerance
+        self.accidentalTolerance = accidentalTolerance
     }
 
     /// What every source said about this night (empty when nothing is stored).
@@ -88,6 +92,7 @@ final class NightRecord {
         if pauses == nil { r.awayBudget = nil }
         r.lockScreenCollapses = strictLockScreen ?? true
         r.lockScreenTolerance = lockScreenTolerance ?? 10
+        r.accidentalTolerance = accidentalTolerance ?? 10
         return r
     }
 
@@ -115,6 +120,7 @@ final class NightRecord {
         return NightResult(key: window.key, outcome: outcome, buildingId: buildingId, awaySeconds: awaySeconds,
                            startedAt: startedAt, confirmedAt: confirmedAt, pauses: pauses, bedtime: bedtime,
                            fellAsleepAt: fellAsleepAt, asleepSeconds: asleepSeconds,
-                           calmHours: calm?.calm, calmHoursTotal: calm?.total)
+                           calmHours: calm?.calm, calmHoursTotal: calm?.total,
+                           sleepEndedAt: sleepEndedAt, isTestNight: isTestNight ? true : nil)
     }
 }

@@ -163,7 +163,37 @@ struct ViewsTests {
                           initialSelection: withData[1].key), m)                // a selected night, with sleep data
         render(NightChart(points: withData, bedtime: m.settings.schedule, showsSleep: true,
                           initialSelection: withData[2].key), m)                // a selected night without a value
-        #expect(!L("Each bar runs from the build start to falling asleep – the shorter, the sooner you slept. The dashed line is your bedtime.").isEmpty)
+        #expect(!L("The start dot has the night's colour from the calendar. The line runs from the start to getting up and fades towards the morning. The dashed lines are your bedtime and wake-up.").isEmpty)
+    }
+
+    @Test func regularityWordFollowsTheRoundedNumber() {
+        #expect(StatsView.regularityLevel(15.3) == .excellent && StatsView.regularityLevel(15.6) == .good)
+        #expect(StatsView.regularityLevel(30.4) == .good && StatsView.regularityLevel(30.6) == .varies)
+        #expect(StatsView.regularityLevel(0) == .excellent)
+    }
+
+    @Test func chartLegendAndGradientRules() {
+        let key = NightKey(year: 2026, month: 10, day: 5)
+        func pt(asleep: Double?, up: Double? = 1080, start: Double? = 600, _ o: Outcome = .complete) -> NightPoint {
+            NightPoint(key: key, startMinutes: start, wakeMinutes: nil, asleepMinutes: asleep, outcome: o, upMinutes: up)
+        }
+        let health = pt(asleep: 650), plain = pt(asleep: nil)
+        #expect(!NightChart.drawsGradient(health, showsSleep: true) && NightChart.drawsGradient(plain, showsSleep: true))
+        #expect(NightChart.drawsGradient(health, showsSleep: false))                 // switch off: everything is a gradient
+        #expect(!NightChart.drawsGradient(pt(asleep: nil, up: nil), showsSleep: true))
+        #expect(NightChart.drawsSleepLine(health, showsSleep: true) && !NightChart.drawsSleepLine(health, showsSleep: false))
+        #expect(!NightChart.drawsSleepLine(plain, showsSleep: true))
+        #expect(NightChart.legendItems(points: [health], showsSleep: true) == [.fallingAsleep, .sleep, .outcome(.complete)])
+        #expect(NightChart.legendItems(points: [health, plain, pt(asleep: nil, .excused), pt(asleep: 650, .ruins)], showsSleep: true)
+                == [.fallingAsleep, .sleep, .withoutHealth, .outcome(.complete), .outcome(.ruins), .outcome(.excused)])
+        #expect(NightChart.legendItems(points: [health, plain], showsSleep: false) == [.outcome(.complete)])
+        #expect(NightChart.legendItems(points: [], showsSleep: true).isEmpty)
+        let colors = NightChart.gradientColors(.unfinished)
+        #expect(colors == [CalendarGrid.color(.unfinished), CalendarGrid.color(.unfinished).opacity(0.25)])
+        let hidden = NightChart.hidingSleep([health, health, health], count: 2)
+        #expect(hidden.map(\.asleepMinutes) == [650, nil, nil] && hidden[2].upMinutes == 1080)
+        #expect(StatsView.chartSeries([health, health], args: ["-hideSleepFor", "1"]).map(\.asleepMinutes) == [650, nil])
+        #expect(StatsView.chartSeries([health], args: []).map(\.asleepMinutes) == [650])
     }
 
     @Test(arguments: AppLanguage.allCases) func chartCalloutTexts(language: AppLanguage) {
@@ -179,6 +209,26 @@ struct ViewsTests {
                 == (sk ? "\(date) · začiatok 22:30 · spánok prišiel 22:55 · po 25 min" : "\(date) · start 22:30 · asleep 22:55 · after 25 min"))
         #expect(NightChart.callout(plain, showsSleep: true) == (sk ? "\(date) · začiatok 22:30" : "\(date) · start 22:30"))
         #expect(NightChart.callout(both, showsSleep: false) == NightChart.callout(plain, showsSleep: false))
+    }
+
+    @Test func yAxisCoversEveningToMorningInWholeHours() {
+        let up = NightPoint(key: NightKey(year: 2026, month: 10, day: 1), startMinutes: 560, wakeMinutes: nil,
+                            asleepMinutes: 650, outcome: .complete, upMinutes: 1100)
+        let d = NightChart.yDomain(points: [up], bed: 630, wake: 1110)          // 22:30 / 06:30
+        #expect(d == 480...1200)                                                // 20:00 ... 08:00
+        #expect(NightChart.yTicks(d) == [480, 600, 720, 840, 960, 1080, 1200])
+        #expect(NightChart.yDomain(points: [], bed: 630, wake: 700) == 600...1080)   // minimum span of 8 h
+        #expect(NightChart.yTicks(0...960) == [0, 240, 480, 720, 960])         // long axes thin out
+        #expect(NightChart.clock(afterNoon: 1080) == Fmt.time(minutesOfDay: 360))
+    }
+
+    @Test func calloutAddsGettingUp() {
+        let key = NightKey(year: 2026, month: 10, day: 18)
+        let p = NightPoint(key: key, startMinutes: 565, wakeMinutes: nil, asleepMinutes: 656, outcome: .complete, upMinutes: 1080)
+        #expect(NightChart.callout(p, showsSleep: true).hasSuffix(NightChart.clock(afterNoon: 1080)))
+        #expect(NightChart.callout(p, showsSleep: false).contains(NightChart.clock(afterNoon: 1080)))
+        let none = NightPoint(key: key, startMinutes: 565, wakeMinutes: nil, asleepMinutes: nil, outcome: .complete)
+        #expect(!NightChart.callout(none, showsSleep: false).contains(NightChart.clock(afterNoon: 1080)))
     }
 
     @Test func chartSelectionRules() {

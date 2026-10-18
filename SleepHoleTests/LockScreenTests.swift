@@ -588,7 +588,7 @@ struct LockScreenTests {
         func at(_ d: Date, collapsed: Bool = false) -> Date? {
             Notifications.collapseNoticeTime(log: log, rules: rules, at: d, alreadyCollapsed: collapsed)
         }
-        #expect(at(grace + 60) == grace + 60 + 13)                          // a full trip
+        #expect(at(grace + 60) == grace + 60 + 18)                          // a full trip
         #expect(at(grace - 5) == nil)                                       // setup time
         #expect(at(grace + 60, collapsed: true) == nil)
         #expect(at(rec.wake) == nil && at(rec.wake + 60) == nil)            // wake time
@@ -616,7 +616,7 @@ struct LockScreenTests {
         m.refresh(); m.startNight()
         let g = m.graceEnds!
         m.append(.leftApp, at: g + 60)
-        #expect(m.collapseNoticeAt == g + 73)
+        #expect(m.collapseNoticeAt == g + 78)
         m.append(.returned, at: g + 66)
         #expect(m.collapseNoticeAt == nil)
         m.append(.usedLockScreen, at: g + 100)
@@ -637,7 +637,7 @@ struct LockScreenTests {
         m.append(.pauseStarted, at: g + 100)
         m.append(.leftApp, at: g + 101)                                      // inside a pause: free, the notice waits for its end
         let ends = PausePolicy.activeUntil(m.active!.log, at: g + 102)!
-        #expect(m.collapseNoticeAt == ends + 13)
+        #expect(m.collapseNoticeAt == ends + 18)
     }
 
     @Test func theCollapseNoticeIsSetAgainWhenACallEndsWithTheOwnerStillOut() {
@@ -667,11 +667,11 @@ struct LockScreenTests {
         m.append(.leftApp, at: g + 60)
         m.append(.pauseStarted, at: g + 62)                                  // out when the pause starts
         let ends = PausePolicy.activeUntil(m.active!.log, at: g + 63)!
-        #expect(m.collapseNoticeAt == ends + 13)
+        #expect(m.collapseNoticeAt == ends + 18)
         m.append(.returned, at: g + 100)                                     // back inside the pause
         #expect(m.collapseNoticeAt == nil)
         m.append(.leftApp, at: g + 200)                                      // leaves inside the pause
-        #expect(m.collapseNoticeAt == ends + 13)
+        #expect(m.collapseNoticeAt == ends + 18)
         #expect(m.collapseNoticeAt == m.collapsedAt)
     }
 
@@ -684,7 +684,7 @@ struct LockScreenTests {
         m.append(.returned, at: g - 20)
         m.append(.leftApp, at: g + 60)
         m.append(.leftApp, at: g + 100)                                      // already collapsed at g + 73
-        #expect(m.collapseNoticeAt == g + 73)                                // unchanged: nothing new was set
+        #expect(m.collapseNoticeAt == g + 78)                                // unchanged: nothing new was set
     }
 
     @Test func finalisingTheNightClearsTheCollapseNotice() {

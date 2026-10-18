@@ -286,6 +286,12 @@ final class AppModel {
         loadProgress()
         #if DEBUG
         if initialSettings == nil { debugScheduleState = Self.launchScheduleState() }
+        // `-pendingSchedule`: a pending (applies-from-tomorrow) change, for screenshots; nothing is saved.
+        if initialSettings == nil, DevArgs.list.contains("-pendingSchedule") {
+            var later = self.settings.schedule; later.bedtime = TimeOfDay(23, 0)
+            self.settings.pendingSchedule = PendingSchedule(
+                schedule: later, fromNight: NightKey(date: clock.now, calendar: .current).adding(days: 3, calendar: .current))
+        }
         #endif
         sync.attach(self)
         if initialSettings == nil, let lang = Self.launchLanguage() { language = lang }
@@ -507,12 +513,7 @@ final class AppModel {
     /// coins, but its clock times are artificial (a daytime start), so they never enter the TIME statistics –
     /// average start / getting up, regularity, falling asleep, sleep length (B13).
     func statsInput() -> [NightResult] {
-        let testKeys = Set(records().filter { $0.isTestNight && !$0.isNap }.map(\.keyString))
-        return coreResults().map { r in
-            guard testKeys.contains(r.key.description) else { return r }
-            return NightResult(key: r.key, outcome: r.outcome, buildingId: r.buildingId, awaySeconds: r.awaySeconds,
-                               pauses: r.pauses, calmHours: r.calmHours, calmHoursTotal: r.calmHoursTotal)
-        }
+        coreResults().map { $0.isTestNight == true ? $0.withoutClockTimes : $0 }
     }
 
     /// Everything for the Štatistiky tab.
@@ -683,7 +684,9 @@ final class AppModel {
         let window = settings.nap.session(startingAt: now, calendar: calendar)
         let rec = NightRecord(window: window, buildingId: "", isDebug: false,
                               setupGrace: NapPlan.rules.setupGrace, isNap: true,
-                              strictLockScreen: settings.strictMode)
+                              strictLockScreen: settings.strictMode,
+                              lockScreenTolerance: SleepRules.lockScreenToleranceNow,
+                              accidentalTolerance: SleepRules.accidentalToleranceNow)
         rec.append(.started, at: now)
         context.insert(rec)
         save()
@@ -1046,10 +1049,19 @@ final class AppModel {
     /// When a night was added or replaced and Apple Health is on, its sleep values are read at once (not awaited): a new
     /// install or a second device has none for the nights it just received – they are never part of a sync file.
     @discardableResult
-    func mergeSync(_ files: [BackupFile], firstContactStamp: Date? = nil) throws -> Bool {
+    func mergeSync(_ files: [BackupFile], firstContactStamp: Date? = nil, adoptAccountWeek: Bool = false) throws -> Bool {
         guard active == nil else { throw BackupError.nightRunning }
         let guideWasDone = onboardingDone
         var changed = false, nightsChanged = false
+        // B35: a NEW install (first contact, no nights of its own) must not bring its own fresh change week – the guide it
+        // just finished opened one – so the account's week replaces it outright; the normal "latest wins" merge below then
+        // keeps it. Without any week in the account (a truly new user) the local one stays. Established devices skip this.
+        if adoptAccountWeek,
+           let week = files.filter({ $0.version <= BackupFile.currentVersion }).compactMap(\.changeWeekStart).max(),
+           progress().changeWeekStart != week {
+            progress().changeWeekStart = week
+            changed = true
+        }
         for file in files where file.version <= BackupFile.currentVersion {
             let merged = try SyncStore.merge(file, into: context, progress: progress())
             nightsChanged = nightsChanged || merged.nightsChanged
@@ -1199,7 +1211,7 @@ final class AppModel {
 
     /// The rules a night started now would get (the setup time from Settings) – for texts about tonight's setup.
     var nextNightRules: SleepRules {
-        var r = SleepRules()
+        var r = SleepRules.forNewNights
         r.setupGrace = settings.setupGrace
         return r
     }
@@ -1221,7 +1233,8 @@ final class AppModel {
                               setupGrace: debugWindow != nil ? debugGrace : settings.setupGrace,
                               idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode,
                               calmHoursRule: CalmHours.currentRule,
-                              lockScreenTolerance: SleepRules.lockScreenToleranceNow)
+                              lockScreenTolerance: SleepRules.lockScreenToleranceNow,
+                              accidentalTolerance: SleepRules.accidentalToleranceNow)
         rec.append(.started, at: now)
         context.insert(rec)
         save()
@@ -1838,7 +1851,7 @@ final class AppModel {
 
     /// How many "Vráť sa" warnings were sent this app session (diagnostics + tests).
     private(set) var nudgesSent = 0
-    /// The seconds the last warning promised (always the full 10 – the night's budget never shortens a warning;
+    /// The seconds the last warning promised (always the full tolerance, 15 for new nights – the night's budget never shortens a warning;
     /// with the budget used up no warning is sent at all).
     private(set) var lastNudgeSeconds = 0
 
@@ -1918,7 +1931,7 @@ final class AppModel {
             } else if let graceEnds, date >= graceEnds, !alreadyCollapsed, date < rec.wake {
                 // nothing counts after the wake time (away intervals are clipped to it): picking up the ringing
                 // phone must not produce "Come back … or the building collapses"
-                // a trip that starts with budget left is a full one (13 s); with the budget used up there is no time
+                // a trip that starts with budget left is a full one (18 s for new nights); with the budget used up there is no time
                 // for a warning (left = 0) and the building has already collapsed
                 // owner 2026-10-09: the collapse always comes with a notice, scheduled now because the app may be dead
                 // or suspended when it happens (also with the budget used up: then it fires at once)

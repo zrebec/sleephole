@@ -77,7 +77,7 @@ struct GuideTests {
         #expect(GuideText.page(2, setup: setup).text.contains("10 minút pred večierkou do 5 minút po nej"))
         #expect(GuideText.page(2, setup: setup).text.contains("3 hodiny skôr"))
         #expect(GuideText.page(3, setup: setup).text.contains("do večierky + 5 minút") && GuideText.page(3, setup: setup).text.contains("15s pred koncom"))
-        #expect(GuideText.page(4, setup: setup).text.contains("10s"))
+        #expect(GuideText.page(4, setup: setup).text.contains("15s"))
         #expect(GuideText.page(5, setup: setup).text.contains("Chceš si prečítať správu? Ťukni na 🌙 Pauza – 10 minút mimo appky"))
         #expect(GuideText.page(6, setup: setup).text.contains("30 minút pred budíkom") && GuideText.page(6, setup: setup).text.contains("Do 10 minút po budíku"))
         #expect(GuideText.page(7, setup: setup).text.contains("100–200 🪙") && GuideText.page(7, setup: setup).text.contains("+30") && GuideText.page(7, setup: setup).text.contains("+5"))
@@ -85,7 +85,7 @@ struct GuideTests {
         #expect(g.count == 10 && g.map(\.title).prefix(9) == ["Rozvrh", "Večer", "Noc", "Pauza", "Ráno", "Mince a mesto", "Žolíky", "Odpočinok", "Súkromie"])
         #expect(g[0].items[1].replacingOccurrences(of: "\u{a0}", with: " ").contains("2 000 🪙"))
         #expect(g[1].items[2] == "Príprava trvá do večierky + zvolený čas (5, 10 alebo 15 minút v Nastaveniach), pri skoršom štarte 15 minút od štartu.")
-        #expect(g[2].items[1].contains("10s") && g[2].items[1].contains("30s") && g[2].items[3].hasPrefix("Stiahnuté Centrum hlásení"))
+        #expect(g[2].items[1].contains("15s") && g[2].items[1].contains("30s") && g[2].items[3].hasPrefix("Stiahnuté Centrum hlásení"))
         #expect(g[2].items[5].contains("8s"))
         #expect(g[3].items[0].contains("50, 100, 150 🪙"))
         #expect(g[4].items[0].contains("2 minúty") && g[4].items[1].contains("30 minút") && g[4].items[2].contains("10 minút") && g[4].items[2].contains("60 minút"))
@@ -331,5 +331,24 @@ struct GuideTests {
         #expect(m.settings.schedule.bedtime == TimeOfDay(22, 30))
         #expect(m.settings.pendingSchedule?.schedule.bedtime == TimeOfDay(20, 33))
         #expect(m.window.bedtime == date(5, 22, 30))                       // tonight is still the old night
+    }
+
+    /// The shared schedule editor (Settings + the replayed guide): what "Save" does in each change-week state.
+    @Test func scheduleEditorSaveSteps() {
+        let old = Schedule()
+        var times = old; times.bedtime = TimeOfDay(23, 0)
+        var reminder = old; reminder.reminderOffsets = [45]
+        let week = SchedulePolicy.State.changeWeek(lastDay: NightKey("2026-10-11")!)
+        #expect(ScheduleEditor.saveStep(old: old, draft: times, state: .open) == .confirm)       // opens a change week: asks first
+        #expect(ScheduleEditor.saveStep(old: old, draft: reminder, state: .open) == .apply)      // the reminder is free
+        #expect(ScheduleEditor.saveStep(old: old, draft: times, state: week) == .apply)          // in the week it saves at once
+    }
+
+    @Test func scheduleEditorCompactMessage() {
+        let week = SchedulePolicy.State.changeWeek(lastDay: NightKey("2026-10-11")!)
+        #expect(ScheduleEditor.showsPendingNote(state: week, pending: true, compact: true))
+        #expect(ScheduleEditor.showsPendingNote(state: week, pending: false, compact: true) == false)
+        #expect(ScheduleEditor.showsPendingNote(state: week, pending: true, compact: false) == false)   // Settings has its footer
+        #expect(ScheduleEditor.showsPendingNote(state: .open, pending: true, compact: true))
     }
 }

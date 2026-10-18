@@ -15,7 +15,7 @@ enum Num {
 /// Every number is produced from the code constant that rules the app, so the guide never lies (owner 2026-10-18);
 /// `GuideTests` guards that. Titles and the buddy's sentences were approved by the owner (`docs/guide-texts-draft.json`).
 enum GuideText {
-    static let rules = SleepRules()
+    static let rules = SleepRules.forNewNights
     static let pageCount = 9
 
     struct Page: Equatable {

@@ -258,7 +258,7 @@ final class SyncEngine {
             // counted before the merge: a device that has just received the account's nights is not "established" by them
             let established = model.establishedNights
             let stamp = firstContact ? model.firstContactStamp() : nil
-            try merge(files, into: model, firstContactStamp: stamp)
+            try merge(files, into: model, firstContactStamp: stamp, adoptAccountWeek: firstContact && established == 0)
             if firstContact {
                 // nothing of the account beat this device's unstamped settings: they get the (minimal) first-contact stamp
                 if let stamp, model.settings.changedAt == nil { model.stampSettingsForSync(at: stamp) }
@@ -302,10 +302,10 @@ final class SyncEngine {
         Task { [weak model] in await model?.setHealth(on: true) }
     }
 
-    private func merge(_ files: [BackupFile], into model: AppModel, firstContactStamp: Date?) throws {
+    private func merge(_ files: [BackupFile], into model: AppModel, firstContactStamp: Date?, adoptAccountWeek: Bool) throws {
         merging = true
         defer { merging = false }
-        try model.mergeSync(files, firstContactStamp: firstContactStamp)
+        try model.mergeSync(files, firstContactStamp: firstContactStamp, adoptAccountWeek: adoptAccountWeek)
     }
 }
 
