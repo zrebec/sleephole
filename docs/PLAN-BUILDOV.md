@@ -1,6 +1,6 @@
 # SleepHole – plán podľa buildov
 
-Stav k 16. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdrojom pravdy anglický plán
+Stav k 18. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdrojom pravdy anglický plán
 `docs/IMPLEMENTATION_PLAN.md`, kapitola §0b; keď sa zmení tam, zmení sa aj tu.
 
 ## Ako pracujeme
@@ -19,14 +19,14 @@ Stav k 16. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 
 | Build | Téma | Stav |
 |---|---|---|
-| 8 | Pokoj a drobné opravy | hotový – čaká na tvoju noc, commit a nahratie |
-| 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | naplánovaný, texty sprievodcu čakajú na tvoju kontrolu |
+| 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
+| 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | 9a–9f postavené a skontrolované; v tvojom telefóne od 18. 10. 09:03; ďalej tvoja noc, commit, nahratie |
 | 10 | Štatistiky a nový žreb | návrh |
 | 11 | Mesto | návrh |
 | 12 | Živé mesto | návrh |
 | Neskôr | nápady bez čísla buildu | zásobník |
 
-## Build 8 – Pokoj a drobné opravy (hotový)
+## Build 8 – Pokoj a drobné opravy (hotový, u testerov)
 
 Build 8 robí appku láskavejšou: viac odmeňuje, menej trestá, a mačka konečne hovorí ako súčasť mesta. Za každú
 pokojnú hodinu noci pribudne +5 🪙. Pravidlo dní 1–3, ktoré pri zmene rozvrhu nulovalo sériu, nahradil týždeň na
@@ -52,7 +52,7 @@ náhodne a novinka dňa ide prvá. Po zrútenej noci pomenuje budovu a povie pra
 | 8j | opravené | „kto im bol modelom“ | tvoje znenie |
 | 8k | opravené | potvrdenie týždňa na zmeny: Potvrdiť / Zrušiť, Zrušiť vráti čas | iOS 26 skrýval tlačidlo Zrušiť |
 
-**Zostáva:** tvoja ostrá noc s celým buildom 8 → commit → číslo buildu 8 → nahratie → testeri a „What to Test“.
+**Stav 18. 10.:** dve ostré noci (16.→17. a 17.→18. 10., obe hotové, 8 z 8 pokojných hodín), commit `b7d5f75`, nahratý do App Store Connect o 07:04, „What to Test“ uložené, skupiny Kamaráti aj SE (SE pridané tvojím klikom).
 
 ## Build 9 – Sprievodca a jasné pravidlá (kandidát na verziu 1.0)
 
@@ -66,6 +66,15 @@ Sprievodca, zoznam pravidiel aj FAQ na webe povedia, že stiahnuté Centrum hlá
 Pred podaním na kontrolu Apple sa prepíše návod pre recenzenta: časy sa nastavia v úvodnom sprievodcovi, kde
 platia hneď (tak to robí aj SleepTown), a návod sa raz vyskúša na čistej inštalácii. K tomu upratanie drobných chýb
 B12, B13, B14, B15, B16, B22 a B26.
+
+| Krok | Typ | Čo | Stav |
+|---|---|---|---|
+| 9a | zmenené | návrat do appky sa ráta o ~0,8s skôr (v tvoj prospech, potichu) | hotové, testy |
+| 9b | nové | čas na prípravu 5 / 10 / 15 min v Nastaveniach | hotové, testy |
+| 9c | nové | sprievodca: 9 strán, rozpráva mačka; „Ako funguje SleepHole“ – všetky pravidlá | hotové, testy, iPhone SE bez rolovania |
+| 9d | nové | FAQ na webe: Centrum hlásení je odchod z appky | commitnuté (`454c43d`), ide von tvojím pushom |
+| 9e | zmenené | návod pre Apple: časy v sprievodcovi (`docs/REVIEW-NOTES.md`) + automatický test | hotové, testy; do App Store Connect až s tvojím áno |
+| 9f | opravené | B12, B13, B14, B15, B16, B22, B26 | hotové, testy |
 
 ## Build 10 – Štatistiky a nový žreb (návrh)
 

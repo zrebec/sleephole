@@ -22,25 +22,21 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 8 is in work (plan §0b, §10 REL).** 8a–8k are committed (8g–8k in `0c4b08a`, the docs in `8e0a5d3`, 2026-10-16;
-   he pushes). **His
-   phone runs the whole build 8 (8a–8k, Debug) since 2026-10-16 14:54** (on his word; the 11:04 install had gone OVER
-   the TestFlight build 7 he put on during the night – switching builds never needs an uninstall, and an uninstall
-   deletes the town). His daytime checks passed and 8k is confirmed by him (plan §12). He has `docs/TEST-BUILD-8.md`
-   (also in his iCloud `SleepHole/`). **Next, in this order:**
-   (a) **two real nights with build 8 are done (16 → 17, 17 → 18, both complete; journal 2026-10-18, plan §12):** no
-   trip after the setup, streak 17, 8 of 8 calm hours (+40) each night by the replay, the cat's news today was the new
-   house; his answers 2026-10-18: the wake code went in on the night screen (B31 🟢), the calm-hours line read 8 of 8
-   · +40 (🟢);
-   (b) **in work 2026-10-18 on his word ("dnes skutočne musí ísť von build 8"):** `CURRENT_PROJECT_VERSION` 8 + tests +
-   Release archive (a Sonnet worker) → the upload (Opus, his Mac's keychain dialog) → the tester groups with a "What to
-   Test" list (his clicks or his yes). Then build 9 (his wish: "if 8 is OK, we go to 9").
+1. **Build 9 is in work (plan §0b, §10 REL).** Build 8 is finished (two real nights, committed `b7d5f75`, uploaded as
+   1.0 (8) 2026-10-18 07:04, "What to Test" saved, in both tester groups – SE added by him). **His phone runs the whole
+   build 9 (9a–9f, Debug) since 2026-10-18 09:03**, installed over the app (data kept; full backup first in the git-ignored
+   `docs/device-logs/2026-10-18-pred-buildom-9/` and his iCloud `SleepHole/Zalohy/2026-10-18-pred-buildom-9/`). He has
+   `docs/TEST-BUILD-9.md`. Build 9 is committed (`75339b5`, `15e6b7d`, the docs commit of that morning; he pushes). **Next:** (a) his daytime checks (the guide again, the rules
+   list, the setup time, the solid tab bar); his optional clean first install (the backup and the steps were given to him
+   2026-10-18 – the iCloud switch for SleepHole off first, else the sync marks the guide done and the guide's change week
+   can move his own); (b) the morning of 2026-10-19 – pull the journal (read-only): no `.usedLockScreen` after the alarm
+   (B26), the return stamped at `willEnterForeground`, calm hours; (c) `CURRENT_PROJECT_VERSION` 9 (a fix found by the night gets its own commit first), the
+   upload (he runs the export command himself – the session's auto-mode check refuses it to Opus), the testers.
    His wish for later: when a bad night comes he will check the cat's ruins line; next month the bronze joker → the
    cat's "streak was safe" line.
-2. **Apple's review:** build 7 stays in review (Opus's decision 2026-10-16 on his delegation). Before build 8 or 9 is
-   submitted, the review notes' "whole night in about 15 minutes" must set the times in the FIRST-RUN GUIDE (build 8's
-   evening rule defers a Settings change made within 3 h of the bedtime; he confirmed SleepTown does it the same way)
-   and be tried once on a clean install. **When build 8 (or its successor) goes to review, repeat this whole agenda to
+2. **Apple's review:** build 7 is still "Waiting for Review" (2026-10-18). The notes for build 9 are written
+   (`docs/REVIEW-NOTES.md`: the times set in the first-run guide; proven by the hosted test `reviewRecipeWorksOnAFreshInstall`);
+   App Store Connect is changed only on his yes; a person should still try the recipe once on a clean device. **When build 8 (or its successor) goes to review, repeat this whole agenda to
    him (his request 2026-10-16).**
 3. **His streak:** the night of 2026-10-15 → 16 collapsed (one trip of 13.15s; Notification Center counts as leaving on
    iOS 26); the silver joker saved it (1 000 🪙). October's bronze and silver are used and he will not buy the gold – the
@@ -120,7 +116,7 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   In use: Time Sensitive notifications (F6a), WeatherKit (owner's OK 2026-10-07, phase TOWN-W). Other paid-only APIs (HealthKit, iCloud, push) only when the owner
   asks for them. AlarmKit needs no entitlement.
 * Night rules **R3** (plan D15 + findings 2026-09-29/30): start only bedtime −10…+5 min; setup until
-  max(start, bedtime) + 5 min; **an early start ("Go to sleep early today", owner 2026-10-11, plan §10 EARLY) is
+  max(start, bedtime) + the setup time (Settings, 5 / 10 / 15 min, default 5 – build 9, owner 2026-10-15; stored with the night at its start); **an early start ("Go to sleep early today", owner 2026-10-11, plan §10 EARLY) is
   allowed from bedtime − 3 h, after a short confirmation, with no penalty – the night counts in full and the morning
   does not change; its setup lasts 15 min from the start**; after the setup, leaving the app → warning after ~3 s and 10 s to return (and at most
   30 s out of the app per night in total – see "Away budget"), else the building collapses (calls excused);
@@ -251,6 +247,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (source: the scratchpad file of 2026-10-16 – rebuild it from this .md) – **when §0b changes, update all three** |
 | (claude.ai page) | the owner's bug list B1–B32, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (2026-10-16) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
 | `docs/AGENDA-ARCHIVE.md` | the old long session-start agenda, moved there verbatim 2026-10-16 – history only, no instructions |
+| `docs/REVIEW-NOTES.md` | the App Review notes text (English) for App Store Connect → App Review Information → Notes; since build 9 the 15-minute recipe sets the times in the first-run guide – keep the file and the field identical (changing the field needs his yes) |
 | `docs/TEST-BUILD-8.md` | the owner's test list for build 8 (Slovak): "now" and "tonight" – the base of the testers' "What to Test" |
 | `docs/PLAN.md` | product decisions (Slovak) |
 | `docs/NAVRH-ZVIERATKA.md` | next plans A/B/C: pause, sleep buddy, Cube Pets residents, living town (Slovak, owner picks) |
