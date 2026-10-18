@@ -8,7 +8,9 @@ rm -rf build/tests.xcresult
 xcodegen generate >/dev/null
 xcodebuild test -project SleepHole.xcodeproj -scheme SleepHole -destination "platform=iOS Simulator,id=$SIM" \
   -derivedDataPath build/DerivedData -enableCodeCoverage YES -resultBundlePath build/tests.xcresult 2>&1 \
-  | grep -E "error:|✘|Test run|TEST (SUCCEEDED|FAILED)"
+  | grep -E "error:|✘|Test run|TEST (SUCCEEDED|FAILED)" \
+  | grep -v 'unable to find utility "simctl"'   # xcodebuild's own diagnostics collector runs `xcrun simctl` without our
+                                                # DEVELOPER_DIR (only the Command Line Tools are selected) – harmless noise (B16c)
 xcrun xccov view --report --only-targets build/tests.xcresult 2>/dev/null
 xcrun xccov view --report build/tests.xcresult 2>/dev/null | grep -E "^\s+[A-Za-z]+\.swift" | sort -k2 -t'%' 
 xcrun simctl shutdown "$SIM" 2>/dev/null

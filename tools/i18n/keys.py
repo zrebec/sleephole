@@ -40,7 +40,7 @@ def main():
         for k, f in sorted(keys.items(), key=lambda kv: (kv[1], kv[0])):
             print(f"{f}\t{k}")
         return
-    strings = json.load(open(CATALOG))["strings"]
+    strings = json.load(open(CATALOG, encoding="utf-8"))["strings"]
     missing = [k for k in keys if k not in strings]
     untranslated = [k for k in keys if k in strings and "sk" not in strings[k].get("localizations", {})]
     unused = [k for k in strings if k not in keys]
@@ -51,11 +51,14 @@ def main():
     for k in unused:
         print(f"UNUSED   {k}")
     if "--prune" in sys.argv and unused:
-        catalog = json.load(open(CATALOG))
+        # keep the file's own layout (key order, indent 2, no trailing newline): json keeps the order it read,
+        # so only the unused keys disappear and the diff stays minimal (B16a)
+        with open(CATALOG, encoding="utf-8") as f:
+            catalog = json.load(f)
         for k in unused:
             del catalog["strings"][k]
-        with open(CATALOG, "w") as f:
-            json.dump(catalog, f, ensure_ascii=False, indent=2, sort_keys=True)
+        with open(CATALOG, "w", encoding="utf-8") as f:
+            json.dump(catalog, f, ensure_ascii=False, indent=2)
         print(f"pruned {len(unused)} unused keys")
     print(f"{len(keys)} keys, {len(missing)} missing, {len(untranslated)} without sk, {len(unused)} unused")
     sys.exit(1 if missing or untranslated else 0)
