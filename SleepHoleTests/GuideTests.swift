@@ -163,24 +163,71 @@ struct GuideTests {
         }
     }
 
-    /// Hard acceptance (owner): no guide page scrolls on an iPhone SE (375 × 667 pt) at the default text size.
-    @Test func noGuidePageScrollsOnTheSmallestPhone() {
+    /// Reference phones in points: width, height, top safe area, bottom safe area.
+    static let phones: [(name: String, w: CGFloat, h: CGFloat, top: CGFloat, bottom: CGFloat)] = [
+        ("SE", 375, 667, 20, 0), ("13 mini", 375, 812, 50, 34), ("16", 393, 852, 59, 34),
+        ("16 Pro / 17", 402, 874, 62, 34), ("11", 414, 896, 48, 34), ("16 Plus", 430, 932, 59, 34),
+        ("16 / 17 Pro Max", 440, 956, 62, 34),
+    ]
+
+    func room(_ p: (name: String, w: CGFloat, h: CGFloat, top: CGFloat, bottom: CGFloat)) -> CGFloat {
+        p.h - p.top - p.bottom - (44 + 2 * GuideLayout.buttonBarPadding) - GuideLayout.dotsHeight
+    }
+
+    func chosenStyle(_ p: (name: String, w: CGFloat, h: CGFloat, top: CGFloat, bottom: CGFloat), replay: Bool,
+                     model m: AppModel) -> GuideStyle {
+        GuideStyle.choose(width: p.w, room: room(p), replay: replay, model: m)
+    }
+
+    /// Hard acceptance (owner): no guide page scrolls on any supported iPhone at the default text size, in both
+    /// languages, first run and replay – with the style the guide picks for that display.
+    @Test func noGuidePageScrollsOnAnyPhone() {
         defer { Lang.current = .en }
         let c = store()
         let (m, _) = makeModel(c, at: date(5, 22, 25))
-        // 667 pt − status bar − the button bar (a 44-pt button + its padding) − the page dots
-        let room = 667 - 20 - (44 + 2 * GuideLayout.buttonBarPadding) - GuideLayout.dotsHeight
+        for p in Self.phones {
+            for lang in AppLanguage.allCases {
+                Lang.current = lang
+                for replay in [false, true] {
+                    let style = chosenStyle(p, replay: replay, model: m)
+                    for i in 0..<GuideText.pageCount {
+                        let view = GuidePageView(index: i, replay: replay, style: style, notificationsAllowed: .constant(nil),
+                                                 showRules: .constant(false)).environment(m).environment(sprites)
+                        let h = UIHostingController(rootView: view)
+                            .sizeThatFits(in: CGSize(width: p.w, height: CGFloat.greatestFiniteMagnitude)).height
+                        #expect(h <= room(p), "\(p.name) page \(i + 1) (\(lang), replay \(replay)) needs \(h) pt, room \(room(p)) pt, style \(style)")
+                    }
+                }
+            }
+        }
+    }
+
+    @Test func bigPhonesGetBiggerTextWithTheFullLineHeight() {
+        defer { Lang.current = .en }
+        let c = store()
+        let (m, _) = makeModel(c, at: date(5, 22, 25))
+        let se = Self.phones[0], pro = Self.phones[3], max = Self.phones[6]
         for lang in AppLanguage.allCases {
             Lang.current = lang
             for replay in [false, true] {
-                for i in 0..<GuideText.pageCount {
-                    let view = GuidePageView(index: i, replay: replay, notificationsAllowed: .constant(nil), showRules: .constant(false))
-                        .environment(m).environment(sprites)
-                    let host = UIHostingController(rootView: view)
-                    let h = host.sizeThatFits(in: CGSize(width: 375, height: CGFloat.greatestFiniteMagnitude)).height
-                    #expect(h <= room, "page \(i + 1) (\(lang), replay \(replay)) needs \(h) pt, room \(room) pt")
-                }
+                let sSE = chosenStyle(se, replay: replay, model: m)
+                let sPro = chosenStyle(pro, replay: replay, model: m)
+                let sMax = chosenStyle(max, replay: replay, model: m)
+                #expect(sPro.lineHeight >= 1.5 && sMax.lineHeight >= 1.5, "\(lang) \(replay): \(sPro) \(sMax)")
+                #expect(sMax.textSize > sSE.textSize && sMax.textSize > 17, "\(lang) \(replay): \(sSE) \(sMax)")
+                #expect(sMax.textSize >= sPro.textSize)
             }
+        }
+    }
+
+    @Test func theStylePickerIsMonotoneAndAlwaysAnswers() {
+        let all = GuideStyle.candidates
+        #expect(zip(all, all.dropFirst()).allSatisfy { $0.textSize >= $1.textSize })
+        #expect(all.first?.lineHeight == 1.5 && all.last == GuideStyle.smallest)
+        #expect(GuideStyle.pick(fits: { _ in false }) == GuideStyle.smallest)       // nothing fits: the last one
+        #expect(GuideStyle.pick(fits: { _ in true }) == all[0])
+        for (n, expected) in all.enumerated() {                                       // the first that fits, whatever the room
+            #expect(GuideStyle.pick(fits: { s in all.firstIndex(of: s)! >= n }) == expected)
         }
     }
 

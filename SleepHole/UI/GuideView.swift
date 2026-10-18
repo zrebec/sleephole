@@ -1,5 +1,7 @@
+import os
 import SleepCore
 import SwiftUI
+import UIKit
 import UserNotifications
 
 /// Number phrases with correct plurals in the current language ("5 minutes" / "5 minút", "1 minútu").
@@ -11,7 +13,7 @@ enum Plural {
     static func days(_ n: Int) -> String { L("\(n) days") }
 }
 
-/// First-run guide: nine swipe pages the sleep buddy narrates in a comic speech bubble (owner 2026-10-18, build 9c).
+/// First-run guide: nine swipe pages the sleep buddy narrates (owner 2026-10-18, build 9c).
 /// `replay` = opened again from Settings (the times are then changed in Settings, the guide does not finish anything).
 struct GuideView: View {
     @Environment(AppModel.self) private var model
@@ -20,6 +22,7 @@ struct GuideView: View {
     @State private var page: Int
     @State private var notificationsAllowed: Bool?
     @State private var showRules: Bool
+    @State private var style: GuideStyle?
     static let pageCount = GuideText.pageCount
 
     init(replay: Bool = false) {
@@ -31,21 +34,32 @@ struct GuideView: View {
         _showRules = State(initialValue: a.contains("-guideRules"))
     }
 
+    private struct PickKey: Hashable {
+        var width: CGFloat, room: CGFloat, language: AppLanguage, replay: Bool, setup: TimeInterval
+    }
+
     var body: some View {
         VStack(spacing: 0) {
-            TabView(selection: $page) {
-                ForEach(0..<Self.pageCount, id: \.self) { i in
-                    ScrollView {
-                        GuidePageView(index: i, replay: replay, notificationsAllowed: $notificationsAllowed,
-                                      showRules: $showRules)
-                            .padding(.bottom, GuideLayout.dotsHeight)
+            GeometryReader { proxy in
+                let room = proxy.size.height - GuideLayout.dotsHeight
+                let key = PickKey(width: proxy.size.width, room: room, language: model.language, replay: replay,
+                                  setup: model.settings.setupGrace)
+                TabView(selection: $page) {
+                    ForEach(0..<Self.pageCount, id: \.self) { i in
+                        ScrollView {
+                            GuidePageView(index: i, replay: replay, style: style ?? .smallest,
+                                          notificationsAllowed: $notificationsAllowed, showRules: $showRules)
+                                .padding(.bottom, GuideLayout.dotsHeight)
+                        }
+                        .scrollBounceBehavior(.basedOnSize)
+                        .tag(i)
                     }
-                    .scrollBounceBehavior(.basedOnSize)
-                    .tag(i)
                 }
+                .tabViewStyle(.page(indexDisplayMode: .always))
+                .indexViewStyle(.page(backgroundDisplayMode: .always))
+                .opacity(style == nil ? 0 : 1)              // hidden for the one frame before the style is known
+                .task(id: key) { pickStyle(key) }
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .indexViewStyle(.page(backgroundDisplayMode: .always))
             HStack {
                 if page > 0 { Button(L("Back")) { withAnimation { page -= 1 } } }
                 Spacer()
@@ -66,6 +80,20 @@ struct GuideView: View {
         }
     }
 
+    /// Picks the biggest style for which all nine pages fit the room (once per size / language / replay / setup time).
+    private func pickStyle(_ key: PickKey) {
+        guard key.width > 0, key.room > 0 else { return }
+        let start = Date()
+        let chosen = GuideStyle.choose(width: key.width, room: key.room, replay: replay, model: model)
+        style = chosen
+        #if DEBUG
+        let ms = Date().timeIntervalSince(start) * 1000
+        Logger(subsystem: "sk.zrebec.sleephole", category: "guide").info(
+            "guide style: text \(chosen.textSize) pt, line \(chosen.lineHeight), gap \(chosen.gap), k \(chosen.k) – picked in \(ms) ms")
+        print("guide style: text \(chosen.textSize) pt, line \(chosen.lineHeight), gap \(chosen.gap), k \(chosen.k) – picked in \(Int(ms)) ms")
+        #endif
+    }
+
     func finish() {
         Self.complete(replay: replay, model: model)
         dismiss()
@@ -84,44 +112,117 @@ struct GuideView: View {
     }
 }
 
-/// Fixed sizes around a guide page, shared with the test that proves no page scrolls on a 375 × 667 pt iPhone SE.
+/// Fixed sizes around a guide page, shared with the test that proves no page scrolls on any supported iPhone.
 enum GuideLayout {
     /// Room kept under a page's content for the page dots.
     static let dotsHeight: CGFloat = 34
     static let buttonBarPadding: CGFloat = 12
 }
 
-/// One guide page: title, art row, the sleep buddy and its sentence in a comic bubble, and the page's own extras.
-/// The content is sized to fit the smallest supported iPhone at the default text size without scrolling.
+/// How big a guide page is drawn (owner 2026-10-18, step 9h): the text as large as the display allows, with a line height
+/// of 1.5 × the text size while it fits (WCAG 1.4.12), and real gaps between the blocks. The same for every page.
+struct GuideStyle: Equatable {
+    var textSize: CGFloat
+    /// Line height as a multiple of the text size.
+    var lineHeight: CGFloat
+    /// Gap between the title, the art, the cat and the text.
+    var gap: CGFloat
+
+    /// Scale of the title, the art and the cat relative to the 17-pt text of the smallest phone.
+    var k: CGFloat { textSize / 17 }
+    var titleSize: CGFloat { 1.6 * textSize }
+    func artSize(_ index: Int) -> CGFloat { (index == 1 ? 2.0 : 2.3) * textSize }
+    var catScale: CGFloat { min(k, 1.3) }
+
+    /// Extra spacing between lines so that a line is `lineHeight × textSize` tall (never negative).
+    var lineSpacing: CGFloat {
+        let base = UIFont.systemFont(ofSize: textSize, weight: .medium)
+        let font = base.fontDescriptor.withDesign(.rounded).map { UIFont(descriptor: $0, size: textSize) } ?? base
+        return max(0, lineHeight * textSize - font.lineHeight)
+    }
+
+    /// Most preferred first: line height 1.5 with 25 … 17 pt (gaps 28 … 14), then 17 pt tighter, then 16 and 15 pt.
+    static let candidates: [GuideStyle] = {
+        var list: [GuideStyle] = []
+        for size in stride(from: 25, through: 17, by: -1) {
+            let t = CGFloat(25 - size) / 8
+            list.append(GuideStyle(textSize: CGFloat(size), lineHeight: 1.5, gap: (28 - 14 * t).rounded()))
+        }
+        list.append(GuideStyle(textSize: 17, lineHeight: 1.35, gap: 12))
+        list.append(GuideStyle(textSize: 17, lineHeight: 1.2, gap: 10))
+        list.append(GuideStyle(textSize: 16, lineHeight: 1.2, gap: 8))
+        list.append(GuideStyle(textSize: 15, lineHeight: 1.2, gap: 8))
+        return list
+    }()
+    static let smallest = candidates[candidates.count - 1]
+
+    /// The first candidate that fits; the candidates run from big to small, so "fits" is monotone and a binary search
+    /// is enough. When nothing fits, the last (smallest) one.
+    static func pick(from list: [GuideStyle] = candidates, fits: (GuideStyle) -> Bool) -> GuideStyle {
+        var lo = 0, hi = list.count
+        while lo < hi {
+            let mid = (lo + hi) / 2
+            if fits(list[mid]) { hi = mid } else { lo = mid + 1 }
+        }
+        return lo < list.count ? list[lo] : list[list.count - 1]
+    }
+
+    /// Whether every one of the nine pages in this style fits `room` at this width (measured as the layout would;
+    /// stops at the first page that does not fit).
+    @MainActor static func fits(_ style: GuideStyle, width: CGFloat, room: CGFloat, replay: Bool, model: AppModel) -> Bool {
+        (0..<GuideText.pageCount).allSatisfy { i in
+            let view = GuidePageView(index: i, replay: replay, style: style, notificationsAllowed: .constant(nil),
+                                     showRules: .constant(false)).environment(model)
+            return UIHostingController(rootView: view)
+                .sizeThatFits(in: CGSize(width: width, height: .greatestFiniteMagnitude)).height <= room
+        }
+    }
+
+    @MainActor static func choose(width: CGFloat, room: CGFloat, replay: Bool, model: AppModel) -> GuideStyle {
+        pick { fits($0, width: width, room: room, replay: replay, model: model) }
+    }
+}
+
+/// One guide page: title, art row, the sleep buddy and its sentence, and the page's own extras.
+/// The sizes come from a `GuideStyle` the guide picks so that every page fits the display without scrolling.
 struct GuidePageView: View {
     @Environment(AppModel.self) private var model
     let index: Int
     var replay = false
+    var style: GuideStyle = .smallest
     @Binding var notificationsAllowed: Bool?
     @Binding var showRules: Bool
 
     private var content: GuideText.Page { GuideText.page(index, setup: model.settings.setupGrace) }
     /// Pages with extras show a smaller cat.
     private var catHeight: CGFloat {
-        switch index {
+        let base: CGFloat = switch index {
         case 0: 130
         case 1: 100
         case 6, 8: 170
         default: 200
         }
+        return base * style.catScale
     }
 
     var body: some View {
-        VStack(spacing: 8) {
-            Text(content.title).font(.title.bold()).multilineTextAlignment(.center)
+        VStack(spacing: style.gap) {
+            Text(content.title).font(.system(size: style.titleSize, weight: .bold)).multilineTextAlignment(.center)
                 .minimumScaleFactor(0.8).fixedSize(horizontal: false, vertical: true)
-            Text(content.art).font(.system(size: index == 1 ? 34 : 40))
+            Text(content.art).font(.system(size: style.artSize(index)))
             Image(content.cat).resizable().scaledToFit().frame(height: catHeight)
                 .accessibilityHidden(true)
-            GuideBubble(text: content.text)
+            Text(content.text)
+                .font(.system(size: style.textSize, weight: .medium, design: .rounded))
+                .lineSpacing(style.lineSpacing)
+                .foregroundStyle(.primary)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 4)
             extras
         }
-        .padding(.horizontal, 20).padding(.top, 12)
+        .padding(.horizontal, 20).padding(.top, style.gap / 2)
         .frame(maxWidth: .infinity)
     }
 
@@ -170,27 +271,6 @@ struct GuidePageView: View {
         default:
             EmptyView()
         }
-    }
-}
-
-/// The sleep buddy's comic speech bubble on a guide page: the tail points up to the cat, solid colours (no transparency).
-struct GuideBubble: View {
-    let text: String
-
-    var body: some View {
-        Text(text)
-            .font(.system(size: 17, weight: .medium, design: .rounded))
-            .foregroundStyle(SpeechBubbleShape.ink(.dark))
-            .multilineTextAlignment(.leading)
-            .fixedSize(horizontal: false, vertical: true)
-            .padding(.horizontal, 16)
-            .padding(.top, 11 + SpeechBubbleShape.tailHeight).padding(.bottom, 12)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background {
-                SpeechBubbleShape().fill(SpeechBubbleShape.paper(.dark))
-                SpeechBubbleShape().stroke(SpeechBubbleShape.ink(.dark).opacity(0.85),
-                                           style: StrokeStyle(lineWidth: 2.5, lineJoin: .round))
-            }
     }
 }
 
