@@ -15,6 +15,13 @@ before doing anything:
 2. `docs/PLAN.md` — product background and the owner's decisions (Slovak). Source of truth for intent.
 3. `assets/sprites/catalog.json` + `docs/previews/demo_town.png` — the finished art and how it should look.
 
+## 🌅 MONDAY 2026-10-19 – READ `docs/ZAJTRA-RANO.md` FIRST (owner's request 2026-10-18)
+
+On 2026-10-19, before anything else (right after listing the agenda below), read `docs/ZAJTRA-RANO.md` and follow its
+steps **exactly and in order** – the morning journal check, build 9's upload, the testers ("What to Test" EN / SK, the
+message to his three friends), the clean-install review recipe, his reinstall test of B35, departures.to. Tick a step
+there only after its proof is seen. When the whole file is done, say so to him and remove this section.
+
 ## 📌 FIRST THING EVERY SESSION – tell the owner (owner's explicit request, 2026-10-02)
 
 Whatever the owner's first message is (even just "Ahoj"), **start your reply by listing this agenda in Slovak**, then
@@ -29,12 +36,12 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    15s Strict warning (his lab 14:00 ✓); 9j 15s for leaving the app too; 9k shorter guide pages centred; 9l the chart
    complete (B34) + getting up; 9m the schedule settable in the replayed guide (+ "from tomorrow"); 9n the chart in
    variant A (no yellow, calendar-coloured start dots, legend first, regularity with a clock); 9o B35 (a reinstall with
-   iCloud off opened a new change week). He has `docs/TEST-BUILD-9.md`. **Next:** (a) the morning of 2026-10-19 – pull the
-   journal (read-only): no `.usedLockScreen` after the alarm (B26), the return at `willEnterForeground`, calm hours, the
-   15s rules; (b) `CURRENT_PROJECT_VERSION` 9 (a fix found by the night gets its own commit first), the upload (he runs
+   iCloud off opened a new change week). He has `docs/TEST-BUILD-9.md`. **Done 2026-10-19:** the night 18 → 19 complete, no bug
+   (B26 ✓, 9a ✓, 15s ✓, 7 of 8 calm hours, his chart look ✓); `CURRENT_PROJECT_VERSION` 9, tests green, committed
+   (`2f8c5eb` the chart's dot, `3675e52` build 9). The Release archive 1.0 (9) is made and checked. **Next:** (b) the upload (he runs
    the export command himself – the session's auto-mode check refuses it to Opus), "What to Test" with the 15-minute
-   recipe + how to send feedback + three questions (Opus drafts EN / SK), the testers; his yes asked: expire builds 1–7
-   after build 9; (c) his reinstall test of B35 on the phone in the daytime (steps in plan §12 2026-10-18, expected: the
+   recipe + how to send feedback + three questions (drafted in `docs/ZAJTRA-RANO.md`), the testers (he expired builds
+   1–7 himself 2026-10-18); (c) his reinstall test of B35 on the phone in the daytime (steps in plan §12 2026-10-18, expected: the
    change week still ends 22 Oct); (d) his daytime checks (the guide, the rules list, the chart, the setup time).
    His wish for later: when a bad night comes he will check the cat's ruins line; next month the bronze joker → the
    cat's "streak was safe" line.
