@@ -154,24 +154,45 @@ struct SettingsView: View {
                             UIApplication.shared.open(url)
                         }
                     }
-                    HStack {
-                        Text(L("System alarm"))
-                        Spacer()
-                        Text(alarmConsent.title).foregroundStyle(.secondary)
-                    }
-                    if alarmConsent == .notAsked {
-                        Button(L("Allow")) {
-                            Task { alarmConsent = await model.systemAlarm.requestConsent() }
+                    switch alarmConsent {
+                    case .allowed, .notAsked:
+                        Toggle(L("System alarm"), isOn: Binding(
+                            get: { model.settings.usesSystemAlarm },
+                            set: { on in
+                                model.setSystemAlarm(on: on)
+                                if on, alarmConsent == .notAsked {       // switching it on asks iOS right away
+                                    Task {
+                                        await model.systemAlarmIdle()
+                                        alarmConsent = model.systemAlarm.consent
+                                    }
+                                }
+                            }))
+                        if alarmConsent == .notAsked, model.settings.usesSystemAlarm {
+                            Button(L("Allow")) {
+                                Task { alarmConsent = await model.systemAlarm.requestConsent() }
+                            }
+                        }
+                    case .denied, .unavailable:
+                        HStack {
+                            Text(L("System alarm"))
+                            Spacer()
+                            Text(alarmConsent.title).foregroundStyle(.secondary)
                         }
                     }
                     if alarmConsent == .denied {
                         Text(L("To allow it, open iOS Settings → SleepHole."))
                             .font(.footnote).foregroundStyle(.secondary)
+                        Button(L("Open SleepHole in iOS Settings")) {
+                            if let url = URL(string: UIApplication.openSettingsURLString) {
+                                UIApplication.shared.open(url)
+                            }
+                        }
                     }
                 } footer: {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(L("Without notifications you won't get the “SleepHole must stay open” warning or the backup alarm. SleepHole's warnings are time sensitive – they arrive during a Focus (Sleep, Do Not Disturb) too. If iOS asks, keep them allowed."))
                         Text(L("The system alarm is a second backup next to the backup notifications: it rings in silent mode and during a Focus even if iOS has closed SleepHole – 30s after your wake time, or when SleepHole's own alarm stops after 2 minutes."))
+                        Text(L("Off: no system alarm in the morning – SleepHole's own alarm and the backup notifications still ring. In Strict mode the lock-screen warning still rings as a system alarm."))
                     }
                 }
 

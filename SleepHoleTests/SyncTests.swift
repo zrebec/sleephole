@@ -175,6 +175,21 @@ struct SyncTests {
         #expect(b.model.records().count == 1 && b.model.records().allSatisfy { !$0.isDebug && $0.isFinalized })
     }
 
+    @Test func theSystemAlarmSwitchStaysOnItsDevice() throws {
+        let a = device(at: date(1, 12)), b = device(at: date(1, 12))
+        a.model.settings.usesSystemAlarm = false
+        #expect(a.model.settings.changedAt == nil)                                   // no stamped change
+        #expect(a.model.makeBackup().settings.systemAlarmOff == true)
+        let file = a.model.makeSyncFile()
+        #expect(file.settings.systemAlarmOff == nil)
+        #expect(!String(decoding: try file.encodedForSync(), as: UTF8.self).contains("systemAlarmOff"))
+        // a newer remote settings file does not switch it back on, and the other way round
+        b.clock.now = date(1, 14); b.model.settings.alarmSound = .bowl
+        a.clock.now = date(1, 15)
+        #expect(try a.model.mergeSync([b.model.makeSyncFile()]))
+        #expect(a.model.settings.alarmSound == .bowl && !a.model.settings.usesSystemAlarm)
+    }
+
     @Test func aSyncFileHoldsNoSyncSwitchCarriesTheHealthSwitchAsAPreferenceAndTheLanguage() throws {
         let before = Lang.current
         defer { Lang.current = before }

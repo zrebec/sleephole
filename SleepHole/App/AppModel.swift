@@ -1108,6 +1108,7 @@ final class AppModel {
         var merged = remote
         merged.healthOn = settings.healthOn
         merged.syncOff = settings.syncOff
+        merged.systemAlarmOff = settings.systemAlarmOff
         guard merged != settings else { return false }
         applyingMergedSettings = true
         settings = merged
@@ -1626,6 +1627,7 @@ final class AppModel {
         setupEndsAt = setupEnds
         setupReminderAt = nil
         if servicesEnabled { Notifications.cancelSetupReminder() }
+        guard settings.usesSystemAlarm else { return }        // switched off in Settings: no backup, no question
         switch systemAlarm.consent {
         case .allowed:
             scheduleSystemAlarm(at: rec.wake + SystemAlarmPlan.afterWake)
@@ -1635,6 +1637,34 @@ final class AppModel {
                 let answer = await self.systemAlarm.requestConsent()
                 // the owner may take a while to answer: the night can be over by then
                 guard answer == .allowed, self.active?.id == rec.id, rec.wake > self.clock.now else { return }
+                self.scheduleSystemAlarm(at: rec.wake + SystemAlarmPlan.afterWake)
+            }
+        case .denied, .unavailable:
+            break
+        }
+    }
+
+    /// The Settings switch for the morning system alarm (B36). It works at once: off cancels a scheduled backup /
+    /// safety alarm; on, during a night / nap whose wake time is still ahead, schedules the backup (asking for consent
+    /// first when it was not asked yet, like `armAlarm`). The Strict-mode warning does not depend on it.
+    func setSystemAlarm(on: Bool) {
+        guard settings.usesSystemAlarm != on else { return }
+        settings.usesSystemAlarm = on
+        if !on {
+            cancelSystemAlarm()
+            return
+        }
+        let rec = active.flatMap { $0.wake > clock.now ? $0 : nil }     // a night / nap whose own alarm has not rung yet
+        if rec != nil { systemAlarmMoved = false }
+        switch systemAlarm.consent {
+        case .allowed:
+            if let rec { scheduleSystemAlarm(at: rec.wake + SystemAlarmPlan.afterWake) }
+        case .notAsked:                                           // switching it on asks, also with no night running
+            consentTask = Task { @MainActor [weak self] in
+                guard let self else { return }
+                let answer = await self.systemAlarm.requestConsent()
+                guard answer == .allowed, let rec, self.settings.usesSystemAlarm, self.active?.id == rec.id,
+                      rec.wake > self.clock.now else { return }
                 self.scheduleSystemAlarm(at: rec.wake + SystemAlarmPlan.afterWake)
             }
         case .denied, .unavailable:
@@ -1667,7 +1697,7 @@ final class AppModel {
     private func settleSystemAlarm(for rec: NightRecord) {
         systemAlarmMoved = false
         let early = !rec.isNap && rec.log.confirmedAt.map { $0 < rec.wake } == true
-        if early, systemAlarm.consent == .allowed, rec.wake > clock.now {
+        if early, settings.usesSystemAlarm, systemAlarm.consent == .allowed, rec.wake > clock.now {
             scheduleSystemAlarm(at: rec.wake, safety: true)
         } else {
             cancelSystemAlarm()

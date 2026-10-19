@@ -27,7 +27,7 @@ extension BackupFile.Night {
 
 extension BackupFile {
     /// What a device writes for the others: no debug nights, no night that is not finalized (a running one belongs to
-    /// the device that runs it), no sleep values, and not the sync switch (`syncOff`, per device). The UI language
+    /// the device that runs it), no sleep values, and not the per-device switches (`syncOff`, `systemAlarmOff`). The UI language
     /// travels, but only so that a device that has never chosen one can adopt it (`UserProgress.merge`); a device that
     /// has its own language never takes another's. The POSITION of the Apple Health switch travels as a preference (it
     /// is not health data): a normal merge keeps the local switch, only a new install (no nights of its own) takes it over
@@ -36,6 +36,7 @@ extension BackupFile {
         var file = self
         file.nights = nights.filter { !$0.isDebug && $0.finalizedAt != nil }.map { $0.withoutSleepValues() }
         file.settings.syncOff = nil
+        file.settings.systemAlarmOff = nil
         return file
     }
 
@@ -60,6 +61,7 @@ extension AppSettings {
         copy.changedAt = other.changedAt
         copy.healthOn = other.healthOn
         copy.syncOff = other.syncOff
+        copy.systemAlarmOff = other.systemAlarmOff
         return copy == other
     }
 }

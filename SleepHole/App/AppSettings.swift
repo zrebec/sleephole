@@ -52,6 +52,15 @@ struct AppSettings: Codable, Equatable {
         get { syncOff != true }
         set { syncOff = newValue ? nil : true }
     }
+    /// Build 10 (B36, owner 2026-10-19): set when the user switched the MORNING system alarm (the backup of a night /
+    /// nap and the safety alarm after an early confirmation) off ON THIS DEVICE. nil = on (the default). The Strict-mode
+    /// lock-screen warning is not affected. Per device, like `syncOff`: a merge keeps the local value, toggling it is no
+    /// change that gets a stamp and it is never put into a sync file. Optional so older settings still load as on.
+    var systemAlarmOff: Bool?
+    var usesSystemAlarm: Bool {
+        get { systemAlarmOff != true }
+        set { systemAlarmOff = newValue ? nil : true }
+    }
     /// Setup time of a normal start in minutes (build 9, owner 2026-10-15): 5 / 10 / 15, nil = 5. Copied into every
     /// night when it starts (`NightRecord.setupGrace`), so a change never touches a running or past night. Optional
     /// so settings saved by older builds (and old backups) load as 5.

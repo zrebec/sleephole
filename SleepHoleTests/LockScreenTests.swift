@@ -415,6 +415,20 @@ struct LockScreenTests {
         return (s, alarm, t)
     }
 
+    @Test func theWarningStillRingsAsASystemAlarmWithTheMorningAlarmSwitchedOff() async {
+        let alarm = FakeSystemAlarm(consent: .allowed)
+        let s = Scene(self, alarm: alarm)
+        s.model.settings.usesSystemAlarm = false
+        _ = s.startAndLock()
+        let t = s.wakeLockScreen()
+        s.clock.now = t + s.window
+        await waitUntil { s.kinds.contains(.usedLockScreen) }
+        await wait(0.05)
+        await s.model.systemAlarmIdle()
+        #expect(alarm.events.last == .ringWarning("alarm_alert.caf", 15))
+        #expect(alarm.scheduled.isEmpty)                                    // no morning backup was set
+    }
+
     @Test func theWarningRingsAsASystemAlarmWithTheAppsOwnSound() async {
         let (s, alarm, t) = await ringingScene()
         #expect(alarm.events.last == .ringWarning("alarm_alert.caf", 15))

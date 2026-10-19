@@ -5673,6 +5673,38 @@
         }
       }
     },
+    "Open SleepHole in iOS Settings": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open SleepHole in iOS Settings"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otvoriť SleepHole v Nastaveniach iOS"
+          }
+        }
+      }
+    },
+    "Off: no system alarm in the morning – SleepHole's own alarm and the backup notifications still ring. In Strict mode the lock-screen warning still rings as a system alarm.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off: no system alarm in the morning – SleepHole's own alarm and the backup notifications still ring. In Strict mode the lock-screen warning still rings as a system alarm."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vypnuté: ráno žiadny systémový budík – budík SleepHole a záložné upozornenia zazvonia aj tak. Varovanie prísneho režimu na zamknutej obrazovke zvoní ako systémový budík naďalej."
+          }
+        }
+      }
+    },
     "Open notification settings": {
       "localizations": {
         "en": {

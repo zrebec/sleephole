@@ -718,4 +718,78 @@ struct SystemAlarmTests {
         #expect(h.alarm.events.isEmpty)
         #expect(h.model.systemAlarmAt == wake + 30)
     }
+
+    // MARK: the Settings switch (build 10, B36)
+
+    @Test func switchedOffAStartedNightSchedulesNothingAndAsksNoConsent() async {
+        for consent in [SystemAlarmConsent.allowed, .notAsked] {
+            let h = await harness(consent: consent, at: date(5, 12))
+            h.model.settings.usesSystemAlarm = false
+            await startTonight(h)
+            #expect(h.alarm.events.isEmpty, "\(consent)")
+            #expect(h.model.systemAlarmAt == nil && h.model.backupNotificationsOn, "\(consent)")
+        }
+    }
+
+    @Test func switchedOffAnEarlyConfirmationLeavesNoSafetyAlarm() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.model.setSystemAlarm(on: false)
+        await h.model.systemAlarmIdle()
+        h.alarm.forgetEvents()
+        h.clock.now = date(6, 6, 5)
+        #expect(h.model.confirm())
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.scheduled.isEmpty && h.model.safetyAlarmAt == nil)
+    }
+
+    @Test func switchedOffDuringANightCancelsTheBackupAndOnAgainSchedulesItAgain() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        #expect(h.model.systemAlarmAt == wake + 30)
+        h.model.setSystemAlarm(on: false)
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.cancels == 1 && h.model.systemAlarmAt == nil && h.model.settings.systemAlarmOff == true)
+        h.alarm.forgetEvents()
+        h.model.setSystemAlarm(on: true)
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile)])
+        #expect(h.model.systemAlarmAt == wake + 30 && h.model.settings.systemAlarmOff == nil)
+    }
+
+    @Test func switchedOnAfterOurOwnAlarmRangSchedulesNothing() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        h.model.settings.usesSystemAlarm = false
+        await startTonight(h)
+        h.clock.now = wake + 10
+        h.model.setSystemAlarm(on: true)
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.scheduled.isEmpty)
+    }
+
+    @Test func switchedOnDuringANightAsksConsentFirstWhenNotAskedYet() async {
+        let h = await harness(consent: .notAsked, at: date(5, 12))
+        h.model.settings.usesSystemAlarm = false
+        await startTonight(h)
+        #expect(h.alarm.events.isEmpty)
+        h.model.setSystemAlarm(on: true)
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.events == [.requestConsent, .schedule(wake + 30, alarmFile)])
+    }
+
+    @Test func switchedOnWithNoNightRunningOnlyAsksConsent() async {
+        let h = await harness(consent: .notAsked, at: date(5, 12))
+        h.model.settings.usesSystemAlarm = false
+        h.model.setSystemAlarm(on: true)
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.events == [.requestConsent])
+    }
+
+    @Test func oldSettingsWithoutTheKeyDecodeAsOn() throws {
+        #expect(AppSettings().usesSystemAlarm && AppSettings().systemAlarmOff == nil)
+        var json = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(AppSettings())) as? [String: Any])
+        json.removeValue(forKey: "systemAlarmOff")
+        let old = try JSONDecoder().decode(AppSettings.self, from: JSONSerialization.data(withJSONObject: json))
+        #expect(old.usesSystemAlarm)
+    }
 }
