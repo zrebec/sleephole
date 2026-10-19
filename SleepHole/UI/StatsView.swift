@@ -234,11 +234,11 @@ struct CalendarGrid: View {
 }
 
 /// The last 30 nights: per night the build start (a dot in the outcome's colour) and, with Apple Health data, a bar up
-/// to the blue "fell asleep" diamond. Tap a night to select it; the dashed line is the bedtime.
+/// to the "fell asleep" dot. Tap a night to select it; the dashed line is the bedtime.
 struct NightChart: View {
     let points: [NightPoint]
     let bedtime: Schedule
-    /// Also draw the bars and the blue "fell asleep" points (Apple Health).
+    /// Also draw the bars and the "fell asleep" dots (Apple Health).
     var showsSleep = false
     /// The night shown selected when the card first appears (screenshots only).
     var initialSelection: NightKey?
@@ -310,11 +310,12 @@ struct NightChart: View {
         return Array(stride(from: first, through: domain.upperBound, by: step))
     }
 
-    /// The blue of sleep (falling asleep → getting up) and of the dashed wake line; theme-aware, ≥ 3 : 1 on the card.
+    /// The cyan-blue of sleep (falling asleep → getting up, full opacity) and of the dashed wake line; theme-aware, ≥ 3 : 1 on the card.
     static func sleepBlue(dark: Bool) -> Color {
-        dark ? Color(red: 0x8D / 255, green: 0xB4 / 255, blue: 0xF2 / 255) : Color(red: 0x3E / 255, green: 0x6F / 255, blue: 0xC9 / 255)
+        dark ? Color(red: 0x8F / 255, green: 0xD3 / 255, blue: 0xFF / 255) : Color(red: 0x1B / 255, green: 0x8F / 255, blue: 0xD1 / 255)
     }
-    static let sleepLineOpacity = (dark: 0.8, light: 0.75)
+    /// The dividing dot at falling asleep: white on dark, near-black on light (always contrasts with the card and both bars).
+    static func dividerColor(dark: Bool) -> Color { dark ? .white : Color(red: 0.07, green: 0.07, blue: 0.1) }
     /// The gradient of a night without Apple Health fades to this opacity at getting up.
     static let gradientTopOpacity = 0.25
 
@@ -338,12 +339,12 @@ struct NightChart: View {
         return [c, c.opacity(gradientTopOpacity)]
     }
 
-    enum LegendItem: Equatable { case fallingAsleep, sleep, withoutHealth, outcome(Outcome) }
+    enum LegendItem: Equatable { case fallingAsleep, fellAsleepDot, sleep, withoutHealth, outcome(Outcome) }
 
     /// The chips under the chart: only marks that really appear in it.
     static func legendItems(points: [NightPoint], showsSleep: Bool) -> [LegendItem] {
         var items: [LegendItem] = []
-        if showsSleep, points.contains(where: { $0.startMinutes != nil && $0.asleepMinutes != nil }) { items.append(.fallingAsleep) }
+        if showsSleep, points.contains(where: { $0.startMinutes != nil && $0.asleepMinutes != nil }) { items.append(.fallingAsleep); items.append(.fellAsleepDot) }
         if points.contains(where: { drawsSleepLine($0, showsSleep: showsSleep) }) { items.append(.sleep) }
         if showsSleep, points.contains(where: { drawsGradient($0, showsSleep: true) }) { items.append(.withoutHealth) }
         for o in [Outcome.complete, .unfinished, .ruins, .excused]
@@ -405,7 +406,7 @@ struct NightChart: View {
                         if Self.drawsSleepLine(p, showsSleep: showsSleep), let a = p.asleepMinutes, let up = p.upMinutes {
                             RuleMark(x: .value(L("Night"), i), yStart: .value(L("Fell asleep"), a), yEnd: .value(L("Getting up"), up))
                                 .lineStyle(StrokeStyle(lineWidth: on ? 5 : 3, lineCap: .round))
-                                .foregroundStyle(blue.opacity(dark ? Self.sleepLineOpacity.dark : Self.sleepLineOpacity.light))
+                                .foregroundStyle(blue)
                                 .accessibilityLabel(label)
                         } else if Self.drawsGradient(p, showsSleep: showsSleep), let s = p.startMinutes, let up = p.upMinutes {
                             RuleMark(x: .value(L("Night"), i), yStart: .value(L("Start"), s), yEnd: .value(L("Getting up"), up))
@@ -423,11 +424,14 @@ struct NightChart: View {
                                 .symbolSize(size)
                                 .accessibilityLabel(label)
                         }
-                        if on, showsSleep, let a = p.asleepMinutes {
+                        if showsSleep, let a = p.asleepMinutes {                          // the dividing dot at falling asleep
+                            let size: Double = on ? 100 : 36
                             PointMark(x: .value(L("Night"), i), y: .value(L("Fell asleep"), a))
-                                .foregroundStyle(Color.blue)
-                                .symbol(.diamond)
-                                .symbolSize(150)
+                                .foregroundStyle(Self.ringColor(dark: dark))
+                                .symbolSize(pow(size.squareRoot() + 4, 2))
+                            PointMark(x: .value(L("Night"), i), y: .value(L("Fell asleep"), a))
+                                .foregroundStyle(Self.dividerColor(dark: dark))
+                                .symbolSize(size)
                                 .accessibilityLabel(label)
                         }
                         if on, let up = p.upMinutes {
@@ -488,8 +492,12 @@ struct NightChart: View {
                     case .fallingAsleep:
                         Capsule().fill(Self.barColor).frame(width: 5, height: 14)
                         Text(L("Falling asleep"))
+                    case .fellAsleepDot:
+                        Circle().fill(Self.dividerColor(dark: dark)).frame(width: 7, height: 7)
+                            .overlay(Circle().stroke(Self.ringColor(dark: dark), lineWidth: 1))
+                        Text(L("Fell asleep"))
                     case .sleep:
-                        Capsule().fill(blue.opacity(dark ? Self.sleepLineOpacity.dark : Self.sleepLineOpacity.light)).frame(width: 3, height: 14)
+                        Capsule().fill(blue).frame(width: 3, height: 14)
                         Text(L("Sleep"))
                     case .withoutHealth:
                         Capsule().fill(LinearGradient(colors: Self.gradientColors(.complete), startPoint: .bottom, endPoint: .top))
