@@ -62,7 +62,7 @@ neinštaluje.** Týždeň na zmeny máš do 22. 10. 2026.
         <key>uploadSymbols</key><true/>
       </dict></plist>
       ```
-- [ ] **Ty:** nahratie spustíš sám (Claudovi ho kontrola sedenia nedovolí): Claude ti dá presný príkaz
+- [x] **Ty:** nahratie spustíš sám (Claudovi ho kontrola sedenia nedovolí): Claude ti dá presný príkaz
       `xcodebuild -exportArchive -archivePath "…/SleepHole 1.0 (9).xcarchive" -exportOptionsPlist <scratchpad>/ExportOptions.plist
       -exportPath <scratchpad>/export-9 -allowProvisioningUpdates` a ty ho spustíš s `!` na začiatku. **Len raz** – pri
       builde 8 bežal omylom dvakrát. Čakáme na „Upload succeeded“ a „EXPORT SUCCEEDED“. Ak by sa objavilo okno kľúčenky
@@ -70,25 +70,34 @@ neinštaluje.** Týždeň na zmeny máš do 22. 10. 2026.
 
 ## Krok 3 – testeri (keď Apple build 9 spracuje, zvyčajne 10–30 min)
 
-- [ ] **Ty alebo Claude s tvojím áno:** App Store Connect → TestFlight → 1.0 (9) → pridať do skupín **Kamaráti** aj
+*19. 10.: „Upload succeeded“ (tvoje nahratie). Claude v App Store Connect (len čítanie): 1.0 (9) „Testing“, v skupinách
+Kamaráti aj SE, „What to Test“ anglicky – presne text nižšie (1 536 znakov). Slovenčina chýba: TestFlight má zatiaľ len
+anglickú lokalizáciu „Test Information“ – slovenská sa dá pridať (tvoje áno).*
+*13:15: slovenčinu si pridal sám (popis bety + „What to Test“); Claude overil: 1.0 (9) má Slovak, 1 487 znakov = text nižšie.*
+
+- [x] **Ty alebo Claude s tvojím áno:** App Store Connect → TestFlight → 1.0 (9) → pridať do skupín **Kamaráti** aj
       **SE**, odpovedať na otázku o šifrovaní ako pri builde 8, vložiť „What to Test“ (texty nižšie).
-- [ ] **Ty:** osobná správa trom kamarátom (text nižšie).
+- [x] **Ty:** osobná správa trom kamarátom (text nižšie). *16:30: tvoje „DONE“.*
 
 ## Krok 4 – návod pre Apple na čistom telefóne, potom výmena buildu na kontrole
 
 - [ ] **Druhý tester** (telefón, na ktorom SleepHole nikdy nebol) nainštaluje build 9 z TestFlightu a prejde
-      `docs/REVIEW-NOTES.md` („celá noc za 15 minút“). Claude mu ponúkne slovenskú kópiu návodu do iCloudu.
+      `docs/REVIEW-NOTES.md` („celá noc za 15 minút“). *Druhý tester = tvoja manželka; návod s ňou prejdeš ty, slovenskú kópiu
+      netreba (tvoje slovo 19. 10.).*
 - [ ] Až potom **ty** (alebo Claude s tvojím áno pri každom kroku): build 7 stiahnuť z kontroly, pripojiť build 9 a vložiť
       do App Review Information → Notes text z `docs/REVIEW-NOTES.md` (súbor a pole musia byť rovnaké), znova podať
       s ručným vydaním. Pred podaním Claude zopakuje celú agendu (tvoja požiadavka zo 16. 10.).
 
-## Krok 5 – ty, cez deň: test preinštalovania (B35)
+## Krok 5 – ty, cez deň: test preinštalovania (B35) ✓
 
 **Kedy:** cez deň, po nahratí buildu 9. Nie počas odpočinku a **nie po 18:30** (od 3 hodín pred večierkou platí
 zmena rozvrhu až od zajtra a test by sa skreslil). Nesmie bežať noc ani odpočinok.
 
 *Príprava*
 1. Napíš Claudovi „idem na test“. Claude overí, že nič nebeží, a stiahne celé úložisko do Macu.
+   *19. 10. 16:35 ✓: nič nebeží (posledná noc uzavretá 6:00), rozvrh 21:30 / 6:00, prísny režim zapnutý, Zdravie
+   zapnuté, týždeň na zmeny od 16. 10. (do 22. 10.); úložisko je v Macu. Na telefóne je build z Macu z 18. 10. 18:54 –
+   presne ten Claude po zmazaní nainštaluje.*
 2. V appke: **Nastavenia → Záloha → Exportovať zálohu** → Uložiť do Súborov → **iCloud Drive**. (Automatická
    záloha v „Na mojom iPhone“ sa so zmazaním appky stratí.)
 3. Otvor appku a minútu počkaj, nech iCloud dobehne. V Nastaveniach → Rozvrh má byť „🔧 Týždeň na zmeny … (do 22. 10. 2026)“.
@@ -107,6 +116,21 @@ zmena rozvrhu až od zajtra a test by sa skreslil). Nesmie bežať noc ani odpo�
    - ❌ **chyba:** ostalo 22:15 / 6:45, alebo týždeň na zmeny končí neskôr (napr. 26. 10.).
 10. Napíš Claudovi; stiahne úložisko a porovná. Ak niečo nesedí: **Nastavenia → Záloha → Obnoviť zo zálohy…**
     zo súboru v iCloud Drive; potom skontrolujete prísny režim (má byť zapnutý), zvuk budíka, Zdravie a upozornenia.
+
+**✓ Uzavreté 19. 10. ~16:55 (tvoje slovo: „nič toto už opakovať nebudeme“).** Dvakrát: prepínač SleepHole v iCloud Drive
+vypnutý → appka zmazaná → Claude ju nainštaloval z Macu (ten istý build). **Sprievodca sa ani raz neukázal** – appka hneď
+načítala iCloud a vrátila všetko: mesto aj jeho názov, dnešnú stavbu, 20 nocí a 18 odpočinkov, rozvrh 21:30 / 6:00, týždeň
+na zmeny do 22. 10., prísny režim, Zdravie, žolíka a mince (Claude porovnal úložisko pred a po). Nevrátilo sa len 7
+vývojárskych skúšobných nocí – tie sa do iCloudu neposielajú. Pri prvom pokuse sa iOS podľa teba pýtal aj na iCloud
+(dal si „Povoliť“), pri druhom nie. **Bežná cesta je teda overená, prípad B35 (sprievodca a až potom iCloud) sa na tvojom
+telefóne vyvolať nedal** – len vypnutím celého iCloud Drive alebo odhlásením, a to nerobíme. Oprava B35 stojí na testoch;
+sprievodcu na čistom telefóne uvidí manželka (krok 4).
+*Tvoje vysvetlenie (~17:10): po zmazaní appka zo zoznamu Nastavenia → tvoje meno → iCloud → Uložené v iCloude → Zobraziť
+všetko úplne zmizne a po novej inštalácii je iCloud pre ňu znova zapnutý bez otázky – preinštalovanie samo vráti voľbu na
+„zapnuté“. Apple to slovami nikde nepíše, ale jeho dokumenty s tým súhlasia (zdroje v pláne §12). Nič sa nemení.*
+*~17:15 si to doskúšal sám: náš prepínač „Synchronizovať cez iCloud“ nechá prepínač iPhonu zapnutý; s vypnutým prepínačom
+iPhonu appka napíše „iCloud nie je dostupný“ ✓; po preinštalovaní z Xcode (teraz 1.0 (9)) sa po ~2 s všetko vrátilo a
+prepínač iPhonu sa zapol sám. Claude overil úložisko: 21:30 / 6:00, týždeň do 22. 10., prísny režim – dnešná noc je v poriadku.*
 
 ## Krok 6 – ty: departures.to (kategórie Health + Audio namiesto Health + AI)
 

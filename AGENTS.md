@@ -29,23 +29,14 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 9 is in work (plan §0b, §10 REL).** Build 8 is finished (committed `b7d5f75`, uploaded as 1.0 (8) 2026-10-18,
-   in both tester groups). **His phone runs the whole build 9 – steps 9a–9o (Debug) – since 2026-10-18 18:20**, all
-   committed (9a–9f `75339b5`/`15e6b7d`, 9g `e595db6`, 9h `ae04425`, 9i `8c6dca0`, 9j–9o `3a2647b`, docs commits; he
-   pushes). His additions that day: 9g Settings rows "Guide" / "All rules"; 9h the guide follows the display; 9i B33 +
-   15s Strict warning (his lab 14:00 ✓); 9j 15s for leaving the app too; 9k shorter guide pages centred; 9l the chart
-   complete (B34) + getting up; 9m the schedule settable in the replayed guide (+ "from tomorrow"); 9n the chart in
-   variant A (no yellow, calendar-coloured start dots, legend first, regularity with a clock); 9o B35 (a reinstall with
-   iCloud off opened a new change week). He has `docs/TEST-BUILD-9.md`. **Done 2026-10-19:** the night 18 → 19 complete, no bug
-   (B26 ✓, 9a ✓, 15s ✓, 7 of 8 calm hours, his chart look ✓); `CURRENT_PROJECT_VERSION` 9, tests green, committed
-   (`2f8c5eb` the chart's dot, `3675e52` build 9). The Release archive 1.0 (9) is made and checked. **Next:** (b) the upload (he runs
-   the export command himself – the session's auto-mode check refuses it to Opus), "What to Test" with the 15-minute
-   recipe + how to send feedback + three questions (drafted in `docs/ZAJTRA-RANO.md`), the testers (he expired builds
-   1–7 himself 2026-10-18); (c) his reinstall test of B35 on the phone in the daytime (steps in plan §12 2026-10-18, expected: the
-   change week still ends 22 Oct); (d) his daytime checks (the guide, the rules list, the chart, the setup time).
-   His wish for later: when a bad night comes he will check the cat's ruins line; next month the bronze joker → the
-   cat's "streak was safe" line.
-2. **Apple's review:** build 7 is still "Waiting for Review" (2026-10-18). **His yes 2026-10-18:** once build 9 is uploaded,
+1. **Build 9 is finished (2026-10-19, plan §0b, §10 REL):** its first night 18 → 19 complete with no bug, committed
+   (`2f8c5eb` the chart's dot, `3675e52` build 9, docs; he pushes), uploaded by him ~12:00, 1.0 (9) in Kamaráti and SE with
+   "What to Test" EN + SK (he added the Slovak localization himself). No build is in work now – build 10 waits for his
+   word (scope freeze until 1.0). **Open today from `docs/ZAJTRA-RANO.md`:** the second
+   tester's clean install (see 2) – his wife, he walks the recipe with her (no Slovak copy needed); departures.to (categories Health + Audio); his daytime checks of
+   build 9 (`docs/TEST-BUILD-9.md`). His wish for later: when a bad night comes he will check the cat's ruins line;
+   next month the bronze joker → the cat's "streak was safe" line.
+2. **Apple's review:** build 7 is still "Waiting for Review" (2026-10-18). **His yes 2026-10-18:** now that build 9 is uploaded,
    a second tester tries `docs/REVIEW-NOTES.md` on their own phone (build 9 from TestFlight, no SleepHole before – the clean device),
    then build 7 leaves the review and build 9 goes in with those notes (the App Store Connect clicks are his, or his yes per
    action). **When build 8 (or its successor) goes to review, repeat this whole agenda to
@@ -62,7 +53,7 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 5. **Owed device checks:** the review recipe on a clean install (the second tester, see 2); R4 – the app killed by iOS in the night
    and opened while the SYSTEM alarm rings → only one alarm (his normal mornings ring one – 2026-10-18; this rarer case is
    untried); Developer → System alarm test – what the system's own stop button says (B27).
-6. **Open bugs (plan §11a):** B8, B10, B30; B27 to re-check. B28 and B33 (9i) proven fixed on his phone 2026-10-18; B34 (9l), B35 (9o – his reinstall test owed) and B12–B16, B22, B26 are fixed in build 9 (tests – his night will tell).
+6. **Open bugs (plan §11a):** B8, B10, B30; B27 to re-check. B28 and B33 (9i) proven fixed on his phone 2026-10-18; B34 (9l), B35 (9o – his reinstall test 2026-10-19: nothing lost, but the B35 path itself was unreachable on his phone; closed, rests on tests) and B12–B16, B22, B26 are fixed in build 9 (tests – his night will tell).
 7. **Standing notes:** the app is free for now (price 0 since 2026-10-12; a price only after an accountant – never push;
    his reasons stay out of this public repo); the Strict switch is ON on his phone; App Store Connect can be read in his
    Chrome – every change needs his yes, agreements, bank, tax and legal declarations stay his own clicks.
@@ -259,8 +250,8 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | Path | What |
 |---|---|
 | `docs/IMPLEMENTATION_PLAN.md` | the plan (read first) |
-| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (source: the scratchpad file of 2026-10-16 – rebuild it from this .md) – **when §0b changes, update all three** |
-| (claude.ai page) | the owner's bug list B1–B32, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (2026-10-16) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
+| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (source: a scratchpad file of 2026-10-19 – gone with the session; read the page with the Artifact tool, edit, republish) – **when §0b changes, update all three** |
+| (claude.ai page) | the owner's bug list B1–B32, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (updated 2026-10-19) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
 | `docs/AGENDA-ARCHIVE.md` | the old long session-start agenda, moved there verbatim 2026-10-16 – history only, no instructions |
 | `docs/REVIEW-NOTES.md` | the App Review notes text (English) for App Store Connect → App Review Information → Notes; since build 9 the 15-minute recipe sets the times in the first-run guide – keep the file and the field identical (changing the field needs his yes) |
 | `docs/TEST-BUILD-8.md` | the owner's test list for build 8 (Slovak): "now" and "tonight" – the base of the testers' "What to Test" |

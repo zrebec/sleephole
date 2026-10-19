@@ -20,7 +20,7 @@ Stav k 18. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 | Build | Téma | Stav |
 |---|---|---|
 | 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
-| 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | 9a–9f postavené, v tvojom telefóne od 18. 10. 09:03, commitnuté; 9g–9k pridané tebou; 9g–9i v telefóne a commitnuté, 9j–9m v telefóne (9m od 16:35); ďalej tvoja noc, nahratie, build 9 namiesto 7 na kontrolu |
+| 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | hotový – ostrá noc 18.→19. 10. bez chyby, commitnutý, nahratý ako 1.0 (9) 19. 10., u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky); ďalej návod pre Apple na čistom telefóne, potom build 9 namiesto 7 na kontrolu |
 | 10 | Štatistiky a nový žreb | návrh |
 | 11 | Mesto | návrh |
 | 12 | Živé mesto | návrh |
@@ -54,7 +54,14 @@ náhodne a novinka dňa ide prvá. Po zrútenej noci pomenuje budovu a povie pra
 
 **Stav 18. 10.:** dve ostré noci (16.→17. a 17.→18. 10., obe hotové, 8 z 8 pokojných hodín), commit `b7d5f75`, nahratý do App Store Connect o 07:04, „What to Test“ uložené, skupiny Kamaráti aj SE (SE pridané tvojím klikom).
 
-## Build 9 – Sprievodca a jasné pravidlá (kandidát na verziu 1.0)
+## Build 9 – Sprievodca a jasné pravidlá (kandidát na verziu 1.0) – hotový, u testerov
+
+**Stav 19. 10.:** prvá ostrá noc (18.→19. 10.) hotová a bez chyby – pravidlá 15s uložené, po budíku nič zo zamknutej
+obrazovky (B26 ✓), návrat do appky hneď po rozpoznaní (9a ✓), 7 z 8 pokojných hodín; graf s deliacou bodkou si potvrdil.
+Commity `2f8c5eb` (bodka v grafe), `3675e52` (build 9) a dokumenty; nahratý ako 1.0 (9) (tvoje nahratie), v skupinách
+Kamaráti aj SE, „What to Test“ anglicky aj slovensky (slovenčinu si pridal sám). Ďalej: návod pre Apple na čistom telefóne
+(druhý tester – manželka), potom build 9 namiesto 7 na kontrolu. Test preinštalovania (B35) 19. 10. popoludní: nič sa
+nestratilo, týždeň na zmeny stále do 22. 10.; samotný prípad B35 sa na tvojom telefóne vyvolať nedal – uzavreté tvojím slovom.
 
 Hlavnou vecou je nový sprievodca: mačka v bubline prevedie nového človeka deviatimi stranami a na konci je zoznam
 všetkých pravidiel s číslami priamo z kódu. Žiadna strana sa na najmenšom iPhone nebude rolovať. Dĺžka prípravy
@@ -69,12 +76,12 @@ B12, B13, B14, B15, B16, B22 a B26.
 
 | Krok | Typ | Čo | Stav |
 |---|---|---|---|
-| 9a | zmenené | návrat do appky sa ráta o ~0,8s skôr (v tvoj prospech, potichu) | hotové, testy |
+| 9a | zmenené | návrat do appky sa ráta o ~0,8s skôr (v tvoj prospech, potichu) | hotové, testy, overené nocou 18.→19. 10. |
 | 9b | nové | čas na prípravu 5 / 10 / 15 min v Nastaveniach | hotové, testy |
 | 9c | nové | sprievodca: 9 strán, rozpráva mačka; „Ako funguje SleepHole“ – všetky pravidlá | hotové, testy, iPhone SE bez rolovania |
 | 9d | nové | FAQ na webe: Centrum hlásení je odchod z appky | commitnuté (`454c43d`), ide von tvojím pushom |
 | 9e | zmenené | návod pre Apple: časy v sprievodcovi (`docs/REVIEW-NOTES.md`) + automatický test | hotové, testy; do App Store Connect až s tvojím áno |
-| 9f | opravené | B12, B13, B14, B15, B16, B22, B26 | hotové, testy |
+| 9f | opravené | B12, B13, B14, B15, B16, B22, B26 | hotové, testy; B26 overená nocou 18.→19. 10. |
 | 9g | zmenené | Nastavenia: riadky „Sprievodca“ a „Všetky pravidlá“ (tvoje áno 18. 10.) | hotové, testy, v telefóne od 18. 10. ~10:55 |
 | 9h | zmenené | Sprievodca podľa displeja: bez bubliny, čo najväčšie písmo, riadkovanie 1,5 kde sa zmestí, rozostupy (tvoje výhrady 18. 10.) | hotové, testy, v telefóne od 18. 10. 11:46 |
 | 9i | opravené | B33 + varovanie prísneho režimu trvá 15s a zvoní až do zrútenia (tvoje slovo 18. 10.) | hotové, testy, v telefóne od 18. 10. 13:56; tvoj test 14:00: zvonil ~15s, potom zrútenie ✓ |
@@ -82,8 +89,8 @@ B12, B13, B14, B15, B16, B22 a B26.
 | 9k | zmenené | kratšie strany sprievodcu vycentrované na výšku (tvoje áno 18. 10.) | hotové, testy, v telefóne od 18. 10. 15:22 |
 | 9l | opravené + nové | graf nocí kompletný (B34: chýbalo 6 začatých nocí) a bohatší: aj vstávanie – potvrdenie budíka, inak koniec spánku z Apple Health – žltou čiarou od zaspatia (tvoje želanie 18. 10.) | hotové, testy, v telefóne od 18. 10. 15:49 |
 | 9m | opravené | sprievodca otvorený z Nastavení: večierka, budík aj pripomenutie sa dajú nastaviť priamo v ňom, podľa pravidiel týždňa na zmeny (tvoje želanie 18. 10., ako SleepTown) | hotové, testy, v telefóne od 18. 10. 16:35, doplnok „platí od zajtra“ od 16:58 |
-| 9n | zmenené | graf nocí vo variante A: spánok tichou modrou namiesto žltej, začiatok vždy vo farbe kalendára, body zaspatia a vstávania len pri vybranej noci, noc bez Apple Zdravia prechodom vo farbe výsledku, pod grafom najprv značky, potom slová (tvoje rozhodnutie 18. 10.) + pravidelnosť s hodinami a slovom podľa čísla | hotové, testy, v telefóne od 18. 10. 18:10 |
-| 9o | opravené | B35: preinštalovanie appky s vypnutým iCloudom už neotvorí nový týždeň na zmeny (tvoje áno 18. 10.) | hotové, testy, v telefóne od 18. 10. 18:20; tvoj test preinštalovania zajtra |
+| 9n | zmenené | graf nocí vo variante A: spánok tichou modrou namiesto žltej, začiatok vždy vo farbe kalendára, body zaspatia a vstávania len pri vybranej noci, noc bez Apple Zdravia prechodom vo farbe výsledku, pod grafom najprv značky, potom slová (tvoje rozhodnutie 18. 10.) + pravidelnosť s hodinami a slovom podľa čísla; doplnok: deliaca bodka pri zaspatí a jasnejšia čiara spánku | hotové, testy, v telefóne od 18. 10. 18:10 (bodka 18:54); potvrdil si 19. 10. |
+| 9o | opravené | B35: preinštalovanie appky s vypnutým iCloudom už neotvorí nový týždeň na zmeny (tvoje áno 18. 10.) | hotové, testy, v telefóne od 18. 10. 18:20; tvoj test 19. 10.: dvakrát sa vrátilo všetko, prípad B35 sa vyvolať nedal (stojí na testoch) |
 
 **Tvoje odpovede 18. 10.:** spodná lišta plná je OK; build 7 zajtra vymeníme za build 9 a dáme k nemu nový návod pre Apple – najprv ho vyskúša druhý tester na svojom telefóne (build 9 z TestFlightu). **B28 je overená na tvojom telefóne** (test 18. 10. 12:00–12:06: „Zastaviť“, zhasnutie aj nechať tak – appka budík vypne načas). Test našiel **B33**: varovanie sľubuje 10s, ale zvoní len ~7,5s (začne o 2,5s neskôr a stíchne 3s pred zrútením) – tvoje rozhodnutie: 15s a zvoniť až do zrútenia, ide do buildu 9 ako krok 9i. **9i je v telefóne od 13:56 a tvoj test o 14:00 to potvrdil:** varovanie nechané tak zvonilo ~15s, potom testovacia stavba spadla a hlásenie prišlo aj na hodinky.
 
@@ -125,6 +132,7 @@ skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón l
 - láskavý posun večierky po viacerých skorších nociach; skoršie ukončenie odpočinku (B10)
 - najnovšia budova namiesto mačky na Dnes; čínština (teraz neodporúčané); výskumné centrum
 - batéria (B8); testovací systémový budík (B27) znova preveriť
+- zvuk nočného vlaku na spánok – prototyp na stránke (20 min + klapot A / B / C); odložené 19. 10., teraz nie je priorita
 
 ## Vydanie v App Store
 
