@@ -82,8 +82,9 @@ anglickú lokalizáciu „Test Information“ – slovenská sa dá pridať (tvo
 ## Krok 4 – návod pre Apple na čistom telefóne, potom výmena buildu na kontrole
 
 - [ ] **Druhý tester** (telefón, na ktorom SleepHole nikdy nebol) nainštaluje build 9 z TestFlightu a prejde
-      `docs/REVIEW-NOTES.md` („celá noc za 15 minút“). *Druhý tester = tvoja manželka; návod s ňou prejdeš ty, slovenskú kópiu
-      netreba (tvoje slovo 19. 10.).*
+      `docs/REVIEW-NOTES.md` („celá noc za 15 minút“). *Návod s druhým testerom prejdeš ty, slovenskú kópiu
+      netreba (tvoje slovo 19. 10.).* *~17:30: nainštaloval si appku na telefón druhého testera – sprievodca sa ukázal a prebehol v poriadku ✓.
+      Či prešla aj „celú noc za 15 minút“, ešte povieš. Jej postreh o pružnej večierke a chyba B36 → `docs/NAVRH-FLEXIBILITA.md`.*
 - [ ] Až potom **ty** (alebo Claude s tvojím áno pri každom kroku): build 7 stiahnuť z kontroly, pripojiť build 9 a vložiť
       do App Review Information → Notes text z `docs/REVIEW-NOTES.md` (súbor a pole musia byť rovnaké), znova podať
       s ručným vydaním. Pred podaním Claude zopakuje celú agendu (tvoja požiadavka zo 16. 10.).
@@ -124,7 +125,7 @@ na zmeny do 22. 10., prísny režim, Zdravie, žolíka a mince (Claude porovnal 
 vývojárskych skúšobných nocí – tie sa do iCloudu neposielajú. Pri prvom pokuse sa iOS podľa teba pýtal aj na iCloud
 (dal si „Povoliť“), pri druhom nie. **Bežná cesta je teda overená, prípad B35 (sprievodca a až potom iCloud) sa na tvojom
 telefóne vyvolať nedal** – len vypnutím celého iCloud Drive alebo odhlásením, a to nerobíme. Oprava B35 stojí na testoch;
-sprievodcu na čistom telefóne uvidí manželka (krok 4).
+sprievodcu na čistom telefóne uvidí druhý tester (krok 4).
 *Tvoje vysvetlenie (~17:10): po zmazaní appka zo zoznamu Nastavenia → tvoje meno → iCloud → Uložené v iCloude → Zobraziť
 všetko úplne zmizne a po novej inštalácii je iCloud pre ňu znova zapnutý bez otázky – preinštalovanie samo vráti voľbu na
 „zapnuté“. Apple to slovami nikde nepíše, ale jeho dokumenty s tým súhlasia (zdroje v pláne §12). Nič sa nemení.*

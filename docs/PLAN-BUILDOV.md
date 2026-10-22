@@ -8,12 +8,14 @@ Stav k 18. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 1. **Jeden build naraz.** Build, na ktorom sa robí, má pevný zoznam krokov (8a, 8b, …). Krok doňho pridávaš len ty.
    Claude môže navrhnúť jedným riadkom a čaká na tvoje slovo.
 2. **Každý nový nápad – tvoj aj Claudov – ide do tohto plánu** do niektorého z ďalších buildov alebo do „Neskôr“,
-   jedným riadkom. Nič nepreskočí rad bez tvojho slova. Zmrazenie rozsahu až do vydania 1.0 platí ďalej: buildy 10–12
+   jedným riadkom. Nič nepreskočí rad bez tvojho slova. Zmrazenie rozsahu až do vydania 1.0 platí ďalej: buildy 11–15
    sú plán, nie rozrobená práca.
 3. **Build je hotový**, až keď je každý krok skontrolovaný (testy zelené, texty kompletné v oboch jazykoch), je v tvojom
    telefóne, prežil jednu ostrú noc, je commitnutý, nahratý do TestFlightu a pridaný testerom so zoznamom „What to Test“.
 4. **Číslo buildu je číslo v TestFlighte** (`CURRENT_PROJECT_VERSION`); krok je číslo + písmeno (8a, 8b, …).
 5. **Agenda na začiatku sedenia je krátka** – len to, čo je otvorené teraz. História ide do plánu (§12).
+6. **Tick-tock (tvoje pravidlo 19. 10.):** buildy sa striedajú – jeden na nové veci (11, 13, 15, …), ďalší na doladenie
+   (10, 12, 14, …) s opravami a chybami, ktoré sa medzitým našli. Do dolaďovacieho buildu nová funkcia nejde.
 
 ## Prehľad
 
@@ -21,9 +23,12 @@ Stav k 18. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 |---|---|---|
 | 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
 | 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | hotový – ostrá noc 18.→19. 10. bez chyby, commitnutý, nahratý ako 1.0 (9) 19. 10., u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky); ďalej návod pre Apple na čistom telefóne, potom build 9 namiesto 7 na kontrolu |
-| 10 | Štatistiky a nový žreb | návrh |
-| 11 | Mesto | návrh |
-| 12 | Živé mesto | návrh |
+| 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | v práci od 19. 10. |
+| 11 | **Nové veci:** voľné noci, štatistiky a nový žreb | návrh |
+| 12 | **Doladenie** | návrh |
+| 13 | **Nové veci:** mesto | návrh |
+| 14 | **Doladenie** | návrh |
+| 15 | **Nové veci:** živé mesto | návrh |
 | Neskôr | nápady bez čísla buildu | zásobník |
 
 ## Build 8 – Pokoj a drobné opravy (hotový, u testerov)
@@ -60,7 +65,7 @@ náhodne a novinka dňa ide prvá. Po zrútenej noci pomenuje budovu a povie pra
 obrazovky (B26 ✓), návrat do appky hneď po rozpoznaní (9a ✓), 7 z 8 pokojných hodín; graf s deliacou bodkou si potvrdil.
 Commity `2f8c5eb` (bodka v grafe), `3675e52` (build 9) a dokumenty; nahratý ako 1.0 (9) (tvoje nahratie), v skupinách
 Kamaráti aj SE, „What to Test“ anglicky aj slovensky (slovenčinu si pridal sám). Ďalej: návod pre Apple na čistom telefóne
-(druhý tester – manželka), potom build 9 namiesto 7 na kontrolu. Test preinštalovania (B35) 19. 10. popoludní: nič sa
+(druhý tester), potom build 9 namiesto 7 na kontrolu. Test preinštalovania (B35) 19. 10. popoludní: nič sa
 nestratilo, týždeň na zmeny stále do 22. 10.; samotný prípad B35 sa na tvojom telefóne vyvolať nedal – uzavreté tvojím slovom.
 
 Hlavnou vecou je nový sprievodca: mačka v bubline prevedie nového človeka deviatimi stranami a na konci je zoznam
@@ -94,7 +99,25 @@ B12, B13, B14, B15, B16, B22 a B26.
 
 **Tvoje odpovede 18. 10.:** spodná lišta plná je OK; build 7 zajtra vymeníme za build 9 a dáme k nemu nový návod pre Apple – najprv ho vyskúša druhý tester na svojom telefóne (build 9 z TestFlightu). **B28 je overená na tvojom telefóne** (test 18. 10. 12:00–12:06: „Zastaviť“, zhasnutie aj nechať tak – appka budík vypne načas). Test našiel **B33**: varovanie sľubuje 10s, ale zvoní len ~7,5s (začne o 2,5s neskôr a stíchne 3s pred zrútením) – tvoje rozhodnutie: 15s a zvoniť až do zrútenia, ide do buildu 9 ako krok 9i. **9i je v telefóne od 13:56 a tvoj test o 14:00 to potvrdil:** varovanie nechané tak zvonilo ~15s, potom testovacia stavba spadla a hlásenie prišlo aj na hodinky.
 
-## Build 10 – Štatistiky a nový žreb (návrh)
+## Build 10 – Doladenie: vypínač budíka, neskorší začiatok a otvorené chyby (v telefóne od 22. 10. 7:03)
+
+**Tvoje slovo 19. 10. ~19:30** (po prečítaní `docs/NAVRH-FLEXIBILITA.md`; zmrazenie do 1.0 si pre tieto dva kroky zrušil):
+
+| Krok | Typ | Čo | Stav |
+|---|---|---|---|
+| 10a | opravené | B36: systémový budík má klasický prepínač iPhonu. Vypnutý = ráno žiadna záloha ani poistný budík po skoršom potvrdení; varovanie prísneho režimu na zamknutej obrazovke ostáva (tvoja voľba); platí hneď, aj počas noci | hotové, **commitnuté samostatne (`5421f1d`)**, v telefóne od 22. 10. 7:03 |
+| 10b | zmenené | začať stavbu do **+30 min** po večierke v miernom režime; prísny režim ostáva +5; skorší začiatok sa nemení (−10 min, skorý štart od −3 h) | hotové, v telefóne od 22. 10. 7:03; skúšaš jemný mód od 22. 10. |
+| 10c | opravené | B10: odpočinok sa dá potvrdiť v posledných 20 % – pri 30 min od 24. minúty, pri 60 min od 48. minúty; dĺžky 30 / 60 min sa nemenia; skoršie potvrdenie = hotový odpočinok za 50 🪙 (tvoje áno 19. a 20. 10.) | hotové, v telefóne od 22. 10. 7:03 |
+| 10d | opravené | B8: batéria – ostrovček na Dnes sa nebude prekresľovať 20× za sekundu, počty sa nebudú stále prepočítavať, záloha sa pripraví až pri exporte; vzhľad ostane rovnaký (tvoje áno 20. 10.). Ostrovček už na Dnes nie je, takže tam nebolo čo opravovať; živé nebo ostáva, ako je | hotové, v telefóne od 22. 10. 7:03 |
+| 10e | opravené | B30: appka si pamätá pohľad na mesto a doskroluješ ku každej budove; oddialenie sa nemení – celé veľké mesto sa nezmestí a skrolovať je súčasť hry (tvoje slovo 20. 10.); po každej novej budove sa mesto raz presunie k nej (tvoje áno 22. 10.); karta hore ostáva, vrchol každej veže sa dá potiahnuť pod ňu | hotové, v telefóne od 22. 10. 7:03 |
+
+Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Aplikácie → SleepHole. Neskorší začiatok nemá vlastnú pokutu: príprava beží od začiatku a pokojné hodiny sa rátajú až od jej konca, takže neskorší štart prinesie menej mincí. „Dnešný budík“ (B) si nechcel; druhý rozvrh (D) nie – namiesto neho voľné noci (E) v builde 11.
+
+## Build 11 – Nové veci: voľné noci, štatistiky a nový žreb (návrh)
+
+**Najprv voľné noci (E – tvoje slovo 19. 10.):** dve noci v týždni voľno, ako to má SleepTown – väčšina ľudí chodí v piatok a sobotu spať inak (tvoje želanie 18. 10.). Podrobnosti ešte dohodneme.
+
+**Prehľadný „účet“ mincí po noci (tvoj nápad 22. 10.):** každá časť mincí na vlastnom riadku – budova a jej level, noc bez pauzy, pokojné hodiny, bonus za sériu.
 
 Skutočný mesačný kalendár s obdobiami a detail noci ako samostatná obrazovka s časovou osou. Graf spánku v jednej
 čiare so štyrmi farbami (šiel si spať, zaspal si, budíček, kedy si naozaj vstal).
@@ -107,17 +130,25 @@ Ak sa zmestí, aj zoznam chýb v appke (Nastavenia → Vývoj, ako „Plány a n
 čítanie z jedného .md súboru. Návrh Claude: obrazovka „Plány a návrhy“ bude čítať tento plán buildov namiesto starého
 prehľadu z 12. 10. (čaká na tvoje slovo).
 
-**Voľné noci (tvoje želanie 18. 10.):** dve noci v týždni voľno, ako to má SleepTown – väčšina ľudí chodí v piatok a sobotu spať inak. Claude navrhuje build 10; treba rozhodnúť, či ide o voľné noci, alebo o iný rozvrh pre tie noci.
-
 Navrch prístupnosť (VoiceOver, väčšie písmo) na obrazovkách Dnes, noc a Štatistiky – appka je pre veľa ľudí.
 
-## Build 11 – Mesto (návrh)
+Toto bol pôvodný build 10 (štatistiky a nový žreb); voľné noci pribudli 18.–19. 10.
 
-Celé veľké mesto bude vidieť naraz a appka si zapamätá pohľad (chyba B30, týka sa miest od asi 45 nocí). Viac
+## Build 12 – Doladenie (návrh)
+
+Opravy po builde 11 a chyby, ktoré sa medzitým nájdu.
+
+## Build 13 – Nové veci: mesto (návrh)
+
+Pohľad na mesto (B30) sa presunul do buildu 10. Viac
 budov úrovne 3 – dnes sa ich päť opakuje. Ostrov, ktorého pobrežie kopíruje mesto (čaká na tvoju odpoveď: voda
 všade, alebo horizont).
 
-## Build 12 – Živé mesto (návrh)
+## Build 14 – Doladenie (návrh)
+
+Opravy po builde 13.
+
+## Build 15 – Nové veci: živé mesto (návrh)
 
 Dážď a sneh nad mestom, deň a noc so svetlami lámp a okien. Live Activity a Dynamic Island s odpočtom noci (najprv
 skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón len leží.
@@ -129,9 +160,9 @@ skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón l
 - štart noci z Apple Watch (najprv skúška)
 - zvieratká v meste (Cube Pets), téma Fantasy Town, robotický hlas hlásateľa
 - počasie cez celú obrazovku Dnes (najprv vysvetli „ako stierač na aute“)
-- láskavý posun večierky po viacerých skorších nociach; skoršie ukončenie odpočinku (B10)
+- láskavý posun večierky po viacerých skorších nociach
 - najnovšia budova namiesto mačky na Dnes; čínština (teraz neodporúčané); výskumné centrum
-- batéria (B8); testovací systémový budík (B27) znova preveriť
+- testovací systémový budík (B27) znova preveriť
 - zvuk nočného vlaku na spánok – prototyp na stránke (20 min + klapot A / B / C); odložené 19. 10., teraz nie je priorita
 
 ## Vydanie v App Store

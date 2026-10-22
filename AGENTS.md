@@ -31,9 +31,9 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 
 1. **Build 9 is finished (2026-10-19, plan §0b, §10 REL):** its first night 18 → 19 complete with no bug, committed
    (`2f8c5eb` the chart's dot, `3675e52` build 9, docs; he pushes), uploaded by him ~12:00, 1.0 (9) in Kamaráti and SE with
-   "What to Test" EN + SK (he added the Slovak localization himself). No build is in work now – build 10 waits for his
-   word (scope freeze until 1.0). **Open today from `docs/ZAJTRA-RANO.md`:** the second
-   tester's clean install (see 2) – his wife, he walks the recipe with her (no Slovak copy needed); departures.to (categories Health + Audio); his daytime checks of
+   "What to Test" EN + SK (he added the Slovak localization himself). **Build 10 is ON HIS PHONE since 2026-10-22 07:03 – a POLISHING build (tick-tock, his rule 2026-10-19, plan §0b rule 7, §10 REL):** 10a B36 the system alarm toggle (committed alone `5421f1d`), 10b the start until bedtime +30 min in the gentle mode (he tries the gentle mode from 2026-10-22 – Strict off), 10c B10 a nap confirmable in its last 20 % (50 🪙), 10d B8 (the derived-value cache, the streak flame, the lazy backup; the island was no longer on Today), 10e B30 (the camera remembered per device, a glide to each new building; zoom cap and first look unchanged). All reviewed; Opus's runs 2026-10-22 07:02: SleepCore 419, app 559, i18n 763 – green. **Next: his day checks, one real night, then commit (his word – 10b–10e and the docs are uncommitted), `CURRENT_PROJECT_VERSION` 10, upload, testers.** The second tester
+   switches the system alarm off in iOS Settings → SleepHole until build 10 is in TestFlight. **Open today from `docs/ZAJTRA-RANO.md`:** the second
+   tester's clean install (see 2) – he walks the recipe with the tester (no Slovak copy needed); departures.to (categories Health + Audio); his daytime checks of
    build 9 (`docs/TEST-BUILD-9.md`). His wish for later: when a bad night comes he will check the cat's ruins line;
    next month the bronze joker → the cat's "streak was safe" line.
 2. **Apple's review:** build 7 is still "Waiting for Review" (2026-10-18). **His yes 2026-10-18:** now that build 9 is uploaded,
@@ -44,16 +44,17 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 3. **His streak:** the night of 2026-10-15 → 16 collapsed (one trip of 13.15s; Notification Center counts as leaving on
    iOS 26); the silver joker saved it (1 000 🪙). October's bronze and silver are used and he will not buy the gold – the
    next failed night this month breaks the streak. Be kind about it.
-4. **Waiting for his word:** nights off (his wish 2026-10-18 – two nights a week, like SleepTown; Opus proposes build 10;
-   days off vs a second schedule for those nights?); the reroll during the setup (his idea, roadmap build 10) – Opus recommends 100 🪙, +100 for
-   each further reroll of the same night, none free; the roadmap builds 10–12 (plan §0b); the eight questions
-   at the end of `docs/NAVRH-MESTO-STATISTIKY.md` (they shape builds 10–12); still open from 2026-10-14: the seller name
+4. **Waiting for his word:** the Xcode reformat of the two string catalogs sits in `git stash` (2026-10-19) – drop it?;
+   nights off = build 11 (his word 2026-10-19: E, not a second schedule; details still to agree – two nights a week, like
+   SleepTown); the reroll during the setup (his idea, roadmap build 11) – Opus recommends 100 🪙, +100 for
+   each further reroll of the same night, none free; the roadmap builds 11–13 (plan §0b); the eight questions
+   at the end of `docs/NAVRH-MESTO-STATISTIKY.md` (they shape builds 11–13); still open from 2026-10-14: the seller name
    on the Business page (it differs from the copyright name), what "a little tuning of the home screen UI" and "some AI
    optimisation" mean, what "like a wiper on a car" means (weather over Today).
 5. **Owed device checks:** the review recipe on a clean install (the second tester, see 2); R4 – the app killed by iOS in the night
    and opened while the SYSTEM alarm rings → only one alarm (his normal mornings ring one – 2026-10-18; this rarer case is
    untried); Developer → System alarm test – what the system's own stop button says (B27).
-6. **Open bugs (plan §11a):** B8, B10, B30; B27 to re-check. B28 and B33 (9i) proven fixed on his phone 2026-10-18; B34 (9l), B35 (9o – his reinstall test 2026-10-19: nothing lost, but the B35 path itself was unreachable on his phone; closed, rests on tests) and B12–B16, B22, B26 are fixed in build 9 (tests – his night will tell).
+6. **Open bugs (plan §11a):** B36 (10a), B10 (10c), B8 (10d), B30 (10e) – on his phone since 2026-10-22 07:03, not confirmed yet; B27 to re-check. B28 and B33 (9i) proven fixed on his phone 2026-10-18; B34 (9l), B35 (9o – his reinstall test 2026-10-19: nothing lost, but the B35 path itself was unreachable on his phone; closed, rests on tests) and B12–B16, B22, B26 are fixed in build 9 (tests – his night will tell).
 7. **Standing notes:** the app is free for now (price 0 since 2026-10-12; a price only after an accountant – never push;
    his reasons stay out of this public repo); the Strict switch is ON on his phone; App Store Connect can be read in his
    Chrome – every change needs his yes, agreements, bank, tax and legal declarations stay his own clicks.
@@ -119,7 +120,8 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
 * Signing: the owner's **paid Apple Developer Program** team `8V2VSXHQ86` (since 2026-10, proven by a signed build).
   In use: Time Sensitive notifications (F6a), WeatherKit (owner's OK 2026-10-07, phase TOWN-W). Other paid-only APIs (HealthKit, iCloud, push) only when the owner
   asks for them. AlarmKit needs no entitlement.
-* Night rules **R3** (plan D15 + findings 2026-09-29/30): start only bedtime −10…+5 min; setup until
+* Night rules **R3** (plan D15 + findings 2026-09-29/30): start only bedtime −10…+5 min (**from build 10b: until +30 min in
+  the gentle mode, Strict mode keeps +5 – owner 2026-10-19**); setup until
   max(start, bedtime) + the setup time (Settings, 5 / 10 / 15 min, default 5 – build 9, owner 2026-10-15; stored with the night at its start); **an early start ("Go to sleep early today", owner 2026-10-11, plan §10 EARLY) is
   allowed from bedtime − 3 h, after a short confirmation, with no penalty – the night counts in full and the morning
   does not change; its setup lasts 15 min from the start**; after the setup, leaving the app → warning after ~3 s and 15 s to return (10 s for nights stored before build 9j – owner 2026-10-18) (and at most
@@ -252,11 +254,13 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `docs/IMPLEMENTATION_PLAN.md` | the plan (read first) |
 | `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (source: a scratchpad file of 2026-10-19 – gone with the session; read the page with the Artifact tool, edit, republish) – **when §0b changes, update all three** |
 | (claude.ai page) | the owner's bug list B1–B32, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (updated 2026-10-19) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
+| (claude.ai page) | build 10 for the owner (Slovak, 2026-10-22): what 10a–10e fixed and how, what to try at once, how to switch the phone for the night (Strict off), and a morning reply form with a copy button: https://claude.ai/artifact/P5jc2DhAxdEwfEtKnhzkLX (source: a scratchpad file of 2026-10-22 – read the page with the Artifact tool to edit it) |
 | `docs/AGENDA-ARCHIVE.md` | the old long session-start agenda, moved there verbatim 2026-10-16 – history only, no instructions |
 | `docs/REVIEW-NOTES.md` | the App Review notes text (English) for App Store Connect → App Review Information → Notes; since build 9 the 15-minute recipe sets the times in the first-run guide – keep the file and the field identical (changing the field needs his yes) |
 | `docs/TEST-BUILD-8.md` | the owner's test list for build 8 (Slovak): "now" and "tonight" – the base of the testers' "What to Test" |
 | `docs/PLAN.md` | product decisions (Slovak) |
 | `docs/NAVRH-ZVIERATKA.md` | next plans A/B/C: pause, sleep buddy, Cube Pets residents, living town (Slovak, owner picks) |
+| `docs/NAVRH-FLEXIBILITA.md` | research and options for a flexible bedtime / alarm outside Strict mode (Slovak, 2026-10-19, after the second tester's first run): sleep-regularity studies, Apple Health and SleepTown, options A–F, Opus's recommendation, five questions; a copy in his iCloud `SleepHole/` and the private claude.ai page https://claude.ai/artifact/EbHqHizVfMU8GFk4wr86L4 (source: a scratchpad file of 2026-10-19 – read the page with the Artifact tool to edit it) |
 | `docs/NAVRH-MESTO-STATISTIKY.md`, `docs/previews/navrh-2026-10-10/` | proposals of 2026-10-10 after the 100-night simulation (Slovak) and their SVG mock-ups – the spec of phase NEXT (plan §10); the owner picks |
 | `docs/PREHLAD-PLANOV.md` | the owner's overview of everything open (Slovak, 2026-10-11): one table with effort and priority per item + short descriptions; priorities are Opus's recommendation – the plan's §10 stays the spec. **Bundled into Debug builds and shown in Settings → Developer → "Plans and proposals" (`SleepHole/Debug/PlansView.swift`) – keep the main table's five columns (`#` first) or the parser loses it; no `http` links. A `✅` in a row's priority cell marks it finished (green badges on the screen) – set it only after the proof is seen** |
 | `docs/ROZBOR-APP-REVIEW.md` | what Apple's review can question and the way to a submission (Slovak, 2026-10-12): twelve risks with guideline numbers, the three undocumented lock signals and their documented fallback, the steps to a review with a manual release, five decisions asked from the owner. A copy is in his iCloud Drive `SleepHole/` |
