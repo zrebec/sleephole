@@ -2,20 +2,16 @@ import SwiftUI
 import SleepCore
 
 /// The schedule editor under the change-week rules (owner 2026-10-15): the status line, bedtime / wake / reminder on a
-/// draft, Cancel / Save, the "Start a change week?" alert and the paid unlock. ONE place for the rules – Settings and the
-/// guide opened again from Settings both use it (owner 2026-10-18: the guide must be able to set the times).
+/// draft, Cancel / Save, the "Start a change week?" alert and the paid unlock. Settings → Schedule is the only user:
+/// the guide opened again from Settings no longer edits the schedule (owner 2026-10-22, build 10f).
 /// It returns several rows, so it can sit directly in a List section or in a VStack.
 struct ScheduleEditor: View {
     @Environment(AppModel.self) private var model
-    /// The guide: short status texts and a Cancel / Save row that is always there (disabled until something changed),
-    /// so the page height stays the same.
-    var compact = false
     @State private var draft: Schedule?
     @State private var confirmSchedule: Bool
     @State private var confirmUnlock = false
 
-    init(compact: Bool = false) {
-        self.compact = compact
+    init() {
         #if DEBUG
         _confirmSchedule = State(initialValue: DevArgs.list.contains("-openScheduleDialog"))   // screenshots of the first-change dialog
         #else
@@ -30,12 +26,6 @@ struct ScheduleEditor: View {
         return timesChanged && state == .open ? .confirm : .apply
     }
 
-    /// The compact (guide) status line: a pending change wins over the state text, because it says when the new times
-    /// really start. false = show the state text.
-    static func showsPendingNote(state: SchedulePolicy.State, pending: Bool, compact: Bool) -> Bool {
-        compact && pending
-    }
-
     private var changed: Bool { draft.map { $0 != model.editableSchedule } ?? false }
 
     var body: some View {
@@ -43,7 +33,7 @@ struct ScheduleEditor: View {
             status.id("schedule")
             ScheduleFields(schedule: Binding(get: { draft ?? model.editableSchedule }, set: { draft = $0 }),
                            timesLocked: !SchedulePolicy.allowsChange(model.scheduleState))
-            if changed || compact {
+            if changed {
                 HStack {
                     Button(L("Cancel")) { draft = nil }
                         .buttonStyle(.borderless)
@@ -88,38 +78,20 @@ struct ScheduleEditor: View {
 
     /// What state the schedule is in (change week) and, while it is locked, the paid unlock.
     @ViewBuilder private var status: some View {
-        if Self.showsPendingNote(state: model.scheduleState, pending: model.settings.pendingSchedule != nil,
-                                 compact: compact) {
-            Text(L("The new times apply from tomorrow – tonight's building can already start.")).font(.footnote).lineLimit(2, reservesSpace: true)
-        } else { stateStatus }
+        stateStatus
     }
 
     @ViewBuilder private var stateStatus: some View {
         switch model.scheduleState {
         case .open:
-            if compact {
-                Text(L("Your first change opens a 7-day change week."))
-                    .font(.footnote).foregroundStyle(.secondary).lineLimit(2, reservesSpace: true)
-            } else {
-                Text(L("You can change your schedule. The first change opens a change week (7 days); after it your schedule stays the same for a month."))
-                    .font(.footnote).foregroundStyle(.secondary)
-            }
+            Text(L("You can change your schedule. The first change opens a change week (7 days); after it your schedule stays the same for a month."))
+                .font(.footnote).foregroundStyle(.secondary)
         case .changeWeek(let lastDay):
-            if compact {
-                Text(L("🔧 Change week: \(SettingsView.daysLeft(until: lastDay, now: model.clock.now)) left. Change freely."))
-                    .font(.footnote).lineLimit(2, reservesSpace: true)
-            } else {
-                Text(L("🔧 Change week: \(SettingsView.daysLeft(until: lastDay, now: model.clock.now)) left (until \(Fmt.fullDate(lastDay))). Change it as often as you like."))
-                    .font(.footnote)
-            }
+            Text(L("🔧 Change week: \(SettingsView.daysLeft(until: lastDay, now: model.clock.now)) left (until \(Fmt.fullDate(lastDay))). Change it as often as you like."))
+                .font(.footnote)
         case .locked(let lastDay, let freeFrom):
-            if compact {
-                Text(L("🔒 Set until \(Fmt.fullDate(lastDay)). Free change from \(Fmt.fullDate(freeFrom))."))
-                    .font(.footnote).lineLimit(2, reservesSpace: true)
-            } else {
-                Text(L("🔒 Your schedule is set until \(Fmt.fullDate(lastDay)). A free change week again from \(Fmt.fullDate(freeFrom))."))
-                    .font(.footnote)
-            }
+            Text(L("🔒 Your schedule is set until \(Fmt.fullDate(lastDay)). A free change week again from \(Fmt.fullDate(freeFrom))."))
+                .font(.footnote)
             let missing = max(0, SchedulePolicy.unlockPrice - model.coins)
             Button(L("Unlock now · 2,000 🪙")) { confirmUnlock = true }
                 .disabled(missing > 0)

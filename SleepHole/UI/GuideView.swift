@@ -14,7 +14,7 @@ enum Plural {
 }
 
 /// First-run guide: nine swipe pages the sleep buddy narrates (owner 2026-10-18, build 9c).
-/// `replay` = opened again from Settings (the times are then edited under the change-week rules, the guide does not finish anything).
+/// `replay` = opened again from Settings (the times are only shown – they are changed in Settings → Schedule; the guide does not finish anything).
 struct GuideView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
@@ -38,7 +38,7 @@ struct GuideView: View {
     }
 
     private struct PickKey: Hashable {
-        var width: CGFloat, room: CGFloat, language: AppLanguage, replay: Bool, setup: TimeInterval, locked: Bool
+        var width: CGFloat, room: CGFloat, language: AppLanguage, replay: Bool, setup: TimeInterval, pending: Bool
     }
 
     var body: some View {
@@ -46,7 +46,7 @@ struct GuideView: View {
             GeometryReader { proxy in
                 let room = proxy.size.height - GuideLayout.dotsHeight
                 let key = PickKey(width: proxy.size.width, room: room, language: model.language, replay: replay,
-                                  setup: model.settings.setupGrace, locked: !SchedulePolicy.allowsChange(model.scheduleState))
+                                  setup: model.settings.setupGrace, pending: model.settings.pendingSchedule != nil)
                 TabView(selection: $page) {
                     ForEach(0..<Self.pageCount, id: \.self) { i in
                         ScrollView {
@@ -240,8 +240,8 @@ struct GuidePageView: View {
             @Bindable var model = model
             VStack(spacing: 6) {
                 if replay {
-                    // opened again from Settings: the same editor and rules as Settings → Schedule
-                    ScheduleEditor(compact: true)
+                    // opened again from Settings: the times are only shown (owner 2026-10-22, build 10f)
+                    ReplayScheduleRows()
                 } else {
                     // first run: saved at once (the guide is always free)
                     ScheduleFields(schedule: Binding(get: { model.settings.schedule }, set: { model.applySchedule($0) }))
@@ -277,6 +277,42 @@ struct GuidePageView: View {
             .padding(.top, 4)
         default:
             EmptyView()
+        }
+    }
+}
+
+/// The replayed guide's page 2: the times as plain, non-interactive rows and a pointer to Settings → Schedule.
+struct ReplayScheduleRows: View {
+    @Environment(AppModel.self) private var model
+
+    /// The reminder line, the same texts `ScheduleFields` uses.
+    static func reminderText(_ minutes: Int) -> String {
+        minutes == 0 ? L("Reminder: off") : L("Reminder \(minutes) min before bedtime")
+    }
+
+    var body: some View {
+        let schedule = model.editableSchedule
+        VStack(spacing: 8) {
+            row(L("Bedtime"), Fmt.time(schedule.bedtime))
+            row(L("Wake-up"), Fmt.time(schedule.wake))
+            Text(Self.reminderText(schedule.reminderOffsets.first ?? 0))
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(L("You change your schedule in Settings → Schedule."))
+                .font(.footnote).foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            if model.settings.pendingSchedule != nil {
+                Text(L("The new times apply from tomorrow – tonight's building can already start."))
+                    .font(.footnote).foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+
+    private func row(_ label: String, _ value: String) -> some View {
+        HStack {
+            Text(label)
+            Spacer()
+            Text(value).monospacedDigit().fontWeight(.semibold)
         }
     }
 }

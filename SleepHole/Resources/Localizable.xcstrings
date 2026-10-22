@@ -12681,50 +12681,18 @@
         }
       }
     },
-    "Your first change opens a 7-day change week.": {
+    "You change your schedule in Settings → Schedule.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Your first change opens a 7-day change week."
+            "value": "You change your schedule in Settings → Schedule."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prvá zmena otvorí 7-dňový týždeň na zmeny."
-          }
-        }
-      }
-    },
-    "🔧 Change week: %@ left. Change freely.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔧 Change week: %@ left. Change freely."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔧 Týždeň na zmeny: ešte %@. Meň, ako chceš."
-          }
-        }
-      }
-    },
-    "🔒 Set until %@. Free change from %@.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔒 Set until %@. Free change from %@."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🔒 Platí do %@. Zmena zadarmo od %@."
+            "value": "Rozvrh zmeníš v Nastaveniach → Rozvrh."
           }
         }
       }

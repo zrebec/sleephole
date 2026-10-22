@@ -202,6 +202,27 @@ struct GuideTests {
         }
     }
 
+    /// The replayed guide with a change waiting for tomorrow (the extra footnote on page 2) still fits the smallest phone.
+    @Test func replayedGuideWithPendingChangeFitsTheSmallestPhone() {
+        defer { Lang.current = .en }
+        let c = store()
+        let (m, _) = makeModel(c, at: date(5, 22, 25))
+        var later = m.settings.schedule; later.bedtime = TimeOfDay(23, 0)
+        m.settings.pendingSchedule = PendingSchedule(schedule: later, fromNight: NightKey("2026-10-08")!)
+        let p = Self.phones[0]
+        for lang in AppLanguage.allCases {
+            Lang.current = lang
+            let style = chosenStyle(p, replay: true, model: m)
+            for i in 0..<GuideText.pageCount {
+                let view = GuidePageView(index: i, replay: true, style: style, notificationsAllowed: .constant(nil),
+                                         showRules: .constant(false)).environment(m).environment(sprites)
+                let h = UIHostingController(rootView: view)
+                    .sizeThatFits(in: CGSize(width: p.w, height: CGFloat.greatestFiniteMagnitude)).height
+                #expect(h <= room(p), "\(p.name) page \(i + 1) (\(lang), pending) needs \(h) pt, room \(room(p)) pt, style \(style)")
+            }
+        }
+    }
+
     @Test func bigPhonesGetBiggerTextWithTheFullLineHeight() {
         defer { Lang.current = .en }
         let c = store()
@@ -344,11 +365,14 @@ struct GuideTests {
         #expect(ScheduleEditor.saveStep(old: old, draft: times, state: week) == .apply)          // in the week it saves at once
     }
 
-    @Test func scheduleEditorCompactMessage() {
-        let week = SchedulePolicy.State.changeWeek(lastDay: NightKey("2026-10-11")!)
-        #expect(ScheduleEditor.showsPendingNote(state: week, pending: true, compact: true))
-        #expect(ScheduleEditor.showsPendingNote(state: week, pending: false, compact: true) == false)
-        #expect(ScheduleEditor.showsPendingNote(state: week, pending: true, compact: false) == false)   // Settings has its footer
-        #expect(ScheduleEditor.showsPendingNote(state: .open, pending: true, compact: true))
+    /// The replayed guide's read-only reminder line uses the same texts as the pickers, in both languages.
+    @Test func replayScheduleReminderText() {
+        defer { Lang.current = .en }
+        Lang.current = .en
+        #expect(ReplayScheduleRows.reminderText(0) == "Reminder: off")
+        #expect(ReplayScheduleRows.reminderText(30) == "Reminder 30 min before bedtime")
+        Lang.current = .sk
+        #expect(ReplayScheduleRows.reminderText(0) != "Reminder: off")
+        #expect(ReplayScheduleRows.reminderText(30) != "Reminder 30 min before bedtime")
     }
 }
