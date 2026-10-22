@@ -1705,18 +1705,34 @@
         }
       }
     },
-    "“Go to sleep” works from %@ before bedtime until %@ after it.": {
+    "“Go to sleep” works from %@ before bedtime until %@ after it – in Strict mode until %@ after it.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "“Go to sleep” works from %@ before bedtime until %@ after it."
+            "value": "“Go to sleep” works from %@ before bedtime until %@ after it – in Strict mode until %@ after it."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "„Ísť spať“ ide od %@ pred večierkou do %@ po nej."
+            "value": "„Ísť spať“ ide od %@ pred večierkou do %@ po nej – v prísnom režime do %@ po nej."
+          }
+        }
+      }
+    },
+    "In Strict mode “Go to sleep” also closes sooner: %@ after bedtime instead of %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In Strict mode “Go to sleep” also closes sooner: %@ after bedtime instead of %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V prísnom režime sa „Ísť spať“ zatvára skôr: %@ po večierke namiesto %@."
           }
         }
       }

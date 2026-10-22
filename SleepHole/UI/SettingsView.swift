@@ -201,6 +201,7 @@ struct SettingsView: View {
                         .disabled(nightRunning)
                 } footer: {
                     Text(L("Off: when you unlock the phone and keep using it at night, SleepHole only reminds you gently and the building stays. On: the phone rings a loud warning, and tonight's building comes down if you keep using it."))
+                    Text(L("In Strict mode “Go to sleep” also closes sooner: \(Plural.minutes(SleepRules().startDeadline)) after bedtime instead of \(Plural.minutes(SleepRules.gentleStartDeadline))."))
                     if !LockCapability.canTellLockFromLeaving() {
                         Text(L("Without a passcode with Face ID or Touch ID, SleepHole can't tell locking the phone from leaving the app, so leaving isn't counted on this iPhone."))
                     }
@@ -279,7 +280,7 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    ShareLink(item: BackupDocument(data: (try? model.makeBackup().encoded()) ?? Data()),
+                    ShareLink(item: BackupDocument { [model] in (try? model.makeBackup().encoded()) ?? Data() },
                               preview: SharePreview(L("SleepHole – backup"))) {
                         Label(L("Export backup"), systemImage: "square.and.arrow.up")
                     }

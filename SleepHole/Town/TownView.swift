@@ -6,6 +6,7 @@ import SwiftUI
 struct TownSpriteView: UIViewRepresentable {
     let model: TownRenderModel
     let focus: ScenePoint?
+    let newest: String?
     let version: Int
     let imageProvider: (String) -> UIImage?
     let onTap: (Int?) -> Void
@@ -33,16 +34,18 @@ struct TownSpriteView: UIViewRepresentable {
         [pan, pinch, tap, doubleTap].forEach { view.addGestureRecognizer($0) }
         pan.delegate = context.coordinator
         pinch.delegate = context.coordinator
-        scene.show(model, focus: focus)
+        scene.show(model, focus: focus, newest: newest)
         context.coordinator.shownVersion = version
         return view
     }
+
+    static func dismantleUIView(_ view: SKView, coordinator: Coordinator) { coordinator.scene?.saveCamera() }
 
     func updateUIView(_ view: SKView, context: Context) {
         context.coordinator.onTap = onTap
         guard context.coordinator.shownVersion != version else { return }
         context.coordinator.shownVersion = version
-        context.coordinator.scene?.show(model, focus: focus)
+        context.coordinator.scene?.show(model, focus: focus, newest: newest)
     }
 
     final class Coordinator: NSObject, UIGestureRecognizerDelegate {
@@ -65,6 +68,7 @@ struct TownSpriteView: UIViewRepresentable {
             guard let view else { return }
             scene?.zoom(by: g.scale, at: g.location(in: view), in: view)
             g.scale = 1
+            if g.state == .ended || g.state == .cancelled { scene?.saveCamera() }
         }
 
         @objc func tap(_ g: UITapGestureRecognizer) {
@@ -97,7 +101,7 @@ struct TownTab: View {
             ZStack(alignment: .top) {
                 LivingSky()
                 if let render {
-                    TownSpriteView(model: render, focus: model.townFocus, version: model.townVersion,
+                    TownSpriteView(model: render, focus: model.townFocus, newest: model.townNewest, version: model.townVersion,
                                    imageProvider: { sprites.image(for: $0) },
                                    onTap: { selected = $0 })
                         .ignoresSafeArea(edges: [.horizontal, .bottom])

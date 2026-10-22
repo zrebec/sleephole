@@ -83,7 +83,7 @@ final class NightRecord {
     var isTestNight: Bool { isDebug || id.hasPrefix("bonus-") }
 
     var window: NightWindow {
-        NightWindow(key: NightKey(keyString)!, bedtime: bedtime, wake: wake, earlyConfirmOverride: isNap ? 0 : (isTestNight ? NightWindow.testNightConfirmLead : nil))
+        NightWindow(key: NightKey(keyString)!, bedtime: bedtime, wake: wake, earlyConfirmOverride: isNap ? NapPlan.confirmLead(forLength: wake.timeIntervalSince(bedtime)) : (isTestNight ? NightWindow.testNightConfirmLead : nil))
     }
 
     var rules: SleepRules {
@@ -91,6 +91,7 @@ final class NightRecord {
         r.setupGrace = setupGrace
         if pauses == nil { r.awayBudget = nil }
         r.lockScreenCollapses = strictLockScreen ?? true
+        if !isNap, strictLockScreen == false { r.startDeadline = SleepRules.gentleStartDeadline }
         r.lockScreenTolerance = lockScreenTolerance ?? 10
         r.accidentalTolerance = accidentalTolerance ?? 10
         return r

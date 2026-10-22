@@ -86,7 +86,7 @@ struct SupportTests {
         let b = NightRecord(window: w, buildingId: "x", isDebug: false, setupGrace: 300, idPrefix: "bonus")
         #expect(b.id.hasPrefix("bonus-"))
         let n = NightRecord(window: w, buildingId: "", isDebug: false, setupGrace: 120, isNap: true)
-        #expect(n.id == "nap-\(w.key)" && n.window.earlyConfirmOverride == 0 && n.backup.isNap == true)
+        #expect(n.id == "nap-\(w.key)" && n.window.earlyConfirmOverride == NapPlan.confirmLead(forLength: w.duration) && n.backup.isNap == true)
         #expect(NightRecord(backup: n.backup).isNap)
     }
 

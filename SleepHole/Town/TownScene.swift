@@ -15,6 +15,13 @@ final class TownScene: SKScene {
     static let minScale: CGFloat = 0.6      // camera scale: smaller = closer
     static let maxScale: CGFloat = 10
     private var needsFit = true
+    /// The remembered camera (B30): per device, in `UserDefaults` – never in the sync file or the backup.
+    var cameraDefaults: UserDefaults = .standard
+    static let cameraKey = "townCamera.v1"
+    private var camera0: TownCamera?
+    /// A glide to the newest building waiting for the first fit.
+    private var pendingGlide: ScenePoint?
+    private var wasMoving = false
     /// Dev aid for screenshots (`-townFit`): the whole town is always fitted, uncapped, and refitted when the view is sized.
     static let townFit = DevArgs.list.contains("-townFit")
 
@@ -32,7 +39,8 @@ final class TownScene: SKScene {
 
     // MARK: content
 
-    func show(_ model: TownRenderModel, focus: ScenePoint?) {
+    /// `newest` = the id of the town's newest building (its night key): the camera glides to `focus` once per new one.
+    func show(_ model: TownRenderModel, focus: ScenePoint?, newest: String? = nil) {
         let firstShow = self.model == nil
         self.model = model
         children.filter { $0 !== cameraNode }.forEach { $0.removeFromParent() }
@@ -58,13 +66,29 @@ final class TownScene: SKScene {
         }
         addSoilEdge(model)
         if firstShow {
-            needsFit = true
-            fitIfPossible()
-        } else if let focus {
-            cameraNode.run(.move(to: CGPoint(x: focus.x, y: focus.y + 120), duration: 0.6)) { [weak self] in
-                self?.clampCamera()
+            camera0 = Self.townFit ? nil : loadCamera()
+            if var saved = camera0 {
+                let r = saved.restored(in: model.bounds, minScale: Double(Self.minScale), maxScale: Double(Self.maxScale))
+                cameraNode.setScale(CGFloat(r.scale))
+                cameraNode.position = CGPoint(x: r.x, y: r.y)
+                needsFit = false
+                if saved.noteNewest(newest), let focus { glide(to: focus) }
+                camera0 = saved
+            } else {
+                needsFit = true
+                var fresh = TownCamera(scale: 2.2, x: 0, y: 0)
+                _ = fresh.noteNewest(newest)
+                camera0 = fresh
+                fitIfPossible()
             }
+            clampCamera()
+            saveCamera()
+            return
         }
+        var c = camera0 ?? TownCamera(scale: Double(cameraNode.xScale), x: 0, y: 0)
+        if c.noteNewest(newest), let focus { glide(to: focus) }
+        camera0 = c
+        saveCamera()
         clampCamera()
     }
 
@@ -99,6 +123,51 @@ final class TownScene: SKScene {
         let fit = max(model.bounds.width / size.width, model.bounds.height / (size.height * 0.8)) * 1.05
         cameraNode.setScale(Self.townFit ? fit * 0.62 : min(max(fit, 1.4), 4.5))
         cameraNode.position = CGPoint(x: model.bounds.mid.x, y: model.bounds.mid.y)
+        saveCamera()
+        if let focus = pendingGlide { pendingGlide = nil; glide(to: focus) }
+    }
+
+    // MARK: remembered camera and the glide (B30)
+
+    private func loadCamera() -> TownCamera? {
+        cameraDefaults.data(forKey: Self.cameraKey).flatMap { try? JSONDecoder().decode(TownCamera.self, from: $0) }
+    }
+
+    /// Saved when the camera comes to rest (end of a pan / its inertia, a pinch, a double-tap zoom, a glide) and
+    /// when the scene goes away.
+    func saveCamera() {
+        guard !Self.townFit, model != nil, !needsFit else { return }
+        var c = camera0 ?? TownCamera(scale: 0, x: 0, y: 0)
+        c.scale = Double(cameraNode.xScale)
+        c.x = Double(cameraNode.position.x)
+        c.y = Double(cameraNode.position.y)
+        camera0 = c
+        if let data = try? JSONEncoder().encode(c) { cameraDefaults.set(data, forKey: Self.cameraKey) }
+    }
+
+    /// Glides to the newest building keeping the scale; a touch stops it. Reduce Motion: a jump.
+    private func glide(to focus: ScenePoint) {
+        if needsFit { pendingGlide = focus; return }       // the first fit has not happened yet
+        let target = TownRender.clamp(ScenePoint(x: focus.x, y: focus.y + 120), to: model?.bounds ?? SceneRect(minX: focus.x, minY: focus.y, maxX: focus.x, maxY: focus.y))
+        let point = CGPoint(x: target.x, y: target.y)
+        if UIAccessibility.isReduceMotionEnabled {
+            cameraNode.position = point
+            clampCamera()
+            saveCamera()
+            return
+        }
+        let move = SKAction.move(to: point, duration: Motion.t(0.6))
+        move.timingMode = .easeInEaseOut
+        cameraNode.run(.sequence([move, .run { [weak self] in
+            self?.clampCamera()
+            self?.saveCamera()
+        }]), withKey: "glide")
+    }
+
+    /// A touch takes the camera back from a running glide.
+    private func stopGlide() {
+        pendingGlide = nil
+        cameraNode.removeAction(forKey: "glide")
     }
 
     override func didChangeSize(_ oldSize: CGSize) {
@@ -118,6 +187,7 @@ final class TownScene: SKScene {
     // MARK: camera
 
     func pan(by translation: CGPoint) {
+        stopGlide()
         velocity = .zero
         cameraNode.position.x -= translation.x * cameraNode.xScale
         cameraNode.position.y += translation.y * cameraNode.yScale
@@ -126,10 +196,13 @@ final class TownScene: SKScene {
 
     func fling(velocity v: CGPoint) {
         velocity = CGVector(dx: -v.x * cameraNode.xScale, dy: v.y * cameraNode.yScale)
+        wasMoving = abs(velocity.dx) + abs(velocity.dy) > 5
+        if !wasMoving { saveCamera() }                  // otherwise `update` saves when the inertia dies out
     }
 
     /// Zoom by `factor` keeping the scene point under `viewPoint` fixed.
     func zoom(by factor: CGFloat, at viewPoint: CGPoint, in view: SKView) {
+        stopGlide()
         let before = convertPoint(fromView: viewPoint)
         let newScale = min(Self.maxScale, max(Self.minScale, cameraNode.xScale / factor))
         cameraNode.setScale(newScale)
@@ -140,17 +213,24 @@ final class TownScene: SKScene {
     }
 
     func animateZoom(in viewPoint: CGPoint, view: SKView) {
+        stopGlide()
         let target = cameraNode.xScale > 1.2 ? cameraNode.xScale / 2 : 2.2
         let p = convertPoint(fromView: viewPoint)
-        cameraNode.run(.group([.scale(to: target, duration: 0.3), .move(to: p, duration: 0.3)])) { [weak self] in
+        cameraNode.run(.sequence([.group([.scale(to: target, duration: 0.3), .move(to: p, duration: 0.3)]),
+                                  .run { [weak self] in
             self?.clampCamera()
-        }
+            self?.saveCamera()
+        }]), withKey: "glide")
     }
 
     override func update(_ currentTime: TimeInterval) {
         let dt = lastUpdate == 0 ? 1.0 / 60 : min(0.05, currentTime - lastUpdate)
         lastUpdate = currentTime
-        guard abs(velocity.dx) + abs(velocity.dy) > 5 else { velocity = .zero; return }
+        guard abs(velocity.dx) + abs(velocity.dy) > 5 else {
+            velocity = .zero
+            if wasMoving { wasMoving = false; saveCamera() }
+            return
+        }
         cameraNode.position.x += velocity.dx * dt
         cameraNode.position.y += velocity.dy * dt
         let decay = pow(0.04, dt)                  // smooth deceleration (≈ 1 s)

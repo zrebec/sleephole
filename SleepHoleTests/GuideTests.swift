@@ -74,7 +74,7 @@ struct GuideTests {
         defer { Lang.current = .en }
         #expect(GuideText.pageCount == 9 && GuideView.pageCount == 9)
         let setup = AppSettings().setupGrace
-        #expect(GuideText.page(2, setup: setup).text.contains("10 minút pred večierkou do 5 minút po nej"))
+        #expect(GuideText.page(2, setup: setup).text.contains("10 minút pred večierkou do 30 minút po nej"))
         #expect(GuideText.page(2, setup: setup).text.contains("3 hodiny skôr"))
         #expect(GuideText.page(3, setup: setup).text.contains("do večierky + 5 minút") && GuideText.page(3, setup: setup).text.contains("15s pred koncom"))
         #expect(GuideText.page(4, setup: setup).text.contains("15s"))
@@ -99,7 +99,7 @@ struct GuideTests {
     @Test func guideTextInEnglish() {
         Lang.current = .en
         let setup = AppSettings().setupGrace
-        #expect(GuideText.page(2, setup: setup).text == "Tap “Go to sleep” from 10 minutes before bedtime until 5 minutes after it. Tired sooner? You can start up to 3 hours early.")
+        #expect(GuideText.page(2, setup: setup).text == "Tap “Go to sleep” from 10 minutes before bedtime until 30 minutes after it. Tired sooner? You can start up to 3 hours early.")
         #expect(GuideText.page(3, setup: setup).text == "After the start there's time for a podcast or story, until bedtime + 5 minutes. In another app? I'll call you 15s before the end.")
         #expect(GuideText.page(5, setup: setup).text == "Want to read a message? Tap 🌙 Pause – 10 minutes outside the app, the first one each night is free.")
         #expect(GuideText.page(7, setup: setup).text.hasPrefix("A finished night pays 100–200 🪙, +30 without a pause, +5 for every calm hour."))

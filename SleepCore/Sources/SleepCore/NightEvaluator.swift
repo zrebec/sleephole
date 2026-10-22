@@ -2,8 +2,12 @@ import Foundation
 
 /// All thresholds of the night rules in one place (plan §5.4, owner rules of 2026-09-29).
 public struct SleepRules: Codable, Equatable, Sendable {
-    /// "Začať stavbu" is possible until bedtime + 5 min; later the night is missed.
+    /// "Go to sleep" is possible until bedtime + 5 min (Strict mode and every night stored before 10b); later the
+    /// night is missed. The gentle mode uses `gentleStartDeadline`.
     public var startDeadline: TimeInterval = 5 * 60
+    /// The start deadline in the gentle mode (Strict mode OFF): bedtime + 30 min (owner 2026-10-19, build 10b).
+    /// A later start simply earns less – the setup runs from the start and the calm hours count from its end.
+    public static let gentleStartDeadline: TimeInterval = 30 * 60
     /// Setup time after bedtime: the app may be in the background from the start until
     /// max(start, bedtime) + setupGrace (owner, 2026-09-30: starting at 20:51 for a 21:00 bedtime gives
     /// 9 + 5 = 14 min to set up a podcast, a story, selfies…).
@@ -174,7 +178,7 @@ public enum NightEvaluator {
     }
 
     /// Outcome (owner rules of 2026-09-29):
-    /// missed – not started by bedtime + 5 min · ruins – collapsed, abandoned or not confirmed within
+    /// missed – not started by bedtime + `startDeadline` (5 min, 30 min in the gentle mode) · ruins – collapsed, abandoned or not confirmed within
     /// wake + 60 min · unfinished – confirmed after the alarm stopped (wake + 2…60 min) · complete – otherwise.
     public static func evaluate(_ log: NightLog?, rules: SleepRules = SleepRules()) -> Outcome {
         guard let log, let start = log.startedAt,

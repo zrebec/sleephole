@@ -157,10 +157,18 @@ extension NightRecord {
 }
 
 /// Share-sheet payload ("Exportovať zálohu").
+/// The data is produced only when the share sheet asks for it (B8): building the item on every render of Settings
+/// must not encode the whole backup each time.
 struct BackupDocument: Transferable {
-    let data: Data
+    let makeData: @MainActor @Sendable () -> Data
+    init(data: Data) { makeData = { data } }
+    init(makeData: @escaping @MainActor @Sendable () -> Data) { self.makeData = makeData }
+    /// The payload now (what the export hands to the share sheet).
+    @MainActor var data: Data { makeData() }
     static var transferRepresentation: some TransferRepresentation {
-        DataRepresentation(exportedContentType: .json) { $0.data }
-            .suggestedFileName(BackupFile.fileName)
+        DataRepresentation(exportedContentType: .json) { doc in
+            await MainActor.run { doc.makeData() }
+        }
+        .suggestedFileName(BackupFile.fileName)
     }
 }

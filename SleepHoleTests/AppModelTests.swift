@@ -53,6 +53,7 @@ struct AppModelTests {
 
     @Test func startWindowIsBedtimeMinus10ToPlus5() {
         let h = harness(at: date(5, 22, 19))
+        h.model.settings.strictMode = true                                    // Strict mode keeps + 5 min
         #expect(h.model.phase == .idle)
         h.clock.now = date(5, 22, 20); h.model.refresh()
         #expect(h.model.phase == .canStart)
@@ -60,6 +61,45 @@ struct AppModelTests {
         #expect(h.model.phase == .canStart)
         h.clock.now = date(5, 22, 36); h.model.refresh()
         #expect(h.model.phase == .idle)
+    }
+
+    /// Owner 2026-10-19, build 10b: the gentle mode starts until bedtime + 30 min; Strict mode closes at + 5 min.
+    @Test func gentleModeStartsUntilBedtimePlus30() {
+        let h = harness(at: date(5, 12))
+        #expect(!h.model.settings.strictMode && h.model.nextNightRules.startDeadline == 30 * 60)
+        h.clock.now = date(5, 22, 50); h.model.refresh()                      // bedtime 22:30 + 20 min
+        #expect(h.model.phase == .canStart)
+        h.clock.now = date(5, 23, 0); h.model.refresh()
+        #expect(h.model.phase == .canStart)                                   // exactly + 30 min
+        h.clock.now = date(5, 23, 0) + 1; h.model.refresh()
+        #expect(h.model.phase == .idle)
+        h.clock.now = date(5, 22, 50); h.model.refresh()
+        h.model.startNight()
+        #expect(h.model.phase == .building)
+        #expect(h.model.active?.strictLockScreen == false && h.model.active?.rules.startDeadline == 30 * 60)
+        h.clock.now = date(6, 6, 30) + 60; h.model.refresh()
+        #expect(h.model.confirm(code: "1234"))
+        #expect(h.model.shownResult?.outcome == .complete)
+    }
+
+    @Test func strictModeIsTooLateAtBedtimePlus20() {
+        let h = harness(at: date(5, 12))
+        h.model.settings.strictMode = true
+        #expect(h.model.nextNightRules.startDeadline == 5 * 60)
+        h.clock.now = date(5, 22, 50); h.model.refresh()
+        #expect(h.model.phase == .idle)
+    }
+
+    @Test func nightRecordRulesFollowTheStoredMode() {
+        let h = harness(at: date(5, 12))
+        let w = h.model.settings.schedule.window(containing: date(5, 22, 25), calendar: .current)
+        func rec(strict: Bool?, nap: Bool = false) -> NightRecord {
+            NightRecord(window: w, buildingId: "l1-x", isDebug: false, setupGrace: 300, isNap: nap, strictLockScreen: strict)
+        }
+        #expect(rec(strict: false).rules.startDeadline == 30 * 60)
+        #expect(rec(strict: true).rules.startDeadline == 5 * 60)
+        #expect(rec(strict: nil).rules.startDeadline == 5 * 60)
+        #expect(rec(strict: false, nap: true).rules.startDeadline == NapPlan.rules.startDeadline)
     }
 
     @Test func aPerfectNightBuildsTheFirstHouse() {
@@ -390,7 +430,8 @@ struct AppModelTests {
         #expect(h.model.active?.wake == date(5, 15, 30))                    // 30 min default
         #expect(h.model.graceEnds == date(5, 15, 2))                         // 2 min setup
         #expect(h.model.napBlockReason() == "A night is in progress.")
-        #expect(!h.model.confirm(code: "1234"))                             // only at the end
+        h.clock.now = date(5, 15, 23); h.clock.now += 59                    // 23 min 59 s of 30: not yet
+        #expect(!h.model.confirm(code: "1234"))                             // confirming opens in the last 20 %
         h.clock.now = date(5, 15, 30); h.model.refresh()
         #expect(h.model.phase == .alarm)
         #expect(h.model.confirm(code: "1234"))
@@ -403,6 +444,18 @@ struct AppModelTests {
         #expect(h.model.napBlockReason() == "You've already had today's nap 😴")
         h.clock.now = date(5, 18, 0)
         #expect(h.model.napBlockReason() != nil)
+    }
+
+    @Test func aNapIsConfirmedInItsLast20PercentAndPaysInFull() {
+        let h = harness(at: date(5, 14, 0))
+        h.model.startNap()
+        h.clock.now = date(5, 14, 23); h.clock.now += 59
+        #expect(!h.model.confirm(code: "1234"))
+        h.clock.now = date(5, 14, 24); h.model.refresh()
+        #expect(h.model.phase == .building)                                 // the alarm has not rung
+        #expect(h.model.confirm(code: "1234"))                              // minute 24 of 30
+        #expect(h.model.shownResult?.isNap == true && h.model.shownResult?.outcome == .complete)
+        #expect(h.model.napSummary.coins == 50)
     }
 
     @Test func sixtyMinuteNapFromTheEdgeAndAnInterruptedNap() {
@@ -679,7 +732,7 @@ struct AppModelTests {
         }
         h.clock.now = date(5, 22, 20); h.model.refresh()
         #expect(!h.model.canStartEarly && h.model.phase == .canStart)
-        h.clock.now = date(5, 22, 36); h.model.refresh()
+        h.clock.now = date(5, 23, 1); h.model.refresh()                       // gentle mode: closes at + 30 min
         #expect(!h.model.canStartEarly && h.model.phase == .idle)
     }
 

@@ -155,15 +155,15 @@ struct HomeView: View {
             return L("Tired already? You can start tonight's building now – the night without your phone will just be longer. Your alarm stays at \(Fmt.time(w.wake)).")
         }
         if canSleep {
-            return L("Start building by \(Fmt.time(w.startCloses())). You have until \(Fmt.time(w.setupEnds(start: w.bedtime, rules: model.nextNightRules))) to set up (podcast, bedtime story), then keep SleepHole open and lock your phone.")
+            return L("Start building by \(Fmt.time(w.startCloses(model.nextNightRules))). You have until \(Fmt.time(w.setupEnds(start: w.bedtime, rules: model.nextNightRules))) to set up (podcast, bedtime story), then keep SleepHole open and lock your phone.")
         }
-        if now > w.startCloses() {
+        if now > w.startCloses(model.nextNightRules) {
             return L("It's too late to build tonight 🌙 Tomorrow from \(Fmt.time(w.startOpens)).")
         }
         if played {
             return L("You've already built tonight 🌙 You can build again tomorrow from \(Fmt.time(w.startOpens)).")
         }
-        return L("You can build from \(Fmt.time(w.startOpens)) to \(Fmt.time(w.startCloses())) · early start from \(Fmt.time(w.earlyStartOpens))")
+        return L("You can build from \(Fmt.time(w.startOpens)) to \(Fmt.time(w.startCloses(model.nextNightRules))) · early start from \(Fmt.time(w.earlyStartOpens))")
     }
 
     @ViewBuilder

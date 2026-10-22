@@ -50,6 +50,6 @@ struct TestNightConfirmTests {
         let real = NightRecord(window: live, buildingId: "x", isDebug: false, setupGrace: 300)
         #expect(real.window.confirmOpens == live.wake - NightWindow.earlyConfirm)
         let nap = NightRecord(window: live, buildingId: "", isDebug: false, setupGrace: 120, isNap: true)
-        #expect(nap.window.confirmOpens == live.wake)
+        #expect(nap.window.confirmOpens == live.wake - NapPlan.confirmLead(forLength: 240))   // a nap opens in its last 20 %
     }
 }

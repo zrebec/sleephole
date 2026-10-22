@@ -339,6 +339,34 @@ final class AppModel {
     /// value is derived from stored rows (streak, coins, jokers, stats, the buddy's lines …).
     private(set) var dataRevision = 0
 
+    // MARK: derived values, cached (B8)
+
+    /// Every input of the cached values below: the stored rows (`dataRevision` – every write goes through `save()` or
+    /// bumps it itself), the Health reads, the night in `window` and today's key (the day rolling over changes the last
+    /// night that is over), and the town (the achievements read its repairs). The calendar and the catalog are constants
+    /// of the model. A change of any part drops everything cached.
+    private struct DerivedKey: Equatable {
+        var revision: Int, sleepReads: Int, townVersion: Int
+        var window: NightKey, today: NightKey
+    }
+
+    private struct Derived {
+        var key: DerivedKey?
+        var jokerState: (results: [NightResult], uses: [JokerUse])?
+        var coinsEarned: Int?, streak: Int?
+        var stats: StatsSummary?
+    }
+
+    /// Not observed: filling the cache inside a view body must not invalidate that view. The reads of `dataRevision`
+    /// and the others in `validateDerived()` still register the dependencies, so views redraw exactly as before.
+    @ObservationIgnored private var derived = Derived()
+
+    private func validateDerived() {
+        let key = DerivedKey(revision: dataRevision, sleepReads: sleepReads, townVersion: townVersion,
+                             window: window.key, today: NightKey(date: clock.now, calendar: calendar))
+        if derived.key != key { derived = Derived(key: key) }
+    }
+
     func records() -> [NightRecord] {
         _ = dataRevision
         return (try? context.fetch(FetchDescriptor<NightRecord>(sortBy: [SortDescriptor(\.bedtime)]))) ?? []
@@ -437,6 +465,14 @@ final class AppModel {
 
     /// Jokers in effect (switched on + automatic bronze) and the protected results.
     var jokerState: (results: [NightResult], uses: [JokerUse]) {
+        validateDerived()
+        if let cached = derived.jokerState { return cached }
+        let value = computeJokerState()
+        derived.jokerState = value
+        return value
+    }
+
+    private func computeJokerState() -> (results: [NightResult], uses: [JokerUse]) {
         Jokers.apply(results: realResults().compactMap(\.result), manual: jokerRecords().compactMap(\.use),
                      lastNight: window.key.adding(days: -1, calendar: calendar), calendar: calendar,
                      breaks: streakBreaks)
@@ -518,9 +554,12 @@ final class AppModel {
 
     /// Everything for the Štatistiky tab.
     var stats: StatsSummary {
-        _ = sleepReads                              // a finished Health read redraws Stats (SwiftData rows are not observed)
-        return Stats.summary(statsInput(), today: NightKey(date: clock.now, calendar: calendar),
-                             calendar: calendar, breaks: streakBreaks, catalog: catalog)
+        validateDerived()                           // reads `sleepReads`: a finished Health read redraws Stats
+        if let cached = derived.stats { return cached }
+        let value = Stats.summary(statsInput(), today: NightKey(date: clock.now, calendar: calendar),
+                                  calendar: calendar, breaks: streakBreaks, catalog: catalog)
+        derived.stats = value
+        return value
     }
 
     /// Coin balance 🪙: earned (replayed from the real nights, naps and achievements) − spent (`CoinSpend`).
@@ -528,12 +567,20 @@ final class AppModel {
     var coins: Int { max(0, coinsEarned - coinsSpent) }
 
     var coinsEarned: Int {
+        validateDerived()
+        if let cached = derived.coinsEarned { return cached }
+        let value = computeCoinsEarned()
+        derived.coinsEarned = value
+        return value
+    }
+
+    private func computeCoinsEarned() -> Int {
         Economy.earned(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
             + napResults().compactMap(\.outcome).reduce(0) { $0 + NapPlan.reward($1) }
             + Achievements.coins(achievements)
     }
 
-    var coinsSpent: Int { spends().reduce(0) { $0 + $1.amount } }
+    var coinsSpent: Int { spends().reduce(0) { $0 + $1.amount } }          // one small fetch: not cached
 
     func spends() -> [CoinSpend] {
         _ = dataRevision
@@ -592,10 +639,14 @@ final class AppModel {
 
     /// Current 🔥 streak: complete nights in a row up to the most recent night that could be finished.
     var streak: Int {
+        validateDerived()
+        if let cached = derived.streak { return cached }
         let results = coreResults()
         let lastPossible = window.key.adding(days: -1, calendar: calendar)
         let last = max(results.map(\.key).max() ?? lastPossible, lastPossible)
-        return Progression.currentStreak(results, lastNight: last, calendar: calendar, breaks: streakBreaks)
+        let value = Progression.currentStreak(results, lastNight: last, calendar: calendar, breaks: streakBreaks)
+        derived.streak = value
+        return value
     }
 
     /// The sleep buddy's AVAILABLE sentences now (phase TALK); the bubble draws from them at random (`BuddyBag`).
@@ -650,6 +701,8 @@ final class AppModel {
     private(set) var townVersion = 0
     /// Where the camera should look after a rebuild (the newest building).
     private(set) var townFocus: ScenePoint?
+    /// Identifies the newest building (its night key) – the camera glides to it once per new one (B30).
+    private(set) var townNewest: String?
 
     func rebuildTown() {
         guard let catalog else { return }
@@ -658,6 +711,7 @@ final class AppModel {
         townRender = TownRender.build(snap, catalog: catalog, today: NightKey(date: clock.now, calendar: calendar),
                                       calendar: calendar)
         townFocus = snap.buildings.last.map { IsoProjection.scenePoint(x: $0.placement.centre.x, z: $0.placement.centre.z) }
+        townNewest = snap.buildings.last.map { $0.nightKey.description }
         townVersion += 1
     }
 
@@ -1068,6 +1122,7 @@ final class AppModel {
             changed = mergeSyncSettings(file.settings, firstContactStamp: firstContactStamp) || merged.changed || changed
         }
         guard changed else { return false }
+        dataRevision += 1                                // the merge wrote rows: drop the cached derived values
         loadProgress()
         rescheduleReminders()                            // a week opened on another device moves the "lock ended" notification
         rebuildTown()
@@ -1168,7 +1223,7 @@ final class AppModel {
         }
         window = debugWindow ?? settings.schedule.window(containing: now, calendar: calendar)
         let alreadyPlayed = debugWindow == nil && records().contains { $0.id == window.key.description }
-        phase = !alreadyPlayed && window.canStart(at: now) ? .canStart : .idle
+        phase = !alreadyPlayed && window.canStart(at: now, rules: nextNightRules) ? .canStart : .idle
         setEarlyFlags(canStartEarly: debugWindow == nil && !alreadyPlayed && window.canStartEarly(at: now),
                       tonightPlayed: alreadyPlayed)
     }
@@ -1214,6 +1269,7 @@ final class AppModel {
     var nextNightRules: SleepRules {
         var r = SleepRules.forNewNights
         r.setupGrace = settings.setupGrace
+        if !settings.strictMode { r.startDeadline = SleepRules.gentleStartDeadline }
         return r
     }
 
@@ -1693,7 +1749,8 @@ final class AppModel {
 
     /// A night / nap is over (confirmed, abandoned or expired). Confirmed at or after the wake time, abandoned or
     /// expired → the system alarm is cancelled. Confirmed EARLY (a night, from wake − 30 min) → it moves to the wake
-    /// time and stays as a safety alarm. Without consent there is no safety alarm.
+    /// time and stays as a safety alarm. Without consent there is no safety alarm. A nap confirmed early (its last
+    /// 20 %) leaves none: it is cancelled like any nap's alarm.
     private func settleSystemAlarm(for rec: NightRecord) {
         systemAlarmMoved = false
         let early = !rec.isNap && rec.log.confirmedAt.map { $0 < rec.wake } == true

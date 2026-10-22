@@ -35,10 +35,18 @@ public struct NapPlan: Codable, Equatable, Sendable {
         return t >= w.start && t <= w.end
     }
 
-    /// The nap as a session window: "bedtime" = start, "wake" = start + minutes; confirm only at the end.
+    /// A nap can be confirmed (shake / code) in its last 20 % (owner 2026-10-19, B10): from 24 min of 30, from 48 min
+    /// of 60. The alarm still rings at the end; an early confirmation counts as a complete nap.
+    public static let earlyConfirmShare = 0.2
+
+    /// How long before the end confirming opens, for a nap of `length` seconds.
+    public static func confirmLead(forLength length: TimeInterval) -> TimeInterval { length * earlyConfirmShare }
+
+    /// The nap as a session window: "bedtime" = start, "wake" = start + minutes; confirming opens in the last 20 %.
     public func session(startingAt start: Date, calendar: Calendar) -> NightWindow {
-        NightWindow(key: NightKey(date: start, calendar: calendar), bedtime: start,
-                    wake: start + Double(minutes) * 60, earlyConfirmOverride: 0)
+        let length = Double(minutes) * 60
+        return NightWindow(key: NightKey(date: start, calendar: calendar), bedtime: start, wake: start + length,
+                           earlyConfirmOverride: Self.confirmLead(forLength: length))
     }
 
     /// Coins for a nap (owner 2026-09-30: complete +50, cut short +25).

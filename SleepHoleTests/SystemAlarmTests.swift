@@ -366,13 +366,14 @@ struct SystemAlarmTests {
         #expect(h.alarm.events == [.schedule(napWake + 30, alarmFile)])
         #expect(h.model.backupNotificationsOn)
 
-        h.clock.now = napWake - 60
-        #expect(!h.model.confirm())                                         // a nap can only be confirmed when it is over
-        h.clock.now = napWake + 5
-        #expect(h.model.confirm())
+        h.clock.now = napWake - 6 * 60 - 1
+        #expect(!h.model.confirm())                                         // confirming opens in the last 20 %
+        h.clock.now = napWake - 5 * 60
+        #expect(h.model.confirm())                                          // early: nothing rings at the nap's end
         await h.model.systemAlarmIdle()
-        #expect(h.alarm.events.last == .cancel)
+        #expect(h.alarm.events == [.schedule(napWake + 30, alarmFile), .cancel])   // cancelled, no safety alarm
         #expect(h.model.safetyAlarmAt == nil && h.model.systemAlarmAt == nil)
+        #expect(!h.model.backupNotificationsOn && h.model.shownResult?.outcome == .complete)
         h.model.acknowledgeResult()
 
         // ending a nap early cancels too
