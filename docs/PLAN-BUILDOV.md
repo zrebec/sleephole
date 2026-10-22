@@ -99,7 +99,7 @@ B12, B13, B14, B15, B16, B22 a B26.
 
 **Tvoje odpovede 18. 10.:** spodná lišta plná je OK; build 7 zajtra vymeníme za build 9 a dáme k nemu nový návod pre Apple – najprv ho vyskúša druhý tester na svojom telefóne (build 9 z TestFlightu). **B28 je overená na tvojom telefóne** (test 18. 10. 12:00–12:06: „Zastaviť“, zhasnutie aj nechať tak – appka budík vypne načas). Test našiel **B33**: varovanie sľubuje 10s, ale zvoní len ~7,5s (začne o 2,5s neskôr a stíchne 3s pred zrútením) – tvoje rozhodnutie: 15s a zvoniť až do zrútenia, ide do buildu 9 ako krok 9i. **9i je v telefóne od 13:56 a tvoj test o 14:00 to potvrdil:** varovanie nechané tak zvonilo ~15s, potom testovacia stavba spadla a hlásenie prišlo aj na hodinky.
 
-## Build 10 – Doladenie: vypínač budíka, neskorší začiatok a otvorené chyby (v telefóne od 22. 10. 7:03)
+## Build 10 – Doladenie: vypínač budíka, neskorší začiatok a otvorené chyby (v telefóne od 22. 10. 7:03, 10f od 10:55; celý commitnutý 22. 10.; 23. 10. k testerom a na kontrolu k Apple)
 
 **Tvoje slovo 19. 10. ~19:30** (po prečítaní `docs/NAVRH-FLEXIBILITA.md`; zmrazenie do 1.0 si pre tieto dva kroky zrušil):
 
@@ -110,6 +110,7 @@ B12, B13, B14, B15, B16, B22 a B26.
 | 10c | opravené | B10: odpočinok sa dá potvrdiť v posledných 20 % – pri 30 min od 24. minúty, pri 60 min od 48. minúty; dĺžky 30 / 60 min sa nemenia; skoršie potvrdenie = hotový odpočinok za 50 🪙 (tvoje áno 19. a 20. 10.) | hotové, v telefóne od 22. 10. 7:03 |
 | 10d | opravené | B8: batéria – ostrovček na Dnes sa nebude prekresľovať 20× za sekundu, počty sa nebudú stále prepočítavať, záloha sa pripraví až pri exporte; vzhľad ostane rovnaký (tvoje áno 20. 10.). Ostrovček už na Dnes nie je, takže tam nebolo čo opravovať; živé nebo ostáva, ako je | hotové, v telefóne od 22. 10. 7:03 |
 | 10e | opravené | B30: appka si pamätá pohľad na mesto a doskroluješ ku každej budove; oddialenie sa nemení – celé veľké mesto sa nezmestí a skrolovať je súčasť hry (tvoje slovo 20. 10.); po každej novej budove sa mesto raz presunie k nej (tvoje áno 22. 10.); karta hore ostáva, vrchol každej veže sa dá potiahnuť pod ňu | hotové, v telefóne od 22. 10. 7:03 |
+| 10f | zmenené | sprievodca otvorený znova z Nastavení už rozvrh nemení – časy len ukáže a povie „Rozvrh zmeníš v Nastaveniach → Rozvrh.“; pri prvom spustení sa časy nastavujú ako doteraz (tvoje slovo 22. 10., ruší krok 9m z 18. 10.; do buildu 10 tvoje áno 22. 10.) | hotové, v telefóne od 22. 10. 10:55; **sprievodca z Nastavení potvrdený 22. 10.**; prvé spustenie na čistej inštalácii ešte treba vyskúšať (druhá testerka s buildom 10 z TestFlightu) |
 
 Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Aplikácie → SleepHole. Neskorší začiatok nemá vlastnú pokutu: príprava beží od začiatku a pokojné hodiny sa rátajú až od jej konca, takže neskorší štart prinesie menej mincí. „Dnešný budík“ (B) si nechcel; druhý rozvrh (D) nie – namiesto neho voľné noci (E) v builde 11.
 
@@ -162,7 +163,6 @@ skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón l
 - počasie cez celú obrazovku Dnes (najprv vysvetli „ako stierač na aute“)
 - láskavý posun večierky po viacerých skorších nociach
 - najnovšia budova namiesto mačky na Dnes; čínština (teraz neodporúčané); výskumné centrum
-- testovací systémový budík (B27) znova preveriť
 - zvuk nočného vlaku na spánok – prototyp na stránke (20 min + klapot A / B / C); odložené 19. 10., teraz nie je priorita
 
 ## Vydanie v App Store
