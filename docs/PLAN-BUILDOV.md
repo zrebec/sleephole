@@ -99,41 +99,36 @@ B12, B13, B14, B15, B16, B22 a B26.
 
 **Tvoje odpovede 18. 10.:** spodná lišta plná je OK; build 7 zajtra vymeníme za build 9 a dáme k nemu nový návod pre Apple – najprv ho vyskúša druhý tester na svojom telefóne (build 9 z TestFlightu). **B28 je overená na tvojom telefóne** (test 18. 10. 12:00–12:06: „Zastaviť“, zhasnutie aj nechať tak – appka budík vypne načas). Test našiel **B33**: varovanie sľubuje 10s, ale zvoní len ~7,5s (začne o 2,5s neskôr a stíchne 3s pred zrútením) – tvoje rozhodnutie: 15s a zvoniť až do zrútenia, ide do buildu 9 ako krok 9i. **9i je v telefóne od 13:56 a tvoj test o 14:00 to potvrdil:** varovanie nechané tak zvonilo ~15s, potom testovacia stavba spadla a hlásenie prišlo aj na hodinky.
 
-## Build 10 – Doladenie: vypínač budíka, neskorší začiatok a otvorené chyby (v telefóne od 22. 10. 7:03, 10f od 10:55; celý commitnutý 22. 10.; 23. 10. k testerom a na kontrolu k Apple)
+## Build 10 – Doladenie: vypínač budíka, neskorší začiatok a otvorené chyby (v telefóne od 22. 10. 7:03, 10f od 10:55; 10a–10f commitnuté 22. 10., 10g 23. 10.; k testerom a na kontrolu k Apple 24. 10.)
 
 **Tvoje slovo 19. 10. ~19:30** (po prečítaní `docs/NAVRH-FLEXIBILITA.md`; zmrazenie do 1.0 si pre tieto dva kroky zrušil):
 
 | Krok | Typ | Čo | Stav |
 |---|---|---|---|
 | 10a | opravené | B36: systémový budík má klasický prepínač iPhonu. Vypnutý = ráno žiadna záloha ani poistný budík po skoršom potvrdení; varovanie prísneho režimu na zamknutej obrazovke ostáva (tvoja voľba); platí hneď, aj počas noci | hotové, **commitnuté samostatne (`5421f1d`)**, v telefóne od 22. 10. 7:03 |
-| 10b | zmenené | začať stavbu do **+30 min** po večierke v miernom režime; prísny režim ostáva +5; skorší začiatok sa nemení (−10 min, skorý štart od −3 h) | hotové, v telefóne od 22. 10. 7:03; skúšaš jemný mód od 22. 10. |
-| 10c | opravené | B10: odpočinok sa dá potvrdiť v posledných 20 % – pri 30 min od 24. minúty, pri 60 min od 48. minúty; dĺžky 30 / 60 min sa nemenia; skoršie potvrdenie = hotový odpočinok za 50 🪙 (tvoje áno 19. a 20. 10.) | hotové, v telefóne od 22. 10. 7:03 |
+| 10b | zmenené | začať stavbu do **+30 min** po večierke v miernom režime; prísny režim ostáva +5; skorší začiatok sa nemení (−10 min, skorý štart od −3 h) | hotové, v telefóne od 22. 10. 7:03; **potvrdené 23. 10.** („do 22:00 je OK“), prvá noc v jemnom móde hotová |
+| 10c | opravené | B10: odpočinok sa dá potvrdiť v posledných 20 % – pri 30 min od 24. minúty, pri 60 min od 48. minúty; dĺžky 30 / 60 min sa nemenia; skoršie potvrdenie = hotový odpočinok za 50 🪙 (tvoje áno 19. a 20. 10.) | hotové, v telefóne od 22. 10. 7:03; **potvrdené 23. 10.** (odpočinok 22. 10. potvrdený po 48 min) |
 | 10d | opravené | B8: batéria – ostrovček na Dnes sa nebude prekresľovať 20× za sekundu, počty sa nebudú stále prepočítavať, záloha sa pripraví až pri exporte; vzhľad ostane rovnaký (tvoje áno 20. 10.). Ostrovček už na Dnes nie je, takže tam nebolo čo opravovať; živé nebo ostáva, ako je | hotové, v telefóne od 22. 10. 7:03 |
 | 10e | opravené | B30: appka si pamätá pohľad na mesto a doskroluješ ku každej budove; oddialenie sa nemení – celé veľké mesto sa nezmestí a skrolovať je súčasť hry (tvoje slovo 20. 10.); po každej novej budove sa mesto raz presunie k nej (tvoje áno 22. 10.); karta hore ostáva, vrchol každej veže sa dá potiahnuť pod ňu | hotové, v telefóne od 22. 10. 7:03 |
 | 10f | zmenené | sprievodca otvorený znova z Nastavení už rozvrh nemení – časy len ukáže a povie „Rozvrh zmeníš v Nastaveniach → Rozvrh.“; pri prvom spustení sa časy nastavujú ako doteraz (tvoje slovo 22. 10., ruší krok 9m z 18. 10.; do buildu 10 tvoje áno 22. 10.) | hotové, v telefóne od 22. 10. 10:55; **sprievodca z Nastavení potvrdený 22. 10.**; prvé spustenie na čistej inštalácii ešte treba vyskúšať (druhá testerka s buildom 10 z TestFlightu) |
+| 10g | opravené | B37 (tvoj nález 23. 10.): čas prípravy na Dnes ide s hodinami – pred večierkou večierka + tvoj čas, po nej teraz + tvoj čas (o 21:40 „do 21:45“), mení sa sám v celú minútu; tri vety v sprievodcovi: „… od večierky, alebo od štartu, ak začneš neskôr“ (tvoje áno 23. 10.) | hotové a commitnuté (`b5ff74c`); do telefónu po tvojom odpočinku; večer po 21:30 pozri Dnes |
 
 Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Aplikácie → SleepHole. Neskorší začiatok nemá vlastnú pokutu: príprava beží od začiatku a pokojné hodiny sa rátajú až od jej konca, takže neskorší štart prinesie menej mincí. „Dnešný budík“ (B) si nechcel; druhý rozvrh (D) nie – namiesto neho voľné noci (E) v builde 11.
 
-## Build 11 – Nové veci: voľné noci, štatistiky a nový žreb (návrh)
+## Build 11 – Nové veci: prístupnosť, ekonomika so škatuľami a voľné noci (návrh)
 
-**Najprv voľné noci (E – tvoje slovo 19. 10.):** dve noci v týždni voľno, ako to má SleepTown – väčšina ľudí chodí v piatok a sobotu spať inak (tvoje želanie 18. 10.). Podrobnosti ešte dohodneme.
+**Tvoj rozsah 22. 10.:** prístupnosť, kontrola ekonomiky s tajomnými škatuľami za mince a dva voľné dni v týždni – „to asi bude dosť na jeden build“. Začne sa, až keď bude build 10 u testerov a na kontrole u Apple. Podrobný návrh s otázkami: stránka https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo.
 
-**Prehľadný „účet“ mincí po noci (tvoj nápad 22. 10.):** každá časť mincí na vlastnom riadku – budova a jej level, noc bez pauzy, pokojné hodiny, bonus za sériu.
+| Krok | Typ | Čo | Stav |
+|---|---|---|---|
+| 11a | nové | účet mincí po noci – každá časť mincí na vlastnom riadku (tvoj nápad 22. 10.) | návrh |
+| 11b | nové | ekonomika: prepočet mincí, potom tajomné škatule za mince (nikdy za peniaze, pravdepodobnosti vždy viditeľné, jedna denne po hotovej noci); vnútri mince (zriedka aj viac než cena) a žolík navyše, nie budovy; možno aj nový žreb | návrh, tvoje odpovede na stránke |
+| 11c | nové | voľné noci: najviac 2 dni v týždni, len bez prísneho režimu; začneš, kedy chceš; 6 h a viac hotová budova, 4 h rozostavaná, menej nič | návrh, tvoje odpovede na stránke |
+| 11d | nové | prístupnosť: VoiceOver, väčšie písmo, obmedzený pohyb, nielen farbou, kontrast; potom vyplniť v App Store Connect | návrh |
 
-Skutočný mesačný kalendár s obdobiami a detail noci ako samostatná obrazovka s časovou osou. Graf spánku v jednej
-čiare so štyrmi farbami (šiel si spať, zaspal si, budíček, kedy si naozaj vstal).
+**Lootbox?** Nie, kým sa mince nedajú kúpiť (žiadne nákupy v appke – pevné pravidlo): škatule otvárané menou, ktorá sa dá len zarobiť, nie sú hazard. Pravdepodobnosti aj tak ukážeme vždy.
 
-**Nový žreb počas prípravy:** keď sa ti dnešná budova nepáči, môžeš si za mince vyžrebovať inú, len z úrovní, ktoré
-už máš odomknuté. Claude odporúča: žiadny zadarmo, prvý žreb noci 100 🪙 a každý ďalší o 100 drahší (200, 300 …),
-ako pri pauze – aby si to človek rozmyslel a nežreboval až do mrakodrapu. **Cenu rozhodneš ty.**
-
-Ak sa zmestí, aj zoznam chýb v appke (Nastavenia → Vývoj, ako „Plány a návrhy“) – tvoj nápad zo 16. 10.; len na
-čítanie z jedného .md súboru. Návrh Claude: obrazovka „Plány a návrhy“ bude čítať tento plán buildov namiesto starého
-prehľadu z 12. 10. (čaká na tvoje slovo).
-
-Navrch prístupnosť (VoiceOver, väčšie písmo) na obrazovkách Dnes, noc a Štatistiky – appka je pre veľa ľudí.
-
-Toto bol pôvodný build 10 (štatistiky a nový žreb); voľné noci pribudli 18.–19. 10.
+**Návrh presunúť do buildu 13:** mesačný kalendár, detail noci, graf so štyrmi farbami, zoznam chýb vo Vývoji, obrazovka Plánov (čaká na tvoje slovo).
 
 ## Build 12 – Doladenie (návrh)
 
