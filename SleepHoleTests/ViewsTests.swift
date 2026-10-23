@@ -14,6 +14,23 @@ struct ViewsTests {
 
     init() { AudioKeeper.muted = true }
 
+    /// B37: the caption's setup end follows a start after bedtime, to the minute.
+    @Test func captionSetupEndFollowsTheClock() {
+        let w = NightWindow(key: NightKey(date: date(6, 6), calendar: .current), bedtime: date(5, 21, 30), wake: date(6, 6, 30))
+        var r = SleepRules()
+        #expect(HomeView.captionSetupEnd(now: date(5, 21, 25), w: w, rules: r) == date(5, 21, 35))
+        #expect(HomeView.captionSetupEnd(now: date(5, 21, 30), w: w, rules: r) == date(5, 21, 35))
+        #expect(HomeView.captionSetupEnd(now: date(5, 21, 40), w: w, rules: r) == date(5, 21, 45))
+        #expect(HomeView.captionSetupEnd(now: date(5, 21, 59), w: w, rules: r) == date(5, 22, 4))
+        r.setupGrace = 10 * 60
+        #expect(HomeView.captionSetupEnd(now: date(5, 21, 40), w: w, rules: r) == date(5, 21, 50))
+    }
+
+    @Test func minuteStartRoundsDown() {
+        let d = date(5, 21, 40).addingTimeInterval(37.5)
+        #expect(HomeView.minuteStart(d) == date(5, 21, 40))
+    }
+
     func date(_ d: Int, _ h: Int, _ m: Int = 0) -> Date {
         cal.date(from: DateComponents(year: 2026, month: 10, day: d, hour: h, minute: m))!
     }

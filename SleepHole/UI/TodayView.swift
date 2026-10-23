@@ -73,8 +73,15 @@ struct HomeView: View {
     /// The hero cat: 50 % of the screen width (200 pt on a 402 pt wide phone), at most this wide.
     static let buddyMaxWidth: CGFloat = 200
 
+    /// The start of the minute containing `d`.
+    static func minuteStart(_ d: Date) -> Date {
+        Date(timeIntervalSinceReferenceDate: (d.timeIntervalSinceReferenceDate / 60).rounded(.down) * 60)
+    }
+
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 30)) { ctx in
+        // Ticks aligned to whole minutes (:00 and :30), so the caption's setup time and the buttons that open at
+        // whole minutes switch exactly when the clock's minute changes (owner 2026-10-23, B37).
+        TimelineView(.periodic(from: Self.minuteStart(.now), by: 30)) { ctx in
             let now = ctx.date
             let w = model.window
             let canSleep = model.phase == .canStart
@@ -150,12 +157,18 @@ struct HomeView: View {
         .todayWeather()                                   // the weather badge top right + the refresh loop
     }
 
+    /// The setup end shown in the caption: if the night started now (canSleep means `now` is in the normal start
+    /// window, never an early start), so it follows a start after bedtime (owner 2026-10-23, B37).
+    static func captionSetupEnd(now: Date, w: NightWindow, rules: SleepRules) -> Date {
+        w.setupEnds(start: now, rules: rules)
+    }
+
     private func sleepCaption(canSleep: Bool, early: Bool, played: Bool, now: Date, w: NightWindow) -> String {
         if early {
             return L("Tired already? You can start tonight's building now – the night without your phone will just be longer. Your alarm stays at \(Fmt.time(w.wake)).")
         }
         if canSleep {
-            return L("Start building by \(Fmt.time(w.startCloses(model.nextNightRules))). You have until \(Fmt.time(w.setupEnds(start: w.bedtime, rules: model.nextNightRules))) to set up (podcast, bedtime story), then keep SleepHole open and lock your phone.")
+            return L("Start building by \(Fmt.time(w.startCloses(model.nextNightRules))). You have until \(Fmt.time(Self.captionSetupEnd(now: now, w: w, rules: model.nextNightRules))) to set up (podcast, bedtime story), then keep SleepHole open and lock your phone.")
         }
         if now > w.startCloses(model.nextNightRules) {
             return L("It's too late to build tonight 🌙 Tomorrow from \(Fmt.time(w.startOpens)).")

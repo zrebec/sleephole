@@ -76,7 +76,7 @@ struct GuideTests {
         let setup = AppSettings().setupGrace
         #expect(GuideText.page(2, setup: setup).text.contains("10 minút pred večierkou do 30 minút po nej"))
         #expect(GuideText.page(2, setup: setup).text.contains("3 hodiny skôr"))
-        #expect(GuideText.page(3, setup: setup).text.contains("do večierky + 5 minút") && GuideText.page(3, setup: setup).text.contains("15s pred koncom"))
+        #expect(GuideText.page(3, setup: setup).text.contains("5 minút od večierky") && GuideText.page(3, setup: setup).text.contains("15s pred koncom"))
         #expect(GuideText.page(4, setup: setup).text.contains("15s"))
         #expect(GuideText.page(5, setup: setup).text.contains("Chceš si prečítať správu? Ťukni na 🌙 Pauza – 10 minút mimo appky"))
         #expect(GuideText.page(6, setup: setup).text.contains("30 minút pred budíkom") && GuideText.page(6, setup: setup).text.contains("Do 10 minút po budíku"))
@@ -84,7 +84,7 @@ struct GuideTests {
         let g = GuideText.ruleGroups
         #expect(g.count == 10 && g.map(\.title).prefix(9) == ["Rozvrh", "Večer", "Noc", "Pauza", "Ráno", "Mince a mesto", "Žolíky", "Odpočinok", "Súkromie"])
         #expect(g[0].items[1].replacingOccurrences(of: "\u{a0}", with: " ").contains("2 000 🪙"))
-        #expect(g[1].items[2] == "Príprava trvá do večierky + zvolený čas (5, 10 alebo 15 minút v Nastaveniach), pri skoršom štarte 15 minút od štartu.")
+        #expect(g[1].items[2] == "Príprava trvá zvolený čas (5, 10 alebo 15 minút v Nastaveniach) od večierky, alebo od štartu, ak začneš neskôr; pri skoršom štarte 15 minút od štartu.")
         #expect(g[2].items[1].contains("15s") && g[2].items[1].contains("30s") && g[2].items[3].hasPrefix("Stiahnuté Centrum hlásení"))
         #expect(g[2].items[5].contains("8s"))
         #expect(g[3].items[0].contains("50, 100, 150 🪙"))
@@ -100,12 +100,12 @@ struct GuideTests {
         Lang.current = .en
         let setup = AppSettings().setupGrace
         #expect(GuideText.page(2, setup: setup).text == "Tap “Go to sleep” from 10 minutes before bedtime until 30 minutes after it. Tired sooner? You can start up to 3 hours early.")
-        #expect(GuideText.page(3, setup: setup).text == "After the start there's time for a podcast or story, until bedtime + 5 minutes. In another app? I'll call you 15s before the end.")
+        #expect(GuideText.page(3, setup: setup).text == "After the start there's time for a podcast or story: 5 minutes from bedtime, or from the start if you start later. In another app? I'll call you 15s before the end.")
         #expect(GuideText.page(5, setup: setup).text == "Want to read a message? Tap 🌙 Pause – 10 minutes outside the app, the first one each night is free.")
         #expect(GuideText.page(7, setup: setup).text.hasPrefix("A finished night pays 100–200 🪙, +30 without a pause, +5 for every calm hour."))
         let g = GuideText.ruleGroups
         #expect(g[0].items[1] == "Your first change opens a change week (7 days). Then the schedule stays for a month; unlocking it sooner costs 2,000 🪙.")
-        #expect(g[1].items[2] == "The setup lasts until bedtime + your setup time (5, 10 or 15 minutes in Settings), or 15 minutes from an early start.")
+        #expect(g[1].items[2] == "The setup lasts your setup time (5, 10 or 15 minutes in Settings) from bedtime, or from the start if you start later; 15 minutes from an early start.")
         #expect(g[2].items[3] == "On iOS 26, pulling down Notification Center counts as leaving the app – use 🌙 Pause to read a message.")
         #expect(g[3].items[0] == "🌙 Pause: 10 minutes outside the app. The first of a night is free, then 50, 100, 150 🪙.")
         #expect(g[5].items[1] == "No pause +30, every calm hour +5, every 7th finished night in a row +200.")
@@ -122,9 +122,9 @@ struct GuideTests {
             var settings = AppSettings()
             settings.setupMinutes = minutes
             Lang.current = .en
-            #expect(GuideText.page(3, setup: settings.setupGrace).text.contains("until bedtime + \(minutes) minutes."))
+            #expect(GuideText.page(3, setup: settings.setupGrace).text.contains(": \(minutes) minutes from bedtime"))
             Lang.current = .sk
-            #expect(GuideText.page(3, setup: settings.setupGrace).text.contains("do večierky + \(minutes) minút."))
+            #expect(GuideText.page(3, setup: settings.setupGrace).text.contains(": \(minutes) minút od večierky"))
         }
     }
 

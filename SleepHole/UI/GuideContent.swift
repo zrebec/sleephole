@@ -45,7 +45,7 @@ enum GuideText {
                         text: L("Tap “Go to sleep” from \(m(NightWindow.startLead)) before bedtime until \(m(SleepRules.gentleStartDeadline)) after it. Tired sooner? You can start up to \(Plural.hours(NightWindow.earlyStartLead)) early."))
         case 3:
             return Page(art: "🎧📖", cat: "buddy-cat-wink", title: L("A moment to get ready"),
-                        text: L("After the start there's time for a podcast or story, until bedtime + \(m(setup)). In another app? I'll call you \(s(SetupReminder.lead)) before the end."))
+                        text: L("After the start there's time for a podcast or story: \(m(setup)) from bedtime, or from the start if you start later. In another app? I'll call you \(s(SetupReminder.lead)) before the end."))
         case 4:
             return Page(art: "📱🔒", cat: "buddy-cat-awake", title: L("At night I guard the building"),
                         text: L("Keep SleepHole open and lock your phone. If you leave, you have \(s(rules.accidentalTolerance)) to come back. Phone calls don't count."))
@@ -91,7 +91,7 @@ enum GuideText {
             RuleGroup(title: L("Evening"), items: [
                 L("“Go to sleep” works from \(m(NightWindow.startLead)) before bedtime until \(m(SleepRules.gentleStartDeadline)) after it – in Strict mode until \(m(rules.startDeadline)) after it."),
                 L("An early start works up to \(Plural.hours(NightWindow.earlyStartLead)) before bedtime: the night counts in full and the alarm rings as always."),
-                L("The setup lasts until bedtime + your setup time (\(o[0]), \(o[1]) or \(o[2]) minutes in Settings), or \(m(rules.earlySetup)) from an early start."),
+                L("The setup lasts your setup time (\(o[0]), \(o[1]) or \(o[2]) minutes in Settings) from bedtime, or from the start if you start later; \(m(rules.earlySetup)) from an early start."),
                 L("If you're in another app during the setup, a notice comes \(s(SetupReminder.lead)) before it ends."),
             ]),
             RuleGroup(title: L("Night"), items: [

@@ -969,18 +969,18 @@
         }
       }
     },
-    "After the start there's time for a podcast or story, until bedtime + %@. In another app? I'll call you %@ before the end.": {
+    "After the start there's time for a podcast or story: %@ from bedtime, or from the start if you start later. In another app? I'll call you %@ before the end.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "After the start there's time for a podcast or story, until bedtime + %@. In another app? I'll call you %@ before the end."
+            "value": "After the start there's time for a podcast or story: %@ from bedtime, or from the start if you start later. In another app? I'll call you %@ before the end."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Po štarte máš čas na podcast či rozprávku – do večierky + %@. Ak budeš v inej appke, %@ pred koncom ťa zavolám."
+            "value": "Po štarte máš čas na podcast či rozprávku: %@ od večierky, alebo od štartu, ak začneš neskôr. Ak budeš v inej appke, %@ pred koncom ťa zavolám."
           }
         }
       }
@@ -1545,18 +1545,18 @@
         }
       }
     },
-    "The setup lasts until bedtime + your setup time (%lld, %lld or %lld minutes in Settings), or %@ from an early start.": {
+    "The setup lasts your setup time (%lld, %lld or %lld minutes in Settings) from bedtime, or from the start if you start later; %@ from an early start.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The setup lasts until bedtime + your setup time (%lld, %lld or %lld minutes in Settings), or %@ from an early start."
+            "value": "The setup lasts your setup time (%lld, %lld or %lld minutes in Settings) from bedtime, or from the start if you start later; %@ from an early start."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Príprava trvá do večierky + zvolený čas (%lld, %lld alebo %lld minút v Nastaveniach), pri skoršom štarte %@ od štartu."
+            "value": "Príprava trvá zvolený čas (%lld, %lld alebo %lld minút v Nastaveniach) od večierky, alebo od štartu, ak začneš neskôr; pri skoršom štarte %@ od štartu."
           }
         }
       }
@@ -9037,18 +9037,18 @@
         }
       }
     },
-    "You have until bedtime + %@ for a podcast or story.": {
+    "You have %@ for a podcast or story – from bedtime, or from the start if you start later.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "You have until bedtime + %@ for a podcast or story."
+            "value": "You have %@ for a podcast or story – from bedtime, or from the start if you start later."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Na podcast či rozprávku máš čas do večierky + %@."
+            "value": "Na podcast či rozprávku máš %@ – od večierky, alebo od štartu, ak začneš neskôr."
           }
         }
       }

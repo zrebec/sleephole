@@ -368,7 +368,7 @@ struct FirstNightBriefing: View {
             List {
                 Section {
                     Label(early ? L("You have \(Plural.minutes(GuideText.rules.earlySetup)) from now for a podcast or story.")
-                                : L("You have until bedtime + \(Plural.minutes(model.settings.setupGrace)) for a podcast or story."),
+                                : L("You have \(Plural.minutes(model.settings.setupGrace)) for a podcast or story – from bedtime, or from the start if you start later."),
                           systemImage: "headphones")
                     Label(L("Then come back to SleepHole and lock your phone."), systemImage: "lock.iphone")
                     Label(L("Keep your phone on the charger."), systemImage: "battery.100.bolt")
