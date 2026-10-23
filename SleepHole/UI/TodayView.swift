@@ -371,7 +371,7 @@ struct NightView: View {
                     } else {
                         let pauseEnds = model.pauseEnds(at: now)
                         ConstructionSite(buildingId: rec.buildingId, progress: progress, resting: pauseEnds != nil,
-                                         buddy: model.buddyState(at: now))
+                                         buddy: model.buddyState(at: now), startedAt: rec.startedAt)
                             .scaleEffect(compact ? 0.6 : 1, anchor: .top)
                             .frame(height: compact ? 190 : nil, alignment: .top)
                         Text(model.catalog?[rec.buildingId]?.displayName ?? "").font(.headline)
@@ -503,8 +503,54 @@ struct NapResting: View {
                     guard !reduceMotion else { return }
                     withAnimation(.easeInOut(duration: Motion.t(2.5)).repeatForever(autoreverses: true)) { dimmed = true }
                 }
-            ProgressView(value: progress).tint(.yellow.opacity(0.8)).frame(maxWidth: 200)
+            ProgressView(value: progress).progressViewStyle(ThickProgressStyle()).frame(maxWidth: 240)
         }
+    }
+}
+
+/// A taller progress bar (10h, owner 2026-10-23): a 12 pt capsule, yellow fill on a soft translucent track.
+/// Used with `ProgressView(value:)`, so VoiceOver still reads the percentage.
+struct ThickProgressStyle: ProgressViewStyle {
+    static let height: CGFloat = 12
+
+    func makeBody(configuration: Configuration) -> some View {
+        let f = min(1, max(0, configuration.fractionCompleted ?? 0))
+        GeometryReader { g in
+            ZStack(alignment: .leading) {
+                Capsule().fill(.white.opacity(0.18))
+                Capsule().fill(.yellow.opacity(0.8))
+                    .frame(width: max(Self.height, g.size.width * f))
+                    .opacity(f > 0 ? 1 : 0)
+            }
+        }
+        .frame(height: Self.height)
+        .animation(.linear(duration: 0.9), value: f)
+    }
+}
+
+/// Where the construction scaffold goes over a building on the night screen (10h). Pure, so it is unit-tested.
+enum ScaffoldGeometry {
+    /// The scaffold's frame in the building image's own coordinates (origin top-left, points). All sprites share one
+    /// points-per-pixel scale, so the scaffold is drawn at the building's scale (the shown width / its pixel width) and
+    /// the two ground anchors (SpriteKit anchors, y from the bottom) land on the same point.
+    static func frame(buildingSize: CGSize, buildingPx: [Int], buildingAnchor: [Double],
+                      scaffoldPx: [Int], scaffoldAnchor: [Double]) -> CGRect {
+        let s = buildingSize.width / CGFloat(max(1, buildingPx[0]))
+        let w = CGFloat(scaffoldPx[0]) * s, h = CGFloat(scaffoldPx[1]) * s
+        let groundX = CGFloat(buildingAnchor[0]) * CGFloat(buildingPx[0]) * s
+        let groundY = (1 - CGFloat(buildingAnchor[1])) * CGFloat(buildingPx[1]) * s
+        return CGRect(x: groundX - CGFloat(scaffoldAnchor[0]) * w, y: groundY - (1 - CGFloat(scaffoldAnchor[1])) * h,
+                      width: w, height: h)
+    }
+
+    /// The scaffold stays while the building time runs and fades when it is over.
+    static func isVisible(progress: Double) -> Bool { progress < 1 }
+
+    /// Only a screen that appears right after the start lets the scaffold grow; later it is simply there.
+    static func growsOnAppear(startedAt: Date?, now: Date) -> Bool {
+        guard let startedAt else { return false }
+        let d = now.timeIntervalSince(startedAt)
+        return d >= -1 && d < 10
     }
 }
 
@@ -524,9 +570,57 @@ struct ConstructionSite: View {
     static let buddyWidth: CGFloat = 110
     static let frameDuration = 0.22          // one slewing cycle ≈ 3.5 s
 
-    private var siteId: String {
-        (sprites.catalog?[buildingId]?.footprint.first ?? 1) == 2 ? "o-site-2" : "o-site-1"
+    /// The night's start: a screen that appears right after it lets the scaffold grow (10h); nil = no growth.
+    var startedAt: Date?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var scaffoldReveal: Double
+
+    init(buildingId: String, progress: Double, resting: Bool = false, buddy: BuddyState? = nil, startedAt: Date? = nil) {
+        self.buildingId = buildingId
+        self.progress = progress
+        self.resting = resting
+        self.buddy = buddy
+        self.startedAt = startedAt
+        _scaffoldReveal = State(initialValue: ScaffoldGeometry.growsOnAppear(startedAt: startedAt, now: Date()) ? 0 : 1)
     }
+
+    /// The scaffold over the building, anchors on the same ground point and at the building's scale (plan §3.3).
+    @ViewBuilder private var scaffold: some View {
+        let fp = sprites.catalog?[shownBuildingId]?.footprint.first ?? 1
+        let id = fp == 2 ? "o-scaffold-2" : "o-scaffold-1"
+        if let b = sprites.catalog?[shownBuildingId], let sc = sprites.catalog?[id], let image = sprites.image(for: id) {
+            GeometryReader { g in
+                let r = ScaffoldGeometry.frame(buildingSize: g.size, buildingPx: b.size, buildingAnchor: b.anchor,
+                                               scaffoldPx: sc.size, scaffoldAnchor: sc.anchor)
+                let visible = ScaffoldGeometry.isVisible(progress: shownProgress)
+                Image(uiImage: image)
+                    .resizable()
+                    .frame(width: r.width, height: r.height)
+                    .mask(alignment: .bottom) {
+                        Rectangle().frame(width: r.width, height: r.height * max(0.001, scaffoldReveal))
+                    }
+                    .opacity(visible ? 1 : 0)
+                    .animation(reduceMotion ? nil : .easeOut(duration: Motion.t(1)), value: visible)
+                    .offset(x: r.minX, y: r.minY)
+                    .frame(width: g.size.width, height: g.size.height, alignment: .topLeading)
+            }
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+            .onAppear {
+                guard scaffoldReveal < 1 else { return }
+                if reduceMotion { scaffoldReveal = 1 } else {
+                    withAnimation(.easeOut(duration: Motion.t(1))) { scaffoldReveal = 1 }
+                }
+            }
+        }
+    }
+
+    private var siteId: String {
+        (sprites.catalog?[shownBuildingId]?.footprint.first ?? 1) == 2 ? "o-site-2" : "o-site-1"
+    }
+
+    /// Dev aid: `-previewBuilding l3-police` overrides the building (screenshots).
+    private var shownBuildingId: String { DevArgs.value(after: "-previewBuilding") ?? buildingId }
 
     /// Dev aid: `-previewProgress 0.6` overrides the progress (screenshots).
     private var shownProgress: Double {
@@ -554,7 +648,8 @@ struct ConstructionSite: View {
                     BuildingImage(id: siteId, maxHeight: 110)       // building site under the building
                         .frame(width: 190)
                         .offset(x: -40 + shift, y: 6)
-                    BuildingImage(id: buildingId, progress: shownProgress, maxHeight: 150)
+                    BuildingImage(id: shownBuildingId, progress: shownProgress, maxHeight: 150)
+                        .overlay { scaffold }                       // in front of the building, like in the town
                         .frame(width: 190)
                         .offset(x: -40 + shift, y: -4)
                 }
@@ -564,9 +659,9 @@ struct ConstructionSite: View {
                     .foregroundStyle(.yellow)
                     .opacity(0.45 + 0.55 * breath)
                     .scaleEffect(0.97 + 0.06 * breath)
-                ProgressView(value: progress)
-                    .tint(.yellow.opacity(0.8))
-                    .frame(maxWidth: 200)
+                ProgressView(value: shownProgress)
+                    .progressViewStyle(ThickProgressStyle())
+                    .frame(maxWidth: 260)
             }
             .frame(maxWidth: .infinity)
         }

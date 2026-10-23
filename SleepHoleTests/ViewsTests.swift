@@ -14,6 +14,38 @@ struct ViewsTests {
 
     init() { AudioKeeper.muted = true }
 
+    /// 10h: the scaffold sits on the building's ground point at the building's scale.
+    @Test func scaffoldGeometry() throws {
+        let cat = try #require(sprites.catalog)
+        func check(_ bid: String, _ sid: String) throws {
+            let b = try #require(cat[bid]), sc = try #require(cat[sid])
+            // the building as BuildingImage shows it: fitted into 190 x 150
+            let k = min(190 / CGFloat(b.size[0]), 150 / CGFloat(b.size[1]))
+            let size = CGSize(width: CGFloat(b.size[0]) * k, height: CGFloat(b.size[1]) * k)
+            let r = ScaffoldGeometry.frame(buildingSize: size, buildingPx: b.size, buildingAnchor: b.anchor,
+                                           scaffoldPx: sc.size, scaffoldAnchor: sc.anchor)
+            #expect(abs(r.width / CGFloat(sc.size[0]) - k) < 0.0001)
+            let gx = b.anchor[0] * Double(size.width), gy = (1 - b.anchor[1]) * Double(size.height)
+            #expect(abs(Double(r.minX) + sc.anchor[0] * Double(r.width) - gx) < 0.001)
+            #expect(abs(Double(r.minY) + (1 - sc.anchor[1]) * Double(r.height) - gy) < 0.001)
+        }
+        try check("l1-house-a-0", "o-scaffold-1")
+        try check("l3-police", "o-scaffold-2")
+        try check("l4-sky-d-0", "o-scaffold-2")         // tall: scaled down by the 150 pt limit
+        let tall = try #require(cat["l4-sky-d-0"])
+        #expect(150 / CGFloat(tall.size[1]) < 190 / CGFloat(tall.size[0]))
+    }
+
+    @Test func scaffoldVisibilityAndGrowth() {
+        #expect(ScaffoldGeometry.isVisible(progress: 0))
+        #expect(ScaffoldGeometry.isVisible(progress: 0.99))
+        #expect(!ScaffoldGeometry.isVisible(progress: 1))
+        let now = Date()
+        #expect(ScaffoldGeometry.growsOnAppear(startedAt: now.addingTimeInterval(-3), now: now))
+        #expect(!ScaffoldGeometry.growsOnAppear(startedAt: now.addingTimeInterval(-30), now: now))
+        #expect(!ScaffoldGeometry.growsOnAppear(startedAt: nil, now: now))
+    }
+
     /// B37: the caption's setup end follows a start after bedtime, to the minute.
     @Test func captionSetupEndFollowsTheClock() {
         let w = NightWindow(key: NightKey(date: date(6, 6), calendar: .current), bedtime: date(5, 21, 30), wake: date(6, 6, 30))
