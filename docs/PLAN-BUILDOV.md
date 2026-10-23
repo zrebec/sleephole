@@ -99,7 +99,7 @@ B12, B13, B14, B15, B16, B22 a B26.
 
 **Tvoje odpovede 18. 10.:** spodná lišta plná je OK; build 7 zajtra vymeníme za build 9 a dáme k nemu nový návod pre Apple – najprv ho vyskúša druhý tester na svojom telefóne (build 9 z TestFlightu). **B28 je overená na tvojom telefóne** (test 18. 10. 12:00–12:06: „Zastaviť“, zhasnutie aj nechať tak – appka budík vypne načas). Test našiel **B33**: varovanie sľubuje 10s, ale zvoní len ~7,5s (začne o 2,5s neskôr a stíchne 3s pred zrútením) – tvoje rozhodnutie: 15s a zvoniť až do zrútenia, ide do buildu 9 ako krok 9i. **9i je v telefóne od 13:56 a tvoj test o 14:00 to potvrdil:** varovanie nechané tak zvonilo ~15s, potom testovacia stavba spadla a hlásenie prišlo aj na hodinky.
 
-## Build 10 – Doladenie: vypínač budíka, neskorší začiatok a otvorené chyby (v telefóne od 22. 10. 7:03, 10f od 10:55; 10a–10f commitnuté 22. 10., 10g 23. 10.; k testerom a na kontrolu k Apple 24. 10.)
+## Build 10 – Doladenie: vypínač budíka, neskorší začiatok a otvorené chyby (v telefóne od 22. 10. 7:03, 10f od 10:55; 10a–10f commitnuté 22. 10., 10g 23. 10., 10h sa robí; k testerom a na kontrolu k Apple po noci s 10g a 10h)
 
 **Tvoje slovo 19. 10. ~19:30** (po prečítaní `docs/NAVRH-FLEXIBILITA.md`; zmrazenie do 1.0 si pre tieto dva kroky zrušil):
 
@@ -111,7 +111,8 @@ B12, B13, B14, B15, B16, B22 a B26.
 | 10d | opravené | B8: batéria – ostrovček na Dnes sa nebude prekresľovať 20× za sekundu, počty sa nebudú stále prepočítavať, záloha sa pripraví až pri exporte; vzhľad ostane rovnaký (tvoje áno 20. 10.). Ostrovček už na Dnes nie je, takže tam nebolo čo opravovať; živé nebo ostáva, ako je | hotové, v telefóne od 22. 10. 7:03 |
 | 10e | opravené | B30: appka si pamätá pohľad na mesto a doskroluješ ku každej budove; oddialenie sa nemení – celé veľké mesto sa nezmestí a skrolovať je súčasť hry (tvoje slovo 20. 10.); po každej novej budove sa mesto raz presunie k nej (tvoje áno 22. 10.); karta hore ostáva, vrchol každej veže sa dá potiahnuť pod ňu | hotové, v telefóne od 22. 10. 7:03 |
 | 10f | zmenené | sprievodca otvorený znova z Nastavení už rozvrh nemení – časy len ukáže a povie „Rozvrh zmeníš v Nastaveniach → Rozvrh.“; pri prvom spustení sa časy nastavujú ako doteraz (tvoje slovo 22. 10., ruší krok 9m z 18. 10.; do buildu 10 tvoje áno 22. 10.) | hotové, v telefóne od 22. 10. 10:55; **sprievodca z Nastavení potvrdený 22. 10.**; prvé spustenie na čistej inštalácii ešte treba vyskúšať (druhá testerka s buildom 10 z TestFlightu) |
-| 10g | opravené | B37 (tvoj nález 23. 10.): čas prípravy na Dnes ide s hodinami – pred večierkou večierka + tvoj čas, po nej teraz + tvoj čas (o 21:40 „do 21:45“), mení sa sám v celú minútu; tri vety v sprievodcovi: „… od večierky, alebo od štartu, ak začneš neskôr“ (tvoje áno 23. 10.) | hotové a commitnuté (`b5ff74c`); do telefónu po tvojom odpočinku; večer po 21:30 pozri Dnes |
+| 10g | opravené | B37 (tvoj nález 23. 10.): čas prípravy na Dnes ide s hodinami – pred večierkou večierka + tvoj čas, po nej teraz + tvoj čas (o 21:40 „do 21:45“), mení sa sám v celú minútu; tri vety v sprievodcovi: „… od večierky, alebo od štartu, ak začneš neskôr“ (tvoje áno 23. 10.) | hotové a commitnuté (`b5ff74c`), v telefóne od 23. 10. 12:47; večer po 21:30 pozri Dnes |
+| 10h | zmenené | noc a odpočinok viditeľnejšie: asi 3× vyšší ukazovateľ priebehu pri nočnej stavbe aj pri odpočinku; okolo budovy hneď od štartu lešenie (vyrastie za pár sekúnd), budova rastie v ňom a lešenie zmizne, keď je čas stavby hotový (tvoj nápad a tvoje „stojí mi to za ten deň“ 23. 10.) | hotové, v telefóne od 23. 10. 14:17, commitnuté; večer pri štarte noci pozri lešenie |
 
 Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Aplikácie → SleepHole. Neskorší začiatok nemá vlastnú pokutu: príprava beží od začiatku a pokojné hodiny sa rátajú až od jej konca, takže neskorší štart prinesie menej mincí. „Dnešný budík“ (B) si nechcel; druhý rozvrh (D) nie – namiesto neho voľné noci (E) v builde 11.
 
@@ -133,6 +134,7 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 ## Build 12 – Doladenie (návrh)
 
 Opravy po builde 11 a chyby, ktoré sa medzitým nájdu.
+
 
 ## Build 13 – Nové veci: mesto (návrh)
 
