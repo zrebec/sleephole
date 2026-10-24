@@ -23,9 +23,9 @@ Stav k 18. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 |---|---|---|
 | 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
 | 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | hotový – ostrá noc 18.→19. 10. bez chyby, commitnutý, nahratý ako 1.0 (9) 19. 10., u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky); ďalej návod pre Apple na čistom telefóne, potom build 9 namiesto 7 na kontrolu |
-| 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | v práci od 19. 10. |
+| 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | v práci od 19. 10.; ostrá noc 23.→24. 10. bez chyby, číslo buildu 10 commitnuté 24. 10.; ďalej nahratie, testeri a kontrola u Apple |
 | 11 | **Nové veci:** voľné noci, štatistiky a nový žreb | návrh |
-| 12 | **Doladenie** | návrh |
+| 12 | **Doladenie** (+ jasne povedať, na čo appka je) | návrh |
 | 13 | **Nové veci:** mesto | návrh |
 | 14 | **Doladenie** | návrh |
 | 15 | **Nové veci:** živé mesto | návrh |
@@ -112,7 +112,7 @@ B12, B13, B14, B15, B16, B22 a B26.
 | 10e | opravené | B30: appka si pamätá pohľad na mesto a doskroluješ ku každej budove; oddialenie sa nemení – celé veľké mesto sa nezmestí a skrolovať je súčasť hry (tvoje slovo 20. 10.); po každej novej budove sa mesto raz presunie k nej (tvoje áno 22. 10.); karta hore ostáva, vrchol každej veže sa dá potiahnuť pod ňu | hotové, v telefóne od 22. 10. 7:03 |
 | 10f | zmenené | sprievodca otvorený znova z Nastavení už rozvrh nemení – časy len ukáže a povie „Rozvrh zmeníš v Nastaveniach → Rozvrh.“; pri prvom spustení sa časy nastavujú ako doteraz (tvoje slovo 22. 10., ruší krok 9m z 18. 10.; do buildu 10 tvoje áno 22. 10.) | hotové, v telefóne od 22. 10. 10:55; **sprievodca z Nastavení potvrdený 22. 10.**; prvé spustenie na čistej inštalácii ešte treba vyskúšať (druhá testerka s buildom 10 z TestFlightu) |
 | 10g | opravené | B37 (tvoj nález 23. 10.): čas prípravy na Dnes ide s hodinami – pred večierkou večierka + tvoj čas, po nej teraz + tvoj čas (o 21:40 „do 21:45“), mení sa sám v celú minútu; tri vety v sprievodcovi: „… od večierky, alebo od štartu, ak začneš neskôr“ (tvoje áno 23. 10.) | hotové a commitnuté (`b5ff74c`), v telefóne od 23. 10. 12:47; večer po 21:30 pozri Dnes |
-| 10h | zmenené | noc a odpočinok viditeľnejšie: asi 3× vyšší ukazovateľ priebehu pri nočnej stavbe aj pri odpočinku; okolo budovy hneď od štartu lešenie (vyrastie za pár sekúnd), budova rastie v ňom a lešenie zmizne, keď je čas stavby hotový (tvoj nápad a tvoje „stojí mi to za ten deň“ 23. 10.) | hotové, v telefóne od 23. 10. 14:17, commitnuté; večer pri štarte noci pozri lešenie |
+| 10h | zmenené | noc a odpočinok viditeľnejšie: asi 3× vyšší ukazovateľ priebehu pri nočnej stavbe aj pri odpočinku; okolo budovy hneď od štartu lešenie (vyrastie za pár sekúnd), budova rastie v ňom a lešenie zmizne, keď je čas stavby hotový (tvoj nápad a tvoje „stojí mi to za ten deň“ 23. 10.) | hotové, v telefóne od 23. 10. 14:17, commitnuté; noc 23.→24. 10. aj odpočinok 24. 10. s 10g a 10h hotové bez chyby v zázname |
 
 Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Aplikácie → SleepHole. Neskorší začiatok nemá vlastnú pokutu: príprava beží od začiatku a pokojné hodiny sa rátajú až od jej konca, takže neskorší štart prinesie menej mincí. „Dnešný budík“ (B) si nechcel; druhý rozvrh (D) nie – namiesto neho voľné noci (E) v builde 11.
 
@@ -134,6 +134,8 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 ## Build 12 – Doladenie (návrh)
 
 Opravy po builde 11 a chyby, ktoré sa medzitým nájdu.
+
+**Návrh: jasne povedať, na čo appka je (tvoj nápad 24. 10.).** Testeri čakajú, že appka bude fungovať sama alebo brať spánok z hodiniek, a v miernom režime im „nechodia upozornenia“. Do appky jedna jasná veta: SleepHole spánok nemeria, učí chodiť spať načas, každú noc spúšťaš sám a hodinky netreba. Patrí na prvú stranu sprievodcu a pod prísny režim v Nastaveniach, kde treba dopísať, čo mierny režim nestráži. Ešte skôr to patrí do popisu v App Store a v TestFlighte – to nepotrebuje build, stačia tvoje kliky pri builde 10. Silnejší mierny režim (druhé pokojné pripomenutie, ráno ukázať, koľko si v noci bol na telefóne) počká na podrobnosti od testerov.
 
 
 ## Build 13 – Nové veci: mesto (návrh)
