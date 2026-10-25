@@ -55,6 +55,55 @@ public enum Economy {
         /// Calm hours of the night and their pay (+`calmHourBonus` each); 0 for nights from before build 8.
         public let calmHours: Int
         public let calmBonus: Int
+        /// The building's pay alone (full for complete, half for unfinished), its level and the complete-night run
+        /// at that night – what the receipt lists (11a).
+        public let base: Int
+        public let level: Int
+        public let run: Int
+    }
+
+    /// The coin receipt of one night (11a): every part of the night's coins on its own line.
+    public struct Receipt: Equatable, Sendable {
+        public enum Kind: Equatable, Sendable {
+            case building(level: Int)
+            case unfinishedBuilding(level: Int)
+            case withoutPause
+            case calmHours(calm: Int, total: Int)
+            case streak(run: Int)
+            /// Coins that came from outside the ledger (achievements) – added by the app so the total adds up.
+            case achievements
+        }
+        public struct Line: Equatable, Sendable {
+            public let kind: Kind
+            public let amount: Int
+            public init(kind: Kind, amount: Int) { self.kind = kind; self.amount = amount }
+        }
+        public private(set) var lines: [Line]
+        public var total: Int { lines.reduce(0) { $0 + $1.amount } }
+
+        /// `calmTotal`: the night's whole hours (`NightResult.calmHoursTotal`). nil when the night paid nothing.
+        public init?(_ entry: Entry, calmTotal: Int?) {
+            guard entry.outcome == .complete || entry.outcome == .unfinished, entry.base > 0 else { return nil }
+            var l: [Line] = [Line(kind: entry.outcome == .complete ? .building(level: entry.level)
+                                                                  : .unfinishedBuilding(level: entry.level),
+                                  amount: entry.base)]
+            if entry.undisturbedBonus > 0 { l.append(Line(kind: .withoutPause, amount: entry.undisturbedBonus)) }
+            if entry.calmBonus > 0, entry.calmHours > 0 {
+                l.append(Line(kind: .calmHours(calm: entry.calmHours, total: max(calmTotal ?? entry.calmHours, entry.calmHours)),
+                              amount: entry.calmBonus))
+            }
+            if entry.streakBonus > 0 { l.append(Line(kind: .streak(run: entry.run), amount: entry.streakBonus)) }
+            lines = l
+        }
+
+        public init(lines: [Line]) { self.lines = lines }
+
+        /// A copy with extra coins from outside the ledger (achievements) as the last line.
+        public func addingAchievements(_ amount: Int) -> Receipt {
+            var r = self
+            if amount > 0 { r.lines.append(Line(kind: .achievements, amount: amount)) }
+            return r
+        }
     }
 
     /// One entry per result in chronological order, with the streak bonus where it was earned.
@@ -79,9 +128,12 @@ public enum Economy {
             let undisturbed = r.outcome == .complete && r.pauses == 0 ? PausePolicy.undisturbedBonus : 0
             let calmHours = r.outcome.isBuildNight ? r.calmHours ?? 0 : 0
             let calmBonus = calmHours * calmHourBonus
-            let coins = reward(r.outcome, level: level(of: r, catalog: catalog)) + bonus + undisturbed + calmBonus
+            let lvl = level(of: r, catalog: catalog)
+            let base = reward(r.outcome, level: lvl)
+            let coins = base + bonus + undisturbed + calmBonus
             out.append(Entry(key: r.key, outcome: r.outcome, coins: coins, streakBonus: bonus,
-                             undisturbedBonus: undisturbed, calmHours: calmHours, calmBonus: calmBonus))
+                             undisturbedBonus: undisturbed, calmHours: calmHours, calmBonus: calmBonus,
+                             base: base, level: lvl, run: run))
             prev = r.key
         }
         return out

@@ -310,11 +310,13 @@ final class AppModel {
                 .last { $0.key.description == rec.keyString }
             shownResult = rec
             lastReward = entry?.coins ?? 0
-            lastStreakBonus = entry?.streakBonus ?? 0
-            lastUndisturbedBonus = entry?.undisturbedBonus ?? 0
-            setCalmHours(entry, result: rec.result)
-            if DevArgs.list.contains("-calmDemo") {         // screenshots: a night with 7 of 8 calm hours
-                lastCalmHours = (7, 8); lastCalmBonus = 7 * Economy.calmHourBonus; lastReward += lastCalmBonus
+            lastReceipt = entry.flatMap { Economy.Receipt($0, calmTotal: rec.result?.calmHoursTotal) }
+            if DevArgs.list.contains("-calmDemo"), let r = lastReceipt {     // screenshots: a night with 7 of 8 calm hours
+                var lines = r.lines.filter { if case .calmHours = $0.kind { false } else { true } }
+                let calm = Economy.Receipt.Line(kind: .calmHours(calm: 7, total: 8), amount: 7 * Economy.calmHourBonus)
+                lines.insert(calm, at: min(lines.count, lines.firstIndex { if case .streak = $0.kind { true } else { false } } ?? lines.count))
+                lastReceipt = Economy.Receipt(lines: lines)
+                lastReward = lines.reduce(0) { $0 + $1.amount }
             }
             phase = .result
         }
@@ -628,14 +630,11 @@ final class AppModel {
 
     /// The week that just ended, shown once on the result screen (Monday morning after "I'm up").
     private(set) var finishedWeek: WeekSummary?
-    /// What the night in `shownResult` paid (reward + streak bonus).
+    /// What the night in `shownResult` paid (reward + bonuses + achievements).
     private(set) var lastReward = 0
-    private(set) var lastStreakBonus = 0
-    /// +30 when the night in `shownResult` was complete without a pause.
-    private(set) var lastUndisturbedBonus = 0
-    /// Calm hours of the night on the result screen: how many of how many whole hours, and what they paid.
-    private(set) var lastCalmHours: (calm: Int, total: Int)?
-    private(set) var lastCalmBonus = 0
+    /// The coin receipt of the night in `shownResult` (11a); nil for naps, for nights that paid nothing and whenever
+    /// its lines would not add up to `lastReward`.
+    private(set) var lastReceipt: Economy.Receipt?
 
     /// Current 🔥 streak: complete nights in a row up to the most recent night that could be finished.
     var streak: Int {
@@ -1334,18 +1333,9 @@ final class AppModel {
         if let rec = active { finalize(rec) }
     }
 
-    /// The result screen's calm-hours line: only when the night had at least one calm hour (no blame otherwise).
-    private func setCalmHours(_ entry: Economy.Entry?, result: NightResult?) {
-        lastCalmBonus = entry?.calmBonus ?? 0
-        if let calm = entry?.calmHours, calm > 0, let total = result?.calmHoursTotal { lastCalmHours = (calm, total) }
-        else { lastCalmHours = nil }
-    }
-
     func acknowledgeResult() {
         shownResult = nil
-        lastUndisturbedBonus = 0
-        lastCalmHours = nil
-        lastCalmBonus = 0
+        lastReceipt = nil
         levelUp = nil
         newAchievements = []
         finishedWeek = nil
@@ -2202,9 +2192,9 @@ final class AppModel {
         let entry = rec.isDebug || rec.isNap ? nil
             : Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
                 .last { $0.key.description == rec.keyString }
-        lastStreakBonus = entry?.streakBonus ?? 0
-        lastUndisturbedBonus = entry?.undisturbedBonus ?? 0
-        setCalmHours(entry, result: rec.result)
+        lastReceipt = entry.flatMap { Economy.Receipt($0, calmTotal: rec.result?.calmHoursTotal) }
+            .map { $0.addingAchievements(newAchievements.reduce(0) { $0 + $1.reward }) }   // achievements pay coins too
+            .flatMap { $0.total == lastReward ? $0 : nil }
         phase = .result
         if servicesEnabled {
             switch result.outcome {

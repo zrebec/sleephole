@@ -861,21 +861,10 @@ struct ResultView: View {
                 }
                 }
                 if !rec.isDebug, model.lastReward > 0 {
-                    VStack(spacing: 2) {
+                    VStack(spacing: 8) {
                         Text(verbatim: "+\(model.lastReward) 🪙").font(.title.bold()).foregroundStyle(Color.readableYellow)
                             .popIn(delay: 0.5)
-                        if model.lastStreakBonus > 0 {
-                            Text(L("including a +\(model.lastStreakBonus) bonus for \(Economy.streakBonusEvery) nights in a row 🔥"))
-                                .font(.footnote).cardCaption()
-                        }
-                        if model.lastUndisturbedBonus > 0 {
-                            Text(L("including +\(model.lastUndisturbedBonus) for a night without a pause 🌙"))
-                                .font(.footnote).cardCaption()
-                        }
-                        if let calm = model.lastCalmHours {
-                            Text(L("🌙 Calm hours: \(calm.calm) of \(calm.total) · +\(model.lastCalmBonus) 🪙"))
-                                .font(.footnote).cardCaption()
-                        }
+                        if !rec.isNap, let receipt = model.lastReceipt { CoinReceiptView(receipt: receipt).appearIn(delay: 0.8) }
                     }
                 }
                 if !rec.isDebug { NewAchievements(achievements: model.newAchievements) }
@@ -924,5 +913,64 @@ struct ResultView: View {
                 }
             }
         }
+    }
+}
+
+
+// MARK: - coin receipt (11a)
+
+/// The night's coins, one line per part like a shop receipt, so nobody has to ask "why 370?".
+struct CoinReceiptView: View {
+    let receipt: Economy.Receipt
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    /// One row: label left, amount right; at accessibility sizes the amount goes under the label so nothing wraps mid-word.
+    @ViewBuilder private func row(_ label: Text, _ amount: String) -> some View {
+        if typeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: 2) {
+                label.fixedSize(horizontal: false, vertical: true)
+                Text(verbatim: amount).monospacedDigit()
+            }.frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            HStack(alignment: .firstTextBaseline, spacing: 12) {
+                label.fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 8)
+                Text(verbatim: amount).monospacedDigit().fixedSize()
+            }
+        }
+    }
+
+    private func icon(_ kind: Economy.Receipt.Kind) -> String {
+        switch kind {
+        case .building, .unfinishedBuilding: "🏠"
+        case .withoutPause, .calmHours: "🌙"
+        case .streak: "🔥"
+        case .achievements: "🏆"
+        }
+    }
+
+    private func text(_ kind: Economy.Receipt.Kind) -> String {
+        switch kind {
+        case .building(let level): L("Building, level \(level)")
+        case .unfinishedBuilding(let level): L("Unfinished building, level \(level) (half)")
+        case .withoutPause: L("Without a pause")
+        case .calmHours(let calm, let total): L("Calm hours \(calm) of \(total)")
+        case .streak(let run): L("Night \(run) in a row")
+        case .achievements: L("Achievements")
+        }
+    }
+
+    var body: some View {
+        VStack(spacing: 2) {
+            ForEach(Array(receipt.lines.enumerated()), id: \.offset) { _, line in
+                row(Text(verbatim: "\(icon(line.kind)) \(text(line.kind))"), "+\(line.amount) 🪙")
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(L("\(text(line.kind)), plus \(line.amount) coins"))
+            }
+        }
+        .font(.footnote)
+        .foregroundStyle(Color.cardCaption)
+        .padding(.horizontal, 24)
+        .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : 320)
     }
 }

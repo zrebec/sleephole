@@ -361,8 +361,11 @@ struct AppModelTests {
         h.clock.now = date(2, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
         // complete +100, no pause +30, 7 calm hours +35 and the achievement "First building" +50
         #expect(h.model.coins == 215 && h.model.lastReward == 215 && h.model.newAchievements == [.firstBuilding])
-        #expect(h.model.lastUndisturbedBonus == 30)
+        #expect(h.model.lastReceipt?.lines.contains { $0.kind == .withoutPause && $0.amount == 30 } == true)
+        #expect(h.model.lastReceipt?.total == h.model.lastReward)          // 100 + 30 + 35 + 50 achievement line
+        #expect(h.model.lastReceipt?.lines.last == .init(kind: .achievements, amount: Achievement.firstBuilding.reward))
         h.model.acknowledgeResult()
+        #expect(h.model.lastReceipt == nil)                                // cleared with the screen
         #expect(h.model.newAchievements.isEmpty)
         playNight(h, day: 2, confirmAfterWake: 30 * 60)                   // unfinished +50 (no bonus)
         #expect(h.model.coins == 300)                                     // +50 +35 calm hours
@@ -384,7 +387,7 @@ struct AppModelTests {
         h.clock.now = date(8, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
         // 100 + streak bonus 200 + achievements ("7 nights in a row", maybe a random first L2 building)
         let bonus = h.model.newAchievements.reduce(0) { $0 + $1.reward }
-        #expect(h.model.newAchievements.contains(.streak7) && h.model.lastStreakBonus == 200)
+        #expect(h.model.newAchievements.contains(.streak7) && h.model.lastReceipt?.lines.contains { $0.kind == .streak(run: 7) && $0.amount == 200 } == true)
         // the 7th night may already build level 2 (pays 120)
         let level = catalog[h.model.shownResult!.buildingId]!.level
         #expect(h.model.lastReward == Economy.completeReward(level: level) + 200 + bonus + PausePolicy.undisturbedBonus + 7 * Economy.calmHourBonus)
@@ -438,6 +441,7 @@ struct AppModelTests {
         #expect(h.model.shownResult?.isNap == true && h.model.shownResult?.outcome == .complete)
         #expect(h.model.coins == 100 && h.model.lastReward == 100 && h.model.levelUp == nil)   // + "First nap"
         #expect(h.model.newAchievements == [.firstNap])
+        #expect(h.model.lastReceipt == nil)                                  // a nap keeps its single "+50 🪙"
         #expect(h.model.napSummary.count == 1 && h.model.napSummary.coins == 50)
         #expect(h.model.builtNights == 0 && h.model.townSnapshot?.buildings.isEmpty == true && h.model.streak == 0)
         h.model.acknowledgeResult()
@@ -594,7 +598,7 @@ struct AppModelTests {
         h.clock.now = date(6, 6, 31); h.model.refresh()
         #expect(h.model.confirm(code: "1234"))
         #expect(h.model.shownResult?.outcome == .complete && h.model.shownResult?.result?.pauses == 1)
-        #expect(h.model.lastUndisturbedBonus == 0 && h.model.lastReward == 100 + 50 + 6 * Economy.calmHourBonus)   // no +30; +50 first building; the pause spoils one of 7 hours
+        #expect(h.model.lastReceipt?.lines.contains { $0.kind == .withoutPause } == false && h.model.lastReward == 100 + 50 + 6 * Economy.calmHourBonus)   // no +30; +50 first building; the pause spoils one of 7 hours
         #expect(NightReport(log: h.model.shownResult!.log).pauses.count == 1)
     }
 
@@ -659,7 +663,7 @@ struct AppModelTests {
         #expect(h.model.collapsedAt == nil && h.model.awayBudgetUse() == nil)
         h.clock.now = date(6, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
         #expect(h.model.shownResult?.outcome == .complete)
-        #expect(h.model.lastUndisturbedBonus == 0 && h.model.shownResult?.result?.pauses == nil)
+        #expect(h.model.lastReceipt?.lines.contains { $0.kind == .withoutPause } == false && h.model.shownResult?.result?.pauses == nil)
         // a backup keeps "old night" (nil) and "new night without a pause" (0) apart
         let b = h.model.makeBackup()
         #expect(b.nights.first?.pauses == nil)
@@ -857,7 +861,8 @@ extension AppModelTests {
         // started 22:25, setup ends 22:35 → anchor 22:35 → 7 whole hours before 06:30
         let result = h.model.shownResult?.result
         #expect(result?.calmHours == 7 && result?.calmHoursTotal == 7)
-        #expect(h.model.lastCalmHours?.calm == 7 && h.model.lastCalmBonus == 7 * Economy.calmHourBonus)
+        #expect(h.model.lastReceipt?.lines.contains { $0.kind == .calmHours(calm: 7, total: 7) && $0.amount == 7 * Economy.calmHourBonus } == true)
+        #expect(h.model.lastReceipt?.total == h.model.lastReward)          // the receipt adds up (incl. "First building")
         #expect(h.model.lastReward == 100 + 30 + 35 + 50)          // night, no pause, calm hours, "First building"
     }
 
@@ -866,7 +871,7 @@ extension AppModelTests {
         h.clock.now = date(1, 22, 25); h.model.refresh(); h.model.startNight()
         h.model.active?.calmHoursRule = nil                         // as if it had started in an older build
         h.clock.now = date(2, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
-        #expect(h.model.lastCalmHours == nil && h.model.lastCalmBonus == 0)
+        #expect(h.model.lastReceipt?.lines.contains { if case .calmHours = $0.kind { true } else { false } } == false)
         #expect(h.model.shownResult?.result?.calmHours == nil)
         #expect(h.model.lastReward == 100 + 30 + 50)
     }
