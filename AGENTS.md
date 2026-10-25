@@ -29,35 +29,42 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 9 is finished (2026-10-19, plan §0b, §10 REL):** its first night 18 → 19 complete with no bug, committed
-   (`2f8c5eb` the chart's dot, `3675e52` build 9, docs; he pushes), uploaded by him ~12:00, 1.0 (9) in Kamaráti and SE with
-   "What to Test" EN + SK (he added the Slovak localization himself). **Build 10 is ON HIS PHONE since 2026-10-22 07:03 – a POLISHING build (tick-tock, his rule 2026-10-19, plan §0b rule 7, §10 REL):** 10a B36 the system alarm toggle (committed alone `5421f1d`), 10b the start until bedtime +30 min in the gentle mode (he tries the gentle mode from 2026-10-22 – Strict off), 10c B10 a nap confirmable in its last 20 % (50 🪙), 10d B8 (the derived-value cache, the streak flame, the lazy backup; the island was no longer on Today), 10e B30 (the camera remembered per device, a glide to each new building; zoom cap and first look unchanged); **10f (his yes 2026-10-22 ~10:15, reverses 9m): the guide opened again from Settings only shows the times – on his phone since 10:55 (app 560, i18n 761), his check 11:00 "works" (the replay)**. All of build 10 is committed (`5421f1d` 10a, `a07e94c` 10b–10e, `47fae12` 10f, the docs; he pushes). **2026-10-23 ~08:15: 10c confirmed (nap ended at 48 min), 10b confirmed (start until 22:00), the first gentle night 22 → 23 complete (plan §12). 10g (B37 – the setup time follows a start after bedtime, three guide texts; his yes ~08:40) built, reviewed, committed `b5ff74c`, on his phone since 12:47 (he was still before his nap and asked for it); pick the physical phone by `reality == physical` in `devicectl list devices --json-output`, never by name – a simulator is called "iPhone 16 Pro"); on his phone since 12:47 (he asked before his nap); tonight after 21:30 his look at Today (build 10 page check c8). **10h (his idea ~12:50, "worth the day"): a taller progress bar (night + nap) and the scaffolding around the growing building – on his phone since 14:17, committed; check c9;** **the night 23 → 24 and the nap of 24 Oct with 10g + 10h are complete, no bug in the journal (plan §12); his ticks c8 / c9 are still open; `CURRENT_PROJECT_VERSION` 10 committed on his word 2026-10-24 ~19:20; next: the Release archive, his upload, the testers, the review.** **His plan (2026-10-22 ~11:10):** today he tests what is left – the build 10 page (checks c1, c3, c5, c7 the clean install, the morning answers – read them with `ArtifactData`) and the night 22 → 23 in the gentle mode; **tomorrow 2026-10-23: build 10 to the testers AND to Apple's review** (his word: build 10, not 9, replaces build 7) – after the night: `CURRENT_PROJECT_VERSION` 10 (commit), his upload, "What to Test" EN + SK, `docs/REVIEW-NOTES.md` (+30 min start in the gentle mode) and the App Store Connect notes field (his yes per action), and repeat this whole agenda to him (see 2). Build 11 is talked through later (§0b row 11). The second tester
-   switches the system alarm off in iOS Settings → SleepHole until build 10 is in TestFlight. **Open today from `docs/ZAJTRA-RANO.md`:** the second
-   tester's clean install (see 2) – he walks the recipe with the tester (no Slovak copy needed); departures.to (categories Health + Audio); his daytime checks of
-   build 9 (`docs/TEST-BUILD-9.md`). His wish for later: when a bad night comes he will check the cat's ruins line;
-   next month the bronze joker → the cat's "streak was safe" line.
-2. **Apple's review:** build 7 is still "Waiting for Review" (2026-10-18). **His yes 2026-10-18:** now that build 9 is uploaded,
-   a second tester tries `docs/REVIEW-NOTES.md` on their own phone (**build 10** from TestFlight, no SleepHole before – the clean device;
-   it also tries 10f's first-run guide), then build 7 leaves the review and **build 10 goes in (his word 2026-10-22, not 9)** with those notes (the App Store Connect clicks are his, or his yes per
-   action). **When build 8 (or its successor) goes to review, repeat this whole agenda to
-   him (his request 2026-10-16).**
+1. **Build 11 is in work since 2026-10-25 (his word; plan §10 REL "Build 11", §0b row 11).** His final answers are on the
+   build 11 page (v92). **11a the coin receipt** – built and reviewed ~08:40 (SleepCore 425, app 564, i18n 764 – green;
+   screenshots `build/11a/`); **on his phone since 11:40** – next: his look at the receipt on the morning of 26 Oct.
+   **11a2 = B38** (his step 2026-10-25: the tab bar hidden on the night result) – built and reviewed ~12:25 (app 564,
+   i18n 764 – green); **on his phone since 12:28, confirmed by him on the nap result 13:31** – next: the night result on
+   26 Oct together with 11a.
+   The cat accessories proof is done; his pick: nightcap, top hat, builder's helmet, sunglasses, bowl with a fish, rug.
+   **His 11b answers 2026-10-25 ~11:50** (plan §10 REL 11b): one box a day after a complete night + the 20 / 40 / 60 % tiers,
+   none after the 9th, floor 400 🪙, the reroll once a night for 100 🪙, cat accessories (Kenney 3D on the cat, a proof sheet
+   first) and the night sky (code, no art) already in build 11.
+   His worry "it must not get mixed up" → the rule in §10 REL: records, not counters; the data model first; month tests.
+   Build 10 (finished 2026-10-24) is in Kamaráti and SE – 0 installs on 25 Oct morning; his ticks c8 / c9 on the build 10
+   page still open (`state/answers` v7).
+2. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
+   and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (up to
+   48 h). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
+   to review, repeat this whole agenda to him (his request 2026-10-16).**
 3. **His streak:** the night of 2026-10-15 → 16 collapsed (one trip of 13.15s; Notification Center counts as leaving on
    iOS 26); the silver joker saved it (1 000 🪙). October's bronze and silver are used and he will not buy the gold – the
    next failed night this month breaks the streak. Be kind about it.
-4. **Waiting for his word:** **PURPOSE (his idea 2026-10-24, §0b row 12): say plainly that SleepHole teaches a bedtime, measures no sleep and needs no watch – the store / TestFlight texts first (no build), the guide and Settings in build 12; which notification the testers miss in the gentle mode is asked;** **build 11 = 11a the coin receipt, 11b the economy + mystery boxes (coins only), 11c nights off (2 weekdays, gentle
-   mode only, the building by sleep length), 11d accessibility (his scope 2026-10-22 ~12:00)** – his eight answers on the page
-   https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo (read `state/answers` with `ArtifactData`); nothing starts before build 10 is with the testers and in review;
-   the reroll – in 11b or not (Opus: 100 🪙, +100 for each further reroll of the same night, none free); statistics etc. → build 13 (asked); the eight questions
-   at the end of `docs/NAVRH-MESTO-STATISTIKY.md` (they shape builds 11–13); still open from 2026-10-14: the seller name
-   on the Business page (it differs from the copyright name), what "a little tuning of the home screen UI" and "some AI
-   optimisation" mean, what "like a wiper on a car" means (weather over Today).
-5. **Owed device checks:** the review recipe on a clean install (NOT the second tester's phone – her iCloud brings her data back, plan §12 2026-10-22 ~11:20; a phone whose Apple ID never had SleepHole, or a fresh simulator – asked him) – with build 10 it also tries 10f's first-run guide (his wish 2026-10-22: "a clean install must be tried too"); R4 – the app killed by iOS in the night
-   and opened while the SYSTEM alarm rings → only one alarm (his normal mornings ring one – 2026-10-18; this rarer case is
-   untried); (B27 done 2026-10-22.)
-6. **Open bugs (plan §11a):** **B37 (found 2026-10-23: Today's "until 21:35 to set up" is computed from bedtime, wrong after bedtime in the gentle mode – his yes ~08:40: step 10g, committed `b5ff74c`, his phone after the nap)**; B36 (10a – the toggle ticked by him), B10 (10c – ✅ his nap 2026-10-22), B8 (10d), B30 (10e) – on his phone since 2026-10-22 07:03, his checks on the build 10 page; B27 ✅ confirmed 2026-10-22. Nothing else is open. B28 and B33 (9i) proven fixed on his phone 2026-10-18; B34 (9l), B35 (9o – his reinstall test 2026-10-19: nothing lost, but the B35 path itself was unreachable on his phone; closed, rests on tests) and B12–B16, B22, B26 are fixed in build 9 (tests – his night will tell).
-7. **Standing notes:** the app is free for now (price 0 since 2026-10-12; a price only after an accountant – never push;
-   his reasons stay out of this public repo); the Strict switch is ON on his phone; App Store Connect can be read in his
-   Chrome – every change needs his yes, agreements, bank, tax and legal declarations stay his own clicks.
+4. **Later builds:** 11b the economy + mystery boxes (coins only), 11c nights off, 11d accessibility (incl. 10h's
+   `ThickProgressStyle`); statistics, the bug list and Plans → build 13 (his answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 12):** the store and TestFlight
+   texts are done (plan §12); the guide's first page and the Strict-mode footer wait for build 12; the testers' answers about
+   missing notifications decide a stronger gentle mode. Still open: the eight questions at the end of
+   `docs/NAVRH-MESTO-STATISTIKY.md`; from 2026-10-14 the seller name on the Business page, "a little tuning of the home screen
+   UI", "some AI optimisation", "like a wiper on a car"; from `docs/ZAJTRA-RANO.md` departures.to (Health + Audio).
+5. **Owed device checks:** the review recipe on a clean install (NOT the second tester's phone – her iCloud brings her data
+   back; a phone whose Apple ID never had SleepHole, or a fresh simulator – asked him), also trying 10f's first-run guide (his
+   wish 2026-10-22); R4 – the app killed by iOS in the night and opened while the SYSTEM alarm rings → only one alarm (untried).
+6. **Open bugs (plan §11a):** none. B36, B10, B8, B30 and B37 are fixed in build 10 (B10 and the gentle start confirmed by
+   him, B37's caption is his c8). His wishes for later: when a bad night comes he checks the cat's ruins line; next month the
+   bronze joker → the cat's "streak was safe" line.
+7. **Standing notes:** the app is free for now (price 0 since 2026-10-12; a price only after an accountant – never push; his
+   reasons stay out of this public repo); he runs the gentle mode since 2026-10-22 (Strict off); App Store Connect can be
+   read in his Chrome – every change needs his yes, agreements, bank, tax and legal declarations stay his own clicks; what
+   the 2026-10-24 store edits replaced is in plan §12 (for a revert).
 
 ## ⚠️ WHO DOES WHAT – OWNER'S RULE (2026-10-03) – IMPORTANT
 
@@ -93,9 +100,18 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   next. Do not start the next step or build until the owner says so.
 * **Keep the agenda short:** the session-start agenda above lists only what is open now (≈30 lines); when something
   is done, delete it there and write the finding into §12.
-* **The owner commits.** Never `git commit`/`push` unless explicitly asked. Keep changes small and focused.
-  When he asks for commits: whole files only (no partial staging), one commit per topic where the files allow it,
-  otherwise one commit that describes every topic; he pushes.
+* **Git: a branch per build and per step (owner 2026-10-25: "the app is getting serious – separate branches, every build
+  and step its own branch; you may publish the branches; I will forbid a direct push to main"; his picks the same day:
+  a build branch + step branches, Opus opens the pull request, he merges).** `main` holds finished builds only and is
+  never pushed to directly. The build in work has `build/<n>` (from `main`); each step has `step/<code>-<short-name>`
+  (e.g. `step/11a2-b38-tab-bar`) from the build branch's tip. When a step is reviewed (tests green, i18n 0 / 0 / 0) and
+  written into the plan, Opus commits it on its step branch, merges it into the build branch with `--no-ff` and pushes
+  both (`git push -u origin <branch>`); the plan, the agenda and `PLAN-BUILDOV.md` are committed on the build branch.
+  When the build is finished (plan §0b rule 3), Opus opens the pull request `build/<n>` → `main` (`gh pr create`, a
+  detailed description); **merging it is the owner's click on GitHub – Opus never merges into `main` and never pushes
+  `main`.** Commits: whole files only (no partial staging), one commit per topic where the files allow it, otherwise one
+  commit that describes every topic; detailed messages; the repo is public – scrub personal details first. Workers
+  never commit or push. Keep changes small and focused.
 * **One step = one session (owner 2026-10-07):** when a step of a multi-step phase is reviewed, merged and written
   into the plan, Opus itself runs the `session-handoff` skill (user level, `~/.claude/skills/session-handoff`) – a
   chat-only summary the next session starts from – and stops; the next step starts in a clean context. No handoff

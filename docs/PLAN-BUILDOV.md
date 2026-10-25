@@ -1,6 +1,6 @@
 # SleepHole – plán podľa buildov
 
-Stav k 18. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdrojom pravdy anglický plán
+Stav k 25. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdrojom pravdy anglický plán
 `docs/IMPLEMENTATION_PLAN.md`, kapitola §0b; keď sa zmení tam, zmení sa aj tu.
 
 ## Ako pracujeme
@@ -23,8 +23,8 @@ Stav k 18. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 |---|---|---|
 | 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
 | 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | hotový – ostrá noc 18.→19. 10. bez chyby, commitnutý, nahratý ako 1.0 (9) 19. 10., u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky); ďalej návod pre Apple na čistom telefóne, potom build 9 namiesto 7 na kontrolu |
-| 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | v práci od 19. 10.; ostrá noc 23.→24. 10. bez chyby, číslo buildu 10 commitnuté 24. 10.; ďalej nahratie, testeri a kontrola u Apple |
-| 11 | **Nové veci:** voľné noci, štatistiky a nový žreb | návrh |
+| 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | **hotový 24. 10.** – ostrá noc 23.→24. 10. bez chyby, commitnutý, nahratý ako 1.0 (10), u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky), build 7 stiahnutý z kontroly a **1.0 (10) odoslaná na kontrolu u Apple** s ručným vydaním |
+| 11 | **Nové veci:** prístupnosť, ekonomika so škatuľami a voľné noci | **rozrobený od 25. 10.** (tvoje slovo) – 11a účet mincí je v telefóne od 25. 10. 11:40 |
 | 12 | **Doladenie** (+ jasne povedať, na čo appka je) | návrh |
 | 13 | **Nové veci:** mesto | návrh |
 | 14 | **Doladenie** | návrh |
@@ -99,7 +99,7 @@ B12, B13, B14, B15, B16, B22 a B26.
 
 **Tvoje odpovede 18. 10.:** spodná lišta plná je OK; build 7 zajtra vymeníme za build 9 a dáme k nemu nový návod pre Apple – najprv ho vyskúša druhý tester na svojom telefóne (build 9 z TestFlightu). **B28 je overená na tvojom telefóne** (test 18. 10. 12:00–12:06: „Zastaviť“, zhasnutie aj nechať tak – appka budík vypne načas). Test našiel **B33**: varovanie sľubuje 10s, ale zvoní len ~7,5s (začne o 2,5s neskôr a stíchne 3s pred zrútením) – tvoje rozhodnutie: 15s a zvoniť až do zrútenia, ide do buildu 9 ako krok 9i. **9i je v telefóne od 13:56 a tvoj test o 14:00 to potvrdil:** varovanie nechané tak zvonilo ~15s, potom testovacia stavba spadla a hlásenie prišlo aj na hodinky.
 
-## Build 10 – Doladenie: vypínač budíka, neskorší začiatok a otvorené chyby (v telefóne od 22. 10. 7:03, 10f od 10:55; 10a–10f commitnuté 22. 10., 10g 23. 10., 10h sa robí; k testerom a na kontrolu k Apple po noci s 10g a 10h)
+## Build 10 – Doladenie: vypínač budíka, neskorší začiatok a otvorené chyby (hotový 24. 10.: u testerov a na kontrole u Apple)
 
 **Tvoje slovo 19. 10. ~19:30** (po prečítaní `docs/NAVRH-FLEXIBILITA.md`; zmrazenie do 1.0 si pre tieto dva kroky zrušil):
 
@@ -116,31 +116,38 @@ B12, B13, B14, B15, B16, B22 a B26.
 
 Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Aplikácie → SleepHole. Neskorší začiatok nemá vlastnú pokutu: príprava beží od začiatku a pokojné hodiny sa rátajú až od jej konca, takže neskorší štart prinesie menej mincí. „Dnešný budík“ (B) si nechcel; druhý rozvrh (D) nie – namiesto neho voľné noci (E) v builde 11.
 
-## Build 11 – Nové veci: prístupnosť, ekonomika so škatuľami a voľné noci (návrh)
+## Build 11 – Nové veci: prístupnosť, ekonomika so škatuľami a voľné noci (rozrobený od 25. 10.)
 
-**Tvoj rozsah 22. 10.:** prístupnosť, kontrola ekonomiky s tajomnými škatuľami za mince a dva voľné dni v týždni – „to asi bude dosť na jeden build“. Začne sa, až keď bude build 10 u testerov a na kontrole u Apple. Podrobný návrh s otázkami: stránka https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo.
+**Tvoj rozsah 22. 10.:** prístupnosť, kontrola ekonomiky s tajomnými škatuľami za mince a dva voľné dni v týždni – „to asi bude dosť na jeden build“. **Začal sa 25. 10. ráno na tvoje slovo** (build 10 je u testerov a na kontrole u Apple). Podrobný návrh s otázkami: stránka https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo.
+
+**Tvoje konečné odpovede (25. 10.):** štatistiky, zoznam chýb a Plány → build 13; účet mincí aj nový žreb; cena škatule pomerne k minciam – 20 % za prvé 3 škatule v mesiaci, 40 % za ďalšie 3, 60 % za ďalšie 3, počítadlo sa raz za mesiac vynuluje; žolík zo škatule platí do konca budúceho mesiaca, najviac jeden navyše od druhu, zlatý nie; vo výhrach šťastná noc, pohľadnice, ozdoby mesta, doplnky mačky, nočná obloha – žetón žrebu nie („chceš inú budovu? zaplať“); voľná noc pomerne 75 / 50 %, začiatok 18:00–3:00, bez budíka, potvrdiť do 14:00; víkendové stavby áno.
+
+**Tvoje odpovede k 11b (25. 10. ~11:50):** najviac jedna škatuľa denne a len ráno po kompletnej noci, k tomu ceny 20 / 40 / 60 %; po 9. škatuli do konca mesiaca už žiadna; **najnižšia cena 400 🪙**; nový žreb najviac raz za noc počas setupu za 100 🪙; **doplnky mačky a nočná obloha už v builde 11**. Grafika: nočná obloha žiadnu nepotrebuje, obloha sa v appke kreslí kódom (padajúce hviezdy, polárna žiara, súhvezdie, kométa). Doplnky mačky sa dajú zložiť z Kenney 3D modelov (šiltovka, prilba staviteľa, cylinder, okuliare, vankúš, koberček, lampa, miska s rybou, darček, hviezda) a nočná čiapka z vlastných tvarov. Najprv dostaneš ukážku na mačke a vyberieš si. **Tvoj výber (25. 10.):** na hlavu nočná čiapka, cylinder a prilba staviteľa; na tvár slnečné okuliare; pri posteli miska s rybou a koberček. Mačka môže mať naraz jednu vec z každej skupiny (hlava + tvár + pri posteli). Ukážka je v iCloude v priečinku `SleepHole/doplnky-macky-ukazka/`.
+
+**Aby sa to nepomiešalo (tvoja obava):** appka si nebude pamätať žiadne počítadlo, ktoré by sa mohlo rozísť. Počet škatúľ v mesiaci, žolíky zo škatúľ aj mince sa vždy znova spočítajú z datovaných záznamov – tak ako dnes mince z nocí. Každý záznam ide do pamäte telefónu, do iCloudu aj do zálohy JSON. Prechod cez koniec mesiaca dostane vlastné testy. Najprv údaje a pravidlá, obrazovky nakoniec; po každom malom kroku kontrola.
 
 | Krok | Typ | Čo | Stav |
 |---|---|---|---|
-| 11a | nové | účet mincí po noci – každá časť mincí na vlastnom riadku (tvoj nápad 22. 10.) | návrh |
-| 11b | nové | ekonomika: prepočet mincí, potom tajomné škatule za mince (nikdy za peniaze, pravdepodobnosti vždy viditeľné, jedna denne po hotovej noci); vnútri mince (zriedka aj viac než cena) a žolík navyše, nie budovy; možno aj nový žreb | návrh, tvoje odpovede na stránke |
-| 11c | nové | voľné noci: najviac 2 dni v týždni, len bez prísneho režimu; začneš, kedy chceš; 6 h a viac hotová budova, 4 h rozostavaná, menej nič | návrh, tvoje odpovede na stránke |
+| 11a | nové | účet mincí po noci – každá časť mincí na vlastnom riadku (tvoj nápad 22. 10.) | hotový a skontrolovaný, v telefóne od 25. 10. 11:40 – pozrieš sa ráno 26. 10. |
+| 11a2 | oprava | B38: na výsledku noci sa skryje spodná lišta, „Pokračovať“ je vždy celé vidno (tvoj krok 25. 10.) | hotový a skontrolovaný, v telefóne od 25. 10. 12:28; na odpočinku 25. 10. si potvrdil, že lišta zmizla aj sa vrátila – výsledok noci ráno 26. 10. |
+| 11b | nové | ekonomika po malých krokoch: 11b1 prepočet mincí, 11b2 záznamy (nákup škatule, žolík zo škatule), 11b3 pravidlá (cena, šance, losovanie), 11b4 obchod a otvorenie, 11b5 obsah (pohľadnice, ozdoby, doplnky mačky, nočná obloha), 11b6 nový žreb za mince | tvoje odpovede 25. 10. sú zapísané; 11b1 po 11a2, na tvoje slovo |
+| 11c | nové | voľné noci: najviac 2 dni v týždni, len bez prísneho režimu; začneš 18:00–3:00; 75 % vlastného rozvrhu hotová budova, 50 % rozostavaná, menej nič; víkendové stavby | odpovede hotové |
 | 11d | nové | prístupnosť: VoiceOver, väčšie písmo, obmedzený pohyb, nielen farbou, kontrast; potom vyplniť v App Store Connect | návrh |
 
 **Lootbox?** Nie, kým sa mince nedajú kúpiť (žiadne nákupy v appke – pevné pravidlo): škatule otvárané menou, ktorá sa dá len zarobiť, nie sú hazard. Pravdepodobnosti aj tak ukážeme vždy.
 
-**Návrh presunúť do buildu 13:** mesačný kalendár, detail noci, graf so štyrmi farbami, zoznam chýb vo Vývoji, obrazovka Plánov (čaká na tvoje slovo).
+**Presunuté do buildu 13 (tvoja odpoveď 25. 10.):** mesačný kalendár, detail noci, graf so štyrmi farbami, zoznam chýb vo Vývoji, obrazovka Plánov.
 
 ## Build 12 – Doladenie (návrh)
 
-Opravy po builde 11 a chyby, ktoré sa medzitým nájdu.
+Opravy po builde 11 a chyby, ktoré sa medzitým nájdu. (B38 si 25. 10. presunul do buildu 11 ako krok 11a2.)
 
 **Návrh: jasne povedať, na čo appka je (tvoj nápad 24. 10.).** Testeri čakajú, že appka bude fungovať sama alebo brať spánok z hodiniek, a v miernom režime im „nechodia upozornenia“. Do appky jedna jasná veta: SleepHole spánok nemeria, učí chodiť spať načas, každú noc spúšťaš sám a hodinky netreba. Patrí na prvú stranu sprievodcu a pod prísny režim v Nastaveniach, kde treba dopísať, čo mierny režim nestráži. Ešte skôr to patrí do popisu v App Store a v TestFlighte – to nepotrebuje build, stačia tvoje kliky pri builde 10. Silnejší mierny režim (druhé pokojné pripomenutie, ráno ukázať, koľko si v noci bol na telefóne) počká na podrobnosti od testerov.
 
 
 ## Build 13 – Nové veci: mesto (návrh)
 
-Pohľad na mesto (B30) sa presunul do buildu 10. Viac
+Pohľad na mesto (B30) sa presunul do buildu 10. **Z buildu 11 sem prišli (25. 10.):** mesačný kalendár, detail noci, graf so štyrmi farbami, zoznam chýb a Plány vo Vývoji. Viac
 budov úrovne 3 – dnes sa ich päť opakuje. Ostrov, ktorého pobrežie kopíruje mesto (čaká na tvoju odpoveď: voda
 všade, alebo horizont).
 
@@ -166,6 +173,5 @@ skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón l
 
 ## Vydanie v App Store
 
-Vydanie je oddelené od buildov. Verzia 1.0 pôjde von až na tvoje slovo o cene. Build 7 čaká na kontrolu Apple
-s ručným vydaním – schválenie nič nezverejní. Ktorý build pôjde von, sa rozhodne, keď Apple odpovie a návod pre
-recenzenta bude opravený – najpravdepodobnejšie build 9.
+Vydanie je oddelené od buildov. Verzia 1.0 pôjde von až na tvoje slovo o cene. **Od 24. 10. čaká na kontrolu Apple
+build 10** (build 7 stiahnutý) s ručným vydaním – schválenie nič nezverejní.
