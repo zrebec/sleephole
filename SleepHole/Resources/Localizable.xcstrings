@@ -1737,22 +1737,6 @@
         }
       }
     },
-    "🌙 Calm hours: %lld of %lld · +%lld 🪙": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🌙 Calm hours: %lld of %lld · +%lld 🪙"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🌙 Pokojné hodiny: %1$lld z %2$lld · +%3$lld 🪙"
-          }
-        }
-      }
-    },
     "A crackling camp fire, crickets and a brook; someone chops wood, the dog potters about, the chickens settle down, an owl calls. A different story every night.": {
       "localizations": {
         "en": {
@@ -9629,38 +9613,6 @@
         }
       }
     },
-    "including +%lld for a night without a pause 🌙": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "including +%lld for a night without a pause 🌙"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "vrátane +%lld za noc bez pauzy 🌙"
-          }
-        }
-      }
-    },
-    "including a +%lld bonus for %lld nights in a row 🔥": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "including a +%lld bonus for %lld nights in a row 🔥"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "vrátane bonusu +%1$lld za %2$lld nocí v rade 🔥"
-          }
-        }
-      }
-    },
     "joker 🛡️": {
       "localizations": {
         "en": {
@@ -12773,6 +12725,102 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bez Apple Zdravia"
+          }
+        }
+      }
+    },
+    "Building, level %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Building, level %lld"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budova úrovne %lld"
+          }
+        }
+      }
+    },
+    "Unfinished building, level %lld (half)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfinished building, level %lld (half)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozostavaná budova úrovne %lld (polovica)"
+          }
+        }
+      }
+    },
+    "Without a pause": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Without a pause"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez pauzy"
+          }
+        }
+      }
+    },
+    "Calm hours %lld of %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calm hours %lld of %lld"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokojné hodiny %1$lld z %2$lld"
+          }
+        }
+      }
+    },
+    "Night %lld in a row": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night %lld in a row"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld. noc v rade"
+          }
+        }
+      }
+    },
+    "%@, plus %lld coins": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, plus %lld coins"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@, plus %2$lld mincí"
           }
         }
       }
