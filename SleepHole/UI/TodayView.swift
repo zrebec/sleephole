@@ -18,6 +18,9 @@ struct TodayView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.35 * Motion.pace), value: model.phase)
+            // the long result screen has its own "Continue"; the bar hid it on 6.1" phones (B38). Set on the content
+            // inside this tab's NavigationStack, so it affects only Today and the bar returns when the phase leaves .result
+            .toolbarVisibility(model.phase == .result ? .hidden : .automatic, for: .tabBar)
             // full screen: a background on a Group is sized to each child's content (owner bug 2026-10-02: the nap
             // result showed a small 16:9 patch of sky with black bars) – the night screen covers it with its NightSky
             .frame(maxWidth: .infinity, maxHeight: .infinity)
