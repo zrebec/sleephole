@@ -30,11 +30,12 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 2026-10-16). Work by build – the roadmap is plan §0b.
 
 1. **Build 11 is in work since 2026-10-25 (his word; plan §10 REL "Build 11", §0b row 11).** His final answers are on the
-   build 11 page (v92). **11a the coin receipt** – built and reviewed ~08:40 (SleepCore 425, app 564, i18n 764 – green;
-   screenshots `build/11a/`); **on his phone since 11:40** – next: his look at the receipt on the morning of 26 Oct.
-   **11a2 = B38** (his step 2026-10-25: the tab bar hidden on the night result) – built and reviewed ~12:25 (app 564,
-   i18n 764 – green); **on his phone since 12:28, confirmed by him on the nap result 13:31** – next: the night result on
-   26 Oct together with 11a.
+   build 11 page (v92). **11a the coin receipt and 11a2 = B38 (no tab bar on the result) are done and confirmed by him**
+   (the nap 25 Oct, the night 25 → 26), committed on `build/11` (pushed; the PR into `main` when the build is finished).
+   **Next: 11b1** (the simulation of earnings vs sinks – a table for him, no app change) on his word, on `step/11b1-…`.
+   His note 2026-10-26: the fall-asleep time of the night 25 → 26 was missing at 05:34 (the watch had not synced yet –
+   plan §12); check that it appeared later. Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing
+   it offered; protecting `main` on GitHub is his click.
    The cat accessories proof is done; his pick: nightcap, top hat, builder's helmet, sunglasses, bowl with a fish, rug.
    **His 11b answers 2026-10-25 ~11:50** (plan §10 REL 11b): one box a day after a complete night + the 20 / 40 / 60 % tiers,
    none after the 9th, floor 400 🪙, the reroll once a night for 100 🪙, cat accessories (Kenney 3D on the cat, a proof sheet

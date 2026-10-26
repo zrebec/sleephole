@@ -128,8 +128,8 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 
 | Krok | Typ | Čo | Stav |
 |---|---|---|---|
-| 11a | nové | účet mincí po noci – každá časť mincí na vlastnom riadku (tvoj nápad 22. 10.) | hotový a skontrolovaný, v telefóne od 25. 10. 11:40 – pozrieš sa ráno 26. 10. |
-| 11a2 | oprava | B38: na výsledku noci sa skryje spodná lišta, „Pokračovať“ je vždy celé vidno (tvoj krok 25. 10.) | hotový a skontrolovaný, v telefóne od 25. 10. 12:28; na odpočinku 25. 10. si potvrdil, že lišta zmizla aj sa vrátila – výsledok noci ráno 26. 10. |
+| 11a | nové | účet mincí po noci – každá časť mincí na vlastnom riadku (tvoj nápad 22. 10.) | ✅ hotový, v telefóne od 25. 10. 11:40, **potvrdený tebou po noci 26. 10.** (100 + 30 + 35 = 165) |
+| 11a2 | oprava | B38: na výsledku noci sa skryje spodná lišta, „Pokračovať“ je vždy celé vidno (tvoj krok 25. 10.) | ✅ hotový, v telefóne od 25. 10. 12:28, **potvrdený tebou** na odpočinku 25. 10. aj na výsledku noci 26. 10. |
 | 11b | nové | ekonomika po malých krokoch: 11b1 prepočet mincí, 11b2 záznamy (nákup škatule, žolík zo škatule), 11b3 pravidlá (cena, šance, losovanie), 11b4 obchod a otvorenie, 11b5 obsah (pohľadnice, ozdoby, doplnky mačky, nočná obloha), 11b6 nový žreb za mince | tvoje odpovede 25. 10. sú zapísané; 11b1 po 11a2, na tvoje slovo |
 | 11c | nové | voľné noci: najviac 2 dni v týždni, len bez prísneho režimu; začneš 18:00–3:00; 75 % vlastného rozvrhu hotová budova, 50 % rozostavaná, menej nič; víkendové stavby | odpovede hotové |
 | 11d | nové | prístupnosť: VoiceOver, väčšie písmo, obmedzený pohyb, nielen farbou, kontrast; potom vyplniť v App Store Connect | návrh |
