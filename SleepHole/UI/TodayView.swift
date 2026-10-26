@@ -18,6 +18,9 @@ struct TodayView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.35 * Motion.pace), value: model.phase)
+            // the long result screen has its own "Continue"; the bar hid it on 6.1" phones (B38). Set on the content
+            // inside this tab's NavigationStack, so it affects only Today and the bar returns when the phase leaves .result
+            .toolbarVisibility(model.phase == .result ? .hidden : .automatic, for: .tabBar)
             // full screen: a background on a Group is sized to each child's content (owner bug 2026-10-02: the nap
             // result showed a small 16:9 patch of sky with black bars) – the night screen covers it with its NightSky
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -333,6 +336,8 @@ struct NightView: View {
     @State private var confirmAbandon = false
     @State private var soundSheet = false
     @State private var confirmPause = false
+    @State private var confirmReroll = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// "9:41" left of a pause.
     static func countdown(_ seconds: TimeInterval) -> String {
@@ -372,6 +377,9 @@ struct NightView: View {
                         let pauseEnds = model.pauseEnds(at: now)
                         ConstructionSite(buildingId: rec.buildingId, progress: progress, resting: pauseEnds != nil,
                                          buddy: model.buddyState(at: now), startedAt: rec.startedAt)
+                            .id(rec.buildingId)
+                            .transition(.opacity)
+                            .animation(reduceMotion ? nil : .easeInOut(duration: Motion.t(0.5)), value: rec.buildingId)
                             .scaleEffect(compact ? 0.6 : 1, anchor: .top)
                             .frame(height: compact ? 190 : nil, alignment: .top)
                         Text(model.catalog?[rec.buildingId]?.displayName ?? "").font(.headline)
@@ -380,6 +388,7 @@ struct NightView: View {
                             Text(left >= 60 ? L("Setup until \(Fmt.time(graceEnds)) (\(Plural.minutes(Double(left))) left)")
                                             : L("Setup: \(left)s left for a podcast or story"))
                                 .font(.callout).foregroundStyle(.yellow)
+                            rerollSection(now: now)
                         } else if let pauseEnds {
                             Text(L("Pause: \(Self.countdown(pauseEnds.timeIntervalSince(now))) left – you can leave SleepHole now"))
                                 .font(.callout).foregroundStyle(.yellow).multilineTextAlignment(.center)
@@ -451,6 +460,38 @@ struct NightView: View {
                         .font(.footnote).foregroundStyle(.secondary)
                 }
             }
+        }
+    }
+
+    /// "Another building" (build 11b6): during the setup a different building can be drawn for coins.
+    @ViewBuilder
+    private func rerollSection(now: Date) -> some View {
+        switch model.rerollOffer(at: now) {
+        case .available(let price, let left)?:
+            Button { confirmReroll = true } label: {
+                Label(price > 0 ? L("Another building · \(price) 🪙") : L("Another building · free (test night)"),
+                      systemImage: "dice")
+            }
+            .buttonStyle(.bordered)
+            .task {
+                #if DEBUG
+                if DevArgs.list.contains("-rerollDialog") { try? await Task.sleep(for: .seconds(2)); confirmReroll = true }
+                #endif
+            }
+            .confirmationDialog(L("Draw another building for \(price) 🪙?"), isPresented: $confirmReroll,
+                                titleVisibility: .visible) {
+                Button(price > 0 ? L("Draw for \(price) 🪙") : L("Draw (free)")) { model.rerollBuilding() }
+                Button(L("Cancel"), role: .cancel) {}
+            } message: {
+                Text(L("Tonight's building changes at once. The coins are spent even if the night does not work out.")
+                     + " " + (left == 1 ? L("This is tonight's last draw.") : L("At most \(Reroll.maxPerNight) draws a night.")))
+            }
+        case .notEnoughCoins(let price)?:
+            Text(L("Not enough coins for another building (\(price) 🪙)")).font(.footnote).foregroundStyle(.secondary)
+        case .usedUp?:
+            Text(L("No more draws tonight 🎲")).font(.footnote).foregroundStyle(.secondary)
+        case nil:
+            EmptyView()
         }
     }
 
@@ -861,21 +902,10 @@ struct ResultView: View {
                 }
                 }
                 if !rec.isDebug, model.lastReward > 0 {
-                    VStack(spacing: 2) {
+                    VStack(spacing: 8) {
                         Text(verbatim: "+\(model.lastReward) 🪙").font(.title.bold()).foregroundStyle(Color.readableYellow)
                             .popIn(delay: 0.5)
-                        if model.lastStreakBonus > 0 {
-                            Text(L("including a +\(model.lastStreakBonus) bonus for \(Economy.streakBonusEvery) nights in a row 🔥"))
-                                .font(.footnote).cardCaption()
-                        }
-                        if model.lastUndisturbedBonus > 0 {
-                            Text(L("including +\(model.lastUndisturbedBonus) for a night without a pause 🌙"))
-                                .font(.footnote).cardCaption()
-                        }
-                        if let calm = model.lastCalmHours {
-                            Text(L("🌙 Calm hours: \(calm.calm) of \(calm.total) · +\(model.lastCalmBonus) 🪙"))
-                                .font(.footnote).cardCaption()
-                        }
+                        if !rec.isNap, let receipt = model.lastReceipt { CoinReceiptView(receipt: receipt).appearIn(delay: 0.8) }
                     }
                 }
                 if !rec.isDebug { NewAchievements(achievements: model.newAchievements) }
@@ -924,5 +954,64 @@ struct ResultView: View {
                 }
             }
         }
+    }
+}
+
+
+// MARK: - coin receipt (11a)
+
+/// The night's coins, one line per part like a shop receipt, so nobody has to ask "why 370?".
+struct CoinReceiptView: View {
+    let receipt: Economy.Receipt
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    /// One row: label left, amount right; at accessibility sizes the amount goes under the label so nothing wraps mid-word.
+    @ViewBuilder private func row(_ label: Text, _ amount: String) -> some View {
+        if typeSize.isAccessibilitySize {
+            VStack(alignment: .leading, spacing: 2) {
+                label.fixedSize(horizontal: false, vertical: true)
+                Text(verbatim: amount).monospacedDigit()
+            }.frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            HStack(alignment: .firstTextBaseline, spacing: 12) {
+                label.fixedSize(horizontal: false, vertical: true)
+                Spacer(minLength: 8)
+                Text(verbatim: amount).monospacedDigit().fixedSize()
+            }
+        }
+    }
+
+    private func icon(_ kind: Economy.Receipt.Kind) -> String {
+        switch kind {
+        case .building, .unfinishedBuilding: "🏠"
+        case .withoutPause, .calmHours: "🌙"
+        case .streak: "🔥"
+        case .achievements: "🏆"
+        }
+    }
+
+    private func text(_ kind: Economy.Receipt.Kind) -> String {
+        switch kind {
+        case .building(let level): L("Building, level \(level)")
+        case .unfinishedBuilding(let level): L("Unfinished building, level \(level) (half)")
+        case .withoutPause: L("Without a pause")
+        case .calmHours(let calm, let total): L("Calm hours \(calm) of \(total)")
+        case .streak(let run): L("Night \(run) in a row")
+        case .achievements: L("Achievements")
+        }
+    }
+
+    var body: some View {
+        VStack(spacing: 2) {
+            ForEach(Array(receipt.lines.enumerated()), id: \.offset) { _, line in
+                row(Text(verbatim: "\(icon(line.kind)) \(text(line.kind))"), "+\(line.amount) 🪙")
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(L("\(text(line.kind)), plus \(line.amount) coins"))
+            }
+        }
+        .font(.footnote)
+        .foregroundStyle(Color.cardCaption)
+        .padding(.horizontal, 24)
+        .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : 320)
     }
 }

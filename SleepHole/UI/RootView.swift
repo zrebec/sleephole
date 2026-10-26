@@ -58,6 +58,8 @@ struct RootView: View {
                     if case .setup? = model.pauseBlock() { try? await Task.sleep(for: .seconds(1)) } else { break }
                 }
                 model.startPause()
+            } else if a[i + 1] == "reroll" {
+                model.rerollBuilding()                         // 11b6 screenshots: one draw during the setup
             } else if a[i + 1] == "warning" {
                 model.showNotificationSettings()
             } else if a[i + 1] == "abandon" {

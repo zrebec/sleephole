@@ -58,7 +58,10 @@ struct Part: Codable {
     var children: [Part]?          // nested parts in this part's model space
     var attach: String?            // child only: glue to this OBJ group of the parent (follows its pose)
     var chamfer: Double?           // box: chamfer radius (default min(h/2, 0.01))
-    var center: Bool?              // box: centred on pos instead of sitting on pos.y
+    var center: Bool?              // box / cone / sphere: centred on pos instead of sitting on pos.y
+    var cone: [Double]?            // OR a primitive cone / frustum [bottomRadius, topRadius, height]
+    var sphere: Double?            // OR a primitive sphere of this radius (centred on pos.y + radius unless `center`)
+    var segments: Int?             // cone / sphere: radial segments (low = Kenney's faceted look; default 8)
 }
 
 struct Pose: Codable {
@@ -247,7 +250,22 @@ func buildPart(_ p: Part, _ id: String) -> SCNNode {
         g.firstMaterial?.lightingModel = .lambert
         let inner = SCNNode(geometry: g); inner.position.y = (p.center ?? false) ? 0 : CGFloat(b[1] / 2)
         model = SCNNode(); model.addChildNode(inner)
-    } else { fatalError("part needs src or box in \(id)") }
+    } else if let c = p.cone {
+        let g = SCNCone(topRadius: c[1], bottomRadius: c[0], height: c[2])
+        g.radialSegmentCount = p.segments ?? 8
+        g.heightSegmentCount = 1
+        g.firstMaterial?.diffuse.contents = color(p.color ?? "#888888")
+        g.firstMaterial?.lightingModel = .lambert
+        let inner = SCNNode(geometry: g); inner.position.y = (p.center ?? false) ? 0 : CGFloat(c[2] / 2)
+        model = SCNNode(); model.addChildNode(inner)
+    } else if let r = p.sphere {
+        let g = SCNSphere(radius: r)
+        g.segmentCount = p.segments ?? 8
+        g.firstMaterial?.diffuse.contents = color(p.color ?? "#888888")
+        g.firstMaterial?.lightingModel = .lambert
+        let inner = SCNNode(geometry: g); inner.position.y = (p.center ?? false) ? 0 : CGFloat(r)
+        model = SCNNode(); model.addChildNode(inner)
+    } else { fatalError("part needs src, box, cone or sphere in \(id)") }
 
     // per-group poses: wildcard keys first, exact names after (so an exact key overrides a "leg-*")
     var holders: [String: SCNNode] = [:]       // group name -> `inner` node children glue to

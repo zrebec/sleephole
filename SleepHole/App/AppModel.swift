@@ -88,6 +88,8 @@ final class AppModel {
     ///   -lockLab                      DEBUG nights only: record the lock-screen lab (Darwin / UIKit signals, motion, a line
     ///                                 per second) to Application Support/lock-lab.log – pull it with devicectl
     ///   -startNap                     screenshots: open the nap window around now and start a nap
+    ///   -testNightCounts              with -startTestNight: a real night (pays; "another building" costs coins)
+    ///   -testNightGrace S             with -startTestNight: the setup lasts S seconds (default 15)
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
     ///   -showResult [unfinished]      SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
@@ -99,6 +101,8 @@ final class AppModel {
     ///   -screenshot                   no permission alert, no first-run guide (use with a pulled store, tools/sim_shot.sh)
     ///   -thenTab 1|island|abandon|pause|warning   4 s after launch: select a tab / open the Town tab / cancel the
     ///                                 running night and close its result / start a pause once the setup is over
+    ///   -thenTab reroll               (with a paying night) draw another building once, 4 s after launch
+    ///   -rerollDialog                 open the "Another building" confirmation 2 s after the night screen shows
     ///   -expiresIn HOURS              pretend the provisioning profile runs out then (AppExpiry)
     ///   -mute                         silence every sound (alarm, effects) – for screenshots of a night's end
     ///   -buddy awake|asleep           force the sleep buddy's state (screenshots)
@@ -310,11 +314,13 @@ final class AppModel {
                 .last { $0.key.description == rec.keyString }
             shownResult = rec
             lastReward = entry?.coins ?? 0
-            lastStreakBonus = entry?.streakBonus ?? 0
-            lastUndisturbedBonus = entry?.undisturbedBonus ?? 0
-            setCalmHours(entry, result: rec.result)
-            if DevArgs.list.contains("-calmDemo") {         // screenshots: a night with 7 of 8 calm hours
-                lastCalmHours = (7, 8); lastCalmBonus = 7 * Economy.calmHourBonus; lastReward += lastCalmBonus
+            lastReceipt = entry.flatMap { Economy.Receipt($0, calmTotal: rec.result?.calmHoursTotal) }
+            if DevArgs.list.contains("-calmDemo"), let r = lastReceipt {     // screenshots: a night with 7 of 8 calm hours
+                var lines = r.lines.filter { if case .calmHours = $0.kind { false } else { true } }
+                let calm = Economy.Receipt.Line(kind: .calmHours(calm: 7, total: 8), amount: 7 * Economy.calmHourBonus)
+                lines.insert(calm, at: min(lines.count, lines.firstIndex { if case .streak = $0.kind { true } else { false } } ?? lines.count))
+                lastReceipt = Economy.Receipt(lines: lines)
+                lastReward = lines.reduce(0) { $0 + $1.amount }
             }
             phase = .result
         }
@@ -323,7 +329,11 @@ final class AppModel {
         if DevArgs.list.contains("-startTestNight"), active == nil {
             let a = DevArgs.list
             let minutes = a.firstIndex(of: "-testNightMinutes").flatMap { a.indices.contains($0 + 1) ? Double(a[$0 + 1]) : nil }
-            startTestNight(minutes: minutes ?? 4)
+            let grace = a.firstIndex(of: "-testNightGrace").flatMap { a.indices.contains($0 + 1) ? Double(a[$0 + 1]) : nil }
+            startTestNight(minutes: minutes ?? 4, grace: grace ?? AppModel.debugGrace)
+            #if DEBUG
+            if DevArgs.list.contains("-testNightCounts") { nextTestNightCounts = true }    // a real (paying) night
+            #endif
             startNight()
         }
         if DevArgs.list.contains("-startNap"), active == nil { startNap() }
@@ -628,14 +638,11 @@ final class AppModel {
 
     /// The week that just ended, shown once on the result screen (Monday morning after "I'm up").
     private(set) var finishedWeek: WeekSummary?
-    /// What the night in `shownResult` paid (reward + streak bonus).
+    /// What the night in `shownResult` paid (reward + bonuses + achievements).
     private(set) var lastReward = 0
-    private(set) var lastStreakBonus = 0
-    /// +30 when the night in `shownResult` was complete without a pause.
-    private(set) var lastUndisturbedBonus = 0
-    /// Calm hours of the night on the result screen: how many of how many whole hours, and what they paid.
-    private(set) var lastCalmHours: (calm: Int, total: Int)?
-    private(set) var lastCalmBonus = 0
+    /// The coin receipt of the night in `shownResult` (11a); nil for naps, for nights that paid nothing and whenever
+    /// its lines would not add up to `lastReward`.
+    private(set) var lastReceipt: Economy.Receipt?
 
     /// Current 🔥 streak: complete nights in a row up to the most recent night that could be finished.
     var streak: Int {
@@ -1334,18 +1341,9 @@ final class AppModel {
         if let rec = active { finalize(rec) }
     }
 
-    /// The result screen's calm-hours line: only when the night had at least one calm hour (no blame otherwise).
-    private func setCalmHours(_ entry: Economy.Entry?, result: NightResult?) {
-        lastCalmBonus = entry?.calmBonus ?? 0
-        if let calm = entry?.calmHours, calm > 0, let total = result?.calmHoursTotal { lastCalmHours = (calm, total) }
-        else { lastCalmHours = nil }
-    }
-
     func acknowledgeResult() {
         shownResult = nil
-        lastUndisturbedBonus = 0
-        lastCalmHours = nil
-        lastCalmBonus = 0
+        lastReceipt = nil
         levelUp = nil
         newAchievements = []
         finishedWeek = nil
@@ -1974,6 +1972,54 @@ final class AppModel {
         return NightEvaluator.budgetState(rec.log, rules: rec.rules, at: t ?? clock.now)
     }
 
+    // MARK: - another building (build 11b6, owner 2026-10-26)
+
+    /// What the night screen offers during the setup: a draw of another building. nil = nothing to show.
+    enum RerollOffer: Equatable {
+        case available(price: Int, left: Int)      // price 0 = a test night (free)
+        case notEnoughCoins(price: Int)
+        case usedUp
+    }
+
+    /// Draws of tonight's building that a test night made (a test night stores no `CoinSpend`; counts for nothing).
+    private var testNightDraws: (night: PersistentIdentifier?, ids: [String]) = (nil, [])
+
+    /// Buildings drawn away from tonight – derived from the `CoinSpend` reasons, never counted.
+    private func drawnAwayTonight(_ rec: NightRecord) -> [String] {
+        rec.isDebug ? (testNightDraws.night == rec.persistentModelID ? testNightDraws.ids : []) : Reroll.drawnAway(nightKey: rec.keyString, reasons: spends().map(\.reason))
+    }
+
+    func rerollOffer(at t: Date? = nil) -> RerollOffer? {
+        let now = t ?? clock.now
+        guard let rec = active, !rec.isNap, collapsedAt.map({ $0 > now }) ?? true,
+              let graceEnds, graceEnds > now else { return nil }
+        let made = drawnAwayTonight(rec).count
+        guard let price = Reroll.price(drawsMade: made) else { return .usedUp }
+        if rec.isDebug { return .available(price: 0, left: Reroll.maxPerNight - made) }
+        return coins >= price ? .available(price: price, left: Reroll.maxPerNight - made) : .notEnoughCoins(price: price)
+    }
+
+    /// Draws another building for tonight: spends the coins (a test night draws free), never repeats a building drawn
+    /// earlier tonight, same pool and history as the evening draw.
+    func rerollBuilding() {
+        guard let rec = active, let catalog, case .available(let price, _)? = rerollOffer() else { return }
+        let old = rec.buildingId
+        var tried = Set(drawnAwayTonight(rec)); tried.insert(old)
+        var rng = SystemRandomNumberGenerator()
+        let entry = BuildingPicker.pick(
+            maxLevel: Progression.unlockedMaxLevel(builtBefore: builtNights), catalog: catalog,
+            history: realResults().map(\.buildingId), excluding: tried, rng: &rng)
+        if rec.isDebug {
+            testNightDraws = (rec.persistentModelID, drawnAwayTonight(rec) + [old])
+        } else if price > 0 {
+            spend(price, reason: Reroll.reason(nightKey: rec.keyString, from: old))
+        }
+        rec.buildingId = entry.id
+        save()
+        fx("fx_pop", volume: 0.5)
+        refresh()
+    }
+
     func startPause() {
         guard let rec = active, pauseBlock() == nil else { return }
         let price = nextPausePrice
@@ -2202,9 +2248,9 @@ final class AppModel {
         let entry = rec.isDebug || rec.isNap ? nil
             : Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
                 .last { $0.key.description == rec.keyString }
-        lastStreakBonus = entry?.streakBonus ?? 0
-        lastUndisturbedBonus = entry?.undisturbedBonus ?? 0
-        setCalmHours(entry, result: rec.result)
+        lastReceipt = entry.flatMap { Economy.Receipt($0, calmTotal: rec.result?.calmHoursTotal) }
+            .map { $0.addingAchievements(newAchievements.reduce(0) { $0 + $1.reward }) }   // achievements pay coins too
+            .flatMap { $0.total == lastReward ? $0 : nil }
         phase = .result
         if servicesEnabled {
             switch result.outcome {

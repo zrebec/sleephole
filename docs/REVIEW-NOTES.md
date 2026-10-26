@@ -1,7 +1,9 @@
-# App Review notes – the source text (build 9)
+# App Review notes – the source text (build 10)
 
-The text below goes into App Store Connect → the version → App Review Information → **Notes** when build 9 (or a
-later build) is submitted. Two changes against the notes saved with build 7 (read from App Store Connect 2026-10-18):
+The text below goes into App Store Connect → the version → App Review Information → **Notes** when build 10 (or a
+later build) is submitted. Build 10 changed steps 2 and 3 (10b: "Go to sleep" until 30 minutes after bedtime
+without Strict mode; 10g: the setup time counts from a later start). Build 9 had made two changes against the notes
+saved with build 7 (read from App Store Connect 2026-10-18):
 (1) the section "A WHOLE NIGHT IN ABOUT 15 MINUTES" – since build 8 a bedtime / wake change made in Settings once
 tonight's building can start (from bedtime − 3 h) applies from tomorrow, so the reviewer sets the times in the
 first-run guide, where they apply at once (plan §12, 2026-10-16, point 6); (2) STRICT MODE – the warning lasts 15 seconds
@@ -14,9 +16,9 @@ SleepHole is a sleep-habit app. At bedtime the user starts a "night" and a build
 
 A WHOLE NIGHT IN ABOUT 15 MINUTES
 1. On a fresh install the first-run guide opens. On its page "Your schedule" set Bedtime to about 3 minutes from now and Wake-up to about 15 minutes from now – times set in the guide apply at once. Finish the guide. (In Settings > Schedule a change made within 3 hours of the current bedtime applies only from the next day, so please use the guide; to see the guide again, delete and reinstall the app.)
-2. Today tab: tap "Go to sleep" (active from 10 minutes before bedtime until 5 minutes after it). A short first-night checklist appears once.
-3. The first minutes are setup time (until 5 minutes after bedtime by default; Settings > Setup time offers 5, 10 or 15 minutes). Then lock the phone; SleepHole must stay the frontmost app, the screen can be off.
-4. At the wake-up time the alarm rings. Shake the phone, or type the code shown in Settings > Morning confirmation (the night screen accepts both from 30 minutes before the wake-up time, so in this short test it accepts them straight away). The building is finished and stands on the Town tab.
+2. Today tab: tap "Go to sleep" (active from 10 minutes before bedtime until 30 minutes after it; 5 minutes with Strict mode on). A short first-night checklist appears once.
+3. The first minutes are setup time (5 minutes by default, 10 or 15 in Settings > Setup time; from bedtime or from a later start). Then lock the phone; SleepHole must stay the frontmost app, the screen can be off.
+4. At the wake-up time the alarm rings. Shake the phone, or type the code shown in Settings > Morning confirmation (accepted from 30 minutes before the wake-up time, so straight away in this short test). The building is finished and stands on the Town tab.
 To see the reminder: after the setup time, leave the app - a notification asks you to come back and shows the seconds left. "Cancel night" ends a test at any time.
 
 BACKGROUND AUDIO (UIBackgroundModes: audio)
