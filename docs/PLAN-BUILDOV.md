@@ -1,6 +1,6 @@
 # SleepHole – plán podľa buildov
 
-Stav k 25. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdrojom pravdy anglický plán
+Stav k 26. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdrojom pravdy anglický plán
 `docs/IMPLEMENTATION_PLAN.md`, kapitola §0b; keď sa zmení tam, zmení sa aj tu.
 
 ## Ako pracujeme
@@ -130,7 +130,7 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 |---|---|---|---|
 | 11a | nové | účet mincí po noci – každá časť mincí na vlastnom riadku (tvoj nápad 22. 10.) | ✅ hotový, v telefóne od 25. 10. 11:40, **potvrdený tebou po noci 26. 10.** (100 + 30 + 35 = 165) |
 | 11a2 | oprava | B38: na výsledku noci sa skryje spodná lišta, „Pokračovať“ je vždy celé vidno (tvoj krok 25. 10.) | ✅ hotový, v telefóne od 25. 10. 12:28, **potvrdený tebou** na odpočinku 25. 10. aj na výsledku noci 26. 10. |
-| 11b6 | nové | **iná budova na dnešnú noc** (tvoj krok 26. 10., „podmienka dnešného dňa“): počas setupu noci tlačidlo „Iná budova“ – prvý žreb 400 🪙, druhý 800 🪙, potom v tú noc už nie (číslo sa môže neskôr zmeniť); vyberá sa ako pri večernom žrebe (úrovne rovnako, najprv budovy, ktoré ešte nemáš), nikdy budova, ktorá už v tú noc padla; mince sa minú, aj keby sa noc nepodarila; testovacia noc zdarma | hotový a skontrolovaný 26. 10. ~09:05 – do telefónu na tvoje áno (nie počas odpočinku), určite pred 21:30 |
+| 11b6 | nové | **iná budova na dnešnú noc** (tvoj krok 26. 10., „podmienka dnešného dňa“): počas setupu noci tlačidlo „Iná budova“ – prvý žreb 400 🪙, druhý 800 🪙, potom v tú noc už nie (číslo sa môže neskôr zmeniť); vyberá sa ako pri večernom žrebe (úrovne rovnako, najprv budovy, ktoré ešte nemáš), nikdy budova, ktorá už v tú noc padla; mince sa minú, aj keby sa noc nepodarila; testovacia noc zdarma | hotový a skontrolovaný 26. 10. ~09:05, **v telefóne od 26. 10. 11:39** – dnes večer prvý skutočný žreb, ráno 27. 10. ho skontrolujem |
 | 11b | nové | ekonomika po malých krokoch: 11b1 prepočet mincí, 11b2 záznamy (nákup škatule, žolík zo škatule), 11b3 pravidlá (cena, šance, losovanie), 11b4 obchod a otvorenie, 11b5 obsah (pohľadnice, ozdoby, doplnky mačky, nočná obloha), 11b6 nový žreb za mince (vytiahnutý dopredu, riadok vyššie) | tvoje odpovede 25. 10. sú zapísané; 11b1 na tvoje slovo |
 | 11c | nové | voľné noci: najviac 2 dni v týždni, len bez prísneho režimu; začneš 18:00–3:00; 75 % vlastného rozvrhu hotová budova, 50 % rozostavaná, menej nič; víkendové stavby | odpovede hotové |
 | 11d | nové | prístupnosť: VoiceOver, väčšie písmo, obmedzený pohyb, nielen farbou, kontrast; potom vyplniť v App Store Connect | návrh |

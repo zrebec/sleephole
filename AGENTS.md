@@ -34,11 +34,11 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    (the nap 25 Oct, the night 25 → 26), committed on `build/11` (pushed; the PR into `main` when the build is finished).
    **11b6 (another building for tonight) pulled forward – his "condition of today" (2026-10-26 ~07:45):** during the setup,
    400 🪙 then 800 🪙, at most two a night, the evening draw's pool – **built and reviewed ~09:05** (SleepCore 428, app
-   572, i18n 774 – green; screenshots `build/11b6/`); next: his yes → his phone **before 21:30** (not in his nap window
-   12:30–13:30) → tonight's night with it. Then 11b1 on his word.
-   His note 2026-10-26: the fall-asleep time of the night 25 → 26 was missing at 05:34 (the watch had not synced yet –
-   plan §12); check that it appeared later. Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing
-   it offered; protecting `main` on GitHub is his click.
+   572, i18n 774 – green; screenshots `build/11b6/`) – **on his phone since 2026-10-26 11:39**; tonight his first real
+   draw → on 2026-10-27 morning pull the store and check the spends `reroll-2026-10-27:<old id>`, the night's building
+   and coins. Then 11b1 on his word.
+   Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is
+   his click.
    The cat accessories proof is done; his pick: nightcap, top hat, builder's helmet, sunglasses, bowl with a fish, rug.
    **His 11b answers 2026-10-25 ~11:50** (plan §10 REL 11b): one box a day after a complete night + the 20 / 40 / 60 % tiers,
    none after the 9th, floor 400 🪙, the reroll once a night for 100 🪙, cat accessories (Kenney 3D on the cat, a proof sheet
