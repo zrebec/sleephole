@@ -31,12 +31,14 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 
 1. **Build 11 is in work since 2026-10-25 (his word; plan §10 REL "Build 11", §0b row 11).** His final answers are on the
    build 11 page (v92). **11a the coin receipt and 11a2 = B38 (no tab bar on the result) are done and confirmed by him**
-   (the nap 25 Oct, the night 25 → 26), committed on `build/11` (pushed; the PR into `main` when the build is finished).
+   (the nap 25 Oct, the night 25 → 26), committed on `build/11` (pushed; he merged PR #1 into `main` mid-build on 2026-10-26 ~11:45 – the next PR when the build is finished).
    **11b6 (another building for tonight) pulled forward – his "condition of today" (2026-10-26 ~07:45):** during the setup,
    400 🪙 then 800 🪙, at most two a night, the evening draw's pool – **built and reviewed ~09:05** (SleepCore 428, app
    572, i18n 774 – green; screenshots `build/11b6/`) – **on his phone since 2026-10-26 11:39**; tonight his first real
    draw → on 2026-10-27 morning pull the store and check the spends `reroll-2026-10-27:<old id>`, the night's building
-   and coins. Then 11b1 on his word.
+   and coins. **11b1 (the economy simulation, no app change) built and reviewed ~12:15, merged into `build/11`;** his
+   four answers wait on the page https://claude.ai/artifact/9LZJ8RKQYyf9BJ6nr57tz4 (`state/answers`: q1 odds, q2 new item
+   first, q3 the 1 000 reserve, q4 the collection sizes) → read them with `ArtifactData`, then 11b2 on his word.
    Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is
    his click.
    The cat accessories proof is done; his pick: nightcap, top hat, builder's helmet, sunglasses, bowl with a fish, rug.
@@ -278,6 +280,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | (claude.ai pages) | per-build pages for the owner (Slovak, 2026-10-22), each with a reply form whose answers (and ticks) go to the page's shared store – read them with `ArtifactData` `get` `state/answers` (the browser also keeps a local copy under the `b10.` / `b9.` keys; never rename them): build 10 https://claude.ai/artifact/P5jc2DhAxdEwfEtKnhzkLX (what 10a–10e fixed, what to try, the switch for the night, the morning questions), build 9 https://claude.ai/artifact/T1hEdc9dpk56MAmwQxk7nr (9a–9o, the bugs, what was confirmed, what is open). Sources: scratchpad files of 2026-10-22 – read a page with the Artifact tool to edit it |
 | (claude.ai page) | the price-model comparison (Slovak, 2026-10-22, private): https://claude.ai/artifact/1mJPVNdRK9EAVjsLAkGfRD – a one-time price vs a subscription with a trial vs a 7-day trial + one-time unlock: Apple's rules, money per sale, indie practice, effort, Opus's view. His decision is open; never push (memory) |
 | (claude.ai page) | the build 11 proposal (Slovak, 2026-10-22): https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo – 11a–11d, the economy numbers, the loot-box assessment, box rules and contents, nights off rules, accessibility, eight questions; answers in its store `state/answers` (browser prefix `b11.` – never rename the field names / ids). Source: a scratchpad file of 2026-10-22 – read the page with the Artifact tool to edit it |
+| (claude.ai page) | the economy simulation 11b1 for the owner (Slovak, 2026-10-26): https://claude.ai/artifact/9LZJ8RKQYyf9BJ6nr57tz4 – the three profiles, today's coins, the boxes by odds A / B / C / C-new / C-new-reserve / D, collections, the joker reserve, four questions; answers in its store `state/answers` (browser prefix `e11b1.` – never rename q1–q5). Source: a scratchpad file of 2026-10-26; the numbers come from `ECON_SIM=… swift test --filter EconomySimulation` |
 | (claude.ai page) | the owner's App Store Connect snapshot (Slovak, read-only, 2026-10-22 ~11:40): https://claude.ai/artifact/RMgAr81NV5bmSGHuSeR3d5 – the review state, the store page, the notes for Apple vs `docs/REVIEW-NOTES.md`, TestFlight, what tomorrow's switch to build 10 needs. A snapshot, not kept current; re-read App Store Connect before acting |
 | `docs/AGENDA-ARCHIVE.md` | the old long session-start agenda, moved there verbatim 2026-10-16 – history only, no instructions |
 | `docs/REVIEW-NOTES.md` | the App Review notes text (English) for App Store Connect → App Review Information → Notes; since build 9 the 15-minute recipe sets the times in the first-run guide – keep the file and the field identical (changing the field needs his yes) |

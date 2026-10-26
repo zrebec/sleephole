@@ -3177,6 +3177,35 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         combination. **His pick 2026-10-25 ~12:10:** on the head the nightcap, the top hat and the builder's helmet; on the
         face the sunglasses; by the bed the bowl with a fish and the rug (its colour still to agree – red today); **one item
         per group at a time** (head + face + by the bed, chosen in the collection) → the layered rendering above.
+        **11b1 started 2026-10-26 ~11:50 on his word** ("yes, start 11b1"): one Sonnet worker on branch
+        `step/11b1-economy-sim` – a deterministic Monte-Carlo dev-aid test in `SleepCore/Tests` (`ECON_SIM=<dir>`, like
+        `dumpTown`) with always-on checks that its day loop equals `Economy.ledger` + `Jokers.apply` + `Achievements`;
+        365 nights from 2026-11-01, 500 runs per combination, three profiles (perfect / typical / weak: outcomes, pauses,
+        calm hours of 7, naps, silver jokers, schedule unlocks, rerolls), the box rules as he answered them (one a day after
+        a complete night, 20 / 40 / 60 % of the balance by the month's box number, floor 400, none after the 9th), buyer
+        policies P0 / P3 / P6 / P9 and odds variants A (≈40 % back), B (≈55 %), C (B with the 10× prize capped at 3×);
+        the report to `build/11b1/` (git-ignored). No app change.
+        **Built and reviewed ~12:15 (three rounds):** `SleepCore/Tests/SleepCoreTests/EconomySimEngine.swift` +
+        `EconomySimulationTests.swift` (9 tests; SleepCore 437 / 0; the `ECON_SIM` report ~100 s, byte-identical on a
+        second run by Opus). `SimFastPicker` is a twin of `BuildingPicker.pick` (the real one rebuilds its history sets on
+        every call – minutes for millions of nights in debug), proven equal by a test. Review round 1: the box month must be
+        the night key's date (the key is the MORNING); every sim type prefixed `Sim` (an `enum Collection` shadowed Swift's
+        protocol, and 11b3's real box types would be shadowed silently); variants C-new (a missing collectible first) and
+        C-new-reserve (a box only if 1 000 stay); the metric "silver wanted but not affordable". Round 2: night 365 is a
+        month's end, so the snapshot overstated buyers who buy all boxes early → the average of the last 100 nights and the
+        lowest balance after night 30; variant D (C-new-reserve with more collectibles). **Findings (typical profile):**
+        today ≈223 🪙 a day, ≈76 000 after a year without rerolls; rerolls are the biggest sink if used often (≈37 500 a
+        year at the assumed 30 % / 15 %); boxes priced by the balance really drain it (average of the last 100 nights
+        ≈8 000 / 3 000 / 2 000 at 3 / 6 / 9 boxes a month), never below 0; the 10× prize as a multiple of a
+        balance-scaled price runs away (one box paid 370 800 in variant B) – a 3× cap keeps the maximum ≈13 000; the real
+        coin return is A ≈42 %, B ≈51 %, C ≈45 %, D ≈35 %; collections are slow (3 boxes a month: 6–9 of 30 postcards a
+        year), "new item first" helps; heavy buyers cannot afford a silver joker (weak, 9 a month: ≈4 times a year), the
+        1 000 reserve brings it to ≈0.5. **For him: the Slovak page https://claude.ai/artifact/9LZJ8RKQYyf9BJ6nr57tz4**
+        (published ~12:15, `capabilities: {db: {}}`, answers in `state/answers`, browser prefix `e11b1.` – never rename
+        the field names q1–q5): q1 the odds (Opus: D), q2 new item first (Opus: yes), q3 the 1 000 reserve (Opus: yes),
+        q4 the collection sizes at the start (Opus: 15 postcards / 8 decorations / 6 accessories / 4 skies, more later).
+        Committed on `step/11b1-economy-sim` (`ebff5f4`), merged into `build/11` (`46d6411`), both pushed. Next: his
+        answers → 11b2 (the records) on his word.
   - [ ] **11c – nights off** (rules on the build 11 page and §0b row 11): 11c1 the rules in `SleepCore` (the window
         18:00–03:00, confirming until 14:00, the 75 % / 50 % thresholds, a skipped off night neither breaks nor grows the
         streak and uses no automatic bronze, coins as a normal night); 11c2 the model + Settings → Schedule (up to two
@@ -3640,6 +3669,8 @@ screen checks.
 | 2026-10-26 | **~07:45 – 11b6 (another building for tonight) pulled forward, on his phone tonight (his word).** He asked for the draw of a new building at the night start as "the condition of today" (boxes not needed yet): on level 3 the cat keeps saying the town has no hospital, fire station, school or town hall, and he has only the police and many parks. Why parks: `BuildingPicker` draws the level first (L1, L2, L3 equally likely) and half of L2 are parks. His two answers: 400 🪙 then 800 🪙, at most two draws a night for now; the pool as the evening draw, never a building already drawn that night (each draw then gives an L3 building about one time in three). The 11b answer "once a night, 100 🪙" is replaced. A Sonnet worker started on `step/11b6-reroll`. | review, install before 21:30 |
 | 2026-10-26 | **~09:05 – 11b6 built and reviewed (§10 REL "Build 11").** Two findings worth keeping: (1) every line added to the night screen during the setup pushes the sleep-sound button down, and on a 6.1-inch phone it slid under the tab bar – the setup is when a sound is picked, so a new control there must cost no extra line (the caption moved into the confirmation dialog); (2) state that lives only in memory (the free draws of a test night) must be tied to the night it belongs to, or the next night inherits it. On the iPhone 17e "Cancel night" already needs a scroll during the setup (older than 11b6) – a candidate for build 12's polishing, not touched. Tests: SleepCore 428 / 0, app 572 / 0 (second run; the first hit the known `SyncEngineTests` flake), i18n 774 / 0 / 0 / 0. | his yes for the install |
 | 2026-10-26 | **11:39 – 11b6 on his phone** (his "yes, install 11b6 on the phone", outside his nap window). Debug build by Opus, `devicectl` "App installed"; the store pulled read-only before and after (git-ignored `docs/device-logs/2026-10-26-pred-11b6/`): 53 nights (51 real) and the one spend, the same after the install. **The fall-asleep time of the night 25 → 26 is there now** (read at 11:37 when he opened the app) – the hourly re-read on activation filled it in, as expected; nothing to fix. The store also holds a test night of 11:37 (ended after 28s, counts for nothing). Next: tonight's first real draw, the pull on 2026-10-27 morning. |
+| 2026-10-26 | **~11:45 – PR #1 `build/11` → `main` merged by him on GitHub** (mid-build, his choice; his note: "I forgot the git pull"). Opus fast-forwarded the local `main` only (never pushes it). `build/11` continues; the next pull request when build 11 is finished (§0b rule 3) or when he asks. **~11:50 – 11b1 started on his word** (§10 REL "Build 11", 11b). | 11b1's report |
+| 2026-10-26 | **~12:15 – 11b1 built and reviewed, the page for his pick (§10 REL "Build 11", 11b).** Two lessons worth keeping for simulations: (1) a single snapshot at a month's end misleads when spending depends on the day of the month – report a time average; (2) test-only helper types must not reuse names the production code will have (a test type `Collection` shadowed Swift's protocol; `BoxRules` would shadow 11b3's real one silently). The economy facts and his four questions are in §10 REL 11b and on https://claude.ai/artifact/9LZJ8RKQYyf9BJ6nr57tz4. | his answers on the page |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |
 | 2026-09-29 | `swift test` in SleepCore uses Swift Testing (`import Testing`) fine with the Xcode toolchain. |
