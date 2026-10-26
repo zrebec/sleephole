@@ -336,6 +336,8 @@ struct NightView: View {
     @State private var confirmAbandon = false
     @State private var soundSheet = false
     @State private var confirmPause = false
+    @State private var confirmReroll = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// "9:41" left of a pause.
     static func countdown(_ seconds: TimeInterval) -> String {
@@ -375,6 +377,9 @@ struct NightView: View {
                         let pauseEnds = model.pauseEnds(at: now)
                         ConstructionSite(buildingId: rec.buildingId, progress: progress, resting: pauseEnds != nil,
                                          buddy: model.buddyState(at: now), startedAt: rec.startedAt)
+                            .id(rec.buildingId)
+                            .transition(.opacity)
+                            .animation(reduceMotion ? nil : .easeInOut(duration: Motion.t(0.5)), value: rec.buildingId)
                             .scaleEffect(compact ? 0.6 : 1, anchor: .top)
                             .frame(height: compact ? 190 : nil, alignment: .top)
                         Text(model.catalog?[rec.buildingId]?.displayName ?? "").font(.headline)
@@ -383,6 +388,7 @@ struct NightView: View {
                             Text(left >= 60 ? L("Setup until \(Fmt.time(graceEnds)) (\(Plural.minutes(Double(left))) left)")
                                             : L("Setup: \(left)s left for a podcast or story"))
                                 .font(.callout).foregroundStyle(.yellow)
+                            rerollSection(now: now)
                         } else if let pauseEnds {
                             Text(L("Pause: \(Self.countdown(pauseEnds.timeIntervalSince(now))) left – you can leave SleepHole now"))
                                 .font(.callout).foregroundStyle(.yellow).multilineTextAlignment(.center)
@@ -454,6 +460,38 @@ struct NightView: View {
                         .font(.footnote).foregroundStyle(.secondary)
                 }
             }
+        }
+    }
+
+    /// "Another building" (build 11b6): during the setup a different building can be drawn for coins.
+    @ViewBuilder
+    private func rerollSection(now: Date) -> some View {
+        switch model.rerollOffer(at: now) {
+        case .available(let price, let left)?:
+            Button { confirmReroll = true } label: {
+                Label(price > 0 ? L("Another building · \(price) 🪙") : L("Another building · free (test night)"),
+                      systemImage: "dice")
+            }
+            .buttonStyle(.bordered)
+            .task {
+                #if DEBUG
+                if DevArgs.list.contains("-rerollDialog") { try? await Task.sleep(for: .seconds(2)); confirmReroll = true }
+                #endif
+            }
+            .confirmationDialog(L("Draw another building for \(price) 🪙?"), isPresented: $confirmReroll,
+                                titleVisibility: .visible) {
+                Button(price > 0 ? L("Draw for \(price) 🪙") : L("Draw (free)")) { model.rerollBuilding() }
+                Button(L("Cancel"), role: .cancel) {}
+            } message: {
+                Text(L("Tonight's building changes at once. The coins are spent even if the night does not work out.")
+                     + " " + (left == 1 ? L("This is tonight's last draw.") : L("At most \(Reroll.maxPerNight) draws a night.")))
+            }
+        case .notEnoughCoins(let price)?:
+            Text(L("Not enough coins for another building (\(price) 🪙)")).font(.footnote).foregroundStyle(.secondary)
+        case .usedUp?:
+            Text(L("No more draws tonight 🎲")).font(.footnote).foregroundStyle(.secondary)
+        case nil:
+            EmptyView()
         }
     }
 

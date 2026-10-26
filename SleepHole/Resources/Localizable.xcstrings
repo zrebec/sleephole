@@ -12824,6 +12824,166 @@
           }
         }
       }
+    },
+    "Another building · %lld 🪙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Another building · %lld 🪙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iná budova · %lld 🪙"
+          }
+        }
+      }
+    },
+    "Another building · free (test night)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Another building · free (test night)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iná budova · zdarma (testovacia noc)"
+          }
+        }
+      }
+    },
+    "Draw another building for %lld 🪙?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Draw another building for %lld 🪙?"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vylosovať inú budovu za %lld 🪙?"
+          }
+        }
+      }
+    },
+    "Tonight's building changes at once. The coins are spent even if the night does not work out.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tonight's building changes at once. The coins are spent even if the night does not work out."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnešná budova sa hneď zmení. Mince sa minú, aj keby sa noc nepodarila."
+          }
+        }
+      }
+    },
+    "Draw for %lld 🪙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Draw for %lld 🪙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vylosovať za %lld 🪙"
+          }
+        }
+      }
+    },
+    "Draw (free)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Draw (free)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vylosovať (zdarma)"
+          }
+        }
+      }
+    },
+    "Not enough coins for another building (%lld 🪙)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not enough coins for another building (%lld 🪙)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na inú budovu nemáš dosť mincí (%lld 🪙)"
+          }
+        }
+      }
+    },
+    "No more draws tonight 🎲": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No more draws tonight 🎲"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnes už ďalší žreb nie je 🎲"
+          }
+        }
+      }
+    },
+    "This is tonight's last draw.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This is tonight's last draw."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toto je dnešný posledný žreb."
+          }
+        }
+      }
+    },
+    "At most %lld draws a night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At most %lld draws a night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Najviac %lld-krát za noc."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

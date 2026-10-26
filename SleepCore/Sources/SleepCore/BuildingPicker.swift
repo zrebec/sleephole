@@ -5,11 +5,12 @@ public enum BuildingPicker {
     /// - Parameters:
     ///   - history: catalog ids built so far, oldest first (includes ruins/unfinished).
     /// "road-lit" is never drawn (owner 2026-10-14: a lit street is neither a building nor a park); stored nights keep working.
+    /// `excluding`: ids that must not come up (the buildings already drawn tonight, see `Reroll`); filtered like `recent`.
     /// Level first (uniform over unlocked levels), then an item inside the level: never one of the last
     /// 3 picks, preferring ids not yet in the town, then the least recently used.
     public static func pick<G: RandomNumberGenerator>(maxLevel: Int, catalog: Catalog, history: [String],
-                                                      rng: inout G) -> CatalogEntry {
-        let recent = Set(history.suffix(3))
+                                                      excluding: Set<String> = [], rng: inout G) -> CatalogEntry {
+        let recent = Set(history.suffix(3)).union(excluding)
         var levels = Array(1...max(1, min(4, maxLevel)))
         levels.shuffle(using: &rng)
         for level in levels {
@@ -25,7 +26,8 @@ public enum BuildingPicker {
             return candidates.filter { (lastUse[$0.id] ?? -1) == oldest }.randomElement(using: &rng)!
         }
         // Everything was filtered out (tiny catalog in tests) – fall back to any L1 building.
-        return catalog.buildable(level: 1).randomElement(using: &rng)!
+        let l1 = catalog.buildable(level: 1)
+        return (l1.filter { !excluding.contains($0.id) }.randomElement(using: &rng)) ?? l1.randomElement(using: &rng)!
     }
 
     /// Buildable entries of a level, without the lit-street sprites (they are never drawn any more).
