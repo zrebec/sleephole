@@ -88,6 +88,8 @@ final class AppModel {
     ///   -lockLab                      DEBUG nights only: record the lock-screen lab (Darwin / UIKit signals, motion, a line
     ///                                 per second) to Application Support/lock-lab.log – pull it with devicectl
     ///   -startNap                     screenshots: open the nap window around now and start a nap
+    ///   -testNightCounts              with -startTestNight: a real night (pays; "another building" costs coins)
+    ///   -testNightGrace S             with -startTestNight: the setup lasts S seconds (default 15)
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
     ///   -showResult [unfinished]      SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
@@ -99,6 +101,8 @@ final class AppModel {
     ///   -screenshot                   no permission alert, no first-run guide (use with a pulled store, tools/sim_shot.sh)
     ///   -thenTab 1|island|abandon|pause|warning   4 s after launch: select a tab / open the Town tab / cancel the
     ///                                 running night and close its result / start a pause once the setup is over
+    ///   -thenTab reroll               (with a paying night) draw another building once, 4 s after launch
+    ///   -rerollDialog                 open the "Another building" confirmation 2 s after the night screen shows
     ///   -expiresIn HOURS              pretend the provisioning profile runs out then (AppExpiry)
     ///   -mute                         silence every sound (alarm, effects) – for screenshots of a night's end
     ///   -buddy awake|asleep           force the sleep buddy's state (screenshots)
@@ -325,7 +329,11 @@ final class AppModel {
         if DevArgs.list.contains("-startTestNight"), active == nil {
             let a = DevArgs.list
             let minutes = a.firstIndex(of: "-testNightMinutes").flatMap { a.indices.contains($0 + 1) ? Double(a[$0 + 1]) : nil }
-            startTestNight(minutes: minutes ?? 4)
+            let grace = a.firstIndex(of: "-testNightGrace").flatMap { a.indices.contains($0 + 1) ? Double(a[$0 + 1]) : nil }
+            startTestNight(minutes: minutes ?? 4, grace: grace ?? AppModel.debugGrace)
+            #if DEBUG
+            if DevArgs.list.contains("-testNightCounts") { nextTestNightCounts = true }    // a real (paying) night
+            #endif
             startNight()
         }
         if DevArgs.list.contains("-startNap"), active == nil { startNap() }
@@ -1962,6 +1970,54 @@ final class AppModel {
     func awayBudgetState(at t: Date? = nil) -> AwayBudgetState? {
         guard let rec = active else { return nil }
         return NightEvaluator.budgetState(rec.log, rules: rec.rules, at: t ?? clock.now)
+    }
+
+    // MARK: - another building (build 11b6, owner 2026-10-26)
+
+    /// What the night screen offers during the setup: a draw of another building. nil = nothing to show.
+    enum RerollOffer: Equatable {
+        case available(price: Int, left: Int)      // price 0 = a test night (free)
+        case notEnoughCoins(price: Int)
+        case usedUp
+    }
+
+    /// Draws of tonight's building that a test night made (a test night stores no `CoinSpend`; counts for nothing).
+    private var testNightDraws: (night: PersistentIdentifier?, ids: [String]) = (nil, [])
+
+    /// Buildings drawn away from tonight – derived from the `CoinSpend` reasons, never counted.
+    private func drawnAwayTonight(_ rec: NightRecord) -> [String] {
+        rec.isDebug ? (testNightDraws.night == rec.persistentModelID ? testNightDraws.ids : []) : Reroll.drawnAway(nightKey: rec.keyString, reasons: spends().map(\.reason))
+    }
+
+    func rerollOffer(at t: Date? = nil) -> RerollOffer? {
+        let now = t ?? clock.now
+        guard let rec = active, !rec.isNap, collapsedAt.map({ $0 > now }) ?? true,
+              let graceEnds, graceEnds > now else { return nil }
+        let made = drawnAwayTonight(rec).count
+        guard let price = Reroll.price(drawsMade: made) else { return .usedUp }
+        if rec.isDebug { return .available(price: 0, left: Reroll.maxPerNight - made) }
+        return coins >= price ? .available(price: price, left: Reroll.maxPerNight - made) : .notEnoughCoins(price: price)
+    }
+
+    /// Draws another building for tonight: spends the coins (a test night draws free), never repeats a building drawn
+    /// earlier tonight, same pool and history as the evening draw.
+    func rerollBuilding() {
+        guard let rec = active, let catalog, case .available(let price, _)? = rerollOffer() else { return }
+        let old = rec.buildingId
+        var tried = Set(drawnAwayTonight(rec)); tried.insert(old)
+        var rng = SystemRandomNumberGenerator()
+        let entry = BuildingPicker.pick(
+            maxLevel: Progression.unlockedMaxLevel(builtBefore: builtNights), catalog: catalog,
+            history: realResults().map(\.buildingId), excluding: tried, rng: &rng)
+        if rec.isDebug {
+            testNightDraws = (rec.persistentModelID, drawnAwayTonight(rec) + [old])
+        } else if price > 0 {
+            spend(price, reason: Reroll.reason(nightKey: rec.keyString, from: old))
+        }
+        rec.buildingId = entry.id
+        save()
+        fx("fx_pop", volume: 0.5)
+        refresh()
     }
 
     func startPause() {

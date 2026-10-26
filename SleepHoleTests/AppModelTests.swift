@@ -977,3 +977,136 @@ extension AppModelTests {
         #expect(decoded.settings.setupMinutes == 15)
     }
 }
+
+// MARK: - another building (build 11b6)
+
+@MainActor
+struct RerollTests {
+    let t = AppModelTests()
+
+    /// Plays `nights` complete nights, then waits at the start window of the next day.
+    func richHarness(nights: Int = 10) -> (AppModelTests.Harness, Int) {
+        let h = t.harness(at: t.date(1, 12))
+        for d in 1...nights { t.playNight(h, day: d) }
+        let day = nights + 1
+        h.clock.now = t.date(day, 22, 25); h.model.refresh()
+        return (h, day)
+    }
+
+    func spends(_ h: AppModelTests.Harness) -> [CoinSpend] { h.model.spends() }
+
+    @Test func drawsCostFourHundredThenEightHundredThenStop() {
+        let (h, _) = richHarness()
+        let m = h.model
+        m.startNight()
+        let rec = m.active!
+        let start = m.coins
+        #expect(start >= 1200)
+        var seen = [rec.buildingId]
+        #expect(m.rerollOffer() == .available(price: 400, left: 2))
+        m.rerollBuilding()
+        #expect(m.coins == start - 400 && rec.buildingId != seen[0])
+        #expect(spends(h).last?.reason == "reroll-\(rec.keyString):\(seen[0])" && spends(h).last?.amount == 400)
+        seen.append(rec.buildingId)
+        #expect(m.rerollOffer() == .available(price: 800, left: 1))
+        m.rerollBuilding()
+        #expect(m.coins == start - 1200 && !seen.contains(rec.buildingId))
+        #expect(spends(h).last?.amount == 800)
+        seen.append(rec.buildingId)
+        #expect(m.rerollOffer() == .usedUp)
+        let id = rec.buildingId, n = spends(h).count
+        m.rerollBuilding()
+        #expect(rec.buildingId == id && spends(h).count == n && m.coins == start - 1200)
+    }
+
+    @Test func noOfferAfterTheSetupOnANapOrACollapse() {
+        let (h, day) = richHarness()
+        let m = h.model
+        m.startNight()
+        #expect(m.rerollOffer() != nil)
+        let ends = m.graceEnds!
+        h.clock.now = ends + 1; m.refresh()
+        #expect(m.rerollOffer() == nil)
+        let id = m.active!.buildingId, c = m.coins
+        m.rerollBuilding()
+        #expect(m.active!.buildingId == id && m.coins == c)
+        _ = day
+        // a collapse during the setup is impossible, so check the collapsed night after the setup stays without offer
+        h.clock.now = ends + 60; m.append(.leftApp)
+        h.clock.now += 60; m.append(.returned); m.refresh()
+        #expect(m.rerollOffer() == nil)
+    }
+
+    @Test func noOfferOnANap() {
+        let h = t.harness(at: t.date(3, 13, 30))
+        h.model.startNap()
+        #expect(h.model.active?.isNap == true)
+        #expect(h.model.rerollOffer() == nil)
+        let id = h.model.active!.buildingId
+        h.model.rerollBuilding()
+        #expect(h.model.active!.buildingId == id && h.model.spends().isEmpty)
+    }
+
+    @Test func tooFewCoinsRefuseWithoutSpending() {
+        let h = t.harness(at: t.date(1, 22, 25))
+        let m = h.model
+        m.startNight()
+        #expect(m.coins < 400)
+        #expect(m.rerollOffer() == .notEnoughCoins(price: 400))
+        let id = m.active!.buildingId
+        m.rerollBuilding()
+        #expect(m.active!.buildingId == id && m.spends().isEmpty && m.coins == 0)
+    }
+
+    @Test func aTestNightDrawsForFreeAndStoresNoSpend() {
+        let h = t.harness(at: t.date(5, 12))
+        let m = h.model
+        m.startTestNight(minutes: 15, grace: 300); m.startNight()
+        #expect(m.active?.isDebug == true)
+        var seen = [m.active!.buildingId]
+        for left in [2, 1] {
+            #expect(m.rerollOffer() == .available(price: 0, left: left))
+            m.rerollBuilding()
+            #expect(!seen.contains(m.active!.buildingId))
+            seen.append(m.active!.buildingId)
+        }
+        #expect(m.rerollOffer() == .usedUp && m.spends().isEmpty)
+    }
+
+    @Test func aNewTestNightStartsWithItsDrawsAgain() {
+        let h = t.harness(at: t.date(5, 12))
+        let m = h.model
+        m.startTestNight(minutes: 15, grace: 300); m.startNight()
+        m.rerollBuilding(); m.rerollBuilding()
+        #expect(m.rerollOffer() == .usedUp)
+        m.abandonNight(); m.acknowledgeResult()
+        h.clock.now += 60
+        m.startTestNight(minutes: 15, grace: 300); m.startNight()
+        #expect(m.active?.isDebug == true)
+        #expect(m.rerollOffer() == .available(price: 0, left: 2))
+    }
+
+    @Test func aBonusTestNightPaysForTheDraw() {
+        let (h, _) = richHarness()
+        let m = h.model
+        m.nextTestNightCounts = true
+        m.startTestNight(minutes: 15, grace: 300); m.startNight()
+        #expect(m.active?.isDebug == false)
+        #expect(m.rerollOffer() == .available(price: 400, left: 2))
+        m.rerollBuilding()
+        #expect(m.spends().last?.amount == 400)
+    }
+
+    @Test func theNightPaysByTheNewBuildingsLevel() {
+        let (h, day) = richHarness(nights: 20)           // 20 built nights: levels up to L3 are drawn
+        let m = h.model
+        m.startNight()
+        let rec = m.active!
+        m.rerollBuilding()
+        let level = m.catalog![rec.buildingId]!.level
+        h.clock.now = t.date(day + 1, 6, 30) + 60; m.refresh()
+        #expect(m.confirm(code: "1234"))
+        let line = m.lastReceipt?.lines.first { $0.kind == .building(level: level) }
+        #expect(line?.amount == Economy.reward(.complete, level: level))
+    }
+}
