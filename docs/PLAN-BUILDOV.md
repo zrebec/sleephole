@@ -24,7 +24,7 @@ Stav k 26. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 | 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
 | 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | hotový – ostrá noc 18.→19. 10. bez chyby, commitnutý, nahratý ako 1.0 (9) 19. 10., u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky); ďalej návod pre Apple na čistom telefóne, potom build 9 namiesto 7 na kontrolu |
 | 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | **hotový 24. 10.** – ostrá noc 23.→24. 10. bez chyby, commitnutý, nahratý ako 1.0 (10), u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky), build 7 stiahnutý z kontroly a **1.0 (10) odoslaná na kontrolu u Apple** s ručným vydaním |
-| 11 | **Nové veci:** prístupnosť, ekonomika so škatuľami a voľné noci | **rozrobený od 25. 10.** (tvoje slovo) – 11a účet mincí je v telefóne od 25. 10. 11:40 |
+| 11 | **Nové veci:** prístupnosť, ekonomika so škatuľami a voľné noci | **rozrobený od 25. 10.** (tvoje slovo) – 11a a 11a2 potvrdené tebou, 11b6 v telefóne od 26. 10. 11:39; ďalej 11b1–11b5, 11c, 11d |
 | 12 | **Doladenie** (+ jasne povedať, na čo appka je) | návrh |
 | 13 | **Nové veci:** mesto | návrh |
 | 14 | **Doladenie** | návrh |
