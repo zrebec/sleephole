@@ -32,7 +32,10 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 1. **Build 11 is in work since 2026-10-25 (his word; plan §10 REL "Build 11", §0b row 11).** His final answers are on the
    build 11 page (v92). **11a the coin receipt and 11a2 = B38 (no tab bar on the result) are done and confirmed by him**
    (the nap 25 Oct, the night 25 → 26), committed on `build/11` (pushed; the PR into `main` when the build is finished).
-   **Next: 11b1** (the simulation of earnings vs sinks – a table for him, no app change) on his word, on `step/11b1-…`.
+   **11b6 (another building for tonight) pulled forward – his "condition of today" (2026-10-26 ~07:45):** during the setup,
+   400 🪙 then 800 🪙, at most two a night, the evening draw's pool – **built and reviewed ~09:05** (SleepCore 428, app
+   572, i18n 774 – green; screenshots `build/11b6/`); next: his yes → his phone **before 21:30** (not in his nap window
+   12:30–13:30) → tonight's night with it. Then 11b1 on his word.
    His note 2026-10-26: the fall-asleep time of the night 25 → 26 was missing at 05:34 (the watch had not synced yet –
    plan §12); check that it appeared later. Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing
    it offered; protecting `main` on GitHub is his click.
