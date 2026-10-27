@@ -124,7 +124,7 @@ struct JokerSheet: View {
                 switch block {
                 case .alreadyUsedThisMonth?: Text(L("Already used this month")).font(.caption).foregroundStyle(.orange)
                 case .notEnoughCoins(let missing)?: Text(L("\(missing) 🪙 short")).font(.caption).foregroundStyle(.orange)
-                case nil: EmptyView()
+                case .notHeldFromBox?, nil: EmptyView()
                 }
             }
             Spacer()

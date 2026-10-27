@@ -24,7 +24,7 @@ struct DerivedCacheTests {
     }
 
     func rig(at now: Date) -> Rig {
-        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
+        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                     configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let clock = FakeClock(now)
         var s = AppSettings()

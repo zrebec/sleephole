@@ -249,7 +249,7 @@ struct WeatherViewsTests {
 
     @Test(arguments: AppLanguage.allCases) func theNewViewsRender(language: AppLanguage) async throws {
         let c = try ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
-                                   JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                                   JokerRecord.self, BoxRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         var s = AppSettings()
         s.city = SkyCity(name: "Bratislava", latitude: 48.1486, longitude: 17.1077)
         let name = "weather.views.\(UUID().uuidString)"

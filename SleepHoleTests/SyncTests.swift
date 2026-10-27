@@ -27,7 +27,7 @@ struct SyncTests {
 
     func device(at now: Date) -> Device {
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
-                                    JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                                    JokerRecord.self, BoxRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let clock = FakeClock(now)
         var s = AppSettings(); s.wakeCode = "1234"
         // its own UserDefaults: nothing leaks between the devices, and the first read of the sync place counts as finished

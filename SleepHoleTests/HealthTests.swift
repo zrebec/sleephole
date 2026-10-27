@@ -51,7 +51,7 @@ struct HealthTests {
 
     /// The model, the clock and the store. Nights: 10th→11th (real), a debug night and a nap.
     func setup(catalog: Catalog? = nil, health: Bool = true, source: FakeSleepSource = FakeSleepSource(), protectedData: @escaping @MainActor () -> Bool = { true }) -> (AppModel, FakeClock, FakeSleepSource, ModelContext) {
-        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
+        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                     configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         Self.kept.append(c)
         let clock = FakeClock(date(11, 9))
@@ -483,7 +483,7 @@ struct HealthTests {
 
     @Test func theButtonIsDisabledWhileAReadIsRunning() async throws {
         let gate = GatedSleepSource()
-        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
+        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                     configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         Self.kept.append(c)
         var s = AppSettings(); s.usesHealth = true

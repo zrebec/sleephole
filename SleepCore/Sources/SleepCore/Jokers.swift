@@ -29,11 +29,14 @@ public struct JokerUse: Equatable, Sendable {
     /// The bronze joker is used by itself on the first missed night of a month that would break a streak
     /// (like Duolingo's streak freeze) – a sick person should not have to remember it.
     public let automatic: Bool
+    /// Set when this use spent a joker won from that box (`Boxes`); such a use never touches the month's own slot of its tier.
+    public let boxId: String?
 
-    public init(tier: JokerTier, firstNight: NightKey, automatic: Bool = false) {
+    public init(tier: JokerTier, firstNight: NightKey, automatic: Bool = false, boxId: String? = nil) {
         self.tier = tier
         self.firstNight = firstNight
         self.automatic = automatic
+        self.boxId = boxId
     }
 
     public func lastNight(calendar: Calendar) -> NightKey { firstNight.adding(days: tier.nights - 1, calendar: calendar) }
@@ -59,8 +62,10 @@ public enum Jokers {
     ///   - manual: jokers the owner switched on (silver / gold, or a bronze chosen by hand)
     ///   - lastNight: the most recent night that is over – later nights are never touched
     ///   - breaks: nights that start a new streak (paid schedule changes) – as in `Progression`
+    ///   - boxes: the box purchases – a bronze won from a box is used automatically on a second missed night of a month
+    ///     (after the month's own bronze), while it is valid and not used yet
     public static func apply(results: [NightResult], manual: [JokerUse], lastNight: NightKey, calendar: Calendar,
-                             breaks: [NightKey] = []) -> (results: [NightResult], uses: [JokerUse]) {
+                             breaks: [NightKey] = [], boxes: [BoxPurchase] = []) -> (results: [NightResult], uses: [JokerUse]) {
         // several results may share a key (a counted test night) – they are all kept; a key is "bad" when none of
         // its results built anything
         var out = results
@@ -86,8 +91,10 @@ public enum Jokers {
         }
 
         var uses = manual
-        // only a BRONZE (by hand or automatic) uses up the month's automatic bronze – silver / gold do not
-        var usedMonths = Set(manual.filter { $0.tier == .bronze }.map(\.month))
+        // only a BRONZE (by hand or automatic) uses up the month's automatic bronze – silver / gold do not, and neither
+        // does a joker won from a box (it has its own slot)
+        var usedMonths = Set(manual.filter { $0.tier == .bronze && $0.boxId == nil }.map(\.month))
+        var usedBoxIds = Set(manual.compactMap(\.boxId))
         for use in manual {
             var key = use.firstNight
             while key <= min(use.lastNight(calendar: calendar), lastNight) {
@@ -111,6 +118,15 @@ public enum Jokers {
                         uses.append(JokerUse(tier: .bronze, firstNight: key, automatic: true))
                         usedMonths.insert(Month(key))
                         excuse(key)
+                    } else if run > 0, let box = boxes.filter({
+                        if case .joker(.bronze) = $0.prize { return !usedBoxIds.contains($0.id) && Boxes.isValid($0, at: key, calendar: calendar) }
+                        return false
+                    }).min(by: { (Boxes.expiry(of: $0, calendar: calendar), $0.nightKey, $0.id)
+                        < (Boxes.expiry(of: $1, calendar: calendar), $1.nightKey, $1.id) }) {
+                        // the month's own bronze is used up: the bronze won from a box saves this night
+                        uses.append(JokerUse(tier: .bronze, firstNight: key, automatic: true, boxId: box.id))
+                        usedBoxIds.insert(box.id)
+                        excuse(key)
                     } else {
                         run = 0
                     }
@@ -125,13 +141,25 @@ public enum Jokers {
     public enum Block: Equatable, Sendable {
         case alreadyUsedThisMonth
         case notEnoughCoins(missing: Int)
+        /// A use from a box was asked for, but no unused, valid joker of that tier from that box is held.
+        case notHeldFromBox
     }
 
     /// Each kind may be used once per calendar month (the month of its first night), independently of the others.
     /// A manual joker is applied before the automatic bronze, so one that starts on the night the automatic bronze
     /// saved covers that night itself and the month's bronze stays free for a later missed night.
-    public static func block(_ tier: JokerTier, firstNight: NightKey, uses: [JokerUse], coins: Int) -> Block? {
-        let taken = uses.contains { $0.tier == tier && $0.month == Month(firstNight) }
+    ///
+    /// With a `boxId` the use spends a joker won from that box: allowed only when that box's joker of this tier is held at
+    /// `firstNight` (valid then, not used yet – see `Boxes.heldJokers`); it costs no coins and neither needs nor takes the month's own slot.
+    public static func block(_ tier: JokerTier, firstNight: NightKey, uses: [JokerUse], coins: Int,
+                             boxId: String? = nil, boxes: [BoxPurchase] = [], calendar: Calendar = .current) -> Block? {
+        if let boxId {
+            let usable = boxes.contains {
+                $0.id == boxId && $0.prize == .joker(tier) && tier != .gold && Boxes.isValid($0, at: firstNight, calendar: calendar)
+            } && !uses.contains { $0.boxId == boxId }
+            return usable ? nil : .notHeldFromBox
+        }
+        let taken = uses.contains { $0.tier == tier && $0.boxId == nil && $0.month == Month(firstNight) }
         if taken { return .alreadyUsedThisMonth }
         if coins < tier.price { return .notEnoughCoins(missing: tier.price - coins) }
         return nil

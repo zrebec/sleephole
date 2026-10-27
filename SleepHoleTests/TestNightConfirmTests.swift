@@ -13,7 +13,7 @@ struct TestNightConfirmTests {
 
     func makeModel(at now: Date) -> (AppModel, FakeClock, ModelContainer) {
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
-                                    JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                                    JokerRecord.self, BoxRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let clock = FakeClock(now)
         var s = AppSettings()
         s.wakeCode = "1234"
