@@ -36,8 +36,8 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    400 🪙 then 800 🪙, at most two a night, the evening draw's pool – **built and reviewed ~09:05** (SleepCore 428, app
    572, i18n 774 – green; screenshots `build/11b6/`) – **on his phone since 2026-10-26 11:39**; **works in the real night
    26 → 27** (400 + 800, then the fountain park he already had – his verdict "it did not pay off"; why: plan §12
-   2026-10-27) → **his choice ~06:45: the draw stays as it is; 11b6b adds only the label "New in town" during the setup – today,
-   on his phone before 21:30 (his yes); then 11b2.** **11b1 (the economy simulation, no app change) built and reviewed ~12:15, merged into `build/11`;** his
+   2026-10-27) → **his choice ~06:45: the draw stays as it is; 11b6b adds only the label "New in town" during the setup – built and
+   reviewed ~07:45, merged into `build/11`; waits for his yes to install (before 21:30); then 11b2.** **11b1 (the economy simulation, no app change) built and reviewed ~12:15, merged into `build/11`;** his
    answers read 2026-10-26 ~13:55 (odds D, a missing collectible first, the 1 000 reserve except for the town's very
    first box, collections 30 / 12 / 6 / 4, the shop always visible – plan §10 REL 11b) → **11b2 (the records) on his word.**
    Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is
