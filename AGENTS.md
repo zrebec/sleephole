@@ -40,7 +40,9 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    reviewed ~07:45, merged into `build/11`, **on his phone since 2026-10-27 07:48** – tonight his first look; on
    2026-10-28 morning pull the store (the night's building, any draws).** **Boxes (his pace 2026-10-27 ~08:00): only with
    the full contents – 11b2 the records → 11b3 the rules → 11b5 the contents → 11b4 the shop last; his first box about
-   30 – 31 Oct; each step on his word, in a clean session. Tell him where the boxes stand whenever a step ends.** **11b1 (the economy simulation, no app change) built and reviewed ~12:15, merged into `build/11`;** his
+   30 – 31 Oct; each step on his word, in a clean session. Tell him where the boxes stand whenever a step ends.**
+   **11b2 (the box records, nothing visible) built and reviewed 2026-10-27 ~08:30, merged into `build/11`** – waits
+   for his yes to install (proves the store migration on his phone); then 11b3 (the rules) on his word. **11b1 (the economy simulation, no app change) built and reviewed ~12:15, merged into `build/11`;** his
    answers read 2026-10-26 ~13:55 (odds D, a missing collectible first, the 1 000 reserve except for the town's very
    first box, collections 30 / 12 / 6 / 4, the shop always visible – plan §10 REL 11b) → **11b2 (the records) on his word.**
    Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is
