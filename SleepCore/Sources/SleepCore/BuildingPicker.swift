@@ -17,8 +17,7 @@ public enum BuildingPicker {
             let candidates = candidates(level: level, catalog: catalog)
                 .filter { !recent.contains($0.id) }
             guard !candidates.isEmpty else { continue }
-            let built = Set(history)
-            let fresh = candidates.filter { !built.contains($0.id) }
+            let fresh = candidates.filter { isNew($0.id, history: history) }
             if !fresh.isEmpty { return fresh.randomElement(using: &rng)! }
             // all used already: least recently used = smallest last index in history
             let lastUse = Dictionary(history.enumerated().map { ($1, $0) }, uniquingKeysWith: { _, b in b })
@@ -28,6 +27,12 @@ public enum BuildingPicker {
         // Everything was filtered out (tiny catalog in tests) – fall back to any L1 building.
         let l1 = catalog.buildable(level: 1)
         return (l1.filter { !excluding.contains($0.id) }.randomElement(using: &rng)) ?? l1.randomElement(using: &rng)!
+    }
+
+    /// "New in town": the id is not among the buildings of the finished nights (`history`, ruins and unfinished
+    /// included). The one notion of *fresh* shared by `pick` and the "New in town" label of the setup (11b6b).
+    public static func isNew(_ id: String, history: [String]) -> Bool {
+        !history.contains(id)
     }
 
     /// Buildable entries of a level, without the lit-street sprites (they are never drawn any more).

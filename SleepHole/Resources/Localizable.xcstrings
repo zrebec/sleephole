@@ -12937,6 +12937,22 @@
         }
       }
     },
+    "New in town": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New in town"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nová v meste"
+          }
+        }
+      }
+    },
     "No more draws tonight 🎲": {
       "localizations": {
         "en": {

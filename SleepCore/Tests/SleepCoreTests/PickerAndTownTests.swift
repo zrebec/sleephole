@@ -33,6 +33,24 @@ import Testing
         }
     }
 
+    @Test func isNewMeansNotInHistory() {
+        #expect(BuildingPicker.isNew("l1-a", history: []))
+        #expect(BuildingPicker.isNew("l1-a", history: ["l1-b", "l2-c"]))
+        #expect(!BuildingPicker.isNew("l1-a", history: ["l1-b", "l1-a"]))   // a ruined night is in the history too
+    }
+
+    @Test func pickReturnsANewOneWhileThereIsOne() {
+        var rng = SeededGenerator(seed: 11)
+        var history: [String] = []
+        for _ in 0..<40 {
+            let e = BuildingPicker.pick(maxLevel: 1, catalog: catalog, history: history, rng: &rng)
+            let anyFresh = BuildingPicker.candidates(level: 1, catalog: catalog)
+                .contains { BuildingPicker.isNew($0.id, history: history) && !history.suffix(3).contains($0.id) }
+            if anyFresh { #expect(BuildingPicker.isNew(e.id, history: history)) }
+            history.append(e.id)
+        }
+    }
+
     @Test func prefersBuildingsNotYetInTown() {
         var rng = SeededGenerator(seed: 4)
         var history: [String] = []

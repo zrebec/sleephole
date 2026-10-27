@@ -90,6 +90,8 @@ final class AppModel {
     ///   -startNap                     screenshots: open the nap window around now and start a nap
     ///   -testNightCounts              with -startTestNight: a real night (pays; "another building" costs coins)
     ///   -testNightGrace S             with -startTestNight: the setup lasts S seconds (default 15)
+    ///   -forceBuilding had            DEBUG builds only, with -startTestNight: tonight's building is one already in the town (the newest
+    ///                                 finished night's), so the "New in town" label is absent (screenshots, 11b6b)
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
     ///   -showResult [unfinished]      SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
@@ -385,6 +387,12 @@ final class AppModel {
     /// Finalized real nights, oldest first (debug nights never count).
     func realResults() -> [NightRecord] {
         records().filter { !$0.isDebug && !$0.isNap && $0.isFinalized }
+    }
+
+    /// The "New in town" label of the setup (11b6b): the picker's own notion of fresh, see `BuildingPicker.isNew`.
+    func isNewInTown(_ rec: NightRecord) -> Bool {
+        !rec.isNap && !rec.buildingId.isEmpty
+            && BuildingPicker.isNew(rec.buildingId, history: realResults().map(\.buildingId))
     }
 
     // MARK: - sleep from the source (phase HEALTH)
@@ -1290,9 +1298,12 @@ final class AppModel {
         if isBonus { nextTestNightCounts = false }
         let real = realResults()
         var rng = SystemRandomNumberGenerator()
-        let entry = BuildingPicker.pick(
+        var entry = BuildingPicker.pick(
             maxLevel: Progression.unlockedMaxLevel(builtBefore: builtNights), catalog: catalog,
             history: real.map(\.buildingId), rng: &rng)
+        #if DEBUG
+        if DevArgs.list.contains("-forceBuilding"), let had = real.last.flatMap({ catalog[$0.buildingId] }) { entry = had }
+        #endif
         let rec = NightRecord(window: window, buildingId: entry.id, isDebug: isDebug,
                               setupGrace: debugWindow != nil ? debugGrace : settings.setupGrace,
                               idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode,
