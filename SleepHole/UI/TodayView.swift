@@ -382,7 +382,21 @@ struct NightView: View {
                             .animation(reduceMotion ? nil : .easeInOut(duration: Motion.t(0.5)), value: rec.buildingId)
                             .scaleEffect(compact ? 0.6 : 1, anchor: .top)
                             .frame(height: compact ? 190 : nil, alignment: .top)
-                        Text(model.catalog?[rec.buildingId]?.displayName ?? "").font(.headline)
+                        let buildingName = model.catalog?[rec.buildingId]?.displayName ?? ""
+                        let inSetup = model.graceEnds.map { $0 > now } ?? false
+                        if inSetup && model.isNewInTown(rec) {
+                            // same line as the name – nothing below may move during the setup (11b6 lesson)
+                            HStack(spacing: 8) {
+                                Text(buildingName).font(.headline).lineLimit(1).minimumScaleFactor(0.6)
+                                Text(L("New in town")).font(.caption.weight(.semibold)).lineLimit(1)
+                                    .foregroundStyle(.black).padding(.horizontal, 8).padding(.vertical, 2)
+                                    .background(Capsule().fill(Color.yellow))
+                            }
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel(buildingName + ", " + L("New in town"))
+                        } else {
+                            Text(buildingName).font(.headline)
+                        }
                         if let graceEnds = model.graceEnds, graceEnds > now {
                             let left = Int(graceEnds.timeIntervalSince(now).rounded(.up))
                             Text(left >= 60 ? L("Setup until \(Fmt.time(graceEnds)) (\(Plural.minutes(Double(left))) left)")
