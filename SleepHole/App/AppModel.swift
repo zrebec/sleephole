@@ -493,7 +493,7 @@ final class AppModel {
     private func computeJokerState() -> (results: [NightResult], uses: [JokerUse]) {
         Jokers.apply(results: realResults().compactMap(\.result), manual: jokerRecords().compactMap(\.use),
                      lastNight: window.key.adding(days: -1, calendar: calendar), calendar: calendar,
-                     breaks: streakBreaks)
+                     breaks: streakBreaks, boxes: boxes())
     }
 
     func jokerRecords() -> [JokerRecord] {
@@ -508,8 +508,10 @@ final class AppModel {
                                  calendar: calendar)
     }
 
-    func jokerBlock(_ tier: JokerTier) -> Jokers.Block? {
-        Jokers.block(tier, firstNight: jokerFirstNight, uses: jokerState.uses, coins: coins)
+    /// - Parameter fromBox: the id of the box whose joker would be spent (no coins, not the month's own slot).
+    func jokerBlock(_ tier: JokerTier, fromBox boxId: String? = nil) -> Jokers.Block? {
+        Jokers.block(tier, firstNight: jokerFirstNight, uses: jokerState.uses, coins: coins,
+                     boxId: boxId, boxes: boxes(), calendar: calendar)
     }
 
     /// The joker protecting tonight or a night around now, if any (shown on Today).
@@ -520,10 +522,10 @@ final class AppModel {
         }
     }
 
-    func useJoker(_ tier: JokerTier) {
-        guard jokerBlock(tier) == nil else { return }
-        if tier.price > 0 { spend(tier.price, reason: "joker-\(tier.rawValue)") }
-        context.insert(JokerRecord(at: clock.now, tier: tier, firstNight: jokerFirstNight))
+    func useJoker(_ tier: JokerTier, fromBox boxId: String? = nil) {
+        guard jokerBlock(tier, fromBox: boxId) == nil else { return }
+        if tier.price > 0, boxId == nil { spend(tier.price, reason: "joker-\(tier.rawValue)") }
+        context.insert(JokerRecord(at: clock.now, tier: tier, firstNight: jokerFirstNight, boxId: boxId))
         save()
         rebuildTown()
         refresh()
@@ -582,7 +584,7 @@ final class AppModel {
 
     /// Coin balance 🪙: earned (replayed from the real nights, naps and achievements) − spent (`CoinSpend`).
     /// Never negative: two devices may have spent the same coins before they synced (phase SYNC).
-    var coins: Int { max(0, coinsEarned - coinsSpent) }
+    var coins: Int { max(0, coinsEarned - coinsSpent + Boxes.coinDelta(boxes())) }
 
     var coinsEarned: Int {
         validateDerived()
@@ -603,6 +605,12 @@ final class AppModel {
     func spends() -> [CoinSpend] {
         _ = dataRevision
         return (try? context.fetch(FetchDescriptor<CoinSpend>(sortBy: [SortDescriptor(\.at)]))) ?? []
+    }
+
+    /// The mystery boxes bought so far, oldest first (one small fetch, never cached). A record this version cannot read is skipped.
+    func boxes() -> [BoxPurchase] {
+        _ = dataRevision
+        return ((try? context.fetch(FetchDescriptor<BoxRecord>(sortBy: [SortDescriptor(\.at)]))) ?? []).compactMap(\.purchase)
     }
 
     private func spend(_ amount: Int, reason: String) {
@@ -1045,9 +1053,18 @@ final class AppModel {
                           scheduleChanges: scheduleChanges().map {
                               .init(at: $0.at, from: $0.from, to: $0.to, free: $0.free, breakKey: $0.breakKey, rule: $0.rule)
                           },
-                          jokers: jokerRecords().map { .init(at: $0.at, tier: $0.tierRaw, firstNight: $0.firstNight) },
+                          jokers: jokerRecords().map { .init(at: $0.at, tier: $0.tierRaw, firstNight: $0.firstNight, boxId: $0.boxId) },
                           townNameChangedAt: p.townNameChangedAt, schedulePromptMonth: p.schedulePromptMonth,
-                          changeWeekStart: p.changeWeekStart)
+                          changeWeekStart: p.changeWeekStart,
+                          boxes: boxRecords().map { .init(id: $0.id, at: $0.at, nightKey: $0.nightKey, price: $0.price,
+                                                          seed: String($0.seed), tableVersion: $0.tableVersion,
+                                                          prize: $0.prizeRaw, payout: $0.payout) })
+    }
+
+    /// Every stored box row, readable or not (the backup keeps what it cannot read).
+    func boxRecords() -> [BoxRecord] {
+        _ = dataRevision
+        return (try? context.fetch(FetchDescriptor<BoxRecord>(sortBy: [SortDescriptor(\.at)]))) ?? []
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
@@ -1080,8 +1097,13 @@ final class AppModel {
         try context.delete(model: JokerRecord.self)
         for j in b.jokers ?? [] {
             guard let tier = JokerTier(rawValue: j.tier), let key = NightKey(j.firstNight) else { continue }
-            let r = JokerRecord(at: j.at, tier: tier, firstNight: key)
+            let r = JokerRecord(at: j.at, tier: tier, firstNight: key, boxId: j.boxId)
             context.insert(r)
+        }
+        try context.delete(model: BoxRecord.self)
+        for box in b.boxes ?? [] {
+            guard let record = BoxRecord(backup: box) else { continue }
+            context.insert(record)
         }
         save()
         settings = b.settings

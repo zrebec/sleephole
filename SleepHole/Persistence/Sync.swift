@@ -84,6 +84,7 @@ enum SyncStore {
         result.nightsChanged = try mergeNights(file.nights, into: context)
         var changed = result.nightsChanged
         changed = try mergeSpends(file.spends ?? [], into: context) || changed
+        changed = try mergeBoxes(file.boxes ?? [], into: context) || changed       // before the jokers: they may spend a box
         changed = try mergeJokers(file.jokers ?? [], into: context) || changed
         changed = try mergeScheduleChanges(file.scheduleChanges ?? [], into: context) || changed
         changed = progress.merge(file) || changed
@@ -148,14 +149,44 @@ enum SyncStore {
         }, add: { context.insert(CoinSpend(at: $0.at, amount: $0.amount, reason: $0.reason)) })
     }
 
+    /// A box is one record with its own id: the union is by id (an id already present is skipped, nothing is replaced or
+    /// deleted, so merging the same file twice adds nothing). An entry this version cannot read is skipped.
+    static func mergeBoxes(_ remote: [BackupFile.Box], into context: ModelContext) throws -> Bool {
+        var known = Set(try context.fetch(FetchDescriptor<BoxRecord>()).map(\.id))
+        var changed = false
+        for box in remote where !known.contains(box.id) {
+            guard let record = BoxRecord(backup: box) else { continue }
+            context.insert(record)
+            known.insert(box.id)
+            changed = true
+        }
+        return changed
+    }
+
+    /// Jokers: the union rule above, with the box id outside the comparison – two copies of the same use (tier, first night,
+    /// moment) are ONE even when only one of them knows the box. A copy with a box id upgrades a local one without
+    /// (an older device wrote it); a local box id is never replaced.
     static func mergeJokers(_ remote: [BackupFile.Joker], into context: ModelContext) throws -> Bool {
         // an entry this version cannot read (a tier or night it does not know) is skipped, as `restore` does
         let readable = remote.filter { JokerTier(rawValue: $0.tier) != nil && NightKey($0.firstNight) != nil }
-        return union(readable, local: try context.fetch(FetchDescriptor<JokerRecord>()), matches: {
-            $0.tierRaw == $1.tier && $0.firstNight == $1.firstNight && SyncMerge.sameMoment($0.at, $1.at)
-        }, add: {
-            context.insert(JokerRecord(at: $0.at, tier: JokerTier(rawValue: $0.tier)!, firstNight: NightKey($0.firstNight)!))
-        })
+        var pool = try context.fetch(FetchDescriptor<JokerRecord>())
+        var changed = false
+        for entry in readable {
+            if let i = pool.firstIndex(where: {
+                $0.tierRaw == entry.tier && $0.firstNight == entry.firstNight && SyncMerge.sameMoment($0.at, entry.at)
+            }) {
+                let local = pool.remove(at: i)
+                if local.boxId == nil, let id = entry.boxId {
+                    local.boxId = id
+                    changed = true
+                }
+            } else {
+                context.insert(JokerRecord(at: entry.at, tier: JokerTier(rawValue: entry.tier)!,
+                                           firstNight: NightKey(entry.firstNight)!, boxId: entry.boxId))
+                changed = true
+            }
+        }
+        return changed
     }
 
     static func mergeScheduleChanges(_ remote: [BackupFile.Change], into context: ModelContext) throws -> Bool {

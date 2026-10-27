@@ -122,7 +122,7 @@ struct SystemAlarmTests {
     func harness(consent: SystemAlarmConsent, at now: Date) async -> Harness {
         let suite = "sleephole-systemalarm-\(UUID().uuidString)"
         let h = Harness(container: try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self,
-                                                       ScheduleChange.self, JokerRecord.self,
+                                                       ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                                        configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)),
                         clock: FakeClock(now), alarm: FakeSystemAlarm(consent: consent),
                         defaults: UserDefaults(suiteName: suite)!, suite: suite)
@@ -392,7 +392,7 @@ struct SystemAlarmTests {
         defer { defaults.removePersistentDomain(forName: suite) }
         defaults.set(date(6, 6, 30), forKey: SystemAlarmMemory.atKey)         // remembered from an earlier run
         let h = Harness(container: try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self,
-                                                       ScheduleChange.self, JokerRecord.self,
+                                                       ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                                        configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)),
                         clock: FakeClock(date(5, 12)), alarm: FakeSystemAlarm(consent: .allowed), defaults: defaults, suite: suite)
         let m = model(h, alarm: h.alarm)
@@ -590,7 +590,7 @@ struct SystemAlarmTests {
         #expect(no.consent == .unavailable)
         // an AppModel built without a system alarm gets the do-nothing one
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
-                                    JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                                    JokerRecord.self, BoxRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let plain = AppModel(context: c.mainContext, catalog: sprites.catalog, clock: FakeClock(date(5, 12)),
                              settings: settings(), servicesEnabled: false)
         #expect(plain.systemAlarm is NoSystemAlarm)

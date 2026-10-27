@@ -101,7 +101,7 @@ struct SyncStatusTests {
 
     func model(_ place: any SyncTransport, language: AppLanguage) -> AppModel {
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
-                                    JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                                    JokerRecord.self, BoxRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         var s = AppSettings(); s.wakeCode = "1234"
         let m = AppModel(context: c.mainContext, catalog: sprites.catalog, clock: FakeClock(date(5, 12)), settings: s,
                          servicesEnabled: false, defaults: UserDefaults(suiteName: "sleephole-status-\(UUID().uuidString)")!,

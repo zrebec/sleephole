@@ -21,7 +21,7 @@ struct BuddyStateTests {
     /// The container must outlive the model (ModelContext does not retain it).
     func makeModel(at now: Date) -> (AppModel, FakeClock, ModelContainer) {
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
-                                    JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                                    JokerRecord.self, BoxRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let clock = FakeClock(now)
         var s = AppSettings()
         s.schedule = Schedule(bedtime: TimeOfDay(22, 30), wake: TimeOfDay(6, 30))
@@ -226,7 +226,7 @@ struct BuddyReactionViewTests {
 
     func makeModel() -> (AppModel, ModelContainer) {
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
-                                    JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                                    JokerRecord.self, BoxRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         var s = AppSettings()
         s.wakeCode = "1234"
         let m = AppModel(context: c.mainContext, catalog: sprites.catalog, clock: FakeClock(date(5, 12)), settings: s,

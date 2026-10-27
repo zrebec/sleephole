@@ -51,7 +51,7 @@ struct ClosureTests {
     func tonight(boot: Date? = nil) -> Harness {
         let suite = "sleephole-closure-\(UUID().uuidString)"
         let h = Harness(container: try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self,
-                                                       ScheduleChange.self, JokerRecord.self,
+                                                       ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                                        configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)),
                         clock: FakeClock(date(5, 22, 25)), suite: suite, defaults: UserDefaults(suiteName: suite)!)
         h.model = newModel(h, boot: boot)
@@ -157,7 +157,7 @@ struct ClosureTests {
     func emptyHarness(day: Int) -> Harness {
         let suite = "sleephole-closure-\(UUID().uuidString)"
         let h = Harness(container: try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self,
-                                                       ScheduleChange.self, JokerRecord.self,
+                                                       ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                                        configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)),
                         clock: FakeClock(date(day, 12)), suite: suite, defaults: UserDefaults(suiteName: suite)!)
         h.model = newModel(h)
@@ -311,7 +311,7 @@ struct ClosureTests {
         // no night: nothing is appended anywhere, nothing crashes
         let suite = "sleephole-closure-idle-\(UUID().uuidString)"
         let idle = Harness(container: try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self,
-                                                          ScheduleChange.self, JokerRecord.self,
+                                                          ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                                           configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)),
                            clock: FakeClock(date(5, 12)), suite: suite, defaults: UserDefaults(suiteName: suite)!)
         idle.model = newModel(idle)
@@ -431,7 +431,7 @@ struct ClosureTests {
         let suite = "sleephole-closure-nap-\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suite)!
         let h = Harness(container: try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self,
-                                                       ScheduleChange.self, JokerRecord.self,
+                                                       ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                                        configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)),
                         clock: FakeClock(date(8, 13, 30)), suite: suite, defaults: defaults)
         h.model = newModel(h)
