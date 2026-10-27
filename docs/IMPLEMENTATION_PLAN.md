@@ -3251,6 +3251,14 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         from the coin rules), so Opus asked; **his pick ~14:00: the town's very first box has no reserve** (the floor
         400 🪙 only – no box purchase recorded yet); from the second box on the 1 000 reserve applies. Next: 11b2 (the
         records) on his word.
+        **His pace 2026-10-27 ~08:00** (asked "when will I see the boxes?" – he had expected them after 11b6b; Opus
+        explained that no box step is in the app yet): **the boxes only with the full contents**, the odds D exactly as he
+        chose – no "first edition" with the missing collectibles' shares moved to postcards. Order: 11b2 the records →
+        11b3 the rules → 11b5 the contents (postcards with sourced tips EN + SK, the night sky in code, town decorations,
+        the cat accessories as layers) → 11b4 the shop and the opening last; his first box about Fri 30 / Sat 31 Oct
+        (an estimate, the morning after a complete night once 11b4 is on his phone). Each step on his word, each in a
+        clean session (his "one step = one session"). For 11b2: a box record stores what came out (and the odds table's
+        version), so a later change of the table never re-draws an old box on a replay.
   - [ ] **11c – nights off** (rules on the build 11 page and §0b row 11): 11c1 the rules in `SleepCore` (the window
         18:00–03:00, confirming until 14:00, the 75 % / 50 % thresholds, a skipped off night neither breaks nor grows the
         streak and uses no automatic bronze, coins as a normal night); 11c2 the model + Settings → Schedule (up to two
@@ -3721,6 +3729,7 @@ screen checks.
 | 2026-10-27 | **~06:45 – his choice: the draw stays as it is, plus the label "New in town" in the setup, today (11b6b), then 11b2.** Opus's proposal (the paid draw only from tonight's level and higher, new buildings first) and "pick one of three" were declined; the draw keeps the evening draw's pool and the prices 400 / 800. The step 11b6b is his (§10 REL "Build 11"). | 11b6b review, his yes for the install |
 | 2026-10-27 | **~07:45 – 11b6b built and reviewed (§10 REL "Build 11").** SleepCore 439 / 0, app 572 / 0, i18n 775 / 0 / 0 / 0. Seen in the shots: "Cancel night" sits under the tab bar during the setup on the iPhone 16 Pro simulator too, not only on the 17e (older than 11b6, the screen scrolls) – stays the build 12 candidate noted 2026-10-26. | his yes for the install |
 | 2026-10-27 | **07:48 – 11b6b on his phone** (his "yes, install 11b6b on the phone"). Debug build by Opus, `devicectl` "App installed"; the store pulled read-only before and after: the same counts (57 nights, 3 spends, 1 joker, 3 schedule changes). Next: tonight's setup shows the label when the building is new; the morning pull of 2026-10-28. | tonight's night |
+| 2026-10-27 | **~08:00 – his question "what was this step for? I still don't see the boxes" and his pace: the boxes only with the full contents (§10 REL 11b).** He had expected boxes after 11b6b – the step names (11b1 … 11b6b) did not tell him that 11b1 and 11b6b are not boxes and that no box step is in the app yet. Lesson: when a build's steps are reordered or a side step is added, tell him in one line where the visible feature stands ("boxes: 0 of 4 steps in the app, first box about …"). His choice: no first edition with moved shares – the order 11b2 → 11b3 → 11b5 → 11b4, the first box about 30 – 31 Oct. | 11b2 on his word, in a clean session |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |
 | 2026-09-29 | `swift test` in SleepCore uses Swift Testing (`import Testing`) fine with the Xcode toolchain. |
