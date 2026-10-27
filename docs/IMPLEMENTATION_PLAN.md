@@ -205,7 +205,7 @@ SleepCore 336 tests, app 500 tests green (2026-10-12 17:19, Opus's own run on th
 | 🟢 | 11a2 (B38): no tab bar on the nap and the night result, "Continue" fully visible, the bar returns after it | owner 2026-10-25 13:31 (the nap result, his screenshot and three "yes") and 2026-10-26 05:34 (the long night result with the receipt and the week card, his screenshot: no bar, "Continue" whole) |
 | 🟢 | 11b6: another building for tonight during the setup (400 🪙, then 800 🪙, then none; free on a test night) | on his phone since 2026-10-26 11:39; **works as built in the real night 26 → 27** (his report + the store: two draws 400 + 800 at 21:34, no third, the night counted with the last building, both spends in the JSON backup); his verdict "it did not pay off" – a change of the draw's pool proposed (§12 2026-10-27) |
 | 📱 | 11b6b: "New in town" on tonight's building during the setup (when it is not in the town yet) | on his phone since 2026-10-27 07:48; tests and simulator screenshots only so far (`build/11b6b/`) – his first look is tonight's setup |
-| 🖥 | 11b2: mystery box records (one record per box, box jokers, backup + sync) – nothing to see or buy yet | tests only + a simulator launch with a copy of his pulled store (57 nights and the joker kept, a new empty box table); waits for his yes to install (a store-migration check on his phone) |
+| 📱 | 11b2: mystery box records (one record per box, box jokers, backup + sync) – nothing to see or buy yet | on his phone since 2026-10-27 08:40; **the store migration ran on his phone** (launched once by Opus with `devicectl`, the store pulled after: 57 nights, 3 spends, 1 joker, 3 schedule changes kept, a new empty `ZBOXRECORD`, `ZJOKERRECORD.ZBOXID` added); the box rules themselves are tests only |
 
 ---
 
@@ -3277,8 +3277,10 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         would disagree about the coins and "one a day / nine a month" → `BoxPrize.unknown(String)` kept verbatim: such a
         box counts for coins and the box counts, only the prize rules skip it. **Opus's runs: SleepCore 460 / 0, app
         580 / 0, i18n 775 keys 0 / 0 / 0.** Committed on `step/11b2-box-records` (`7983990`), merged into `build/11`
-        (`56935ee`), both pushed. Next: his yes to install (nothing visible – it proves the store migration on his phone),
-        then 11b3 (the rules) on his word.
+        (`56935ee`), both pushed. **On his phone since 2026-10-27 08:40** (his "install, please"; Debug build by Opus,
+        `devicectl` "App installed", then launched once): the store migration ran on his real store – 57 nights, 3
+        spends, 1 joker and 3 schedule changes kept, a new empty `ZBOXRECORD`, the joker table has `ZBOXID`; the backup
+        before is in the git-ignored `docs/device-logs/2026-10-27-pred-11b2/`. Next: 11b3 (the rules) on his word.
   - [ ] **11c – nights off** (rules on the build 11 page and §0b row 11): 11c1 the rules in `SleepCore` (the window
         18:00–03:00, confirming until 14:00, the 75 % / 50 % thresholds, a skipped off night neither breaks nor grows the
         streak and uses no automatic bronze, coins as a normal night); 11c2 the model + Settings → Schedule (up to two
@@ -3751,6 +3753,7 @@ screen checks.
 | 2026-10-27 | **07:48 – 11b6b on his phone** (his "yes, install 11b6b on the phone"). Debug build by Opus, `devicectl` "App installed"; the store pulled read-only before and after: the same counts (57 nights, 3 spends, 1 joker, 3 schedule changes). Next: tonight's setup shows the label when the building is new; the morning pull of 2026-10-28. | tonight's night |
 | 2026-10-27 | **~08:00 – his question "what was this step for? I still don't see the boxes" and his pace: the boxes only with the full contents (§10 REL 11b).** He had expected boxes after 11b6b – the step names (11b1 … 11b6b) did not tell him that 11b1 and 11b6b are not boxes and that no box step is in the app yet. Lesson: when a build's steps are reordered or a side step is added, tell him in one line where the visible feature stands ("boxes: 0 of 4 steps in the app, first box about …"). His choice: no first edition with moved shares – the order 11b2 → 11b3 → 11b5 → 11b4, the first box about 30 – 31 Oct. | 11b2 on his word, in a clean session |
 | 2026-10-27 | **~08:30 – 11b2 built and reviewed (§10 REL "Build 11", 11b).** Lesson for every record that travels between devices: a record that a later build may write with a value this build cannot read must be KEPT and must keep counting where its readable fields matter (the price in the balance, the box in "one a day"); skipping it makes two devices on different builds disagree. Store the unreadable part verbatim and pass it on unchanged. SleepCore 460 / 0, app 580 / 0, i18n 775 / 0 / 0 / 0. | his yes to install; 11b3 on his word |
+| 2026-10-27 | **08:40 – 11b2 on his phone, the store migration checked there** (his "install, please"). Debug build, `devicectl` "App installed"; the app launched once with `devicectl process launch` so the new schema opened his real store; pulled read-only before and after: the same counts (57 nights, 3 spends, 1 joker, 3 schedule changes), a new empty box table and the joker's box column. A schema change is now proven on his phone before any box exists. | 11b3 on his word |
 | 2026-09-29 | The owner's iPhone can be installed from the CLI with `xcrun devicectl device install app --device <UDID>` when connected + unlocked (UDID from `xcrun devicectl list devices`; the repo is PUBLIC – never commit device ids, device logs or personal data). |
 | 2026-09-29 | Owner: town view must scroll smoothly like SimCity (one continuous map), see §7.2. |
 | 2026-09-29 | `swift test` in SleepCore uses Swift Testing (`import Testing`) fine with the Xcode toolchain. |
