@@ -34,9 +34,10 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    (the nap 25 Oct, the night 25 → 26), committed on `build/11` (pushed; he merged PR #1 into `main` mid-build on 2026-10-26 ~11:45 – the next PR when the build is finished).
    **11b6 (another building for tonight) pulled forward – his "condition of today" (2026-10-26 ~07:45):** during the setup,
    400 🪙 then 800 🪙, at most two a night, the evening draw's pool – **built and reviewed ~09:05** (SleepCore 428, app
-   572, i18n 774 – green; screenshots `build/11b6/`) – **on his phone since 2026-10-26 11:39**; tonight his first real
-   draw → on 2026-10-27 morning pull the store and check the spends `reroll-2026-10-27:<old id>`, the night's building
-   and coins. **11b1 (the economy simulation, no app change) built and reviewed ~12:15, merged into `build/11`;** his
+   572, i18n 774 – green; screenshots `build/11b6/`) – **on his phone since 2026-10-26 11:39**; **works in the real night
+   26 → 27** (400 + 800, then the fountain park he already had – his verdict "it did not pay off"; why: plan §12
+   2026-10-27) → **his choice open: the paid draw only from tonight's level and higher, new buildings first, "new in
+   the town" shown in the setup (Opus's proposal), or as it is.** **11b1 (the economy simulation, no app change) built and reviewed ~12:15, merged into `build/11`;** his
    answers read 2026-10-26 ~13:55 (odds D, a missing collectible first, the 1 000 reserve except for the town's very
    first box, collections 30 / 12 / 6 / 4, the shop always visible – plan §10 REL 11b) → **11b2 (the records) on his word.**
    Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is
