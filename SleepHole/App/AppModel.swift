@@ -312,7 +312,7 @@ final class AppModel {
             DevArgs.list.indices.contains($0 + 1) && DevArgs.list[$0 + 1] == "unfinished" } == true ? .unfinished : .complete
         if DevArgs.list.contains("-showResult"), active == nil, initialSettings == nil,
            let rec = realResults().last(where: { $0.outcome == wantedResult }) {       // store screenshots: the morning screen
-            let entry = Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
+            let entry = Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
                 .last { $0.key.description == rec.keyString }
             shownResult = rec
             lastReward = entry?.coins ?? 0
@@ -561,7 +561,7 @@ final class AppModel {
     }
 
     func coinsEarned(for key: NightKey) -> Int? {
-        Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
+        Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
             .last { $0.key == key }?.coins
     }
 
@@ -577,7 +577,7 @@ final class AppModel {
         validateDerived()                           // reads `sleepReads`: a finished Health read redraws Stats
         if let cached = derived.stats { return cached }
         let value = Stats.summary(statsInput(), today: NightKey(date: clock.now, calendar: calendar),
-                                  calendar: calendar, breaks: streakBreaks, catalog: catalog)
+                                  calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
         derived.stats = value
         return value
     }
@@ -595,7 +595,7 @@ final class AppModel {
     }
 
     private func computeCoinsEarned() -> Int {
-        Economy.earned(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
+        Economy.earned(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
             + napResults().compactMap(\.outcome).reduce(0) { $0 + NapPlan.reward($1) }
             + Achievements.coins(achievements)
     }
@@ -640,13 +640,13 @@ final class AppModel {
     /// Weeks (Monday–Sunday evenings) with nights or naps, newest first.
     var journalWeeks: [WeekSummary] {
         WeeklyJournal.weeks(results: coreResults(), naps: napResults().compactMap(\.result),
-                            calendar: calendar, breaks: streakBreaks, catalog: catalog)
+                            calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
     }
 
     func journalWeek(monday: NightKey) -> WeekSummary {
         WeeklyJournal.week(monday: monday, results: coreResults(),
                            naps: napResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks,
-                           catalog: catalog)
+                           catalog: catalog, boxes: boxes())
     }
 
     /// Monday of the week we are in now.
@@ -1065,6 +1065,13 @@ final class AppModel {
     func boxRecords() -> [BoxRecord] {
         _ = dataRevision
         return (try? context.fetch(FetchDescriptor<BoxRecord>(sortBy: [SortDescriptor(\.at)]))) ?? []
+    }
+
+    /// Stores one bought box (the only write path for 11b4's shop): `save()` bumps `dataRevision`, so the cached balance,
+    /// the joker state and the stats are dropped and the sync notices the change.
+    func recordBox(_ purchase: BoxPurchase) {
+        context.insert(BoxRecord(purchase))
+        save()
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
@@ -2279,7 +2286,7 @@ final class AppModel {
         if !rec.isDebug { writeAutoBackup() }
         if servicesEnabled, !rec.isDebug, !rec.isNap { Task { await refreshSleepIfIdle() } }   // the watch may not have synced yet: read again later
         let entry = rec.isDebug || rec.isNap ? nil
-            : Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
+            : Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
                 .last { $0.key.description == rec.keyString }
         lastReceipt = entry.flatMap { Economy.Receipt($0, calmTotal: rec.result?.calmHoursTotal) }
             .map { $0.addingAchievements(newAchievements.reduce(0) { $0 + $1.reward }) }   // achievements pay coins too

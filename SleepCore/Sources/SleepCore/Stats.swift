@@ -52,7 +52,7 @@ public struct NightPoint: Equatable, Sendable {
 public enum Stats {
     public static func summary(_ results: [NightResult], today: NightKey, calendar: Calendar,
                                window: Int = 14, calendarDays: Int = 35, breaks: [NightKey] = [],
-                               catalog: Catalog? = nil) -> StatsSummary {
+                               catalog: Catalog? = nil, boxes: [BoxPurchase] = []) -> StatsSummary {
         let sorted = results.sorted { $0.key < $1.key }
         let lastPossible = today.adding(days: -1, calendar: calendar)
         let last = max(sorted.last?.key ?? lastPossible, lastPossible)
@@ -82,7 +82,7 @@ public enum Stats {
             bestStreak: Progression.bestStreak(sorted, calendar: calendar, breaks: breaks),
             builtNights: built,
             completeNights: sorted.filter { $0.outcome == .complete }.count,
-            coins: Economy.earned(sorted, calendar: calendar, breaks: breaks, catalog: catalog),
+            coins: Economy.earned(sorted, calendar: calendar, breaks: breaks, catalog: catalog, boxes: boxes),
             maxLevel: Progression.unlockedMaxLevel(builtBefore: built),
             averageStart: circularMean(starts).map(timeOfDay),
             averageWake: circularMean(wakes).map(timeOfDay),

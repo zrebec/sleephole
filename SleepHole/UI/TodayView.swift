@@ -1000,6 +1000,7 @@ struct CoinReceiptView: View {
         case .building, .unfinishedBuilding: "🏠"
         case .withoutPause, .calmHours: "🌙"
         case .streak: "🔥"
+        case .luckyNight: "🍀"
         case .achievements: "🏆"
         }
     }
@@ -1011,6 +1012,7 @@ struct CoinReceiptView: View {
         case .withoutPause: L("Without a pause")
         case .calmHours(let calm, let total): L("Calm hours \(calm) of \(total)")
         case .streak(let run): L("Night \(run) in a row")
+        case .luckyNight: L("Lucky night ×2")
         case .achievements: L("Achievements")
         }
     }

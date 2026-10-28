@@ -62,6 +62,20 @@ import Testing
         #expect(d.model.coins == 0)                                        // never negative
     }
 
+    @Test func aLuckyNightBoxDoublesTheNextCompleteNightInTheCachedBalance() throws {
+        let d = device(at: date(10, 21))
+        d.clock.now = date(10, 21, 22) + 25 * 60; d.model.refresh(); d.model.startNight()
+        d.clock.now = date(10, 22, 6) + 31 * 60; d.model.refresh(); d.model.confirm(code: "1234"); d.model.acknowledgeResult()
+        let k = NightKey("2026-10-22")!
+        let plain = try #require(d.model.coinsEarned(for: k))
+        #expect(plain > 0)
+        let earnedBefore = d.model.coinsEarned                              // fills the cache
+        d.model.recordBox(BoxPurchase(id: "L", at: date(10, 21), nightKey: NightKey("2026-10-21")!,
+                                      price: 400, seed: 1, tableVersion: 1, prize: .luckyNight, payout: 0))
+        #expect(d.model.coinsEarned(for: k) == plain * 2)
+        #expect(d.model.coinsEarned == earnedBefore + plain)                // the cached total follows the new record
+    }
+
     @Test func aBackupRoundTripKeepsBoxesAndAJokersBoxId() throws {
         let a = device(at: date(11, 2))
         a.context.insert(BoxRecord(purchase("b1", night: "2026-10-31", prize: .joker(.bronze), frac: 0)))       // a backup keeps whole seconds
@@ -76,9 +90,9 @@ import Testing
         #expect(json.contains("\"boxes\"") && json.contains("\"boxId\""))
         let b = device(at: date(11, 3))
         try b.model.restore(try BackupFile.decode(data))
-        #expect(b.model.boxes() == a.model.boxes())
+        #expect(b.model.boxes().sorted { $0.id < $1.id } == a.model.boxes().sorted { $0.id < $1.id })   // equal `at`: the fetch order of ties is not defined
         #expect(b.model.jokerRecords().map(\.boxId) == ["b1", nil])
-        #expect(b.model.makeBackup().boxes == file.boxes && b.model.makeBackup().jokers == file.jokers)
+        #expect(b.model.makeBackup().boxes?.sorted { $0.id < $1.id } == file.boxes?.sorted { $0.id < $1.id } && b.model.makeBackup().jokers == file.jokers)
         // the backup is the whole truth: restoring one without boxes clears them
         var old = file; old.boxes = nil
         try b.model.restore(old)

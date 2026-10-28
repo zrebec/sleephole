@@ -128,6 +128,13 @@ public enum Boxes {
         key > box.nightKey && key <= expiry(of: box, calendar: calendar)
     }
 
+    /// The one notion of "a joker won from a box": the tier of a `.joker` prize that was really kept (not gold, payout 0).
+    /// A `.joker` prize with a payout is a converted one (the tier was already held) – nobody holds it.
+    public static func wonJoker(_ box: BoxPurchase) -> JokerTier? {
+        guard case .joker(let tier) = box.prize, tier != .gold, box.payout == 0 else { return nil }
+        return tier
+    }
+
     /// For each tier the box joker that is valid at `key` and not used yet (if several, the one that expires first).
     /// "One of each kind held at a time" is a draw rule (11b3) – this only reports what is held.
     public static func heldJokers(boxes: [BoxPurchase], uses: [JokerUse], at key: NightKey,
@@ -135,7 +142,7 @@ public enum Boxes {
         let usedIds = Set(uses.compactMap(\.boxId))
         var held: [JokerTier: BoxPurchase] = [:]
         for b in boxes {
-            guard case .joker(let tier) = b.prize, tier != .gold, !usedIds.contains(b.id),
+            guard let tier = wonJoker(b), !usedIds.contains(b.id),
                   isValid(b, at: key, calendar: calendar) else { continue }
             if let current = held[tier], (expiry(of: current, calendar: calendar), current.nightKey, current.id)
                 <= (expiry(of: b, calendar: calendar), b.nightKey, b.id) { continue }
