@@ -30,7 +30,7 @@ struct BuddyOutfitTests {
 
     @Test func everyAccessoryHasAName() {
         for id in BoxCatalog.ids(.accessory) { #expect(CollectibleText.accessoryName(id) != id) }
-        #expect(CollectibleText.keys.count == 6)
+        #expect(CollectibleText.keys.count == 6 + BoxCatalog.ids(.sky).count)
     }
 
     @Test func accessibilityText() {

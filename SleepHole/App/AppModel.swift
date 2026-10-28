@@ -98,6 +98,8 @@ final class AppModel {
     ///                                 (with `unfinished`: of the newest unfinished one, which was confirmed 30 min after the alarm)
     ///   -openTab town                 start on the Mesto tab
     ///   -showAllDecorations           DEBUG only: the Town view shows all 12 town decorations (11b5c; screenshots, preview)
+    ///   -nightSky sky-02              DEBUG only: show that night sky (sky-01 … sky-04, 11b5d) on Today and the Town tab
+    ///   -skyClock 12.5|still          DEBUG only: pin the night sky effect's clock (seconds) / show its frozen Reduce Motion frame
     ///   -townFit                      screenshots: the Town view frames the built-up part of the town (no zoom cap)
     ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
     ///   -theme system|light|dark      set the appearance (Settings → Theme)
@@ -1493,6 +1495,12 @@ final class AppModel {
 
     /// What the cat on Today wears. Today only the dev argument; the owner's choice (11b4) replaces it here.
     var buddyOutfit: CatOutfit { Self.forcedBuddyOutfit }
+
+    /// Dev aid: `-nightSky sky-02` (Debug only; `DevArgs` is empty in Release).
+    static let forcedNightSky: String? = DevArgs.value(after: "-nightSky")
+
+    /// The night sky shown on Today and the Town tab. Today only the dev argument; the owner's choice (11b4) replaces it here.
+    var nightSky: NightSkyEffect? { NightSkies.effect(forId: Self.forcedNightSky) }
 
     /// The reaction the next tap on the cat gives (plan P2b). Session state only – never stored, never in a backup.
     @ObservationIgnored private var nextBuddyReaction = BuddyReaction.purr
