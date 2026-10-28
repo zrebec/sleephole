@@ -101,7 +101,7 @@ struct HomeView: View {
                     // the cloud below it.
                     BuddyView.centred(
                         BuddyView(state: model.buddyState(at: now), cloud: true, onPet: { model.petBuddy() },
-                                  hold: AppModel.forcedBuddyReaction)
+                                  hold: AppModel.forcedBuddyReaction, outfit: model.buddyOutfit)
                             .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.5) })
                         .overlay(alignment: .top) {
                             // the buddy talks (phase TALK): an overlay, so Today's layout does not change
