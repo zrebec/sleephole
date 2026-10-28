@@ -97,6 +97,7 @@ final class AppModel {
     ///   -showResult [unfinished]      SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
     ///                                 (with `unfinished`: of the newest unfinished one, which was confirmed 30 min after the alarm)
     ///   -openTab town                 start on the Mesto tab
+    ///   -showAllDecorations           DEBUG only: the Town view shows all 12 town decorations (11b5c; screenshots, preview)
     ///   -townFit                      screenshots: the Town view frames the built-up part of the town (no zoom cap)
     ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
     ///   -theme system|light|dark      set the appearance (Settings → Theme)
@@ -727,12 +728,20 @@ final class AppModel {
     /// Identifies the newest building (its night key) – the camera glides to it once per new one (B30).
     private(set) var townNewest: String?
 
+    /// The town decorations won from boxes, in the order won; with the debug flag `-showAllDecorations` all twelve.
+    private func ownedDecorations() -> [String] {
+        #if DEBUG
+        if DevArgs.list.contains("-showAllDecorations") { return BoxCatalog.ids(.decoration) }
+        #endif
+        return Boxes.ownedInOrder(.decoration, boxes: boxes())
+    }
+
     func rebuildTown() {
         guard let catalog else { return }
         let snap = buildSnapshot()
         townSnapshot = snap
         townRender = TownRender.build(snap, catalog: catalog, today: NightKey(date: clock.now, calendar: calendar),
-                                      calendar: calendar)
+                                      calendar: calendar, decorations: ownedDecorations())
         townFocus = snap.buildings.last.map { IsoProjection.scenePoint(x: $0.placement.centre.x, z: $0.placement.centre.z) }
         townNewest = snap.buildings.last.map { $0.nightKey.description }
         townVersion += 1
@@ -1072,6 +1081,7 @@ final class AppModel {
     func recordBox(_ purchase: BoxPurchase) {
         context.insert(BoxRecord(purchase))
         save()
+        rebuildTown()                                           // a won decoration appears in the town at once
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).

@@ -13,7 +13,7 @@ func loadRealCatalog() throws -> Catalog {
 
 @Test func realCatalogDecodes() throws {
     let catalog = try loadRealCatalog()
-    #expect(catalog.entries.count == 190)          // 174 + 16 crane frames
+    #expect(catalog.entries.count == 202)          // 174 + 16 crane frames + 12 town decorations
     #expect(catalog["l3-police"]?.nameSK == "Polícia")
     #expect(catalog["l3-police"]?.footprint == [2, 2])
 }

@@ -113,6 +113,16 @@ public enum Boxes {
         return ids
     }
 
+    /// The same ids in the order they were won (oldest first, a duplicate keeps its first place) – the order the town
+    /// decorations are placed in. `boxes` may come in any order: sorted by purchase moment, then id.
+    public static func ownedInOrder(_ kind: CollectibleKind, boxes: [BoxPurchase]) -> [String] {
+        var seen = Set<String>(), out: [String] = []
+        for b in boxes.sorted(by: { ($0.at, $0.id) < ($1.at, $1.id) }) {
+            if case .collectible(kind, let id) = b.prize, seen.insert(id).inserted { out.append(id) }
+        }
+        return out
+    }
+
     // MARK: jokers won from boxes
 
     /// A joker from a box lasts until the end of the NEXT month (a box on 31 Oct → through 30 Nov; 15 Dec 2026 → through
