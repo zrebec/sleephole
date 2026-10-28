@@ -25,6 +25,8 @@ struct SettingsView: View {
     @State private var syncTest = DevArgs.list.contains("-openSyncTest")
     /// Dev aid: `-openTextsView` opens Developer → Texts at once (screenshots).
     @State private var textsView = DevArgs.list.contains("-openTextsView")
+    /// Dev aid: `-openBoxContents [postcards|decorations|cat|skies]` opens Developer → Box contents at once.
+    @State private var boxContents = DevArgs.list.contains("-openBoxContents")
     #endif
 
     /// The warning triangle on Today: list's rows may not be laid out yet right after the tab switch → scroll twice.
@@ -318,6 +320,7 @@ struct SettingsView: View {
                 Section(L("Developer")) {
                     NavigationLink(L("Plans and proposals")) { PlansView() }
                     NavigationLink(L("Texts")) { TextsView() }
+                    NavigationLink(L("Box contents")) { BoxContentsView() }
                     Button(L("Quick night (4 min, \(Int(AppModel.debugGrace))s setup)")) { model.startTestNight() }
                         .disabled(nightRunning)
                     Button(L("Test night (30 min, \(Int(AppModel.debugGrace))s setup)")) { model.startTestNight(minutes: 30) }
@@ -363,6 +366,7 @@ struct SettingsView: View {
             .navigationDestination(isPresented: $weatherTest) { WeatherTestView() }
             .navigationDestination(isPresented: $syncTest) { SyncTestView() }
             .navigationDestination(isPresented: $textsView) { TextsView() }
+            .navigationDestination(isPresented: $boxContents) { BoxContentsView() }
             #endif
             .renameTownAlert(isPresented: $renaming)
             .sheet(isPresented: $showGuide) { GuideView(replay: true) }

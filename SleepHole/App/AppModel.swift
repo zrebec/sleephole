@@ -97,6 +97,9 @@ final class AppModel {
     ///   -showResult [unfinished]      SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
     ///                                 (with `unfinished`: of the newest unfinished one, which was confirmed 30 min after the alarm)
     ///   -openTab town                 start on the Mesto tab
+    ///   -openBoxContents [postcards|decorations|cat|skies]   DEBUG only: open Settings > Developer > Box contents at once (11b5e)
+    ///   -boxCatFull                   DEBUG only: the Box contents cat starts with a full outfit (first head, face and bed item)
+    ///   -boxCatAsleep                 DEBUG only: the Box contents cat starts asleep
     ///   -showAllDecorations           DEBUG only: the Town view shows all 12 town decorations (11b5c; screenshots, preview)
     ///   -nightSky sky-02              DEBUG only: show that night sky (sky-01 … sky-04, 11b5d) on Today and the Town tab
     ///   -skyClock 12.5|still          DEBUG only: pin the night sky effect's clock (seconds) / show its frozen Reduce Motion frame
