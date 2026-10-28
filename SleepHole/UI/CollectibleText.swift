@@ -5,7 +5,8 @@ import SleepCore
 /// decorations (names come from the sprite catalog); a later step adds the night skies here. Every name is a literal `L("…")` so the i18n tool finds it.
 enum CollectibleText {
     /// The English keys, exactly as they stand in the String Catalog.
-    static let keys: [String] = ["Nightcap", "Top hat", "Builder's helmet", "Sunglasses", "Bowl with a fish", "Rug"]
+    static let keys: [String] = ["Nightcap", "Top hat", "Builder's helmet", "Sunglasses", "Bowl with a fish", "Rug",
+                                 "Shooting stars", "Northern lights", "The Cat constellation", "Comet"]
 
     /// The name of an accessory id (`BoxCatalog.ids(.accessory)`); the id itself for an unknown one.
     static func accessoryName(_ id: String) -> String {
@@ -16,6 +17,17 @@ enum CollectibleText {
         case "sunglasses": L("Sunglasses")
         case "fish-bowl": L("Bowl with a fish")
         case "rug": L("Rug")
+        default: id
+        }
+    }
+
+    /// The name of a night sky id (`BoxCatalog.ids(.sky)`); the id itself for an unknown one.
+    static func skyName(_ id: String) -> String {
+        switch id {
+        case "sky-01": L("Shooting stars")
+        case "sky-02": L("Northern lights")
+        case "sky-03": L("The Cat constellation")
+        case "sky-04": L("Comet")
         default: id
         }
     }

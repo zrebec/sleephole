@@ -14152,6 +14152,70 @@
           }
         }
       }
+    },
+    "Shooting stars": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shooting stars"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padajúce hviezdy"
+          }
+        }
+      }
+    },
+    "Northern lights": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Northern lights"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polárna žiara"
+          }
+        }
+      }
+    },
+    "The Cat constellation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Cat constellation"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Súhvezdie Mačky"
+          }
+        }
+      }
+    },
+    "Comet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comet"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kométa"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

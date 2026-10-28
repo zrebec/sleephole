@@ -24,7 +24,7 @@ struct TodayView: View {
             // full screen: a background on a Group is sized to each child's content (owner bug 2026-10-02: the nap
             // result showed a small 16:9 patch of sky with black bars) – the night screen covers it with its NightSky
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background { LivingSky(semicircle: true) }
+            .background { LivingSky(semicircle: true, nightSky: model.nightSky) }
             .overlay {
                 if let nap = splash {
                     GoodNightSplash(nap: nap) { withAnimation { splash = nil } }
