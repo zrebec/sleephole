@@ -3342,6 +3342,17 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         (`c4cee34`). Sources used: NHS Every Mind Matters, CDC (sleep basics + the NIOSH sleep bulletin), NIH NHLBI,
         NIH MedlinePlus, the Mayo Clinic Diet blog (Harvard, Mayo's main site and NINDS refuse automated fetching, so
         none of their pages could be checked). Nothing to see on the phone yet (11b5e shows the contents).
+        **11b5b part 2 (the app) done ~11:20:** `CatOutfit` in SleepCore (one id per slot, draw order bed → face →
+        head), `BuddyView.outfit` (layers over both cross-fading frames inside the breathing / wobble transforms;
+        `.none` = the confirmed look unchanged; "Wearing: …" for VoiceOver), `CollectibleText` (the names), the 48
+        imagesets (byte-identical to the layers), Today's cat takes `AppModel.buddyOutfit` – for now only the Debug
+        `-buddyOutfit` argument, 11b4's collection replaces it. The first worker was stopped half-way by an interrupt; on
+        his word a second worker reviewed and finished its work. Screenshots: the items sit exactly on the cat by day and
+        at night; **on Today the buddy's speech bubble covers the bed, so the bowl and the rug show only partly – a
+        point for 11b4 (e.g. the bubble shifts while the cat wears a bed item).** Opus's runs: SleepCore 483 / 0, app 591
+        with one failure of the known flaky `SyncEngineTests.theTriesStop…` (untouched code; alone it failed 1 of 3
+        runs – more often than before: a fix belongs to build 12's polishing), i18n 847 keys 0 / 0 / 0. Committed on
+        `step/11b5b-cat-accessories` (`1440546` the art, `01baa0f` the app), merged into `build/11`.
   - [ ] **11c – nights off → moved to build 13 (his pick 2026-10-28: build 11 = the boxes; §0b row 13)** (rules on the
         build 11 page and §0b row 11): 11c1 the rules in `SleepCore` (the window
         18:00–03:00, confirming until 14:00, the 75 % / 50 % thresholds, a skipped off night neither breaks nor grows the
