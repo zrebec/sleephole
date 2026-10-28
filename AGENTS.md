@@ -34,9 +34,9 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    receipt, 11a2 = B38, 11b6 another building for tonight (400 / 800 🪙), 11b6b "New in town" (2026-10-28). Done and on his
    phone, nothing to see: 11b1 the economy simulation (his answers: odds D, a missing collectible first, the 1 000 reserve
    except for the town's very first box, collections 30 / 12 / 6 / 4, the shop always visible), 11b2 the box records.
-   **Boxes (his pace 2026-10-27): only with the full contents – 11b3 the rules (built and reviewed 2026-10-28 ~07:15,
-   merged into `build/11`; nothing to see) → 11b5 the contents (postcards with sourced tips EN + SK, the night sky in code, town decorations,
-   his six cat accessories as layers) → 11b4 the shop last; his first box about 30 – 31 Oct; each step on his word. Tell
+   **Boxes (his pace 2026-10-27): only with the full contents – 11b3 the rules and 11b5 the contents (30 postcards
+   with sourced tips, his six cat accessories, 12 town decorations, 4 night skies; Settings → Developer → "Box contents" shows
+   them) built and reviewed 2026-10-28, merged into `build/11`, NOT on his phone yet (install on his word) → 11b4 the shop last; his first box about 30 – 31 Oct; each step on his word. Tell
    him where the boxes stand whenever a step ends.** Then one real night, version 11, the testers (about 1 – 2 Nov), the
    PR `build/11` → `main` (he merges; he merged PR #1 mid-build on 2026-10-26). His worry "it must not get mixed up" →
    records, not counters (§10 REL). Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered;
