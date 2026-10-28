@@ -29,31 +29,19 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 11 is in work since 2026-10-25 (his word; plan §10 REL "Build 11", §0b row 11).** His final answers are on the
-   build 11 page (v92). **11a the coin receipt and 11a2 = B38 (no tab bar on the result) are done and confirmed by him**
-   (the nap 25 Oct, the night 25 → 26), committed on `build/11` (pushed; he merged PR #1 into `main` mid-build on 2026-10-26 ~11:45 – the next PR when the build is finished).
-   **11b6 (another building for tonight) pulled forward – his "condition of today" (2026-10-26 ~07:45):** during the setup,
-   400 🪙 then 800 🪙, at most two a night, the evening draw's pool – **built and reviewed ~09:05** (SleepCore 428, app
-   572, i18n 774 – green; screenshots `build/11b6/`) – **on his phone since 2026-10-26 11:39**; **works in the real night
-   26 → 27** (400 + 800, then the fountain park he already had – his verdict "it did not pay off"; why: plan §12
-   2026-10-27) → **his choice ~06:45: the draw stays as it is; 11b6b adds only the label "New in town" during the setup – built and
-   reviewed ~07:45, merged into `build/11`, **on his phone since 2026-10-27 07:48** – tonight his first look; on
-   2026-10-28 morning pull the store (the night's building, any draws).** **Boxes (his pace 2026-10-27 ~08:00): only with
-   the full contents – 11b2 the records → 11b3 the rules → 11b5 the contents → 11b4 the shop last; his first box about
-   30 – 31 Oct; each step on his word, in a clean session. Tell him where the boxes stand whenever a step ends.**
-   **11b2 (the box records, nothing visible) built and reviewed 2026-10-27 ~08:30, merged into `build/11`, **on his
-   phone since 08:40 (the store migration checked there)**; next 11b3 (the rules) on his word. **11b1 (the economy simulation, no app change) built and reviewed ~12:15, merged into `build/11`;** his
-   answers read 2026-10-26 ~13:55 (odds D, a missing collectible first, the 1 000 reserve except for the town's very
-   first box, collections 30 / 12 / 6 / 4, the shop always visible – plan §10 REL 11b) → **11b2 (the records) on his word.**
-   Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is
-   his click.
-   The cat accessories proof is done; his pick: nightcap, top hat, builder's helmet, sunglasses, bowl with a fish, rug.
-   **His 11b answers 2026-10-25 ~11:50** (plan §10 REL 11b): one box a day after a complete night + the 20 / 40 / 60 % tiers,
-   none after the 9th, floor 400 🪙, the reroll once a night for 100 🪙, cat accessories (Kenney 3D on the cat, a proof sheet
-   first) and the night sky (code, no art) already in build 11.
-   His worry "it must not get mixed up" → the rule in §10 REL: records, not counters; the data model first; month tests.
-   Build 10 (finished 2026-10-24) is in Kamaráti and SE – 0 installs on 25 Oct morning; his ticks c8 / c9 on the build 10
-   page still open (`state/answers` v7).
+1. **Build 11 is in work since 2026-10-25 (his word; plan §10 REL "Build 11", §0b row 11). Cut on 2026-10-28 (his pick):
+   build 11 = the boxes – 11c nights off → build 13, 11d accessibility → build 12.** Done and confirmed by him: 11a the coin
+   receipt, 11a2 = B38, 11b6 another building for tonight (400 / 800 🪙), 11b6b "New in town" (2026-10-28). Done and on his
+   phone, nothing to see: 11b1 the economy simulation (his answers: odds D, a missing collectible first, the 1 000 reserve
+   except for the town's very first box, collections 30 / 12 / 6 / 4, the shop always visible), 11b2 the box records.
+   **Boxes (his pace 2026-10-27): only with the full contents – 11b3 the rules (built and reviewed 2026-10-28 ~07:15,
+   merged into `build/11`; nothing to see) → 11b5 the contents (postcards with sourced tips EN + SK, the night sky in code, town decorations,
+   his six cat accessories as layers) → 11b4 the shop last; his first box about 30 – 31 Oct; each step on his word. Tell
+   him where the boxes stand whenever a step ends.** Then one real night, version 11, the testers (about 1 – 2 Nov), the
+   PR `build/11` → `main` (he merges; he merged PR #1 mid-build on 2026-10-26). His worry "it must not get mixed up" →
+   records, not counters (§10 REL). Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered;
+   protecting `main` on GitHub is his click. Build 10 is in Kamaráti and SE; his ticks c8 / c9 on the build 10 page are
+   still open (`state/answers` v7).
 2. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
    and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (up to
    48 h). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
@@ -61,8 +49,8 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 3. **His streak:** the night of 2026-10-15 → 16 collapsed (one trip of 13.15s; Notification Center counts as leaving on
    iOS 26); the silver joker saved it (1 000 🪙). October's bronze and silver are used and he will not buy the gold – the
    next failed night this month breaks the streak. Be kind about it.
-4. **Later builds:** 11b the economy + mystery boxes (coins only), 11c nights off, 11d accessibility (incl. 10h's
-   `ThickProgressStyle`); statistics, the bug list and Plans → build 13 (his answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 12):** the store and TestFlight
+4. **Later builds:** 12 polishing + accessibility (11d, incl. 10h's `ThickProgressStyle`; moved 2026-10-28); 13 nights off
+   (11c, moved 2026-10-28) + statistics, the bug list and Plans (his answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 12):** the store and TestFlight
    texts are done (plan §12); the guide's first page and the Strict-mode footer wait for build 12; the testers' answers about
    missing notifications decide a stronger gentle mode. Still open: the eight questions at the end of
    `docs/NAVRH-MESTO-STATISTIKY.md`; from 2026-10-14 the seller name on the Business page, "a little tuning of the home screen

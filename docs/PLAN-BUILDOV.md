@@ -1,6 +1,6 @@
 # SleepHole – plán podľa buildov
 
-Stav k 27. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdrojom pravdy anglický plán
+Stav k 28. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdrojom pravdy anglický plán
 `docs/IMPLEMENTATION_PLAN.md`, kapitola §0b; keď sa zmení tam, zmení sa aj tu.
 
 ## Ako pracujeme
@@ -24,9 +24,9 @@ Stav k 27. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 | 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
 | 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | hotový – ostrá noc 18.→19. 10. bez chyby, commitnutý, nahratý ako 1.0 (9) 19. 10., u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky); ďalej návod pre Apple na čistom telefóne, potom build 9 namiesto 7 na kontrolu |
 | 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | **hotový 24. 10.** – ostrá noc 23.→24. 10. bez chyby, commitnutý, nahratý ako 1.0 (10), u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky), build 7 stiahnutý z kontroly a **1.0 (10) odoslaná na kontrolu u Apple** s ručným vydaním |
-| 11 | **Nové veci:** prístupnosť, ekonomika so škatuľami a voľné noci | **rozrobený od 25. 10.** (tvoje slovo) – 11a a 11a2 potvrdené tebou, 11b6 v telefóne od 26. 10. 11:39, v noci 26. → 27. 10. funguje; 11b6b štítok „Nová v meste“ v telefóne od 27. 10. 07:48; 11b1 prepočet mincí hotový (26. 10.), tvoje odpovede zapísané; ďalej 11b2–11b5, 11c, 11d |
-| 12 | **Doladenie** (+ jasne povedať, na čo appka je) | návrh |
-| 13 | **Nové veci:** mesto | návrh |
+| 11 | **Nové veci:** ekonomika so škatuľami (zúžený 28. 10.: prístupnosť → 12, voľné noci → 13) | **rozrobený od 25. 10.** (tvoje slovo) – 11a, 11a2, 11b6 aj 11b6b potvrdené tebou; 11b1 prepočet a 11b2 záznamy hotové; **11b3 pravidlá škatúľ hotové 28. 10. ~07:15**; ďalej 11b5 obsah a 11b4 obchod; prvá škatuľa asi 30. – 31. 10., testerom asi 1. – 2. 11. (odhad) |
+| 12 | **Doladenie** + prístupnosť (+ jasne povedať, na čo appka je) | návrh |
+| 13 | **Nové veci:** mesto a voľné noci | návrh |
 | 14 | **Doladenie** | návrh |
 | 15 | **Nové veci:** živé mesto | návrh |
 | Neskôr | nápady bez čísla buildu | zásobník |
@@ -116,7 +116,9 @@ B12, B13, B14, B15, B16, B22 a B26.
 
 Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Aplikácie → SleepHole. Neskorší začiatok nemá vlastnú pokutu: príprava beží od začiatku a pokojné hodiny sa rátajú až od jej konca, takže neskorší štart prinesie menej mincí. „Dnešný budík“ (B) si nechcel; druhý rozvrh (D) nie – namiesto neho voľné noci (E) v builde 11.
 
-## Build 11 – Nové veci: prístupnosť, ekonomika so škatuľami a voľné noci (rozrobený od 25. 10.)
+## Build 11 – Nové veci: ekonomika so škatuľami (rozrobený od 25. 10.)
+
+**Zúžený 28. 10. (tvoja voľba):** build 11 budú škatule a to, čo je už hotové. Prístupnosť (11d) ide do buildu 12 – je to doladenie, nie nová funkcia. Voľné noci (11c) idú do buildu 13. S celým pôvodným rozsahom by build išiel testerom asi 7. – 10. 11., len so škatuľami asi 1. – 2. 11. (odhad).
 
 **Tvoj rozsah 22. 10.:** prístupnosť, kontrola ekonomiky s tajomnými škatuľami za mince a dva voľné dni v týždni – „to asi bude dosť na jeden build“. **Začal sa 25. 10. ráno na tvoje slovo** (build 10 je u testerov a na kontrole u Apple). Podrobný návrh s otázkami: stránka https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo.
 
@@ -135,10 +137,10 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 | 11a | nové | účet mincí po noci – každá časť mincí na vlastnom riadku (tvoj nápad 22. 10.) | ✅ hotový, v telefóne od 25. 10. 11:40, **potvrdený tebou po noci 26. 10.** (100 + 30 + 35 = 165) |
 | 11a2 | oprava | B38: na výsledku noci sa skryje spodná lišta, „Pokračovať“ je vždy celé vidno (tvoj krok 25. 10.) | ✅ hotový, v telefóne od 25. 10. 12:28, **potvrdený tebou** na odpočinku 25. 10. aj na výsledku noci 26. 10. |
 | 11b6 | nové | **iná budova na dnešnú noc** (tvoj krok 26. 10., „podmienka dnešného dňa“): počas setupu noci tlačidlo „Iná budova“ – prvý žreb 400 🪙, druhý 800 🪙, potom v tú noc už nie (číslo sa môže neskôr zmeniť); vyberá sa ako pri večernom žrebe (úrovne rovnako, najprv budovy, ktoré ešte nemáš), nikdy budova, ktorá už v tú noc padla; mince sa minú, aj keby sa noc nepodarila; testovacia noc zdarma | hotový a skontrolovaný 26. 10. ~09:05, **v telefóne od 26. 10. 11:39**; **v noci 26. → 27. 10. funguje**: dva žreby (400 + 800 🪙), potom už žiadny. Tvoje hodnotenie: „neoplatilo sa“. Večerný žreb ti dal Múzeum B, jedinú budovu úrovne 2, ktorú si ešte nemal. Prvý žreb dal dom úrovne 1, druhý park s fontánou, ktorý už máš. Tvoja voľba 27. 10.: žreb ostáva, ako je; pribudne len štítok „Nová v meste“ (11b6b). |
-| 11b6b | nové | **štítok „Nová v meste“** (tvoja voľba 27. 10. po prvých žreboch): počas setupu noci sa pri mene dnešnej budovy ukáže štítok, keď ju v meste ešte nemáš – aby si novú budovu omylom nevymenil; žreb ostáva náhodný ako večerný, 400 / 800 🪙 | hotový a skontrolovaný 27. 10. ~07:45, **v telefóne od 27. 10. 07:48** – dnes večer ho uvidíš pri príprave noci |
-| 11b | nové | ekonomika po malých krokoch: 11b1 prepočet mincí, 11b2 záznamy (nákup škatule, žolík zo škatule), 11b3 pravidlá (cena, šance, losovanie), 11b4 obchod a otvorenie, 11b5 obsah (pohľadnice, ozdoby, doplnky mačky, nočná obloha), 11b6 nový žreb za mince (vytiahnutý dopredu, riadok vyššie) | tvoje odpovede 25. 10. sú zapísané; **11b1 hotový 26. 10. ~12:15**, tvoje odpovede k nemu 26. 10. ~13:55 (šance D, najprv vec, ktorú ešte nemáš, rezerva 1 000 okrem prvej škatule, zbierky 30 / 12 / 6 / 4); **11b2 záznamy hotový 27. 10. ~08:30, v telefóne od 08:40** (nič neuvidíš; tvoje mesto sa s novou tabuľkou škatúľ otvorilo celé); ďalej 11b3 pravidlá na tvoje slovo |
-| 11c | nové | voľné noci: najviac 2 dni v týždni, len bez prísneho režimu; začneš 18:00–3:00; 75 % vlastného rozvrhu hotová budova, 50 % rozostavaná, menej nič; víkendové stavby | odpovede hotové |
-| 11d | nové | prístupnosť: VoiceOver, väčšie písmo, obmedzený pohyb, nielen farbou, kontrast; potom vyplniť v App Store Connect | návrh |
+| 11b6b | nové | **štítok „Nová v meste“** (tvoja voľba 27. 10. po prvých žreboch): počas setupu noci sa pri mene dnešnej budovy ukáže štítok, keď ju v meste ešte nemáš – aby si novú budovu omylom nevymenil; žreb ostáva náhodný ako večerný, 400 / 800 🪙 | hotový a skontrolovaný 27. 10. ~07:45, v telefóne od 27. 10. 07:48; **potvrdený tebou 28. 10.** („tlačidlo s novými budovami funguje dobre“) – v noci 27. → 28. 10. si dvoma žrebmi (400 + 800 🪙) vymenil dve nové budovy úrovne 1 za nové Múzeum B (úroveň 2) |
+| 11b | nové | ekonomika po malých krokoch: 11b1 prepočet mincí, 11b2 záznamy (nákup škatule, žolík zo škatule), 11b3 pravidlá (cena, šance, losovanie), 11b4 obchod a otvorenie, 11b5 obsah (pohľadnice, ozdoby, doplnky mačky, nočná obloha), 11b6 nový žreb za mince (vytiahnutý dopredu, riadok vyššie) | tvoje odpovede 25. 10. sú zapísané; **11b1 hotový 26. 10. ~12:15**, tvoje odpovede k nemu 26. 10. ~13:55 (šance D, najprv vec, ktorú ešte nemáš, rezerva 1 000 okrem prvej škatule, zbierky 30 / 12 / 6 / 4); **11b2 záznamy hotový 27. 10. ~08:30, v telefóne od 08:40** (nič neuvidíš; tvoje mesto sa s novou tabuľkou škatúľ otvorilo celé); **11b3 pravidlá hotové a skontrolované 28. 10. ~07:15** (cena, rezerva, jedna denne, deväť mesačne, šance D, losovanie, šťastná noc ×2 – aj v týždennom denníku a štatistikách); v telefóne zatiaľ nič neuvidíš; ďalej 11b5 obsah a 11b4 obchod |
+| 11c | nové | voľné noci: najviac 2 dni v týždni, len bez prísneho režimu; začneš 18:00–3:00; 75 % vlastného rozvrhu hotová budova, 50 % rozostavaná, menej nič; víkendové stavby | **presunuté do buildu 13** (tvoja voľba 28. 10.); odpovede hotové |
+| 11d | nové | prístupnosť: VoiceOver, väčšie písmo, obmedzený pohyb, nielen farbou, kontrast; potom vyplniť v App Store Connect | **presunuté do buildu 12** (tvoja voľba 28. 10.) |
 
 **Lootbox?** Nie, kým sa mince nedajú kúpiť (žiadne nákupy v appke – pevné pravidlo): škatule otvárané menou, ktorá sa dá len zarobiť, nie sú hazard. Pravdepodobnosti aj tak ukážeme vždy.
 
@@ -146,12 +148,16 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 
 ## Build 12 – Doladenie (návrh)
 
-Opravy po builde 11 a chyby, ktoré sa medzitým nájdu. (B38 si 25. 10. presunul do buildu 11 ako krok 11a2.)
+Opravy po builde 11 a chyby, ktoré sa medzitým nájdu. (B38 si 25. 10. presunul do buildu 11 ako krok 11a2.) „Zrušiť noc“ je počas prípravy noci schované pod spodnou lištou na iPhone 17e aj 16 Pro.
+
+**Prístupnosť (z buildu 11, tvoja voľba 28. 10.):** VoiceOver (aj hrubý pásik postupu z 10h), väčšie písmo, obmedzený pohyb, nielen farbou, kontrast; potom v App Store Connect vyplniť len to, čo naozaj funguje (tvoje kliky alebo tvoje áno).
 
 **Návrh: jasne povedať, na čo appka je (tvoj nápad 24. 10.).** Testeri čakajú, že appka bude fungovať sama alebo brať spánok z hodiniek, a v miernom režime im „nechodia upozornenia“. Do appky jedna jasná veta: SleepHole spánok nemeria, učí chodiť spať načas, každú noc spúšťaš sám a hodinky netreba. Patrí na prvú stranu sprievodcu a pod prísny režim v Nastaveniach, kde treba dopísať, čo mierny režim nestráži. Ešte skôr to patrí do popisu v App Store a v TestFlighte – to nepotrebuje build, stačia tvoje kliky pri builde 10. Silnejší mierny režim (druhé pokojné pripomenutie, ráno ukázať, koľko si v noci bol na telefóne) počká na podrobnosti od testerov.
 
 
 ## Build 13 – Nové veci: mesto (návrh)
+
+**Voľné noci (z buildu 11, tvoja voľba 28. 10.):** najviac 2 dni v týždni, len bez prísneho režimu; začneš 18:00–3:00, bez budíka, potvrdiť do 14:00; 75 % vlastného rozvrhu hotová budova, 50 % rozostavaná, menej nič; víkendové stavby. Tvoje odpovede sú hotové.
 
 Pohľad na mesto (B30) sa presunul do buildu 10. **Z buildu 11 sem prišli (25. 10.):** mesačný kalendár, detail noci, graf so štyrmi farbami, zoznam chýb a Plány vo Vývoji. Viac
 budov úrovne 3 – dnes sa ich päť opakuje. Ostrov, ktorého pobrežie kopíruje mesto (čaká na tvoju odpoveď: voda
