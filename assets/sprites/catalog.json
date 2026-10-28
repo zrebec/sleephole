@@ -1,6 +1,246 @@
 [
   {
     "anchor" : [
+      0.399,
+      0.308
+    ],
+    "file" : "L0\/d-bench-lamp.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-bench-lamp",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Bench and lamp",
+    "nameSK" : "Lavička s lampou",
+    "size" : [
+      357,
+      255
+    ]
+  },
+  {
+    "anchor" : [
+      0.416,
+      0.357
+    ],
+    "file" : "L0\/d-campfire.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-campfire",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Campfire and tent",
+    "nameSK" : "Ohnisko so stanom",
+    "size" : [
+      363,
+      242
+    ]
+  },
+  {
+    "anchor" : [
+      0.375,
+      0.275
+    ],
+    "file" : "L0\/d-cat-statue.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-cat-statue",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Sleeping cat statue",
+    "nameSK" : "Socha spiacej mačky",
+    "size" : [
+      380,
+      287
+    ]
+  },
+  {
+    "anchor" : [
+      0.356,
+      0.25
+    ],
+    "file" : "L0\/d-clock-tower.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-clock-tower",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Clock tower",
+    "nameSK" : "Hodinová veža",
+    "size" : [
+      400,
+      314
+    ]
+  },
+  {
+    "anchor" : [
+      0.438,
+      0.37
+    ],
+    "file" : "L0\/d-flower-bed.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-flower-bed",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Flower bed",
+    "nameSK" : "Kvetinový záhon",
+    "size" : [
+      326,
+      213
+    ]
+  },
+  {
+    "anchor" : [
+      0.459,
+      0.41
+    ],
+    "file" : "L0\/d-fountain.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-fountain",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Fountain",
+    "nameSK" : "Fontána",
+    "size" : [
+      311,
+      192
+    ]
+  },
+  {
+    "anchor" : [
+      0.393,
+      0.296
+    ],
+    "file" : "L0\/d-gazebo.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-gazebo",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Gazebo",
+    "nameSK" : "Altánok",
+    "size" : [
+      478,
+      342
+    ]
+  },
+  {
+    "anchor" : [
+      0.335,
+      0.225
+    ],
+    "file" : "L0\/d-pines.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-pines",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Pine grove",
+    "nameSK" : "Smrekový hájik",
+    "size" : [
+      428,
+      352
+    ]
+  },
+  {
+    "anchor" : [
+      0.4,
+      0.309
+    ],
+    "file" : "L0\/d-sign.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-sign",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "SleepHole sign",
+    "nameSK" : "Tabuľa SleepHole",
+    "size" : [
+      357,
+      255
+    ]
+  },
+  {
+    "anchor" : [
+      0.368,
+      0.265
+    ],
+    "file" : "L0\/d-stall.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-stall",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Market stall",
+    "nameSK" : "Trhový stánok",
+    "size" : [
+      388,
+      297
+    ]
+  },
+  {
+    "anchor" : [
+      0.377,
+      0.276
+    ],
+    "file" : "L0\/d-well.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-well",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Wishing well",
+    "nameSK" : "Studňa prianí",
+    "size" : [
+      378,
+      284
+    ]
+  },
+  {
+    "anchor" : [
+      0.372,
+      0.27
+    ],
+    "file" : "L0\/d-windmill.png",
+    "footprint" : [
+      1,
+      1
+    ],
+    "id" : "d-windmill",
+    "kind" : "decoration",
+    "level" : 0,
+    "nameEN" : "Windmill",
+    "nameSK" : "Veterný mlyn",
+    "size" : [
+      384,
+      292
+    ]
+  },
+  {
+    "anchor" : [
       0.334,
       0.209
     ],
