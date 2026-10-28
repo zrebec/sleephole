@@ -33,7 +33,8 @@ public enum TownBuilder {
     public static func build(results: [NightResult], catalog: Catalog) -> TownSnapshot {
         var town = TownSnapshot()
         for r in results.sorted(by: { $0.key < $1.key }) {
-            guard r.outcome != .missed, r.outcome != .excused, let id = r.buildingId, let entry = catalog[id] else { continue }
+            guard r.outcome != .missed, r.outcome != .excused, let id = r.buildingId, let entry = catalog[id],
+                  entry.kind != .decoration else { continue }          // a decoration is never a building
             switch (entry.kind, r.outcome) {
             case (.roadLit, .complete), (.roadLit, .unfinished):
                 town.layout.upgradeStreets()                       // "Osvetlená ulica" lights streets

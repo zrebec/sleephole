@@ -11,7 +11,7 @@ struct SupportTests {
 
     @Test func spriteLibraryLoadsAndCaches() throws {
         let catalog = try #require(sprites.catalog)
-        #expect(catalog.entries.count == 190)
+        #expect(catalog.entries.count == 202)
         let a = try #require(sprites.image(for: "l3-police"))
         #expect(sprites.image(for: "l3-police") === a)
         #expect(sprites.image(for: "nope") == nil)
