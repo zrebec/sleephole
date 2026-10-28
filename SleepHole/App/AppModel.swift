@@ -1475,6 +1475,15 @@ final class AppModel {
         }
     }()
 
+    /// Dev aid: `-buddyOutfit nightcap,sunglasses,fish-bowl` dresses the cat (Debug only; `DevArgs` is empty in Release).
+    static let forcedBuddyOutfit: CatOutfit = {
+        guard let v = DevArgs.value(after: "-buddyOutfit") else { return .none }
+        return CatOutfit(ids: v.split(separator: ",").map(String.init))
+    }()
+
+    /// What the cat on Today wears. Today only the dev argument; the owner's choice (11b4) replaces it here.
+    var buddyOutfit: CatOutfit { Self.forcedBuddyOutfit }
+
     /// The reaction the next tap on the cat gives (plan P2b). Session state only – never stored, never in a backup.
     @ObservationIgnored private var nextBuddyReaction = BuddyReaction.purr
 

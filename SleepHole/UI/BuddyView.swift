@@ -22,6 +22,9 @@ struct BuddyView: View {
     var onPet: (() -> BuddyReaction?)?
     /// Dev aid / tests: shows this reaction's hold frame (hearts, sparkle) without playing anything.
     var hold: BuddyReaction?
+    /// What the cat wears (box prizes, step 11b5b): transparent layers stacked over both frame images, inside the same
+    /// breathing / wobble transforms. `.none` draws nothing extra.
+    var outfit: CatOutfit = .none
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
@@ -35,6 +38,8 @@ struct BuddyView: View {
         case wink                                   // one eye closed, head tilted
         case arch1 = "arch-1", arch2 = "arch-2"     // standing tall on stretched legs, tail puffed: half / full
         var imageName: String { "buddy-cat-\(rawValue)" }
+        /// The layer of an accessory for this frame (`buddy-acc-<id>-<pose>`): same canvas, so it stacks exactly.
+        func accessoryImageName(_ id: String) -> String { "buddy-acc-\(id)-\(rawValue)" }
     }
 
     /// The frame that is fully shown, and the next one that fades in over it.
@@ -92,8 +97,10 @@ struct BuddyView: View {
         static let catWidth = 0.376
     }
 
-    init(state: BuddyState, cloud: Bool = false, onPet: (() -> BuddyReaction?)? = nil, hold: BuddyReaction? = nil) {
+    init(state: BuddyState, cloud: Bool = false, onPet: (() -> BuddyReaction?)? = nil, hold: BuddyReaction? = nil,
+         outfit: CatOutfit = .none) {
         self.state = state
+        self.outfit = outfit
         self.cloud = cloud
         self.onPet = onPet
         self.hold = hold
@@ -125,7 +132,7 @@ struct BuddyView: View {
             .onTapGesture { tap() }
             .allowsHitTesting(onPet != nil)                 // a plain buddy stays a decoration (the night is calm)
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(state == .awake ? L("Your cat is looking at you") : L("Your sleepy cat"))
+            .accessibilityLabel(Self.accessibilityText(state: state, outfit: outfit))
             .accessibilityAddTraits(tappable ? .isButton : [])
             .accessibilityHint(tappable ? L("Tap to pet your cat") : "")
             .accessibilityAction(.default) { tap() }
@@ -148,6 +155,21 @@ struct BuddyView: View {
             }
     }
 
+    /// The accessories of the outfit for one frame, back to front (bed, face, head).
+    @ViewBuilder
+    private func outfitLayers(pose: Pose, width w: CGFloat, height h: CGFloat) -> some View {
+        ForEach(outfit.layers, id: \.self) { id in
+            Image(pose.accessoryImageName(id)).resizable().frame(width: w, height: h)
+        }
+    }
+
+    /// The accessibility label: the cat's state, plus what it wears.
+    static func accessibilityText(state: BuddyState, outfit: CatOutfit) -> String {
+        let base = state == .awake ? L("Your cat is looking at you") : L("Your sleepy cat")
+        let worn = CollectibleText.wearing(outfit)
+        return worn.isEmpty ? base : base + ". " + worn
+    }
+
     /// The whole canvas, bottom-aligned to the layout box (`boxHeight` is shorter by the headroom), so that only the
     /// arch frames reach above it.
     @ViewBuilder
@@ -159,7 +181,9 @@ struct BuddyView: View {
             BreathingStack(asleep: breathing == .asleep, still: !animated) {
                 ZStack {
                     Image(shown.imageName).resizable().frame(width: w, height: h)
+                    outfitLayers(pose: shown, width: w, height: h)
                     Image(top.imageName).resizable().frame(width: w, height: h).opacity(topOpacity)
+                    outfitLayers(pose: top, width: w, height: h).opacity(topOpacity)
                 }
             }
             .rotationEffect(.degrees(wobbleAngle), anchor: UnitPoint(x: Spot.head.x, y: 0.8))
