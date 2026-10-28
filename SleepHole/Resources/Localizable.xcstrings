@@ -1289,6 +1289,22 @@
         }
       }
     },
+    "Lucky night ×2": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lucky night ×2"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Šťastná noc ×2"
+          }
+        }
+      }
+    },
     "No pause +%lld, every calm hour +%lld, every %lldth finished night in a row +%lld.": {
       "localizations": {
         "en": {

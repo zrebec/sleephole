@@ -119,7 +119,7 @@ public enum Jokers {
                         usedMonths.insert(Month(key))
                         excuse(key)
                     } else if run > 0, let box = boxes.filter({
-                        if case .joker(.bronze) = $0.prize { return !usedBoxIds.contains($0.id) && Boxes.isValid($0, at: key, calendar: calendar) }
+                        if Boxes.wonJoker($0) == .bronze { return !usedBoxIds.contains($0.id) && Boxes.isValid($0, at: key, calendar: calendar) }
                         return false
                     }).min(by: { (Boxes.expiry(of: $0, calendar: calendar), $0.nightKey, $0.id)
                         < (Boxes.expiry(of: $1, calendar: calendar), $1.nightKey, $1.id) }) {
@@ -155,7 +155,7 @@ public enum Jokers {
                              boxId: String? = nil, boxes: [BoxPurchase] = [], calendar: Calendar = .current) -> Block? {
         if let boxId {
             let usable = boxes.contains {
-                $0.id == boxId && $0.prize == .joker(tier) && tier != .gold && Boxes.isValid($0, at: firstNight, calendar: calendar)
+                $0.id == boxId && Boxes.wonJoker($0) == tier && Boxes.isValid($0, at: firstNight, calendar: calendar)
             } && !uses.contains { $0.boxId == boxId }
             return usable ? nil : .notHeldFromBox
         }
