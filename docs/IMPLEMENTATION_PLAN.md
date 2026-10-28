@@ -3364,6 +3364,14 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         spiacej mačky" like the rest of the app. Screenshots (5 and 38 buildings) checked. Opus's runs: SleepCore 496 / 0,
         app 591 / 0, i18n 847 keys 0 / 0 / 0. Committed on `step/11b5c-town-decorations` (`a445dfa` the sprites,
         `a889d50` the code), merged into `build/11`. Next: 11b5d the night skies.
+        **11b5d (the night skies) done ~13:20:** `NightSkies` in SleepCore (the table `sky-NN` → effect, the
+        shooting-star schedule, the comet's crossing, the constellation's stars – tested), `NightSkyDrawing` on
+        `LivingSky`'s canvas after the stars (scaled by the stars' opacity – night only; a still frame when paused /
+        Reduce Motion), on Today and the Town tab only; `AppModel.nightSky` = for now only the Debug-only `-nightSky`
+        (+ `-skyClock` for screenshots), 11b4 replaces it. Review round 1: the aurora toned down (0.42 → 0.28, fades out
+        above the title), the shooting star brighter. Opus's runs: SleepCore 501 / 0, app 594 / 0, i18n 851 keys
+        0 / 0 / 0. Committed on `step/11b5d-night-skies`, merged into `build/11`. Next: 11b5e the Debug "Box contents"
+        screen.
   - [ ] **11c – nights off → moved to build 13 (his pick 2026-10-28: build 11 = the boxes; §0b row 13)** (rules on the
         build 11 page and §0b row 11): 11c1 the rules in `SleepCore` (the window
         18:00–03:00, confirming until 14:00, the 75 % / 50 % thresholds, a skipped off night neither breaks nor grows the
