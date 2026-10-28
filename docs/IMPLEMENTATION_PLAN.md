@@ -3353,6 +3353,17 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         with one failure of the known flaky `SyncEngineTests.theTriesStop…` (untouched code; alone it failed 1 of 3
         runs – more often than before: a fix belongs to build 12's polishing), i18n 847 keys 0 / 0 / 0. Committed on
         `step/11b5b-cat-accessories` (`1440546` the art, `01baa0f` the app), merged into `build/11`.
+        **11b5c (the town decorations) done ~12:05:** the 12 sprites installed (`decorations.py --install`:
+        `assets/sprites/L0/d-*.png`, 12 entries of the new kind `decoration` in `catalog.json`, the old entries
+        byte-identical); `CatalogEntry.Kind.decoration` is never buildable and `TownBuilder` skips it (tests: never a
+        building, placement, residents, park, achievement – also in the simulation's picker); `TownDecorations` = the
+        fixed table `decoration-NN` → sprite and the placement (grass outside the town only, never a grid road or a lot,
+        the front first, one free cell between two, the margin grows when needed; nothing stored – a decoration may move as
+        the town grows); `TownRender.build(…, decorations:)`; `AppModel` passes `Boxes.ownedInOrder(.decoration, …)`,
+        `recordBox` rebuilds the town, Debug-only `-showAllDecorations`. The statue is "Sleeping cat statue" / "Socha
+        spiacej mačky" like the rest of the app. Screenshots (5 and 38 buildings) checked. Opus's runs: SleepCore 496 / 0,
+        app 591 / 0, i18n 847 keys 0 / 0 / 0. Committed on `step/11b5c-town-decorations` (`a445dfa` the sprites,
+        `a889d50` the code), merged into `build/11`. Next: 11b5d the night skies.
   - [ ] **11c – nights off → moved to build 13 (his pick 2026-10-28: build 11 = the boxes; §0b row 13)** (rules on the
         build 11 page and §0b row 11): 11c1 the rules in `SleepCore` (the window
         18:00–03:00, confirming until 14:00, the 75 % / 50 % thresholds, a skipped off night neither breaks nor grows the
