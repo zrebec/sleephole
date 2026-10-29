@@ -1,8 +1,10 @@
 import SleepCore
 import SwiftUI
 
-/// The "Boxes" tab (step 11b4a): today's mystery box, what a box can hold with the odds, and the price rule. Boxes cost
+/// The "Parcels" tab (step 11b4a): today's mystery box, what a box can hold with the odds, and the price rule. Boxes cost
 /// coins only; the shop is always visible – at 0 coins too – and never pushes (no countdown, no near-miss).
+/// On screen a box is a "parcel" (Slovak "balíček", step 11b4a2): the owner said on 2026-10-29 that the Slovak word for
+/// a box is vulgar slang, and so is "box" in American English. The code, the records and the backup keep "box".
 struct BoxShopView: View {
     @Environment(AppModel.self) private var model
     @State private var confirming = false
@@ -31,7 +33,7 @@ struct BoxShopView: View {
             }
             }
             .skyBackground()
-            .navigationTitle(L("Boxes"))
+            .navigationTitle(L("Parcels"))
         }
     }
 
@@ -40,37 +42,37 @@ struct BoxShopView: View {
     @ViewBuilder
     private func todayCard(_ offer: BoxOffer, boxes: [BoxPurchase]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(L("Today's box")).font(.headline)
+            Text(L("Today's parcel")).font(.headline)
             Text(L("Your coins: \(model.coins) 🪙")).font(.subheadline.monospacedDigit()).cardCaption()
             switch offer {
             case .available(let price, let boxNumber):
-                Text(L("Box \(boxNumber) of \(BoxRules.maxPerMonth) this month")).font(.subheadline)
+                Text(L("Parcel \(boxNumber) of \(BoxRules.maxPerMonth) this month")).font(.subheadline)
                 Button { confirming = true } label: {
-                    Text(L("Buy a box for \(price) 🪙")).frame(maxWidth: .infinity).padding(.vertical, 6)
+                    Text(L("Buy a parcel for \(price) 🪙")).frame(maxWidth: .infinity).padding(.vertical, 6)
                 }
                 .glassButton(prominent: true)
                 .tint(.indigo)
-                .confirmationDialog(L("Buy this box?"), isPresented: $confirming, titleVisibility: .visible) {
+                .confirmationDialog(L("Buy this parcel?"), isPresented: $confirming, titleVisibility: .visible) {
                     Button(L("Buy")) { model.buyBox() }
                     Button(L("Cancel"), role: .cancel) {}
                 } message: {
                     Text(L("It costs \(price) 🪙 – \(model.coins - price) 🪙 stay."))
                 }
             case .notEnoughCoins(_, let missing, let boxNumber):
-                Text(L("\(missing) 🪙 to go to box \(boxNumber)")).font(.subheadline.bold())
+                Text(L("\(missing) 🪙 to go to parcel \(boxNumber)")).font(.subheadline.bold())
                 if !boxes.isEmpty {
                     Text(L("\(BoxRules.reserve) 🪙 always stay for a silver joker.")).font(.footnote).cardCaption()
                 }
             case .needsCompleteNight:
-                Text(L("A box opens on the morning after a complete night.")).font(.subheadline)
+                Text(L("A parcel opens on the morning after a complete night.")).font(.subheadline)
             case .alreadyBoughtToday:
                 if let box = model.todaysBox() {
                     BoxPrizeCard(box: box)
                     Divider()
                 }
-                Text(L("One box a day – the next one after your next complete night.")).font(.footnote).cardCaption()
+                Text(L("One parcel a day – the next one after your next complete night.")).font(.footnote).cardCaption()
             case .monthFull:
-                Text(L("Nine boxes this month. The next ones from \(Fmt.fullDate(nextMonth)).")).font(.subheadline)
+                Text(L("Nine parcels this month. The next ones from \(Fmt.fullDate(nextMonth)).")).font(.subheadline)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -88,14 +90,14 @@ struct BoxShopView: View {
 
     private func oddsCard(boxes: [BoxPurchase]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(L("What a box can hold")).font(.headline)
+            Text(L("What a parcel can hold")).font(.headline)
             ForEach(Array(BoxRules.odds.enumerated()), id: \.offset) { _, row in
                 oddsRow(row, boxes: boxes)
                 Divider()
             }
-            Text(L("A collection item is always a new one until you have the whole collection; after that a repeat turns into a quarter of the price in coins. A joker from a box lasts until the end of next month; a second one of the same kind also turns into a quarter of the price. Coins are earned only by sleeping – they can never be bought."))
+            Text(L("A collection item is always a new one until you have the whole collection; after that a repeat turns into a quarter of the price in coins. A joker from a parcel lasts until the end of next month; a second one of the same kind also turns into a quarter of the price. Coins are earned only by sleeping – they can never be bought."))
                 .font(.footnote).cardCaption().fixedSize(horizontal: false, vertical: true)
-            Text(L("Boxes 1–3 of a month cost 20% of your coins, boxes 4–6 cost 40%, boxes 7–9 cost 60% – never less than \(BoxRules.floorPrice) 🪙. At most nine a month."))
+            Text(L("Parcels 1–3 of a month cost 20% of your coins, parcels 4–6 cost 40%, parcels 7–9 cost 60% – never less than \(BoxRules.floorPrice) 🪙. At most nine a month."))
                 .font(.footnote).cardCaption().fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)

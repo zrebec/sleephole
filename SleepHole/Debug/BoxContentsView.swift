@@ -74,7 +74,7 @@ struct BoxContentsView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 16) {
-                Picker(L("Box contents"), selection: $section) {
+                Picker(L("Parcel contents"), selection: $section) {
                     ForEach(BoxContents.Section.allCases) { Text($0.title).tag($0) }
                 }
                 .pickerStyle(.menu)                 // a menu, not segments: four long names do not fit at large text sizes
@@ -88,7 +88,7 @@ struct BoxContentsView: View {
             }
             .padding(16)
         }
-        .navigationTitle(L("Box contents"))
+        .navigationTitle(L("Parcel contents"))
         .navigationBarTitleDisplayMode(.inline)
     }
 
