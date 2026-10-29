@@ -192,7 +192,7 @@ Opravy po buildoch 12 a 14.
 Dážď a sneh nad mestom, deň a noc so svetlami lámp a okien. Live Activity a Dynamic Island s odpočtom noci (najprv
 skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón len leží.
 
-**Tvoje nápady 29. 10. (návrh, čakajú na tvoje slovo):** hudba pri prezeraní mesta (tichá slučka len na záložke Mesto, vypínač v Nastaveniach, nikdy počas noci ani odpočinku, ~1 – 2 kroky); otáčanie mesta po 90° (každá budova vykreslená zo štyroch strán, najprv skúška vzhľadu, ~4 – 5 krokov). Ak ich chceš skôr, hudba sa zmestí ako malý build hneď po 13.
+**Tvoje nápady 29. 10. (návrh, čakajú na tvoje slovo):** hudba pri prezeraní mesta (tichá slučka len na záložke Mesto, vypínač v Nastaveniach, nikdy počas noci ani odpočinku, ~1 – 2 kroky); **otáčanie mesta po 90° má prednosť (tvoja voľba 29. 10.: v builde 16, možno 15)** (každá budova vykreslená zo štyroch strán, najprv skúška vzhľadu, ~4 – 5 krokov). Ak ich chceš skôr, hudba sa zmestí ako malý build hneď po 13.
 
 ## Neskôr (bez čísla buildu)
 
