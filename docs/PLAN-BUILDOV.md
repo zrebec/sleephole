@@ -25,8 +25,8 @@ Stav k 29. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 | 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
 | 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | hotový – ostrá noc 18.→19. 10. bez chyby, commitnutý, nahratý ako 1.0 (9) 19. 10., u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky); ďalej návod pre Apple na čistom telefóne, potom build 9 namiesto 7 na kontrolu |
 | 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | **hotový 24. 10.** – ostrá noc 23.→24. 10. bez chyby, commitnutý, nahratý ako 1.0 (10), u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky), build 7 stiahnutý z kontroly a **1.0 (10) odoslaná na kontrolu u Apple** s ručným vydaním |
-| 11 | **Nové veci:** iná budova na dnešnú noc, účet mincí; škatule vnútri bez obchodu | **u testerov od 29. 10. ~7:30** – nahratý ako 1.0 (11), „What to Test“ anglicky aj slovensky, Kamaráti aj SE; pull request do `main` čaká na tvoje zlúčenie |
-| 12 | **Nové veci:** škatule – obchod, otvorenie, zbierka | ďalší, na tvoje slovo; obsah aj pravidlá sú hotové už v builde 11; prvá škatuľa asi 31. 10. – 1. 11. (odhad) |
+| 11 | **Nové veci:** iná budova na dnešnú noc, účet mincí; škatule vnútri bez obchodu | **u testerov od 29. 10. ~7:30** – nahratý ako 1.0 (11), „What to Test“ anglicky aj slovensky, Kamaráti aj SE; pull request do `main` si zlúčil 29. 10. ráno |
+| 12 | **Nové veci:** škatule – obchod, otvorenie, zbierka | **v práci od 29. 10. ~9:55** – krok 11b4a (obchod a kúpa) v telefóne od 29. 10. 14:59, prvá škatuľa už 29. 10.; ďalej 11b4b otvorenie, 11b4c zbierka, 11b4d bublina, každý na tvoje slovo |
 | 13 | **Doladenie** + prístupnosť (+ jasne povedať, na čo appka je) | návrh |
 | 14 | **Nové veci:** mesto a voľné noci | návrh |
 | 15 | **Doladenie** | návrh |
@@ -150,9 +150,18 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 
 **Presunuté do buildu 13 (tvoja odpoveď 25. 10.):** mesačný kalendár, detail noci, graf so štyrmi farbami, zoznam chýb vo Vývoji, obrazovka Plánov.
 
-## Build 12 – Nové veci: škatule (ďalší)
+## Build 12 – Nové veci: škatule (v práci)
 
 **Tvoja voľba 29. 10.:** škatule dostanú vlastný build. Obsah (11b5), pravidlá (11b3) aj záznamy (11b2) sú hotové už v builde 11. Zostáva **11b4**: obchod so škatuľami (vždy viditeľný, aj pri 0 minciach: čo môže v škatuli byť, šance a koľko mincí ešte chýba), otvorenie (krátke, ťuknutím preskočiť), zbierka (pohľadnice, ozdoby, výber doplnkov mačky a oblohy) a bublina mačky, ktorá dnes zakrýva pelech. Pred kontrolou u Apple: vekové hodnotenie „Loot Boxes“ áno a odpoveď na „Simulated Gambling“ (tvoje áno). Päť otázok je na stránke prípravy. Začne sa na tvoje slovo, prvá škatuľa asi 31. 10. – 1. 11. (odhad).
+
+**Začatý 29. 10. ~9:55 (tvoje „Spusti 11b4a“).** Tvoje odpovede: obchod je vlastná záložka v spodnej lište, mačka škatuľu rozbalí, zbierka je v obchode, „Simulated Gambling“ nie, začať ešte dnes. Použitie žolíka zo škatule ide do 11b4c, prvá škatuľa hneď s 11b4a, zatiaľ bez mačky.
+
+| Krok | Čo | Stav |
+|---|---|---|
+| 11b4a | obchod a kúpa: záložka Škatule, dnešná škatuľa s cenou a potvrdením, šance všetkých 11 možností, výhra jasne napísaná | hotový a skontrolovaný ~11:27, **v telefóne od 29. 10. 14:59**; testy na stránke buildu 12: https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h |
+| 11b4b | otvorenie: mačka rozbalí škatuľu, ťuknutím preskočiť | na tvoje slovo |
+| 11b4c | zbierka v obchode + použitie žolíka zo škatule | na tvoje slovo |
+| 11b4d | bublina mačky sa posunie, keď má mačka niečo pri pelechu | na tvoje slovo |
 
 ## Build 13 – Doladenie a prístupnosť (návrh)
 
