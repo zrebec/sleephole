@@ -96,7 +96,7 @@ final class AppModel {
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
     ///   -showResult [unfinished]      SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
     ///                                 (with `unfinished`: of the newest unfinished one, which was confirmed 30 min after the alarm)
-    ///   -openTab town                 start on the Mesto tab
+    ///   -openTab town|boxes           start on the Mesto / Boxes tab
     ///   -openBoxContents [postcards|decorations|cat|skies]   DEBUG only: open Settings > Developer > Box contents at once (11b5e)
     ///   -boxCatFull                   DEBUG only: the Box contents cat starts with a full outfit (first head, face and bed item)
     ///   -boxCatAsleep                 DEBUG only: the Box contents cat starts asleep
@@ -109,6 +109,13 @@ final class AppModel {
     ///   -screenshot                   no permission alert, no first-run guide (use with a pulled store, tools/sim_shot.sh)
     ///   -thenTab 1|island|abandon|pause|warning   4 s after launch: select a tab / open the Town tab / cancel the
     ///                                 running night and close its result / start a pause once the setup is over
+    ///   -thenTab buybox               DEBUG only: 5 s after launch (4 s, then the tab opens and 1 s more) buy today's box (with -boxSeed N: that draw seed; needs a
+    ///                                 complete night of today – see -seedTodayNight)
+    ///   -seedTodayNight complete|unfinished|none   SIMULATOR ONLY, with -seedNights: force the newest seeded night (the one
+    ///                                 with today's key) to be complete / unfinished / absent (shop screenshots, 11b4a)
+    ///   -seedBoxBefore                SIMULATOR ONLY, with -seedNights: an earlier box (price 700, no prize coins) three days ago,
+    ///                                 so the shop shows the 1 000 🪙 reserve line (11b4a screenshots)
+    ///   -boxScroll / -boxConfirm      DEBUG only, Boxes tab: scroll to the odds list / open the buy confirmation (screenshots)
     ///   -thenTab reroll               (with a paying night) draw another building once, 4 s after launch
     ///   -rerollDialog                 open the "Another building" confirmation 2 s after the night screen shows
     ///   -expiresIn HOURS              pretend the provisioning profile runs out then (AppExpiry)
@@ -187,12 +194,21 @@ final class AppModel {
                 history.append(e.id)
                 let rec = NightRecord(window: w, buildingId: e.id, isDebug: false, setupGrace: 300)
                 rec.append(.started, at: w.bedtime)
-                let roll = Int.random(in: 0..<10, using: &rng)
+                var roll = Int.random(in: 0..<10, using: &rng)
+                if i == n - 1, let forced = value("-seedTodayNight") {   // the newest seeded night carries today's key
+                    if forced == "none" { continue }
+                    roll = forced == "unfinished" ? 0 : 5
+                }
                 rec.append(.confirmed, at: w.wake + (roll == 0 ? 30 * 60 : 60))
                 rec.outcomeRaw = roll == 9 ? Outcome.ruins.rawValue : roll == 0 ? Outcome.unfinished.rawValue
                     : Outcome.complete.rawValue
                 rec.finalizedAt = w.wake + 120
                 context.insert(rec)
+            }
+            if args.contains("-seedBoxBefore") {
+                let key = NightKey(date: cal.date(byAdding: .day, value: -3, to: Date())!, calendar: cal)
+                context.insert(BoxRecord(BoxPurchase(id: "seed-box", at: Date().addingTimeInterval(-3 * 86400), nightKey: key,
+                                                     price: 700, seed: 1, tableVersion: 1, prize: .coins, payout: 0)))
             }
             try? context.save()
         }
@@ -1087,6 +1103,37 @@ final class AppModel {
         context.insert(BoxRecord(purchase))
         save()
         rebuildTown()                                           // a won decoration appears in the town at once
+    }
+
+    // MARK: - the box shop (11b4a)
+
+    /// The day the shop looks at: today's date as a night key (the night that ended this morning has this key).
+    var boxDay: NightKey { NightKey(date: clock.now, calendar: calendar) }
+
+    /// What the shop may offer now. `coreResults()` holds only real finished nights (no naps, no test nights) after jokers,
+    /// so an excused night never opens a box.
+    func boxOffer() -> BoxOffer {
+        let day = boxDay
+        return BoxRules.offer(today: day, todaysNight: coreResults().last { $0.key == day }?.outcome,
+                              boxes: boxes(), balance: coins)
+    }
+
+    /// The box bought for today, if any.
+    func todaysBox() -> BoxPurchase? {
+        let day = boxDay
+        return boxes().last { $0.nightKey == day }
+    }
+
+    /// Buys today's box: re-checks the offer at this very moment and buys only on `.available`. The seed is random
+    /// (the system generator) unless a test or a Debug hook passes one. Returns nil, writing nothing, in every other case.
+    @discardableResult
+    func buyBox(seed: UInt64? = nil) -> BoxPurchase? {
+        guard case .available(let price, _) = boxOffer() else { return nil }
+        let purchase = BoxRules.purchase(id: UUID().uuidString, at: clock.now, nightKey: boxDay, price: price,
+                                         seed: seed ?? UInt64.random(in: .min ... .max), boxes: boxes(),
+                                         uses: jokerState.uses, calendar: calendar)
+        recordBox(purchase)
+        return purchase
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).

@@ -8,6 +8,7 @@ struct RootView: View {
         case "town": return 1
         case "stats": return 2
         case "settings": return 3
+        case "boxes": return 4
         default: return 0
         }
     }()
@@ -32,6 +33,7 @@ struct RootView: View {
         TabView(selection: $tab) {
             Tab(L("Today"), systemImage: "moon.stars.fill", value: 0) { TodayView().id(lang) }
             Tab(L("Town"), systemImage: "building.2.fill", value: 1) { TownTab().id(lang) }
+            Tab(L("Boxes"), systemImage: "gift.fill", value: 4) { BoxShopView().id(lang) }
             Tab(L("Stats"), systemImage: "chart.bar.fill", value: 2) { StatsView().id(lang) }
             Tab(L("Settings"), systemImage: "gearshape.fill", value: 3) { SettingsView().id(lang) }
         }
@@ -60,6 +62,11 @@ struct RootView: View {
                 model.startPause()
             } else if a[i + 1] == "reroll" {
                 model.rerollBuilding()                         // 11b6 screenshots: one draw during the setup
+            } else if a[i + 1] == "buybox" {
+                let seed = DevArgs.value(after: "-boxSeed", in: a).flatMap(UInt64.init)
+                tab = 4
+                try? await Task.sleep(for: .seconds(1))
+                model.buyBox(seed: seed)                       // 11b4a screenshots: today's box with a chosen draw
             } else if a[i + 1] == "warning" {
                 model.showNotificationSettings()
             } else if a[i + 1] == "abandon" {
