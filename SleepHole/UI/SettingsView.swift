@@ -320,7 +320,7 @@ struct SettingsView: View {
                 Section(L("Developer")) {
                     NavigationLink(L("Plans and proposals")) { PlansView() }
                     NavigationLink(L("Texts")) { TextsView() }
-                    NavigationLink(L("Box contents")) { BoxContentsView() }
+                    NavigationLink(L("Parcel contents")) { BoxContentsView() }
                     Button(L("Quick night (4 min, \(Int(AppModel.debugGrace))s setup)")) { model.startTestNight() }
                         .disabled(nightRunning)
                     Button(L("Test night (30 min, \(Int(AppModel.debugGrace))s setup)")) { model.startTestNight(minutes: 30) }

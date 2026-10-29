@@ -33,7 +33,7 @@ struct RootView: View {
         TabView(selection: $tab) {
             Tab(L("Today"), systemImage: "moon.stars.fill", value: 0) { TodayView().id(lang) }
             Tab(L("Town"), systemImage: "building.2.fill", value: 1) { TownTab().id(lang) }
-            Tab(L("Boxes"), systemImage: "gift.fill", value: 4) { BoxShopView().id(lang) }
+            Tab(L("Parcels"), systemImage: "gift.fill", value: 4) { BoxShopView().id(lang) }
             Tab(L("Stats"), systemImage: "chart.bar.fill", value: 2) { StatsView().id(lang) }
             Tab(L("Settings"), systemImage: "gearshape.fill", value: 3) { SettingsView().id(lang) }
         }
