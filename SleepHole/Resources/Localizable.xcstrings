@@ -14408,6 +14408,598 @@
           }
         }
       }
+    },
+    "Boxes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boxes"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Škatule"
+          }
+        }
+      }
+    },
+    "Today's box": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's box"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnešná škatuľa"
+          }
+        }
+      }
+    },
+    "Your coins: %lld 🪙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your coins: %lld 🪙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje mince: %lld 🪙"
+          }
+        }
+      }
+    },
+    "Box %lld of %lld this month": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Box %lld of %lld this month"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Škatuľa %lld z %lld tento mesiac"
+          }
+        }
+      }
+    },
+    "Buy a box for %lld 🪙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buy a box for %lld 🪙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kúpiť škatuľu za %lld 🪙"
+          }
+        }
+      }
+    },
+    "Buy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buy"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kúpiť"
+          }
+        }
+      }
+    },
+    "%lld 🪙 to go to box %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 🪙 to go to box %lld"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ešte %lld 🪙 do škatule %lld"
+          }
+        }
+      }
+    },
+    "%lld 🪙 always stay for a silver joker.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 🪙 always stay for a silver joker."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 🪙 ti vždy zostane na strieborného žolíka."
+          }
+        }
+      }
+    },
+    "A box opens on the morning after a complete night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A box opens on the morning after a complete night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Škatuľa sa otvorí ráno po hotovej noci."
+          }
+        }
+      }
+    },
+    "One box a day – the next one after your next complete night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One box a day – the next one after your next complete night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jedna škatuľa denne – ďalšia po tvojej najbližšej hotovej noci."
+          }
+        }
+      }
+    },
+    "Nine boxes this month. The next ones from %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nine boxes this month. The next ones from %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tento mesiac je to deväť škatúľ. Ďalšie od %@."
+          }
+        }
+      }
+    },
+    "What a box can hold": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What a box can hold"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čo môže škatuľa skrývať"
+          }
+        }
+      }
+    },
+    "Half the price back": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Half the price back"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polovica ceny späť"
+          }
+        }
+      }
+    },
+    "The price back": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The price back"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cena späť"
+          }
+        }
+      }
+    },
+    "Twice the price": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Twice the price"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dvojnásobok ceny"
+          }
+        }
+      }
+    },
+    "Three times the price": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Three times the price"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trojnásobok ceny"
+          }
+        }
+      }
+    },
+    "A postcard with a sleep tip": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A postcard with a sleep tip"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohľadnica s tipom na spánok"
+          }
+        }
+      }
+    },
+    "A town decoration": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A town decoration"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ozdoba mesta"
+          }
+        }
+      }
+    },
+    "Something for the cat": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Something for the cat"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niečo pre mačku"
+          }
+        }
+      }
+    },
+    "A night sky": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A night sky"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nočná obloha"
+          }
+        }
+      }
+    },
+    "%lld of %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld z %lld"
+          }
+        }
+      }
+    },
+    "Your next complete night pays double.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your next complete night pays double."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoja najbližšia hotová noc vyplatí dvojnásobok."
+          }
+        }
+      }
+    },
+    "Already in your collection – +%lld 🪙 instead.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Already in your collection – +%lld 🪙 instead."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Už je v zbierke – namiesto toho +%lld 🪙."
+          }
+        }
+      }
+    },
+    "New in your collection.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New in your collection."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nové v zbierke."
+          }
+        }
+      }
+    },
+    "Postcard": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postcard"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohľadnica"
+          }
+        }
+      }
+    },
+    "Town decoration": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Town decoration"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ozdoba mesta"
+          }
+        }
+      }
+    },
+    "For the cat": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "For the cat"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pre mačku"
+          }
+        }
+      }
+    },
+    "Night sky": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night sky"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nočná obloha"
+          }
+        }
+      }
+    },
+    "Yours until %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yours until %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Platí do %@."
+          }
+        }
+      }
+    },
+    "You already hold one – +%lld 🪙 instead.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You already hold one – +%lld 🪙 instead."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taký už máš – namiesto toho +%lld 🪙."
+          }
+        }
+      }
+    },
+    "A prize from a newer version of SleepHole.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A prize from a newer version of SleepHole."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Výhra z novšej verzie SleepHole."
+          }
+        }
+      }
+    },
+    "Read": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prečítať"
+          }
+        }
+      }
+    },
+    "Boxes 1–3 of a month cost 20%% of your coins, boxes 4–6 cost 40%%, boxes 7–9 cost 60%% – never less than %lld 🪙. At most nine a month.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boxes 1–3 of a month cost 20%% of your coins, boxes 4–6 cost 40%%, boxes 7–9 cost 60%% – never less than %lld 🪙. At most nine a month."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Škatule 1–3 v mesiaci stoja 20 %% tvojich mincí, škatule 4–6 stoja 40 %%, škatule 7–9 stoja 60 %% – nikdy menej ako %lld 🪙. Najviac deväť za mesiac."
+          }
+        }
+      }
+    },
+    "Buy this box?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buy this box?"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kúpiť škatuľu?"
+          }
+        }
+      }
+    },
+    "It costs %lld 🪙 – %lld 🪙 stay.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It costs %lld 🪙 – %lld 🪙 stay."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stojí %lld 🪙, ostane ti %lld 🪙."
+          }
+        }
+      }
+    },
+    "A collection item is always a new one until you have the whole collection; after that a repeat turns into a quarter of the price in coins. A joker from a box lasts until the end of next month; a second one of the same kind also turns into a quarter of the price. Coins are earned only by sleeping – they can never be bought.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A collection item is always a new one until you have the whole collection; after that a repeat turns into a quarter of the price in coins. A joker from a box lasts until the end of next month; a second one of the same kind also turns into a quarter of the price. Coins are earned only by sleeping – they can never be bought."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vec do zbierky je vždy nová, kým nemáš celú zbierku; potom sa opakovaná vec zmení na štvrtinu ceny v minciach. Žolík zo škatule platí do konca budúceho mesiaca; druhý rovnaký sa tiež zmení na štvrtinu ceny. Mince sa dajú iba vyspať – kúpiť sa nedajú nikdy."
+          }
+        }
+      }
+    },
+    "%@× the price": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@× the price"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@× ceny"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

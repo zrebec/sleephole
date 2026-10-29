@@ -173,6 +173,8 @@ struct ViewsTests {
             clock.now = date(d + 1, 6, 31); m.refresh(); m.confirm(); m.acknowledgeResult()
         }
         render(TownTab(), m)                                        // town with buildings
+        render(BoxShopView(), m)                                    // the box shop: available / not enough
+        m.buyBox(seed: 5); render(BoxShopView(), m)                 // ... and with today's postcard
         render(NightLogView(), m)
         render(RootView(), m)
         render(PlaceholderView(title: "x", text: "y"), m)
