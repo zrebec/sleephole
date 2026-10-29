@@ -80,17 +80,21 @@ public enum TownRender {
     public static let unfinishedReveal = 0.6
     static let margin = 2
 
-    public static func build(_ town: TownSnapshot, catalog: Catalog, today: NightKey,
-                             calendar: Calendar) -> TownRenderModel {
+    /// - Parameter decorations: the collectible ids of the owned town decorations in the order they were won
+    ///   (`Boxes.ownedInOrder(.decoration, …)`); they stand on the grass in front of the town (`TownDecorations`).
+    public static func build(_ town: TownSnapshot, catalog: Catalog, today: NightKey, calendar: Calendar,
+                             decorations: [String] = []) -> TownRenderModel {
         var sprites: [SpriteInstance] = []
+        let deco = TownDecorations.layout(town: town.layout, owned: decorations)
         let roads = town.layout.drawnRoads
         let occupied = town.layout.occupied
         let cells = occupied.union(roads)
 
         // Ground: grass everywhere in the bounding box (+margin) except under roads.
         let cols = cells.map(\.col), rows = cells.map(\.row)
-        let (c0, c1) = ((cols.min() ?? 0) - margin, (cols.max() ?? 0) + margin)
-        let (r0, r1) = ((rows.min() ?? 0) - margin, (rows.max() ?? 0) + margin)
+        let m = deco.margin                                   // 2 unless the decorations needed more grass
+        let (c0, c1) = ((cols.min() ?? 0) - m, (cols.max() ?? 0) + m)
+        let (r0, r1) = ((rows.min() ?? 0) - m, (rows.max() ?? 0) + m)
         for c in c0...c1 {
             for r in r0...r1 where !roads.contains(Cell(c, r)) {
                 let id = (c + r) % 2 == 0 ? "t-grass-a" : "t-grass-b"
@@ -121,6 +125,12 @@ public enum TownRender {
                 let id = old ? "o-ruin-flowers-\(fp)" : "o-ruin-\(fp)"
                 sprites += instance(id, catalog, x: x, z: z, z0: depth, layer: .object, index: i).map { [$0] } ?? []
             }
+        }
+
+        // Decorations: 1×1 objects, the same depth rule as a 1×1 building; never tappable (no building index).
+        for d in deco.placed {
+            if let s = instance(d.spriteId, catalog, x: Double(d.cell.col), z: Double(d.cell.row),
+                                z0: Double(d.cell.col + d.cell.row) * 10, layer: .object) { sprites.append(s) }
         }
 
         let bounds = sprites.map(\.frame).reduce(nil as SceneRect?) { $0?.union($1) ?? $1 }

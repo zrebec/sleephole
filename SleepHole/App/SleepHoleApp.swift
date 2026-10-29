@@ -12,7 +12,7 @@ struct SleepHoleApp: App {
         // SYNC: with an iCloud container among the entitlements SwiftData would switch on CloudKit mirroring by itself
         // (`.automatic`) and refuse to load this store – the town travels as files (`ICloudSyncTransport`), never through
         // CloudKit. The configuration has no name, so it is the same `default.store` as before.
-        let container = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
+        let container = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                             configurations: ModelConfiguration(cloudKitDatabase: .none))
         let sprites = SpriteLibrary.loadFromBundle()
         self.container = container

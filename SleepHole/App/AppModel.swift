@@ -90,11 +90,19 @@ final class AppModel {
     ///   -startNap                     screenshots: open the nap window around now and start a nap
     ///   -testNightCounts              with -startTestNight: a real night (pays; "another building" costs coins)
     ///   -testNightGrace S             with -startTestNight: the setup lasts S seconds (default 15)
+    ///   -forceBuilding had            DEBUG builds only, with -startTestNight: tonight's building is one already in the town (the newest
+    ///                                 finished night's), so the "New in town" label is absent (screenshots, 11b6b)
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
     ///   -showResult [unfinished]      SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
     ///                                 (with `unfinished`: of the newest unfinished one, which was confirmed 30 min after the alarm)
     ///   -openTab town                 start on the Mesto tab
+    ///   -openBoxContents [postcards|decorations|cat|skies]   DEBUG only: open Settings > Developer > Box contents at once (11b5e)
+    ///   -boxCatFull                   DEBUG only: the Box contents cat starts with a full outfit (first head, face and bed item)
+    ///   -boxCatAsleep                 DEBUG only: the Box contents cat starts asleep
+    ///   -showAllDecorations           DEBUG only: the Town view shows all 12 town decorations (11b5c; screenshots, preview)
+    ///   -nightSky sky-02              DEBUG only: show that night sky (sky-01 … sky-04, 11b5d) on Today and the Town tab
+    ///   -skyClock 12.5|still          DEBUG only: pin the night sky effect's clock (seconds) / show its frozen Reduce Motion frame
     ///   -townFit                      screenshots: the Town view frames the built-up part of the town (no zoom cap)
     ///   -lang en|sk                   switch the UI language (stored like the Settings picker)
     ///   -theme system|light|dark      set the appearance (Settings → Theme)
@@ -310,7 +318,7 @@ final class AppModel {
             DevArgs.list.indices.contains($0 + 1) && DevArgs.list[$0 + 1] == "unfinished" } == true ? .unfinished : .complete
         if DevArgs.list.contains("-showResult"), active == nil, initialSettings == nil,
            let rec = realResults().last(where: { $0.outcome == wantedResult }) {       // store screenshots: the morning screen
-            let entry = Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
+            let entry = Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
                 .last { $0.key.description == rec.keyString }
             shownResult = rec
             lastReward = entry?.coins ?? 0
@@ -385,6 +393,12 @@ final class AppModel {
     /// Finalized real nights, oldest first (debug nights never count).
     func realResults() -> [NightRecord] {
         records().filter { !$0.isDebug && !$0.isNap && $0.isFinalized }
+    }
+
+    /// The "New in town" label of the setup (11b6b): the picker's own notion of fresh, see `BuildingPicker.isNew`.
+    func isNewInTown(_ rec: NightRecord) -> Bool {
+        !rec.isNap && !rec.buildingId.isEmpty
+            && BuildingPicker.isNew(rec.buildingId, history: realResults().map(\.buildingId))
     }
 
     // MARK: - sleep from the source (phase HEALTH)
@@ -485,7 +499,7 @@ final class AppModel {
     private func computeJokerState() -> (results: [NightResult], uses: [JokerUse]) {
         Jokers.apply(results: realResults().compactMap(\.result), manual: jokerRecords().compactMap(\.use),
                      lastNight: window.key.adding(days: -1, calendar: calendar), calendar: calendar,
-                     breaks: streakBreaks)
+                     breaks: streakBreaks, boxes: boxes())
     }
 
     func jokerRecords() -> [JokerRecord] {
@@ -500,8 +514,10 @@ final class AppModel {
                                  calendar: calendar)
     }
 
-    func jokerBlock(_ tier: JokerTier) -> Jokers.Block? {
-        Jokers.block(tier, firstNight: jokerFirstNight, uses: jokerState.uses, coins: coins)
+    /// - Parameter fromBox: the id of the box whose joker would be spent (no coins, not the month's own slot).
+    func jokerBlock(_ tier: JokerTier, fromBox boxId: String? = nil) -> Jokers.Block? {
+        Jokers.block(tier, firstNight: jokerFirstNight, uses: jokerState.uses, coins: coins,
+                     boxId: boxId, boxes: boxes(), calendar: calendar)
     }
 
     /// The joker protecting tonight or a night around now, if any (shown on Today).
@@ -512,10 +528,10 @@ final class AppModel {
         }
     }
 
-    func useJoker(_ tier: JokerTier) {
-        guard jokerBlock(tier) == nil else { return }
-        if tier.price > 0 { spend(tier.price, reason: "joker-\(tier.rawValue)") }
-        context.insert(JokerRecord(at: clock.now, tier: tier, firstNight: jokerFirstNight))
+    func useJoker(_ tier: JokerTier, fromBox boxId: String? = nil) {
+        guard jokerBlock(tier, fromBox: boxId) == nil else { return }
+        if tier.price > 0, boxId == nil { spend(tier.price, reason: "joker-\(tier.rawValue)") }
+        context.insert(JokerRecord(at: clock.now, tier: tier, firstNight: jokerFirstNight, boxId: boxId))
         save()
         rebuildTown()
         refresh()
@@ -551,7 +567,7 @@ final class AppModel {
     }
 
     func coinsEarned(for key: NightKey) -> Int? {
-        Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
+        Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
             .last { $0.key == key }?.coins
     }
 
@@ -567,14 +583,14 @@ final class AppModel {
         validateDerived()                           // reads `sleepReads`: a finished Health read redraws Stats
         if let cached = derived.stats { return cached }
         let value = Stats.summary(statsInput(), today: NightKey(date: clock.now, calendar: calendar),
-                                  calendar: calendar, breaks: streakBreaks, catalog: catalog)
+                                  calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
         derived.stats = value
         return value
     }
 
     /// Coin balance 🪙: earned (replayed from the real nights, naps and achievements) − spent (`CoinSpend`).
     /// Never negative: two devices may have spent the same coins before they synced (phase SYNC).
-    var coins: Int { max(0, coinsEarned - coinsSpent) }
+    var coins: Int { max(0, coinsEarned - coinsSpent + Boxes.coinDelta(boxes())) }
 
     var coinsEarned: Int {
         validateDerived()
@@ -585,7 +601,7 @@ final class AppModel {
     }
 
     private func computeCoinsEarned() -> Int {
-        Economy.earned(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
+        Economy.earned(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
             + napResults().compactMap(\.outcome).reduce(0) { $0 + NapPlan.reward($1) }
             + Achievements.coins(achievements)
     }
@@ -595,6 +611,12 @@ final class AppModel {
     func spends() -> [CoinSpend] {
         _ = dataRevision
         return (try? context.fetch(FetchDescriptor<CoinSpend>(sortBy: [SortDescriptor(\.at)]))) ?? []
+    }
+
+    /// The mystery boxes bought so far, oldest first (one small fetch, never cached). A record this version cannot read is skipped.
+    func boxes() -> [BoxPurchase] {
+        _ = dataRevision
+        return ((try? context.fetch(FetchDescriptor<BoxRecord>(sortBy: [SortDescriptor(\.at)]))) ?? []).compactMap(\.purchase)
     }
 
     private func spend(_ amount: Int, reason: String) {
@@ -624,13 +646,13 @@ final class AppModel {
     /// Weeks (Monday–Sunday evenings) with nights or naps, newest first.
     var journalWeeks: [WeekSummary] {
         WeeklyJournal.weeks(results: coreResults(), naps: napResults().compactMap(\.result),
-                            calendar: calendar, breaks: streakBreaks, catalog: catalog)
+                            calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
     }
 
     func journalWeek(monday: NightKey) -> WeekSummary {
         WeeklyJournal.week(monday: monday, results: coreResults(),
                            naps: napResults().compactMap(\.result), calendar: calendar, breaks: streakBreaks,
-                           catalog: catalog)
+                           catalog: catalog, boxes: boxes())
     }
 
     /// Monday of the week we are in now.
@@ -711,12 +733,20 @@ final class AppModel {
     /// Identifies the newest building (its night key) – the camera glides to it once per new one (B30).
     private(set) var townNewest: String?
 
+    /// The town decorations won from boxes, in the order won; with the debug flag `-showAllDecorations` all twelve.
+    private func ownedDecorations() -> [String] {
+        #if DEBUG
+        if DevArgs.list.contains("-showAllDecorations") { return BoxCatalog.ids(.decoration) }
+        #endif
+        return Boxes.ownedInOrder(.decoration, boxes: boxes())
+    }
+
     func rebuildTown() {
         guard let catalog else { return }
         let snap = buildSnapshot()
         townSnapshot = snap
         townRender = TownRender.build(snap, catalog: catalog, today: NightKey(date: clock.now, calendar: calendar),
-                                      calendar: calendar)
+                                      calendar: calendar, decorations: ownedDecorations())
         townFocus = snap.buildings.last.map { IsoProjection.scenePoint(x: $0.placement.centre.x, z: $0.placement.centre.z) }
         townNewest = snap.buildings.last.map { $0.nightKey.description }
         townVersion += 1
@@ -1037,9 +1067,26 @@ final class AppModel {
                           scheduleChanges: scheduleChanges().map {
                               .init(at: $0.at, from: $0.from, to: $0.to, free: $0.free, breakKey: $0.breakKey, rule: $0.rule)
                           },
-                          jokers: jokerRecords().map { .init(at: $0.at, tier: $0.tierRaw, firstNight: $0.firstNight) },
+                          jokers: jokerRecords().map { .init(at: $0.at, tier: $0.tierRaw, firstNight: $0.firstNight, boxId: $0.boxId) },
                           townNameChangedAt: p.townNameChangedAt, schedulePromptMonth: p.schedulePromptMonth,
-                          changeWeekStart: p.changeWeekStart)
+                          changeWeekStart: p.changeWeekStart,
+                          boxes: boxRecords().map { .init(id: $0.id, at: $0.at, nightKey: $0.nightKey, price: $0.price,
+                                                          seed: String($0.seed), tableVersion: $0.tableVersion,
+                                                          prize: $0.prizeRaw, payout: $0.payout) })
+    }
+
+    /// Every stored box row, readable or not (the backup keeps what it cannot read).
+    func boxRecords() -> [BoxRecord] {
+        _ = dataRevision
+        return (try? context.fetch(FetchDescriptor<BoxRecord>(sortBy: [SortDescriptor(\.at)]))) ?? []
+    }
+
+    /// Stores one bought box (the only write path for 11b4's shop): `save()` bumps `dataRevision`, so the cached balance,
+    /// the joker state and the stats are dropped and the sync notices the change.
+    func recordBox(_ purchase: BoxPurchase) {
+        context.insert(BoxRecord(purchase))
+        save()
+        rebuildTown()                                           // a won decoration appears in the town at once
     }
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
@@ -1072,8 +1119,13 @@ final class AppModel {
         try context.delete(model: JokerRecord.self)
         for j in b.jokers ?? [] {
             guard let tier = JokerTier(rawValue: j.tier), let key = NightKey(j.firstNight) else { continue }
-            let r = JokerRecord(at: j.at, tier: tier, firstNight: key)
+            let r = JokerRecord(at: j.at, tier: tier, firstNight: key, boxId: j.boxId)
             context.insert(r)
+        }
+        try context.delete(model: BoxRecord.self)
+        for box in b.boxes ?? [] {
+            guard let record = BoxRecord(backup: box) else { continue }
+            context.insert(record)
         }
         save()
         settings = b.settings
@@ -1290,9 +1342,12 @@ final class AppModel {
         if isBonus { nextTestNightCounts = false }
         let real = realResults()
         var rng = SystemRandomNumberGenerator()
-        let entry = BuildingPicker.pick(
+        var entry = BuildingPicker.pick(
             maxLevel: Progression.unlockedMaxLevel(builtBefore: builtNights), catalog: catalog,
             history: real.map(\.buildingId), rng: &rng)
+        #if DEBUG
+        if DevArgs.list.contains("-forceBuilding"), let had = real.last.flatMap({ catalog[$0.buildingId] }) { entry = had }
+        #endif
         let rec = NightRecord(window: window, buildingId: entry.id, isDebug: isDebug,
                               setupGrace: debugWindow != nil ? debugGrace : settings.setupGrace,
                               idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode,
@@ -1434,6 +1489,21 @@ final class AppModel {
         default: return nil
         }
     }()
+
+    /// Dev aid: `-buddyOutfit nightcap,sunglasses,fish-bowl` dresses the cat (Debug only; `DevArgs` is empty in Release).
+    static let forcedBuddyOutfit: CatOutfit = {
+        guard let v = DevArgs.value(after: "-buddyOutfit") else { return .none }
+        return CatOutfit(ids: v.split(separator: ",").map(String.init))
+    }()
+
+    /// What the cat on Today wears. Today only the dev argument; the owner's choice (11b4) replaces it here.
+    var buddyOutfit: CatOutfit { Self.forcedBuddyOutfit }
+
+    /// Dev aid: `-nightSky sky-02` (Debug only; `DevArgs` is empty in Release).
+    static let forcedNightSky: String? = DevArgs.value(after: "-nightSky")
+
+    /// The night sky shown on Today and the Town tab. Today only the dev argument; the owner's choice (11b4) replaces it here.
+    var nightSky: NightSkyEffect? { NightSkies.effect(forId: Self.forcedNightSky) }
 
     /// The reaction the next tap on the cat gives (plan P2b). Session state only – never stored, never in a backup.
     @ObservationIgnored private var nextBuddyReaction = BuddyReaction.purr
@@ -2246,7 +2316,7 @@ final class AppModel {
         if !rec.isDebug { writeAutoBackup() }
         if servicesEnabled, !rec.isDebug, !rec.isNap { Task { await refreshSleepIfIdle() } }   // the watch may not have synced yet: read again later
         let entry = rec.isDebug || rec.isNap ? nil
-            : Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog)
+            : Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
                 .last { $0.key.description == rec.keyString }
         lastReceipt = entry.flatMap { Economy.Receipt($0, calmTotal: rec.result?.calmHoursTotal) }
             .map { $0.addingAchievements(newAchievements.reduce(0) { $0 + $1.reward }) }   // achievements pay coins too

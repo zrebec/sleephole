@@ -111,10 +111,13 @@ struct LivingSky: View {
     @State private var visible = false
     let semicircle: Bool
     let showsBody: Bool
+    /// The night sky won from a mystery box (11b5d), drawn after the stars; nil = nothing extra.
+    let nightSky: NightSkyEffect?
 
-    init(semicircle: Bool = false, showsBody: Bool = true) {
+    init(semicircle: Bool = false, showsBody: Bool = true, nightSky: NightSkyEffect? = nil) {
         self.semicircle = semicircle
         self.showsBody = showsBody
+        self.nightSky = nightSky
     }
 
     /// The sky behind the Stats and Settings tabs: no sun or moon (it would shine through the large title).
@@ -165,6 +168,9 @@ struct LivingSky: View {
                 gradient(palette, t: t)
                 Canvas { gc, size in
                     SkyDrawing.stars(&gc, size: size, opacity: palette.starOpacity, t: t)
+                    if let nightSky {
+                        NightSkyDrawing.draw(nightSky, &gc, size: size, opacity: palette.starOpacity, t: t, still: paused)
+                    }
                     if round && showsBody { SkyDrawing.track(&gc, size: size, dark: scheme == .dark, daylight: sky.daylight) }
                     if showsBody { SkyDrawing.sunOrMoon(&gc, size: size, sky: sky, semicircle: round) }
                     SkyDrawing.clouds(&gc, size: size, palette: palette, t: t)

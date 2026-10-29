@@ -38,8 +38,8 @@ public enum WeeklyJournal {
 
     /// All weeks with at least one night or nap, newest first.
     public static func weeks(results: [NightResult], naps: [NightResult] = [], calendar: Calendar,
-                             breaks: [NightKey] = [], catalog: Catalog? = nil) -> [WeekSummary] {
-        let ledger = Economy.ledger(results, calendar: calendar, breaks: breaks, catalog: catalog)
+                             breaks: [NightKey] = [], catalog: Catalog? = nil, boxes: [BoxPurchase] = []) -> [WeekSummary] {
+        let ledger = Economy.ledger(results, calendar: calendar, breaks: breaks, catalog: catalog, boxes: boxes)
         var mondays = Set(results.map { monday(of: evening(of: $0.key, calendar: calendar), calendar: calendar) })
         mondays.formUnion(naps.map { monday(of: $0.key, calendar: calendar) })
         return mondays.sorted(by: >).map { m in
@@ -49,9 +49,10 @@ public enum WeeklyJournal {
 
     /// One week (may be empty).
     public static func week(monday: NightKey, results: [NightResult], naps: [NightResult] = [],
-                            calendar: Calendar, breaks: [NightKey] = [], catalog: Catalog? = nil) -> WeekSummary {
+                            calendar: Calendar, breaks: [NightKey] = [], catalog: Catalog? = nil,
+                            boxes: [BoxPurchase] = []) -> WeekSummary {
         summary(monday: monday, results: results,
-                ledger: Economy.ledger(results, calendar: calendar, breaks: breaks, catalog: catalog),
+                ledger: Economy.ledger(results, calendar: calendar, breaks: breaks, catalog: catalog, boxes: boxes),
                 naps: naps,
                 calendar: calendar)
     }

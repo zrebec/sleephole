@@ -99,7 +99,7 @@ struct TownTab: View {
         let render = model.townRender
         NavigationStack {
             ZStack(alignment: .top) {
-                LivingSky()
+                LivingSky(nightSky: model.nightSky)
                 if let render {
                     TownSpriteView(model: render, focus: model.townFocus, newest: model.townNewest, version: model.townVersion,
                                    imageProvider: { sprites.image(for: $0) },

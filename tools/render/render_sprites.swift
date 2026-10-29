@@ -62,6 +62,7 @@ struct Part: Codable {
     var cone: [Double]?            // OR a primitive cone / frustum [bottomRadius, topRadius, height]
     var sphere: Double?            // OR a primitive sphere of this radius (centred on pos.y + radius unless `center`)
     var segments: Int?             // cone / sphere: radial segments (low = Kenney's faceted look; default 8)
+    var occluder: Bool?            // depth-only: hides what is behind it but draws no colour (accessory layers)
 }
 
 struct Pose: Codable {
@@ -96,6 +97,10 @@ struct Recipe: Codable {
     var shadow: Bool?              // default true
     var connects: String?          // roads only: open edges, subset of "NESW"
     var bounds: [Double]?          // extra world box [x0,y0,z0,x1,y1,z1] to include in the canvas
+    var fixedBounds: Bool?         // true = the canvas comes from `bounds` alone (content is not added), so frames with
+                                   // different content (accessory layers) keep the identical canvas + anchor
+    var floor: Bool?               // default true; false = no shadow-catching floor (accessory layers: the shipped
+                                   // frame already has the cat's and the bed's floor shadow)
 }
 
 struct CatalogEntry: Codable {
@@ -267,6 +272,22 @@ func buildPart(_ p: Part, _ id: String) -> SCNNode {
         model = SCNNode(); model.addChildNode(inner)
     } else { fatalError("part needs src, box, cone or sphere in \(id)") }
 
+    // occluder: the part writes depth but no colour and is drawn first (geometry / materials are shared with the
+    // cached model -> copy before changing). Children are added later and are NOT affected.
+    if p.occluder == true {
+        model.enumerateHierarchy { n, _ in
+            guard let shared = n.geometry else { return }
+            let g = shared.copy() as! SCNGeometry
+            n.geometry = g
+            g.materials = shared.materials.map { m in
+                let c = m.copy() as! SCNMaterial
+                c.colorBufferWriteMask = []
+                return c
+            }
+            n.renderingOrder = -10
+        }
+    }
+
     // per-group poses: wildcard keys first, exact names after (so an exact key overrides a "leg-*")
     var holders: [String: SCNNode] = [:]       // group name -> `inner` node children glue to
     for key in (p.pose ?? [:]).keys.sorted(by: { ($0.hasSuffix("*") ? 0 : 1, $0) < ($1.hasSuffix("*") ? 0 : 1, $1) }) {
@@ -422,7 +443,11 @@ for r in recipes where onlyId == nil || r.id == onlyId {
     let fw = Double(r.footprint[0]) / 2, fd = Double(r.footprint[1]) / 2
     lo = simd_min(lo, SIMD3(-fw, 0, -fd)); hi = simd_max(hi, SIMD3(fw, 0, fd))
     if let b = r.bounds {   // frames of one animation share one canvas
-        lo = simd_min(lo, SIMD3(b[0], b[1], b[2])); hi = simd_max(hi, SIMD3(b[3], b[4], b[5]))
+        if r.fixedBounds == true {
+            lo = SIMD3(b[0], b[1], b[2]); hi = SIMD3(b[3], b[4], b[5])
+        } else {
+            lo = simd_min(lo, SIMD3(b[0], b[1], b[2])); hi = simd_max(hi, SIMD3(b[3], b[4], b[5]))
+        }
     }
     var pts: [SIMD3<Double>] = []
     for x in [lo.x, hi.x] { for y in [lo.y, hi.y] { for z in [lo.z, hi.z] { pts.append(SIMD3(x, y, z)) }}}
@@ -465,7 +490,7 @@ for r in recipes where onlyId == nil || r.id == onlyId {
     let keyNode = SCNNode(); keyNode.light = key
     keyNode.eulerAngles = KEY_EULER
     scene.rootNode.addChildNode(keyNode)
-    if r.shadow ?? true {
+    if (r.shadow ?? true) && (r.floor ?? true) {
         let floor = SCNFloor(); floor.reflectivity = 0
         floor.firstMaterial?.lightingModel = .shadowOnly
         scene.rootNode.addChildNode(SCNNode(geometry: floor))

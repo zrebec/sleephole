@@ -30,11 +30,29 @@ struct BackupFile: Codable, Equatable {
     var schedulePromptMonth: String? = nil
     /// Build 8 (change week, owner 2026-10-15): when the last change week was opened. Optional → older files load.
     var changeWeekStart: Date? = nil
+    /// Build 11 (mystery boxes): every box bought, ids included. Optional → older backups still load. A new optional field
+    /// needs no version bump (`currentVersion` only guards against files from a LATER, incompatible format).
+    var boxes: [Box]? = nil
 
     struct Joker: Codable, Equatable {
         var at: Date
         var tier: String
         var firstNight: String
+        /// The box whose joker this use spent (build 11); nil in older backups.
+        var boxId: String? = nil
+    }
+
+    struct Box: Codable, Equatable {
+        var id: String
+        var at: Date
+        var nightKey: String
+        var price: Int
+        /// The draw's `UInt64` seed as a decimal string – JSON numbers lose precision above 2^53 in other tools.
+        var seed: String
+        var tableVersion: Int
+        /// `BoxPrize.encoded`.
+        var prize: String
+        var payout: Int
     }
 
     struct Spend: Codable, Equatable {
@@ -170,5 +188,15 @@ struct BackupDocument: Transferable {
             await MainActor.run { doc.makeData() }
         }
         .suggestedFileName(BackupFile.fileName)
+    }
+}
+
+extension BoxRecord {
+    /// nil only for a corrupt entry (unreadable seed or night key). An unreadable prize is kept verbatim (`.unknown`), so a
+    /// box from a later build still counts here and travels on unchanged.
+    convenience init?(backup b: BackupFile.Box) {
+        guard let seed = UInt64(b.seed), let key = NightKey(b.nightKey) else { return nil }
+        self.init(id: b.id, at: b.at, nightKey: key, price: b.price, seed: seed, tableVersion: b.tableVersion,
+                  prize: BoxPrize(stored: b.prize), payout: b.payout)
     }
 }

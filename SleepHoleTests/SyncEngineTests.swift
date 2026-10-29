@@ -102,7 +102,7 @@ struct SyncEngineTests {
                 protectedData: @escaping @MainActor () -> Bool = { true },
                 retryDelay: @escaping (Int) -> TimeInterval = { _ in 3600 }) -> Device {
         let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
-                                    JokerRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+                                    JokerRecord.self, BoxRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let clock = FakeClock(now)
         var s = AppSettings(); s.wakeCode = code
         s.usesSync = syncOn

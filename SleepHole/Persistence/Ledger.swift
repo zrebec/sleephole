@@ -53,15 +53,63 @@ final class JokerRecord {
     var tierRaw: String
     /// NightKey string of the first protected night.
     var firstNight: String
+    /// The id of the `BoxRecord` whose joker this use spent (build 11); nil = a joker of the month's own slot (an optional
+    /// column → a lightweight migration, existing stores open unchanged).
+    var boxId: String?
 
-    init(at: Date, tier: JokerTier, firstNight: NightKey) {
+    init(at: Date, tier: JokerTier, firstNight: NightKey, boxId: String? = nil) {
         self.at = at
         self.tierRaw = tier.rawValue
         self.firstNight = firstNight.description
+        self.boxId = boxId
     }
 
     var use: JokerUse? {
         guard let tier = JokerTier(rawValue: tierRaw), let key = NightKey(firstNight) else { return nil }
-        return JokerUse(tier: tier, firstNight: key)
+        return JokerUse(tier: tier, firstNight: key, boxId: boxId)
+    }
+}
+
+/// A mystery box 📦 bought with coins (build 11, plan §10 REL 11b) – ONE immutable record; nothing about boxes is a
+/// counter (boxes this month, jokers held, collectibles owned and the coins a box moved are derived by `Boxes`).
+@Model
+final class BoxRecord {
+    @Attribute(.unique) var id: String = UUID().uuidString
+    var at: Date
+    /// NightKey string of the complete night this box follows (the purchase morning's date).
+    var nightKey: String
+    var price: Int
+    /// The draw's `UInt64` seed stored losslessly as its bit pattern in an `Int64` (SwiftData has no unsigned column).
+    var seedBits: Int64
+    var tableVersion: Int
+    /// `BoxPrize.encoded`.
+    var prizeRaw: String
+    var payout: Int
+
+    init(id: String = UUID().uuidString, at: Date, nightKey: NightKey, price: Int, seed: UInt64, tableVersion: Int,
+         prize: BoxPrize, payout: Int) {
+        self.id = id
+        self.at = at
+        self.nightKey = nightKey.description
+        self.price = price
+        self.seedBits = Int64(bitPattern: seed)
+        self.tableVersion = tableVersion
+        self.prizeRaw = prize.encoded
+        self.payout = payout
+    }
+
+    convenience init(_ p: BoxPurchase) {
+        self.init(id: p.id, at: p.at, nightKey: p.nightKey, price: p.price, seed: p.seed, tableVersion: p.tableVersion,
+                  prize: p.prize, payout: p.payout)
+    }
+
+    var seed: UInt64 { UInt64(bitPattern: seedBits) }
+
+    /// nil only when the stored night key is unreadable (a corrupt row). An unreadable PRIZE (a later build's kind) is kept as
+    /// `.unknown`: the box still counts for coins and the box counts.
+    var purchase: BoxPurchase? {
+        guard let key = NightKey(nightKey) else { return nil }
+        return BoxPurchase(id: id, at: at, nightKey: key, price: price, seed: seed, tableVersion: tableVersion,
+                           prize: BoxPrize(stored: prizeRaw), payout: payout)
     }
 }

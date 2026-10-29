@@ -29,33 +29,29 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 11 is in work since 2026-10-25 (his word; plan §10 REL "Build 11", §0b row 11).** His final answers are on the
-   build 11 page (v92). **11a the coin receipt and 11a2 = B38 (no tab bar on the result) are done and confirmed by him**
-   (the nap 25 Oct, the night 25 → 26), committed on `build/11` (pushed; the PR into `main` when the build is finished).
-   **11b6 (another building for tonight) pulled forward – his "condition of today" (2026-10-26 ~07:45):** during the setup,
-   400 🪙 then 800 🪙, at most two a night, the evening draw's pool – **built and reviewed ~09:05** (SleepCore 428, app
-   572, i18n 774 – green; screenshots `build/11b6/`) – **on his phone since 2026-10-26 11:39**; tonight his first real
-   draw → on 2026-10-27 morning pull the store and check the spends `reroll-2026-10-27:<old id>`, the night's building
-   and coins. Then 11b1 on his word.
-   Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is
-   his click.
-   The cat accessories proof is done; his pick: nightcap, top hat, builder's helmet, sunglasses, bowl with a fish, rug.
-   **His 11b answers 2026-10-25 ~11:50** (plan §10 REL 11b): one box a day after a complete night + the 20 / 40 / 60 % tiers,
-   none after the 9th, floor 400 🪙, the reroll once a night for 100 🪙, cat accessories (Kenney 3D on the cat, a proof sheet
-   first) and the night sky (code, no art) already in build 11.
-   His worry "it must not get mixed up" → the rule in §10 REL: records, not counters; the data model first; month tests.
-   Build 10 (finished 2026-10-24) is in Kamaráti and SE – 0 installs on 25 Oct morning; his ticks c8 / c9 on the build 10
-   page still open (`state/answers` v7).
+1. **Build 11 is with the testers since 2026-10-29 ~07:30 (his word that morning: "build 11 as-is to the testers – without the
+   boxes, with the new building draw").** 1.0 (11) uploaded 07:23; "What to Test" EN + SK (his yes; App Store Connect refuses
+   the 🪙 emoji → "coins" / "mincí"); "Testing" in Kamaráti and SE. Visible: 11a the receipt, 11a2 = B38, 11b6 another building
+   (400 / 800 🪙), 11b6b "New in town"; inside but unreachable without a shop: 11b2, 11b3, 11b5. The build 11 page
+   (https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo) holds his open ticks t1–t4 (incl. the night 29 → 30, the first real
+   night with the whole tree) and notes n1 / n2 (`state/answers`). **The PR `build/11` → `main` is open – he merges.**
+   **Next: build 12 = the boxes (his pick 2026-10-29): 11b4 the shop, the opening, the collection (choose the cat's items and
+   the sky), the speech bubble over the bed items; prep page https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h with five
+   questions (`state/answers`, prefix `b12.`). Starts on his word (Opus recommends the morning of 30 Oct, a clean session);
+   `build/12` from `main` after his merge. Tell him where the boxes stand whenever a step ends.** His worry "it must not get
+   mixed up" → records, not counters. Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered;
+   protecting `main` on GitHub is his click. Build 10's ticks c8 / c9 (its page, `state/answers` v7) are still open.
 2. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
-   and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (up to
-   48 h). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
+   and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (still on
+   2026-10-29 07:30). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
    to review, repeat this whole agenda to him (his request 2026-10-16).**
 3. **His streak:** the night of 2026-10-15 → 16 collapsed (one trip of 13.15s; Notification Center counts as leaving on
    iOS 26); the silver joker saved it (1 000 🪙). October's bronze and silver are used and he will not buy the gold – the
    next failed night this month breaks the streak. Be kind about it.
-4. **Later builds:** 11b the economy + mystery boxes (coins only), 11c nights off, 11d accessibility (incl. 10h's
-   `ThickProgressStyle`); statistics, the bug list and Plans → build 13 (his answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 12):** the store and TestFlight
-   texts are done (plan §12); the guide's first page and the Strict-mode footer wait for build 12; the testers' answers about
+4. **Later builds (renumbered 2026-10-29):** 13 polishing + accessibility (11d, incl. 10h's `ThickProgressStyle`; the flaky
+   `SyncEngineTests` test; "Cancel night" under the tab bar); 14 nights off (11c) + statistics, the bug list and Plans (his
+   answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 13):** the store and TestFlight
+   texts are done (plan §12); the guide's first page and the Strict-mode footer wait for build 13; the testers' answers about
    missing notifications decide a stronger gentle mode. Still open: the eight questions at the end of
    `docs/NAVRH-MESTO-STATISTIKY.md`; from 2026-10-14 the seller name on the Business page, "a little tuning of the home screen
    UI", "some AI optimisation", "like a wiper on a car"; from `docs/ZAJTRA-RANO.md` departures.to (Health + Audio).
@@ -278,6 +274,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | (claude.ai pages) | per-build pages for the owner (Slovak, 2026-10-22), each with a reply form whose answers (and ticks) go to the page's shared store – read them with `ArtifactData` `get` `state/answers` (the browser also keeps a local copy under the `b10.` / `b9.` keys; never rename them): build 10 https://claude.ai/artifact/P5jc2DhAxdEwfEtKnhzkLX (what 10a–10e fixed, what to try, the switch for the night, the morning questions), build 9 https://claude.ai/artifact/T1hEdc9dpk56MAmwQxk7nr (9a–9o, the bugs, what was confirmed, what is open). Sources: scratchpad files of 2026-10-22 – read a page with the Artifact tool to edit it |
 | (claude.ai page) | the price-model comparison (Slovak, 2026-10-22, private): https://claude.ai/artifact/1mJPVNdRK9EAVjsLAkGfRD – a one-time price vs a subscription with a trial vs a 7-day trial + one-time unlock: Apple's rules, money per sale, indie practice, effort, Opus's view. His decision is open; never push (memory) |
 | (claude.ai page) | the build 11 proposal (Slovak, 2026-10-22): https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo – 11a–11d, the economy numbers, the loot-box assessment, box rules and contents, nights off rules, accessibility, eight questions; answers in its store `state/answers` (browser prefix `b11.` – never rename the field names / ids). Source: a scratchpad file of 2026-10-22 – read the page with the Artifact tool to edit it |
+| (claude.ai page) | the economy simulation 11b1 for the owner (Slovak, 2026-10-26): https://claude.ai/artifact/9LZJ8RKQYyf9BJ6nr57tz4 – the three profiles, today's coins, the boxes by odds A / B / C / C-new / C-new-reserve / D, collections, the joker reserve, four questions; answers in its store `state/answers` (browser prefix `e11b1.` – never rename q1–q5; answered 2026-10-26 ~13:55, v10). Source: a scratchpad file of 2026-10-26; the numbers come from `ECON_SIM=… swift test --filter EconomySimulation` |
 | (claude.ai page) | the owner's App Store Connect snapshot (Slovak, read-only, 2026-10-22 ~11:40): https://claude.ai/artifact/RMgAr81NV5bmSGHuSeR3d5 – the review state, the store page, the notes for Apple vs `docs/REVIEW-NOTES.md`, TestFlight, what tomorrow's switch to build 10 needs. A snapshot, not kept current; re-read App Store Connect before acting |
 | `docs/AGENDA-ARCHIVE.md` | the old long session-start agenda, moved there verbatim 2026-10-16 – history only, no instructions |
 | `docs/REVIEW-NOTES.md` | the App Review notes text (English) for App Store Connect → App Review Information → Notes; since build 9 the 15-minute recipe sets the times in the first-run guide – keep the file and the field identical (changing the field needs his yes) |

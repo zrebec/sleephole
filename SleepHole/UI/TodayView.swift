@@ -24,7 +24,7 @@ struct TodayView: View {
             // full screen: a background on a Group is sized to each child's content (owner bug 2026-10-02: the nap
             // result showed a small 16:9 patch of sky with black bars) – the night screen covers it with its NightSky
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background { LivingSky(semicircle: true) }
+            .background { LivingSky(semicircle: true, nightSky: model.nightSky) }
             .overlay {
                 if let nap = splash {
                     GoodNightSplash(nap: nap) { withAnimation { splash = nil } }
@@ -101,7 +101,7 @@ struct HomeView: View {
                     // the cloud below it.
                     BuddyView.centred(
                         BuddyView(state: model.buddyState(at: now), cloud: true, onPet: { model.petBuddy() },
-                                  hold: AppModel.forcedBuddyReaction)
+                                  hold: AppModel.forcedBuddyReaction, outfit: model.buddyOutfit)
                             .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.5) })
                         .overlay(alignment: .top) {
                             // the buddy talks (phase TALK): an overlay, so Today's layout does not change
@@ -382,7 +382,21 @@ struct NightView: View {
                             .animation(reduceMotion ? nil : .easeInOut(duration: Motion.t(0.5)), value: rec.buildingId)
                             .scaleEffect(compact ? 0.6 : 1, anchor: .top)
                             .frame(height: compact ? 190 : nil, alignment: .top)
-                        Text(model.catalog?[rec.buildingId]?.displayName ?? "").font(.headline)
+                        let buildingName = model.catalog?[rec.buildingId]?.displayName ?? ""
+                        let inSetup = model.graceEnds.map { $0 > now } ?? false
+                        if inSetup && model.isNewInTown(rec) {
+                            // same line as the name – nothing below may move during the setup (11b6 lesson)
+                            HStack(spacing: 8) {
+                                Text(buildingName).font(.headline).lineLimit(1).minimumScaleFactor(0.6)
+                                Text(L("New in town")).font(.caption.weight(.semibold)).lineLimit(1)
+                                    .foregroundStyle(.black).padding(.horizontal, 8).padding(.vertical, 2)
+                                    .background(Capsule().fill(Color.yellow))
+                            }
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel(buildingName + ", " + L("New in town"))
+                        } else {
+                            Text(buildingName).font(.headline)
+                        }
                         if let graceEnds = model.graceEnds, graceEnds > now {
                             let left = Int(graceEnds.timeIntervalSince(now).rounded(.up))
                             Text(left >= 60 ? L("Setup until \(Fmt.time(graceEnds)) (\(Plural.minutes(Double(left))) left)")
@@ -986,6 +1000,7 @@ struct CoinReceiptView: View {
         case .building, .unfinishedBuilding: "🏠"
         case .withoutPause, .calmHours: "🌙"
         case .streak: "🔥"
+        case .luckyNight: "🍀"
         case .achievements: "🏆"
         }
     }
@@ -997,6 +1012,7 @@ struct CoinReceiptView: View {
         case .withoutPause: L("Without a pause")
         case .calmHours(let calm, let total): L("Calm hours \(calm) of \(total)")
         case .streak(let run): L("Night \(run) in a row")
+        case .luckyNight: L("Lucky night ×2")
         case .achievements: L("Achievements")
         }
     }

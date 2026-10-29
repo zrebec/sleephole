@@ -154,7 +154,7 @@ struct TownSceneTests {
         scene.saveCamera()
         #expect(d.data(forKey: TownScene.cameraKey) != nil)
         let container = try ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
-                                           JokerRecord.self,
+                                           JokerRecord.self, BoxRecord.self,
                                            configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let model = AppModel(context: container.mainContext, catalog: sprites.catalog, servicesEnabled: false)
         let json = String(decoding: try model.makeBackup().encoded(), as: UTF8.self)

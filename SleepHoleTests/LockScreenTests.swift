@@ -238,7 +238,7 @@ struct LockScreenTests {
     /// helper starts strict by default; the gentle tests pass `strict: false` (the app's own default).
     func model(at now: Date, alarm: any SystemAlarm = NoSystemAlarm(),
                keepAlive: any KeepAlive = NoKeepAlive(), strict: Bool = true) -> (AppModel, FakeClock) {
-        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self,
+        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                     configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
         let clock = FakeClock(now)
         var s = AppSettings()

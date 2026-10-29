@@ -60,6 +60,8 @@ public enum Economy {
         public let base: Int
         public let level: Int
         public let run: Int
+        /// A lucky night ×2 from a box (11b3): the night's pay once more (base + streak + undisturbed + calm); 0 otherwise.
+        public let luckyBonus: Int
     }
 
     /// The coin receipt of one night (11a): every part of the night's coins on its own line.
@@ -70,6 +72,8 @@ public enum Economy {
             case withoutPause
             case calmHours(calm: Int, total: Int)
             case streak(run: Int)
+            /// The night was doubled by a lucky night from a box (11b3).
+            case luckyNight
             /// Coins that came from outside the ledger (achievements) – added by the app so the total adds up.
             case achievements
         }
@@ -93,6 +97,7 @@ public enum Economy {
                               amount: entry.calmBonus))
             }
             if entry.streakBonus > 0 { l.append(Line(kind: .streak(run: entry.run), amount: entry.streakBonus)) }
+            if entry.luckyBonus > 0 { l.append(Line(kind: .luckyNight, amount: entry.luckyBonus)) }
             lines = l
         }
 
@@ -110,8 +115,12 @@ public enum Economy {
     /// Streak semantics as in `Progression`: complete +1, unfinished neutral, ruins/missed/gaps break.
     /// `breaks`: nights that start a new streak (a paid schedule change).
     public static func ledger(_ results: [NightResult], calendar: Calendar, breaks: [NightKey] = [],
-                              catalog: Catalog? = nil) -> [Entry] {
+                              catalog: Catalog? = nil, boxes: [BoxPurchase] = []) -> [Entry] {
         var out: [Entry] = []
+        // Each lucky night box doubles the first complete night AFTER its own night key that no earlier lucky box has
+        // doubled (FIFO); other nights leave it waiting. Derived from the records – no counter is stored.
+        let lucky = boxes.filter { $0.prize == .luckyNight }.sorted { ($0.nightKey, $0.at, $0.id) < ($1.nightKey, $1.at, $1.id) }
+        var luckyUsed = 0
         var run = 0
         var prev: NightKey?
         for r in results.sorted(by: { $0.key < $1.key }) {
@@ -130,17 +139,22 @@ public enum Economy {
             let calmBonus = calmHours * calmHourBonus
             let lvl = level(of: r, catalog: catalog)
             let base = reward(r.outcome, level: lvl)
-            let coins = base + bonus + undisturbed + calmBonus
+            var lucky2 = 0
+            if r.outcome == .complete, luckyUsed < lucky.count, lucky[luckyUsed].nightKey < r.key {
+                lucky2 = base + bonus + undisturbed + calmBonus
+                luckyUsed += 1
+            }
+            let coins = base + bonus + undisturbed + calmBonus + lucky2
             out.append(Entry(key: r.key, outcome: r.outcome, coins: coins, streakBonus: bonus,
                              undisturbedBonus: undisturbed, calmHours: calmHours, calmBonus: calmBonus,
-                             base: base, level: lvl, run: run))
+                             base: base, level: lvl, run: run, luckyBonus: lucky2))
             prev = r.key
         }
         return out
     }
 
     public static func earned(_ results: [NightResult], calendar: Calendar, breaks: [NightKey] = [],
-                              catalog: Catalog? = nil) -> Int {
-        ledger(results, calendar: calendar, breaks: breaks, catalog: catalog).reduce(0) { $0 + $1.coins }
+                              catalog: Catalog? = nil, boxes: [BoxPurchase] = []) -> Int {
+        ledger(results, calendar: calendar, breaks: breaks, catalog: catalog, boxes: boxes).reduce(0) { $0 + $1.coins }
     }
 }

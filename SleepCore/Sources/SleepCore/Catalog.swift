@@ -4,6 +4,8 @@ import Foundation
 public struct CatalogEntry: Codable, Hashable, Sendable, Identifiable {
     public enum Kind: String, Codable, Sendable {
         case building, park, road, terrain, overlay, vehicle
+        /// A town decoration won from a mystery box (build 11b5c): never a night's building, never counted.
+        case decoration
         case roadLit = "road-lit"
     }
 
@@ -50,6 +52,7 @@ public struct Catalog: Sendable {
 
     /// Entries that can be built at night (levels 1…4).
     public func buildable(level: Int) -> [CatalogEntry] {
-        entries.filter { $0.level == level && $0.kind != .terrain && $0.kind != .overlay && $0.kind != .vehicle }
+        entries.filter { $0.level == level && $0.kind != .terrain && $0.kind != .overlay
+            && $0.kind != .vehicle && $0.kind != .decoration }
     }
 }

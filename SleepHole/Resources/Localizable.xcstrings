@@ -1289,6 +1289,22 @@
         }
       }
     },
+    "Lucky night ×2": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lucky night ×2"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Šťastná noc ×2"
+          }
+        }
+      }
+    },
     "No pause +%lld, every calm hour +%lld, every %lldth finished night in a row +%lld.": {
       "localizations": {
         "en": {
@@ -12937,6 +12953,22 @@
         }
       }
     },
+    "New in town": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New in town"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nová v meste"
+          }
+        }
+      }
+    },
     "No more draws tonight 🎲": {
       "localizations": {
         "en": {
@@ -12981,6 +13013,1398 @@
           "stringUnit": {
             "state": "translated",
             "value": "Najviac %lld-krát za noc."
+          }
+        }
+      }
+    },
+    "Same time, every day": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Same time, every day"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rovnaký čas každý deň"
+          }
+        }
+      }
+    },
+    "Going to bed and getting up at similar times, even on days off, teaches your body when it's time to sleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Going to bed and getting up at similar times, even on days off, teaches your body when it's time to sleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keď chodíš spať a vstávaš v podobnom čase aj cez voľné dni, telo sa naučí, kedy je čas na spánok."
+          }
+        }
+      }
+    },
+    "Weekends, gently": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weekends, gently"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Víkend s mierou"
+          }
+        }
+      }
+    },
+    "Try keeping weekend bedtimes within about an hour of your weeknight ones – your body clock will thank you.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try keeping weekend bedtimes within about an hour of your weeknight ones – your body clock will thank you."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skús, aby sa víkendové ukladanie do postele líšilo od všedných dní najviac o hodinu. Vnútorné hodiny sa potešia."
+          }
+        }
+      }
+    },
+    "Screens off for an hour": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screens off for an hour"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obrazovky preč na hodinu"
+          }
+        }
+      }
+    },
+    "Phones, tablets and computers are best put away an hour before bed – their light can make falling asleep harder.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phones, tablets and computers are best put away an hour before bed – their light can make falling asleep harder."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mobil, tablet a počítač odlož hodinu pred spaním – ich svetlo môže sťažiť zaspávanie."
+          }
+        }
+      }
+    },
+    "A calm bedtime routine": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A calm bedtime routine"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokojný večerný rituál"
+          }
+        }
+      }
+    },
+    "Reading, soothing music or an audiobook, repeated each evening, tells your body that sleep is near.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading, soothing music or an audiobook, repeated each evening, tells your body that sleep is near."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čítanie, tichá hudba či audiokniha každý večer dajú telu vedieť, že spánok je blízko."
+          }
+        }
+      }
+    },
+    "A warm bath": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A warm bath"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplý kúpeľ"
+          }
+        }
+      }
+    },
+    "A warm bath 30 minutes to 2 hours before bed can help you relax into sleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A warm bath 30 minutes to 2 hours before bed can help you relax into sleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplý kúpeľ 30 minút až 2 hodiny pred spaním pomáha uvoľniť sa."
+          }
+        }
+      }
+    },
+    "A wind-down reminder": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A wind-down reminder"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pripomienka na upokojenie"
+          }
+        }
+      }
+    },
+    "Set a gentle reminder for 1.5 hours before bed, then start dimming the lights and slowing down.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set a gentle reminder for 1.5 hours before bed, then start dimming the lights and slowing down."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastav si jemnú pripomienku 90 minút pred spaním, potom stlmuj svetlá a spomaľ."
+          }
+        }
+      }
+    },
+    "Park your worries": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Park your worries"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starosti na papier"
+          }
+        }
+      }
+    },
+    "Write your worries down, or list tomorrow's tasks, before bed. Then they can wait on the page.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Write your worries down, or list tomorrow's tasks, before bed. Then they can wait on the page."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Napíš si starosti alebo zajtrajšie úlohy ešte pred spaním. Potom môžu počkať na papieri."
+          }
+        }
+      }
+    },
+    "Try a relaxing trick": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try a relaxing trick"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skús uvoľnenie"
+          }
+        }
+      }
+    },
+    "Guided imagery, soft music, gentle yoga or meditation can help you let go of the day's stress.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guided imagery, soft music, gentle yoga or meditation can help you let go of the day's stress."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vedená predstava, tichá hudba, jemná joga či meditácia pomáhajú pustiť stres dňa."
+          }
+        }
+      }
+    },
+    "Late coffee lingers": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Late coffee lingers"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neskorá káva"
+          }
+        }
+      }
+    },
+    "Caffeine can stay with you for up to 8 hours, so an afternoon coffee may still be awake at bedtime.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caffeine can stay with you for up to 8 hours, so an afternoon coffee may still be awake at bedtime."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kofeín môže pôsobiť až 8 hodín, takže popoludňajšia káva môže byť hore ešte pri ukladaní do postele."
+          }
+        }
+      }
+    },
+    "Heavy talks by daylight": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heavy talks by daylight"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ťažké rozhovory cez deň"
+          }
+        }
+      }
+    },
+    "Upsetting conversations are best kept for the daytime, so your evening stays calm.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upsetting conversations are best kept for the daytime, so your evening stays calm."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozrušujúce rozhovory si nechaj radšej na deň, nech je večer pokojný."
+          }
+        }
+      }
+    },
+    "A light dinner": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A light dinner"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ľahká večera"
+          }
+        }
+      }
+    },
+    "Make dinner your lightest meal and finish eating 3 to 4 hours before bed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make dinner your lightest meal and finish eating 3 to 4 hours before bed."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nech je večera najľahším jedlom dňa a dojedz 3 až 4 hodiny pred spaním."
+          }
+        }
+      }
+    },
+    "Drink earlier": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drink earlier"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pi radšej skôr"
+          }
+        }
+      }
+    },
+    "Try limiting liquids in the last few hours before sleep, and drink your fill earlier in the day.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try limiting liquids in the last few hours before sleep, and drink your fill earlier in the day."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pár hodín pred spaním pi menej a svoj pitný režim si splň radšej skôr cez deň."
+          }
+        }
+      }
+    },
+    "A cool bedroom": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A cool bedroom"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chladnejšia spálňa"
+          }
+        }
+      }
+    },
+    "A cool room is cosy for sleeping – aim for around 18–20 °C (65–68 °F).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A cool room is cosy for sleeping – aim for around 18–20 °C (65–68 °F)."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V chladnejšej izbe sa spí príjemne – skús približne 18 – 20 °C."
+          }
+        }
+      }
+    },
+    "Make it dark": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make it dark"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nech je tma"
+          }
+        }
+      }
+    },
+    "Blackout curtains or an eye mask keep the light off your eyes while you sleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Blackout curtains or an eye mask keep the light off your eyes while you sleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatemňovacie závesy alebo maska na oči udržia svetlo mimo, kým spíš."
+          }
+        }
+      }
+    },
+    "Quiet or softly noisy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quiet or softly noisy"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokoj v izbe"
+          }
+        }
+      }
+    },
+    "Soft earplugs help with noise, and gentle sounds like rain can make the room cosy.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soft earplugs help with noise, and gentle sounds like rain can make the room cosy."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mäkké štuple do uší zmiernia hluk a jemné zvuky ako dážď spravia izbu útulnejšou."
+          }
+        }
+      }
+    },
+    "Bed is for sleep": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bed is for sleep"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Posteľ je na spanie"
+          }
+        }
+      }
+    },
+    "Try using your bed just for sleep – no eating or working in it – so it says “sleep” to your brain.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try using your bed just for sleep – no eating or working in it – so it says “sleep” to your brain."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skús používať posteľ len na spanie – bez jedenia a práce – nech mozgu hovorí „spánok“."
+          }
+        }
+      }
+    },
+    "Turn the clock away": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn the clock away"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hodiny otoč bokom"
+          }
+        }
+      }
+    },
+    "Turn clocks away from the bed – not seeing the minutes tick by is one less thing to think about.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn clocks away from the bed – not seeing the minutes tick by is one less thing to think about."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otoč hodiny od postele – ak nevidíš ubiehať minúty, máš o jednu starosť menej."
+          }
+        }
+      }
+    },
+    "Every bit of movement": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every bit of movement"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aj trocha pohybu pomôže"
+          }
+        }
+      }
+    },
+    "Even a little regular activity can help your sleep, and you can build it up gradually.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Even a little regular activity can help your sleep, and you can build it up gradually."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Už trochu pravidelného pohybu môže pomôcť spánku a môžeš ho pomaly pridávať."
+          }
+        }
+      }
+    },
+    "Exercise earlier": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exercise earlier"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cvič skôr počas dňa"
+          }
+        }
+      }
+    },
+    "Try to finish exercising at least 3 hours before your planned bedtime.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try to finish exercising at least 3 hours before your planned bedtime."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skús dokončiť cvičenie aspoň 3 hodiny pred plánovaným spaním."
+          }
+        }
+      }
+    },
+    "Catch some daylight": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catch some daylight"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ranné svetlo"
+          }
+        }
+      }
+    },
+    "About 30 minutes outside early in the day helps – even a cloudy sky beats dim indoor light.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About 30 minutes outside early in the day helps – even a cloudy sky beats dim indoor light."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asi 30 minút vonku v prvých hodinách dňa pomôže – aj zamračená obloha je lepšia než slabé svetlo v interiéri."
+          }
+        }
+      }
+    },
+    "Postcard %lld of %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postcard %lld of %lld"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohľadnica %lld z %lld"
+          }
+        }
+      }
+    },
+    "– your sleep buddy 🐾": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "– your sleep buddy 🐾"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "– tvoj spánkový kamarát 🐾"
+          }
+        }
+      }
+    },
+    "Open the source": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the source"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otvoriť zdroj"
+          }
+        }
+      }
+    },
+    "Postcard from your buddy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postcard from your buddy"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohľadnica od kamaráta"
+          }
+        }
+      }
+    },
+    "Seven hours or more": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seven hours or more"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aspoň sedem hodín"
+          }
+        }
+      }
+    },
+    "Most adults feel their best with at least 7 hours of sleep a night. Plan your evening backwards from the morning.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Most adults feel their best with at least 7 hours of sleep a night. Plan your evening backwards from the morning."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dospelým zvyčajne najlepšie vyhovuje 7 a viac hodín spánku. Naplánuj si večer od rána dozadu."
+          }
+        }
+      }
+    },
+    "Make time for sleep": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make time for sleep"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daj spánku čas"
+          }
+        }
+      }
+    },
+    "Planning enough time for sleep helps protect your health and well-being – give it a spot in your day.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Planning enough time for sleep helps protect your health and well-being – give it a spot in your day."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas na spánok pomáha chrániť zdravie a pohodu – daj mu pevné miesto vo svojom dni."
+          }
+        }
+      }
+    },
+    "A warm evening drink": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A warm evening drink"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplý večerný nápoj"
+          }
+        }
+      }
+    },
+    "Swap evening coffee or black tea for a warm milky drink or a herbal tea.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swap evening coffee or black tea for a warm milky drink or a herbal tea."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večernú kávu či čierny čaj vymeň za teplé mlieko alebo bylinkový čaj."
+          }
+        }
+      }
+    },
+    "A comfy bed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A comfy bed"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohodlná posteľ"
+          }
+        }
+      }
+    },
+    "A comfortable mattress and pillow make your bedroom a nicer place to sleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A comfortable mattress and pillow make your bedroom a nicer place to sleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohodlný matrac a vankúš urobia zo spálne príjemnejšie miesto na spanie."
+          }
+        }
+      }
+    },
+    "Sweet things in moderation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sweet things in moderation"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sladkosti s mierou"
+          }
+        }
+      }
+    },
+    "Phone face down": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phone face down"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mobil displejom nadol"
+          }
+        }
+      }
+    },
+    "Turn your phone face down, so its glow doesn't reach you at night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turn your phone face down, so its glow doesn't reach you at night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otoč mobil displejom nadol, nech ťa v noci neruší jeho svetlo."
+          }
+        }
+      }
+    },
+    "The 20-minute rule": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The 20-minute rule"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pravidlo 20 minút"
+          }
+        }
+      }
+    },
+    "Still awake after about 20 minutes? Get up and do something calm, like reading a book, then come back when sleep returns.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Still awake after about 20 minutes? Get up and do something calm, like reading a book, then come back when sleep returns."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stále hore po zhruba 20 minútach? Vstaň, rob niečo pokojné, napríklad čítaj, a vráť sa, keď sa spánok vráti."
+          }
+        }
+      }
+    },
+    "Sleep helps you learn": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sleep helps you learn"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spánok pomáha učeniu"
+          }
+        }
+      }
+    },
+    "While you sleep, your brain stores memories – good sleep helps learning and clear thinking.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "While you sleep, your brain stores memories – good sleep helps learning and clear thinking."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Počas spánku sa upevňujú spomienky – dobrý spánok pomáha učeniu aj jasnému mysleniu."
+          }
+        }
+      }
+    },
+    "Naps before 3 p.m.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naps before 3 p.m."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Šlofík do tretej"
+          }
+        }
+      }
+    },
+    "Try to finish any nap before 3 p.m., so the evening can get properly sleepy.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try to finish any nap before 3 p.m., so the evening can get properly sleepy."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Šlofík si dopraj radšej pred 15:00, aby večer prišla poriadna ospalosť."
+          }
+        }
+      }
+    },
+    "Keep the light low": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep the light low"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svetlo nechaj slabé"
+          }
+        }
+      }
+    },
+    "If you get up in the night, keep the lights low – a dim night light is fine.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "If you get up in the night, keep the lights low – a dim night light is fine."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ak v noci vstaneš, nechaj svetlo slabé – stačí tlmené nočné svetielko."
+          }
+        }
+      }
+    },
+    "Sugary drinks and snacks can make it harder to fall or stay asleep – go easy on them.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sugary drinks and snacks can make it harder to fall or stay asleep – go easy on them."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sladké nápoje a maškrty môžu sťažiť zaspávanie aj spánok – dopraj si ich s mierou."
+          }
+        }
+      }
+    },
+    "Nightcap": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nightcap"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nočná čiapka"
+          }
+        }
+      }
+    },
+    "Top hat": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Top hat"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cylinder"
+          }
+        }
+      }
+    },
+    "Builder's helmet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Builder's helmet"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prilba staviteľa"
+          }
+        }
+      }
+    },
+    "Sunglasses": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunglasses"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slnečné okuliare"
+          }
+        }
+      }
+    },
+    "Bowl with a fish": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bowl with a fish"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Miska s rybou"
+          }
+        }
+      }
+    },
+    "Rug": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rug"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koberček"
+          }
+        }
+      }
+    },
+    "Wearing: %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wearing: %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Má na sebe: %@"
+          }
+        }
+      }
+    },
+    "Shooting stars": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shooting stars"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padajúce hviezdy"
+          }
+        }
+      }
+    },
+    "Northern lights": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Northern lights"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polárna žiara"
+          }
+        }
+      }
+    },
+    "The Cat constellation": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Cat constellation"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Súhvezdie Mačky"
+          }
+        }
+      }
+    },
+    "Comet": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comet"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kométa"
+          }
+        }
+      }
+    },
+    "Box contents": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Box contents"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obsah škatúľ"
+          }
+        }
+      }
+    },
+    "Postcards": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postcards"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohľadnice"
+          }
+        }
+      }
+    },
+    "Decorations": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Decorations"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ozdoby"
+          }
+        }
+      }
+    },
+    "Cat accessories": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cat accessories"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doplnky mačky"
+          }
+        }
+      }
+    },
+    "Night skies": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Night skies"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nočné oblohy"
+          }
+        }
+      }
+    },
+    "Head": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Head"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hlava"
+          }
+        }
+      }
+    },
+    "Face": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Face"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvár"
+          }
+        }
+      }
+    },
+    "By the bed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "By the bed"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pri pelechu"
+          }
+        }
+      }
+    },
+    "Cat": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cat"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mačka"
+          }
+        }
+      }
+    },
+    "Awake": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Awake"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hore"
+          }
+        }
+      }
+    },
+    "Asleep": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asleep"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spí"
+          }
+        }
+      }
+    },
+    "Shooting stars: one every 6–12s. The comet crosses the sky once every %lld min.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shooting stars: one every 6–12s. The comet crosses the sky once every %lld min."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padajúce hviezdy: jedna za 6 – 12s. Kométa prejde oblohou raz za %lld min."
           }
         }
       }
