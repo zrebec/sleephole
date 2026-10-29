@@ -32,7 +32,10 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 1. **Build 12 = the boxes, in work since 2026-10-29 ~09:55 (his word "Spusti 11b4a").** His prep-page answers (`state/answers`
    v5 of https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h): the shop is its own tab, the cat unwraps the box, the collection
    inside the shop, "Simulated Gambling" no. Steps (plan §10 REL "Build 12"): **11b4a the shop + the purchase (on his
-   phone since 2026-10-29 14:59; his ticks t1–t7 today and r1–r3 the morning of 30 Oct on the page above, rewritten as the build page)**, 11b4b the opening, 11b4c the collection, 11b4d the bubble. Using a joker won from a box
+   phone since 2026-10-29 14:59; his t1–t7 all fine; r1–r3 the morning of 30 Oct on the page above, rewritten as the build
+   page)**, **11b4a2 the name (on his phone 18:48, his t8): on screen a box is a "parcel" / "balíček" – never the old
+   Slovak word (vulgar slang), never "box" or "package" in a UI text; the code keeps "box"**, 11b4b the opening, 11b4c the
+   collection, 11b4d the bubble. Using a joker won from a box
    (no screen yet) → 11b4c (his answer); his first box right away with 11b4a alone, no opening yet (his pick). **Tell him
    where the boxes stand whenever a step ends** ("boxes: n of 4 steps in the app, first box about …"). His worry "it must not
    get mixed up" → records, not counters. Build 11 (1.0 (11)) is with the testers since 07:30; PR #2 merged by him; its page
