@@ -29,18 +29,16 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 11 is with the testers since 2026-10-29 ~07:30 (his word that morning: "build 11 as-is to the testers – without the
-   boxes, with the new building draw").** 1.0 (11) uploaded 07:23; "What to Test" EN + SK (his yes; App Store Connect refuses
-   the 🪙 emoji → "coins" / "mincí"); "Testing" in Kamaráti and SE. Visible: 11a the receipt, 11a2 = B38, 11b6 another building
-   (400 / 800 🪙), 11b6b "New in town"; inside but unreachable without a shop: 11b2, 11b3, 11b5. The build 11 page
-   (https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo) holds his open ticks t1–t4 (incl. the night 29 → 30, the first real
-   night with the whole tree) and notes n1 / n2 (`state/answers`). **The PR `build/11` → `main` is open – he merges.**
-   **Next: build 12 = the boxes (his pick 2026-10-29): 11b4 the shop, the opening, the collection (choose the cat's items and
-   the sky), the speech bubble over the bed items; prep page https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h with five
-   questions (`state/answers`, prefix `b12.`). Starts on his word (Opus recommends the morning of 30 Oct, a clean session);
-   `build/12` from `main` after his merge. Tell him where the boxes stand whenever a step ends.** His worry "it must not get
-   mixed up" → records, not counters. Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered;
-   protecting `main` on GitHub is his click. Build 10's ticks c8 / c9 (its page, `state/answers` v7) are still open.
+1. **Build 12 = the boxes, in work since 2026-10-29 ~09:55 (his word "Spusti 11b4a").** His prep-page answers (`state/answers`
+   v5 of https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h): the shop is its own tab, the cat unwraps the box, the collection
+   inside the shop, "Simulated Gambling" no. Steps (plan §10 REL "Build 12"): **11b4a the shop + the purchase (built,
+   reviewed, merged into `build/12`; not on his phone yet – his yes)**, 11b4b the opening, 11b4c the collection, 11b4d the bubble. Using a joker won from a box
+   (no screen yet) → 11b4c (his answer); his first box right away with 11b4a alone, no opening yet (his pick). **Tell him
+   where the boxes stand whenever a step ends** ("boxes: n of 4 steps in the app, first box about …"). His worry "it must not
+   get mixed up" → records, not counters. Build 11 (1.0 (11)) is with the testers since 07:30; PR #2 merged by him; its page
+   https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo holds his open ticks t1–t4 (incl. the night 29 → 30). Leftover worktree
+   `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is his click. Build 10's
+   ticks c8 / c9 (its page, `state/answers` v7) are still open.
 2. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
    and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (still on
    2026-10-29 07:30). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
