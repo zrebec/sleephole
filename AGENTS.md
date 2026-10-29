@@ -29,29 +29,29 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 11 is in work since 2026-10-25 (his word; plan §10 REL "Build 11", §0b row 11). Cut on 2026-10-28 (his pick):
-   build 11 = the boxes – 11c nights off → build 13, 11d accessibility → build 12.** Done and confirmed by him: 11a the coin
-   receipt, 11a2 = B38, 11b6 another building for tonight (400 / 800 🪙), 11b6b "New in town" (2026-10-28). Done and on his
-   phone, nothing to see: 11b1 the economy simulation (his answers: odds D, a missing collectible first, the 1 000 reserve
-   except for the town's very first box, collections 30 / 12 / 6 / 4, the shop always visible), 11b2 the box records.
-   **Boxes (his pace 2026-10-27): only with the full contents – 11b3 the rules and 11b5 the contents (30 postcards
-   with sourced tips, his six cat accessories, 12 town decorations, 4 night skies; Settings → Developer → "Box contents" shows
-   them) built and reviewed 2026-10-28, merged into `build/11`, NOT on his phone yet (install on his word) → 11b4 the shop last; his first box about 30 – 31 Oct; each step on his word. Tell
-   him where the boxes stand whenever a step ends.** Then one real night, version 11, the testers (about 1 – 2 Nov), the
-   PR `build/11` → `main` (he merges; he merged PR #1 mid-build on 2026-10-26). His worry "it must not get mixed up" →
-   records, not counters (§10 REL). Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered;
-   protecting `main` on GitHub is his click. Build 10 is in Kamaráti and SE; his ticks c8 / c9 on the build 10 page are
-   still open (`state/answers` v7).
+1. **Build 11 is with the testers since 2026-10-29 ~07:30 (his word that morning: "build 11 as-is to the testers – without the
+   boxes, with the new building draw").** 1.0 (11) uploaded 07:23; "What to Test" EN + SK (his yes; App Store Connect refuses
+   the 🪙 emoji → "coins" / "mincí"); "Testing" in Kamaráti and SE. Visible: 11a the receipt, 11a2 = B38, 11b6 another building
+   (400 / 800 🪙), 11b6b "New in town"; inside but unreachable without a shop: 11b2, 11b3, 11b5. The build 11 page
+   (https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo) holds his open ticks t1–t4 (incl. the night 29 → 30, the first real
+   night with the whole tree) and notes n1 / n2 (`state/answers`). **The PR `build/11` → `main` is open – he merges.**
+   **Next: build 12 = the boxes (his pick 2026-10-29): 11b4 the shop, the opening, the collection (choose the cat's items and
+   the sky), the speech bubble over the bed items; prep page https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h with five
+   questions (`state/answers`, prefix `b12.`). Starts on his word (Opus recommends the morning of 30 Oct, a clean session);
+   `build/12` from `main` after his merge. Tell him where the boxes stand whenever a step ends.** His worry "it must not get
+   mixed up" → records, not counters. Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered;
+   protecting `main` on GitHub is his click. Build 10's ticks c8 / c9 (its page, `state/answers` v7) are still open.
 2. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
-   and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (up to
-   48 h). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
+   and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (still on
+   2026-10-29 07:30). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
    to review, repeat this whole agenda to him (his request 2026-10-16).**
 3. **His streak:** the night of 2026-10-15 → 16 collapsed (one trip of 13.15s; Notification Center counts as leaving on
    iOS 26); the silver joker saved it (1 000 🪙). October's bronze and silver are used and he will not buy the gold – the
    next failed night this month breaks the streak. Be kind about it.
-4. **Later builds:** 12 polishing + accessibility (11d, incl. 10h's `ThickProgressStyle`; moved 2026-10-28); 13 nights off
-   (11c, moved 2026-10-28) + statistics, the bug list and Plans (his answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 12):** the store and TestFlight
-   texts are done (plan §12); the guide's first page and the Strict-mode footer wait for build 12; the testers' answers about
+4. **Later builds (renumbered 2026-10-29):** 13 polishing + accessibility (11d, incl. 10h's `ThickProgressStyle`; the flaky
+   `SyncEngineTests` test; "Cancel night" under the tab bar); 14 nights off (11c) + statistics, the bug list and Plans (his
+   answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 13):** the store and TestFlight
+   texts are done (plan §12); the guide's first page and the Strict-mode footer wait for build 13; the testers' answers about
    missing notifications decide a stronger gentle mode. Still open: the eight questions at the end of
    `docs/NAVRH-MESTO-STATISTIKY.md`; from 2026-10-14 the seller name on the Business page, "a little tuning of the home screen
    UI", "some AI optimisation", "like a wiper on a car"; from `docs/ZAJTRA-RANO.md` departures.to (Health + Audio).

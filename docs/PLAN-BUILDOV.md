@@ -1,6 +1,6 @@
 # SleepHole – plán podľa buildov
 
-Stav k 28. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdrojom pravdy anglický plán
+Stav k 29. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdrojom pravdy anglický plán
 `docs/IMPLEMENTATION_PLAN.md`, kapitola §0b; keď sa zmení tam, zmení sa aj tu.
 
 ## Ako pracujeme
@@ -8,14 +8,15 @@ Stav k 28. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 1. **Jeden build naraz.** Build, na ktorom sa robí, má pevný zoznam krokov (8a, 8b, …). Krok doňho pridávaš len ty.
    Claude môže navrhnúť jedným riadkom a čaká na tvoje slovo.
 2. **Každý nový nápad – tvoj aj Claudov – ide do tohto plánu** do niektorého z ďalších buildov alebo do „Neskôr“,
-   jedným riadkom. Nič nepreskočí rad bez tvojho slova. Zmrazenie rozsahu až do vydania 1.0 platí ďalej: buildy 11–15
+   jedným riadkom. Nič nepreskočí rad bez tvojho slova. Zmrazenie rozsahu až do vydania 1.0 platí ďalej: buildy 12–16
    sú plán, nie rozrobená práca.
 3. **Build je hotový**, až keď je každý krok skontrolovaný (testy zelené, texty kompletné v oboch jazykoch), je v tvojom
    telefóne, prežil jednu ostrú noc, je commitnutý, nahratý do TestFlightu a pridaný testerom so zoznamom „What to Test“.
 4. **Číslo buildu je číslo v TestFlighte** (`CURRENT_PROJECT_VERSION`); krok je číslo + písmeno (8a, 8b, …).
 5. **Agenda na začiatku sedenia je krátka** – len to, čo je otvorené teraz. História ide do plánu (§12).
 6. **Tick-tock (tvoje pravidlo 19. 10.):** buildy sa striedajú – jeden na nové veci (11, 13, 15, …), ďalší na doladenie
-   (10, 12, 14, …) s opravami a chybami, ktoré sa medzitým našli. Do dolaďovacieho buildu nová funkcia nejde.
+   (10, 12, 14, …) s opravami a chybami, ktoré sa medzitým našli. Do dolaďovacieho buildu nová funkcia nejde. **Posun 29. 10. (tvoja voľba):** build 11 išiel bez obchodu
+   so škatuľami a škatule dostali vlastný build 12 – od neho je doladenie 13, 15, … a nové veci 14, 16, …
 
 ## Prehľad
 
@@ -24,11 +25,12 @@ Stav k 28. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 | 8 | Pokoj a drobné opravy | hotový – dve ostré noci, commitnutý, nahratý ako 1.0 (8), u testerov (Kamaráti aj SE) |
 | 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | hotový – ostrá noc 18.→19. 10. bez chyby, commitnutý, nahratý ako 1.0 (9) 19. 10., u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky); ďalej návod pre Apple na čistom telefóne, potom build 9 namiesto 7 na kontrolu |
 | 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | **hotový 24. 10.** – ostrá noc 23.→24. 10. bez chyby, commitnutý, nahratý ako 1.0 (10), u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky), build 7 stiahnutý z kontroly a **1.0 (10) odoslaná na kontrolu u Apple** s ručným vydaním |
-| 11 | **Nové veci:** ekonomika so škatuľami (zúžený 28. 10.: prístupnosť → 12, voľné noci → 13) | **rozrobený od 25. 10.** (tvoje slovo) – 11a, 11a2, 11b6 aj 11b6b potvrdené tebou; 11b1 prepočet a 11b2 záznamy hotové; **11b3 pravidlá škatúľ hotové 28. 10. ~07:15**; ďalej 11b5 obsah a 11b4 obchod; prvá škatuľa asi 30. – 31. 10., testerom asi 1. – 2. 11. (odhad) |
-| 12 | **Doladenie** + prístupnosť (+ jasne povedať, na čo appka je) | návrh |
-| 13 | **Nové veci:** mesto a voľné noci | návrh |
-| 14 | **Doladenie** | návrh |
-| 15 | **Nové veci:** živé mesto | návrh |
+| 11 | **Nové veci:** iná budova na dnešnú noc, účet mincí; škatule vnútri bez obchodu | **u testerov od 29. 10. ~7:30** – nahratý ako 1.0 (11), „What to Test“ anglicky aj slovensky, Kamaráti aj SE; pull request do `main` čaká na tvoje zlúčenie |
+| 12 | **Nové veci:** škatule – obchod, otvorenie, zbierka | ďalší, na tvoje slovo; obsah aj pravidlá sú hotové už v builde 11; prvá škatuľa asi 31. 10. – 1. 11. (odhad) |
+| 13 | **Doladenie** + prístupnosť (+ jasne povedať, na čo appka je) | návrh |
+| 14 | **Nové veci:** mesto a voľné noci | návrh |
+| 15 | **Doladenie** | návrh |
+| 16 | **Nové veci:** živé mesto | návrh |
 | Neskôr | nápady bez čísla buildu | zásobník |
 
 ## Build 8 – Pokoj a drobné opravy (hotový, u testerov)
@@ -116,7 +118,9 @@ B12, B13, B14, B15, B16, B22 a B26.
 
 Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Aplikácie → SleepHole. Neskorší začiatok nemá vlastnú pokutu: príprava beží od začiatku a pokojné hodiny sa rátajú až od jej konca, takže neskorší štart prinesie menej mincí. „Dnešný budík“ (B) si nechcel; druhý rozvrh (D) nie – namiesto neho voľné noci (E) v builde 11.
 
-## Build 11 – Nové veci: ekonomika so škatuľami (rozrobený od 25. 10.)
+## Build 11 – Nové veci: ekonomika so škatuľami (u testerov od 29. 10.)
+
+**Vydaný 29. 10. ~7:30 bez obchodu so škatuľami (tvoja voľba ráno: „build 11 as-is daj na test, bez škatúľ, so žrebom pre novú budovu“).** Celý kód je v telefóne od 6:55. Archív 1.0 (11) je skontrolovaný a nahratý o 7:23. Texty „What to Test“ sú anglicky aj slovensky; App Store Connect neprijal emoji mince, preto „coins“ a „mincí“. Build je v skupinách Kamaráti aj SE. Testeri vidia: inú budovu na dnešnú noc, štítok „Nová v meste“, účet mincí a opravu B38. Záznamy, pravidlá a obsah škatúľ sú vnútri, ale bez obchodu sa škatuľa nedá kúpiť. Obchod a otvorenie (11b4) sú teraz **build 12**. Stránka buildu 11: https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo, príprava buildu 12: https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h.
 
 **Zúžený 28. 10. (tvoja voľba):** build 11 budú škatule a to, čo je už hotové. Prístupnosť (11d) ide do buildu 12 – je to doladenie, nie nová funkcia. Voľné noci (11c) idú do buildu 13. S celým pôvodným rozsahom by build išiel testerom asi 7. – 10. 11., len so škatuľami asi 1. – 2. 11. (odhad).
 
@@ -146,7 +150,11 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 
 **Presunuté do buildu 13 (tvoja odpoveď 25. 10.):** mesačný kalendár, detail noci, graf so štyrmi farbami, zoznam chýb vo Vývoji, obrazovka Plánov.
 
-## Build 12 – Doladenie (návrh)
+## Build 12 – Nové veci: škatule (ďalší)
+
+**Tvoja voľba 29. 10.:** škatule dostanú vlastný build. Obsah (11b5), pravidlá (11b3) aj záznamy (11b2) sú hotové už v builde 11. Zostáva **11b4**: obchod so škatuľami (vždy viditeľný, aj pri 0 minciach: čo môže v škatuli byť, šance a koľko mincí ešte chýba), otvorenie (krátke, ťuknutím preskočiť), zbierka (pohľadnice, ozdoby, výber doplnkov mačky a oblohy) a bublina mačky, ktorá dnes zakrýva pelech. Pred kontrolou u Apple: vekové hodnotenie „Loot Boxes“ áno a odpoveď na „Simulated Gambling“ (tvoje áno). Päť otázok je na stránke prípravy. Začne sa na tvoje slovo, prvá škatuľa asi 31. 10. – 1. 11. (odhad).
+
+## Build 13 – Doladenie a prístupnosť (návrh)
 
 Opravy po builde 11 a chyby, ktoré sa medzitým nájdu. (B38 si 25. 10. presunul do buildu 11 ako krok 11a2.) „Zrušiť noc“ je počas prípravy noci schované pod spodnou lištou na iPhone 17e aj 16 Pro.
 
@@ -155,7 +163,7 @@ Opravy po builde 11 a chyby, ktoré sa medzitým nájdu. (B38 si 25. 10. presunu
 **Návrh: jasne povedať, na čo appka je (tvoj nápad 24. 10.).** Testeri čakajú, že appka bude fungovať sama alebo brať spánok z hodiniek, a v miernom režime im „nechodia upozornenia“. Do appky jedna jasná veta: SleepHole spánok nemeria, učí chodiť spať načas, každú noc spúšťaš sám a hodinky netreba. Patrí na prvú stranu sprievodcu a pod prísny režim v Nastaveniach, kde treba dopísať, čo mierny režim nestráži. Ešte skôr to patrí do popisu v App Store a v TestFlighte – to nepotrebuje build, stačia tvoje kliky pri builde 10. Silnejší mierny režim (druhé pokojné pripomenutie, ráno ukázať, koľko si v noci bol na telefóne) počká na podrobnosti od testerov.
 
 
-## Build 13 – Nové veci: mesto (návrh)
+## Build 14 – Nové veci: mesto a voľné noci (návrh)
 
 **Voľné noci (z buildu 11, tvoja voľba 28. 10.):** najviac 2 dni v týždni, len bez prísneho režimu; začneš 18:00–3:00, bez budíka, potvrdiť do 14:00; 75 % vlastného rozvrhu hotová budova, 50 % rozostavaná, menej nič; víkendové stavby. Tvoje odpovede sú hotové.
 
@@ -163,11 +171,11 @@ Pohľad na mesto (B30) sa presunul do buildu 10. **Z buildu 11 sem prišli (25. 
 budov úrovne 3 – dnes sa ich päť opakuje. Ostrov, ktorého pobrežie kopíruje mesto (čaká na tvoju odpoveď: voda
 všade, alebo horizont).
 
-## Build 14 – Doladenie (návrh)
+## Build 15 – Doladenie (návrh)
 
-Opravy po builde 13.
+Opravy po buildoch 12 a 14.
 
-## Build 15 – Nové veci: živé mesto (návrh)
+## Build 16 – Nové veci: živé mesto (návrh)
 
 Dážď a sneh nad mestom, deň a noc so svetlami lámp a okien. Live Activity a Dynamic Island s odpočtom noci (najprv
 skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón len leží.
