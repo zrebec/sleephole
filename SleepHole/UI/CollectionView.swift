@@ -24,6 +24,8 @@ struct CollectionCard: View {
             link("🐱", L("For the cat"), .accessory) { CatOutfitView() }
             Divider()
             link("🌌", L("Night skies"), .sky) { NightSkiesView() }
+            Divider()
+            boughtLink
             ForEach(held, id: \.id) { box in
                 Divider()
                 heldRow(box)
@@ -55,6 +57,28 @@ struct CollectionCard: View {
         .buttonStyle(.plain)
         .navigationDestination(isPresented: Binding(                 // screenshots: `-openCollection postcards|decorations|cat|skies`
             get: { autoOpen == Self.launchKey(kind) || (kind == .postcard && autoOpen == "postcard") }, set: { if !$0 { autoOpen = nil } })) { destination() }
+    }
+
+    /// "Parcels bought": every parcel ever bought, newest first.
+    private var boughtLink: some View {
+        let title = L("Parcels bought"), count = "\(boxes.count)"
+        return NavigationLink {
+            BoughtParcelsView()
+        } label: {
+            HStack(spacing: 10) {
+                Text(verbatim: "📜").frame(width: 30)
+                Text(title).font(.subheadline)
+                Spacer(minLength: 8)
+                Text(verbatim: count).font(.caption.monospacedDigit()).cardCaption()
+                Image(systemName: "chevron.right").font(.caption).cardCaption()
+            }
+            .contentShape(Rectangle())
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(verbatim: "\(title), \(count)"))
+        }
+        .buttonStyle(.plain)
+        .navigationDestination(isPresented: Binding(                 // screenshots: `-openCollection bought|boughtSheet`
+            get: { autoOpen == "bought" || autoOpen == "boughtSheet" }, set: { if !$0 { autoOpen = nil } })) { BoughtParcelsView() }
     }
 
     /// The `-openCollection` word of a kind (DevArgs is empty in Release, so this never fires there).
@@ -163,6 +187,92 @@ struct PostcardsListView: View {
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(Text(verbatim: "\(title), \(date)"))
     }
+}
+
+/// The parcels bought: newest first and the two sums (plain numbers, no judgement).
+struct BoughtParcels: Equatable {
+    let newestFirst: [BoxPurchase]
+    let spent: Int
+    let back: Int
+
+    init(_ boxes: [BoxPurchase]) {
+        newestFirst = boxes.sorted { $0.at > $1.at }
+        spent = boxes.reduce(0) { $0 + $1.price }
+        back = boxes.reduce(0) { $0 + $1.payout }
+    }
+}
+
+/// Every parcel ever bought, newest first; a tap opens that parcel's prize card in a sheet.
+struct BoughtParcelsView: View {
+    @Environment(AppModel.self) private var model
+    @State private var shown: BoxPurchase?
+    @State private var autoSheet = DevArgs.value(after: "-openCollection") == "boughtSheet"      // screenshots (Debug only)
+
+    var body: some View {
+        let all = BoughtParcels(model.boxes())
+        CollectionScreen(title: L("Parcels bought")) {
+            if all.newestFirst.isEmpty {
+                EmptyNote(text: L("No parcels yet. One can be bought on the morning after a complete night."))
+            } else {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(L("Spent on parcels: \(all.spent) 🪙")).font(.subheadline)
+                    Text(L("Coins back from parcels: \(all.back) 🪙")).font(.subheadline)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading).padding().glassCard()
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text(verbatim: "\(L("Spent on parcels: \(all.spent) 🪙")). \(L("Coins back from parcels: \(all.back) 🪙"))"))
+                VStack(spacing: 0) {
+                    ForEach(Array(all.newestFirst.enumerated()), id: \.element.id) { i, box in
+                        if i > 0 { Divider() }
+                        Button { shown = box } label: { row(box) }.buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal).padding(.vertical, 4)
+                .glassCard()
+            }
+        }
+        .sheet(item: Binding(get: { shown.map(ParcelItem.init) }, set: { shown = $0?.box })) { item in
+            NavigationStack {
+                ScrollView {
+                    BoxPrizeCard(box: item.box).padding().glassCard().padding()
+                }
+                .skyBackground()
+                .navigationTitle(Fmt.fullDate(item.box.nightKey))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L("Done")) { shown = nil } } }
+            }
+            .environment(\.locale, Lang.current.locale)
+        }
+        .onAppear {
+            if autoSheet { autoSheet = false; shown = all.newestFirst.first }
+        }
+    }
+
+    private func row(_ box: BoxPurchase) -> some View {
+        let text = BoxPrizeText.make(for: box, catalog: model.catalog)
+        let date = [text.kind, Fmt.fullDate(box.nightKey)].compactMap { $0 }.joined(separator: " · ")      // "Postcard · 26 Oct"
+        var caption = L("Price \(box.price) 🪙")
+        if box.payout > 0 { caption += " · " + L("+\(box.payout) 🪙 back") }
+        return HStack(spacing: 10) {
+            Text(verbatim: text.emoji).font(.title2).frame(width: 34)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: text.title).font(.subheadline).fixedSize(horizontal: false, vertical: true)
+                Text(date).font(.caption).cardCaption()
+                Text(caption).font(.caption).cardCaption().fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 8)
+            Image(systemName: "chevron.right").font(.caption).cardCaption()
+        }
+        .padding(.vertical, 10)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: "\(text.title), \(date), \(caption)"))
+    }
+}
+
+private struct ParcelItem: Identifiable {
+    let box: BoxPurchase
+    var id: String { box.id }
 }
 
 /// The owned decorations: they stand in the town by themselves, nothing to choose.
