@@ -1817,6 +1817,22 @@
         }
       }
     },
+    "The cat opened your parcel.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The cat opened your parcel."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mačka ti rozbalila balíček."
+          }
+        }
+      }
+    },
     "The reminder, the nap window, sounds and the code can change any time.": {
       "localizations": {
         "en": {

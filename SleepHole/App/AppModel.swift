@@ -111,6 +111,8 @@ final class AppModel {
     ///                                 running night and close its result / start a pause once the setup is over
     ///   -thenTab buybox               DEBUG only: 5 s after launch (4 s, then the tab opens and 1 s more) buy today's box (with -boxSeed N: that draw seed; needs a
     ///                                 complete night of today – see -seedTodayNight)
+    ///   -openingAt <seconds>          DEBUG only: freeze the parcel opening's timeline at that moment (0.5 wobble, 1.3 pop, 5 the end; 11b4b)
+    ///   -openingStill                 DEBUG only: the parcel opening takes the Reduce Motion path (11b4b)
     ///   -seedTodayNight complete|unfinished|none   SIMULATOR ONLY, with -seedNights: force the newest seeded night (the one
     ///                                 with today's key) to be complete / unfinished / absent (shop screenshots, 11b4a)
     ///   -seedBoxBefore                SIMULATOR ONLY, with -seedNights: an earlier box (price 700, no prize coins) three days ago,
@@ -1163,8 +1165,12 @@ final class AppModel {
                                          seed: seed ?? UInt64.random(in: .min ... .max), boxes: boxes(),
                                          uses: jokerState.uses, calendar: calendar)
         recordBox(purchase)
+        openingParcel = purchase                           // 11b4b: the shop plays the opening (transient, never stored)
         return purchase
     }
+
+    /// The parcel whose opening is on screen (step 11b4b). Set by `buyBox`, cleared when the opening is closed.
+    var openingParcel: BoxPurchase?
 
     /// Replaces ALL nights, settings and guide flags with the backup (not while a night is running).
     func restore(_ b: BackupFile) throws {
