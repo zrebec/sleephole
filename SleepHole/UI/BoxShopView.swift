@@ -35,6 +35,9 @@ struct BoxShopView: View {
             }
             .skyBackground()
             .navigationTitle(L("Parcels"))
+            .fullScreenCover(item: Bindable(model).openingParcel) { box in
+                ParcelOpeningView(box: box)
+            }
         }
     }
 
