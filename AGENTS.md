@@ -34,7 +34,7 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    inside the shop, "Simulated Gambling" no. Steps (plan §10 REL "Build 12"): **11b4a the shop + the purchase (on his
    phone since 2026-10-29 14:59; his t1–t7 all fine; r1–r3 the morning of 30 Oct on the page above, rewritten as the build
    page)**, **11b4a2 the name (on his phone 18:48, his t8): on screen a box is a "parcel" / "balíček" – never the old
-   Slovak word (vulgar slang), never "box" or "package" in a UI text; the code keeps "box"**; the night 29 → 30 complete and his second parcel 06:07 (3× the price); **11b4c the collection + using a parcel joker on his phone since 2026-10-30 07:49 (his z1–z5 on the build page v5)**, **11b4c2 the list of parcels bought (his addition 2026-10-30 ~07:45) merged ~08:00, install on his word**, 11b4b the opening, 11b4d the bubble. Using a joker won from a box
+   Slovak word (vulgar slang), never "box" or "package" in a UI text; the code keeps "box"**; the night 29 → 30 complete and his second parcel 06:07 (3× the price); **11b4c the collection + using a parcel joker on his phone since 2026-10-30 07:49 (his z1–z5 on the build page v5)**, **11b4c2 the list of parcels bought (his addition 2026-10-30 ~07:45) on his phone since 14:03 (his z6 on the build page v6)**, 11b4b the opening, 11b4d the bubble. Using a joker won from a box
    (no screen yet) → 11b4c (his answer); his first box right away with 11b4a alone, no opening yet (his pick). **Tell him
    where the boxes stand whenever a step ends** ("boxes: n of 4 steps in the app, first box about …"). His worry "it must not
    get mixed up" → records, not counters. Build 11 (1.0 (11)) is with the testers since 07:30; PR #2 merged by him; its page
