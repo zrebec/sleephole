@@ -15336,6 +15336,102 @@
           }
         }
       }
+    },
+    "Parcels bought": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parcels bought"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kúpené balíčky"
+          }
+        }
+      }
+    },
+    "No parcels yet. One can be bought on the morning after a complete night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No parcels yet. One can be bought on the morning after a complete night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatiaľ žiadne balíčky. Prvý sa dá kúpiť ráno po hotovej noci."
+          }
+        }
+      }
+    },
+    "Spent on parcels: %lld 🪙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spent on parcels: %lld 🪙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minuté na balíčky: %lld 🪙"
+          }
+        }
+      }
+    },
+    "Coins back from parcels: %lld 🪙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coins back from parcels: %lld 🪙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mince späť z balíčkov: %lld 🪙"
+          }
+        }
+      }
+    },
+    "Price %lld 🪙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Price %lld 🪙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cena %lld 🪙"
+          }
+        }
+      }
+    },
+    "+%lld 🪙 back": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld 🪙 back"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld 🪙 späť"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

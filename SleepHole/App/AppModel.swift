@@ -118,8 +118,9 @@ final class AppModel {
     ///   -seedCollection               SIMULATOR ONLY, with -seedNights: eleven earlier boxes (4–14 days ago) giving 3 postcards, 2 town
     ///                                 decorations, 3 cat accessories (nightcap, sunglasses, rug), 2 night skies and a silver joker
     ///                                 (collection screenshots, 11b4c)
-    ///   -openCollection postcards|postcard|decorations|cat|skies|jokers   DEBUG only, Boxes tab: open that collection screen / the
-    ///                                 first postcard / the joker sheet at once (screenshots, 11b4c)
+    ///   -openCollection postcards|postcard|decorations|cat|skies|jokers|bought|boughtSheet   DEBUG only, Boxes tab: open that
+    ///                                 collection screen / the first postcard / the joker sheet / the list of parcels bought (boughtSheet:
+    ///                                 also the newest parcel's sheet) at once (screenshots, 11b4c, 11b4c2)
     ///   -boxScroll / -boxConfirm      DEBUG only, Boxes tab: scroll to the odds list / open the buy confirmation (screenshots)
     ///   -thenTab reroll               (with a paying night) draw another building once, 4 s after launch
     ///   -rerollDialog                 open the "Another building" confirmation 2 s after the night screen shows
