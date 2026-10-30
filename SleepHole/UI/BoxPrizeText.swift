@@ -80,6 +80,7 @@ struct BoxPrizeCard: View {
                 Button(L("Read")) { reading = true }
                     .glassButton(prominent: false)
             }
+            wearing()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .sheet(isPresented: $reading) {
@@ -90,6 +91,32 @@ struct BoxPrizeCard: View {
                         .navigationBarTitleDisplayMode(.inline)
                 }
                 .environment(\.locale, Lang.current.locale)
+            }
+        }
+    }
+
+    /// A new accessory or sky: "Put it on" / "Show this sky", or a note that it is already shown. A repeat that turned
+    /// into coins (payout > 0) has nothing to put on.
+    @ViewBuilder
+    private func wearing() -> some View {
+        if box.payout == 0, case .collectible(let kind, let id) = box.prize {
+            switch kind {
+            case .accessory:
+                if let slot = AccessorySlot.of(id) {
+                    let worn = [model.buddyOutfit.head, model.buddyOutfit.face, model.buddyOutfit.bed].contains(id)
+                    if worn {
+                        Text(L("The cat has it now.")).font(.footnote).cardCaption()
+                    } else {
+                        Button(L("Put it on")) { model.chooseAccessory(id, slot: slot) }.glassButton(prominent: false)
+                    }
+                }
+            case .sky:
+                if model.nightSkyId == id {
+                    Text(L("Shown at night.")).font(.footnote).cardCaption()
+                } else {
+                    Button(L("Show this sky")) { model.chooseNightSky(id) }.glassButton(prominent: false)
+                }
+            default: EmptyView()
             }
         }
     }

@@ -17,6 +17,7 @@ struct BoxShopView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     todayCard(offer, boxes: boxes).appearIn(delay: 0)
+                    CollectionCard(boxes: boxes).appearIn(delay: 0.05)
                     oddsCard(boxes: boxes).appearIn(delay: 0.1).id("odds")
                 }
                 .padding()

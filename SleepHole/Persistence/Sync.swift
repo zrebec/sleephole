@@ -216,6 +216,21 @@ extension UserProgress {
             townNameChangedAt = theirs                       // the stamp travels with the name
             changed = true
         }
+        // the collection's two choices (11b4c): the newer stamp wins; a file without a stamp leaves ours
+        if file.outfitChosenAt != nil,
+           SyncMerge.newer((false, outfitChosenAt), (true, file.outfitChosenAt)).value,
+           outfitChoice != file.outfitChoice || outfitChosenAt != file.outfitChosenAt {
+            outfitChoice = file.outfitChoice
+            outfitChosenAt = file.outfitChosenAt
+            changed = true
+        }
+        if file.nightSkyChosenAt != nil,
+           SyncMerge.newer((false, nightSkyChosenAt), (true, file.nightSkyChosenAt)).value,
+           nightSkyChoice != file.nightSkyChoice || nightSkyChosenAt != file.nightSkyChosenAt {
+            nightSkyChoice = file.nightSkyChoice
+            nightSkyChosenAt = file.nightSkyChosenAt
+            changed = true
+        }
         func take(_ current: Date?, _ new: Date?, _ set: (Date?) -> Void) {
             if new != current { set(new); changed = true }
         }

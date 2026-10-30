@@ -115,6 +115,11 @@ final class AppModel {
     ///                                 with today's key) to be complete / unfinished / absent (shop screenshots, 11b4a)
     ///   -seedBoxBefore                SIMULATOR ONLY, with -seedNights: an earlier box (price 700, no prize coins) three days ago,
     ///                                 so the shop shows the 1 000 🪙 reserve line (11b4a screenshots)
+    ///   -seedCollection               SIMULATOR ONLY, with -seedNights: eleven earlier boxes (4–14 days ago) giving 3 postcards, 2 town
+    ///                                 decorations, 3 cat accessories (nightcap, sunglasses, rug), 2 night skies and a silver joker
+    ///                                 (collection screenshots, 11b4c)
+    ///   -openCollection postcards|postcard|decorations|cat|skies|jokers   DEBUG only, Boxes tab: open that collection screen / the
+    ///                                 first postcard / the joker sheet at once (screenshots, 11b4c)
     ///   -boxScroll / -boxConfirm      DEBUG only, Boxes tab: scroll to the odds list / open the buy confirmation (screenshots)
     ///   -thenTab reroll               (with a paying night) draw another building once, 4 s after launch
     ///   -rerollDialog                 open the "Another building" confirmation 2 s after the night screen shows
@@ -209,6 +214,22 @@ final class AppModel {
                 let key = NightKey(date: cal.date(byAdding: .day, value: -3, to: Date())!, calendar: cal)
                 context.insert(BoxRecord(BoxPurchase(id: "seed-box", at: Date().addingTimeInterval(-3 * 86400), nightKey: key,
                                                      price: 700, seed: 1, tableVersion: 1, prize: .coins, payout: 0)))
+            }
+            if args.contains("-seedCollection") {                 // 11b4c screenshots: a little of everything, won on earlier days
+                let prizes: [BoxPrize] = [
+                    .collectible(.postcard, id: "postcard-03"), .collectible(.postcard, id: "postcard-07"),
+                    .collectible(.postcard, id: "postcard-12"), .collectible(.decoration, id: "decoration-02"),
+                    .collectible(.decoration, id: "decoration-05"), .collectible(.accessory, id: "nightcap"),
+                    .collectible(.accessory, id: "sunglasses"), .collectible(.accessory, id: "rug"),
+                    .collectible(.sky, id: "sky-01"), .collectible(.sky, id: "sky-03"), .joker(.silver),
+                ]
+                for (i, prize) in prizes.enumerated() {
+                    let ago = 4 + i                                // 4 … 14 days ago: before tonight, so a joker is usable
+                    let at = Date().addingTimeInterval(-Double(ago) * 86400)
+                    let key = NightKey(date: cal.date(byAdding: .day, value: -ago, to: Date())!, calendar: cal)
+                    context.insert(BoxRecord(BoxPurchase(id: "seed-collection-\(i)", at: at, nightKey: key, price: 400 + 10 * i,
+                                                         seed: UInt64(i + 1), tableVersion: 1, prize: prize, payout: 0)))
+                }
             }
             try? context.save()
         }
@@ -534,6 +555,12 @@ final class AppModel {
     func jokerBlock(_ tier: JokerTier, fromBox boxId: String? = nil) -> Jokers.Block? {
         Jokers.block(tier, firstNight: jokerFirstNight, uses: jokerState.uses, coins: coins,
                      boxId: boxId, boxes: boxes(), calendar: calendar)
+    }
+
+    /// The jokers won from parcels that can be switched on now (valid, not used), bronze first.
+    func heldBoxJokers() -> [BoxPurchase] {
+        let held = Boxes.heldJokers(boxes: boxes(), uses: jokerState.uses, at: jokerFirstNight, calendar: calendar)
+        return JokerTier.allCases.compactMap { held[$0] }
     }
 
     /// The joker protecting tonight or a night around now, if any (shown on Today).
@@ -1088,7 +1115,9 @@ final class AppModel {
                           changeWeekStart: p.changeWeekStart,
                           boxes: boxRecords().map { .init(id: $0.id, at: $0.at, nightKey: $0.nightKey, price: $0.price,
                                                           seed: String($0.seed), tableVersion: $0.tableVersion,
-                                                          prize: $0.prizeRaw, payout: $0.payout) })
+                                                          prize: $0.prizeRaw, payout: $0.payout) },
+                          outfitChoice: p.outfitChoice, outfitChosenAt: p.outfitChosenAt,
+                          nightSkyChoice: p.nightSkyChoice, nightSkyChosenAt: p.nightSkyChosenAt)
     }
 
     /// Every stored box row, readable or not (the backup keeps what it cannot read).
@@ -1156,6 +1185,10 @@ final class AppModel {
         if let d = b.scheduleCalibrationStart { p.scheduleCalibrationStart = d }
         if let m = b.schedulePromptMonth { p.schedulePromptMonth = m }
         p.changeWeekStart = b.changeWeekStart                // an older backup has none: the schedule is `open`
+        p.outfitChoice = b.outfitChoice                      // the backup is the whole truth: none = never chosen
+        p.outfitChosenAt = b.outfitChoice == nil ? nil : (b.outfitChosenAt ?? clock.now)
+        p.nightSkyChoice = b.nightSkyChoice
+        p.nightSkyChosenAt = b.nightSkyChoice == nil ? nil : (b.nightSkyChosenAt ?? clock.now)
         // the backup is the whole truth: an older one (no spends / changes) had none
         try context.delete(model: CoinSpend.self)
         for s in b.spends ?? [] { context.insert(CoinSpend(at: s.at, amount: s.amount, reason: s.reason)) }
@@ -1538,19 +1571,51 @@ final class AppModel {
     }()
 
     /// Dev aid: `-buddyOutfit nightcap,sunglasses,fish-bowl` dresses the cat (Debug only; `DevArgs` is empty in Release).
-    static let forcedBuddyOutfit: CatOutfit = {
-        guard let v = DevArgs.value(after: "-buddyOutfit") else { return .none }
+    static let forcedBuddyOutfit: CatOutfit? = {
+        guard let v = DevArgs.value(after: "-buddyOutfit") else { return nil }
         return CatOutfit(ids: v.split(separator: ",").map(String.init))
     }()
 
-    /// What the cat on Today wears. Today only the dev argument; the owner's choice (11b4) replaces it here.
-    var buddyOutfit: CatOutfit { Self.forcedBuddyOutfit }
+    /// What the cat on Today wears: the Debug argument when given, else the owner's choice (11b4c) – never chosen means the
+    /// newest owned item of each slot.
+    var buddyOutfit: CatOutfit {
+        Self.forcedBuddyOutfit ?? Collection.effectiveOutfit(choice: progress().outfitChoice, boxes: boxes())
+    }
+
+    /// The id of the night sky shown (nil = the plain sky): the Debug argument when given, else the owner's choice.
+    var nightSkyId: String? {
+        Self.forcedNightSky ?? Collection.effectiveSky(choice: progress().nightSkyChoice, boxes: boxes())
+    }
+
+    /// Wears `id` in `slot` (nil = nothing in that slot). The other slots keep what they wear now, also what was worn
+    /// automatically. Stores the choice with its moment; the sync and the automatic backup pick it up through `save()`.
+    func chooseAccessory(_ id: String?, slot: AccessorySlot) {
+        let p = progress()
+        p.outfitChoice = Collection.storedOutfit(changing: slot, to: id, current: buddyOutfitChosen)
+        p.outfitChosenAt = clock.now
+        save()
+        refresh()
+    }
+
+    /// The outfit the stored choice gives (ignores the Debug argument, which must not leak into a stored choice).
+    private var buddyOutfitChosen: CatOutfit {
+        Collection.effectiveOutfit(choice: progress().outfitChoice, boxes: boxes())
+    }
+
+    /// Shows `id` at night (nil = the plain sky).
+    func chooseNightSky(_ id: String?) {
+        let p = progress()
+        p.nightSkyChoice = Collection.storedSky(id)
+        p.nightSkyChosenAt = clock.now
+        save()
+        refresh()
+    }
 
     /// Dev aid: `-nightSky sky-02` (Debug only; `DevArgs` is empty in Release).
     static let forcedNightSky: String? = DevArgs.value(after: "-nightSky")
 
-    /// The night sky shown on Today and the Town tab. Today only the dev argument; the owner's choice (11b4) replaces it here.
-    var nightSky: NightSkyEffect? { NightSkies.effect(forId: Self.forcedNightSky) }
+    /// The night sky effect shown on Today and the Town tab (`nightSkyId`).
+    var nightSky: NightSkyEffect? { NightSkies.effect(forId: nightSkyId) }
 
     /// The reaction the next tap on the cat gives (plan P2b). Session state only – never stored, never in a backup.
     @ObservationIgnored private var nextBuddyReaction = BuddyReaction.purr
