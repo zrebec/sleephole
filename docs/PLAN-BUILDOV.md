@@ -26,7 +26,7 @@ Stav k 29. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 | 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | hotový – ostrá noc 18.→19. 10. bez chyby, commitnutý, nahratý ako 1.0 (9) 19. 10., u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky); ďalej návod pre Apple na čistom telefóne, potom build 9 namiesto 7 na kontrolu |
 | 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | **hotový 24. 10.** – ostrá noc 23.→24. 10. bez chyby, commitnutý, nahratý ako 1.0 (10), u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky), build 7 stiahnutý z kontroly a **1.0 (10) odoslaná na kontrolu u Apple** s ručným vydaním |
 | 11 | **Nové veci:** iná budova na dnešnú noc, účet mincí; balíčky vnútri bez obchodu | **u testerov od 29. 10. ~7:30** – nahratý ako 1.0 (11), „What to Test“ anglicky aj slovensky, Kamaráti aj SE; pull request do `main` si zlúčil 29. 10. ráno |
-| 12 | **Nové veci:** balíčky – obchod, otvorenie, zbierka | **v práci od 29. 10. ~9:55** – krok 11b4a (obchod a kúpa) v telefóne od 29. 10. 14:59, prvý balíček kúpený 29. 10.; 11b4a2 nový názov „balíček“ v telefóne od 18:48; ďalej 11b4b otvorenie, 11b4c zbierka, 11b4d bublina, každý na tvoje slovo |
+| 12 | **Nové veci:** balíčky – obchod, otvorenie, zbierka | **v práci od 29. 10. ~9:55** – krok 11b4a (obchod a kúpa) v telefóne od 29. 10. 14:59, prvý balíček kúpený 29. 10.; 11b4a2 nový názov „balíček“ v telefóne od 18:48; 11b4c zbierka v telefóne od 30. 10. 7:49; 11b4c2 zoznam kúpených balíčkov (tvoja požiadavka 30. 10.) sa robí; ďalej 11b4b otvorenie a 11b4d bublina, každý na tvoje slovo |
 | 13 | **Doladenie** + prístupnosť (+ jasne povedať, na čo appka je) | návrh |
 | 14 | **Nové veci:** mesto a voľné noci | návrh |
 | 15 | **Doladenie** | návrh |
@@ -163,7 +163,8 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 | 11b4a | obchod a kúpa: záložka Balíčky, dnešný balíček s cenou a potvrdením, šance všetkých 11 možností, výhra jasne napísaná | hotový a skontrolovaný ~11:27, **v telefóne od 29. 10. 14:59**; testy na stránke buildu 12: https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h; tvoje testy t1 – t7 dnes všetky sedia |
 | 11b4a2 | nový názov: balíček (po anglicky parcel), len slová na obrazovke | tvoja požiadavka 29. 10. ~18:20, **v telefóne od 29. 10. 18:48**; test t8 na stránke buildu 12 |
 | 11b4b | otvorenie: mačka rozbalí balíček, ťuknutím preskočiť | na tvoje slovo |
-| 11b4c | zbierka v obchode + použitie žolíka z balíčka | na tvoje slovo |
+| 11b4c | zbierka v obchode: pohľadnice na čítanie, ozdoby, doplnky mačky s výberom, nočná obloha s výberom + použitie žolíka z balíčka | spustený na tvoje „pokračuj v pláne“ 30. 10. ~6:55, hotový a skontrolovaný ~7:25, **v telefóne od 30. 10. 7:49**; testy z1 – z5 na stránke buildu 12 |
+| 11b4c2 | zoznam kúpených balíčkov v zbierke: dátum, cena, výhra, súčty | tvoja požiadavka 30. 10. ~7:45, robí sa |
 | 11b4d | bublina mačky sa posunie, keď má mačka niečo pri pelechu | na tvoje slovo |
 
 ## Build 13 – Doladenie a prístupnosť (návrh)
