@@ -33,6 +33,12 @@ struct BackupFile: Codable, Equatable {
     /// Build 11 (mystery boxes): every box bought, ids included. Optional → older backups still load. A new optional field
     /// needs no version bump (`currentVersion` only guards against files from a LATER, incompatible format).
     var boxes: [Box]? = nil
+    /// Step 11b4c (the collection): the cat's outfit and the night sky chosen, each with the moment of the choice (the
+    /// newest wins a merge). See `Collection` for the stored forms. Optional → older backups still load.
+    var outfitChoice: String? = nil
+    var outfitChosenAt: Date? = nil
+    var nightSkyChoice: String? = nil
+    var nightSkyChosenAt: Date? = nil
 
     struct Joker: Codable, Equatable {
         var at: Date

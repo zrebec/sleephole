@@ -33,6 +33,22 @@
         }
       }
     },
+    "%@ from a parcel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ from a parcel"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ z balíčka"
+          }
+        }
+      }
+    },
     "%@ Playing until %@.": {
       "localizations": {
         "en": {
@@ -1161,6 +1177,38 @@
         }
       }
     },
+    "from a parcel": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "from a parcel"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "z balíčka"
+          }
+        }
+      }
+    },
+    "From parcels": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From parcels"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Z balíčkov"
+          }
+        }
+      }
+    },
     "Hi, I'm your cat! In the evening we start a building, at night your phone rests, and in the morning it's finished.": {
       "localizations": {
         "en": {
@@ -1241,6 +1289,38 @@
         }
       }
     },
+    "It protects %@ from %@. It costs nothing and does not use up this month's own joker.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It protects %@ from %@. It costs nothing and does not use up this month's own joker."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ochráni %1$@ od %2$@. Nestojí nič a neminie tohtomesačného žolíka."
+          }
+        }
+      }
+    },
+    "It stands in your town by itself.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It stands in your town by itself."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stojí v tvojom meste sama."
+          }
+        }
+      }
+    },
     "Jokers": {
       "localizations": {
         "en": {
@@ -1305,6 +1385,54 @@
         }
       }
     },
+    "No cat accessories yet. The cat will wear what you win.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No cat accessories yet. The cat will wear what you win."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatiaľ žiadne doplnky pre mačku. Mačka bude nosiť, čo vyhráš."
+          }
+        }
+      }
+    },
+    "No decorations yet. Each one you win stands in your town.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No decorations yet. Each one you win stands in your town."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatiaľ žiadne ozdoby. Každá, ktorú vyhráš, bude stáť v tvojom meste."
+          }
+        }
+      }
+    },
+    "No night skies yet. A sky you win lights up your nights.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No night skies yet. A sky you win lights up your nights."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatiaľ žiadne nočné oblohy. Obloha, ktorú vyhráš, rozjasní tvoje noci."
+          }
+        }
+      }
+    },
     "No pause +%lld, every calm hour +%lld, every %lldth finished night in a row +%lld.": {
       "localizations": {
         "en": {
@@ -1321,6 +1449,22 @@
         }
       }
     },
+    "No postcards yet. Each one holds a sleep tip.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No postcards yet. Each one holds a sleep tip."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatiaľ žiadne pohľadnice. Každá ukrýva tip na spánok."
+          }
+        }
+      }
+    },
     "No worries – a joker protects your streak and the next good night repairs a ruin. Keep your phone on the charger overnight.": {
       "localizations": {
         "en": {
@@ -1333,6 +1477,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nič sa nedeje – žolík ochráni sériu a ďalšia dobrá noc ruinu opraví. Telefón nechaj cez noc na nabíjačke."
+          }
+        }
+      }
+    },
+    "Nothing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nič"
           }
         }
       }
@@ -1385,6 +1545,22 @@
         }
       }
     },
+    "Plain sky": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plain sky"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obyčajná obloha"
+          }
+        }
+      }
+    },
     "Privacy": {
       "localizations": {
         "en": {
@@ -1397,6 +1573,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Súkromie"
+          }
+        }
+      }
+    },
+    "Put it on": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Put it on"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dať mačke"
           }
         }
       }
@@ -1449,6 +1641,54 @@
         }
       }
     },
+    "Show this sky": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show this sky"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zobraziť túto oblohu"
+          }
+        }
+      }
+    },
+    "Shown at night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shown at night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zobrazuje sa v noci."
+          }
+        }
+      }
+    },
+    "Shown on Today and in the town at night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shown on Today and in the town at night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zobrazuje sa na obrazovke Dnes a v meste v noci."
+          }
+        }
+      }
+    },
     "Silver: %@ for %@ 🪙. Gold: %@ for %@ 🪙. Each kind once a month.": {
       "localizations": {
         "en": {
@@ -1493,6 +1733,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Prísny režim (Nastavenia, predvolene vypnutý): výstraha systémovým budíkom a pri použití telefónu stavba spadne."
+          }
+        }
+      }
+    },
+    "Switch on the %@ from a parcel?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Switch on the %@ from a parcel?"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapnúť: %@ z balíčka?"
           }
         }
       }
@@ -1545,6 +1801,22 @@
         }
       }
     },
+    "The cat has it now.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The cat has it now."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mačka to už má."
+          }
+        }
+      }
+    },
     "The reminder, the nap window, sounds and the code can change any time.": {
       "localizations": {
         "en": {
@@ -1589,6 +1861,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tipy"
+          }
+        }
+      }
+    },
+    "Town decorations": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Town decorations"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ozdoby mesta"
+          }
+        }
+      }
+    },
+    "Used by itself on a missed night once this month's own bronze is gone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used by itself on a missed night once this month's own bronze is gone."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ak vynecháš noc a tohtomesačný bronzový žolík je už minutý, použije sa sám."
+          }
+        }
+      }
+    },
+    "Valid through %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Valid through %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Platí do %@"
           }
         }
       }
@@ -1685,6 +2005,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Telefón bez kódu zámku nevie rozlíšiť zamknutie od odchodu, preto tam appka odchody nepočíta (okrem zatvorenia appky)."
+          }
+        }
+      }
+    },
+    "Your collection": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your collection"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoja zbierka"
           }
         }
       }
