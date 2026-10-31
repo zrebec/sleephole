@@ -211,6 +211,8 @@ import Testing
             let cat = sprites.catalog
             let coins = BoxPrizeText.make(for: box(.coins, payout: 800), catalog: cat)
             #expect(coins.title.contains("800"))
+            let big = BoxPrizeText.make(for: box(.coins, payout: 1530), catalog: cat)
+            #expect(big.title.contains("530") && !big.title.contains("1530"))   // digits are grouped in either language
             let lucky = BoxPrizeText.make(for: box(.luckyNight), catalog: cat)
             #expect(!lucky.title.isEmpty && lucky.detail?.isEmpty == false)
             let fresh = BoxPrizeText.make(for: box(.collectible(.postcard, id: "postcard-03")), catalog: cat)
