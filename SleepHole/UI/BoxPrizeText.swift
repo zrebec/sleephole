@@ -19,7 +19,7 @@ struct BoxPrizeText: Equatable {
     static func make(for box: BoxPurchase, catalog: Catalog?, calendar: Calendar = .current) -> BoxPrizeText {
         switch box.prize {
         case .coins:
-            return BoxPrizeText(emoji: "🪙", title: "+\(box.payout) 🪙", kind: nil, detail: nil, postcardId: nil)
+            return BoxPrizeText(emoji: "🪙", title: L("+\(box.payout) 🪙"), kind: nil, detail: nil, postcardId: nil)
         case .luckyNight:
             return BoxPrizeText(emoji: "🍀", title: L("Lucky night ×2"), kind: nil,
                                 detail: L("Your next complete night pays double."), postcardId: nil)

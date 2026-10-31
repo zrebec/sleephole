@@ -15433,6 +15433,22 @@
         }
       }
     },
+    "+%lld 🪙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld 🪙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld 🪙"
+          }
+        }
+      }
+    },
     "+%lld 🪙 back": {
       "localizations": {
         "en": {
