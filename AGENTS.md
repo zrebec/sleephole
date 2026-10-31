@@ -34,7 +34,7 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    inside the shop, "Simulated Gambling" no. Steps (plan §10 REL "Build 12"): **11b4a the shop + the purchase (on his
    phone since 2026-10-29 14:59; his t1–t7 all fine; r1–r3 the morning of 30 Oct on the page above, rewritten as the build
    page)**, **11b4a2 the name (on his phone 18:48, his t8): on screen a box is a "parcel" / "balíček" – never the old
-   Slovak word (vulgar slang), never "box" or "package" in a UI text; the code keeps "box"**; the night 29 → 30 complete and his second parcel 06:07 (3× the price); **11b4c the collection + using a parcel joker on his phone since 2026-10-30 07:49 (his z1–z5 on the build page v5)**, **11b4c2 the list of parcels bought (his addition 2026-10-30 ~07:45) on his phone since 14:03 (his z6 on the build page v6)**, **11b4b the opening on his phone since 2026-10-30 15:19 (his o1 / o2 on the morning of 31 Oct, build page v11)**, 11b4d the bubble (+ the coins title digit grouping, §12). Using a joker won from a box
+   Slovak word (vulgar slang), never "box" or "package" in a UI text; the code keeps "box"**; the night 29 → 30 complete and his second parcel 06:07 (3× the price); **11b4c the collection + using a parcel joker on his phone since 2026-10-30 07:49 (his z1–z5 on the build page v5)**, **11b4c2 the list of parcels bought (his addition 2026-10-30 ~07:45) on his phone since 14:03 (his z6 on the build page v6)**, **11b4b the opening on his phone since 2026-10-30 15:19 – confirmed by him on 31 Oct (parcel 3, a silver joker; o1 written, o2 his)**, **11b4d the bubble + the coins title grouping built and reviewed 2026-10-31 ~11:15 (merged `4593cc8`) – install on his yes before 21:30, then the real night 31 → 1, and on 1 Nov version 12, the upload as 1.0 (12) and the testers (his "tomorrow at the latest")**. Using a joker won from a box
    (no screen yet) → 11b4c (his answer); his first box right away with 11b4a alone, no opening yet (his pick). **Tell him
    where the boxes stand whenever a step ends** ("boxes: n of 4 steps in the app, first box about …"). His worry "it must not
    get mixed up" → records, not counters. Build 11 (1.0 (11)) is with the testers since 07:30; PR #2 merged by him; its page
@@ -42,13 +42,13 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is his click.
 2. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
    and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (still on
+   2026-10-31 ~10:50, no message from Apple; on
    2026-10-30 ~14:20 – 16 days in the queue with the 14 Oct submission; the new Developer Program License Agreement (issued 29 Oct) accepted by him 2026-10-30, checked; the new age-rating questions already
    read NO (nothing to save); **2026-10-30 ~14:55 he requested an expedited review – Apple: "We'll expedite review for SleepHole"** (plan §12); once 1.0 is
    approved, build 12 goes up as 1.1 (12)). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
    to review, repeat this whole agenda to him (his request 2026-10-16).**
-3. **His streak:** the night of 2026-10-15 → 16 collapsed (one trip of 13.15s; Notification Center counts as leaving on
-   iOS 26); the silver joker saved it (1 000 🪙). October's bronze and silver are used and he will not buy the gold – the
-   next failed night this month breaks the streak. Be kind about it.
+3. **His streak:** safe again – parcel 3 (2026-10-31) held a silver joker (3 nights, by hand, valid until 30 Nov) and
+   November brings its own bronze (automatic). Level 4 unlocked on 31 Oct (his 30th building night). Be kind if a night fails.
 4. **Later builds (renumbered 2026-10-29):** 13 polishing + accessibility (11d, incl. 10h's `ThickProgressStyle`; the flaky
    `SyncEngineTests` test; "Cancel night" under the tab bar); 14 nights off (11c) + statistics, the bug list and Plans (his
    answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 13):** the store and TestFlight
