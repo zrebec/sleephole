@@ -62,7 +62,9 @@ struct JokerCard: View {
 struct JokerSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
-    @State private var confirm: JokerTier?
+    /// What the owner is about to switch on: a month's own joker, or (with a box) one won from a parcel.
+    private struct Pending: Equatable { let tier: JokerTier; let box: BoxPurchase? }
+    @State private var confirm: Pending?
 
     var body: some View {
         let first = model.jokerFirstNight
@@ -73,6 +75,12 @@ struct JokerSheet: View {
                         .font(.subheadline)
                     Text(L("If you miss a night and haven't used the bronze joker this month, it is used by itself."))
                         .font(.footnote).foregroundStyle(.secondary)
+                }
+                let held = model.heldBoxJokers()             // first: free, and they expire
+                if !held.isEmpty {
+                    Section(L("From parcels")) {
+                        ForEach(held, id: \.id) { box in boxRow(box) }
+                    }
                 }
                 Section {
                     ForEach(JokerTier.allCases, id: \.self) { tier in row(tier, first: first) }
@@ -87,7 +95,8 @@ struct JokerSheet: View {
                                 Text(verbatim: u.tier.emoji)
                                 Text(L("\(Fmt.dayMonth(u.firstNight)) – \(Fmt.dayMonth(u.lastNight(calendar: .current)))"))
                                 Spacer()
-                                if u.automatic { Text(L("automatic")).font(.caption).foregroundStyle(.secondary) }
+                                let notes = [u.automatic ? L("automatic") : nil, u.boxId != nil ? L("from a parcel") : nil].compactMap { $0 }
+                                if !notes.isEmpty { Text(notes.joined(separator: ", ")).font(.caption).foregroundStyle(.secondary) }
                             }
                         }
                     }
@@ -96,21 +105,55 @@ struct JokerSheet: View {
             .navigationTitle(L("Jokers 🛡️"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button(L("Done")) { dismiss() } } }
-            .confirmationDialog(confirm.map { L("Switch on the \($0.title)?") } ?? "", isPresented: Binding(
+            .confirmationDialog(confirmTitle, isPresented: Binding(
                 get: { confirm != nil }, set: { if !$0 { confirm = nil } }), titleVisibility: .visible) {
-                if let tier = confirm {
-                    Button(tier.price > 0 ? L("Switch on for \(tier.price) 🪙") : L("Switch on for free")) {
-                        model.useJoker(tier)
+                if let pending = confirm {
+                    let tier = pending.tier
+                    Button(tier.price > 0 && pending.box == nil ? L("Switch on for \(tier.price) 🪙") : L("Switch on for free")) {
+                        model.useJoker(tier, fromBox: pending.box?.id)
                         model.fx("fx_sparkle")
                         dismiss()
                     }
                 }
             } message: {
-                if let tier = confirm {
-                    Text(L("It protects \(Plural.nights(tier.nights)) from \(Fmt.dayMonth(first)). This kind is used up for this month."))
+                if let pending = confirm {
+                    if pending.box != nil {
+                        Text(L("It protects \(Plural.nights(pending.tier.nights)) from \(Fmt.dayMonth(first)). It costs nothing and does not use up this month's own joker."))
+                    } else {
+                        Text(L("It protects \(Plural.nights(pending.tier.nights)) from \(Fmt.dayMonth(first)). This kind is used up for this month."))
+                    }
                 }
             }
         }
+    }
+
+    private var confirmTitle: String {
+        guard let pending = confirm else { return "" }
+        return pending.box != nil ? L("Switch on the \(pending.tier.title) from a parcel?") : L("Switch on the \(pending.tier.title)?")
+    }
+
+    /// A joker won from a parcel: free, valid until the end of next month, not the month's own slot.
+    private func boxRow(_ box: BoxPurchase) -> some View {
+        let tier = Boxes.wonJoker(box) ?? .bronze
+        let until = Fmt.fullDate(Boxes.expiry(of: box, calendar: .current))
+        return HStack(spacing: 12) {
+            Text(verbatim: tier.emoji).font(.largeTitle)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(L("\(tier.title) from a parcel")).font(.headline)
+                Text(L("Protects \(Plural.nights(tier.nights))")).font(.subheadline)
+                Text(L("Valid through \(until)")).font(.caption).foregroundStyle(.secondary)
+                if tier == .bronze {
+                    Text(L("Used by itself on a missed night once this month's own bronze is gone."))
+                        .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            Spacer()
+            Button(L("Use")) { confirm = Pending(tier: tier, box: box) }
+                .glassButton(prominent: true)
+                .tint(tier.tint)
+                .disabled(model.jokerBlock(tier, fromBox: box.id) != nil)
+        }
+        .padding(.vertical, 4)
     }
 
     private func row(_ tier: JokerTier, first: NightKey) -> some View {
@@ -128,7 +171,7 @@ struct JokerSheet: View {
                 }
             }
             Spacer()
-            Button(L("Use")) { confirm = tier }
+            Button(L("Use")) { confirm = Pending(tier: tier, box: nil) }
                 .glassButton(prominent: true)
                 .tint(tier.tint)
                 .disabled(block != nil)

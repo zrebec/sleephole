@@ -65,6 +65,17 @@ enum Fmt {
         return time(date)
     }
 
+    /// A chance in tenths of a percent as a percent with at most one decimal, in the app's language: 250 → "25%" / "25 %",
+    /// 8 → "0.8%" / "0,8 %" (the box odds, 11b4a).
+    static func permille(_ p: Int) -> String {
+        let f = NumberFormatter()
+        f.locale = Lang.current.locale
+        f.numberStyle = .percent
+        f.minimumFractionDigits = 0
+        f.maximumFractionDigits = 1
+        return f.string(from: NSNumber(value: Double(p) / 1000)) ?? "\(p / 10)%"
+    }
+
     /// "30. 9." / "9/30"
     static func dayMonth(_ k: NightKey) -> String {
         Lang.current == .sk ? "\(k.day). \(k.month)." : "\(k.month)/\(k.day)"

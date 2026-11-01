@@ -28,5 +28,13 @@ final class UserProgress {
     /// who updated starts `open`). The whole change-week state is derived from this one date.
     var changeWeekStart: Date?
 
+    /// Step 11b4c (the collection): what the cat wears – nil = never chosen (the newest owned item of each slot is worn),
+    /// otherwise the comma-separated accessory ids ("" = nothing on purpose). The stamp: the newest choice wins a merge.
+    var outfitChoice: String?
+    var outfitChosenAt: Date?
+    /// The night sky shown – nil = never chosen (the newest owned sky), "none" = the plain sky, otherwise a sky id.
+    var nightSkyChoice: String?
+    var nightSkyChosenAt: Date?
+
     init() {}
 }

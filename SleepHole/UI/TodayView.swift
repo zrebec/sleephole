@@ -75,6 +75,40 @@ struct HomeView: View {
     @State private var confirmEarly = false
     /// The hero cat: 50 % of the screen width (200 pt on a 402 pt wide phone), at most this wide.
     static let buddyMaxWidth: CGFloat = 200
+    /// Space between the bottom of the buddy's layout box and the tip of the bubble's tail while the cat has a bed item
+    /// (fish bowl / rug): both layers end at canvas row 964–968 of 974 (the box bottom), so 4 pt keeps the bubble clear of them.
+    static let bedBubbleGap: CGFloat = 4
+
+    /// The cat with its speech bubble. Without a bed item the bubble is an overlay (Today's confirmed look: it covers
+    /// the bed); with one, the bubble takes real space under the cat so it covers neither the item nor the card below.
+    @ViewBuilder
+    private func buddyHero(now: Date) -> some View {
+        let buddy = BuddyView.centred(
+            BuddyView(state: model.buddyState(at: now), cloud: true, onPet: { model.petBuddy() },
+                      hold: AppModel.forcedBuddyReaction, outfit: model.buddyOutfit)
+                .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.5) })
+        if model.buddyOutfit.bed == nil {
+            buddy
+                .overlay(alignment: .top) {
+                    // the buddy talks (phase TALK): an overlay, so Today's layout does not change
+                    BuddyBubble(now: now)
+                        .containerRelativeFrame(.horizontal) { w, _ in min(330, w - 32) }
+                        .offset(y: 80)
+                }
+                .padding(.top, 25)
+                .padding(.bottom, 14)
+                .appearIn(delay: 0.1)
+        } else {
+            VStack(spacing: Self.bedBubbleGap) {
+                buddy
+                BuddyBubble(now: now)
+                    .containerRelativeFrame(.horizontal) { w, _ in min(330, w - 32) }
+            }
+            .padding(.top, 25)
+            .padding(.bottom, 14)
+            .appearIn(delay: 0.1)
+        }
+    }
 
     /// The start of the minute containing `d`.
     static func minuteStart(_ d: Date) -> Date {
@@ -99,19 +133,7 @@ struct HomeView: View {
                     // the hero (plan P2b): only the cat – the town has its own tab. A tap pets it (purr, arched back, wink).
                     // Centred on cat + bed (the canvas is not centred on them); the arch's tail reaches above the box,
                     // the cloud below it.
-                    BuddyView.centred(
-                        BuddyView(state: model.buddyState(at: now), cloud: true, onPet: { model.petBuddy() },
-                                  hold: AppModel.forcedBuddyReaction, outfit: model.buddyOutfit)
-                            .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.5) })
-                        .overlay(alignment: .top) {
-                            // the buddy talks (phase TALK): an overlay, so Today's layout does not change
-                            BuddyBubble(now: now)
-                                .containerRelativeFrame(.horizontal) { w, _ in min(330, w - 32) }
-                                .offset(y: 80)
-                        }
-                        .padding(.top, 25)
-                        .padding(.bottom, 14)
-                        .appearIn(delay: 0.1)
+                    buddyHero(now: now)
 
                     VStack(spacing: 10) {
                         Text(L("Bedtime \(Fmt.time(w.bedtime)) · wake-up \(Fmt.time(w.wake))"))
