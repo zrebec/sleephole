@@ -178,6 +178,13 @@ Opravy po builde 11 a chyby, ktoré sa medzitým nájdu. (B38 si 25. 10. presunu
 
 **Návrh: jasne povedať, na čo appka je (tvoj nápad 24. 10.).** Testeri čakajú, že appka bude fungovať sama alebo brať spánok z hodiniek, a v miernom režime im „nechodia upozornenia“. Do appky jedna jasná veta: SleepHole spánok nemeria, učí chodiť spať načas, každú noc spúšťaš sám a hodinky netreba. Patrí na prvú stranu sprievodcu a pod prísny režim v Nastaveniach, kde treba dopísať, čo mierny režim nestráži. Ešte skôr to patrí do popisu v App Store a v TestFlighte – to nepotrebuje build, stačia tvoje kliky pri builde 10. Silnejší mierny režim (druhé pokojné pripomenutie, ráno ukázať, koľko si v noci bol na telefóne) počká na podrobnosti od testerov.
 
+**Tvoje tri nápady na veľké začistenie (1. 11., „toc release, nie tic release“):**
+- **Mačka hovorí o tom, čo mesto MÁ.** Dnes má vety len o knižnici, múzeu, hasičoch, nemocnici, počte parkov a najvyššej budove. O radnici, polícii, škole, jednotlivých parkoch a mrakodrapoch nehovorí nič: keď ich postavíš, veta „ešte nemáme…“ len zmizne. Štyri bežné vety sa opakujú a veta o kine sľubuje budovu, ktorá v appke vôbec nie je. Návrh: pri každej budove úrovne 2 – 4 niekoľko viet, budova z poslednej noci menom a viac bežných viet.
+- **Pohľadnice s „prečo“.** Dnes nadpis, jedna – dve vety a odkaz na zdravotnícku stránku (NHS, CDC, NIH, Mayo Clinic). Návrh: 2 – 4 vety prečo to pomáha, jedna skutočná štúdia (kto, kedy, čo zistila, odkaz na PubMed alebo DOI – každú otvorím a overím, nikdy nie z pamäti) a poctivá poznámka, kde je výskum slabý. 30 pohľadníc po dávkach, každú dávku skontroluješ.
+- **Ďalšie jazyky: čeština, poľština, nemčina, francúzština. Návrh: čeština prvá** (každý text si skontroluješ sám, má rovnaké množné čísla ako slovenčina, jeden česko-slovenský trh), nemčina druhá (najväčší platiaci trh v EÚ, musí ju skontrolovať rodený hovoriaci). Každý jazyk znásobí všetky ďalšie texty, preto ako posledný krok buildu, keď sú všetky jeho texty hotové.
+
+Tvoje voľby čakajú.
+
 
 ## Build 14 – Nové veci: mesto a voľné noci (návrh)
 
