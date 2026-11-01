@@ -40,6 +40,12 @@
             "state" : "translated",
             "value" : "SleepHole nastaví systémový budík ako zálohu, aby ťa zobudil, aj keď iOS appku v noci ukončí. V Prísnom režime ním krátko zazvoní aj výstraha, keď telefón v noci používaš."
           }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SleepHole nastaví systémový budík jako zálohu, aby tě vzbudil, i když iOS aplikaci v noci ukončí. V Přísném režimu jím krátce zazvoní i výstraha, když v noci používáš telefon."
+          }
         }
       }
     },
@@ -58,6 +64,12 @@
             "state" : "translated",
             "value" : "SleepHole číta údaje o spánku, aby ti ukázal, kedy si naozaj zaspal, vedľa času, kedy si išiel spať. Nič neopúšťa tvoj iPhone."
           }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SleepHole čte údaje o tvém spánku, aby vedle času uložení ke spánku ukázal i čas skutečného usnutí. Nic neopouští tvůj iPhone."
+          }
         }
       }
     },
@@ -75,6 +87,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "SleepHole do Apple Zdravia nič nezapisuje. Tvoje údaje o spánku iba číta."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SleepHole do Apple Zdraví nic nezapisuje. Údaje o tvém spánku pouze čte."
           }
         }
       }
