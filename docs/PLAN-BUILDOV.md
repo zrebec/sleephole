@@ -26,7 +26,7 @@ Stav k 29. 10. 2026. Slovenská verzia plánu pre majiteľa. Pre agentov je zdro
 | 9 | Sprievodca a jasné pravidlá – kandidát na verziu 1.0 | hotový – ostrá noc 18.→19. 10. bez chyby, commitnutý, nahratý ako 1.0 (9) 19. 10., u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky); ďalej návod pre Apple na čistom telefóne, potom build 9 namiesto 7 na kontrolu |
 | 10 | **Doladenie:** vypínač systémového budíka, neskorší začiatok a otvorené chyby | **hotový 24. 10.** – ostrá noc 23.→24. 10. bez chyby, commitnutý, nahratý ako 1.0 (10), u testerov (Kamaráti aj SE, „What to Test“ anglicky aj slovensky), build 7 stiahnutý z kontroly a **1.0 (10) odoslaná na kontrolu u Apple** s ručným vydaním |
 | 11 | **Nové veci:** iná budova na dnešnú noc, účet mincí; balíčky vnútri bez obchodu (zvyšok pôvodného plánu je v buildoch 12 – 14) | **u testerov od 29. 10. ~7:30** – nahratý ako 1.0 (11), „What to Test“ anglicky aj slovensky, Kamaráti aj SE; pull request do `main` si zlúčil 29. 10. ráno |
-| 12 | **Nové veci:** balíčky – obchod, otvorenie, zbierka | **v práci od 29. 10. ~9:55** – krok 11b4a (obchod a kúpa) v telefóne od 29. 10. 14:59, prvý balíček kúpený 29. 10.; 11b4a2 nový názov „balíček“ v telefóne od 18:48; 11b4c zbierka v telefóne od 30. 10. 7:49; 11b4c2 zoznam kúpených balíčkov (tvoja požiadavka 30. 10.) v telefóne od 30. 10. 14:03; 11b4b otvorenie v telefóne od 30. 10. 15:19, 31. 10. ráno ním mačka rozbalila balíček 3 (strieborný žolík) – potvrdené tebou; 11b4d bublina a mince v nadpise výhry v telefóne od 31. 10. 11:23; ďalej noc 31 → 1 a 1. 11. číslo 12, nahratie a testeri |
+| 12 | **Nové veci:** balíčky – obchod, otvorenie, zbierka | **v práci od 29. 10. ~9:55** – krok 11b4a (obchod a kúpa) v telefóne od 29. 10. 14:59, prvý balíček kúpený 29. 10.; 11b4a2 nový názov „balíček“ v telefóne od 18:48; 11b4c zbierka v telefóne od 30. 10. 7:49; 11b4c2 zoznam kúpených balíčkov (tvoja požiadavka 30. 10.) v telefóne od 30. 10. 14:03; 11b4b otvorenie v telefóne od 30. 10. 15:19, 31. 10. ráno ním mačka rozbalila balíček 3 (strieborný žolík) – potvrdené tebou; 11b4d bublina a mince v nadpise výhry v telefóne od 31. 10. 11:23; **u testerov od 1. 11. ~7:55** – noc 31 → 1 hotová, nahratý ako 1.0 (12), „What to Test“ anglicky aj slovensky, Kamaráti aj SE; pull request do `main` (#3) čaká na tvoje zlúčenie |
 | 13 | **Doladenie** + prístupnosť (+ jasne povedať, na čo appka je) | návrh |
 | 14 | **Nové veci:** mesto a voľné noci | návrh |
 | 15 | **Doladenie** | návrh |
@@ -152,7 +152,7 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 
 **Presunuté do buildu 14 (tvoja odpoveď 25. 10., posun 29. 10.):** mesačný kalendár, detail noci, graf so štyrmi farbami, zoznam chýb vo Vývoji, obrazovka Plánov.
 
-## Build 12 – Nové veci: balíčky (v práci)
+## Build 12 – Nové veci: balíčky (hotový, u testerov od 1. 11.)
 
 **Tvoja voľba 29. 10.:** balíčky dostanú vlastný build. Obsah (11b5), pravidlá (11b3) aj záznamy (11b2) sú hotové už v builde 11. Zostáva **11b4**: obchod s balíčkami (vždy viditeľný, aj pri 0 minciach: čo môže v balíčku byť, šance a koľko mincí ešte chýba), otvorenie (krátke, ťuknutím preskočiť), zbierka (pohľadnice, ozdoby, výber doplnkov mačky a oblohy) a bublina mačky, ktorá dnes zakrýva pelech. Pred kontrolou u Apple: vekové hodnotenie „Loot Boxes“ áno a odpoveď na „Simulated Gambling“ (tvoje áno). Päť otázok je na stránke prípravy. Začne sa na tvoje slovo, prvý balíček asi 31. 10. – 1. 11. (odhad).
 
@@ -167,7 +167,8 @@ Druhá testerka si systémový budík zatiaľ vypne v Nastaveniach iPhonu → Ap
 | 11b4b | otvorenie: mačka rozbalí balíček, ťuknutím preskočiť | spustený na tvoje slovo 30. 10. ~14:15, hotový a skontrolovaný ~15:10, **v telefóne od 30. 10. 15:19**; **31. 10. ráno ním mačka rozbalila balíček 3 – potvrdené tebou (o1)**; o2 na stránke buildu 12 |
 | 11b4c | zbierka v obchode: pohľadnice na čítanie, ozdoby, doplnky mačky s výberom, nočná obloha s výberom + použitie žolíka z balíčka | spustený na tvoje „pokračuj v pláne“ 30. 10. ~6:55, hotový a skontrolovaný ~7:25, **v telefóne od 30. 10. 7:49**; testy z1 – z5 na stránke buildu 12 |
 | 11b4c2 | zoznam kúpených balíčkov v zbierke: dátum, cena, výhra, súčty | tvoja požiadavka 30. 10. ~7:45, hotový a skontrolovaný ~8:00, **v telefóne od 30. 10. 14:03**; test z6 na stránke buildu 12 |
-| 11b4d | bublina mačky sa posunie, keď má mačka niečo pri pelechu (+ mince v nadpise výhry s medzerou: „+1 530 🪙“) | spustený 31. 10. ~10:10 (tvoja veta o testeroch), hotový a skontrolovaný ~11:15, **v telefóne od 31. 10. 11:23**; testy b1 – b3 dnes, m1 / m2 ráno 1. 11. na stránke buildu 12 |
+| 11b4d | bublina mačky sa posunie, keď má mačka niečo pri pelechu (+ mince v nadpise výhry s medzerou: „+1 530 🪙“) | spustený 31. 10. ~10:10 (tvoja veta o testeroch), hotový a skontrolovaný ~11:15, **v telefóne od 31. 10. 11:23**; testy b1 – b3, m1 / m2 na stránke buildu 12 |
+| vydanie | noc 31 → 1, číslo 12, archív, nahratie, testeri | **1. 11.:** noc hotová (L3 nemocnica, budík 6:00, potvrdené 6:00:27), balíček 4 o 6:10 (680 🪙, späť 340 🪙); archív 1.0 (12) skontrolovaný, **nahratý 7:38**, texty „What to Test“ anglicky aj slovensky, **Kamaráti aj SE „Testing“ ~7:55**; pull request #3 do `main` čaká na tvoje zlúčenie. Vekové hodnotenie a poznámky pre Apple až pri odoslaní 1.1 do App Store (tvoje áno) |
 
 ## Build 13 – Doladenie a prístupnosť (návrh)
 

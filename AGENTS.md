@@ -29,20 +29,18 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 12 = the boxes, in work since 2026-10-29 ~09:55 (his word "Spusti 11b4a").** His prep-page answers (`state/answers`
-   v5 of https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h): the shop is its own tab, the cat unwraps the box, the collection
-   inside the shop, "Simulated Gambling" no. Steps (plan §10 REL "Build 12"): **11b4a the shop + the purchase (on his
-   phone since 2026-10-29 14:59; his t1–t7 all fine; r1–r3 the morning of 30 Oct on the page above, rewritten as the build
-   page)**, **11b4a2 the name (on his phone 18:48, his t8): on screen a box is a "parcel" / "balíček" – never the old
-   Slovak word (vulgar slang), never "box" or "package" in a UI text; the code keeps "box"**; the night 29 → 30 complete and his second parcel 06:07 (3× the price); **11b4c the collection + using a parcel joker on his phone since 2026-10-30 07:49 (his z1–z5 on the build page v5)**, **11b4c2 the list of parcels bought (his addition 2026-10-30 ~07:45) on his phone since 14:03 (his z6 on the build page v6)**, **11b4b the opening on his phone since 2026-10-30 15:19 – confirmed by him on 31 Oct (parcel 3, a silver joker; o1 written, o2 his)**, **11b4d the bubble + the coins title grouping built and reviewed 2026-10-31 ~11:15 (merged `4593cc8`), on his phone 11:23 (build page v12: b1–b3, m1 / m2) – then the real night 31 → 1, and on 1 Nov version 12, the upload as 1.0 (12) and the testers (his "tomorrow at the latest")**. Using a joker won from a box
-   (no screen yet) → 11b4c (his answer); his first box right away with 11b4a alone, no opening yet (his pick). **Tell him
-   where the boxes stand whenever a step ends** ("boxes: n of 4 steps in the app, first box about …"). His worry "it must not
-   get mixed up" → records, not counters. Build 11 (1.0 (11)) is with the testers since 07:30; PR #2 merged by him; its page
-   https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo (ticks closed 2026-10-30, §12; its description aligned the same day). Leftover worktree
+1. **Build 12 = the parcels – FINISHED 2026-11-01: 1.0 (12) uploaded 07:38, "Testing" in Kamaráti + SE ~07:55** (plan §10 REL
+   "Build 12", last item; §12 2026-11-01). The night 31 → 1 complete on the whole tree, parcel 4 06:10. **PR #3 `build/12` →
+   `main` is open – merging it is his click** (https://github.com/zrebec/sleephole/pull/3). Still his on the build page
+   https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h: b1–b3, o2, m1, m2 (read `state/answers`; move 11b4d in §0a to 🟢 on his b1).
+   On screen a box is a "parcel" / "balíček" – never the old Slovak word, never "box" or "package" in a UI text; the code keeps
+   "box". The App Store gets the parcels as 1.1 after Apple's answer on 1.0 (10): "Loot Boxes" YES, "Simulated Gambling"
+   re-read (his "no" stands; try "Infrequent" in the unsaved questionnaire first), one parcels sentence in
+   `docs/REVIEW-NOTES.md` (3 986 / 4 000) – each his yes. **Build 13 starts only on his word.** Leftover worktree
    `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is his click.
 2. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
    and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (still on
-   2026-10-31 ~10:50, no message from Apple; on
+   2026-11-01 ~07:57, no message from Apple; on
    2026-10-30 ~14:20 – 16 days in the queue with the 14 Oct submission; the new Developer Program License Agreement (issued 29 Oct) accepted by him 2026-10-30, checked; the new age-rating questions already
    read NO (nothing to save); **2026-10-30 ~14:55 he requested an expedited review – Apple: "We'll expedite review for SleepHole"** (plan §12); once 1.0 is
    approved, build 12 goes up as 1.1 (12)). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
