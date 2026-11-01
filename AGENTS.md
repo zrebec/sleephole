@@ -33,8 +33,13 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    "Build 13". His picks: **Czech now, step by step** (untranslated texts fall back to Slovak; install only after his night,
    on his word), **the postcards with a "why"** (one real study each, every citation opened and checked, an honest note
    where the evidence is weak – his sugar example; batches of ten with his review), **the cinema line out** (13a merged
-   `18b16d2`; a cinema building later). Next: 13b Czech part 1, then 13c postcards batch 1, 13d the cat's lines about owned
-   buildings, accessibility and the other polishing items. Build 12 (1.0 (12), the parcels) is with the testers since
+   `18b16d2`; a cinema building later). **13b Czech part 1 merged 2026-11-01 ~23:00 (`8404184`): 353 of 928 texts in Czech,
+   the rest in Slovak, every text read twice (plan §10 REL 13b).** 13a + 13b are on the Mac only: **morning of 2 Nov –
+   the agenda, his night pulled read-only, then install ONLY on his word (store backed up first) and publish the build 13
+   page (draft: scratchpad `b13page/` – head.html + body.html + the b12 page's script with `var P = 'b13.'`; if the
+   scratchpad is gone, rebuild it from the build 12 page https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h)**. Next on his
+   word: 13c postcards batch 1, 13d the cat's lines about owned buildings, the rest of Czech, accessibility and the other
+   polishing items. Build 12 (1.0 (12), the parcels) is with the testers since
    2026-11-01 ~07:55, PR #3 merged by him (`8c75eb3`); his ticks b1–b3, o2, m1, m2 on
    https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h are still open (11b4d → 🟢 on his b1). On screen a box is a "parcel" /
    "balíček" (Czech: "balíček"); never "box" or "package" in a UI text. The App Store gets the parcels as 1.1 after Apple's
