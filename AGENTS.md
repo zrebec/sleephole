@@ -29,16 +29,17 @@ answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 li
 is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
 2026-10-16). Work by build – the roadmap is plan §0b.
 
-1. **Build 12 = the parcels – FINISHED 2026-11-01: 1.0 (12) uploaded 07:38, "Testing" in Kamaráti + SE ~07:55** (plan §10 REL
-   "Build 12", last item; §12 2026-11-01). The night 31 → 1 complete on the whole tree, parcel 4 06:10. **PR #3 `build/12` →
-   `main` merged by him (`8c75eb3`, 2026-11-01).** His three cleanup ideas for build 13 are in plan §0b row 13 (his picks
-   wait; branch `build/13` holds only that docs commit so far). Still his on the build page
-   https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h: b1–b3, o2, m1, m2 (read `state/answers`; move 11b4d in §0a to 🟢 on his b1).
-   On screen a box is a "parcel" / "balíček" – never the old Slovak word, never "box" or "package" in a UI text; the code keeps
-   "box". The App Store gets the parcels as 1.1 after Apple's answer on 1.0 (10): "Loot Boxes" YES, "Simulated Gambling"
-   re-read (his "no" stands; try "Infrequent" in the unsaved questionnaire first), one parcels sentence in
-   `docs/REVIEW-NOTES.md` (3 986 / 4 000) – each his yes. **Build 13 starts only on his word.** Leftover worktree
-   `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is his click.
+1. **Build 13 = polishing ("a toc release – a big cleanup"), in work since 2026-11-01 ~21:20 (his word)** – plan §10 REL
+   "Build 13". His picks: **Czech now, step by step** (untranslated texts fall back to Slovak; install only after his night,
+   on his word), **the postcards with a "why"** (one real study each, every citation opened and checked, an honest note
+   where the evidence is weak – his sugar example; batches of ten with his review), **the cinema line out** (13a merged
+   `18b16d2`; a cinema building later). Next: 13b Czech part 1, then 13c postcards batch 1, 13d the cat's lines about owned
+   buildings, accessibility and the other polishing items. Build 12 (1.0 (12), the parcels) is with the testers since
+   2026-11-01 ~07:55, PR #3 merged by him (`8c75eb3`); his ticks b1–b3, o2, m1, m2 on
+   https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h are still open (11b4d → 🟢 on his b1). On screen a box is a "parcel" /
+   "balíček" (Czech: "balíček"); never "box" or "package" in a UI text. The App Store gets the parcels as 1.1 after Apple's
+   answer on 1.0 (10): "Loot Boxes" YES, "Simulated Gambling" re-read, a parcels sentence in `docs/REVIEW-NOTES.md` – each
+   his yes. Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered.
 2. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
    and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (still on
    2026-11-01 ~07:57, no message from Apple; on
