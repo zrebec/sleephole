@@ -552,6 +552,6 @@ struct HealthTests {
         let was = Lang.current
         defer { Lang.current = was }
         Lang.current = language
-        #expect(L("Read sleep again") == (language == .sk ? "Načítať spánok znova" : "Read sleep again"))
+        #expect(L("Read sleep again") == (language != .en ? "Načítať spánok znova" : "Read sleep again"))   // Czech falls back to Slovak until translated (13b)
     }
 }

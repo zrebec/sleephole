@@ -254,7 +254,7 @@ struct ViewsTests {
         let both = NightPoint(key: key, startMinutes: 630, wakeMinutes: 390, asleepMinutes: 655.4, outcome: .complete)   // 22:30 / 22:55
         let plain = NightPoint(key: key, startMinutes: 630, wakeMinutes: 390, asleepMinutes: nil, outcome: .complete)
         let date = Fmt.dayMonth(key)
-        let sk = language == .sk
+        let sk = language != .en                                       // Czech falls back to Slovak until translated (13b)
         #expect(NightChart.callout(nil, showsSleep: true) == (sk ? "Ťukni na noc a uvidíš ju." : "Tap a night to see it."))
         #expect(NightChart.callout(both, showsSleep: true)
                 == (sk ? "\(date) · začiatok 22:30 · spánok prišiel 22:55 · po 25 min" : "\(date) · start 22:30 · asleep 22:55 · after 25 min"))

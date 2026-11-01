@@ -99,10 +99,23 @@ NAME_EN = {
     "Ruina": "Ruins", "Zarastená ruina": "Overgrown ruins", "Žeriav": "Crane",
 }
 
+# Czech names (build 13b), keyed like NAME_EN by the Slovak name; the app falls back to the Slovak name without one.
+NAME_CS = {
+    "Rodinný dom": "Rodinný dům", "Bytový dom": "Bytový dům", "Veľký bytový dom": "Velký bytový dům",
+    "Malý park": "Malý park", "Park s fontánou": "Park s fontánou", "Záhrada so sochou": "Zahrada se sochou",
+    "Park s jazierkom": "Park s jezírkem", "Osvetlená ulica": "Osvětlená ulice", "Knižnica": "Knihovna",
+    "Mestská knižnica": "Městská knihovna", "Múzeum": "Muzeum", "Múzeum umenia": "Muzeum umění", "Radnica": "Radnice",
+    "Škola": "Škola", "Hasičská stanica": "Hasičská stanice", "Polícia": "Policie", "Nemocnica": "Nemocnice",
+    "Mrakodrap": "Mrakodrap", "Výšková budova": "Výšková budova", "Auto": "Auto", "Cesta": "Silnice", "Tráva": "Tráva",
+    "Dlažba": "Dlažba", "Stavebný pozemok": "Stavební pozemek", "Lešenie": "Lešení", "Stavenisko": "Staveniště",
+    "Ruina": "Ruina", "Zarastená ruina": "Zarostlá ruina", "Žeriav": "Jeřáb",
+}
+
 
 def add(rid, level, kind, name, fp, parts, signs=None, shadow=True, connects=None):
     assert all(r["id"] != rid for r in recipes), rid
-    r = {"id": rid, "level": level, "kind": kind, "nameSK": name, "nameEN": NAME_EN[name], "footprint": [fp, fp],
+    r = {"id": rid, "level": level, "kind": kind, "nameSK": name, "nameEN": NAME_EN[name], "nameCS": NAME_CS[name],
+         "footprint": [fp, fp],
          "parts": parts}
     if connects:
         r["connects"] = "".join(d for d in "NESW" if d in connects)

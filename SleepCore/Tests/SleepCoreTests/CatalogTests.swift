@@ -36,12 +36,16 @@ func loadRealCatalog() throws -> Catalog {
     let catalog = try loadRealCatalog()
     #expect(catalog.entries.allSatisfy { $0.nameEN != nil })
     let police = try #require(catalog["l3-police"])
-    #expect(police.name("sk") == "Polícia" && police.name("en") == "Police station" && police.name("cs") == "Police station")
-    #expect(police.file("sk") == "L3/l3-police.png" && police.file("en") == "L3/l3-police.en.png")
+    #expect(police.name("sk") == "Polícia" && police.name("en") == "Police station" && police.name("cs") == "Policie")
+    // Czech keeps the Slovak signs painted on the sprites (a Czech reader understands them), English has its own
+    #expect(police.file("sk") == "L3/l3-police.png" && police.file("en") == "L3/l3-police.en.png" && police.file("cs") == police.file)
+    // every entry has a Czech name (build 13b)
+    #expect(catalog.entries.allSatisfy { $0.nameCS?.isEmpty == false })
     let house = try #require(catalog["l1-house-a-a"])
     #expect(house.fileEN == nil && house.file("en") == house.file)
     // an older catalog without the English fields still decodes and falls back to Slovak
     let old = #"[{"id":"x","level":1,"kind":"building","nameSK":"Dom","footprint":[1,1],"file":"L1/x.png","size":[1,1],"anchor":[0.5,0.5]}]"#
     let entry = try #require(Catalog(jsonData: Data(old.utf8))["x"])
     #expect(entry.name("en") == "Dom" && entry.file("en") == "L1/x.png")
+    #expect(entry.nameCS == nil && entry.name("cs") == "Dom")                // Czech falls back to Slovak
 }

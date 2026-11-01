@@ -91,6 +91,7 @@ struct Recipe: Codable {
     var kind: String               // building | park | road | terrain | overlay | vehicle
     var nameSK: String
     var nameEN: String?
+    var nameCS: String?            // Czech (build 13b); the app falls back to nameSK
     var footprint: [Int]           // [w, d] in tiles
     var parts: [Part]
     var signs: [Sign]?
@@ -109,6 +110,7 @@ struct CatalogEntry: Codable {
     var kind: String
     var nameSK: String
     var nameEN: String?
+    var nameCS: String?            // Czech (build 13b); the app falls back to nameSK
     var footprint: [Int]
     var file: String
     var fileEN: String?
@@ -412,6 +414,7 @@ for r in recipes where onlyId == nil || r.id == onlyId {
     if enOnly {
         guard let i = catalog.firstIndex(where: { $0.id == r.id }) else { fatalError("EN_ONLY: \(r.id) not in catalog") }
         catalog[i].nameEN = r.nameEN
+        catalog[i].nameCS = r.nameCS
         if !hasEN { continue }
     }
     let scene = SCNScene()
@@ -532,7 +535,7 @@ for r in recipes where onlyId == nil || r.id == onlyId {
         continue
     }
     catalog.removeAll { $0.id == r.id }
-    catalog.append(CatalogEntry(id: r.id, level: r.level, kind: r.kind, nameSK: r.nameSK, nameEN: r.nameEN,
+    catalog.append(CatalogEntry(id: r.id, level: r.level, kind: r.kind, nameSK: r.nameSK, nameEN: r.nameEN, nameCS: r.nameCS,
                                 footprint: r.footprint, file: file, fileEN: fileEN, size: [pxW, pxH],
                                 anchor: [(ax * 1000).rounded() / 1000, (ay * 1000).rounded() / 1000],
                                 connects: r.connects))

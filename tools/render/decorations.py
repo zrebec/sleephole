@@ -253,10 +253,42 @@ cand("d-lantern-walk", "Lantern walk", "Lampiónová cestička", [
 ])
 
 
+# Czech names (build 13b); the app falls back to the Slovak name for an id missing here.
+NAME_CS = {
+    "d-fountain": "Fontána",
+    "d-cat-statue": "Socha spící kočky",
+    "d-windmill": "Větrný mlýn",
+    "d-gazebo": "Altán",
+    "d-bench-lamp": "Lavička s lampou",
+    "d-flower-bed": "Květinový záhon",
+    "d-well": "Studna přání",
+    "d-oak": "Starý dub",
+    "d-pines": "Smrkový hájek",
+    "d-telescope": "Dalekohled",
+    "d-campfire": "Ohniště se stanem",
+    "d-balloon": "Horkovzdušný balón",
+    "d-lighthouse": "Maják",
+    "d-stall": "Tržní stánek",
+    "d-pond": "Jezírko",
+    "d-flagpole": "Stožár s vlajkou",
+    "d-xmas-tree": "Vánoční stromek",
+    "d-snowman": "Sněhulák",
+    "d-bus-stop": "Autobusová zastávka",
+    "d-swing": "Dětská houpačka",
+    "d-bridge": "Kamenný mostek",
+    "d-clock-tower": "Hodinová věž",
+    "d-hedge": "Živý plot",
+    "d-sign": "Cedule SleepHole",
+    "d-crystals": "Měsíční krystaly",
+    "d-lantern-walk": "Lampionová cestička",
+}
+
+
 def recipes():
     out = []
     for rid, en, sk, parts, signs in C:
-        r = {"id": rid, "level": 0, "kind": "decoration", "nameSK": sk, "nameEN": en, "footprint": [1, 1], "parts": parts}
+        r = {"id": rid, "level": 0, "kind": "decoration", "nameSK": sk, "nameEN": en, "nameCS": NAME_CS.get(rid),
+             "footprint": [1, 1], "parts": parts}
         if signs:
             r["signs"] = signs
         out.append(r)
@@ -393,12 +425,12 @@ def install():
     """Copy the rendered PNGs into assets/sprites/L0 and insert their catalog entries as TEXT (Apple's JSON style of the
     existing file stays byte-identical). Entries are kept sorted by `file`, like the whole catalog."""
     import shutil
-    names = {r["id"]: (r["nameEN"], r["nameSK"]) for r in recipes()}
+    names = {r["id"]: (r["nameEN"], r["nameSK"], r["nameCS"]) for r in recipes()}
     rend = json.load(open(f"{OUT}/renders/catalog.json"))
     have = {e["id"] for e in json.load(open(f"{SPR}/catalog.json"))}
     blocks = []
     for e in sorted((e for e in rend if e["id"] in TOP12 and e["id"] not in have), key=lambda e: e["file"]):
-        e["nameEN"], e["nameSK"] = names[e["id"]]
+        e["nameEN"], e["nameSK"], e["nameCS"] = names[e["id"]]
         shutil.copyfile(f"{OUT}/renders/{e['file']}", f"{SPR}/{e['file']}")
         text = json.dumps(e, indent=2, sort_keys=True, ensure_ascii=False, separators=(",", " : ")).replace("/", "\\/")
         # json.dumps puts lists on several lines already; add the 2-space array indent

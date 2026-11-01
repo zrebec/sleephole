@@ -560,3 +560,65 @@ Legend: **file** relative to `SleepHole/`; `{x}` = interpolation; *plural* = nee
 Risks: the long EN signs may not fit the board (adjust width in `make_recipes.py`); SwiftUI views that capture
 strings in `@State` must re-read on language change (the root `.id(uiVersion)` handles it); notifications
 already scheduled keep their old language until rescheduled.
+
+---
+
+## Czech (added 2026-11-01, build 13b)
+
+Czech is the app's third UI language (`AppLanguage.cs`, `cs.lproj`, the in-app picker "English | Slovenčina | Čeština").
+Rules:
+
+* **Slovak fallback:** a text without a Czech translation shows in Slovak (never English, never a raw key) –
+  `L()` compares the `cs` and the `en` lookup and returns the Slovak one when they are equal.
+  `CzechTests.noCzechTextEqualsTheEnglishOneWhileSlovakDiffers` guarantees a real translation is never mistaken for a missing one.
+* **Safety test:** `CzechTests.everyCzechTextKeepsTheEnglishFormatSpecifiers` – every Czech value has the same format
+  specifiers (types and positions, plural and substitution forms included) as the English source. Run it after every batch.
+* **Plurals:** Czech categories one / few / many / other (many only for fractions, still filled). Durations are in the
+  accusative (measure phrases: "3 hodiny před večerkou", "10 minut", "1 minutu"); texts around them are worded so the
+  accusative fits ("nejdřív … před", "nejpozději … po", "na …", "za …").
+* **Style:** warm, informal (tykání), cute, never cruel; seconds with no space ("15s"), minutes "10 min"; the app name
+  SleepHole is masculine ("SleepHole musí zůstat otevřený"), "appka" is feminine. Clock times: translations say "v %@"; `Czech.prepositions` (in `L()`) turns it into "ve" by the hour – ve 2–4, 12–14, 20–23; v otherwise (done in code, unit-tested).
+* **Formats:** Czech formats like Slovak (24 h, "30. 9.", decimal comma, `cs_CZ`); the signs painted on sprites stay
+  Slovak (a Czech reader understands them); building names come from `nameCS` in `assets/sprites/catalog.json`
+  (falls back to `nameSK`); the speech voice is `cs-CZ`.
+* **Tooling:** `python3 tools/i18n/keys.py` prints a Czech line ("n keys translated, m fall back to Slovak"); a missing
+  Czech text is not a failure.
+
+### Glossary (Slovak → Czech)
+
+| Slovak | Czech |
+|---|---|
+| noc / hotová noc | noc / hotová noc |
+| stavba, budova | stavba, budova |
+| mesto | město |
+| večierka | večerka (see doubts) |
+| budíček (wake time) / budík (alarm) | budíček / budík |
+| Ísť spať | Jít spát |
+| Odpočinok (nap) | Odpočinek |
+| príprava | příprava |
+| mierny / prísny režim | mírný / přísný režim |
+| séria | série |
+| žolík | žolík (pl. žolíci) |
+| mince | mince |
+| balíček (parcel) | balíček |
+| zbierka | sbírka |
+| pohľadnica | pohlednice |
+| mačka | kočka |
+| pokojné hodiny | klidné hodiny |
+| pauza | pauza |
+| kód na prebudenie | kód (pro potvrzení vstávání) |
+| týždeň na zmeny | týden na změny |
+| ruina | ruina |
+| obyvatelia | obyvatelé |
+| stavbári | stavbaři |
+| appka | appka |
+| podcast či rozprávka | podcast nebo pohádka |
+| Nastavenia | Nastavení |
+| upozornenie / oznámenie | upozornění / oznámení (iOS: oznámení) |
+| úroveň | úroveň |
+| žreb (draw) | losování |
+| Nerušiť / Spánok (Focus) | Nerušit / Spánek |
+
+**Doubtful words (slang check):** "večerka" also means a late-night corner shop in colloquial Czech (harmless, but a
+possible smile); "kočka" is colloquially also a girl (mild, widely used for the animal); "šlofík" is not used (Czech
+"odpočinek" instead). Nothing vulgar found in the recurring terms; the old Slovak trap ("box") is avoided with "balíček".

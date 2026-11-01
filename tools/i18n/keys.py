@@ -6,7 +6,8 @@ usage: python3 tools/i18n/keys.py            → keys missing in the catalog / c
        python3 tools/i18n/keys.py --all      → every extracted key
 Build the app first (tools/test_app.sh or xcodebuild … build) so the .stringsdata files exist.
        python3 tools/i18n/keys.py --prune    → also delete the unused keys from the catalog
-Exit code 1 when a key is missing or a key lacks its Slovak translation."""
+Exit code 1 when a key is missing or a key lacks its Slovak translation. Czech (build 13b) is reported only: a key
+without a Czech text falls back to Slovak in the app and is NOT a failure."""
 import glob, json, os, sys
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "..")
@@ -61,6 +62,9 @@ def main():
             json.dump(catalog, f, ensure_ascii=False, indent=2)
         print(f"pruned {len(unused)} unused keys")
     print(f"{len(keys)} keys, {len(missing)} missing, {len(untranslated)} without sk, {len(unused)} unused")
+    used = [k for k in keys if k in strings]
+    cs = sum(1 for k in used if "cs" in strings[k].get("localizations", {}))
+    print(f"Czech: {cs} keys translated, {len(used) - cs} fall back to Slovak")
     sys.exit(1 if missing or untranslated else 0)
 
 
