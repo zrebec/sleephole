@@ -33,7 +33,6 @@ enum BuddyTalkText {
         "The hospital is quiet tonight – just the way the doctors like it.",
         "Overheard on the street: “This town gets nicer every night.”",
         "The neighbours say the streets are quietest at night – just the way we like it.",
-        "Someone asked if we'll ever get a cinema. Who knows!",
         "The baker says fresh bread tastes best after a good night's sleep.",
         "Tonight we build again. I'll keep an eye on the site 🐾",
         "Full moon tonight 🌕 The whole town has a silver night.",
@@ -88,7 +87,6 @@ enum BuddyTalkText {
             switch k {
             case 0: L("Overheard on the street: “This town gets nicer every night.”")
             case 1: L("The neighbours say the streets are quietest at night – just the way we like it.")
-            case 2: L("Someone asked if we'll ever get a cinema. Who knows!")
             default: L("The baker says fresh bread tastes best after a good night's sleep.")
             }
         case .tonight: L("Tonight we build again. I'll keep an eye on the site 🐾")

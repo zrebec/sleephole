@@ -34,7 +34,7 @@ public enum BuddyLine: Hashable, Sendable {
     case tonight
 
     /// Number of everyday chatter sentences (`chatter(0..<count)`).
-    public static let chatterCount = 4
+    public static let chatterCount = 3
 
     public var tier: Int {
         switch self {
