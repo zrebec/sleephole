@@ -12613,22 +12613,6 @@
         }
       }
     },
-    "Someone asked if we'll ever get a cinema. Who knows!": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Someone asked if we'll ever get a cinema. Who knows!"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ktosi sa pýtal, či raz budeme mať kino. Ktovie!"
-          }
-        }
-      }
-    },
     "The baker says fresh bread tastes best after a good night's sleep.": {
       "localizations": {
         "en": {

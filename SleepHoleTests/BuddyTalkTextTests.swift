@@ -41,6 +41,13 @@ struct BuddyTalkTextTests {
         #expect(zip(texts(.en), texts(.sk)).allSatisfy { $0 != $1 })
     }
 
+    @Test func noBuddyTextPromisesACinema() {
+        // the town has no cinema (owner 2026-11-01) – the line must not come back by accident
+        #expect(texts(.en).allSatisfy { !$0.localizedCaseInsensitiveContains("cinema") })
+        #expect(texts(.sk).allSatisfy { !$0.localizedCaseInsensitiveContains("kino") })
+        #expect(BuddyTalkText.keys.allSatisfy { !$0.localizedCaseInsensitiveContains("cinema") })
+    }
+
     @Test func theSlovakSentenceForTheLargeCityNamesTheLargeCity() {
         let saved = Lang.current
         defer { Lang.current = saved }
