@@ -31,7 +31,8 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
 
 1. **Build 12 = the parcels – FINISHED 2026-11-01: 1.0 (12) uploaded 07:38, "Testing" in Kamaráti + SE ~07:55** (plan §10 REL
    "Build 12", last item; §12 2026-11-01). The night 31 → 1 complete on the whole tree, parcel 4 06:10. **PR #3 `build/12` →
-   `main` is open – merging it is his click** (https://github.com/zrebec/sleephole/pull/3). Still his on the build page
+   `main` merged by him (`8c75eb3`, 2026-11-01).** His three cleanup ideas for build 13 are in plan §0b row 13 (his picks
+   wait; branch `build/13` holds only that docs commit so far). Still his on the build page
    https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h: b1–b3, o2, m1, m2 (read `state/answers`; move 11b4d in §0a to 🟢 on his b1).
    On screen a box is a "parcel" / "balíček" – never the old Slovak word, never "box" or "package" in a UI text; the code keeps
    "box". The App Store gets the parcels as 1.1 after Apple's answer on 1.0 (10): "Loot Boxes" YES, "Simulated Gambling"
