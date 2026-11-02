@@ -9,12 +9,17 @@ struct TownSpriteView: UIViewRepresentable {
     let newest: String?
     let version: Int
     let imageProvider: (String) -> UIImage?
+    var accessibilityEntries: [TownAccessibility.Entry] = []     // 13e3: the buildings for VoiceOver
+    var accessibilitySummary = ""
     let onTap: (Int?) -> Void
 
     func makeCoordinator() -> Coordinator { Coordinator(onTap: onTap) }
 
     func makeUIView(context: Context) -> SKView {
-        let view = SKView()
+        let view = TownSKView()
+        view.entries = accessibilityEntries
+        view.summary = accessibilitySummary
+        view.onActivate = { [weak coordinator = context.coordinator] in coordinator?.onTap($0) }
         view.allowsTransparency = true          // the living sky shows around the floating town
         view.backgroundColor = .clear
         view.ignoresSiblingOrder = false
@@ -43,6 +48,10 @@ struct TownSpriteView: UIViewRepresentable {
 
     func updateUIView(_ view: SKView, context: Context) {
         context.coordinator.onTap = onTap
+        if let town = view as? TownSKView {
+            town.entries = accessibilityEntries
+            town.summary = accessibilitySummary
+        }
         guard context.coordinator.shownVersion != version else { return }
         context.coordinator.shownVersion = version
         context.coordinator.scene?.show(model, focus: focus, newest: newest)
@@ -104,6 +113,9 @@ struct TownTab: View {
                 if let render {
                     TownSpriteView(model: render, focus: model.townFocus, newest: model.townNewest, version: model.townVersion,
                                    imageProvider: { sprites.image(for: $0) },
+                                   accessibilityEntries: snapshot.map { s in
+                                       TownAccessibility.entries(s) { model.catalog?[$0]?.displayName } } ?? [],
+                                   accessibilitySummary: TownAccessibility.summary(buildings: snapshot?.buildings.count ?? 0),
                                    onTap: { selected = $0 })
                         .ignoresSafeArea(edges: [.horizontal, .bottom])
                 }
