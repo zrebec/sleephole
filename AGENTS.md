@@ -37,7 +37,7 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    the rest in Slovak, every text read twice (plan §10 REL 13b).** **13a + 13b on his phone since 2026-11-02 06:21**
    (Debug build of `86387b1`, the store backed up first). **13b2 – the whole app in Czech (938 texts, developer screens
    too) + Czech signs on seven sprites – merged 2026-11-02 ~07:50 (`ce5ac9d`); 13b3 – Developer → "Plans and proposals" in
-   Czech (`docs/PREHLAD-PLANOV.cs.md`, his pick "Czech copy + test") – merged ~08:15; both on the Mac only: install on his word**
+   Czech (`docs/PREHLAD-PLANOV.cs.md`, his pick "Czech copy + test") – merged ~08:15; both on his phone since 2026-11-02 08:31 (Debug build of `f6f61a5`, his yes, the store backed up first)**
    (store backed up first). His checks c1–c6 / n1–n2 / d1–d6 and notes `cz` / `n13` on his build 13 page
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`) are open. His Chrome is signed out of
    App Store Connect (2026-11-02 07:00) – ask him to sign in before reading Apple's review state. Next on his
