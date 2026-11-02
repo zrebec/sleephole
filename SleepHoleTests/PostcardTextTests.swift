@@ -76,13 +76,14 @@ struct PostcardTextTests {
         }
     }
 
-    @Test func theTenFirstPostcardsHaveAStudyAndTheRestHaveNone() {
+    @Test func postcards1To16And18To20HaveAStudyAndTheRestHaveNone() {
+        func hasOne(_ n: Int) -> Bool { n <= 16 || (18...20).contains(n) }
         for n in 1...30 {
             let id = String(format: "postcard-%02d", n)
-            #expect((Postcards.study(for: id) != nil) == (n <= 10), "\(id)")
-            #expect(PostcardText.hasStudy(id) == (n <= 10), "\(id)")
+            #expect((Postcards.study(for: id) != nil) == hasOne(n), "\(id)")
+            #expect(PostcardText.hasStudy(id) == hasOne(n), "\(id)")
         }
-        #expect(Postcards.studies.count == 10)
+        #expect(Postcards.studies.count == 19)
     }
 
     @Test func theCitationResolves() throws {
@@ -102,7 +103,7 @@ struct PostcardTextTests {
 
     @Test func theDebugKeysAreUniqueAndInTheCatalog() {
         #expect(Set(PostcardText.keys).count == PostcardText.keys.count)
-        #expect(PostcardText.keys.count == 101)
+        #expect(PostcardText.keys.count == 128)
         let entries = AppTexts.load()
         let have = Set(entries.map(\.key))
         #expect(PostcardText.keys.allSatisfy { have.contains($0) })
@@ -143,6 +144,13 @@ struct PostcardTextTests {
             try write("card-\(n)-en-light.png", lang: .en, scheme: .light, size: .large, id: id(n))
             try write("card-\(n)-cs-light.png", lang: .cs, scheme: .light, size: .large, id: id(n))
         }
+        for n in 11...20 { try write("card-\(n)-sk-light.png", lang: .sk, scheme: .light, size: .large, id: id(n)) }
+        for n in [11, 13, 15, 16, 18, 20] {
+            try write("card-\(n)-cs-light.png", lang: .cs, scheme: .light, size: .large, id: id(n))
+            try write("card-\(n)-en-light.png", lang: .en, scheme: .light, size: .large, id: id(n))
+        }
+        try write("card-19-sk-dark.png", lang: .sk, scheme: .dark, size: .large, id: id(19))
+        try write("card-14-sk-light-xxxl.png", lang: .sk, scheme: .light, size: .accessibility2, id: id(14))
         try write("card-2-cs-light.png", lang: .cs, scheme: .light, size: .large, id: id(2))
         try write("card-10-sk-dark.png", lang: .sk, scheme: .dark, size: .large, id: id(10))
         try write("card-4-sk-light-xxxl.png", lang: .sk, scheme: .light, size: .accessibility2, id: id(4))

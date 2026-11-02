@@ -84,6 +84,15 @@ public enum Postcards {
         "postcard-08": PostcardStudy(firstAuthor: "Gooley", journal: "J Clin Endocrinol Metab", year: 2011, pmid: "21193540"),  // room light before bedtime delayed and shortened the sleep hormone; checked 2026-11-02
         "postcard-09": PostcardStudy(firstAuthor: "Scullin", journal: "J Exp Psychol Gen", year: 2018, pmid: "29058942"),  // writing a to-do list for 5 min before bed helped people fall asleep faster; checked 2026-11-02
         "postcard-10": PostcardStudy(firstAuthor: "Rusch", journal: "Ann N Y Acad Sci", year: 2019, pmid: "30575050"),  // review of 18 trials: mindfulness meditation improved sleep quality; checked 2026-11-02
+        "postcard-11": PostcardStudy(firstAuthor: "Gardiner", journal: "Sleep Med Rev", year: 2023, pmid: "36870101"),  // review of 24 studies: caffeine cut sleep by about 45 min; a cup of coffee at least 8.8 h before bed; checked 2026-11-02
+        "postcard-12": PostcardStudy(firstAuthor: "McAlpine", journal: "J Behav Med", year: 2024, pmid: "37702911"),  // 74 students, wrist monitor: about 14 min less sleep after an unpleasant conversation before bed; checked 2026-11-02
+        "postcard-13": PostcardStudy(firstAuthor: "Drake", journal: "J Clin Sleep Med", year: 2013, pmid: "24235903"),  // 12 adults, 400 mg caffeine at 0, 3 or 6 h before bed: over an hour less sleep each time; checked 2026-11-02
+        "postcard-14": PostcardStudy(firstAuthor: "Radwan", journal: "Sleep Health", year: 2015, pmid: "29073401"),  // review of 24 controlled trials: a medium-firm, self-adjusted mattress was best for comfort and sleep quality; checked 2026-11-02
+        "postcard-15": PostcardStudy(firstAuthor: "St-Onge", journal: "J Clin Sleep Med", year: 2016, pmid: "26156950"),  // 26 adults in a sleep lab: more energy from sugar went with more arousals that night; checked 2026-11-02
+        "postcard-16": PostcardStudy(firstAuthor: "Enomoto", journal: "J Physiol Anthropol", year: 2026, pmid: "41975458"),  // 13 young women: dinner 1 h before bed vs 5 h – shorter, more broken sleep after the late dinners; checked 2026-11-02
+        "postcard-18": PostcardStudy(firstAuthor: "Basner", journal: "Sleep Health", year: 2023, pmid: "37076419"),  // 62 adults at home: sleep efficiency about 3 percent lower in the warmest fifth of bedroom readings; checked 2026-11-02
+        "postcard-19": PostcardStudy(firstAuthor: "Hu", journal: "Crit Care", year: 2010, pmid: "20398302"),  // 14 healthy volunteers in simulated hospital noise and light: an eye mask and earplugs gave more REM sleep, fewer arousals; checked 2026-11-02
+        "postcard-20": PostcardStudy(firstAuthor: "Riedy", journal: "Sleep Med Rev", year: 2021, pmid: "33007706"),  // review of 38 studies: evidence that continuous noise improves sleep is very low; results vary; checked 2026-11-02
     ]
 
     /// The study of a postcard; nil when it has no study part (yet).

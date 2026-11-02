@@ -18884,7 +18884,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nastav si jemnou připomínku 90 minut před spaním, pak začni ztlumovat světla a zpomal."
+            "value": "Nastav si jemnou připomínku 90 minut před spaním, pak začni tlumit světla a zpomal."
           }
         }
       }
@@ -18999,28 +18999,6 @@
         }
       }
     },
-    "Caffeine can stay with you for up to 8 hours, so an afternoon coffee may still be awake at bedtime.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Caffeine can stay with you for up to 8 hours, so an afternoon coffee may still be awake at bedtime."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kofeín môže pôsobiť až 8 hodín, takže popoludňajšia káva môže byť hore ešte pri ukladaní do postele."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kofein může působit až 8 hodin, takže odpolední káva může být vzhůru ještě při uléhání."
-          }
-        }
-      }
-    },
     "Heavy talks by daylight": {
       "localizations": {
         "en": {
@@ -19061,50 +19039,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rozrušující rozhovory si nech raději na den, ať je večer klidný."
-          }
-        }
-      }
-    },
-    "A light dinner": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A light dinner"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ľahká večera"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lehká večeře"
-          }
-        }
-      }
-    },
-    "Make dinner your lightest meal and finish eating 3 to 4 hours before bed.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Make dinner your lightest meal and finish eating 3 to 4 hours before bed."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nech je večera najľahším jedlom dňa a dojedz 3 až 4 hodiny pred spaním."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ať je večeře nejlehčím jídlem dne a dojez 3 až 4 hodiny před spaním."
           }
         }
       }
@@ -19175,28 +19109,6 @@
         }
       }
     },
-    "A cool room is cosy for sleeping – aim for around 18–20 °C (65–68 °F).": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A cool room is cosy for sleeping – aim for around 18–20 °C (65–68 °F)."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "V chladnejšej izbe sa spí príjemne – skús približne 18 – 20 °C."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "V chladnějším pokoji se spí příjemně – zkus přibližně 18–20 °C."
-          }
-        }
-      }
-    },
     "Make it dark": {
       "localizations": {
         "en": {
@@ -19259,28 +19171,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Klid v pokoji"
-          }
-        }
-      }
-    },
-    "Soft earplugs help with noise, and gentle sounds like rain can make the room cosy.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Soft earplugs help with noise, and gentle sounds like rain can make the room cosy."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mäkké štuple do uší zmiernia hluk a jemné zvuky ako dážď spravia izbu útulnejšou."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Měkké špunty do uší ztlumí hluk a jemné zvuky jako déšť dodají pokoji útulnost."
           }
         }
       }
@@ -20007,28 +19897,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pokud v noci vstaneš, nech světlo slabé – stačí tlumená noční lampička."
-          }
-        }
-      }
-    },
-    "Sugary drinks and snacks can make it harder to fall or stay asleep – go easy on them.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sugary drinks and snacks can make it harder to fall or stay asleep – go easy on them."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sladké nápoje a maškrty môžu sťažiť zaspávanie aj spánok – dopraj si ich s mierou."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sladké nápoje a mlsky mohou ztížit usínání i spánek – dopřej si je s mírou."
           }
         }
       }
@@ -22559,6 +22427,732 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nanejvýš střední jistota: předčila skupiny se stejnou pozorností, ne ověřené spánkové programy, a autoři to označují za předběžné. Hudba, představy a jóga součástí nebyly."
+          }
+        }
+      }
+    },
+    "Caffeine blocks the signal that builds up through the day and tells you it is time to rest. It fades slowly, so an afternoon cup can still be working when you lie down.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caffeine blocks the signal that builds up through the day and tells you it is time to rest. It fades slowly, so an afternoon cup can still be working when you lie down."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kofeín tlmí signál, ktorý sa počas dňa hromadí a hovorí ti, že je čas odpočívať. Vyprcháva pomaly, takže popoludňajšia šálka môže pôsobiť ešte vtedy, keď si líhaš."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kofein tlumí signál, který se během dne hromadí a říká ti, že je čas odpočívat. Vyprchává pomalu, takže odpolední šálek může působit ještě ve chvíli, kdy si lehneš."
+          }
+        }
+      }
+    },
+    "A 2023 review of 24 studies found that caffeine cut sleep by about 45 min. To avoid that loss, it estimated that a regular cup of coffee should be drunk at least 8.8 hours before bed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A 2023 review of 24 studies found that caffeine cut sleep by about 45 min. To avoid that loss, it estimated that a regular cup of coffee should be drunk at least 8.8 hours before bed."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prehľad 24 štúdií z roku 2023 zistil, že kofeín skrátil spánok asi o 45 min. Aby sa spánok neskracoval, bežnú šálku kávy treba podľa odhadu vypiť aspoň 8,8 hodiny pred spaním."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přehled 24 studií z roku 2023 zjistil, že kofein zkrátil spánek asi o 45 min. Aby se spánek nezkracoval, je podle odhadu potřeba běžný šálek kávy vypít aspoň 8,8 hodiny před spaním."
+          }
+        }
+      }
+    },
+    "It pools 24 studies, so it is broader than one trial. The 8.8 hours is an estimate for a regular cup of coffee (250 mL), not an exact limit for everyone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It pools 24 studies, so it is broader than one trial. The 8.8 hours is an estimate for a regular cup of coffee (250 mL), not an exact limit for everyone."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spája 24 štúdií, takže je širší než jeden pokus. 8,8 hodiny je odhad pre bežnú šálku kávy (250 ml), nie presná hranica pre každého."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spojuje 24 studií, takže je širší než jeden pokus. 8,8 hodiny je odhad pro běžný šálek kávy (250 ml), ne přesná hranice pro každého."
+          }
+        }
+      }
+    },
+    "Heavy talks can leave your mind buzzing and your body on alert, and alert is the opposite of sleepy. Saving them for daylight lets your evening wind down.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heavy talks can leave your mind buzzing and your body on alert, and alert is the opposite of sleepy. Saving them for daylight lets your evening wind down."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ťažké rozhovory vedia rozvíriť myšlienky a postaviť telo do pohotovosti – a pohotovosť je opak ospalosti. Keď ich necháš na deň, večer môžeš pokojne spomaliť."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Těžké rozhovory umí rozvířit myšlenky a uvést tělo do pohotovosti – a pohotovost je opak ospalosti. Když si je necháš na den, večer můžeš v klidu zpomalit."
+          }
+        }
+      }
+    },
+    "In a 2024 study, 74 university students wore a wrist monitor for 14 nights. On nights after an unpleasant conversation before bed, they slept about 14 min less than on other nights.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2024 study, 74 university students wore a wrist monitor for 14 nights. On nights after an unpleasant conversation before bed, they slept about 14 min less than on other nights."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V štúdii z roku 2024 nosilo 74 vysokoškolákov 14 nocí náramkový monitor. V noci po nepríjemnom rozhovore pred spaním spali asi o 14 min menej než v iné noci."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ve studii z roku 2024 nosilo 74 vysokoškoláků 14 nocí náramkový monitor. V noci po nepříjemném rozhovoru před spaním spali asi o 14 min méně než jindy."
+          }
+        }
+      }
+    },
+    "A link, not a cause: 74 students, sleep judged by a wrist monitor, habits reported by themselves. Many other habits in the study showed no link at all.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A link, not a cause: 74 students, sleep judged by a wrist monitor, habits reported by themselves. Many other habits in the study showed no link at all."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Súvislosť, nie príčina: 74 študentov, spánok odhadnutý náramkom a zvyky, ktoré uvádzali sami. Veľa iných zvykov v štúdii vôbec nesúviselo so spánkom."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Souvislost, ne příčina: 74 studentů, spánek odhadnutý náramkem a zvyky, které uváděli sami. Mnoho jiných zvyků ve studii vůbec nesouviselo se spánkem."
+          }
+        }
+      }
+    },
+    "Caffeine keeps your brain alert for hours, even after you stop feeling it. A warm, caffeine-free drink gives you the cosy ritual of an evening cup without the buzz.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caffeine keeps your brain alert for hours, even after you stop feeling it. A warm, caffeine-free drink gives you the cosy ritual of an evening cup without the buzz."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kofeín drží tvoj mozog hodiny v pohotovosti, aj keď ho už necítiš. Teplý nápoj bez kofeínu ti dá útulný večerný rituál, ale nepovzbudí ťa."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kofein drží tvůj mozek hodiny v pohotovosti, i když ho už necítíš. Teplý nápoj bez kofeinu ti dá útulný večerní rituál, ale nepovzbudí tě."
+          }
+        }
+      }
+    },
+    "In a 2013 trial, 12 healthy adults took 400 mg of caffeine (about four cups of coffee) right at bedtime, or 3 or 6 hours before. Each time, a headband monitor showed over an hour less sleep than with a placebo.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2013 trial, 12 healthy adults took 400 mg of caffeine (about four cups of coffee) right at bedtime, or 3 or 6 hours before. Each time, a headband monitor showed over an hour less sleep than with a placebo."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokuse z roku 2013 užilo 12 zdravých dospelých 400 mg kofeínu (asi štyri šálky kávy) tesne pred spaním alebo 3 či 6 hodín predtým. Zakaždým ukázal monitor na čelenke o viac ako hodinu menej spánku než po placebe."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokusu z roku 2013 užilo 12 zdravých dospělých 400 mg kofeinu (asi čtyři šálky kávy) těsně před spaním nebo 3 či 6 hodin předtím. Pokaždé ukázal monitor v čelence o víc než hodinu méně spánku než po placebu."
+          }
+        }
+      }
+    },
+    "Only 12 adults, a high dose, and a company grant paid for it. Warm milk and herbal tea were not tested – the sure gain is skipping the caffeine.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only 12 adults, a high dose, and a company grant paid for it. Warm milk and herbal tea were not tested – the sure gain is skipping the caffeine."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Len 12 dospelých, vysoká dávka a štúdiu zaplatil grant od firmy. Teplé mlieko ani bylinkový čaj sa neskúšali – istý prínos je vynechať kofeín."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jen 12 dospělých, vysoká dávka a studii zaplatil grant od firmy. Teplé mléko ani bylinkový čaj se nezkoušely – jistý přínos je vynechat kofein."
+          }
+        }
+      }
+    },
+    "When the bed supports you well, you spend less time shifting around for a comfy spot, so it is easier to drift off and to stay asleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When the bed supports you well, you spend less time shifting around for a comfy spot, so it is easier to drift off and to stay asleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keď ťa posteľ dobre podopiera, menej sa vrtíš a hľadáš pohodlnú polohu, takže ľahšie zaspíš a menej sa budíš."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Když tě postel dobře podpírá, méně se vrtíš a hledáš pohodlnou polohu, takže snáz usneš a méně se budíš."
+          }
+        }
+      }
+    },
+    "A 2015 review of 24 controlled trials concluded that a medium-firm mattress, especially one you can adjust yourself, is best for sleep comfort and sleep quality.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A 2015 review of 24 controlled trials concluded that a medium-firm mattress, especially one you can adjust yourself, is best for sleep comfort and sleep quality."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prehľad 24 kontrolovaných štúdií z roku 2015 dospel k záveru, že stredne tuhý matrac, najmä taký, ktorý si môžeš nastaviť podľa seba, je najlepší pre pohodlie a kvalitu spánku."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přehled 24 kontrolovaných studií z roku 2015 dospěl k závěru, že středně tuhá matrace, zejména taková, kterou si můžeš nastavit podle sebe, je nejlepší pro pohodlí a kvalitu spánku."
+          }
+        }
+      }
+    },
+    "The trials were rated moderate to high quality, but findings on the ideal mattress still differ, and pillows were not studied.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The trials were rated moderate to high quality, but findings on the ideal mattress still differ, and pillows were not studied."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Štúdie boli hodnotené ako stredne až vysoko kvalitné, no zistenia o ideálnom matraci sa stále rozchádzajú a vankúše sa neskúmali."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Studie byly hodnoceny jako středně až vysoce kvalitní, ale zjištění o ideální matraci se stále rozcházejí a polštáře se nezkoumaly."
+          }
+        }
+      }
+    },
+    "Food is not only fuel for the day – what you eat can also shape how deeply you sleep. A little sugar is fine; it is the everyday habit of a lot that is worth watching.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Food is not only fuel for the day – what you eat can also shape how deeply you sleep. A little sugar is fine; it is the everyday habit of a lot that is worth watching."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jedlo nie je len palivo na deň – to, čo ješ, môže ovplyvniť aj to, ako hlboko spíš. Trochu cukru nevadí; sledovať sa oplatí skôr každodenný zvyk jesť ho veľa."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jídlo není jen palivo na den – to, co jíš, může ovlivnit i to, jak hluboce spíš. Trocha cukru nevadí; sledovat se vyplatí spíš každodenní zvyk jíst ho hodně."
+          }
+        }
+      }
+    },
+    "In a 2016 sleep-lab study, 26 adults of normal weight chose their own food for one day. Getting more of their energy from sugar went with more brief wake-ups (arousals) that night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2016 sleep-lab study, 26 adults of normal weight chose their own food for one day. Getting more of their energy from sugar went with more brief wake-ups (arousals) that night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V štúdii z roku 2016 v spánkovom laboratóriu si 26 dospelých s normálnou hmotnosťou jeden deň vyberalo jedlo podľa seba. Čím viac energie mali z cukru, tým častejšie sa v tú noc krátko prebúdzali."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ve studii z roku 2016 ve spánkové laboratoři si 26 dospělých s normální hmotností jeden den vybíralo jídlo podle sebe. Čím víc energie měli z cukru, tím častěji se tu noc krátce probouzeli."
+          }
+        }
+      }
+    },
+    "Only 26 adults and one day of self-chosen food, so a link, not a cause. Other studies are mixed – some found carb-rich meals made people sleepier.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only 26 adults and one day of self-chosen food, so a link, not a cause. Other studies are mixed – some found carb-rich meals made people sleepier."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Len 26 dospelých a jeden deň vlastného výberu jedla – ide o súvislosť, nie príčinu. Iné štúdie sú zmiešané – podľa niektorých boli ľudia po jedle bohatom na sacharidy ospalejší."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jen 26 dospělých a jeden den vlastního výběru jídla – jde o souvislost, ne příčinu. Jiné studie jsou smíšené – podle některých byli lidé po jídle bohatém na sacharidy ospalejší."
+          }
+        }
+      }
+    },
+    "Digesting a meal keeps your body busy. Finishing dinner a few hours earlier gives it time to settle before you lie down.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digesting a meal keeps your body busy. Finishing dinner a few hours earlier gives it time to settle before you lie down."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trávenie jedla telo zamestnáva. Keď dojíš večeru o pár hodín skôr, telo sa stihne upokojiť ešte predtým, ako si ľahneš."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trávení jídla tělo zaměstnává. Když dojíš večeři o pár hodin dřív, tělo se stihne uklidnit ještě předtím, než si lehneš."
+          }
+        }
+      }
+    },
+    "In a 2026 trial, 13 healthy young women ate the same dinner either 5 hours or 1 hour before bed for 4 days. After the late dinners, they slept less and were awake more during the night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2026 trial, 13 healthy young women ate the same dinner either 5 hours or 1 hour before bed for 4 days. After the late dinners, they slept less and were awake more during the night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokuse z roku 2026 jedlo 13 zdravých mladých žien 4 dni rovnakú večeru buď 5 hodín, alebo 1 hodinu pred spaním. Po neskorých večeriach spali kratšie a v noci boli dlhšie hore."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokusu z roku 2026 jedlo 13 zdravých mladých žen 4 dny stejnou večeři buď 5 hodin, nebo 1 hodinu před spaním. Po pozdních večeřích spaly kratší dobu a v noci byly déle vzhůru."
+          }
+        }
+      }
+    },
+    "Only 13 young women, and only 1 hour vs 5 hours was tested. Another lab study with 20 adults found no clear harm from a late dinner, so the evidence is mixed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only 13 young women, and only 1 hour vs 5 hours was tested. Another lab study with 20 adults found no clear harm from a late dinner, so the evidence is mixed."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Len 13 mladých žien a skúšala sa len 1 hodina oproti 5 hodinám. Iná laboratórna štúdia s 20 dospelými nenašla pri neskorej večeri jasnú ujmu, dôkazy sú teda zmiešané."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jen 13 mladých žen a zkoušela se jen 1 hodina proti 5 hodinám. Jiná laboratorní studie s 20 dospělými u pozdní večeře nenašla jasnou újmu, důkazy jsou tedy smíšené."
+          }
+        }
+      }
+    },
+    "Your body cools down a little as you fall asleep. A cool room helps that along, while a warm one can get in the way and wake you more often.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your body cools down a little as you fall asleep. A cool room helps that along, while a warm one can get in the way and wake you more often."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telo sa pri zaspávaní trochu ochladzuje. Chladnejšia izba tomu pomáha, zatiaľ čo teplá môže prekážať a budiť ťa častejšie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tělo se při usínání trochu ochlazuje. Chladnější pokoj tomu pomáhá, zatímco teplý může překážet a budit tě častěji."
+          }
+        }
+      }
+    },
+    "In a 2023 study, 62 adults wore a wrist monitor at home for 14 nights while their bedrooms were measured. In the warmest fifth of readings, sleep efficiency (time in bed spent asleep) was about 3 percent lower than in the coolest.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2023 study, 62 adults wore a wrist monitor at home for 14 nights while their bedrooms were measured. In the warmest fifth of readings, sleep efficiency (time in bed spent asleep) was about 3 percent lower than in the coolest."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V štúdii z roku 2023 nosilo 62 dospelých doma 14 nocí náramkový monitor a ich spálne sa merali. V najteplejšej pätine meraní bola účinnosť spánku (podiel času v posteli v spánku) asi o 3 percentá nižšia než v najchladnejšej."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ve studii z roku 2023 nosilo 62 dospělých doma 14 nocí náramkový monitor a jejich ložnice se měřily. V nejteplejší pětině měření byla účinnost spánku (podíl času v posteli ve spánku) asi o 3 procenta nižší než v nejchladnější."
+          }
+        }
+      }
+    },
+    "A link, not a cause: 62 adults, and the study names no best temperature. Most rated their room “just right” whatever it measured, so people may not notice the difference.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A link, not a cause: 62 adults, and the study names no best temperature. Most rated their room “just right” whatever it measured, so people may not notice the difference."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Súvislosť, nie príčina: 62 dospelých a štúdia neuvádza najlepšiu teplotu. Väčšina označila izbu za „akurát“ bez ohľadu na namerané hodnoty, takže rozdiel si ľudia nemusia všimnúť."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Souvislost, ne příčina: 62 dospělých a studie neuvádí nejlepší teplotu. Většina označila pokoj za „akorát“ bez ohledu na naměřené hodnoty, takže rozdílu si lidé nemusí všimnout."
+          }
+        }
+      }
+    },
+    "Light tells your brain it is daytime and holds back your body's own sleep hormone. Keeping your eyes in the dark lets that hormone do its work through the night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light tells your brain it is daytime and holds back your body's own sleep hormone. Keeping your eyes in the dark lets that hormone do its work through the night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svetlo hovorí mozgu, že je deň, a tlmí vlastný spánkový hormón tela. Keď máš oči v tme, hormón môže celú noc robiť svoju prácu."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Světlo říká mozku, že je den, a tlumí vlastní spánkový hormon těla. Když máš oči ve tmě, hormon může celou noc dělat svou práci."
+          }
+        }
+      }
+    },
+    "In a 2010 sleep-lab study, 14 healthy volunteers slept with recorded hospital noise and the light on, with and without an eye mask and earplugs. With them, they had more REM sleep and fewer brief wake-ups.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2010 sleep-lab study, 14 healthy volunteers slept with recorded hospital noise and the light on, with and without an eye mask and earplugs. With them, they had more REM sleep and fewer brief wake-ups."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V štúdii z roku 2010 spalo v spánkovom laboratóriu 14 zdravých dobrovoľníkov pri nahratom nemocničnom hluku a zapnutom svetle, s maskou na oči a štuplami do uší aj bez nich. S nimi mali viac REM spánku a menej krátkych prebudení."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ve studii z roku 2010 spalo ve spánkové laboratoři 14 zdravých dobrovolníků při nahraném nemocničním hluku a rozsvíceném světle, s maskou na oči a špunty do uší i bez nich. S nimi měli víc REM spánku a méně krátkých probuzení."
+          }
+        }
+      }
+    },
+    "Only 14 people, a mask and earplugs tested together, in a noisy room with the light on. It does not prove a mask alone helps at home.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only 14 people, a mask and earplugs tested together, in a noisy room with the light on. It does not prove a mask alone helps at home."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Len 14 ľudí, maska a štuple skúšané spolu, v hlučnej miestnosti so zapnutým svetlom. Nedokazuje, že samotná maska pomáha doma."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jen 14 lidí, maska a špunty zkoušené společně, v hlučné místnosti s rozsvíceným světlem. Neprokazuje, že samotná maska pomáhá doma."
+          }
+        }
+      }
+    },
+    "Steady, soft sounds can cover sudden noises, which is why some people like rain or a fan. But a quiet room is the safest start, because noise can also get in the way of good sleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steady, soft sounds can cover sudden noises, which is why some people like rain or a fan. But a quiet room is the safest start, because noise can also get in the way of good sleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stály jemný zvuk dokáže prekryť náhle hluky, preto majú niektorí ľudia radi dážď alebo ventilátor. Najbezpečnejší začiatok je však tichá izba, lebo hluk môže brániť dobrému spánku."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stálý jemný zvuk dokáže přehlušit náhlé hluky, proto má někdo rád déšť nebo ventilátor. Nejbezpečnější začátek je ale tichý pokoj, protože hluk může bránit dobrému spánku."
+          }
+        }
+      }
+    },
+    "A 2021 review of 38 studies on steady background noise, like white noise, as a sleep aid found mixed results, from helping sleep to disturbing it. The authors rated the evidence that it improves sleep as very low quality.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A 2021 review of 38 studies on steady background noise, like white noise, as a sleep aid found mixed results, from helping sleep to disturbing it. The authors rated the evidence that it improves sleep as very low quality."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prehľad 38 štúdií z roku 2021 o stálom hluku na pozadí, napríklad bielom šume, ako pomôcke na spánok priniesol zmiešané výsledky – od pomoci až po rušenie spánku. Autori hodnotili dôkazy, že spánok zlepšuje, ako veľmi nízkej kvality."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přehled 38 studií z roku 2021 o stálém hluku na pozadí, například bílém šumu, jako pomůcce ke spánku přinesl smíšené výsledky – od pomoci až po rušení spánku. Autoři hodnotili důkazy, že spánek zlepšuje, jako velmi nízké kvality."
+          }
+        }
+      }
+    },
+    "Very low quality evidence and mixed results, so soft sounds are a matter of taste, not proven benefit. The review did not look at earplugs.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Very low quality evidence and mixed results, so soft sounds are a matter of taste, not proven benefit. The review did not look at earplugs."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dôkazy veľmi nízkej kvality a zmiešané výsledky, takže jemné zvuky sú vec chuti, nie dokázaný prínos. Štuple do uší prehľad nesledoval."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Důkazy velmi nízké kvality a smíšené výsledky, takže jemné zvuky jsou věc chuti, ne prokázaný přínos. Špunty do uší přehled nesledoval."
+          }
+        }
+      }
+    },
+    "Caffeine can stay with you for 8 hours or more, so an afternoon coffee may still be awake at bedtime.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caffeine can stay with you for 8 hours or more, so an afternoon coffee may still be awake at bedtime."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kofeín môže pôsobiť 8 hodín aj dlhšie, takže popoludňajšia káva môže byť hore ešte pri ukladaní do postele."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kofein může působit 8 hodin i déle, takže odpolední káva může být vzhůru ještě při uléhání."
+          }
+        }
+      }
+    },
+    "Lots of sugary drinks and snacks may make sleep lighter and more restless – go easy on them.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lots of sugary drinks and snacks may make sleep lighter and more restless – go easy on them."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po veľkom množstve sladkých nápojov a maškŕt môže byť spánok ľahší a nepokojnejší – dopraj si ich s mierou."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po velkém množství sladkých nápojů a pamlsků může být spánek lehčí a neklidnější – dopřej si je s mírou."
+          }
+        }
+      }
+    },
+    "Try to finish dinner a few hours before bed rather than right before lights out – your night may be calmer.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try to finish dinner a few hours before bed rather than right before lights out – your night may be calmer."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skús dojesť večeru pár hodín pred spaním, nie tesne pred zhasnutím – noc môže byť pokojnejšia."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zkus dojíst večeři pár hodin před spaním, ne těsně před zhasnutím – noc může být klidnější."
+          }
+        }
+      }
+    },
+    "Dinner, a bit earlier": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dinner, a bit earlier"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večera o niečo skôr"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večeře o něco dřív"
+          }
+        }
+      }
+    },
+    "A cool room is cosy for sleeping – very warm bedrooms tend to go with less restful nights.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A cool room is cosy for sleeping – very warm bedrooms tend to go with less restful nights."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V chladnejšej izbe sa spí príjemne – vo veľmi teplých spálňach býva spánok nepokojnejší."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V chladnějším pokoji se spí příjemně – ve velmi teplých ložnicích bývá spánek neklidnější."
+          }
+        }
+      }
+    },
+    "Soft earplugs can dull noise, and some people like gentle sounds such as rain – see what suits you.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soft earplugs can dull noise, and some people like gentle sounds such as rain – see what suits you."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mäkké štuple do uší môžu stlmiť hluk a niekomu sa páčia jemné zvuky ako dážď – skús, čo ti vyhovuje."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Měkké špunty do uší mohou ztlumit hluk a někomu se líbí jemné zvuky jako déšť – zkus, co ti vyhovuje."
           }
         }
       }
