@@ -35,10 +35,12 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    where the evidence is weak – his sugar example; batches of ten with his review), **the cinema line out** (13a merged
    `18b16d2`; a cinema building later). **13b Czech part 1 merged 2026-11-01 ~23:00 (`8404184`): 353 of 928 texts in Czech,
    the rest in Slovak, every text read twice (plan §10 REL 13b).** **13a + 13b on his phone since 2026-11-02 06:21**
-   (Debug build of `86387b1`, the store backed up first); his checks c1–c6 / n1–n2 and notes `cz` / `n13` on his build 13
-   page https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`) are open. Next on his
-   word: 13c postcards batch 1, 13d the cat's lines about owned buildings, the rest of Czech, accessibility and the other
-   polishing items. Build 12 (1.0 (12), the parcels) is with the testers since
+   (Debug build of `86387b1`, the store backed up first). **13b2 – the whole app in Czech (938 texts, developer screens
+   too) + Czech signs on seven sprites – merged 2026-11-02 ~07:50 (`ce5ac9d`), on the Mac only: install on his word**
+   (store backed up first). His checks c1–c6 / n1–n2 / d1–d6 and notes `cz` / `n13` on his build 13 page
+   https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`) are open. His Chrome is signed out of
+   App Store Connect (2026-11-02 07:00) – ask him to sign in before reading Apple's review state. Next on his
+   word: 13c postcards batch 1, 13d the cat's lines about owned buildings, accessibility and the other polishing items. Build 12 (1.0 (12), the parcels) is with the testers since
    2026-11-01 ~07:55, PR #3 merged by him (`8c75eb3`); his ticks b1–b3, o2, m1, m2 on
    https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h are still open (11b4d → 🟢 on his b1). On screen a box is a "parcel" /
    "balíček" (Czech: "balíček"); never "box" or "package" in a UI text. The App Store gets the parcels as 1.1 after Apple's
@@ -179,11 +181,13 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   Building prices (shop, next): L1 100, L2 200, L3 400, L4 1000.
 * Nap "Odpočinok" (plan D16): 30/60 min, only in its window (default 13:00–15:00), once a day, never builds.
   The home screen always shows both "Ísť spať" and "Odpočinok" buttons (disabled outside their windows).
-* UI languages: **English (default) + Slovak** (in-app switch stored in SwiftData `UserProgress.languageRaw`).
-  **Every UI string goes through `L("English key")`** (never a bare `Text("…")` literal); the Slovak text (correct
-  diacritics) goes into `SleepHole/Resources/Localizable.xcstrings`. Dates/times via `Fmt`. **Seconds are written with NO space after the number – `15s`, `%llds`, in English and Slovak, in every text (owner 2026-10-15: "nowhere with a space, nowhere at all"); minutes stay "10 min".** After adding strings:
-  build, then `python3 tools/i18n/keys.py` must report 0 missing / 0 without sk. `I18nTests` fails on any Slovak
-  literal left in `SleepHole/`. Code, comments, identifiers, agent docs: **English**.
+* UI languages: **English (default) + Slovak + Czech** (in-app switch stored in SwiftData `UserProgress.languageRaw`;
+  Czech since build 13b, **the whole app in Czech since 13b2 – owner 2026-11-02: "complete Czech, the whole app"**).
+  **Every UI string goes through `L("English key")`** (never a bare `Text("…")` literal); the Slovak AND the Czech text
+  (correct diacritics, the Czech glossary in `docs/IMPLEMENTATION_I18N.md`) go into `SleepHole/Resources/Localizable.xcstrings`
+  (`tools/i18n/add.py` takes `{"sk": …, "cs": …}`). Dates/times via `Fmt`. **Seconds are written with NO space after the number – `15s`, `%llds`, in English, Slovak and Czech, in every text (owner 2026-10-15: "nowhere with a space, nowhere at all"); minutes stay "10 min".** After adding strings:
+  build, then `python3 tools/i18n/keys.py` must report 0 missing / 0 without sk / 0 without cs. `I18nTests` fails on any Slovak
+  literal left in `SleepHole/`, `CzechTests.everyTextHasCzech` on any text without Czech. Code, comments, identifiers, agent docs: **English**.
 * Limits (owner 2026-09-30, plan LIM): renaming the town – first naming free, typo fix 10 min, 1× per 365 days free,
   else **5 000 🪙**; bedtime / wake follow the **change week** ("týždeň na zmeny", owner 2026-10-15, replaces days 1–3 + the streak reset): the first change opens 7 calendar days of free changes (a confirmation first; onboarding opens the first one), then the schedule is locked for a month (free again from the same day next month); an earlier unlock costs **2 000 🪙** and opens a new week; a change saved once tonight's building can start (early start included) applies from tomorrow; a schedule change never resets the streak; only bedtime and wake are limited; after the update to build 8 everyone starts with an unused week. Coins = earned − spent (`CoinSpend`), never negative.
 * Never rename a shipped sprite id (ids are persisted). Add new ones instead.
@@ -294,7 +298,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `docs/IMPLEMENTATION_I18N.md` | full spec for the EN/SK multi-language phase (string inventory, architecture, tests) |
 | `SleepCore/` | pure Swift package: schedule, night evaluation, progression, picker, town layout |
 | `SleepHole/` | iOS app target (created in F0) |
-| `SleepHole/Resources/Localizable.xcstrings` | all UI texts: key = English, `sk` translation, plural variations |
+| `SleepHole/Resources/Localizable.xcstrings` | all UI texts: key = English, `sk` and `cs` translations, plural variations |
 | `tools/i18n/keys.py` | compares the keys extracted from `L(...)` (build output) with the String Catalog |
 | `project.yml` | XcodeGen spec (created in F0) |
 | `assets/sprites/` | 174 rendered isometric sprites + `catalog.json` (ship in the app) |
