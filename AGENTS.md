@@ -34,10 +34,9 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    on his word), **the postcards with a "why"** (one real study each, every citation opened and checked, an honest note
    where the evidence is weak – his sugar example; batches of ten with his review), **the cinema line out** (13a merged
    `18b16d2`; a cinema building later). **13b Czech part 1 merged 2026-11-01 ~23:00 (`8404184`): 353 of 928 texts in Czech,
-   the rest in Slovak, every text read twice (plan §10 REL 13b).** 13a + 13b are on the Mac only: **morning of 2 Nov –
-   the agenda, his night pulled read-only, then install ONLY on his word (store backed up first); his build 13 page
-   https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx is already up (2026-11-01 ~23:20, prefix `b13.`; his ticks c1–c6 /
-   n1–n2 and notes `cz` / `n13` in `state/answers`) – after the install, move its masthead to "on the phone"**. Next on his
+   the rest in Slovak, every text read twice (plan §10 REL 13b).** **13a + 13b on his phone since 2026-11-02 06:21**
+   (Debug build of `86387b1`, the store backed up first); his checks c1–c6 / n1–n2 and notes `cz` / `n13` on his build 13
+   page https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`) are open. Next on his
    word: 13c postcards batch 1, 13d the cat's lines about owned buildings, the rest of Czech, accessibility and the other
    polishing items. Build 12 (1.0 (12), the parcels) is with the testers since
    2026-11-01 ~07:55, PR #3 merged by him (`8c75eb3`); his ticks b1–b3, o2, m1, m2 on
