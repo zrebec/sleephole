@@ -1,8 +1,7 @@
 #if DEBUG   // the document is bundled into Debug builds only (project.yml)
 import SwiftUI
-
-/// Pure parser for `docs/PREHLAD-PLANOV.md` (the plans overview): headings, paragraphs, bullets, the main table
-/// (found by its shape: five header cells, the first one `#`) and the small legend tables.
+/// Pure parser for `docs/PREHLAD-PLANOV.md` (the plans overview) and its Czech copy `PREHLAD-PLANOV.cs.md`: headings,
+/// paragraphs, bullets, the main table (found by its shape: five header cells, the first one `#`) and the small legend tables.
 enum PlansDocument {
     struct Item: Equatable {
         var number: Int?
@@ -105,8 +104,14 @@ enum PlansDocument {
 struct PlansView: View {
     private let blocks: [PlansDocument.Block]?
 
+    /// The Czech copy in Czech (falling back to the Slovak document if it is missing), the Slovak document otherwise.
+    static func documentURL(for lang: AppLanguage) -> URL? {
+        if lang == .cs, let url = Bundle.main.url(forResource: "PREHLAD-PLANOV.cs", withExtension: "md") { return url }
+        return Bundle.main.url(forResource: "PREHLAD-PLANOV", withExtension: "md")
+    }
+
     init() {
-        if let url = Bundle.main.url(forResource: "PREHLAD-PLANOV", withExtension: "md"),
+        if let url = Self.documentURL(for: Lang.current),
            let text = try? String(contentsOf: url, encoding: .utf8) {
             blocks = PlansDocument.parse(text)
         } else {
