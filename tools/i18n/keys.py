@@ -6,8 +6,8 @@ usage: python3 tools/i18n/keys.py            → keys missing in the catalog / c
        python3 tools/i18n/keys.py --all      → every extracted key
 Build the app first (tools/test_app.sh or xcodebuild … build) so the .stringsdata files exist.
        python3 tools/i18n/keys.py --prune    → also delete the unused keys from the catalog
-Exit code 1 when a key is missing or a key lacks its Slovak translation. Czech (build 13b) is reported only: a key
-without a Czech text falls back to Slovak in the app and is NOT a failure."""
+Exit code 1 when a key is missing or a key lacks its Slovak translation. Czech is reported only (NO CS lines): a key
+without a Czech text falls back to Slovak in the app; CzechTests.everyTextHasCzech is the guard."""
 import glob, json, os, sys
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "..")
@@ -45,10 +45,13 @@ def main():
     missing = [k for k in keys if k not in strings]
     untranslated = [k for k in keys if k in strings and "sk" not in strings[k].get("localizations", {})]
     unused = [k for k in strings if k not in keys]
+    nocs = [k for k in keys if k in strings and "cs" not in strings[k].get("localizations", {})]
     for k in missing:
         print(f"MISSING  {keys[k]}: {k}")
     for k in untranslated:
         print(f"NO SK    {keys[k]}: {k}")
+    for k in nocs:
+        print(f"NO CS    {keys[k]}: {k}")
     for k in unused:
         print(f"UNUSED   {k}")
     if "--prune" in sys.argv and unused:
@@ -61,7 +64,7 @@ def main():
         with open(CATALOG, "w", encoding="utf-8") as f:
             json.dump(catalog, f, ensure_ascii=False, indent=2)
         print(f"pruned {len(unused)} unused keys")
-    print(f"{len(keys)} keys, {len(missing)} missing, {len(untranslated)} without sk, {len(unused)} unused")
+    print(f"{len(keys)} keys, {len(missing)} missing, {len(untranslated)} without sk, {len(unused)} unused, {len(nocs)} without cs")
     used = [k for k in keys if k in strings]
     cs = sum(1 for k in used if "cs" in strings[k].get("localizations", {}))
     print(f"Czech: {cs} keys translated, {len(used) - cs} fall back to Slovak")

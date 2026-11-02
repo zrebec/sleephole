@@ -3718,6 +3718,7 @@
       0.326
     ],
     "file" : "L2\/l2-library-a.png",
+    "fileCS" : "L2\/l2-library-a.cs.png",
     "fileEN" : "L2\/l2-library-a.en.png",
     "footprint" : [
       2,
@@ -3740,6 +3741,7 @@
       0.29
     ],
     "file" : "L2\/l2-library-b.png",
+    "fileCS" : "L2\/l2-library-b.cs.png",
     "fileEN" : "L2\/l2-library-b.en.png",
     "footprint" : [
       2,
@@ -3762,6 +3764,7 @@
       0.273
     ],
     "file" : "L2\/l2-museum-a.png",
+    "fileCS" : "L2\/l2-museum-a.cs.png",
     "fileEN" : "L2\/l2-museum-a.en.png",
     "footprint" : [
       2,
@@ -3784,6 +3787,7 @@
       0.335
     ],
     "file" : "L2\/l2-museum-b.png",
+    "fileCS" : "L2\/l2-museum-b.cs.png",
     "fileEN" : "L2\/l2-museum-b.en.png",
     "footprint" : [
       2,
@@ -3956,6 +3960,7 @@
       0.279
     ],
     "file" : "L3\/l3-hospital.png",
+    "fileCS" : "L3\/l3-hospital.cs.png",
     "fileEN" : "L3\/l3-hospital.en.png",
     "footprint" : [
       2,
@@ -3978,6 +3983,7 @@
       0.319
     ],
     "file" : "L3\/l3-police.png",
+    "fileCS" : "L3\/l3-police.cs.png",
     "fileEN" : "L3\/l3-police.en.png",
     "footprint" : [
       2,
@@ -4022,6 +4028,7 @@
       0.216
     ],
     "file" : "L3\/l3-townhall.png",
+    "fileCS" : "L3\/l3-townhall.cs.png",
     "fileEN" : "L3\/l3-townhall.en.png",
     "footprint" : [
       2,

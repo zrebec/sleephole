@@ -21,6 +21,8 @@ public struct CatalogEntry: Codable, Hashable, Sendable, Identifiable {
     public let file: String
     /// Variant with an English sign painted on it (e.g. "L3/l3-police.en.png"); nil = no text on the sprite.
     public let fileEN: String?
+    /// Variant with a Czech sign (build 13b2), only where the Czech word differs from the Slovak one; nil = use `file`.
+    public let fileCS: String?
     public let size: [Int]
     public let anchor: [Double]
     public let connects: String?
@@ -35,10 +37,14 @@ public struct CatalogEntry: Codable, Hashable, Sendable, Identifiable {
         }
     }
 
-    /// Sprite file for a language: the signs painted on the sprites are Slovak (also for Czech – a Czech reader
-    /// understands "MÚZEUM"), English for every other language, if there is a variant.
+    /// Sprite file for a language: the signs painted on the sprites are Slovak for "sk", Czech for "cs" (the Slovak
+    /// file where the Czech word is the same), English for every other language, if there is a variant.
     public func file(_ lang: String) -> String {
-        lang == "sk" || lang == "cs" ? file : (fileEN ?? file)
+        switch lang {
+        case "sk": file
+        case "cs": fileCS ?? file
+        default: fileEN ?? file
+        }
     }
 }
 

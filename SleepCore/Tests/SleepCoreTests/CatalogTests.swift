@@ -37,8 +37,10 @@ func loadRealCatalog() throws -> Catalog {
     #expect(catalog.entries.allSatisfy { $0.nameEN != nil })
     let police = try #require(catalog["l3-police"])
     #expect(police.name("sk") == "Polícia" && police.name("en") == "Police station" && police.name("cs") == "Policie")
-    // Czech keeps the Slovak signs painted on the sprites (a Czech reader understands them), English has its own
-    #expect(police.file("sk") == "L3/l3-police.png" && police.file("en") == "L3/l3-police.en.png" && police.file("cs") == police.file)
+    // Czech and English have their own painted signs; where the Czech word equals the Slovak one the file is shared
+    #expect(police.file("sk") == "L3/l3-police.png" && police.file("en") == "L3/l3-police.en.png" && police.file("cs") == "L3/l3-police.cs.png")
+    let school = try #require(catalog["l3-school"])
+    #expect(school.fileCS == nil && school.file("cs") == school.file)
     // every entry has a Czech name (build 13b)
     #expect(catalog.entries.allSatisfy { $0.nameCS?.isEmpty == false })
     let house = try #require(catalog["l1-house-a-a"])
@@ -48,4 +50,5 @@ func loadRealCatalog() throws -> Catalog {
     let entry = try #require(Catalog(jsonData: Data(old.utf8))["x"])
     #expect(entry.name("en") == "Dom" && entry.file("en") == "L1/x.png")
     #expect(entry.nameCS == nil && entry.name("cs") == "Dom")                // Czech falls back to Slovak
+    #expect(entry.fileCS == nil && entry.file("cs") == "L1/x.png")
 }
