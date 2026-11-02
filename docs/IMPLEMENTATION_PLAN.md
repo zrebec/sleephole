@@ -3702,7 +3702,7 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         store backed up to `docs/device-logs/2026-11-02-pred-13c/` first and unchanged after the install – 69 records, 8
         spends, 4 parcels, 1 joker). His own collection holds only postcard 15, so he sees 1–10 under Settings → Developer →
         Parcel contents → Postcards.
-  - [ ] **13c batch 2 – postcards 11–20** (his word 2026-11-02 ~16:15: "let's move forward – further cards?"): the research
+  - [x] **13c batch 2 – postcards 11–20** (his word 2026-11-02 ~16:15: "let's move forward – further cards?"): the research
         worker started ~16:20 (`build/13c/batch2.json`, the batch 1 brief plus a `front_proposal` where the front says
         more than the study, funding noted; 20 "noise" with Riedy et al. 2021, PMID 33007706). **Opus's check ~16:30 – 16:45:**
         all ten PMIDs re-fetched, six full texts searched, four abstracts read whole, every quoted number found; the
@@ -3713,9 +3713,51 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         recommends no "why" for 17 for now. Reviewed texts: `build/13c/batch2-reviewed.json` (git-ignored). **His review
         page https://claude.ai/artifact/5TnaoZ4gkMWTJW3rG4qHGm published ~16:45** (store `state/answers`, browser prefix
         `p13c2.`, fields `p11`–`p20` sedi / zmenit + `pNN_note`, `f11` / `f15` / `f16` / `f18` / `f20` zmenit / nechat,
-        `c17` bez / soda, `note` – never rename). Then the texts into the app.
-  - [ ] 13c batch 3 (21–30), 13d – the cat's lines about owned buildings, then accessibility and the other polishing
-        items – each on his word.
+        `c17` bez / soda, `note` – never rename). **His goal message ~17:15 ("finish all the tip cards, screenshots of all
+        on a page, start VoiceOver, readability and the general smoothing of the app; finish only when satisfied after a
+        triple check of everything incl. the translations; use the Czech dictionary; don't forget the cat's lines about
+        standing buildings – the police found a lost cat, give every cat a random name") → Opus went on with its own
+        recommendations while the page had no answers (none at ~17:45): the five new fronts, 17 without a "why".** Code
+        (one Sonnet worker, `step/13c-postcards-why-2`): nine `Postcards.studies` (11 Gardiner 2023 Sleep Med Rev, 12
+        McAlpine 2024 J Behav Med, 13 Drake 2013 J Clin Sleep Med, 14 Radwan 2015 Sleep Health, 15 St-Onge 2016 J Clin
+        Sleep Med, 16 Enomoto 2026 J Physiol Anthropol, 18 Basner 2023 Sleep Health, 19 Hu 2010 Crit Care, 20 Riedy 2021
+        Sleep Med Rev), the texts copied byte for byte from `build/13c/batch2-final.json`, six front texts replaced (old
+        keys deleted). **Dictionary pass (JULS for Slovak, IJP for Czech, the macOS Czech spell checker over all 1 001
+        Czech texts):** 14 "prespíš noc" (JULS: "prespať" has a pejorative colloquial sense) and "prospíš noc" → "menej sa
+        budíš / méně se budíš"; 15 Czech "mlsek" (IJP: rare) → "pamlsek", the front and the finding reworded; 16's "why"
+        repeated its front → rewritten; an older Czech tip "ztlumovat" (not in IJP) → "tlumit". **SleepCore 509 / 0 (the
+        worker's run), app 640 / 0 (the worker's run) – Opus's run after the fixes: one failure in the known flaky
+        `SyncEngineTests.theTriesStopWhenTheSwitchIsTurnedOffOrTheEngineStops`, its suite + `PostcardTextTests` re-run
+        61 / 0; i18n 1 001 keys 0 / 0 / 0 / 0, 0 Czech fallbacks.** Commit `6f43517`, merged `0e9108a`.
+  - [x] **13c batch 3 – postcards 21–30** (his goal message 2026-11-02 ~17:15). Research worker → `build/13c/batch3.json`
+        (git-ignored, sources in `build/13c/b3src/`). **Opus's check:** all ten PMIDs re-fetched, the PMC full texts of
+        22 / 27 / 29 / 30 searched, every support quote found verbatim (two "misses" were only an en dash and a space),
+        every number re-checked. Studies: 21 Heo 2017 J Psychiatr Res, 22 Hjetland 2025 Front Psychiatry, 23 Espie 2026
+        Behav Sleep Med, 24 Tang 2007 J Behav Ther Exp Psychiatry, 25 Kredlow 2015 J Behav Med, 26 Stutz 2019 Sports Med,
+        27 Boubekri 2014 J Clin Sleep Med, 28 Weighall & Kellar 2023 Emerg Top Life Sci, 29 Boukhris 2026 J Sleep Res,
+        30 Mason 2022 PNAS. Fixes: 23 "lab recordings" → the recordings were at home; 30 "less deep and dream sleep, the
+        heart faster all night" → a smaller share of deep and REM sleep, a faster heart during sleep; 29 an uncited "other
+        studies link late naps…" dropped; 22's "why" no longer claims the untested "the brain links the bed with sleep".
+        **Front changes (Opus's call under his goal):** 22 screens out of the bed (the study only measured screens in
+        bed), 23 "a quarter of an hour" + title "The quarter-hour rule" (the trial tested 15 min, not 20), 25 "Regular
+        movement … doesn't have to be hard training" + title "Keep moving" ("a little" and "build up" untested), 26
+        "Evening exercise is usually fine – just finish hard workouts at least an hour before bed" + title "Hard workouts
+        earlier" (the review contradicts "3 hours"), 27 "Catch some daylight every day – even a cloudy sky is far brighter
+        than indoor light" (no "30 min outside early"; sk / cs title "Ranné svetlo" → "Trochu denného svetla"). 23 and 24
+        studied people with long-lasting sleep trouble (their PubMed titles name insomnia) – the cards say "adults who
+        slept poorly", like card 10. Dictionary pass: JULS "nabudiť" is colloquial-expressive → "čulé / čilé"; IJP
+        "čtvrthodina" standard. Final texts `build/13c/batch3-final.json`; brief `build/13c/brief-batch3.md`; the worker
+        on `step/13c-postcards-why-3` also made the screenshot test write all 30 postcards in sk / cs / en. **Review of the
+        worker:** it had raised the test's length limits for four texts – rejected; 23's finding and evidence, 26's and
+        30's findings shortened instead (limits stay en 260 / 240 / 170, sk / cs 300 / 280 / 200); its seconds-rule fix kept
+        (a Slovak / Czech "s" preposition before a word, "22 s oknami"); 30 cited as "PNAS" like 05; 22's evidence line said
+        "social media … made no difference" (ambiguous) → "the link was the same for social media and other screen uses".
+        **SleepCore 509 / 0, app 641 / 0, i18n 1 031 keys 0 / 0 / 0 / 0, 0 Czech fallbacks (Opus's own runs); 117 texts
+        equal to `batch3-final.json` (script); 92 screenshots `build/pcshots3/` (git-ignored).** Commit `f94b300`, merged
+        `e9cb10d`. All 30 postcards are done: 29 with a "why", 17 without (no lifestyle study found).
+  - [ ] 13d – the cat's lines about owned buildings (texts final in `build/13d/lines.json`, brief `build/13d/brief.md`),
+        then 13e1 VoiceOver + Reduce Motion, 13e2 larger text / contrast / not colour alone / tap targets, 13e3 the town
+        for VoiceOver (briefs in `build/13e/`).
 
 ### F6 — Paid Apple Developer Program (owner 2026-10-04: "next phase: F6, analyse it first"; the paid team is confirmed by a signed build)
 **Analysis (Opus, 2026-10-04; sources: the iOS 27 SDK's `AlarmKit.swiftinterface`, Apple's WWDC25 session 230
