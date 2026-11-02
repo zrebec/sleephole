@@ -18823,28 +18823,6 @@
         }
       }
     },
-    "Reading, soothing music or an audiobook, repeated each evening, tells your body that sleep is near.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reading, soothing music or an audiobook, repeated each evening, tells your body that sleep is near."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Čítanie, tichá hudba či audiokniha každý večer dajú telu vedieť, že spánok je blízko."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Čtení, tichá hudba či audiokniha každý večer dají tělu vědět, že spánek je blízko."
-          }
-        }
-      }
-    },
     "A warm bath": {
       "localizations": {
         "en": {
@@ -18863,28 +18841,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Teplá koupel"
-          }
-        }
-      }
-    },
-    "A warm bath 30 minutes to 2 hours before bed can help you relax into sleep.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A warm bath 30 minutes to 2 hours before bed can help you relax into sleep."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teplý kúpeľ 30 minút až 2 hodiny pred spaním pomáha uvoľniť sa."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Teplá koupel 30 minut až 2 hodiny před spaním pomáhá se uvolnit."
           }
         }
       }
@@ -21767,6 +21723,842 @@
           "stringUnit": {
             "state": "translated",
             "value": "simulovaný"
+          }
+        }
+      }
+    },
+    "Why it helps": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Why it helps"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prečo to pomáha"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Proč to pomáhá"
+          }
+        }
+      }
+    },
+    "The study": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The study"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Štúdia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Studie"
+          }
+        }
+      }
+    },
+    "How strong is the evidence": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How strong is the evidence"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aké silné sú dôkazy"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jak silné jsou důkazy"
+          }
+        }
+      }
+    },
+    "%@ et al., %@, %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ et al., %@, %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ a kol., %2$@, %3$@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ a kol., %2$@, %3$@"
+          }
+        }
+      }
+    },
+    "Open the study on PubMed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open the study on PubMed"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otvoriť štúdiu na PubMed"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otevřít studii na PubMedu"
+          }
+        }
+      }
+    },
+    "%@ and %@, %@, %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ and %@, %@, %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ a %2$@, %3$@, %4$@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ a %2$@, %3$@, %4$@"
+          }
+        }
+      }
+    },
+    "Your body clock loves a rhythm. When bedtime and wake-up time stay similar, it learns when to make you sleepy and when to wake you up. Irregular days blur that signal.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your body clock loves a rhythm. When bedtime and wake-up time stay similar, it learns when to make you sleepy and when to wake you up. Irregular days blur that signal."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje vnútorné hodiny majú rady rytmus. Keď chodíš spať a vstávaš v podobnom čase, naučia sa, kedy ťa uspať a kedy zobudiť. Nepravidelné dni tento signál rozmazávajú."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje vnitřní hodiny mají rády rytmus. Když chodíš spát a vstáváš v podobnou dobu, naučí se, kdy tě uspat a kdy probudit. Nepravidelné dny tenhle signál rozmazávají."
+          }
+        }
+      }
+    },
+    "In a 2017 study, 61 university students kept sleep diaries for 30 days. Irregular sleep went along with a later body clock and lower academic performance.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2017 study, 61 university students kept sleep diaries for 30 days. Irregular sleep went along with a later body clock and lower academic performance."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V štúdii z roku 2017 viedlo 61 vysokoškolákov 30 dní spánkový denník. Nepravidelný spánok súvisel s neskôr posunutými vnútornými hodinami a horšími študijnými výsledkami."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ve studii z roku 2017 vedlo 61 vysokoškoláků 30 dní spánkový deník. Nepravidelný spánek souvisel s později posunutými vnitřními hodinami a horšími studijními výsledky."
+          }
+        }
+      }
+    },
+    "Only 61 students, and it shows a link, not a cause – regularity may go along with other habits.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only 61 students, and it shows a link, not a cause – regularity may go along with other habits."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Len 61 študentov a ide o súvislosť, nie dôkaz príčiny – pravidelnosť môže ísť ruka v ruke s inými zvykmi."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jen 61 studentů a jde o souvislost, ne důkaz příčiny – pravidelnost může jít ruku v ruce s jinými zvyky."
+          }
+        }
+      }
+    },
+    "Sleeping in much later on days off can nudge your body clock later, like a tiny jet lag. A gentler lie-in keeps the clock steadier, so Monday morning feels easier.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sleeping in much later on days off can nudge your body clock later, like a tiny jet lag. A gentler lie-in keeps the clock steadier, so Monday morning feels easier."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ak cez víkend spíš oveľa dlhšie, vnútorné hodiny sa môžu posunúť neskôr, ako pri malom jet lagu. Miernejšie vyspávanie ich drží pokojnejšie, takže pondelňajšie ráno je ľahšie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Když o víkendu spíš mnohem déle, vnitřní hodiny se mohou posunout později, jako při malém jet lagu. Mírnější vyspávání je drží klidnější, takže pondělní ráno je snazší."
+          }
+        }
+      }
+    },
+    "In a 2010 study, teenagers who followed a typical weekend schedule (bed 1.5 hours later, up 3 hours later) had their body clock shift about 45 min later over the weekend.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2010 study, teenagers who followed a typical weekend schedule (bed 1.5 hours later, up 3 hours later) had their body clock shift about 45 min later over the weekend."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V štúdii z roku 2010 mali tínedžeri, ktorí držali bežný víkendový režim (do postele o 1,5 hodiny neskôr, vstávanie o 3 hodiny neskôr), vnútorné hodiny po víkende posunuté asi o 45 min neskôr."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ve studii z roku 2010 měli teenageři, kteří drželi běžný víkendový režim (do postele o 1,5 hodiny později, vstávání o 3 hodiny později), vnitřní hodiny po víkendu posunuté asi o 45 min později."
+          }
+        }
+      }
+    },
+    "Only 12 and 33 teenagers, so adults may differ. Even waking just 1 hour later plus a nap shifted the clock – an hour is a gentle aim, not a proven limit.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only 12 and 33 teenagers, so adults may differ. Even waking just 1 hour later plus a nap shifted the clock – an hour is a gentle aim, not a proven limit."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Len 12 a 33 tínedžerov, u dospelých to môže byť iné. Hodiny posunul aj víkend, keď vstávali len o hodinu neskôr a zdriemli si – hodina je milý cieľ, nie dokázaná hranica."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jen 12 a 33 teenagerů, u dospělých to může být jinak. Hodiny posunul i víkend, kdy vstávali jen o hodinu později a zdřímli si – hodina je milý cíl, ne prokázaná hranice."
+          }
+        }
+      }
+    },
+    "Sleep does a lot of quiet work: it sorts memories, steadies your mood and helps your body recover. Most adults need around 7 hours or more for that, so planning backwards from the morning gives it room.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sleep does a lot of quiet work: it sorts memories, steadies your mood and helps your body recover. Most adults need around 7 hours or more for that, so planning backwards from the morning gives it room."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spánok robí veľa tichej práce: ukladá spomienky, vyrovnáva náladu a pomáha telu zotaviť sa. Väčšina dospelých na to potrebuje okolo 7 hodín alebo viac, preto sa oplatí plánovať večer od rána dozadu."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spánek odvádí spoustu tiché práce: ukládá vzpomínky, vyrovnává náladu a pomáhá tělu zotavit se. Většina dospělých na to potřebuje kolem 7 hodin nebo víc, proto se vyplatí plánovat večer od rána pozpátku."
+          }
+        }
+      }
+    },
+    "In 2015, two large US sleep societies reviewed the evidence and agreed that adults should regularly sleep 7 hours or more a night for the best health.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In 2015, two large US sleep societies reviewed the evidence and agreed that adults should regularly sleep 7 hours or more a night for the best health."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V roku 2015 dve veľké americké spánkové spoločnosti zhodnotili dôkazy a zhodli sa, že dospelí by mali pravidelne spať 7 hodín alebo viac za noc pre čo najlepšie zdravie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V roce 2015 dvě velké americké spánkové společnosti zhodnotily důkazy a shodly se, že dospělí by měli pravidelně spát 7 hodin nebo víc za noc pro co nejlepší zdraví."
+          }
+        }
+      }
+    },
+    "This is an expert consensus, not a single experiment, and a general guide for ages 18 to 60 – how much sleep each person needs varies.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This is an expert consensus, not a single experiment, and a general guide for ages 18 to 60 – how much sleep each person needs varies."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ide o odborný konsenzus, nie jeden pokus, a o všeobecné vodítko pre vek 18 až 60 rokov – potreba spánku je u každého trochu iná."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jde o odborný konsenzus, ne jediný pokus, a o obecné vodítko pro věk 18 až 60 let – potřeba spánku je u každého trochu jiná."
+          }
+        }
+      }
+    },
+    "When sleep is cut short night after night, the lost rest piles up like a debt – and your own feeling of tiredness reports it poorly. A fixed slot for sleep in your day keeps that debt from growing.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When sleep is cut short night after night, the lost rest piles up like a debt – and your own feeling of tiredness reports it poorly. A fixed slot for sleep in your day keeps that debt from growing."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keď sa spánok noc čo noc skracuje, stratený oddych sa hromadí ako dlh – a vlastný pocit únavy ho hlási nepresne. Pevné miesto pre spánok v tvojom dni bráni tomu, aby dlh rástol."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Když se spánek noc co noc krátí, ztracený odpočinek se hromadí jako dluh – a vlastní pocit únavy ho hlásí nepřesně. Pevné místo pro spánek ve tvém dni brání tomu, aby dluh rostl."
+          }
+        }
+      }
+    },
+    "In a 2003 lab experiment with healthy adults, 14 nights of 6 hours or less in bed slowly dulled their mental performance, and they were largely unaware of the decline.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2003 lab experiment with healthy adults, 14 nights of 6 hours or less in bed slowly dulled their mental performance, and they were largely unaware of the decline."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V laboratórnom pokuse z roku 2003 strávili zdraví dospelí 14 nocí po 6 hodín alebo menej v posteli. Ich duševný výkon postupne slabol a oni si to takmer neuvedomovali."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V laboratorním pokusu z roku 2003 strávili zdraví dospělí 14 nocí po 6 hodinách nebo méně v posteli. Jejich duševní výkon postupně slábl a oni si to téměř neuvědomovali."
+          }
+        }
+      }
+    },
+    "A carefully controlled lab experiment, but small: 48 healthy adults aged 21 to 38 in all. It shows what can happen, not what happens to everyone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A carefully controlled lab experiment, but small: 48 healthy adults aged 21 to 38 in all. It shows what can happen, not what happens to everyone."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dôkladný laboratórny pokus, ale malý: spolu 48 zdravých dospelých vo veku 21 až 38 rokov. Ukazuje, čo sa môže stať, nie čo sa stane každému."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Důkladný laboratorní pokus, ale malý: dohromady 48 zdravých dospělých ve věku 21 až 38 let. Ukazuje, co se může stát, ne co se stane každému."
+          }
+        }
+      }
+    },
+    "Light from screens is rich in blue, which tells your brain that it is still daytime. It holds back the body's own sleep hormone and shifts your body clock later, so sleep arrives later.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light from screens is rich in blue, which tells your brain that it is still daytime. It holds back the body's own sleep hormone and shifts your body clock later, so sleep arrives later."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svetlo z obrazoviek má veľa modrej a hovorí mozgu, že je ešte deň. Tlmí vlastný spánkový hormón tela a posúva vnútorné hodiny neskôr, takže spánok príde neskôr."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Světlo z obrazovek má hodně modré a říká mozku, že je ještě den. Tlumí vlastní spánkový hormon těla a posouvá vnitřní hodiny později, takže spánek přijde později."
+          }
+        }
+      }
+    },
+    "In a 2015 lab study, 12 young adults read on a glowing e-reader for five evenings and from printed books for another five. With the e-reader they took nearly 10 min longer to fall asleep and were less alert next morning.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2015 lab study, 12 young adults read on a glowing e-reader for five evenings and from printed books for another five. With the e-reader they took nearly 10 min longer to fall asleep and were less alert next morning."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V laboratórnej štúdii z roku 2015 čítalo 12 mladých dospelých päť večerov na svietiacej čítačke a ďalších päť z tlačených kníh. S čítačkou zaspávali takmer o 10 min dlhšie a ráno boli menej čulí."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V laboratorní studii z roku 2015 četlo 12 mladých dospělých pět večerů na svítící čtečce a dalších pět z tištěných knih. Se čtečkou usínali téměř o 10 min déle a ráno byli méně čilí."
+          }
+        }
+      }
+    },
+    "Only 12 young adults, and a bright e-reader for about 4 hours each evening, so it does not show what one hour on a phone does.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only 12 young adults, and a bright e-reader for about 4 hours each evening, so it does not show what one hour on a phone does."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Len 12 mladých dospelých a jasná čítačka asi 4 hodiny každý večer, takže to nehovorí, čo urobí jedna hodina na telefóne."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jen 12 mladých dospělých a jasná čtečka asi 4 hodiny každý večer, takže to neříká, co udělá jedna hodina na telefonu."
+          }
+        }
+      }
+    },
+    "A repeated, soothing ritual becomes a cue: your mind learns that these gentle minutes mean sleep is near. Calm music also helps you let go of the day.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A repeated, soothing ritual becomes a cue: your mind learns that these gentle minutes mean sleep is near. Calm music also helps you let go of the day."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opakovaný upokojujúci rituál sa stáva signálom: myseľ sa učí, že tieto jemné chvíle znamenajú blížiaci sa spánok. Pokojná hudba pomáha pustiť deň z hlavy."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opakovaný uklidňující rituál se stává signálem: mysl se učí, že tyhle jemné chvíle znamenají blížící se spánek. Klidná hudba pomáhá pustit den z hlavy."
+          }
+        }
+      }
+    },
+    "In a 2008 trial, 94 students with sleep complaints listened to 45 min of relaxing classical music at bedtime for 3 weeks. Their sleep quality improved; for those who heard an audiobook, or nothing, it did not significantly improve.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2008 trial, 94 students with sleep complaints listened to 45 min of relaxing classical music at bedtime for 3 weeks. Their sleep quality improved; for those who heard an audiobook, or nothing, it did not significantly improve."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokuse z roku 2008 počúvalo 94 študentov so spánkovými ťažkosťami 3 týždne pred spaním 45 min pokojnej klasickej hudby. Spánok sa im zlepšil; u tých, čo počúvali audioknihu alebo nerobili nič, výrazné zlepšenie nenastalo."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokusu z roku 2008 poslouchalo 94 studentů se spánkovými potížemi 3 týdny před spaním 45 min klidné klasické hudby. Spánek se jim zlepšil; u těch, kdo poslouchali audioknihu nebo nedělali nic, výrazné zlepšení nenastalo."
+          }
+        }
+      }
+    },
+    "One trial of 94 students who already slept poorly. Music helped, the audiobook did not, and reading was not tested.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One trial of 94 students who already slept poorly. Music helped, the audiobook did not, and reading was not tested."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jediný pokus s 94 študentmi, ktorí už spali zle. Hudba pomohla, audiokniha nie a čítanie sa netestovalo."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jediný pokus s 94 studenty, kteří už spali špatně. Hudba pomohla, audiokniha ne a čtení se netestovalo."
+          }
+        }
+      }
+    },
+    "A calm ritual each evening – like soothing music – tells your body that sleep is near.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A calm ritual each evening – like soothing music – tells your body that sleep is near."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokojný rituál každý večer, napríklad tichá hudba, dá telu vedieť, že spánok je blízko."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klidný rituál každý večer, třeba tichá hudba, dá tělu vědět, že spánek je blízko."
+          }
+        }
+      }
+    },
+    "A warm bath draws blood to your hands and feet. When you step out, your body gives off heat faster and your core temperature drops – the same dip that comes with falling asleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A warm bath draws blood to your hands and feet. When you step out, your body gives off heat faster and your core temperature drops – the same dip that comes with falling asleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplý kúpeľ ženie krv do rúk a nôh. Keď z vane vylezieš, telo odovzdáva teplo rýchlejšie a jeho vnútorná teplota klesá – presne ten pokles, ktorý sprevádza zaspávanie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplá koupel žene krev do rukou a nohou. Když z vany vylezeš, tělo odevzdává teplo rychleji a jeho vnitřní teplota klesá – přesně ten pokles, který provází usínání."
+          }
+        }
+      }
+    },
+    "A 2019 review of 17 studies found that a warm bath or shower (40 to 42.5 °C) went with better self-rated sleep quality, and taken 1 to 2 hours before bed, even 10 min helped people fall asleep sooner.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A 2019 review of 17 studies found that a warm bath or shower (40 to 42.5 °C) went with better self-rated sleep quality, and taken 1 to 2 hours before bed, even 10 min helped people fall asleep sooner."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prehľad 17 štúdií z roku 2019 zistil, že teplý kúpeľ alebo sprcha (40 až 42,5 °C) súviseli s lepšie hodnotenou kvalitou spánku, a keď boli 1 až 2 hodiny pred spaním, už 10 min pomohlo zaspať skôr."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přehled 17 studií z roku 2019 zjistil, že teplá koupel nebo sprcha (40 až 42,5 °C) souvisely s lépe hodnocenou kvalitou spánku, a když byly 1 až 2 hodiny před spaním, už 10 min pomohlo usnout dřív."
+          }
+        }
+      }
+    },
+    "Only 13 of the 17 studies had data to combine, and the authors say more research is needed, especially on the best timing and duration.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only 13 of the 17 studies had data to combine, and the authors say more research is needed, especially on the best timing and duration."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Len 13 zo 17 štúdií malo údaje, ktoré sa dali spojiť, a autori píšu, že treba ďalší výskum, najmä o najlepšom čase a dĺžke."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jen 13 ze 17 studií mělo údaje, které šlo sloučit, a autoři píšou, že je potřeba další výzkum, zejména o nejlepší době a délce."
+          }
+        }
+      }
+    },
+    "A warm bath 1 to 2 hours before bed can help you relax into sleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A warm bath 1 to 2 hours before bed can help you relax into sleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplý kúpeľ 1 až 2 hodiny pred spaním pomáha uvoľniť sa."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplá koupel 1 až 2 hodiny před spaním pomáhá se uvolnit."
+          }
+        }
+      }
+    },
+    "Even ordinary room light tells your brain that it is still day and holds back the body's own sleep hormone. Dimmer lights in the evening let it rise on time.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Even ordinary room light tells your brain that it is still day and holds back the body's own sleep hormone. Dimmer lights in the evening let it rise on time."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aj obyčajné izbové svetlo hovorí mozgu, že je ešte deň, a tlmí vlastný spánkový hormón tela. Tlmenejšie svetlo večer mu dovolí prísť načas."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I obyčejné pokojové světlo říká mozku, že je ještě den, a tlumí vlastní spánkový hormon těla. Tlumenější světlo večer mu dovolí přijít včas."
+          }
+        }
+      }
+    },
+    "In a 2011 study, 116 healthy volunteers aged 18 to 30 were compared after evenings in room light or in dim light. Room light before bedtime delayed the sleep hormone's rise in nearly everyone and shortened it by about 90 min.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2011 study, 116 healthy volunteers aged 18 to 30 were compared after evenings in room light or in dim light. Room light before bedtime delayed the sleep hormone's rise in nearly everyone and shortened it by about 90 min."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V štúdii z roku 2011 porovnali 116 zdravých dobrovoľníkov vo veku 18 až 30 rokov po večeroch pri izbovom a pri tlmenom svetle. Izbové svetlo pred spaním oneskorilo nástup spánkového hormónu takmer u všetkých a skrátilo jeho trvanie asi o 90 min."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ve studii z roku 2011 porovnali 116 zdravých dobrovolníků ve věku 18 až 30 let po večerech při pokojovém a při tlumeném světle. Pokojové světlo před spaním opozdilo nástup spánkového hormonu téměř u všech a zkrátilo jeho trvání asi o 90 min."
+          }
+        }
+      }
+    },
+    "It measured the sleep hormone, not sleep itself, in healthy 18 to 30 year olds, and the lighting lasted 8 to 16 hours – far longer than an evening wind-down.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It measured the sleep hormone, not sleep itself, in healthy 18 to 30 year olds, and the lighting lasted 8 to 16 hours – far longer than an evening wind-down."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Meral sa hormón, nie samotný spánok, u zdravých 18- až 30-ročných a svetlo trvalo 8 až 16 hodín – oveľa dlhšie než večerné upokojovanie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Měřil se hormon, ne samotný spánek, u zdravých 18- až 30letých a světlo trvalo 8 až 16 hodin – mnohem déle než večerní zklidňování."
+          }
+        }
+      }
+    },
+    "Unfinished tasks keep circling in your head at night. Putting them on paper hands the job to the page, so your mind can stop rehearsing them – and falling asleep tends to go faster.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfinished tasks keep circling in your head at night. Putting them on paper hands the job to the page, so your mind can stop rehearsing them – and falling asleep tends to go faster."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nedokončené úlohy sa v noci točia v hlave. Keď ich napíšeš na papier, odovzdáš ich stránke a myseľ ich môže prestať omieľať – zaspávanie býva rýchlejšie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nedokončené úkoly se v noci točí v hlavě. Když je napíšeš na papír, předáš je stránce a mysl je může přestat omílat – usínání bývá rychlejší."
+          }
+        }
+      }
+    },
+    "In a 2018 sleep-lab study, 57 healthy young adults wrote for 5 min before bed, either a to-do list or a list of things already done. The to-do group fell asleep significantly faster, especially with a specific list.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2018 sleep-lab study, 57 healthy young adults wrote for 5 min before bed, either a to-do list or a list of things already done. The to-do group fell asleep significantly faster, especially with a specific list."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V spánkovom laboratóriu v roku 2018 písalo 57 zdravých mladých dospelých 5 min pred spaním buď zoznam úloh, alebo zoznam už hotových vecí. Skupina so zoznamom úloh zaspala výrazne rýchlejšie, najmä pri konkrétnom zozname."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ve spánkové laboratoři v roce 2018 psalo 57 zdravých mladých dospělých 5 min před spaním buď seznam úkolů, nebo seznam již hotových věcí. Skupina se seznamem úkolů usnula výrazně rychleji, zejména při konkrétním seznamu."
+          }
+        }
+      }
+    },
+    "One lab study of 57 healthy 18 to 30 year olds, with a few minutes of writing before one night's sleep. It tested to-do lists, not worry journals.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One lab study of 57 healthy 18 to 30 year olds, with a few minutes of writing before one night's sleep. It tested to-do lists, not worry journals."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jedna laboratórna štúdia s 57 zdravými 18- až 30-ročnými a pár minútami písania pred jednou nocou. Testovali sa zoznamy úloh, nie denníky starostí."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jedna laboratorní studie s 57 zdravými 18- až 30letými a pár minutami psaní před jednou nocí. Testovaly se seznamy úkolů, ne deníky starostí."
+          }
+        }
+      }
+    },
+    "Slow, calm practices ease the body's stress response – breathing slows, muscles soften and thoughts stop racing. That makes it easier to let go of the day when you lie down.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slow, calm practices ease the body's stress response – breathing slows, muscles soften and thoughts stop racing. That makes it easier to let go of the day when you lie down."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pomalé, pokojné techniky upokojujú stresovú reakciu tela – dych sa spomalí, svaly zmäknú a myšlienky prestanú pretekať. Potom je ľahšie pustiť deň z hlavy, keď si ľahneš."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pomalé, klidné techniky uklidňují stresovou reakci těla – dech se zpomalí, svaly změknou a myšlenky se přestanou honit. Pak je snazší pustit den z hlavy, když si lehneš."
+          }
+        }
+      }
+    },
+    "A 2019 review of 18 randomized trials in people with sleep problems found that mindfulness meditation improved sleep quality compared with groups given the same time and attention, but not more than established sleep programmes.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A 2019 review of 18 randomized trials in people with sleep problems found that mindfulness meditation improved sleep quality compared with groups given the same time and attention, but not more than established sleep programmes."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prehľad 18 randomizovaných pokusov z roku 2019 u ľudí so spánkovými ťažkosťami zistil, že meditácia všímavosti zlepšila kvalitu spánku oproti skupinám s rovnakým časom a pozornosťou, no nie viac než overené spánkové programy."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přehled 18 randomizovaných pokusů z roku 2019 u lidí se spánkovými potížemi zjistil, že meditace všímavosti zlepšila kvalitu spánku oproti skupinám se stejným časem a pozorností, ale ne víc než ověřené spánkové programy."
+          }
+        }
+      }
+    },
+    "Moderate at best: it beat attention-matched groups, not established sleep programmes, and the authors call it preliminary. Music, imagery and yoga were not part of it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moderate at best: it beat attention-matched groups, not established sleep programmes, and the authors call it preliminary. Music, imagery and yoga were not part of it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nanajvýš stredná istota: predčila skupiny s rovnakou pozornosťou, nie overené spánkové programy, a autori to nazývajú predbežným. Hudba, predstavy a joga súčasťou neboli."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nanejvýš střední jistota: předčila skupiny se stejnou pozorností, ne ověřené spánkové programy, a autoři to označují za předběžné. Hudba, představy a jóga součástí nebyly."
           }
         }
       }

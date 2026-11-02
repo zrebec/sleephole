@@ -95,7 +95,9 @@ struct BoxContentsView: View {
     // MARK: postcards
 
     private var postcards: some View {
-        ForEach(BoxContents.postcardIds, id: \.self) { PostcardView(id: $0) }
+        // `-onlyPostcard postcard-05` shows one card (screenshots, Debug only)
+        let only = DevArgs.value(after: "-onlyPostcard")
+        return ForEach(BoxContents.postcardIds.filter { only == nil || $0 == only }, id: \.self) { PostcardView(id: $0) }
     }
 
     // MARK: decorations

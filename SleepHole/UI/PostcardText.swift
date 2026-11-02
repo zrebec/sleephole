@@ -20,9 +20,9 @@ enum PostcardText {
         "Screens off for an hour",
         "Phones, tablets and computers are best put away an hour before bed – their light can make falling asleep harder.",
         "A calm bedtime routine",
-        "Reading, soothing music or an audiobook, repeated each evening, tells your body that sleep is near.",
+        "A calm ritual each evening – like soothing music – tells your body that sleep is near.",
         "A warm bath",
-        "A warm bath 30 minutes to 2 hours before bed can help you relax into sleep.",
+        "A warm bath 1 to 2 hours before bed can help you relax into sleep.",
         "A wind-down reminder",
         "Set a gentle reminder for 1.5 hours before bed, then start dimming the lights and slowing down.",
         "Park your worries",
@@ -74,6 +74,42 @@ enum PostcardText {
         "Source: %@",
         "Postcard from your buddy",
         "Open the source",
+        "Why it helps",
+        "The study",
+        "How strong is the evidence",
+        "%@ et al., %@, %@",
+        "%@ and %@, %@, %@",
+        "Open the study on PubMed",
+        "Your body clock loves a rhythm. When bedtime and wake-up time stay similar, it learns when to make you sleepy and when to wake you up. Irregular days blur that signal.",
+        "In a 2017 study, 61 university students kept sleep diaries for 30 days. Irregular sleep went along with a later body clock and lower academic performance.",
+        "Only 61 students, and it shows a link, not a cause – regularity may go along with other habits.",
+        "Sleeping in much later on days off can nudge your body clock later, like a tiny jet lag. A gentler lie-in keeps the clock steadier, so Monday morning feels easier.",
+        "In a 2010 study, teenagers who followed a typical weekend schedule (bed 1.5 hours later, up 3 hours later) had their body clock shift about 45 min later over the weekend.",
+        "Only 12 and 33 teenagers, so adults may differ. Even waking just 1 hour later plus a nap shifted the clock – an hour is a gentle aim, not a proven limit.",
+        "Sleep does a lot of quiet work: it sorts memories, steadies your mood and helps your body recover. Most adults need around 7 hours or more for that, so planning backwards from the morning gives it room.",
+        "In 2015, two large US sleep societies reviewed the evidence and agreed that adults should regularly sleep 7 hours or more a night for the best health.",
+        "This is an expert consensus, not a single experiment, and a general guide for ages 18 to 60 – how much sleep each person needs varies.",
+        "When sleep is cut short night after night, the lost rest piles up like a debt – and your own feeling of tiredness reports it poorly. A fixed slot for sleep in your day keeps that debt from growing.",
+        "In a 2003 lab experiment with healthy adults, 14 nights of 6 hours or less in bed slowly dulled their mental performance, and they were largely unaware of the decline.",
+        "A carefully controlled lab experiment, but small: 48 healthy adults aged 21 to 38 in all. It shows what can happen, not what happens to everyone.",
+        "Light from screens is rich in blue, which tells your brain that it is still daytime. It holds back the body's own sleep hormone and shifts your body clock later, so sleep arrives later.",
+        "In a 2015 lab study, 12 young adults read on a glowing e-reader for five evenings and from printed books for another five. With the e-reader they took nearly 10 min longer to fall asleep and were less alert next morning.",
+        "Only 12 young adults, and a bright e-reader for about 4 hours each evening, so it does not show what one hour on a phone does.",
+        "A repeated, soothing ritual becomes a cue: your mind learns that these gentle minutes mean sleep is near. Calm music also helps you let go of the day.",
+        "In a 2008 trial, 94 students with sleep complaints listened to 45 min of relaxing classical music at bedtime for 3 weeks. Their sleep quality improved; for those who heard an audiobook, or nothing, it did not significantly improve.",
+        "One trial of 94 students who already slept poorly. Music helped, the audiobook did not, and reading was not tested.",
+        "A warm bath draws blood to your hands and feet. When you step out, your body gives off heat faster and your core temperature drops – the same dip that comes with falling asleep.",
+        "A 2019 review of 17 studies found that a warm bath or shower (40 to 42.5 °C) went with better self-rated sleep quality, and taken 1 to 2 hours before bed, even 10 min helped people fall asleep sooner.",
+        "Only 13 of the 17 studies had data to combine, and the authors say more research is needed, especially on the best timing and duration.",
+        "Even ordinary room light tells your brain that it is still day and holds back the body's own sleep hormone. Dimmer lights in the evening let it rise on time.",
+        "In a 2011 study, 116 healthy volunteers aged 18 to 30 were compared after evenings in room light or in dim light. Room light before bedtime delayed the sleep hormone's rise in nearly everyone and shortened it by about 90 min.",
+        "It measured the sleep hormone, not sleep itself, in healthy 18 to 30 year olds, and the lighting lasted 8 to 16 hours – far longer than an evening wind-down.",
+        "Unfinished tasks keep circling in your head at night. Putting them on paper hands the job to the page, so your mind can stop rehearsing them – and falling asleep tends to go faster.",
+        "In a 2018 sleep-lab study, 57 healthy young adults wrote for 5 min before bed, either a to-do list or a list of things already done. The to-do group fell asleep significantly faster, especially with a specific list.",
+        "One lab study of 57 healthy 18 to 30 year olds, with a few minutes of writing before one night's sleep. It tested to-do lists, not worry journals.",
+        "Slow, calm practices ease the body's stress response – breathing slows, muscles soften and thoughts stop racing. That makes it easier to let go of the day when you lie down.",
+        "A 2019 review of 18 randomized trials in people with sleep problems found that mindfulness meditation improved sleep quality compared with groups given the same time and attention, but not more than established sleep programmes.",
+        "Moderate at best: it beat attention-matched groups, not established sleep programmes, and the authors call it preliminary. Music, imagery and yoga were not part of it.",
     ]
 
     private static let stamps = ["⏰", "🛋️", "🌙", "🗓️", "📵", "📖", "🛁", "🔔", "📝", "🧘", "☕️", "💬", "🍵", "🛏️", "🍪", "🍽️", "💧", "❄️", "🌑", "🌧️", "📴", "🛌", "🚶", "🕰️", "🏃", "⏳", "☀️", "🧠", "🕒", "🕯️"]
@@ -130,8 +166,8 @@ enum PostcardText {
         case 3: L("Most adults feel their best with at least 7 hours of sleep a night. Plan your evening backwards from the morning.")
         case 4: L("Planning enough time for sleep helps protect your health and well-being – give it a spot in your day.")
         case 5: L("Phones, tablets and computers are best put away an hour before bed – their light can make falling asleep harder.")
-        case 6: L("Reading, soothing music or an audiobook, repeated each evening, tells your body that sleep is near.")
-        case 7: L("A warm bath 30 minutes to 2 hours before bed can help you relax into sleep.")
+        case 6: L("A calm ritual each evening – like soothing music – tells your body that sleep is near.")
+        case 7: L("A warm bath 1 to 2 hours before bed can help you relax into sleep.")
         case 8: L("Set a gentle reminder for 1.5 hours before bed, then start dimming the lights and slowing down.")
         case 9: L("Write your worries down, or list tomorrow's tasks, before bed. Then they can wait on the page.")
         case 10: L("Guided imagery, soft music, gentle yoga or meditation can help you let go of the day's stress.")
@@ -158,6 +194,70 @@ enum PostcardText {
         default: ""
         }
     }
+
+    /// The study part of a postcard (step 13c): why it helps, what ONE study found, how strong the evidence is. nil = none yet.
+    static func why(for id: String) -> String? {
+        switch number(of: id) {
+        case 1: L("Your body clock loves a rhythm. When bedtime and wake-up time stay similar, it learns when to make you sleepy and when to wake you up. Irregular days blur that signal.")
+        case 2: L("Sleeping in much later on days off can nudge your body clock later, like a tiny jet lag. A gentler lie-in keeps the clock steadier, so Monday morning feels easier.")
+        case 3: L("Sleep does a lot of quiet work: it sorts memories, steadies your mood and helps your body recover. Most adults need around 7 hours or more for that, so planning backwards from the morning gives it room.")
+        case 4: L("When sleep is cut short night after night, the lost rest piles up like a debt – and your own feeling of tiredness reports it poorly. A fixed slot for sleep in your day keeps that debt from growing.")
+        case 5: L("Light from screens is rich in blue, which tells your brain that it is still daytime. It holds back the body's own sleep hormone and shifts your body clock later, so sleep arrives later.")
+        case 6: L("A repeated, soothing ritual becomes a cue: your mind learns that these gentle minutes mean sleep is near. Calm music also helps you let go of the day.")
+        case 7: L("A warm bath draws blood to your hands and feet. When you step out, your body gives off heat faster and your core temperature drops – the same dip that comes with falling asleep.")
+        case 8: L("Even ordinary room light tells your brain that it is still day and holds back the body's own sleep hormone. Dimmer lights in the evening let it rise on time.")
+        case 9: L("Unfinished tasks keep circling in your head at night. Putting them on paper hands the job to the page, so your mind can stop rehearsing them – and falling asleep tends to go faster.")
+        case 10: L("Slow, calm practices ease the body's stress response – breathing slows, muscles soften and thoughts stop racing. That makes it easier to let go of the day when you lie down.")
+        default: nil
+        }
+    }
+
+    static func finding(for id: String) -> String? {
+        switch number(of: id) {
+        case 1: L("In a 2017 study, 61 university students kept sleep diaries for 30 days. Irregular sleep went along with a later body clock and lower academic performance.")
+        case 2: L("In a 2010 study, teenagers who followed a typical weekend schedule (bed 1.5 hours later, up 3 hours later) had their body clock shift about 45 min later over the weekend.")
+        case 3: L("In 2015, two large US sleep societies reviewed the evidence and agreed that adults should regularly sleep 7 hours or more a night for the best health.")
+        case 4: L("In a 2003 lab experiment with healthy adults, 14 nights of 6 hours or less in bed slowly dulled their mental performance, and they were largely unaware of the decline.")
+        case 5: L("In a 2015 lab study, 12 young adults read on a glowing e-reader for five evenings and from printed books for another five. With the e-reader they took nearly 10 min longer to fall asleep and were less alert next morning.")
+        case 6: L("In a 2008 trial, 94 students with sleep complaints listened to 45 min of relaxing classical music at bedtime for 3 weeks. Their sleep quality improved; for those who heard an audiobook, or nothing, it did not significantly improve.")
+        case 7: L("A 2019 review of 17 studies found that a warm bath or shower (40 to 42.5 °C) went with better self-rated sleep quality, and taken 1 to 2 hours before bed, even 10 min helped people fall asleep sooner.")
+        case 8: L("In a 2011 study, 116 healthy volunteers aged 18 to 30 were compared after evenings in room light or in dim light. Room light before bedtime delayed the sleep hormone's rise in nearly everyone and shortened it by about 90 min.")
+        case 9: L("In a 2018 sleep-lab study, 57 healthy young adults wrote for 5 min before bed, either a to-do list or a list of things already done. The to-do group fell asleep significantly faster, especially with a specific list.")
+        case 10: L("A 2019 review of 18 randomized trials in people with sleep problems found that mindfulness meditation improved sleep quality compared with groups given the same time and attention, but not more than established sleep programmes.")
+        default: nil
+        }
+    }
+
+    static func evidence(for id: String) -> String? {
+        switch number(of: id) {
+        case 1: L("Only 61 students, and it shows a link, not a cause – regularity may go along with other habits.")
+        case 2: L("Only 12 and 33 teenagers, so adults may differ. Even waking just 1 hour later plus a nap shifted the clock – an hour is a gentle aim, not a proven limit.")
+        case 3: L("This is an expert consensus, not a single experiment, and a general guide for ages 18 to 60 – how much sleep each person needs varies.")
+        case 4: L("A carefully controlled lab experiment, but small: 48 healthy adults aged 21 to 38 in all. It shows what can happen, not what happens to everyone.")
+        case 5: L("Only 12 young adults, and a bright e-reader for about 4 hours each evening, so it does not show what one hour on a phone does.")
+        case 6: L("One trial of 94 students who already slept poorly. Music helped, the audiobook did not, and reading was not tested.")
+        case 7: L("Only 13 of the 17 studies had data to combine, and the authors say more research is needed, especially on the best timing and duration.")
+        case 8: L("It measured the sleep hormone, not sleep itself, in healthy 18 to 30 year olds, and the lighting lasted 8 to 16 hours – far longer than an evening wind-down.")
+        case 9: L("One lab study of 57 healthy 18 to 30 year olds, with a few minutes of writing before one night's sleep. It tested to-do lists, not worry journals.")
+        case 10: L("Moderate at best: it beat attention-matched groups, not established sleep programmes, and the authors call it preliminary. Music, imagery and yoga were not part of it.")
+        default: nil
+        }
+    }
+
+    /// True when the postcard has a study and all three texts of the study part.
+    static func hasStudy(_ id: String) -> Bool {
+        Postcards.study(for: id) != nil && why(for: id) != nil && finding(for: id) != nil && evidence(for: id) != nil
+    }
+
+    /// "Chang et al., PNAS, 2015" or, for two authors, "Crowley and Carskadon, Chronobiol Int, 2010".
+    static func citation(for s: PostcardStudy) -> String {
+        if let second = s.secondAuthor { return L("\(s.firstAuthor) and \(second), \(s.journal), \(String(s.year))") }
+        return L("\(s.firstAuthor) et al., \(s.journal), \(String(s.year))")
+    }
+    static var whyItHelps: String { L("Why it helps") }
+    static var studyHeading: String { L("The study") }
+    static var evidenceHeading: String { L("How strong is the evidence") }
+    static var openStudy: String { L("Open the study on PubMed") }
 
     static func numberLine(_ n: Int, of total: Int) -> String { L("Postcard \(n) of \(total)") }
     static var signature: String { L("– your sleep buddy 🐾") }
