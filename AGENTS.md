@@ -47,29 +47,30 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    "balíček" (Czech: "balíček"); never "box" or "package" in a UI text. The App Store gets the parcels as 1.1 after Apple's
    answer on 1.0 (10): "Loot Boxes" YES, "Simulated Gambling" re-read, a parcels sentence in `docs/REVIEW-NOTES.md` – each
    his yes. Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered.
-2. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
+2. **His ask 2026-11-02 ~15:10:** the ideas get prioritized again and a retrospective follows; **Opus starts the October retrospective now** from every source (commits, memory, the claude.ai pages, the `.md` files, `docs/`). New ideas the same afternoon, all in plan §0b "Later" and waiting: RECAP (a monthly recap – Opus proposes build 14), sleep sounds as a parcel reward (build 16), the Kenney kits still unused.
+3. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
    and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (still on
    2026-11-01 ~07:57, no message from Apple; on
    2026-10-30 ~14:20 – 16 days in the queue with the 14 Oct submission; the new Developer Program License Agreement (issued 29 Oct) accepted by him 2026-10-30, checked; the new age-rating questions already
    read NO (nothing to save); **2026-10-30 ~14:55 he requested an expedited review – Apple: "We'll expedite review for SleepHole"** (plan §12); once 1.0 is
-   approved, build 12 goes up as 1.1 (12)). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
+   approved, build 12 goes up as 1.1 (12)). Tell him the answer at once. The release itself only on his word (and see the price note in 8). **When a build goes
    to review, repeat this whole agenda to him (his request 2026-10-16).**
-3. **His streak:** safe again – parcel 3 (2026-10-31) held a silver joker (3 nights, by hand, valid until 30 Nov) and
+4. **His streak:** safe again – parcel 3 (2026-10-31) held a silver joker (3 nights, by hand, valid until 30 Nov) and
    November brings its own bronze (automatic). Level 4 unlocked on 31 Oct (his 30th building night). Be kind if a night fails.
-4. **Later builds (renumbered 2026-10-29):** 13 polishing + accessibility (11d, incl. 10h's `ThickProgressStyle`; the flaky
+5. **Later builds (renumbered 2026-10-29):** 13 polishing + accessibility (11d, incl. 10h's `ThickProgressStyle`; the flaky
    `SyncEngineTests` test; "Cancel night" under the tab bar); 14 nights off (11c) + statistics, the bug list and Plans (his
    answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 13):** the store and TestFlight
    texts are done (plan §12); the guide's first page and the Strict-mode footer wait for build 13; the testers' answers about
    missing notifications decide a stronger gentle mode. Still open: the eight questions at the end of
    `docs/NAVRH-MESTO-STATISTIKY.md`; from 2026-10-14 the seller name on the Business page, "a little tuning of the home screen
    UI", "some AI optimisation", "like a wiper on a car"; from `docs/ZAJTRA-RANO.md` departures.to (Health + Audio).
-5. **Owed device checks:** the review recipe on a clean install (NOT the second tester's phone – her iCloud brings her data
+6. **Owed device checks:** the review recipe on a clean install (NOT the second tester's phone – her iCloud brings her data
    back; a phone whose Apple ID never had SleepHole, or a fresh simulator – asked him), also trying 10f's first-run guide (his
    wish 2026-10-22); R4 – the app killed by iOS in the night and opened while the SYSTEM alarm rings → only one alarm (untried).
-6. **Open bugs (plan §11a):** none. B36, B10, B8, B30 and B37 are fixed in build 10 (B10 and the gentle start confirmed by
+7. **Open bugs (plan §11a):** none. B36, B10, B8, B30 and B37 are fixed in build 10 (B10 and the gentle start confirmed by
    him, B37's caption is his c8). His wishes for later: when a bad night comes he checks the cat's ruins line; next month the
    bronze joker → the cat's "streak was safe" line.
-7. **Standing notes:** the app is free for now (price 0 since 2026-10-12; a price only after an accountant – never push; his
+8. **Standing notes:** the app is free for now (price 0 since 2026-10-12; a price only after an accountant – never push; his
    reasons stay out of this public repo); he runs the gentle mode since 2026-10-22 (Strict off); App Store Connect can be
    read in his Chrome – every change needs his yes, agreements, bank, tax and legal declarations stay his own clicks; what
    the 2026-10-24 store edits replaced is in plan §12 (for a revert).

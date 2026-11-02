@@ -222,6 +222,10 @@ skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón l
 - láskavý posun večierky po viacerých skorších nociach
 - najnovšia budova namiesto mačky na Dnes; čínština (teraz neodporúčané); výskumné centrum
 - zvuk nočného vlaku na spánok – prototyp na stránke (20 min + klapot A / B / C); odložené 19. 10., teraz nie je priorita
+- **Recap za mesiac (tvoj nápad 2. 11.: „Recap nie je revolúcia, ale očakávaná funkcia“, ako v Apple Music či Waterllame):** raz za mesiac zhrnutie nocí – štatistiky, noc, keď spánok prišiel najrýchlejšie a najpomalšie (len kde má Zdravie údaje o spánku), spolu prespané hodiny, použitie telefónu po príprave a počas prípravy (ako dlho si bol preč), noci v prísnom a v jemnom režime a nakoniec návrh posunúť večierku – **len ak to štatistiky naozaj podporia, inak iba zhrnutie**; Claude pridá napr. najdlhšiu sériu, pokojné hodiny, mince, pauzy, žolíkov, nové budovy, potvrdenie po budíku, všedné dni vs. víkend. Claude navrhuje build 14 pri štatistikách; recap za október by mohol byť najprv ako stránka z tvojich nocí (skúška, na tvoje slovo).
+- **Zvuky na spanie ako odmena v balíčkoch (tvoj nápad 2. 11.):** biely / ružový / hnedý šum a pokojná klasická hudba (vlastná, zo skladieb, ktoré sú voľné, nikdy cudzia nahrávka); vybraný zvuk potom hrá v noci. Mení šance v balíčkoch (nová tabuľka, odpovede pre App Store – tvoje áno), preto Claude navrhuje build 16 pri hudbe v meste. Pohľadnica 20 poctivo povie, že pri šume sú dôkazy veľmi slabé a má hrať potichu.
+- **Kenney – čo ešte použiť (prehľad 2. 11.):** nové budovy úrovne 2–3 vrátane kina, autá pri budovách (hasiči, sanitka, polícia), zima, viac parkov, vlak, pobrežie, hrad, hvezdáreň, obyvatelia. Claude odporúča najprv budovy a autá; náhľady na výber na tvoje slovo.
+- **Potom spolu:** znova zoradiť nápady a retrospektíva; **retrospektívu za október Claude začína teraz** (commity, pamäť, stránky, dokumenty).
 - maják ako ozdoba mesta „na pobrežie“ (tvoje slovo 28. 10. pri výbere 12 ozdôb do balíčkov) – je už vykreslený, počká na pobrežie alebo vodu v meste
 
 ## Vydanie v App Store
