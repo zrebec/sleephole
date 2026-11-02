@@ -29,7 +29,7 @@ struct BuddyBubble: View {
                 } label: {
                     // a comic speech bubble (owner 2026-10-15: "the font is terribly small"): solid, outlined, readable
                     Text(sentence)
-                        .font(.system(size: 17, weight: .medium, design: .rounded))
+                        .font(.system(.body, design: .rounded, weight: .medium))
                         .foregroundStyle(ink)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)

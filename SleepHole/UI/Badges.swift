@@ -38,6 +38,7 @@ struct CoinBadge: View {
         HStack(spacing: 6) {
             Text(verbatim: "🪙").font(.system(size: 26)).accessibilityHidden(true)
             Text(verbatim: "\(model.coins)").font(.headline.monospacedDigit())
+                .lineLimit(1).fixedSize(horizontal: true, vertical: false)       // a number never breaks across lines (13e2)
                 .contentTransition(.numericText(value: Double(model.coins)))
                 .animation(.snappy, value: model.coins)
         }
@@ -50,8 +51,12 @@ struct CoinBadge: View {
 
 /// Streak + coins side by side.
 struct StatusBadges: View {
+    @Environment(\.dynamicTypeSize) private var typeSize
+
     var body: some View {
-        HStack(spacing: 10) {
+        // at accessibility sizes the badges are stacked, each with the full width (13e2)
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 10))
+        layout {
             StreakBadge()
             CoinBadge()
         }

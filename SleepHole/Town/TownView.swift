@@ -93,6 +93,7 @@ struct TownTab: View {
     @State private var selected: Int?
     @State private var renaming = false
     @State private var showNumbers = false
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         let snapshot = model.townSnapshot
@@ -118,7 +119,7 @@ struct TownTab: View {
             .sheet(item: Binding(get: { selected.map(SelectedBuilding.init) }, set: { selected = $0?.index })) { sel in
                 if let b = snapshot?.buildings[safe: sel.index] {
                     BuildingSheet(building: b)
-                        .presentationDetents([.fraction(0.42)])
+                        .presentationDetents(typeSize.isAccessibilitySize ? [.fraction(0.42), .large] : [.fraction(0.42)])
                 }
             }
         }
@@ -143,10 +144,14 @@ struct TownTab: View {
             Button {
                 showNumbers = true
             } label: {
-                HStack(spacing: 14) {
-                    Label { Text(verbatim: "\(count)") } icon: { Image(systemName: "building.2.fill") }
-                    Label { Text(verbatim: "\(people)") } icon: { Image(systemName: "person.2.fill") }
-                    Text(verbatim: "🪙 \(model.coins)")
+                // the numbers never break across lines; at accessibility sizes the three items are stacked (13e2)
+                let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 4)) : AnyLayout(HStackLayout(spacing: 14))
+                layout {
+                    Label { Text(verbatim: "\(count)").lineLimit(1).fixedSize(horizontal: true, vertical: false) }
+                        icon: { Image(systemName: "building.2.fill") }
+                    Label { Text(verbatim: "\(people)").lineLimit(1).fixedSize(horizontal: true, vertical: false) }
+                        icon: { Image(systemName: "person.2.fill") }
+                    Text(verbatim: "🪙 \(model.coins)").lineLimit(1).fixedSize(horizontal: true, vertical: false)
                 }
             }
             .buttonStyle(.plain)
@@ -182,8 +187,16 @@ struct BuildingSheet: View {
     let building: TownBuilding
 
     var body: some View {
+        // as before at the default size; a text too tall for the sheet (big text sizes) scrolls instead (13e2)
+        ViewThatFits(in: .vertical) {
+            content
+            ScrollView { content }.scrollBounceBehavior(.basedOnSize)
+        }
+    }
+
+    private var content: some View {
         let name = model.catalog?[building.buildingId]?.displayName ?? L("Building")
-        VStack(spacing: 10) {
+        return VStack(spacing: 10) {
             BuildingImage(id: sheetSprite, progress: building.state == .unfinished ? 0.6 : 1, maxHeight: 130)
             Text(name).font(.title2.bold())
             Text(L("Night of \(Fmt.fullDate(building.nightKey))")).foregroundStyle(.secondary)
@@ -195,9 +208,9 @@ struct BuildingSheet: View {
             case .complete:
                 Label(building.repairedLater ? L("Repaired 🛠️ – the ruin is a building again")
                       : building.completedLater ? L("Finished later 💪") : L("Complete 🎉"), systemImage: "checkmark.seal.fill")
-                    .foregroundStyle(.green)
+                    .foregroundStyle(Color.readableGreen)
             case .unfinished:
-                Label(L("Unfinished – your next good night will finish it"), systemImage: "hammer.fill").foregroundStyle(.orange)
+                Label(L("Unfinished – your next good night will finish it"), systemImage: "hammer.fill").foregroundStyle(Color.readableOrange)
             case .ruins:
                 Label(L("Ruins – part of the town too 🌱"), systemImage: "leaf.fill").foregroundStyle(.secondary)
             }
@@ -230,6 +243,7 @@ enum TownStats {
 /// "The town in numbers": explains why the header's building count and the Stats' "nights built" can differ.
 struct TownNumbersSheet: View {
     @Environment(AppModel.self) private var model
+    @ScaledMetric(relativeTo: .body) private var emojiWidth: CGFloat = 26      // the emoji column grows with the text size (13e2)
     @Environment(\.dismiss) private var dismiss
     let town: TownSnapshot
 
@@ -265,7 +279,7 @@ struct TownNumbersSheet: View {
 
     private func row(_ icon: String, _ title: String, _ value: Int) -> some View {
         HStack {
-            Image(systemName: icon).frame(width: 26)
+            Image(systemName: icon).frame(width: emojiWidth)
             Text(title)
             Spacer()
             Text(verbatim: "\(value)").bold().monospacedDigit()
