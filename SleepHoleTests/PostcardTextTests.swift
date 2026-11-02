@@ -29,7 +29,7 @@ struct PostcardTextTests {
             for (i, t) in titles.enumerated() { #expect(t.count <= tMax, "\(lang) \(ids[i]) title \(t.count)") }
             for (i, t) in tips.enumerated() { #expect(t.count <= xMax, "\(lang) \(ids[i]) tip \(t.count)") }
             // house rule: no space between a number and its seconds
-            #expect(!tips.contains { $0.range(of: #"\d s\b"#, options: .regularExpression) != nil })
+            #expect(!tips.contains { $0.range(of: #"\d s\b(?!\s+\p{L})"#, options: .regularExpression) != nil })
         }
         // English and Slovak really differ
         let en = inLanguage(.en) { ids.map { PostcardText.tip(for: $0) } }
@@ -69,21 +69,20 @@ struct PostcardTextTests {
                 for (i, x) in t.enumerated() {
                     #expect(!x.isEmpty && !x.contains("%"), "\(lang) \(id) \(i)")
                     #expect(x.count <= limits[i], "\(lang) \(id) \(i) \(x.count)")
-                    #expect(x.range(of: #"\d s\b"#, options: .regularExpression) == nil, "\(lang) \(id) \(i)")
+                    #expect(x.range(of: #"\d s\b(?!\s+\p{L})"#, options: .regularExpression) == nil, "\(lang) \(id) \(i)")
                     if lang != .en { #expect(x != en[i], "\(lang) \(id) \(i) untranslated") }
                 }
             }
         }
     }
 
-    @Test func postcards1To16And18To20HaveAStudyAndTheRestHaveNone() {
-        func hasOne(_ n: Int) -> Bool { n <= 16 || (18...20).contains(n) }
+    @Test func allPostcardsButSeventeenHaveAStudy() {
         for n in 1...30 {
             let id = String(format: "postcard-%02d", n)
-            #expect((Postcards.study(for: id) != nil) == hasOne(n), "\(id)")
-            #expect(PostcardText.hasStudy(id) == hasOne(n), "\(id)")
+            #expect((Postcards.study(for: id) != nil) == (n != 17), "\(id)")
+            #expect(PostcardText.hasStudy(id) == (n != 17), "\(id)")
         }
-        #expect(Postcards.studies.count == 19)
+        #expect(Postcards.studies.count == 29)
     }
 
     @Test func theCitationResolves() throws {
@@ -101,9 +100,14 @@ struct PostcardTextTests {
         inLanguage(.cs) { #expect(PostcardText.citation(for: s) == "Crowley a Carskadon, Chronobiol Int, 2010") }
     }
 
+    @Test func aSecondAuthorInPostcard28() throws {
+        let s = try #require(Postcards.study(for: "postcard-28"))
+        inLanguage(.en) { #expect(PostcardText.citation(for: s) == "Weighall and Kellar, Emerg Top Life Sci, 2023") }
+    }
+
     @Test func theDebugKeysAreUniqueAndInTheCatalog() {
         #expect(Set(PostcardText.keys).count == PostcardText.keys.count)
-        #expect(PostcardText.keys.count == 128)
+        #expect(PostcardText.keys.count == 158)
         let entries = AppTexts.load()
         let have = Set(entries.map(\.key))
         #expect(PostcardText.keys.allSatisfy { have.contains($0) })
@@ -139,20 +143,12 @@ struct PostcardTextTests {
             }
         }
         func id(_ n: Int) -> String { String(format: "postcard-%02d", n) }
-        for n in 1...10 { try write("card-\(n)-sk-light.png", lang: .sk, scheme: .light, size: .large, id: id(n)) }
-        for n in [6, 7] {
-            try write("card-\(n)-en-light.png", lang: .en, scheme: .light, size: .large, id: id(n))
-            try write("card-\(n)-cs-light.png", lang: .cs, scheme: .light, size: .large, id: id(n))
+        for n in 1...30 {
+            for (lang, code) in [(AppLanguage.sk, "sk"), (.cs, "cs"), (.en, "en")] {
+                try write("card-\(n)-\(code)-light.png", lang: lang, scheme: .light, size: .large, id: id(n))
+            }
         }
-        for n in 11...20 { try write("card-\(n)-sk-light.png", lang: .sk, scheme: .light, size: .large, id: id(n)) }
-        for n in [11, 13, 15, 16, 18, 20] {
-            try write("card-\(n)-cs-light.png", lang: .cs, scheme: .light, size: .large, id: id(n))
-            try write("card-\(n)-en-light.png", lang: .en, scheme: .light, size: .large, id: id(n))
-        }
-        try write("card-19-sk-dark.png", lang: .sk, scheme: .dark, size: .large, id: id(19))
-        try write("card-14-sk-light-xxxl.png", lang: .sk, scheme: .light, size: .accessibility2, id: id(14))
-        try write("card-2-cs-light.png", lang: .cs, scheme: .light, size: .large, id: id(2))
-        try write("card-10-sk-dark.png", lang: .sk, scheme: .dark, size: .large, id: id(10))
-        try write("card-4-sk-light-xxxl.png", lang: .sk, scheme: .light, size: .accessibility2, id: id(4))
+        try write("card-25-sk-dark.png", lang: .sk, scheme: .dark, size: .large, id: id(25))
+        try write("card-23-cs-light-xxxl.png", lang: .cs, scheme: .light, size: .accessibility2, id: id(23))
     }
 }
