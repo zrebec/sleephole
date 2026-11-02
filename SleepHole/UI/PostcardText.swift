@@ -30,7 +30,7 @@ enum PostcardText {
         "Try a relaxing trick",
         "Guided imagery, soft music, gentle yoga or meditation can help you let go of the day's stress.",
         "Late coffee lingers",
-        "Caffeine can stay with you for up to 8 hours, so an afternoon coffee may still be awake at bedtime.",
+        "Caffeine can stay with you for 8 hours or more, so an afternoon coffee may still be awake at bedtime.",
         "Heavy talks by daylight",
         "Upsetting conversations are best kept for the daytime, so your evening stays calm.",
         "A warm evening drink",
@@ -38,17 +38,17 @@ enum PostcardText {
         "A comfy bed",
         "A comfortable mattress and pillow make your bedroom a nicer place to sleep.",
         "Sweet things in moderation",
-        "Sugary drinks and snacks can make it harder to fall or stay asleep – go easy on them.",
-        "A light dinner",
-        "Make dinner your lightest meal and finish eating 3 to 4 hours before bed.",
+        "Lots of sugary drinks and snacks may make sleep lighter and more restless – go easy on them.",
+        "Dinner, a bit earlier",
+        "Try to finish dinner a few hours before bed rather than right before lights out – your night may be calmer.",
         "Drink earlier",
         "Try limiting liquids in the last few hours before sleep, and drink your fill earlier in the day.",
         "A cool bedroom",
-        "A cool room is cosy for sleeping – aim for around 18–20 °C (65–68 °F).",
+        "A cool room is cosy for sleeping – very warm bedrooms tend to go with less restful nights.",
         "Make it dark",
         "Blackout curtains or an eye mask keep the light off your eyes while you sleep.",
         "Quiet or softly noisy",
-        "Soft earplugs help with noise, and gentle sounds like rain can make the room cosy.",
+        "Soft earplugs can dull noise, and some people like gentle sounds such as rain – see what suits you.",
         "Phone face down",
         "Turn your phone face down, so its glow doesn't reach you at night.",
         "Bed is for sleep",
@@ -110,6 +110,33 @@ enum PostcardText {
         "Slow, calm practices ease the body's stress response – breathing slows, muscles soften and thoughts stop racing. That makes it easier to let go of the day when you lie down.",
         "A 2019 review of 18 randomized trials in people with sleep problems found that mindfulness meditation improved sleep quality compared with groups given the same time and attention, but not more than established sleep programmes.",
         "Moderate at best: it beat attention-matched groups, not established sleep programmes, and the authors call it preliminary. Music, imagery and yoga were not part of it.",
+        "Caffeine blocks the signal that builds up through the day and tells you it is time to rest. It fades slowly, so an afternoon cup can still be working when you lie down.",
+        "Heavy talks can leave your mind buzzing and your body on alert, and alert is the opposite of sleepy. Saving them for daylight lets your evening wind down.",
+        "Caffeine keeps your brain alert for hours, even after you stop feeling it. A warm, caffeine-free drink gives you the cosy ritual of an evening cup without the buzz.",
+        "When the bed supports you well, you spend less time shifting around for a comfy spot, so it is easier to drift off and to stay asleep.",
+        "Food is not only fuel for the day – what you eat can also shape how deeply you sleep. A little sugar is fine; it is the everyday habit of a lot that is worth watching.",
+        "Digesting a meal keeps your body busy. Finishing dinner a few hours earlier gives it time to settle before you lie down.",
+        "Your body cools down a little as you fall asleep. A cool room helps that along, while a warm one can get in the way and wake you more often.",
+        "Light tells your brain it is daytime and holds back your body's own sleep hormone. Keeping your eyes in the dark lets that hormone do its work through the night.",
+        "Steady, soft sounds can cover sudden noises, which is why some people like rain or a fan. But a quiet room is the safest start, because noise can also get in the way of good sleep.",
+        "A 2023 review of 24 studies found that caffeine cut sleep by about 45 min. To avoid that loss, it estimated that a regular cup of coffee should be drunk at least 8.8 hours before bed.",
+        "In a 2024 study, 74 university students wore a wrist monitor for 14 nights. On nights after an unpleasant conversation before bed, they slept about 14 min less than on other nights.",
+        "In a 2013 trial, 12 healthy adults took 400 mg of caffeine (about four cups of coffee) right at bedtime, or 3 or 6 hours before. Each time, a headband monitor showed over an hour less sleep than with a placebo.",
+        "A 2015 review of 24 controlled trials concluded that a medium-firm mattress, especially one you can adjust yourself, is best for sleep comfort and sleep quality.",
+        "In a 2016 sleep-lab study, 26 adults of normal weight chose their own food for one day. Getting more of their energy from sugar went with more brief wake-ups (arousals) that night.",
+        "In a 2026 trial, 13 healthy young women ate the same dinner either 5 hours or 1 hour before bed for 4 days. After the late dinners, they slept less and were awake more during the night.",
+        "In a 2023 study, 62 adults wore a wrist monitor at home for 14 nights while their bedrooms were measured. In the warmest fifth of readings, sleep efficiency (time in bed spent asleep) was about 3 percent lower than in the coolest.",
+        "In a 2010 sleep-lab study, 14 healthy volunteers slept with recorded hospital noise and the light on, with and without an eye mask and earplugs. With them, they had more REM sleep and fewer brief wake-ups.",
+        "A 2021 review of 38 studies on steady background noise, like white noise, as a sleep aid found mixed results, from helping sleep to disturbing it. The authors rated the evidence that it improves sleep as very low quality.",
+        "It pools 24 studies, so it is broader than one trial. The 8.8 hours is an estimate for a regular cup of coffee (250 mL), not an exact limit for everyone.",
+        "A link, not a cause: 74 students, sleep judged by a wrist monitor, habits reported by themselves. Many other habits in the study showed no link at all.",
+        "Only 12 adults, a high dose, and a company grant paid for it. Warm milk and herbal tea were not tested – the sure gain is skipping the caffeine.",
+        "The trials were rated moderate to high quality, but findings on the ideal mattress still differ, and pillows were not studied.",
+        "Only 26 adults and one day of self-chosen food, so a link, not a cause. Other studies are mixed – some found carb-rich meals made people sleepier.",
+        "Only 13 young women, and only 1 hour vs 5 hours was tested. Another lab study with 20 adults found no clear harm from a late dinner, so the evidence is mixed.",
+        "A link, not a cause: 62 adults, and the study names no best temperature. Most rated their room “just right” whatever it measured, so people may not notice the difference.",
+        "Only 14 people, a mask and earplugs tested together, in a noisy room with the light on. It does not prove a mask alone helps at home.",
+        "Very low quality evidence and mixed results, so soft sounds are a matter of taste, not proven benefit. The review did not look at earplugs.",
     ]
 
     private static let stamps = ["⏰", "🛋️", "🌙", "🗓️", "📵", "📖", "🛁", "🔔", "📝", "🧘", "☕️", "💬", "🍵", "🛏️", "🍪", "🍽️", "💧", "❄️", "🌑", "🌧️", "📴", "🛌", "🚶", "🕰️", "🏃", "⏳", "☀️", "🧠", "🕒", "🕯️"]
@@ -140,7 +167,7 @@ enum PostcardText {
         case 13: L("A warm evening drink")
         case 14: L("A comfy bed")
         case 15: L("Sweet things in moderation")
-        case 16: L("A light dinner")
+        case 16: L("Dinner, a bit earlier")
         case 17: L("Drink earlier")
         case 18: L("A cool bedroom")
         case 19: L("Make it dark")
@@ -171,16 +198,16 @@ enum PostcardText {
         case 8: L("Set a gentle reminder for 1.5 hours before bed, then start dimming the lights and slowing down.")
         case 9: L("Write your worries down, or list tomorrow's tasks, before bed. Then they can wait on the page.")
         case 10: L("Guided imagery, soft music, gentle yoga or meditation can help you let go of the day's stress.")
-        case 11: L("Caffeine can stay with you for up to 8 hours, so an afternoon coffee may still be awake at bedtime.")
+        case 11: L("Caffeine can stay with you for 8 hours or more, so an afternoon coffee may still be awake at bedtime.")
         case 12: L("Upsetting conversations are best kept for the daytime, so your evening stays calm.")
         case 13: L("Swap evening coffee or black tea for a warm milky drink or a herbal tea.")
         case 14: L("A comfortable mattress and pillow make your bedroom a nicer place to sleep.")
-        case 15: L("Sugary drinks and snacks can make it harder to fall or stay asleep – go easy on them.")
-        case 16: L("Make dinner your lightest meal and finish eating 3 to 4 hours before bed.")
+        case 15: L("Lots of sugary drinks and snacks may make sleep lighter and more restless – go easy on them.")
+        case 16: L("Try to finish dinner a few hours before bed rather than right before lights out – your night may be calmer.")
         case 17: L("Try limiting liquids in the last few hours before sleep, and drink your fill earlier in the day.")
-        case 18: L("A cool room is cosy for sleeping – aim for around 18–20 °C (65–68 °F).")
+        case 18: L("A cool room is cosy for sleeping – very warm bedrooms tend to go with less restful nights.")
         case 19: L("Blackout curtains or an eye mask keep the light off your eyes while you sleep.")
-        case 20: L("Soft earplugs help with noise, and gentle sounds like rain can make the room cosy.")
+        case 20: L("Soft earplugs can dull noise, and some people like gentle sounds such as rain – see what suits you.")
         case 21: L("Turn your phone face down, so its glow doesn't reach you at night.")
         case 22: L("Try using your bed just for sleep – no eating or working in it – so it says “sleep” to your brain.")
         case 23: L("Still awake after about 20 minutes? Get up and do something calm, like reading a book, then come back when sleep returns.")
@@ -208,6 +235,15 @@ enum PostcardText {
         case 8: L("Even ordinary room light tells your brain that it is still day and holds back the body's own sleep hormone. Dimmer lights in the evening let it rise on time.")
         case 9: L("Unfinished tasks keep circling in your head at night. Putting them on paper hands the job to the page, so your mind can stop rehearsing them – and falling asleep tends to go faster.")
         case 10: L("Slow, calm practices ease the body's stress response – breathing slows, muscles soften and thoughts stop racing. That makes it easier to let go of the day when you lie down.")
+        case 11: L("Caffeine blocks the signal that builds up through the day and tells you it is time to rest. It fades slowly, so an afternoon cup can still be working when you lie down.")
+        case 12: L("Heavy talks can leave your mind buzzing and your body on alert, and alert is the opposite of sleepy. Saving them for daylight lets your evening wind down.")
+        case 13: L("Caffeine keeps your brain alert for hours, even after you stop feeling it. A warm, caffeine-free drink gives you the cosy ritual of an evening cup without the buzz.")
+        case 14: L("When the bed supports you well, you spend less time shifting around for a comfy spot, so it is easier to drift off and to stay asleep.")
+        case 15: L("Food is not only fuel for the day – what you eat can also shape how deeply you sleep. A little sugar is fine; it is the everyday habit of a lot that is worth watching.")
+        case 16: L("Digesting a meal keeps your body busy. Finishing dinner a few hours earlier gives it time to settle before you lie down.")
+        case 18: L("Your body cools down a little as you fall asleep. A cool room helps that along, while a warm one can get in the way and wake you more often.")
+        case 19: L("Light tells your brain it is daytime and holds back your body's own sleep hormone. Keeping your eyes in the dark lets that hormone do its work through the night.")
+        case 20: L("Steady, soft sounds can cover sudden noises, which is why some people like rain or a fan. But a quiet room is the safest start, because noise can also get in the way of good sleep.")
         default: nil
         }
     }
@@ -224,6 +260,15 @@ enum PostcardText {
         case 8: L("In a 2011 study, 116 healthy volunteers aged 18 to 30 were compared after evenings in room light or in dim light. Room light before bedtime delayed the sleep hormone's rise in nearly everyone and shortened it by about 90 min.")
         case 9: L("In a 2018 sleep-lab study, 57 healthy young adults wrote for 5 min before bed, either a to-do list or a list of things already done. The to-do group fell asleep significantly faster, especially with a specific list.")
         case 10: L("A 2019 review of 18 randomized trials in people with sleep problems found that mindfulness meditation improved sleep quality compared with groups given the same time and attention, but not more than established sleep programmes.")
+        case 11: L("A 2023 review of 24 studies found that caffeine cut sleep by about 45 min. To avoid that loss, it estimated that a regular cup of coffee should be drunk at least 8.8 hours before bed.")
+        case 12: L("In a 2024 study, 74 university students wore a wrist monitor for 14 nights. On nights after an unpleasant conversation before bed, they slept about 14 min less than on other nights.")
+        case 13: L("In a 2013 trial, 12 healthy adults took 400 mg of caffeine (about four cups of coffee) right at bedtime, or 3 or 6 hours before. Each time, a headband monitor showed over an hour less sleep than with a placebo.")
+        case 14: L("A 2015 review of 24 controlled trials concluded that a medium-firm mattress, especially one you can adjust yourself, is best for sleep comfort and sleep quality.")
+        case 15: L("In a 2016 sleep-lab study, 26 adults of normal weight chose their own food for one day. Getting more of their energy from sugar went with more brief wake-ups (arousals) that night.")
+        case 16: L("In a 2026 trial, 13 healthy young women ate the same dinner either 5 hours or 1 hour before bed for 4 days. After the late dinners, they slept less and were awake more during the night.")
+        case 18: L("In a 2023 study, 62 adults wore a wrist monitor at home for 14 nights while their bedrooms were measured. In the warmest fifth of readings, sleep efficiency (time in bed spent asleep) was about 3 percent lower than in the coolest.")
+        case 19: L("In a 2010 sleep-lab study, 14 healthy volunteers slept with recorded hospital noise and the light on, with and without an eye mask and earplugs. With them, they had more REM sleep and fewer brief wake-ups.")
+        case 20: L("A 2021 review of 38 studies on steady background noise, like white noise, as a sleep aid found mixed results, from helping sleep to disturbing it. The authors rated the evidence that it improves sleep as very low quality.")
         default: nil
         }
     }
@@ -240,6 +285,15 @@ enum PostcardText {
         case 8: L("It measured the sleep hormone, not sleep itself, in healthy 18 to 30 year olds, and the lighting lasted 8 to 16 hours – far longer than an evening wind-down.")
         case 9: L("One lab study of 57 healthy 18 to 30 year olds, with a few minutes of writing before one night's sleep. It tested to-do lists, not worry journals.")
         case 10: L("Moderate at best: it beat attention-matched groups, not established sleep programmes, and the authors call it preliminary. Music, imagery and yoga were not part of it.")
+        case 11: L("It pools 24 studies, so it is broader than one trial. The 8.8 hours is an estimate for a regular cup of coffee (250 mL), not an exact limit for everyone.")
+        case 12: L("A link, not a cause: 74 students, sleep judged by a wrist monitor, habits reported by themselves. Many other habits in the study showed no link at all.")
+        case 13: L("Only 12 adults, a high dose, and a company grant paid for it. Warm milk and herbal tea were not tested – the sure gain is skipping the caffeine.")
+        case 14: L("The trials were rated moderate to high quality, but findings on the ideal mattress still differ, and pillows were not studied.")
+        case 15: L("Only 26 adults and one day of self-chosen food, so a link, not a cause. Other studies are mixed – some found carb-rich meals made people sleepier.")
+        case 16: L("Only 13 young women, and only 1 hour vs 5 hours was tested. Another lab study with 20 adults found no clear harm from a late dinner, so the evidence is mixed.")
+        case 18: L("A link, not a cause: 62 adults, and the study names no best temperature. Most rated their room “just right” whatever it measured, so people may not notice the difference.")
+        case 19: L("Only 14 people, a mask and earplugs tested together, in a noisy room with the light on. It does not prove a mask alone helps at home.")
+        case 20: L("Very low quality evidence and mixed results, so soft sounds are a matter of taste, not proven benefit. The review did not look at earplugs.")
         default: nil
         }
     }
