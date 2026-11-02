@@ -23816,6 +23816,820 @@
           }
         }
       }
+    },
+    "The librarian's tip: a paper book in the evening – the screen can wait till morning 📖": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The librarian's tip: a paper book in the evening – the screen can wait till morning 📖"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Knihovníčka radí: večer papierová kniha – obrazovka počká do rána 📖"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Knihovnice radí: večer papírová knížka – obrazovka počká do rána 📖"
+          }
+        }
+      }
+    },
+    "The museum has a new exhibit: the very first brick of our town 🧱": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The museum has a new exhibit: the very first brick of our town 🧱"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Múzeum má nový exponát: úplne prvú tehlu nášho mesta 🧱"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muzeum má nový exponát: úplně první cihlu našeho města 🧱"
+          }
+        }
+      }
+    },
+    "The museum's night guard counts the paintings – and then the sheep 🐑": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The museum's night guard counts the paintings – and then the sheep 🐑"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nočný strážnik v múzeu počíta obrazy – a potom ovečky 🐑"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noční hlídač v muzeu počítá obrazy – a pak ovečky 🐑"
+          }
+        }
+      }
+    },
+    "Ducks have moved into the pond park. They go to bed early too 🦆": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ducks have moved into the pond park. They go to bed early too 🦆"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do parku s jazierkom sa nasťahovali kačky. Aj ony chodia spať zavčasu 🦆"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do parku s jezírkem se nastěhovaly kachny. I ony chodí spát brzy 🦆"
+          }
+        }
+      }
+    },
+    "The park fountain is switched off at night, so it can rest too ⛲": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The park fountain is switched off at night, so it can rest too ⛲"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fontánu v parku na noc vypínajú, nech si aj ona oddýchne ⛲"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fontánu v parku na noc vypínají, ať si taky odpočine ⛲"
+          }
+        }
+      }
+    },
+    "Someone tied a scarf around the statue in the garden. It looks cosier already 🧣": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Someone tied a scarf around the statue in the garden. It looks cosier already 🧣"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niekto uviazal soche v záhrade šál. Hneď vyzerá útulnejšie 🧣"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Někdo uvázal soše v zahradě šálu. Hned vypadá útulněji 🧣"
+          }
+        }
+      }
+    },
+    "Fire drill today – the firefighters were ready in a flash, then had a well-earned nap 🚒": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fire drill today – the firefighters were ready in a flash, then had a well-earned nap 🚒"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hasiči mali dnes cvičný poplach – boli pripravení ako blesk a potom si zaslúžene zdriemli 🚒"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hasiči měli dnes cvičný poplach – byli připravení jako blesk a pak si zaslouženě zdřímli 🚒"
+          }
+        }
+      }
+    },
+    "A baby was born at the hospital today – our youngest resident 👶": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A baby was born at the hospital today – our youngest resident 👶"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V nemocnici sa dnes narodilo bábätko – náš najmladší obyvateľ 👶"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V nemocnici se dnes narodilo miminko – náš nejmladší obyvatel 👶"
+          }
+        }
+      }
+    },
+    "The night patrol reports: all quiet, everyone asleep, one cat on a roof 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The night patrol reports: all quiet, everyone asleep, one cat on a roof 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nočná hliadka hlási: všade ticho, všetci spia, jedna mačka na streche 🌙"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noční hlídka hlásí: všude klid, všichni spí, jedna kočka na střeše 🌙"
+          }
+        }
+      }
+    },
+    "At school today the children learned why sleep makes us smarter 🎒": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At school today the children learned why sleep makes us smarter 🎒"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deti sa dnes v škole učili, prečo nás spánok robí múdrejšími 🎒"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Děti se dnes ve škole učily, proč nás spánek dělá chytřejšími 🎒"
+          }
+        }
+      }
+    },
+    "We finally have a mayor! The first decree: bedtime is sacred 📜": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We finally have a mayor! The first decree: bedtime is sacred 📜"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konečne máme starostu! Prvé nariadenie: večierka je posvätná 📜"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Konečně máme starostu! První vyhláška: večerka je posvátná 📜"
+          }
+        }
+      }
+    },
+    "At bedtime the skyscraper's lights go out floor by floor – like a giant saying goodnight 🏙️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At bedtime the skyscraper's lights go out floor by floor – like a giant saying goodnight 🏙️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pri večierke v mrakodrape zhasínajú svetlá poschodie po poschodí – ako keď obor hovorí dobrú noc 🏙️"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Při večerce v mrakodrapu zhasínají světla patro po patře – jako když obr říká dobrou noc 🏙️"
+          }
+        }
+      }
+    },
+    "The library has its own cat, %@ – the fairy-tale shelf is its favourite bed 📚": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The library has its own cat, %@ – the fairy-tale shelf is its favourite bed 📚"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Knižnica má vlastnú mačku – volá sa %@ a najradšej spí na poličke s rozprávkami 📚"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Knihovna má vlastní kočku – jmenuje se %@ a nejraději spí na polici s pohádkami 📚"
+          }
+        }
+      }
+    },
+    "In the small park, a cat called %@ has claimed the sunniest bench ☀️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the small park, a cat called %@ has claimed the sunniest bench ☀️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V malom parku si mačka menom %@ zabrala najslnečnejšiu lavičku ☀️"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V malém parku si kočka jménem %@ zabrala nejslunnější lavičku ☀️"
+          }
+        }
+      }
+    },
+    "The firefighters helped a cat down from a tree – %@ is safe and purring again 🐈": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The firefighters helped a cat down from a tree – %@ is safe and purring again 🐈"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hasiči zložili zo stromu mačku – %@ je v bezpečí a zase spokojne priade 🐈"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hasiči sundali ze stromu kočku – %@ je v bezpečí a zase spokojeně přede 🐈"
+          }
+        }
+      }
+    },
+    "The police found a lost cat called %@ – home again in time for bed 🐾": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The police found a lost cat called %@ – home again in time for bed 🐾"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polícia našla stratenú mačku – volá sa %@ a do spania je už doma 🐾"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Policie našla ztracenou kočku – jmenuje se %@ a do spaní je už doma 🐾"
+          }
+        }
+      }
+    },
+    "The class has a cat called %@ – voted the best sleeper in the whole school 🏆": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The class has a cat called %@ – voted the best sleeper in the whole school 🏆"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trieda má mačku – volá sa %@ a v spaní je najlepšia z celej školy 🏆"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Třída má kočku – jmenuje se %@ a ve spaní je nejlepší z celé školy 🏆"
+          }
+        }
+      }
+    },
+    "The town hall has a new clerk: a cat called %@, who stamps papers with a paw 🐾": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The town hall has a new clerk: a cat called %@, who stamps papers with a paw 🐾"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na radnici majú novú úradníčku – mačku menom %@. Pečiatkuje labkou 🐾"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Na radnici mají novou úřednici – kočku jménem %@. Razítkuje tlapkou 🐾"
+          }
+        }
+      }
+    },
+    "A cat called %@ took the lift to the skyscraper's top floor – just for the view 🐈": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A cat called %@ took the lift to the skyscraper's top floor – just for the view 🐈"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mačka menom %@ sa vyviezla výťahom na najvyššie poschodie mrakodrapu – len kvôli výhľadu 🐈"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kočka jménem %@ se svezla výtahem do nejvyššího patra mrakodrapu – jen kvůli výhledu 🐈"
+          }
+        }
+      }
+    },
+    "A cat called %@ visits a different doorstep every evening, just to say goodnight 🐈": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A cat called %@ visits a different doorstep every evening, just to say goodnight 🐈"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mačka menom %@ každý večer navštívi iný prah, len aby povedala dobrú noc 🐈"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kočka jménem %@ každý večer navštíví jiný práh, jen aby řekla dobrou noc 🐈"
+          }
+        }
+      }
+    },
+    "Our newest building – %@ – already looks as if it had always been here.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Our newest building – %@ – already looks as if it had always been here."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Najnovšia stavba v meste – %@ – už vyzerá, akoby tu stála odjakživa."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nejnovější stavba ve městě – %@ – už vypadá, jako by tu stála odjakživa."
+          }
+        }
+      }
+    },
+    "The street lamps dim a little at bedtime, so the whole town knows it's time 🌙": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The street lamps dim a little at bedtime, so the whole town knows it's time 🌙"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pouličné lampy sa pri večierke trochu stlmia, aby celé mesto vedelo, že je čas 🌙"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pouliční lampy se při večerce trochu ztlumí, aby celé město vědělo, že je čas 🌙"
+          }
+        }
+      }
+    },
+    "The milkman starts his round at dawn – so of course he goes to bed early 🥛": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The milkman starts his round at dawn – so of course he goes to bed early 🥛"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mliekar začína rozvoz za svitania – a tak, samozrejme, chodí spať zavčasu 🥛"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mlékař začíná rozvoz za svítání – a tak samozřejmě chodí spát brzy 🥛"
+          }
+        }
+      }
+    },
+    "Someone in town snores a little. Nobody minds – it sounds like a tiny purr 😺": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Someone in town snores a little. Nobody minds – it sounds like a tiny purr 😺"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niekto v meste trochu chrápe. Nikomu to neprekáža – znie to ako tiché priadenie 😺"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Někdo ve městě trochu chrápe. Nikomu to nevadí – zní to jako tiché předení 😺"
+          }
+        }
+      }
+    },
+    "The bakers go to bed right after dinner – their day starts at three in the morning 🥐": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The bakers go to bed right after dinner – their day starts at three in the morning 🥐"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pekári chodia spať hneď po večeri – ich deň sa začína o tretej ráno 🥐"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pekaři chodí spát hned po večeři – jejich den začíná ve tři ráno 🥐"
+          }
+        }
+      }
+    },
+    "Mittens": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mittens"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Micka"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Micka"
+          }
+        }
+      }
+    },
+    "Whiskers": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Whiskers"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Murko"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mourek"
+          }
+        }
+      }
+    },
+    "Pumpkin": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pumpkin"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tigrík"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tygřík"
+          }
+        }
+      }
+    },
+    "Socks": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Socks"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Packa"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tlapka"
+          }
+        }
+      }
+    },
+    "Biscuit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Biscuit"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Líza"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Líza"
+          }
+        }
+      }
+    },
+    "Pepper": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pepper"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Felix"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Felix"
+          }
+        }
+      }
+    },
+    "Muffin": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Muffin"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bambuľka"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bambulka"
+          }
+        }
+      }
+    },
+    "Luna": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Luna"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vločka"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vločka"
+          }
+        }
+      }
+    },
+    "Tiger": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiger"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kubko"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kuba"
+          }
+        }
+      }
+    },
+    "Smudge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smudge"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uhlík"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uhlík"
+          }
+        }
+      }
+    },
+    "Ginger": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ginger"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ryšavka"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zrzka"
+          }
+        }
+      }
+    },
+    "Snowball": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Snowball"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Guľka"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kulička"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

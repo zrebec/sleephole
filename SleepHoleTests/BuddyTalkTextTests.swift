@@ -18,7 +18,9 @@ struct BuddyTalkTextTests {
             .nextSize(missing: 5, .village), .firstNeighbours, .parks(2), .library, .museum, .tallest,
             .noFireStation, .noHospital, .noPolice, .noSchool, .noTownHall, .fireStation, .hospital, .tonight,
             .fullMoonTonight, .newMoonTonight, .longestNight, .shortestNight, .equinox, .fullMoonTomorrow,
-            .fullMoonSoon(days: 2)]
+            .fullMoonSoon(days: 2), .newest(buildingId: "x")]
+        for place in OwnedPlace.allCases { l += (0..<place.variants).map { .owned(place, $0) } }
+        l += CatTale.allCases.map { .catTale($0, name: 3) }
         l += MoonQuarter.allCases.map { .moonPhase($0) }
         l += (0..<BuddyLine.chatterCount).map { .chatter($0) }
         return l
@@ -60,7 +62,8 @@ struct BuddyTalkTextTests {
     }
 
     @Test func keysMatchTheMapping() {
-        #expect(BuddyTalkText.keys.count == everyLine.count)
+        #expect(BuddyTalkText.keys.count == everyLine.count + BuddyLine.catNameCount)
+        #expect(BuddyTalkText.catNames.count == BuddyLine.catNameCount)
         #expect(Set(BuddyTalkText.keys).count == BuddyTalkText.keys.count)
     }
 
@@ -79,6 +82,23 @@ struct BuddyTalkTextTests {
         #expect(BuddyTalkText.text(for: .movedIn(buildingId: "x", people: 5), buildingName: name) == "The Cottage už má 5 obyvateľov.")
         #expect(BuddyTalkText.text(for: .nextSize(missing: 3, .village), buildingName: name) == "Ešte 3 ľudia a budeme dedina!")
         #expect(BuddyTalkText.text(for: .streak(2), buildingName: name) == "2 noci za sebou! Stavbári sú na teba hrdí.")
+    }
+
+    @Test func catNamesFillTheTalesInEveryLanguage() {
+        let saved = Lang.current
+        defer { Lang.current = saved }
+        for lang in AppLanguage.allCases {
+            Lang.current = lang
+            let names = BuddyTalkText.catNames
+            #expect(Set(names).count == names.count && names.allSatisfy { !$0.isEmpty })
+            for i in 0..<BuddyLine.catNameCount {
+                let t = BuddyTalkText.text(for: .catTale(.lostCat, name: i), buildingName: name)
+                #expect(t.contains(names[i]) && !t.contains("%"), "\(lang) \(t)")
+            }
+        }
+        Lang.current = .en
+        #expect(BuddyTalkText.text(for: .catTale(.lostCat, name: 0), buildingName: name)
+                == "The police found a lost cat called Mittens – home again in time for bed 🐾")
     }
 
     @Test func everyKeyIsInTheCatalogWithSlovak() throws {
