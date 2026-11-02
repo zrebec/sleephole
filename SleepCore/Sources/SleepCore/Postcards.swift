@@ -93,6 +93,16 @@ public enum Postcards {
         "postcard-18": PostcardStudy(firstAuthor: "Basner", journal: "Sleep Health", year: 2023, pmid: "37076419"),  // 62 adults at home: sleep efficiency about 3 percent lower in the warmest fifth of bedroom readings; checked 2026-11-02
         "postcard-19": PostcardStudy(firstAuthor: "Hu", journal: "Crit Care", year: 2010, pmid: "20398302"),  // 14 healthy volunteers in simulated hospital noise and light: an eye mask and earplugs gave more REM sleep, fewer arousals; checked 2026-11-02
         "postcard-20": PostcardStudy(firstAuthor: "Riedy", journal: "Sleep Med Rev", year: 2021, pmid: "33007706"),  // review of 38 studies: evidence that continuous noise improves sleep is very low; results vary; checked 2026-11-02
+        "postcard-21": PostcardStudy(firstAuthor: "Heo", journal: "J Psychiatr Res", year: 2017, pmid: "28017916"),  // 22 adults, 2.5 h of phone games: less sleepy with normal screen light than with less blue light; checked 2026-11-02
+        "postcard-22": PostcardStudy(firstAuthor: "Hjetland", journal: "Front Psychiatry", year: 2025, pmid: "40270574"),  // survey of about 40,000 students: each extra hour of screens in bed went with about 24 min less sleep; checked 2026-11-02
+        "postcard-23": PostcardStudy(firstAuthor: "Espie", journal: "Behav Sleep Med", year: 2026, pmid: "42669058"),  // 44 adults, a quarter-of-an-hour rule for lying awake: faster sleep onset in diaries, home recordings unchanged; checked 2026-11-02
+        "postcard-24": PostcardStudy(firstAuthor: "Tang", journal: "J Behav Ther Exp Psychiatry", year: 2007, pmid: "16793001"),  // 60 good and poor sleepers: watching a clock brought more worry and slower sleep onset; checked 2026-11-02
+        "postcard-25": PostcardStudy(firstAuthor: "Kredlow", journal: "J Behav Med", year: 2015, pmid: "25596964"),  // review of 66 studies: regular exercise went with better sleep quality; intensity made no clear difference; checked 2026-11-02
+        "postcard-26": PostcardStudy(firstAuthor: "Stutz", journal: "Sports Med", year: 2019, pmid: "30374942"),  // review of 23 studies: one evening workout did not harm sleep; only hard exercise ending within 1 h of bed might; checked 2026-11-02
+        "postcard-27": PostcardStudy(firstAuthor: "Boubekri", journal: "J Clin Sleep Med", year: 2014, pmid: "24932139"),  // 49 office workers: windows at work went with better sleep, about 46 min more in the 21 with trackers; checked 2026-11-02
+        "postcard-28": PostcardStudy(firstAuthor: "Weighall", secondAuthor: "Kellar", journal: "Emerg Top Life Sci", year: 2023, pmid: "39288097"),  // review of 19 reviews: sleep strengthens memories, less so in older adults; checked 2026-11-02
+        "postcard-29": PostcardStudy(firstAuthor: "Boukhris", journal: "J Sleep Res", year: 2026, pmid: "40537913"),  // 14 student athletes: naps of 25 or 90 min ending at 15:00 did not change night sleep; checked 2026-11-02
+        "postcard-30": PostcardStudy(firstAuthor: "Mason", journal: "PNAS", year: 2022, pmid: "35286195"),  // 20 adults: one night with room light gave less deep and REM sleep and a faster heart rate; checked 2026-11-02
     ]
 
     /// The study of a postcard; nil when it has no study part (yet).

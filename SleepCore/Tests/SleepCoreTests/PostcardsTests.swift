@@ -32,7 +32,7 @@ import Testing
 
     @Test func theStudiesBelongToTheCatalogAndAreWellFormed() throws {
         #expect(Set(Postcards.studies.keys).isSubset(of: Set(BoxCatalog.ids(.postcard))))
-        #expect(Postcards.study(for: "postcard-05") != nil && Postcards.study(for: "postcard-17") == nil && Postcards.study(for: "postcard-21") == nil)
+        #expect(Postcards.study(for: "postcard-05") != nil && Postcards.study(for: "postcard-17") == nil)
         for (id, s) in Postcards.studies {
             #expect(!s.pmid.isEmpty && s.pmid.allSatisfy(\.isASCII) && s.pmid.allSatisfy(\.isNumber), "\(id) pmid")
             let url = try #require(URL(string: s.url), "\(id)")

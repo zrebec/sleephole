@@ -19197,28 +19197,6 @@
         }
       }
     },
-    "Try using your bed just for sleep – no eating or working in it – so it says “sleep” to your brain.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Try using your bed just for sleep – no eating or working in it – so it says “sleep” to your brain."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skús používať posteľ len na spanie – bez jedenia a práce – nech mozgu hovorí „spánok“."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zkus používat postel jen na spaní – nejez v ní a nepracuj – ať mozku říká „spánek“."
-          }
-        }
-      }
-    },
     "Turn the clock away": {
       "localizations": {
         "en": {
@@ -19263,94 +19241,6 @@
         }
       }
     },
-    "Every bit of movement": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every bit of movement"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aj trocha pohybu pomôže"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "I trocha pohybu pomůže"
-          }
-        }
-      }
-    },
-    "Even a little regular activity can help your sleep, and you can build it up gradually.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Even a little regular activity can help your sleep, and you can build it up gradually."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Už trochu pravidelného pohybu môže pomôcť spánku a môžeš ho pomaly pridávať."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "I trochu pravidelného pohybu může spánku pomoct a můžeš ho pomalu přidávat."
-          }
-        }
-      }
-    },
-    "Exercise earlier": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exercise earlier"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cvič skôr počas dňa"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cvič dřív během dne"
-          }
-        }
-      }
-    },
-    "Try to finish exercising at least 3 hours before your planned bedtime.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Try to finish exercising at least 3 hours before your planned bedtime."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skús dokončiť cvičenie aspoň 3 hodiny pred plánovaným spaním."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zkus dokončit cvičení aspoň 3 hodiny před plánovaným spaním."
-          }
-        }
-      }
-    },
     "Catch some daylight": {
       "localizations": {
         "en": {
@@ -19362,35 +19252,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ranné svetlo"
+            "value": "Trochu denného svetla"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ranní světlo"
-          }
-        }
-      }
-    },
-    "About 30 minutes outside early in the day helps – even a cloudy sky beats dim indoor light.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "About 30 minutes outside early in the day helps – even a cloudy sky beats dim indoor light."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Asi 30 minút vonku v prvých hodinách dňa pomôže – aj zamračená obloha je lepšia než slabé svetlo v interiéri."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pomůže zhruba 30 minut venku v prvních hodinách dne – i zatažená obloha je lepší než slabé světlo v interiéru."
+            "value": "Trochu denního světla"
           }
         }
       }
@@ -19721,50 +19589,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Otoč mobil displejem dolů, ať tě v noci neruší jeho světlo."
-          }
-        }
-      }
-    },
-    "The 20-minute rule": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The 20-minute rule"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pravidlo 20 minút"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pravidlo 20 minut"
-          }
-        }
-      }
-    },
-    "Still awake after about 20 minutes? Get up and do something calm, like reading a book, then come back when sleep returns.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Still awake after about 20 minutes? Get up and do something calm, like reading a book, then come back when sleep returns."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stále hore po zhruba 20 minútach? Vstaň, rob niečo pokojné, napríklad čítaj, a vráť sa, keď sa spánok vráti."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nespíš ani po zhruba 20 minutách? Vstaň, dělej něco klidného, třeba si čti, a vrať se, až přijde ospalost."
           }
         }
       }
@@ -23153,6 +22977,842 @@
           "stringUnit": {
             "state": "translated",
             "value": "Měkké špunty do uší mohou ztlumit hluk a někomu se líbí jemné zvuky jako déšť – zkus, co ti vyhovuje."
+          }
+        }
+      }
+    },
+    "Bright screen light, especially its blue part, can keep you feeling more awake. Face down, its glow stays off your eyes and the room stays dark.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bright screen light, especially its blue part, can keep you feeling more awake. Face down, its glow stays off your eyes and the room stays dark."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jasné svetlo displeja, najmä jeho modrá zložka, môže pôsobiť povzbudzujúco. Displejom nadol jeho žiara nesvieti do očí a v izbe zostane tma."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jasné světlo displeje, hlavně jeho modrá složka, může působit povzbudivě. Displejem dolů jeho záře nesvítí do očí a v pokoji zůstane tma."
+          }
+        }
+      }
+    },
+    "In a 2017 trial, 22 healthy adults played phone games for 2.5 hours in the evening, once with normal screen light and once with less blue light. With normal light they felt significantly less sleepy.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2017 trial, 22 healthy adults played phone games for 2.5 hours in the evening, once with normal screen light and once with less blue light. With normal light they felt significantly less sleepy."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokuse z roku 2017 hralo 22 zdravých dospelých večer 2,5 hodiny hry na telefóne, raz s bežným svetlom displeja a raz s menším podielom modrého svetla. S bežným svetlom boli výrazne menej ospalí."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokusu z roku 2017 hrálo 22 zdravých dospělých večer 2,5 hodiny hry na telefonu, jednou s běžným světlem displeje a jednou s menším podílem modrého světla. S běžným světlem byli výrazně méně ospalí."
+          }
+        }
+      }
+    },
+    "A small lab trial (22 people). Hormone changes were not statistically significant, and a phone lying face down was not tested.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A small lab trial (22 people). Hormone changes were not statistically significant, and a phone lying face down was not tested."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malý laboratórny pokus (22 ľudí). Zmeny hormónov neboli štatisticky významné a telefón ležiaci displejom nadol sa netestoval."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malý laboratorní pokus (22 lidí). Změny hormonů nebyly statisticky významné a telefon ležící displejem dolů se netestoval."
+          }
+        }
+      }
+    },
+    "Time on a screen in bed often comes straight out of sleep – one more video, one more message, and it is later than you think.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time on a screen in bed often comes straight out of sleep – one more video, one more message, and it is later than you think."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas pri obrazovke v posteli často ide rovno na úkor spánku – ešte jedno video, ešte jedna správa a zrazu je neskôr, než si myslíš."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas u obrazovky v posteli často jde přímo na úkor spánku – ještě jedno video, ještě jedna zpráva a najednou je později, než si myslíš."
+          }
+        }
+      }
+    },
+    "In a 2025 survey of almost 40,000 Norwegian students aged 18–28 who used screens in bed, each extra hour of screen time in bed went with about 24 min less sleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2025 survey of almost 40,000 Norwegian students aged 18–28 who used screens in bed, each extra hour of screen time in bed went with about 24 min less sleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V prieskume z roku 2025 medzi takmer 40 000 nórskymi študentmi vo veku 18 až 28 rokov, ktorí v posteli používali obrazovky, súvisela každá ďalšia hodina pri obrazovke v posteli s asi o 24 min kratším spánkom."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V průzkumu z roku 2025 mezi téměř 40 000 norskými studenty ve věku 18 až 28 let, kteří v posteli používali obrazovky, souvisela každá další hodina u obrazovky v posteli s asi o 24 min kratším spánkem."
+          }
+        }
+      }
+    },
+    "A survey, so it shows a link, not a cause, and the students reported their own sleep. The link was the same for social media and other screen uses.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A survey, so it shows a link, not a cause, and the students reported their own sleep. The link was the same for social media and other screen uses."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prieskum ukazuje súvislosť, nie príčinu, a spánok uvádzali sami študenti. Pri sociálnych sieťach aj iných činnostiach na obrazovke bola súvislosť rovnaká."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Průzkum ukazuje souvislost, ne příčinu, a spánek uváděli sami studenti. U sociálních sítí i jiných činností na obrazovce byla souvislost stejná."
+          }
+        }
+      }
+    },
+    "Lying awake in bed can teach the brain that bed means “awake”. Getting up for something calm, then coming back when sleepy, helps bed mean sleep again.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lying awake in bed can teach the brain that bed means “awake”. Getting up for something calm, then coming back when sleepy, helps bed mean sleep again."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ak ležíš dlho hore, mozog sa môže naučiť, že posteľ znamená „bdenie“. Vstať, venovať sa niečomu pokojnému a vrátiť sa, keď príde spánok, pomáha, aby posteľ znova znamenala spánok."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Když ležíš dlouho vzhůru, mozek se může naučit, že postel znamená „bdění“. Vstát, věnovat se něčemu klidnému a vrátit se, až přijde spánek, pomáhá, aby postel zase znamenala spánek."
+          }
+        }
+      }
+    },
+    "In a 2026 trial, 44 adults who slept poorly either learned a “quarter-of-an-hour rule” for lying awake or only kept a sleep diary. The rule groups reported falling asleep faster and less time awake, but home recordings did not improve.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2026 trial, 44 adults who slept poorly either learned a “quarter-of-an-hour rule” for lying awake or only kept a sleep diary. The rule groups reported falling asleep faster and less time awake, but home recordings did not improve."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokuse z roku 2026 sa 44 dospelých, ktorí spali zle, buď naučilo „pravidlo štvrťhodiny“ pre ležanie hore, alebo si len viedlo spánkový denník. S pravidlom uvádzali rýchlejšie zaspávanie a kratšie bdenie, merania spánku doma sa však nezlepšili."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokusu z roku 2026 se 44 dospělých, kteří spali špatně, buď naučilo „pravidlo čtvrthodiny“ pro ležení vzhůru, nebo si jen vedlo spánkový deník. S pravidlem uváděli rychlejší usínání a kratší bdění, měření spánku doma se ale nezlepšila."
+          }
+        }
+      }
+    },
+    "A small trial (44 adults), and everyone knew their group. Sleep improved in their own diaries, not in the recordings, and the rule helped when kept in bed too.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A small trial (44 adults), and everyone knew their group. Sleep improved in their own diaries, not in the recordings, and the rule helped when kept in bed too."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malý pokus (44 dospelých) a každý vedel, do ktorej skupiny patrí. Spánok sa zlepšil vo vlastných denníkoch, nie v záznamoch, a pravidlo pomohlo aj vtedy, keď ľudia zostali v posteli."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malý pokus (44 dospělých) a každý věděl, do které skupiny patří. Spánek se zlepšil ve vlastních denících, ne v záznamech, a pravidlo pomohlo i tehdy, když lidé zůstali v posteli."
+          }
+        }
+      }
+    },
+    "Watching the minutes tick by invites counting – “only five hours left!” – and worry keeps you awake. With the clock turned away, there is nothing to count.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Watching the minutes tick by invites counting – “only five hours left!” – and worry keeps you awake. With the clock turned away, there is nothing to count."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sledovanie ubiehajúcich minút navádza na počítanie – „už len päť hodín!“ – a starosti ťa držia hore. S otočenými hodinami nie je čo počítať."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sledování ubíhajících minut svádí k počítání – „už jen pět hodin!“ – a starosti tě drží vzhůru. S otočenými hodinami není co počítat."
+          }
+        }
+      }
+    },
+    "In a 2007 experiment, 60 people – 30 good sleepers and 30 poor sleepers – were told to watch a clock or not while trying to fall asleep. Clock-watchers worried more and took longer to fall asleep, good sleepers too.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2007 experiment, 60 people – 30 good sleepers and 30 poor sleepers – were told to watch a clock or not while trying to fall asleep. Clock-watchers worried more and took longer to fall asleep, good sleepers too."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokuse z roku 2007 dostalo 60 ľudí – 30 dobrých a 30 horších spáčov – pokyn sledovať hodiny, alebo nie, kým sa snažia zaspať. Tí, čo hodiny sledovali, mali pred spánkom viac starostí a zaspávali dlhšie, dobrí spáči tiež."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokusu z roku 2007 dostalo 60 lidí – 30 dobrých a 30 horších spáčů – pokyn sledovat hodiny, nebo ne, zatímco se snaží usnout. Ti, kdo hodiny sledovali, měli před spaním víc starostí a usínali déle, dobří spáči také."
+          }
+        }
+      }
+    },
+    "A small, older study (60 people). A second experiment, in adults with long-lasting sleep trouble, pointed the same way.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A small, older study (60 people). A second experiment, in adults with long-lasting sleep trouble, pointed the same way."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malá, staršia štúdia (60 ľudí). Druhý pokus s dospelými s dlhodobými ťažkosťami so spánkom dopadol podobne."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malá, starší studie (60 lidí). Druhý pokus s dospělými s dlouhodobými potížemi se spánkem vyzněl stejně."
+          }
+        }
+      }
+    },
+    "Regular movement leaves the body more ready to rest at night. Pick something you enjoy enough to keep doing – sticking with it is what counts.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regular movement leaves the body more ready to rest at night. Pick something you enjoy enough to keep doing – sticking with it is what counts."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po pravidelnom pohybe je telo večer lepšie pripravené na odpočinok. Vyber si niečo, čo ťa baví natoľko, že pri tom vydržíš – rozhoduje pravidelnosť."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po pravidelném pohybu je tělo večer lépe připravené na odpočinek. Vyber si něco, co tě baví natolik, že u toho vydržíš – rozhoduje pravidelnost."
+          }
+        }
+      }
+    },
+    "A 2015 review pooled 66 studies. Regular exercise went with moderately better sleep quality and somewhat quicker falling asleep. How hard people exercised made no clear difference.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A 2015 review pooled 66 studies. Regular exercise went with moderately better sleep quality and somewhat quicker falling asleep. How hard people exercised made no clear difference."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prehľad z roku 2015 spojil 66 štúdií. Pravidelné cvičenie súviselo so stredne veľkým zlepšením kvality spánku a o niečo rýchlejším zaspávaním. Výsledky jasne nezáviseli od toho, ako intenzívne ľudia cvičili."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přehled z roku 2015 spojil 66 studií. Pravidelné cvičení souviselo se středně velkým zlepšením kvality spánku a o něco rychlejším usínáním. Výsledky jasně nezávisely na tom, jak intenzivně lidé cvičili."
+          }
+        }
+      }
+    },
+    "Mixed kinds of studies, and the effects were small to moderate. How long people exercised and how well they kept it up changed the results.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mixed kinds of studies, and the effects were small to moderate. How long people exercised and how well they kept it up changed the results."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rôznorodé štúdie a účinky boli malé až stredné. Výsledky menilo, ako dlho ľudia cvičili a ako dobre pri tom vydržali."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Různorodé studie a účinky byly malé až střední. Výsledky měnilo, jak dlouho lidé cvičili a jak dobře u toho vydrželi."
+          }
+        }
+      }
+    },
+    "After hard exercise the body is warm and revved up, and it needs a little time to calm down again. Gentle movement in the evening doesn't need that pause.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "After hard exercise the body is warm and revved up, and it needs a little time to calm down again. Gentle movement in the evening doesn't need that pause."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po namáhavom cvičení je telo zahriate a čulé a potrebuje chvíľu, kým sa znova upokojí. Jemný večerný pohyb takú prestávku nepotrebuje."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po namáhavém cvičení je tělo zahřáté a čilé a potřebuje chvíli, než se zase uklidní. Jemný večerní pohyb takovou pauzu nepotřebuje."
+          }
+        }
+      }
+    },
+    "A 2019 review pooled 23 studies of healthy adults with one evening workout or none. On average evening exercise did not harm sleep – deep sleep even rose a little. Only hard exercise ending within an hour of bedtime might harm it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A 2019 review pooled 23 studies of healthy adults with one evening workout or none. On average evening exercise did not harm sleep – deep sleep even rose a little. Only hard exercise ending within an hour of bedtime might harm it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prehľad z roku 2019 spojil 23 štúdií so zdravými dospelými, ktorí si večer raz zacvičili, alebo nie. Večerné cvičenie v priemere spánku neublížilo – hlbokého spánku dokonca trochu pribudlo. Uškodiť by mu mohlo len namáhavé cvičenie, ktoré skončí do hodiny pred spaním."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přehled z roku 2019 spojil 23 studií se zdravými dospělými, kteří si večer jednou zacvičili, nebo ne. Večerní cvičení v průměru spánku neublížilo – hlubokého spánku dokonce trochu přibylo. Uškodit by mu mohlo jen namáhavé cvičení, které skončí do hodiny před spaním."
+          }
+        }
+      }
+    },
+    "Each study tested one evening. The “within an hour” warning is only a possibility, and some results disappeared when a single study was left out.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Each study tested one evening. The “within an hour” warning is only a possibility, and some results disappeared when a single study was left out."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každá štúdia skúšala jeden večer. Varovanie „do hodiny pred spaním“ je len možnosť a niektoré výsledky zmizli po vynechaní jedinej štúdie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každá studie zkoušela jeden večer. Varování „do hodiny před spaním“ je jen možnost a některé výsledky zmizely po vynechání jediné studie."
+          }
+        }
+      }
+    },
+    "Daylight is the main clue your body clock uses to tell day from night. A bright day helps your body know when it is time to get sleepy later.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daylight is the main clue your body clock uses to tell day from night. A bright day helps your body know when it is time to get sleepy later."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denné svetlo je hlavný signál, podľa ktorého telesné hodiny rozlišujú deň od noci. Vďaka jasnému dňu telo lepšie vie, kedy má večer prísť ospalosť."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denní světlo je hlavní signál, podle kterého tělesné hodiny rozlišují den od noci. Díky jasnému dni tělo lépe ví, kdy má večer přijít ospalost."
+          }
+        }
+      }
+    },
+    "In a 2014 pilot study, 49 office workers were compared: 27 with no daylight at work, 22 with windows. Workers with windows reported better sleep and, by the sleep trackers worn by 21 of the workers, slept about 46 min more a night.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2014 pilot study, 49 office workers were compared: 27 with no daylight at work, 22 with windows. Workers with windows reported better sleep and, by the sleep trackers worn by 21 of the workers, slept about 46 min more a night."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pilotnej štúdii z roku 2014 porovnali 49 kancelárskych pracovníkov: 27 bez denného svetla v práci a 22 s oknami. Pracovníci s oknami uvádzali lepší spánok a podľa náramkov, ktoré nosilo 21 účastníkov, spali približne o 46 min dlhšie za noc."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pilotní studii z roku 2014 porovnali 49 kancelářských pracovníků: 27 bez denního světla v práci a 22 s okny. Pracovníci s okny uváděli lepší spánek a podle náramků, které nosilo 21 účastníků, spali přibližně o 46 min déle za noc."
+          }
+        }
+      }
+    },
+    "A small pilot with volunteers, so a link, not proof. Trackers were worn by only 21 people, and morning light did not differ between the groups.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A small pilot with volunteers, so a link, not proof. Trackers were worn by only 21 people, and morning light did not differ between the groups."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malá pilotná štúdia s dobrovoľníkmi, teda súvislosť, nie dôkaz. Náramok nosilo len 21 ľudí a ranné svetlo sa medzi skupinami nelíšilo."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Malá pilotní studie s dobrovolníky, tedy souvislost, ne důkaz. Náramek nosilo jen 21 lidí a ranní světlo se mezi skupinami nelišilo."
+          }
+        }
+      }
+    },
+    "While you sleep, the brain replays what you learned and files it away, so it sticks. A rested brain also finds it easier to concentrate and think clearly.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "While you sleep, the brain replays what you learned and files it away, so it sticks. A rested brain also finds it easier to concentrate and think clearly."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Počas spánku mozog prehráva naučené a ukladá to na správne miesto, aby to zostalo. Oddýchnutý mozog sa tiež ľahšie sústredí a jasnejšie myslí."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Během spánku mozek přehrává naučené a ukládá to na správné místo, aby to zůstalo. Odpočatý mozek se také snáz soustředí a jasněji myslí."
+          }
+        }
+      }
+    },
+    "A 2023 review gathered 19 earlier reviews and meta-analyses on healthy children and adults. Their conclusion: sleep strengthens memories, especially complex facts, though the benefit was noticeably smaller in older adults.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A 2023 review gathered 19 earlier reviews and meta-analyses on healthy children and adults. Their conclusion: sleep strengthens memories, especially complex facts, though the benefit was noticeably smaller in older adults."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prehľad z roku 2023 zhromaždil 19 predchádzajúcich prehľadov a metaanalýz o zdravých deťoch a dospelých. Záver: spánok posilňuje pamäť, hlavne pri zložitých faktoch, no u starších dospelých bol prínos citeľne menší."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přehled z roku 2023 shromáždil 19 předchozích přehledů a metaanalýz o zdravých dětech a dospělých. Závěr: spánek posiluje paměť, hlavně u složitých faktů, ale u starších dospělých byl přínos znatelně menší."
+          }
+        }
+      }
+    },
+    "A summary of other reviews, not a new experiment. Some benefits, such as for children's skills, were inconsistent, and the focus is memory more than “clear thinking”.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A summary of other reviews, not a new experiment. Some benefits, such as for children's skills, were inconsistent, and the focus is memory more than “clear thinking”."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Súhrn iných prehľadov, nie nový pokus. Niektoré prínosy, napríklad pre zručnosti detí, boli nejednotné a ide skôr o pamäť než o „jasné myslenie“."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Souhrn jiných přehledů, ne nový pokus. Některé přínosy, například pro dovednosti dětí, byly nejednotné a jde spíš o paměť než o „jasné myšlení“."
+          }
+        }
+      }
+    },
+    "A nap uses up some of the sleepiness that builds through the day, so a late one leaves less for the evening. Ending it by mid-afternoon helps bedtime feel properly sleepy.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A nap uses up some of the sleepiness that builds through the day, so a late one leaves less for the evening. Ending it by mid-afternoon helps bedtime feel properly sleepy."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Šlofík minie časť ospalosti, ktorá sa cez deň hromadí, takže po neskorom jej na večer zostane menej. Keď skončí do polovice popoludnia, večer príde ospalosť ľahšie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Šlofík spotřebuje část ospalosti, která se přes den hromadí, takže po pozdním jí na večer zbude méně. Když skončí do poloviny odpoledne, večer přijde ospalost snáz."
+          }
+        }
+      }
+    },
+    "In a 2026 trial, 14 student athletes took no nap, a 25-minute or a 90-minute nap, all ending at 3 p.m. Their sleep that night barely changed: about 7 hours each time.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2026 trial, 14 student athletes took no nap, a 25-minute or a 90-minute nap, all ending at 3 p.m. Their sleep that night barely changed: about 7 hours each time."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokuse z roku 2026 si 14 študentov športovcov dalo šlofík 25 min, 90 min, alebo žiadny, vždy do 15:00. Ich spánok v noci sa takmer nezmenil: zakaždým asi 7 hodín."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V pokusu z roku 2026 si 14 studentů sportovců dalo šlofík 25 min, 90 min, nebo žádný, vždy do 15:00. Jejich spánek v noci se téměř nezměnil: pokaždé asi 7 hodin."
+          }
+        }
+      }
+    },
+    "Only 14 student athletes who nap at least once a week. Naps ending at 3 p.m. were fine, but later naps were not tested.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only 14 student athletes who nap at least once a week. Naps ending at 3 p.m. were fine, but later naps were not tested."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Len 14 študentov športovcov, ktorí si zdriemnu aspoň raz za týždeň. Šlofík končiaci o 15:00 nevadil, neskoršie sa však netestovali."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jen 14 studentů sportovců, kteří si zdřímnou aspoň jednou týdně. Šlofík končící v 15:00 nevadil, pozdější se ale netestovaly."
+          }
+        }
+      }
+    },
+    "Bright light tells the body it is daytime. A dim night light is enough to find your way and keeps your body in night mode.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bright light tells the body it is daytime. A dim night light is enough to find your way and keeps your body in night mode."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jasné svetlo telu hovorí, že je deň. Slabé nočné svetielko stačí na nájdenie cesty a necháva telo v nočnom režime."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jasné světlo tělu říká, že je den. Slabé noční světýlko stačí na nalezení cesty a nechává tělo v nočním režimu."
+          }
+        }
+      }
+    },
+    "In a 2022 lab study, 20 healthy adults slept in dim light (under 3 lux); on night two, half had room light (100 lux). With the light on, a smaller part of their sleep was deep or REM sleep, and their hearts beat faster during sleep.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a 2022 lab study, 20 healthy adults slept in dim light (under 3 lux); on night two, half had room light (100 lux). With the light on, a smaller part of their sleep was deep or REM sleep, and their hearts beat faster during sleep."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V laboratórnej štúdii z roku 2022 spalo 20 zdravých dospelých v tlmenom svetle (pod 3 lux), no druhú noc mala polovica z nich bežné svetlo v izbe (100 lux). Pri rozsvietenom svetle tvoril hlboký a REM spánok menšiu časť ich spánku a srdce im počas spánku bilo rýchlejšie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V laboratorní studii z roku 2022 spalo 20 zdravých dospělých v tlumeném světle (pod 3 lux), ale druhou noc měla polovina z nich běžné světlo v místnosti (100 lux). Při rozsvíceném světle tvořil hluboký a REM spánek menší část jejich spánku a srdce jim během spánku bilo rychleji."
+          }
+        }
+      }
+    },
+    "Tiny study (20 people, one lit night). It tested sleeping with the light on, not getting up for a moment, and how well people said they slept did not change.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tiny study (20 people, one lit night). It tested sleeping with the light on, not getting up for a moment, and how well people said they slept did not change."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maličká štúdia (20 ľudí, jedna noc so svetlom). Skúmala spanie pri svetle, nie vstávanie na chvíľu, a ako dobre ľudia hodnotili svoj spánok, sa nezmenilo."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maličká studie (20 lidí, jedna noc se světlem). Zkoumala spaní se světlem, ne vstávání na chvíli, a jak lidé hodnotili svůj spánek, se nezměnilo."
+          }
+        }
+      }
+    },
+    "Try keeping your bed for sleep – leave phones and other screens out of it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try keeping your bed for sleep – leave phones and other screens out of it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skús mať posteľ len na spanie – mobil a iné obrazovky nechaj mimo nej."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zkus mít postel jen na spaní – mobil a jiné obrazovky nech mimo ni."
+          }
+        }
+      }
+    },
+    "The quarter-hour rule": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The quarter-hour rule"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pravidlo štvrťhodiny"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pravidlo čtvrthodiny"
+          }
+        }
+      }
+    },
+    "Still awake after about a quarter of an hour? Get up and do something calm, like reading a book, then come back when sleep returns.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Still awake after about a quarter of an hour? Get up and do something calm, like reading a book, then come back when sleep returns."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stále hore po zhruba štvrťhodine? Vstaň, rob niečo pokojné, napríklad čítaj, a vráť sa, keď sa spánok vráti."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nespíš ani po zhruba čtvrthodině? Vstaň, dělej něco klidného, třeba si čti, a vrať se, až přijde ospalost."
+          }
+        }
+      }
+    },
+    "Keep moving": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep moving"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hýb sa pravidelne"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hýbej se pravidelně"
+          }
+        }
+      }
+    },
+    "Regular movement can help your sleep – and it doesn't have to be hard training.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regular movement can help your sleep – and it doesn't have to be hard training."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pravidelný pohyb môže pomôcť spánku – a nemusí to byť tvrdý tréning."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pravidelný pohyb může spánku pomoct – a nemusí to být tvrdý trénink."
+          }
+        }
+      }
+    },
+    "Hard workouts earlier": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hard workouts earlier"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Namáhavý tréning skôr"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Namáhavý trénink dřív"
+          }
+        }
+      }
+    },
+    "Evening exercise is usually fine for sleep – just finish hard workouts at least an hour before bed.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Evening exercise is usually fine for sleep – just finish hard workouts at least an hour before bed."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večerné cvičenie spánku zvyčajne neprekáža – len namáhavý tréning skonči aspoň hodinu pred spaním."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večerní cvičení spánku obvykle nevadí – jen namáhavý trénink skonči aspoň hodinu před spaním."
+          }
+        }
+      }
+    },
+    "Catch some daylight every day – even a cloudy sky is far brighter than indoor light.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catch some daylight every day – even a cloudy sky is far brighter than indoor light."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dopraj si každý deň trochu denného svetla – aj zamračená obloha je oveľa jasnejšia než svetlo v interiéri."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dopřej si každý den trochu denního světla – i zatažená obloha je mnohem jasnější než světlo v interiéru."
           }
         }
       }

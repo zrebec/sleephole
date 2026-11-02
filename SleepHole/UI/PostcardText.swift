@@ -52,17 +52,17 @@ enum PostcardText {
         "Phone face down",
         "Turn your phone face down, so its glow doesn't reach you at night.",
         "Bed is for sleep",
-        "Try using your bed just for sleep – no eating or working in it – so it says “sleep” to your brain.",
-        "The 20-minute rule",
-        "Still awake after about 20 minutes? Get up and do something calm, like reading a book, then come back when sleep returns.",
+        "Try keeping your bed for sleep – leave phones and other screens out of it.",
+        "The quarter-hour rule",
+        "Still awake after about a quarter of an hour? Get up and do something calm, like reading a book, then come back when sleep returns.",
         "Turn the clock away",
         "Turn clocks away from the bed – not seeing the minutes tick by is one less thing to think about.",
-        "Every bit of movement",
-        "Even a little regular activity can help your sleep, and you can build it up gradually.",
-        "Exercise earlier",
-        "Try to finish exercising at least 3 hours before your planned bedtime.",
+        "Keep moving",
+        "Regular movement can help your sleep – and it doesn't have to be hard training.",
+        "Hard workouts earlier",
+        "Evening exercise is usually fine for sleep – just finish hard workouts at least an hour before bed.",
         "Catch some daylight",
-        "About 30 minutes outside early in the day helps – even a cloudy sky beats dim indoor light.",
+        "Catch some daylight every day – even a cloudy sky is far brighter than indoor light.",
         "Sleep helps you learn",
         "While you sleep, your brain stores memories – good sleep helps learning and clear thinking.",
         "Naps before 3 p.m.",
@@ -119,6 +119,16 @@ enum PostcardText {
         "Your body cools down a little as you fall asleep. A cool room helps that along, while a warm one can get in the way and wake you more often.",
         "Light tells your brain it is daytime and holds back your body's own sleep hormone. Keeping your eyes in the dark lets that hormone do its work through the night.",
         "Steady, soft sounds can cover sudden noises, which is why some people like rain or a fan. But a quiet room is the safest start, because noise can also get in the way of good sleep.",
+        "Bright screen light, especially its blue part, can keep you feeling more awake. Face down, its glow stays off your eyes and the room stays dark.",
+        "Time on a screen in bed often comes straight out of sleep – one more video, one more message, and it is later than you think.",
+        "Lying awake in bed can teach the brain that bed means “awake”. Getting up for something calm, then coming back when sleepy, helps bed mean sleep again.",
+        "Watching the minutes tick by invites counting – “only five hours left!” – and worry keeps you awake. With the clock turned away, there is nothing to count.",
+        "Regular movement leaves the body more ready to rest at night. Pick something you enjoy enough to keep doing – sticking with it is what counts.",
+        "After hard exercise the body is warm and revved up, and it needs a little time to calm down again. Gentle movement in the evening doesn't need that pause.",
+        "Daylight is the main clue your body clock uses to tell day from night. A bright day helps your body know when it is time to get sleepy later.",
+        "While you sleep, the brain replays what you learned and files it away, so it sticks. A rested brain also finds it easier to concentrate and think clearly.",
+        "A nap uses up some of the sleepiness that builds through the day, so a late one leaves less for the evening. Ending it by mid-afternoon helps bedtime feel properly sleepy.",
+        "Bright light tells the body it is daytime. A dim night light is enough to find your way and keeps your body in night mode.",
         "A 2023 review of 24 studies found that caffeine cut sleep by about 45 min. To avoid that loss, it estimated that a regular cup of coffee should be drunk at least 8.8 hours before bed.",
         "In a 2024 study, 74 university students wore a wrist monitor for 14 nights. On nights after an unpleasant conversation before bed, they slept about 14 min less than on other nights.",
         "In a 2013 trial, 12 healthy adults took 400 mg of caffeine (about four cups of coffee) right at bedtime, or 3 or 6 hours before. Each time, a headband monitor showed over an hour less sleep than with a placebo.",
@@ -128,6 +138,16 @@ enum PostcardText {
         "In a 2023 study, 62 adults wore a wrist monitor at home for 14 nights while their bedrooms were measured. In the warmest fifth of readings, sleep efficiency (time in bed spent asleep) was about 3 percent lower than in the coolest.",
         "In a 2010 sleep-lab study, 14 healthy volunteers slept with recorded hospital noise and the light on, with and without an eye mask and earplugs. With them, they had more REM sleep and fewer brief wake-ups.",
         "A 2021 review of 38 studies on steady background noise, like white noise, as a sleep aid found mixed results, from helping sleep to disturbing it. The authors rated the evidence that it improves sleep as very low quality.",
+        "In a 2017 trial, 22 healthy adults played phone games for 2.5 hours in the evening, once with normal screen light and once with less blue light. With normal light they felt significantly less sleepy.",
+        "In a 2025 survey of almost 40,000 Norwegian students aged 18–28 who used screens in bed, each extra hour of screen time in bed went with about 24 min less sleep.",
+        "In a 2026 trial, 44 adults who slept poorly either learned a “quarter-of-an-hour rule” for lying awake or only kept a sleep diary. The rule groups reported falling asleep faster and less time awake, but home recordings did not improve.",
+        "In a 2007 experiment, 60 people – 30 good sleepers and 30 poor sleepers – were told to watch a clock or not while trying to fall asleep. Clock-watchers worried more and took longer to fall asleep, good sleepers too.",
+        "A 2015 review pooled 66 studies. Regular exercise went with moderately better sleep quality and somewhat quicker falling asleep. How hard people exercised made no clear difference.",
+        "A 2019 review pooled 23 studies of healthy adults with one evening workout or none. On average evening exercise did not harm sleep – deep sleep even rose a little. Only hard exercise ending within an hour of bedtime might harm it.",
+        "In a 2014 pilot study, 49 office workers were compared: 27 with no daylight at work, 22 with windows. Workers with windows reported better sleep and, by the sleep trackers worn by 21 of the workers, slept about 46 min more a night.",
+        "A 2023 review gathered 19 earlier reviews and meta-analyses on healthy children and adults. Their conclusion: sleep strengthens memories, especially complex facts, though the benefit was noticeably smaller in older adults.",
+        "In a 2026 trial, 14 student athletes took no nap, a 25-minute or a 90-minute nap, all ending at 3 p.m. Their sleep that night barely changed: about 7 hours each time.",
+        "In a 2022 lab study, 20 healthy adults slept in dim light (under 3 lux); on night two, half had room light (100 lux). With the light on, a smaller part of their sleep was deep or REM sleep, and their hearts beat faster during sleep.",
         "It pools 24 studies, so it is broader than one trial. The 8.8 hours is an estimate for a regular cup of coffee (250 mL), not an exact limit for everyone.",
         "A link, not a cause: 74 students, sleep judged by a wrist monitor, habits reported by themselves. Many other habits in the study showed no link at all.",
         "Only 12 adults, a high dose, and a company grant paid for it. Warm milk and herbal tea were not tested – the sure gain is skipping the caffeine.",
@@ -137,6 +157,16 @@ enum PostcardText {
         "A link, not a cause: 62 adults, and the study names no best temperature. Most rated their room “just right” whatever it measured, so people may not notice the difference.",
         "Only 14 people, a mask and earplugs tested together, in a noisy room with the light on. It does not prove a mask alone helps at home.",
         "Very low quality evidence and mixed results, so soft sounds are a matter of taste, not proven benefit. The review did not look at earplugs.",
+        "A small lab trial (22 people). Hormone changes were not statistically significant, and a phone lying face down was not tested.",
+        "A survey, so it shows a link, not a cause, and the students reported their own sleep. The link was the same for social media and other screen uses.",
+        "A small trial (44 adults), and everyone knew their group. Sleep improved in their own diaries, not in the recordings, and the rule helped when kept in bed too.",
+        "A small, older study (60 people). A second experiment, in adults with long-lasting sleep trouble, pointed the same way.",
+        "Mixed kinds of studies, and the effects were small to moderate. How long people exercised and how well they kept it up changed the results.",
+        "Each study tested one evening. The “within an hour” warning is only a possibility, and some results disappeared when a single study was left out.",
+        "A small pilot with volunteers, so a link, not proof. Trackers were worn by only 21 people, and morning light did not differ between the groups.",
+        "A summary of other reviews, not a new experiment. Some benefits, such as for children's skills, were inconsistent, and the focus is memory more than “clear thinking”.",
+        "Only 14 student athletes who nap at least once a week. Naps ending at 3 p.m. were fine, but later naps were not tested.",
+        "Tiny study (20 people, one lit night). It tested sleeping with the light on, not getting up for a moment, and how well people said they slept did not change.",
     ]
 
     private static let stamps = ["⏰", "🛋️", "🌙", "🗓️", "📵", "📖", "🛁", "🔔", "📝", "🧘", "☕️", "💬", "🍵", "🛏️", "🍪", "🍽️", "💧", "❄️", "🌑", "🌧️", "📴", "🛌", "🚶", "🕰️", "🏃", "⏳", "☀️", "🧠", "🕒", "🕯️"]
@@ -174,10 +204,10 @@ enum PostcardText {
         case 20: L("Quiet or softly noisy")
         case 21: L("Phone face down")
         case 22: L("Bed is for sleep")
-        case 23: L("The 20-minute rule")
+        case 23: L("The quarter-hour rule")
         case 24: L("Turn the clock away")
-        case 25: L("Every bit of movement")
-        case 26: L("Exercise earlier")
+        case 25: L("Keep moving")
+        case 26: L("Hard workouts earlier")
         case 27: L("Catch some daylight")
         case 28: L("Sleep helps you learn")
         case 29: L("Naps before 3 p.m.")
@@ -209,12 +239,12 @@ enum PostcardText {
         case 19: L("Blackout curtains or an eye mask keep the light off your eyes while you sleep.")
         case 20: L("Soft earplugs can dull noise, and some people like gentle sounds such as rain – see what suits you.")
         case 21: L("Turn your phone face down, so its glow doesn't reach you at night.")
-        case 22: L("Try using your bed just for sleep – no eating or working in it – so it says “sleep” to your brain.")
-        case 23: L("Still awake after about 20 minutes? Get up and do something calm, like reading a book, then come back when sleep returns.")
+        case 22: L("Try keeping your bed for sleep – leave phones and other screens out of it.")
+        case 23: L("Still awake after about a quarter of an hour? Get up and do something calm, like reading a book, then come back when sleep returns.")
         case 24: L("Turn clocks away from the bed – not seeing the minutes tick by is one less thing to think about.")
-        case 25: L("Even a little regular activity can help your sleep, and you can build it up gradually.")
-        case 26: L("Try to finish exercising at least 3 hours before your planned bedtime.")
-        case 27: L("About 30 minutes outside early in the day helps – even a cloudy sky beats dim indoor light.")
+        case 25: L("Regular movement can help your sleep – and it doesn't have to be hard training.")
+        case 26: L("Evening exercise is usually fine for sleep – just finish hard workouts at least an hour before bed.")
+        case 27: L("Catch some daylight every day – even a cloudy sky is far brighter than indoor light.")
         case 28: L("While you sleep, your brain stores memories – good sleep helps learning and clear thinking.")
         case 29: L("Try to finish any nap before 3 p.m., so the evening can get properly sleepy.")
         case 30: L("If you get up in the night, keep the lights low – a dim night light is fine.")
@@ -244,6 +274,16 @@ enum PostcardText {
         case 18: L("Your body cools down a little as you fall asleep. A cool room helps that along, while a warm one can get in the way and wake you more often.")
         case 19: L("Light tells your brain it is daytime and holds back your body's own sleep hormone. Keeping your eyes in the dark lets that hormone do its work through the night.")
         case 20: L("Steady, soft sounds can cover sudden noises, which is why some people like rain or a fan. But a quiet room is the safest start, because noise can also get in the way of good sleep.")
+        case 21: L("Bright screen light, especially its blue part, can keep you feeling more awake. Face down, its glow stays off your eyes and the room stays dark.")
+        case 22: L("Time on a screen in bed often comes straight out of sleep – one more video, one more message, and it is later than you think.")
+        case 23: L("Lying awake in bed can teach the brain that bed means “awake”. Getting up for something calm, then coming back when sleepy, helps bed mean sleep again.")
+        case 24: L("Watching the minutes tick by invites counting – “only five hours left!” – and worry keeps you awake. With the clock turned away, there is nothing to count.")
+        case 25: L("Regular movement leaves the body more ready to rest at night. Pick something you enjoy enough to keep doing – sticking with it is what counts.")
+        case 26: L("After hard exercise the body is warm and revved up, and it needs a little time to calm down again. Gentle movement in the evening doesn't need that pause.")
+        case 27: L("Daylight is the main clue your body clock uses to tell day from night. A bright day helps your body know when it is time to get sleepy later.")
+        case 28: L("While you sleep, the brain replays what you learned and files it away, so it sticks. A rested brain also finds it easier to concentrate and think clearly.")
+        case 29: L("A nap uses up some of the sleepiness that builds through the day, so a late one leaves less for the evening. Ending it by mid-afternoon helps bedtime feel properly sleepy.")
+        case 30: L("Bright light tells the body it is daytime. A dim night light is enough to find your way and keeps your body in night mode.")
         default: nil
         }
     }
@@ -269,6 +309,16 @@ enum PostcardText {
         case 18: L("In a 2023 study, 62 adults wore a wrist monitor at home for 14 nights while their bedrooms were measured. In the warmest fifth of readings, sleep efficiency (time in bed spent asleep) was about 3 percent lower than in the coolest.")
         case 19: L("In a 2010 sleep-lab study, 14 healthy volunteers slept with recorded hospital noise and the light on, with and without an eye mask and earplugs. With them, they had more REM sleep and fewer brief wake-ups.")
         case 20: L("A 2021 review of 38 studies on steady background noise, like white noise, as a sleep aid found mixed results, from helping sleep to disturbing it. The authors rated the evidence that it improves sleep as very low quality.")
+        case 21: L("In a 2017 trial, 22 healthy adults played phone games for 2.5 hours in the evening, once with normal screen light and once with less blue light. With normal light they felt significantly less sleepy.")
+        case 22: L("In a 2025 survey of almost 40,000 Norwegian students aged 18–28 who used screens in bed, each extra hour of screen time in bed went with about 24 min less sleep.")
+        case 23: L("In a 2026 trial, 44 adults who slept poorly either learned a “quarter-of-an-hour rule” for lying awake or only kept a sleep diary. The rule groups reported falling asleep faster and less time awake, but home recordings did not improve.")
+        case 24: L("In a 2007 experiment, 60 people – 30 good sleepers and 30 poor sleepers – were told to watch a clock or not while trying to fall asleep. Clock-watchers worried more and took longer to fall asleep, good sleepers too.")
+        case 25: L("A 2015 review pooled 66 studies. Regular exercise went with moderately better sleep quality and somewhat quicker falling asleep. How hard people exercised made no clear difference.")
+        case 26: L("A 2019 review pooled 23 studies of healthy adults with one evening workout or none. On average evening exercise did not harm sleep – deep sleep even rose a little. Only hard exercise ending within an hour of bedtime might harm it.")
+        case 27: L("In a 2014 pilot study, 49 office workers were compared: 27 with no daylight at work, 22 with windows. Workers with windows reported better sleep and, by the sleep trackers worn by 21 of the workers, slept about 46 min more a night.")
+        case 28: L("A 2023 review gathered 19 earlier reviews and meta-analyses on healthy children and adults. Their conclusion: sleep strengthens memories, especially complex facts, though the benefit was noticeably smaller in older adults.")
+        case 29: L("In a 2026 trial, 14 student athletes took no nap, a 25-minute or a 90-minute nap, all ending at 3 p.m. Their sleep that night barely changed: about 7 hours each time.")
+        case 30: L("In a 2022 lab study, 20 healthy adults slept in dim light (under 3 lux); on night two, half had room light (100 lux). With the light on, a smaller part of their sleep was deep or REM sleep, and their hearts beat faster during sleep.")
         default: nil
         }
     }
@@ -294,6 +344,16 @@ enum PostcardText {
         case 18: L("A link, not a cause: 62 adults, and the study names no best temperature. Most rated their room “just right” whatever it measured, so people may not notice the difference.")
         case 19: L("Only 14 people, a mask and earplugs tested together, in a noisy room with the light on. It does not prove a mask alone helps at home.")
         case 20: L("Very low quality evidence and mixed results, so soft sounds are a matter of taste, not proven benefit. The review did not look at earplugs.")
+        case 21: L("A small lab trial (22 people). Hormone changes were not statistically significant, and a phone lying face down was not tested.")
+        case 22: L("A survey, so it shows a link, not a cause, and the students reported their own sleep. The link was the same for social media and other screen uses.")
+        case 23: L("A small trial (44 adults), and everyone knew their group. Sleep improved in their own diaries, not in the recordings, and the rule helped when kept in bed too.")
+        case 24: L("A small, older study (60 people). A second experiment, in adults with long-lasting sleep trouble, pointed the same way.")
+        case 25: L("Mixed kinds of studies, and the effects were small to moderate. How long people exercised and how well they kept it up changed the results.")
+        case 26: L("Each study tested one evening. The “within an hour” warning is only a possibility, and some results disappeared when a single study was left out.")
+        case 27: L("A small pilot with volunteers, so a link, not proof. Trackers were worn by only 21 people, and morning light did not differ between the groups.")
+        case 28: L("A summary of other reviews, not a new experiment. Some benefits, such as for children's skills, were inconsistent, and the focus is memory more than “clear thinking”.")
+        case 29: L("Only 14 student athletes who nap at least once a week. Naps ending at 3 p.m. were fine, but later naps were not tested.")
+        case 30: L("Tiny study (20 people, one lit night). It tested sleeping with the light on, not getting up for a moment, and how well people said they slept did not change.")
         default: nil
         }
     }
