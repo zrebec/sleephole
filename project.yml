@@ -107,3 +107,25 @@ targets:
         DEVELOPMENT_TEAM: 8V2VSXHQ86
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/SleepHole.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SleepHole"
         BUNDLE_LOADER: "$(TEST_HOST)"
+  SleepHoleUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: SleepHoleUITests
+    dependencies:
+      - target: SleepHole
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: sk.zrebec.sleephole.uitests
+        DEVELOPMENT_TEAM: 8V2VSXHQ86
+        TEST_TARGET_NAME: SleepHole
+# A separate scheme: the running-app accessibility tests (13e4). The SleepHole scheme keeps only SleepHoleTests.
+schemes:
+  SleepHoleUITests:
+    build:
+      targets:
+        SleepHole: all
+        SleepHoleUITests: [test]
+    test:
+      targets: [SleepHoleUITests]
