@@ -42,7 +42,8 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`) are open. His Chrome is signed out of
    App Store Connect (2026-11-02 07:00) – ask him to sign in before reading Apple's review state. **13c batch 1 – postcards 1–10 with a "why" (one checked study each, his ten "sedí", new fronts 06 / 07, one longer
    card, no flip) – merged 2026-11-02 ~16:00, on his phone since 16:18 (Debug build of `f963a46`, the store backed up first).** **13c batch 2
-   (postcards 11–20) research started ~16:20 on his word; then Opus's check and his review page.** Next on his word: batch 3 (21–30), 13d the cat's lines about owned buildings, accessibility and the other polishing items. Build 12 (1.0 (12), the parcels) is with the testers since
+   (postcards 11–20): researched and checked by Opus; his review page https://claude.ai/artifact/5TnaoZ4gkMWTJW3rG4qHGm
+   (~16:45, prefix `p13c2.`; read `state/answers`) waits for his picks – incl. 17 (Opus: no "why" for now).** Next on his word: batch 3 (21–30), 13d the cat's lines about owned buildings, accessibility and the other polishing items. Build 12 (1.0 (12), the parcels) is with the testers since
    2026-11-01 ~07:55, PR #3 merged by him (`8c75eb3`); his ticks b1–b3, o2, m1, m2 on
    https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h are still open (11b4d → 🟢 on his b1). On screen a box is a "parcel" /
    "balíček" (Czech: "balíček"); never "box" or "package" in a UI text. The App Store gets the parcels as 1.1 after Apple's
