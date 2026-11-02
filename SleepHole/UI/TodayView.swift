@@ -364,6 +364,7 @@ struct NightView: View {
     @State private var confirmPause = false
     @State private var confirmReroll = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     /// "9:41" left of a pause.
     static func countdown(_ seconds: TimeInterval) -> String {
@@ -412,8 +413,13 @@ struct NightView: View {
                         let inSetup = model.graceEnds.map { $0 > now } ?? false
                         if inSetup && model.isNewInTown(rec) {
                             // same line as the name – nothing below may move during the setup (11b6 lesson)
-                            HStack(spacing: 8) {
-                                Text(buildingName).font(.headline).lineLimit(1).minimumScaleFactor(0.6)
+                            // at accessibility sizes the capsule goes under the name, and the name may wrap (13e2)
+                            let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 6))
+                                                                      : AnyLayout(HStackLayout(spacing: 8))
+                            layout {
+                                Text(buildingName).font(.headline)
+                                    .lineLimit(typeSize.isAccessibilitySize ? nil : 1).minimumScaleFactor(0.6)
+                                    .multilineTextAlignment(.center)
                                 Text(L("New in town")).font(.caption.weight(.semibold)).lineLimit(1)
                                     .foregroundStyle(.black).padding(.horizontal, 8).padding(.vertical, 2)
                                     .background(Capsule().fill(Color.yellow))
@@ -464,7 +470,10 @@ struct NightView: View {
                         ConfirmPanel()
                     }
                     Spacer(minLength: 0)
-                    Button(rec.isNap ? L("End nap") : L("Cancel night"), role: .destructive) { confirmAbandon = true }
+                    Button(role: .destructive) { confirmAbandon = true } label: {
+                        Text(rec.isNap ? L("End nap") : L("Cancel night"))
+                            .padding(.vertical, 13).contentShape(Rectangle()).padding(.vertical, -13)   // a bigger hit area, same layout (13e2)
+                    }
                         .font(.footnote)
                         .confirmationDialog(rec.isNap ? L("End the nap? It won't earn coins.")
                                                       : L("End tonight early? The building stays as a ruin – a good night repairs it later 🛠️"),
@@ -942,7 +951,7 @@ struct ResultView: View {
                     Text(L("You built: \(name)")).font(.title3).appearIn(delay: 0.8)
                     if !rec.isNap, let b = model.townBuilding(for: rec.window.key), Population.residents(of: b) > 0 {
                         Label(L("\(Population.residents(of: b)) people moved in"), systemImage: "person.2.fill")
-                            .font(.subheadline).foregroundStyle(.secondary).appearIn(delay: 1.0)
+                            .font(.subheadline).cardCaption().appearIn(delay: 1.0)
                     }
                 case .unfinished:
                     BuildingImage(id: rec.buildingId, progress: 0.6, label: name)

@@ -59,11 +59,13 @@ extension Achievement {
 struct AchievementsCard: View {
     @Environment(AppModel.self) private var model
     @State private var selected: Achievement?
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
+        let big = typeSize.isAccessibilitySize           // 2 columns and whole titles instead of 3 and 2 lines (13e2)
         let unlocked = Dictionary(model.achievements.map { ($0.achievement, $0.key) }, uniquingKeysWith: { a, _ in a })
         VStack(alignment: .leading, spacing: 10) {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3), spacing: 12) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: big ? 2 : 3), spacing: 12) {
                 ForEach(Achievement.allCases) { a in
                     let key = unlocked[a]
                     Button { selected = selected == a ? nil : a } label: {
@@ -74,7 +76,7 @@ struct AchievementsCard: View {
                                     if key == nil { Image(systemName: "lock.fill").font(.caption2).cardCaption() }
                                 }
                             Text(a.title).font(.caption2.weight(.semibold)).multilineTextAlignment(.center)
-                                .lineLimit(2, reservesSpace: true)
+                                .lineLimit(big ? 99 : 2, reservesSpace: !big)
                             Text(verbatim: key.map(Fmt.dayMonth) ?? "+\(a.reward) 🪙")
                                 .font(.caption2).cardCaption()
                         }

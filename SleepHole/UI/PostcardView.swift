@@ -71,7 +71,10 @@ struct PostcardView: View {
                     .font(.footnote).foregroundStyle(Self.softInk)
                 Spacer(minLength: 8)
                 if let source, let url = URL(string: source.url) {
-                    Link(PostcardText.sourceLine(source.name), destination: url)
+                    Link(destination: url) {
+                        Text(PostcardText.sourceLine(source.name))
+                            .padding(.vertical, 13).contentShape(Rectangle()).padding(.vertical, -13)   // a bigger hit area, same layout (13e2)
+                    }
                         .font(.footnote.weight(.semibold)).foregroundStyle(Self.linkBlue)
                         .multilineTextAlignment(.trailing)
                 }

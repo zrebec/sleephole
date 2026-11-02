@@ -203,6 +203,20 @@ struct CalendarGrid: View {
     }
 
     @Environment(\.colorScheme) private var scheme
+    /// iOS "Differentiate Without Color": each outcome also gets a glyph (13e2).
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiate
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    /// The glyph of a night's outcome for "Differentiate Without Color" (nothing for a night without a record).
+    static func glyph(_ o: Outcome?) -> String? {
+        switch o {
+        case .complete: "checkmark"
+        case .unfinished: "hammer.fill"
+        case .ruins: "xmark"
+        case .excused: "shield.fill"
+        case .missed, .none: nil
+        }
+    }
 
     /// VoiceOver: the full date and what the night was ("complete", "unfinished", …); a night without a record: the date only.
     static func dayLabel(_ key: NightKey, _ outcome: Outcome?) -> String {
@@ -221,7 +235,15 @@ struct CalendarGrid: View {
                             .fill(Self.color(d.outcome))
                             .aspectRatio(1, contentMode: .fit)
                             .overlay(Text(verbatim: "\(d.key.day)").font(.caption2)
+                                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)       // a dense grid: the numbers stop growing here (13e2)
                                 .foregroundStyle(Self.numberColor(d.outcome, dark: scheme == .dark)))
+                            .overlay(alignment: .topTrailing) {
+                                if differentiate, let g = Self.glyph(d.outcome) {
+                                    Image(systemName: g).font(.system(size: 8, weight: .bold))
+                                        .foregroundStyle(Self.numberColor(d.outcome, dark: scheme == .dark))
+                                        .padding(2).accessibilityHidden(true)
+                                }
+                            }
                             .overlay(RoundedRectangle(cornerRadius: 6)
                                 .stroke(Color.accentColor, lineWidth: selected.wrappedValue == d.key ? 3 : 0))
                     }
@@ -230,16 +252,28 @@ struct CalendarGrid: View {
                     .accessibilityAddTraits(selected.wrappedValue == d.key ? .isSelected : [])
                 }
             }
-            HStack(spacing: 12) {
-                legend(.green, L("complete")); legend(.orange, L("unfinished")); legend(.gray, L("ruins"))
-                legend(.indigo.opacity(0.55), L("joker 🛡️"))
+            // at accessibility sizes the legend wraps into several rows (13e2)
+            let legendLayout = typeSize.isAccessibilitySize ? AnyLayout(ChipFlow(spacing: 12, lineSpacing: 6))
+                                                            : AnyLayout(HStackLayout(spacing: 12))
+            legendLayout {
+                legend(.green, L("complete"), glyph: Self.glyph(.complete)); legend(.orange, L("unfinished"), glyph: Self.glyph(.unfinished))
+                legend(.gray, L("ruins"), glyph: Self.glyph(.ruins))
+                legend(.indigo.opacity(0.55), L("joker 🛡️"), glyph: Self.glyph(.excused))
             }
             .font(.caption2)
         }
     }
 
-    private func legend(_ c: Color, _ t: String) -> some View {
-        HStack(spacing: 4) { RoundedRectangle(cornerRadius: 3).fill(c).frame(width: 10, height: 10); Text(t) }
+    private func legend(_ c: Color, _ t: String, glyph: String?) -> some View {
+        HStack(spacing: 4) {
+            RoundedRectangle(cornerRadius: 3).fill(c).frame(width: 10, height: 10)
+                .overlay {
+                    if differentiate, let glyph {
+                        Image(systemName: glyph).font(.system(size: 6, weight: .bold)).foregroundStyle(.black.opacity(0.78))
+                    }
+                }
+            Text(t)
+        }
     }
 }
 
@@ -268,6 +302,7 @@ struct NightChart: View {
     }
 
     @Environment(\.colorScheme) private var scheme
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiate
 
     private static let barColor = Color(red: 0.40, green: 0.47, blue: 0.82)         // solid, reads on light and dark skies
 
@@ -392,7 +427,10 @@ struct NightChart: View {
                 Text(Self.callout(chosen, showsSleep: showsSleep)).font(.footnote).monospacedDigit()
                     .fixedSize(horizontal: false, vertical: true)
                 if let chosen {
-                    Button(L("Night details")) { onDetails(chosen.key) }
+                    Button { onDetails(chosen.key) } label: {
+                        Text(L("Night details"))
+                            .padding(.vertical, 14).contentShape(Rectangle()).padding(.vertical, -14)   // a bigger hit area, same look (13e2)
+                    }
                         .font(.footnote.weight(.semibold)).buttonStyle(.borderedProminent).tint(.indigo).controlSize(.small)
                 }
                 Chart {
@@ -426,11 +464,14 @@ struct NightChart: View {
                         }
                         if let s = p.startMinutes {
                             let size: Double = on ? 150 : 55
+                            let shape = Self.symbol(p.outcome, differentiate: differentiate)
                             PointMark(x: .value(L("Night"), i), y: .value(L("Start"), s))      // the ring in the card's colour
                                 .foregroundStyle(Self.ringColor(dark: dark))
+                                .symbol(shape)
                                 .symbolSize(pow(size.squareRoot() + 4, 2))
                             PointMark(x: .value(L("Night"), i), y: .value(L("Start"), s))
                                 .foregroundStyle(CalendarGrid.color(p.outcome))
+                                .symbol(shape)
                                 .symbolSize(size)
                                 .accessibilityLabel(label)
                         }
@@ -515,8 +556,13 @@ struct NightChart: View {
                             .frame(width: 3, height: 14)
                         Text(L("Without Apple Health"))
                     case .outcome(let o):
-                        Circle().fill(CalendarGrid.color(o)).frame(width: 9, height: 9)
-                            .overlay(Circle().stroke(Self.ringColor(dark: dark), lineWidth: 1))
+                        if differentiate {
+                            Image(systemName: Self.legendSymbol(o)).font(.system(size: 9))
+                                .foregroundStyle(CalendarGrid.color(o)).frame(width: 9, height: 9)
+                        } else {
+                            Circle().fill(CalendarGrid.color(o)).frame(width: 9, height: 9)
+                                .overlay(Circle().stroke(Self.ringColor(dark: dark), lineWidth: 1))
+                        }
                         Text(Self.outcomeName(o))
                     }
                 }
@@ -524,6 +570,41 @@ struct NightChart: View {
         }
         .font(.caption2)
         .accessibilityElement(children: .combine)
+    }
+
+    /// The start dot's shape: a plain circle, but with "Differentiate Without Color" one shape per outcome (13e2).
+    enum DotShape: Equatable { case circle, triangle, cross, diamond, square }
+
+    static func dotShape(_ o: Outcome?, differentiate: Bool) -> DotShape {
+        guard differentiate else { return .circle }
+        switch o {
+        case .complete: return .circle
+        case .unfinished: return .triangle
+        case .ruins: return .cross
+        case .excused: return .diamond
+        case .missed, .none: return .square
+        }
+    }
+
+    static func symbol(_ o: Outcome?, differentiate: Bool) -> BasicChartSymbolShape {
+        switch dotShape(o, differentiate: differentiate) {
+        case .circle: .circle
+        case .triangle: .triangle
+        case .cross: .cross
+        case .diamond: .diamond
+        case .square: .square
+        }
+    }
+
+    /// The same shapes as SF Symbols for the legend.
+    static func legendSymbol(_ o: Outcome) -> String {
+        switch o {
+        case .complete: "circle.fill"
+        case .unfinished: "triangle.fill"
+        case .ruins: "xmark"
+        case .excused: "diamond.fill"
+        case .missed: "square.fill"
+        }
     }
 
     static func outcomeName(_ o: Outcome) -> String {
