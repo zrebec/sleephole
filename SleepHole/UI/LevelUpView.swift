@@ -14,8 +14,13 @@ struct ConfettiView: View {
         }
     }()
     @State private var start = Date()
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
+        if !reduceMotion { confetti }
+    }
+
+    private var confetti: some View {
         TimelineView(.animation) { ctx in
             let t = ctx.date.timeIntervalSince(start) / Motion.pace
             Canvas { gc, size in
@@ -32,6 +37,7 @@ struct ConfettiView: View {
         }
         .allowsHitTesting(false)
         .ignoresSafeArea()
+        .accessibilityHidden(true)
     }
 }
 
@@ -44,7 +50,7 @@ struct LevelUpCard: View {
     var body: some View {
         let samples = Array((model.catalog?.buildable(level: level) ?? []).filter { $0.kind != .roadLit }.prefix(3))
         VStack(spacing: 14) {
-            Text(verbatim: "🎉").font(.system(size: 54))
+            Text(verbatim: "🎉").font(.system(size: 54)).accessibilityHidden(true)
             Text(L("Level \(level) unlocked!")).font(.largeTitle.bold())
             Text(GuideText.levelUnlocks[safe: level - 1] ?? "")
                 .multilineTextAlignment(.center).cardCaption()

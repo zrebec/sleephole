@@ -230,10 +230,11 @@ struct SettingsView: View {
                     Toggle(L("Play when the night starts"), isOn: $model.settings.playsAtStart)
                         .disabled(model.settings.ambience == .silence)
                     HStack {
-                        Image(systemName: "speaker.fill")
+                        Image(systemName: "speaker.fill").accessibilityHidden(true)
                         Slider(value: $model.settings.volume, in: 0...0.6)
+                            .accessibilityLabel(L("Volume"))
                             .onChange(of: model.settings.volume) { _, v in preview.setVolume(v) }
-                        Image(systemName: "speaker.wave.3.fill")
+                        Image(systemName: "speaker.wave.3.fill").accessibilityHidden(true)
                     }
                     // during a night ▶ / ■ control the night's own sound (a second player would fight over the
                     // shared audio session – owner bug 2026-09-30)

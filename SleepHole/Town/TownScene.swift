@@ -216,7 +216,8 @@ final class TownScene: SKScene {
         stopGlide()
         let target = cameraNode.xScale > 1.2 ? cameraNode.xScale / 2 : 2.2
         let p = convertPoint(fromView: viewPoint)
-        cameraNode.run(.sequence([.group([.scale(to: target, duration: 0.3), .move(to: p, duration: 0.3)]),
+        let d: TimeInterval = UIAccessibility.isReduceMotionEnabled ? 0 : 0.3        // Reduce Motion: straight to the end state
+        cameraNode.run(.sequence([.group([.scale(to: target, duration: d), .move(to: p, duration: d)]),
                                   .run { [weak self] in
             self?.clampCamera()
             self?.saveCamera()

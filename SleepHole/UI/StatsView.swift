@@ -129,11 +129,14 @@ struct StatsView: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
         .glassCard()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
+        .accessibilityValue(Text(verbatim: "\(value)"))
     }
 
     private func card<C: View>(_ title: String, @ViewBuilder content: () -> C) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(title).font(.headline)
+            Text(title).font(.headline).accessibilityAddTraits(.isHeader)
             content()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -201,6 +204,12 @@ struct CalendarGrid: View {
 
     @Environment(\.colorScheme) private var scheme
 
+    /// VoiceOver: the full date and what the night was ("complete", "unfinished", …); a night without a record: the date only.
+    static func dayLabel(_ key: NightKey, _ outcome: Outcome?) -> String {
+        let name = outcome.map(NightChart.outcomeName) ?? ""
+        return name.isEmpty ? Fmt.fullDate(key) : "\(Fmt.fullDate(key)), \(name)"
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 7), spacing: 6) {
@@ -217,7 +226,8 @@ struct CalendarGrid: View {
                                 .stroke(Color.accentColor, lineWidth: selected.wrappedValue == d.key ? 3 : 0))
                     }
                     .buttonStyle(.plain)                 // no accent tint on the day numbers
-                    .accessibilityLabel(Fmt.fullDate(d.key))
+                    .accessibilityLabel(Self.dayLabel(d.key, d.outcome))
+                    .accessibilityAddTraits(selected.wrappedValue == d.key ? .isSelected : [])
                 }
             }
             HStack(spacing: 12) {
@@ -463,6 +473,7 @@ struct NightChart: View {
                 .chartOverlay { proxy in
                     GeometryReader { geo in
                         Rectangle().fill(.clear).contentShape(Rectangle())
+                            .accessibilityHidden(true)
                             .onTapGesture(coordinateSpace: .local) { location in
                                 guard let frame = proxy.plotFrame,
                                       let x = proxy.value(atX: location.x - geo[frame].origin.x, as: Double.self),
@@ -570,7 +581,7 @@ struct NightDetail: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(L("Night of \(Fmt.fullDate(key))")).font(.headline)
+            Text(L("Night of \(Fmt.fullDate(key))")).font(.headline).accessibilityAddTraits(.isHeader)
             if model.coreResults().contains(where: { $0.key == key && $0.outcome == .excused }) {
                 Label(L("Protected by a joker 🛡️ – your streak waited for you."), systemImage: "shield.fill")
                     .font(.subheadline).foregroundStyle(.indigo)
@@ -689,11 +700,12 @@ struct NightDetail: View {
 
     private func row(_ icon: String, _ label: String, _ value: String?) -> some View {
         HStack(alignment: .top) {
-            Text(verbatim: icon)
+            Text(verbatim: icon).accessibilityHidden(true)
             Text(label).cardCaption()
             Spacer()
             Text(value ?? "–").monospacedDigit().multilineTextAlignment(.trailing)
         }
+        .accessibilityElement(children: .combine)
     }
 
     private func trips(_ title: String, _ list: [NightReport.Trip], ok: Bool) -> some View {

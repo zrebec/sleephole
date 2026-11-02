@@ -18,6 +18,7 @@ enum Plural {
 struct GuideView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var replay = false
     @State private var page: Int
     @State private var notificationsAllowed: Bool?
@@ -67,10 +68,10 @@ struct GuideView: View {
                 .task(id: key) { pickStyle(key) }
             }
             HStack {
-                if page > 0 { Button(L("Back")) { withAnimation { page -= 1 } } }
+                if page > 0 { Button(L("Back")) { turn(-1) } }
                 Spacer()
                 if page < Self.pageCount - 1 {
-                    Button(L("Next")) { withAnimation { page += 1 } }.buttonStyle(.borderedProminent)
+                    Button(L("Next")) { turn(1) }.buttonStyle(.borderedProminent)
                 } else {
                     Button(replay ? L("Close") : L("Let's start 🌙")) { finish() }.buttonStyle(.borderedProminent)
                 }
@@ -84,6 +85,11 @@ struct GuideView: View {
             let settings = await UNUserNotificationCenter.current().notificationSettings()
             notificationsAllowed = settings.authorizationStatus == .authorized ? true : nil
         }
+    }
+
+    /// Back / Next: the page slides, except with Reduce Motion (it changes at once).
+    private func turn(_ by: Int) {
+        if reduceMotion { page += by } else { withAnimation { page += by } }
     }
 
     /// Picks the biggest style for which all nine pages fit the room (once per size / language / replay / setup time).
