@@ -32,6 +32,9 @@ targets:
       # the plans overview shown in Settings → Developer (Debug builds only – excluded from Release below)
       - path: docs/PREHLAD-PLANOV.md
         buildPhase: resources
+      # its Czech copy (shown when the app language is Czech; a test keeps the two structurally identical)
+      - path: docs/PREHLAD-PLANOV.cs.md
+        buildPhase: resources
     dependencies:
       - package: SleepCore
     info:
@@ -85,7 +88,7 @@ targets:
         SWIFT_EMIT_LOC_STRINGS: YES
       configs:
         Release:
-          EXCLUDED_SOURCE_FILE_NAMES: PREHLAD-PLANOV.md
+          EXCLUDED_SOURCE_FILE_NAMES: "PREHLAD-PLANOV.md PREHLAD-PLANOV.cs.md"
     scheme:
       testTargets: [SleepHoleTests]
       gatherCoverageData: true
