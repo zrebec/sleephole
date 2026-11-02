@@ -24841,25 +24841,25 @@
               "one": {
                 "stringUnit": {
                   "state": "translated",
-                  "value": "Tvé město: %lld budova"
+                  "value": "Tvoje město: %lld budova"
                 }
               },
               "few": {
                 "stringUnit": {
                   "state": "translated",
-                  "value": "Tvé město: %lld budovy"
+                  "value": "Tvoje město: %lld budovy"
                 }
               },
               "many": {
                 "stringUnit": {
                   "state": "translated",
-                  "value": "Tvé město: %lld budovy"
+                  "value": "Tvoje město: %lld budovy"
                 }
               },
               "other": {
                 "stringUnit": {
                   "state": "translated",
-                  "value": "Tvé město: %lld budov"
+                  "value": "Tvoje město: %lld budov"
                 }
               }
             }

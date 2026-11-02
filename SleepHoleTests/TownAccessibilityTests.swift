@@ -45,8 +45,8 @@ struct TownAccessibilityTests {
         #expect(TownAccessibility.summary(buildings: 2) == "Tvoje mesto: 2 budovy")
         #expect(TownAccessibility.summary(buildings: 5) == "Tvoje mesto: 5 budov")
         Lang.current = .cs
-        #expect(TownAccessibility.summary(buildings: 2) == "Tvé město: 2 budovy")
-        #expect(TownAccessibility.summary(buildings: 5) == "Tvé město: 5 budov")
+        #expect(TownAccessibility.summary(buildings: 2) == "Tvoje město: 2 budovy")
+        #expect(TownAccessibility.summary(buildings: 5) == "Tvoje město: 5 budov")
     }
 
     /// Every building element has a point inside its frame that a sighted tap would also hit (buildings overlap, so not every point).
