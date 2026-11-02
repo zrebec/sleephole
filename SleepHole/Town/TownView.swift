@@ -137,6 +137,7 @@ struct TownTab: View {
                     .labelStyle(TrailingIconLabelStyle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(L("Town name: \(model.townName)"))
             .accessibilityHint(L("Rename the town"))
             Text(TownStats.sizeName(residents: people)).font(.caption).foregroundStyle(.secondary)
             Button {
@@ -149,6 +150,9 @@ struct TownTab: View {
                 }
             }
             .buttonStyle(.plain)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(verbatim: "\(L("Complete buildings")): \(count), \(L("Residents")): \(people), \(L("Coins")): \(model.coins)"))
+            .accessibilityAddTraits(.isButton)
             .accessibilityHint(L("The town in numbers"))
             if (snapshot?.buildings.isEmpty ?? true) {
                 Text(L("Your first building appears after your first night 🌙")).font(.caption)

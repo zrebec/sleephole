@@ -4,18 +4,20 @@ import SwiftUI
 /// 🔥 streak badge with a flickering flame.
 struct StreakBadge: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         let n = model.streak
         HStack(spacing: 6) {
             // only the flame is on the 12.5 fps timeline – the texts and the capsule are drawn when the streak changes
-            TimelineView(.animation(minimumInterval: 0.08)) { ctx in
-                let t = ctx.date.timeIntervalSinceReferenceDate
+            TimelineView(.animation(minimumInterval: 0.08, paused: reduceMotion)) { ctx in
+                let t = reduceMotion ? 0 : ctx.date.timeIntervalSinceReferenceDate
                 Text(verbatim: "🔥")
                     .font(.system(size: 30))
                     .scaleEffect(n > 0 ? 1 + 0.06 * sin(t * 9) + 0.03 * sin(t * 23) : 0.9)
                     .saturation(n > 0 ? 1 : 0)
                     .opacity(n > 0 ? 1 : 0.5)
+                    .accessibilityHidden(true)
             }
             VStack(alignment: .leading, spacing: 0) {
                 Text(n > 0 ? L("\(n) nights in a row") : L("Your streak starts today")).font(.headline)
@@ -24,6 +26,7 @@ struct StreakBadge: View {
         }
         .padding(.horizontal, 14).padding(.vertical, 8)
         .glassCapsule(tint: n > 0 ? .orange : nil)
+        .accessibilityElement(children: .combine)       // one element: the flame is hidden, the two texts are read
     }
 }
 
@@ -33,13 +36,14 @@ struct CoinBadge: View {
 
     var body: some View {
         HStack(spacing: 6) {
-            Text(verbatim: "🪙").font(.system(size: 26))
+            Text(verbatim: "🪙").font(.system(size: 26)).accessibilityHidden(true)
             Text(verbatim: "\(model.coins)").font(.headline.monospacedDigit())
                 .contentTransition(.numericText(value: Double(model.coins)))
                 .animation(.snappy, value: model.coins)
         }
         .padding(.horizontal, 14).padding(.vertical, 8)
         .glassCapsule(tint: .yellow)
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel(L("Coins: \(model.coins)"))
     }
 }

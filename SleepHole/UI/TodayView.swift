@@ -47,6 +47,8 @@ struct BuildingImage: View {
     let id: String
     var progress: Double = 1          // 0…1, reveals the building from the bottom
     var maxHeight: CGFloat = 220
+    /// VoiceOver: nil = decorative (hidden); pass the building's name where the image is the subject.
+    var label: String?
 
     var body: some View {
         if let image = sprites.image(for: id) {
@@ -63,6 +65,8 @@ struct BuildingImage: View {
                     }
                 }
                 .frame(maxHeight: maxHeight)
+                .accessibilityHidden(label == nil)
+                .accessibilityLabel(label ?? "")
         }
     }
 }
@@ -580,7 +584,7 @@ struct NapResting: View {
                     guard !reduceMotion else { return }
                     withAnimation(.easeInOut(duration: Motion.t(2.5)).repeatForever(autoreverses: true)) { dimmed = true }
                 }
-            ProgressView(value: progress).progressViewStyle(ThickProgressStyle()).frame(maxWidth: 240)
+            ProgressView(value: progress).progressViewStyle(ThickProgressStyle(title: L("Nap progress"))).frame(maxWidth: 240)
         }
     }
 }
@@ -589,6 +593,18 @@ struct NapResting: View {
 /// Used with `ProgressView(value:)`, so VoiceOver still reads the percentage.
 struct ThickProgressStyle: ProgressViewStyle {
     static let height: CGFloat = 12
+    /// What VoiceOver calls the bar (the configuration's label is a view, not a string).
+    var title: String = L("Progress")
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// The spoken value, e.g. "42 %" – the locale's own percent format (sk / cs write a space before the sign).
+    static func percentText(_ fraction: Double?, locale: Locale = Lang.current.locale) -> String {
+        let f = NumberFormatter()
+        f.numberStyle = .percent
+        f.maximumFractionDigits = 0
+        f.locale = locale
+        return f.string(from: NSNumber(value: min(1, max(0, fraction ?? 0)))) ?? ""
+    }
 
     func makeBody(configuration: Configuration) -> some View {
         let f = min(1, max(0, configuration.fractionCompleted ?? 0))
@@ -601,7 +617,10 @@ struct ThickProgressStyle: ProgressViewStyle {
             }
         }
         .frame(height: Self.height)
-        .animation(.linear(duration: 0.9), value: f)
+        .animation(reduceMotion ? nil : .linear(duration: 0.9), value: f)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(title)
+        .accessibilityValue(Self.percentText(configuration.fractionCompleted))
     }
 }
 
@@ -708,10 +727,10 @@ struct ConstructionSite: View {
     }
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 0.05)) { ctx in
+        TimelineView(.animation(minimumInterval: 0.05, paused: reduceMotion)) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
-            let frame = resting ? 0 : Int(t / Self.frameDuration) % Self.frames
-            let breath = (1 + sin(t * 2 * .pi / 4)) / 2            // 0…1, 4 s period
+            let frame = (resting || reduceMotion) ? 0 : Int(t / Self.frameDuration) % Self.frames
+            let breath = reduceMotion ? 0.5 : (1 + sin(t * 2 * .pi / 4)) / 2   // 0…1, 4 s period; still: the middle
             VStack(spacing: 14) {
                 // Stage: the crane's mast stands behind the building's right side; the pair is centred.
                 ZStack(alignment: .bottom) {
@@ -725,7 +744,8 @@ struct ConstructionSite: View {
                     BuildingImage(id: siteId, maxHeight: 110)       // building site under the building
                         .frame(width: 190)
                         .offset(x: -40 + shift, y: 6)
-                    BuildingImage(id: shownBuildingId, progress: shownProgress, maxHeight: 150)
+                    BuildingImage(id: shownBuildingId, progress: shownProgress, maxHeight: 150,
+                                  label: sprites.catalog?[shownBuildingId]?.displayName)
                         .overlay { scaffold }                       // in front of the building, like in the town
                         .frame(width: 190)
                         .offset(x: -40 + shift, y: -4)
@@ -737,7 +757,7 @@ struct ConstructionSite: View {
                     .opacity(0.45 + 0.55 * breath)
                     .scaleEffect(0.97 + 0.06 * breath)
                 ProgressView(value: shownProgress)
-                    .progressViewStyle(ThickProgressStyle())
+                    .progressViewStyle(ThickProgressStyle(title: L("Night progress")))
                     .frame(maxWidth: 260)
             }
             .frame(maxWidth: .infinity)
@@ -762,6 +782,7 @@ struct ConstructionSite: View {
 
 /// Calm night background: deep blue gradient with a few softly twinkling stars.
 struct NightSky: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private struct Star { let x, y, size, phase: Double }
     private static let stars: [Star] = {
         var rng = SeededGenerator(seed: 42)
@@ -772,8 +793,8 @@ struct NightSky: View {
     }()
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 0.1)) { ctx in
-            let t = ctx.date.timeIntervalSinceReferenceDate
+        TimelineView(.animation(minimumInterval: 0.1, paused: reduceMotion)) { ctx in
+            let t = reduceMotion ? 0 : ctx.date.timeIntervalSinceReferenceDate     // still: a fixed phase
             Canvas { gc, size in
                 for s in Self.stars {
                     let a = 0.25 + 0.35 * (1 + sin(t * 0.8 + s.phase)) / 2
@@ -913,7 +934,7 @@ struct ResultView: View {
                     ZStack {
                         SunRays().frame(width: 340, height: 340)
                         DustPuff(delay: Motion.landing).frame(width: 340, height: 260)
-                        BuildingImage(id: rec.buildingId).dropIn(delay: 0.15)
+                        BuildingImage(id: rec.buildingId, label: name).dropIn(delay: 0.15)
                         SparkleBurst(delay: Motion.landing + 0.1).frame(width: 340, height: 300)
                     }
                     .frame(height: 260)
@@ -924,7 +945,7 @@ struct ResultView: View {
                             .font(.subheadline).foregroundStyle(.secondary).appearIn(delay: 1.0)
                     }
                 case .unfinished:
-                    BuildingImage(id: rec.buildingId, progress: 0.6)
+                    BuildingImage(id: rec.buildingId, progress: 0.6, label: name)
                     Text(L("Unfinished 🚧")).font(.largeTitle.bold())
                     Text(L("\(name) is waiting – your next good night will finish it.")).multilineTextAlignment(.center)
                     if let late = rec.window.minutesLate(confirmedAt: rec.confirmedAt), !rec.isNap {
@@ -958,7 +979,7 @@ struct ResultView: View {
                 if let level = model.levelUp {
                     Label(L("Level \(level) unlocked!"), systemImage: "star.fill")
                         .font(.headline).foregroundStyle(Color.readableYellow)
-                        .symbolEffect(.bounce, options: .repeat(3))
+                        .symbolEffect(.bounce, options: .repeat(3), isActive: !reduceMotion)
                 }
                 if rec.isDebug { Text(L("(quick test night – doesn't count for the town)")).font(.caption).cardCaption() }
                 if let at = model.safetyAlarmAt { SafetyAlarmCard(at: at) }
@@ -987,6 +1008,7 @@ struct ResultView: View {
                         LevelUpCard(level: level) { withAnimation { celebrationClosed = true } }
                     }
                     .transition(.opacity)
+                    .accessibilityAddTraits(.isModal)
                 }
             }
         }

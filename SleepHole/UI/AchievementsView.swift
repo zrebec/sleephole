@@ -85,6 +85,7 @@ struct AchievementsCard: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(a.title + ", " + (key == nil ? L("locked") : L("unlocked")))
+                    .accessibilityHint(a.detail)
                 }
             }
             if let a = selected {

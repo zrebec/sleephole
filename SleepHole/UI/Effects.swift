@@ -72,6 +72,8 @@ struct GoodNightSplash: View {
         .ignoresSafeArea()
         .contentShape(Rectangle())
         .onTapGesture { done() }                 // never in the way: a tap skips it
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction { done() }
         .task {
             try? await Task.sleep(for: .seconds(Self.duration))
             done()

@@ -46,7 +46,7 @@ struct BoxShopView: View {
     @ViewBuilder
     private func todayCard(_ offer: BoxOffer, boxes: [BoxPurchase]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(L("Today's parcel")).font(.headline)
+            Text(L("Today's parcel")).font(.headline).accessibilityAddTraits(.isHeader)
             Text(L("Your coins: \(model.coins) 🪙")).font(.subheadline.monospacedDigit()).cardCaption()
             switch offer {
             case .available(let price, let boxNumber):
@@ -94,7 +94,7 @@ struct BoxShopView: View {
 
     private func oddsCard(boxes: [BoxPurchase]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(L("What a parcel can hold")).font(.headline)
+            Text(L("What a parcel can hold")).font(.headline).accessibilityAddTraits(.isHeader)
             ForEach(Array(BoxRules.odds.enumerated()), id: \.offset) { _, row in
                 oddsRow(row, boxes: boxes)
                 Divider()
