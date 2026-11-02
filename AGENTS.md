@@ -36,7 +36,8 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    `18b16d2`; a cinema building later). **13b Czech part 1 merged 2026-11-01 ~23:00 (`8404184`): 353 of 928 texts in Czech,
    the rest in Slovak, every text read twice (plan §10 REL 13b).** **13a + 13b on his phone since 2026-11-02 06:21**
    (Debug build of `86387b1`, the store backed up first). **13b2 – the whole app in Czech (938 texts, developer screens
-   too) + Czech signs on seven sprites – merged 2026-11-02 ~07:50 (`ce5ac9d`), on the Mac only: install on his word**
+   too) + Czech signs on seven sprites – merged 2026-11-02 ~07:50 (`ce5ac9d`); 13b3 – Developer → "Plans and proposals" in
+   Czech (`docs/PREHLAD-PLANOV.cs.md`, his pick "Czech copy + test") – merged ~08:45; both on the Mac only: install on his word**
    (store backed up first). His checks c1–c6 / n1–n2 / d1–d6 and notes `cz` / `n13` on his build 13 page
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`) are open. His Chrome is signed out of
    App Store Connect (2026-11-02 07:00) – ask him to sign in before reading Apple's review state. Next on his
@@ -253,7 +254,10 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   project, bundled into Debug builds only (excluded from Release, like `docs/PREHLAD-PLANOV.md` in `project.yml`). The
   screen only reads it – filters and search are fine, but nothing on it can be set, edited or stored; a change is made
   only in the file, and the next build shows it. For documents the file is an `.md` in `docs/`; never keep a second
-  copy in Swift code or in the store. The "Texts" screen follows the same rule with its own source: it reads the app's
+  copy in Swift code or in the store. **One exception, his pick of 2026-11-02 ("Czech copy + test"):** the plans
+  document has a line-by-line Czech translation `docs/PREHLAD-PLANOV.cs.md`, shown when the app is in Czech. The Slovak
+  file stays the source; Opus changes the Czech copy in the same commit as every change of the Slovak one, and
+  `PlansTests` fails when their lines, table rows, `#` cells or `✅` marks differ. The "Texts" screen follows the same rule with its own source: it reads the app's
   compiled String Catalog (`Localizable.xcstrings` → `Localizable.strings` / `.stringsdict` in the bundle), which is
   the only source of every text – no `.md` copy of the texts. Tools on that page that DO something (detection test,
   lock lab, system alarm test, …) are not information screens and are not covered by this rule.
@@ -292,7 +296,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `docs/NAVRH-ZVIERATKA.md` | next plans A/B/C: pause, sleep buddy, Cube Pets residents, living town (Slovak, owner picks) |
 | `docs/NAVRH-FLEXIBILITA.md` | research and options for a flexible bedtime / alarm outside Strict mode (Slovak, 2026-10-19, after the second tester's first run): sleep-regularity studies, Apple Health and SleepTown, options A–F, Opus's recommendation, five questions; a copy in his iCloud `SleepHole/` and the private claude.ai page https://claude.ai/artifact/EbHqHizVfMU8GFk4wr86L4 (source: a scratchpad file of 2026-10-19 – read the page with the Artifact tool to edit it) |
 | `docs/NAVRH-MESTO-STATISTIKY.md`, `docs/previews/navrh-2026-10-10/` | proposals of 2026-10-10 after the 100-night simulation (Slovak) and their SVG mock-ups – the spec of phase NEXT (plan §10); the owner picks |
-| `docs/PREHLAD-PLANOV.md` | the owner's overview of everything open (Slovak, 2026-10-11): one table with effort and priority per item + short descriptions; priorities are Opus's recommendation – the plan's §10 stays the spec. **Bundled into Debug builds and shown in Settings → Developer → "Plans and proposals" (`SleepHole/Debug/PlansView.swift`) – keep the main table's five columns (`#` first) or the parser loses it; no `http` links. A `✅` in a row's priority cell marks it finished (green badges on the screen) – set it only after the proof is seen** |
+| `docs/PREHLAD-PLANOV.md` | the owner's overview of everything open (Slovak, 2026-10-11): one table with effort and priority per item + short descriptions; priorities are Opus's recommendation – the plan's §10 stays the spec. **Bundled into Debug builds and shown in Settings → Developer → "Plans and proposals" (`SleepHole/Debug/PlansView.swift`) – keep the main table's five columns (`#` first) or the parser loses it; no `http` links. A `✅` in a row's priority cell marks it finished (green badges on the screen) – set it only after the proof is seen. Its Czech translation `docs/PREHLAD-PLANOV.cs.md` (2026-11-02) is shown in Czech and changes together with it, line by line** |
 | `docs/ROZBOR-APP-REVIEW.md` | what Apple's review can question and the way to a submission (Slovak, 2026-10-12): twelve risks with guideline numbers, the three undocumented lock signals and their documented fallback, the steps to a review with a manual release, five decisions asked from the owner. A copy is in his iCloud Drive `SleepHole/` |
 | `site/`, `.github/workflows/pages.yml` | the public support page and the privacy policy (English, owner's decision 2026-10-12: on GitHub, public contact `zrebec@zrebec.sk`); the workflow publishes `site/` to `https://zrebec.github.io/sleephole/` (+ `privacy.html`) – the App Store page and the app link there. Whatever the policy says must stay true of the shipped build: change it together with any change of what leaves the device |
 | `docs/IMPLEMENTATION_I18N.md` | full spec for the EN/SK multi-language phase (string inventory, architecture, tests) |
