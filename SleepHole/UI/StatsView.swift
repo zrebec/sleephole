@@ -602,7 +602,7 @@ struct NightDetail: View {
             if let nap = model.napRecord(before: key), let o = nap.outcome {
                 Divider()
                 row("😴", L("Nap \(Fmt.time(nap.bedtime))–\(Fmt.time(nap.wake))"),
-                    (o == .complete ? L("complete") : o == .unfinished ? L("cut short") : L("didn't work out")) + " · +\(NapPlan.reward(o)) 🪙")
+                    (o == .complete ? L("done") : o == .unfinished ? L("cut short") : L("didn't work out")) + " · +\(NapPlan.reward(o)) 🪙")
             }
         }
         .font(.subheadline)
@@ -680,8 +680,8 @@ struct NightDetail: View {
         ForEach(rec.sleepSources, id: \.name) { src in
             let m = Int((src.asleepSeconds / 60).rounded())
             let mark = src.name == rec.sleepSourceName ? "> " : "· "
-            Text(verbatim: "\(mark)\(src.name): \(m / 60) h \(m % 60) min asleep, from \(Fmt.time(src.fellAsleepAt)), "
-                 + (src.hasStages ? "stages" : "no stages") + (src.isFirstParty ? ", first-party" : ""))
+            Text(verbatim: "\(mark)" + L("\(src.name): \(m / 60) h \(m % 60) min asleep, from \(Fmt.time(src.fellAsleepAt))")
+                 + ", " + (src.hasStages ? L("stages") : L("no stages")) + (src.isFirstParty ? ", " + L("first-party") : ""))
                 .font(.caption2).foregroundStyle(.secondary)
         }
     }

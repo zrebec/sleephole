@@ -578,11 +578,15 @@ Rules:
   accusative fits ("nejdřív … před", "nejpozději … po", "na …", "za …").
 * **Style:** warm, informal (tykání), cute, never cruel; seconds with no space ("15s"), minutes "10 min"; the app name
   SleepHole is masculine ("SleepHole musí zůstat otevřený"), "appka" is feminine. Clock times: translations say "v %@"; `Czech.prepositions` (in `L()`) turns it into "ve" by the hour – ve 2–4, 12–14, 20–23; v otherwise (done in code, unit-tested).
-* **Formats:** Czech formats like Slovak (24 h, "30. 9.", decimal comma, `cs_CZ`); the signs painted on sprites stay
-  Slovak (a Czech reader understands them); building names come from `nameCS` in `assets/sprites/catalog.json`
+* **Formats:** Czech formats like Slovak (24 h, "30. 9.", decimal comma, `cs_CZ`); the signs painted on sprites are Czech
+  for Czech (`Catalog.fileCS`, `<id>.cs.png`, render mode `CS_ONLY=1`; ŠKOLA and HASIČI share the Slovak file); building names come from `nameCS` in `assets/sprites/catalog.json`
   (falls back to `nameSK`); the speech voice is `cs-CZ`.
-* **Tooling:** `python3 tools/i18n/keys.py` prints a Czech line ("n keys translated, m fall back to Slovak"); a missing
-  Czech text is not a failure.
+* **Complete since 13b2:** every text is in Czech, the developer screens included (the content of Settings → Developer →
+  "Plans and proposals" stays the Slovak document `docs/PREHLAD-PLANOV.md` in every language – one source file).
+  Every new text needs sk AND cs: `CzechTests.everyTextHasCzech` fails otherwise; add texts with `tools/i18n/add.py`
+  using `{"sk": …, "cs": …}`.
+* **Tooling:** `python3 tools/i18n/keys.py` prints `NO CS` lines, "N without cs" in the summary and a Czech line
+  ("n keys translated, m fall back to Slovak").
 
 ### Glossary (Slovak → Czech)
 
@@ -618,7 +622,12 @@ Rules:
 | úroveň | úroveň |
 | žreb (draw) | losování |
 | Nerušiť / Spánok (Focus) | Nerušit / Spánek |
+| Ovládacie centrum (Control Center) | Ovládací centrum |
+| Fotoaparát (Camera) | Fotoaparát |
+| Na mojom iPhone (Files) | Na mém iPhonu |
+| Aplikácie (Health → profile) | Aplikace |
+| vyspať (mince: „Mince sa dajú iba vyspať“) | naspat („Mince se dají jen naspat“) |
 
 **Doubtful words (slang check):** "večerka" also means a late-night corner shop in colloquial Czech (harmless, but a
-possible smile); "kočka" is colloquially also a girl (mild, widely used for the animal); "šlofík" is not used (Czech
-"odpočinek" instead). Nothing vulgar found in the recurring terms; the old Slovak trap ("box") is avoided with "balíček".
+possible smile); "kočka" is colloquially also a girl (mild, widely used for the animal); "šlofík" IS common colloquial Czech
+("dát si šlofíka"); the feature stays "Odpočinek", the postcards may say "šlofík" like the Slovak ones. Nothing vulgar found in the recurring terms; the old Slovak trap ("box") is avoided with "balíček".

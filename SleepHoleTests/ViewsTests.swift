@@ -247,6 +247,8 @@ struct ViewsTests {
         #expect(StatsView.chartSeries([health], args: []).map(\.asleepMinutes) == [650])
     }
 
+    private func pick(_ l: AppLanguage, en: String, sk: String, cs: String) -> String { l == .en ? en : l == .sk ? sk : cs }
+
     @Test(arguments: AppLanguage.allCases) func chartCalloutTexts(language: AppLanguage) {
         Lang.current = language
         defer { Lang.current = .en }
@@ -254,11 +256,10 @@ struct ViewsTests {
         let both = NightPoint(key: key, startMinutes: 630, wakeMinutes: 390, asleepMinutes: 655.4, outcome: .complete)   // 22:30 / 22:55
         let plain = NightPoint(key: key, startMinutes: 630, wakeMinutes: 390, asleepMinutes: nil, outcome: .complete)
         let date = Fmt.dayMonth(key)
-        let sk = language != .en                                       // Czech falls back to Slovak until translated (13b)
-        #expect(NightChart.callout(nil, showsSleep: true) == (sk ? "Ťukni na noc a uvidíš ju." : "Tap a night to see it."))
+        #expect(NightChart.callout(nil, showsSleep: true) == pick(language, en: "Tap a night to see it.", sk: "Ťukni na noc a uvidíš ju.", cs: "Klepni na noc a uvidíš ji."))
         #expect(NightChart.callout(both, showsSleep: true)
-                == (sk ? "\(date) · začiatok 22:30 · spánok prišiel 22:55 · po 25 min" : "\(date) · start 22:30 · asleep 22:55 · after 25 min"))
-        #expect(NightChart.callout(plain, showsSleep: true) == (sk ? "\(date) · začiatok 22:30" : "\(date) · start 22:30"))
+                == pick(language, en: "\(date) · start 22:30 · asleep 22:55 · after 25 min", sk: "\(date) · začiatok 22:30 · spánok prišiel 22:55 · po 25 min", cs: "\(date) · začátek 22:30 · usnutí 22:55 · po 25 min"))
+        #expect(NightChart.callout(plain, showsSleep: true) == pick(language, en: "\(date) · start 22:30", sk: "\(date) · začiatok 22:30", cs: "\(date) · začátek 22:30"))
         #expect(NightChart.callout(both, showsSleep: false) == NightChart.callout(plain, showsSleep: false))
     }
 

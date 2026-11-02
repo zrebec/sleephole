@@ -161,6 +161,26 @@ struct CzechTests {
         #expect(offenders.isEmpty, "\(offenders.sorted().joined(separator: "\n"))")
     }
 
+    /// Czech is complete (13b2): every text of both catalogs has a real Czech localization – a plain value or all four
+    /// plural categories. Add new texts with sk AND cs (tools/i18n/add.py).
+    @Test func everyTextHasCzech() throws {
+        var missing: [String] = []
+        for name in ["Localizable", "InfoPlist"] {
+            for (key, locs) in try Self.catalog(name) {
+                if name == "InfoPlist" && locs["sk"] == nil { continue }      // the app name: the same in every language
+                guard let cs = locs["cs"] else { missing.append("\(name): \(key)"); continue }
+                let ok: Bool
+                if let v = Self.unitValue(cs) { ok = !v.isEmpty }
+                else {
+                    let forms = [Self.plural(cs)] + ((cs["substitutions"] as? [String: [String: Any]]) ?? [:]).values.map(Self.plural)
+                    ok = forms.contains { !$0.isEmpty } && forms.allSatisfy { $0.isEmpty || (Set($0.keys) == ["one", "few", "many", "other"] && $0.values.allSatisfy { !$0.isEmpty }) }
+                }
+                if !ok { missing.append("\(name): \(key)") }
+            }
+        }
+        #expect(missing.isEmpty, "no cs: \(missing.sorted().joined(separator: "\n"))")
+    }
+
     @Test func infoPlistTextsExistInCzech() throws {
         for (key, locs) in try Self.catalog("InfoPlist") where locs["sk"] != nil {
             #expect(locs["cs"] != nil, "no cs for \(key)")
@@ -223,12 +243,19 @@ struct CzechTests {
         #expect(Voice.voiceLanguage(.cs) == "cs-CZ")
     }
 
-    @Test func buildingNamesAreCzechAndSignsStaySlovak() throws {
+    @Test func buildingNamesAndSignsAreCzech() throws {
         defer { Lang.current = .en }
         let sprites = SpriteLibrary.loadFromBundle()
         let catalog = try #require(sprites.catalog)
         Lang.current = .cs
         #expect(catalog["l1-house-a-a"]?.displayName == "Rodinný dům" && catalog["l3-police"]?.displayName == "Policie")
-        #expect(sprites.image(for: "l3-police", language: .cs)?.pngData() == sprites.image(for: "l3-police", language: .sk)?.pngData())
+        #expect(sprites.image(for: "l3-police", language: .cs)?.pngData() != sprites.image(for: "l3-police", language: .sk)?.pngData())
+        // the school and fire-station signs read the same in Czech: the Slovak file is shared
+        #expect(sprites.image(for: "l3-school", language: .cs) === sprites.image(for: "l3-school", language: .sk))
+        for entry in catalog.entries where entry.fileCS != nil {
+            let cs = try #require(sprites.image(for: entry.id, language: .cs))
+            let sk = try #require(sprites.image(for: entry.id, language: .sk))
+            #expect(cs.size == sk.size)                                  // same canvas + anchor as the Slovak sprite
+        }
     }
 }

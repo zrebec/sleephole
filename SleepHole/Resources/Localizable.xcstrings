@@ -14,6 +14,12 @@
             "state": "translated",
             "value": " (kód)"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (kód)"
+          }
         }
       }
     },
@@ -29,6 +35,12 @@
           "stringUnit": {
             "state": "translated",
             "value": " (zatrasenie)"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (zatřesení)"
           }
         }
       }
@@ -46,6 +58,12 @@
             "state": "translated",
             "value": "%@ z balíčka"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ z balíčku"
+          }
         }
       }
     },
@@ -62,6 +80,12 @@
             "state": "translated",
             "value": "%1$@ Hrá do %2$@."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Hraje do %@."
+          }
         }
       }
     },
@@ -77,6 +101,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ Hrá, kým nestlačíš ■."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ Hraje, dokud nestiskneš ■."
           }
         }
       }
@@ -138,6 +168,12 @@
             "state": "translated",
             "value": "%@ chráni tvoju sériu"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ chrání tvoji sérii"
+          }
         }
       }
     },
@@ -176,6 +212,12 @@
             "state": "translated",
             "value": "%1$@ · mimo %2$llds"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · mimo %llds"
+          }
         }
       }
     },
@@ -210,6 +252,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ – %2$@"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ – %2$@"
@@ -262,6 +310,36 @@
                 "stringUnit": {
                   "state": "translated",
                   "value": "%lld hotových odpočinkov"
+                }
+              }
+            }
+          }
+        },
+        "cs": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hotový odpočinek"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hotové odpočinky"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hotového odpočinku"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld hotových odpočinků"
                 }
               }
             }
@@ -364,6 +442,12 @@
             "state": "translated",
             "value": "%lld min"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld min"
+          }
         }
       }
     },
@@ -376,6 +460,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld min %2$llds"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$lld min %2$llds"
@@ -664,6 +754,12 @@
             "state": "translated",
             "value": "%llds"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%llds"
+          }
         }
       }
     },
@@ -762,6 +858,12 @@
             "state": "translated",
             "value": "%lld 🪙"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 🪙"
+          }
         }
       }
     },
@@ -777,6 +879,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Chýba %lld 🪙"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chybí %lld 🪙"
           }
         }
       }
@@ -816,6 +924,12 @@
             "state": "translated",
             "value": "1 min (test)"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 min (test)"
+          }
         }
       }
     },
@@ -832,6 +946,12 @@
             "state": "translated",
             "value": "1. Ťukni na „Zazvoniť o 20 sekúnd“."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1. Klepni na „Zazvonit za 20 sekund“."
+          }
         }
       }
     },
@@ -844,6 +964,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 postavených nocí"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "10 postavených nocí"
@@ -864,6 +990,12 @@
             "state": "translated",
             "value": "100 postavených nocí"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "100 postavených nocí"
+          }
         }
       }
     },
@@ -879,6 +1011,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "2. Zamkni telefón alebo zavri SleepHole potiahnutím."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "2. Zamkni telefon nebo SleepHole zavři přejetím."
           }
         }
       }
@@ -896,6 +1034,12 @@
             "state": "translated",
             "value": "3 noci v rade"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3 noci v řadě"
+          }
         }
       }
     },
@@ -911,6 +1055,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "3. Systémový budík musí zazvoniť – aj v tichom režime a počas Sústredenia – tvojím zvukom budíka."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3. Systémový budík musí zazvonit – i v tichém režimu a během Soustředění – tvým zvukem budíku."
           }
         }
       }
@@ -928,6 +1078,12 @@
             "state": "translated",
             "value": "30 nocí v rade"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "30 nocí v řadě"
+          }
         }
       }
     },
@@ -942,7 +1098,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "4. „Stop“ ho stíši, „Otvoriť SleepHole“ otvorí appku."
+            "value": "4. „Zastaviť“ ho stíši, „Otvoriť SleepHole“ otvorí appku."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "4. „Zastavit“ ho ztiší, „Otevřít SleepHole“ otevře appku."
           }
         }
       }
@@ -956,6 +1118,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "50 postavených nocí"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "50 postavených nocí"
@@ -975,6 +1143,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "7 nocí v rade"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 nocí v řadě"
           }
         }
       }
@@ -1234,6 +1408,12 @@
             "state": "translated",
             "value": "Hotový popoludňajší odpočinok."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotový odpolední odpočinek."
+          }
         }
       }
     },
@@ -1271,6 +1451,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Všetky pravidlá"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Všechna pravidla"
           }
         }
       }
@@ -1508,6 +1694,12 @@
             "state": "translated",
             "value": "z balíčka"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "z balíčku"
+          }
         }
       }
     },
@@ -1523,6 +1715,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Z balíčkov"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Z balíčků"
           }
         }
       }
@@ -1650,6 +1848,12 @@
             "state": "translated",
             "value": "Ochráni %1$@ od %2$@. Nestojí nič a neminie tohtomesačného žolíka."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ochrání %1$@ od %2$@. Nestojí nic a nespotřebuje tvého žolíka na tento měsíc."
+          }
         }
       }
     },
@@ -1665,6 +1869,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stojí v tvojom meste sama."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stojí ve tvém městě sama."
           }
         }
       }
@@ -1770,6 +1980,12 @@
             "state": "translated",
             "value": "Zatiaľ žiadne doplnky pre mačku. Mačka bude nosiť, čo vyhráš."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatím žádné doplňky pro kočku. Kočka bude nosit, co vyhraješ."
+          }
         }
       }
     },
@@ -1786,6 +2002,12 @@
             "state": "translated",
             "value": "Zatiaľ žiadne ozdoby. Každá, ktorú vyhráš, bude stáť v tvojom meste."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatím žádné ozdoby. Každá, kterou vyhraješ, bude stát ve tvém městě."
+          }
         }
       }
     },
@@ -1801,6 +2023,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zatiaľ žiadne nočné oblohy. Obloha, ktorú vyhráš, rozjasní tvoje noci."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatím žádné noční oblohy. Obloha, kterou vyhraješ, rozjasní tvoje noci."
           }
         }
       }
@@ -1840,6 +2068,12 @@
             "state": "translated",
             "value": "Zatiaľ žiadne pohľadnice. Každá ukrýva tip na spánok."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatím žádné pohlednice. Každá ukrývá tip na spánek."
+          }
         }
       }
     },
@@ -1877,6 +2111,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nič"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nic"
           }
         }
       }
@@ -1960,6 +2200,12 @@
             "state": "translated",
             "value": "Obyčajná obloha"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obyčejná obloha"
+          }
         }
       }
     },
@@ -1997,6 +2243,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dať mačke"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dát kočce"
           }
         }
       }
@@ -2080,6 +2332,12 @@
             "state": "translated",
             "value": "Zobraziť túto oblohu"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zobrazit tuto oblohu"
+          }
         }
       }
     },
@@ -2096,6 +2354,12 @@
             "state": "translated",
             "value": "Zobrazuje sa v noci."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zobrazuje se v noci."
+          }
         }
       }
     },
@@ -2111,6 +2375,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zobrazuje sa na obrazovke Dnes a v meste v noci."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zobrazuje se na obrazovce Dnes a ve městě v noci."
           }
         }
       }
@@ -2194,6 +2464,12 @@
             "state": "translated",
             "value": "Zapnúť: %@ z balíčka?"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapnout: %@ z balíčku?"
+          }
         }
       }
     },
@@ -2276,6 +2552,12 @@
             "state": "translated",
             "value": "Mačka to už má."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kočka to už má."
+          }
         }
       }
     },
@@ -2291,6 +2573,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mačka ti rozbalila balíček."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kočka ti rozbalila balíček."
           }
         }
       }
@@ -2374,6 +2662,12 @@
             "state": "translated",
             "value": "Ozdoby mesta"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ozdoby města"
+          }
         }
       }
     },
@@ -2390,6 +2684,12 @@
             "state": "translated",
             "value": "Ak vynecháš noc a tohtomesačný bronzový žolík je už minutý, použije sa sám."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokud vynecháš noc a bronzový žolík na tento měsíc už je spotřebovaný, použije se sám."
+          }
         }
       }
     },
@@ -2402,6 +2702,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Platí do %@"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Platí do %@"
@@ -2554,6 +2860,12 @@
             "state": "translated",
             "value": "Tvoja zbierka"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje sbírka"
+          }
         }
       }
     },
@@ -2636,6 +2948,12 @@
             "state": "translated",
             "value": "V prísnom režime sa „Ísť spať“ zatvára skôr: %@ po večierke namiesto %@."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V přísném režimu se „Jít spát“ zavírá dřív: %@ po večerce místo %@."
+          }
         }
       }
     },
@@ -2696,6 +3014,12 @@
             "state": "translated",
             "value": "Dobrá noc opravila ruinu."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dobrá noc opravila ruinu."
+          }
         }
       }
     },
@@ -2711,6 +3035,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Skvelý týždeň pre tvoje mesto 🏙️"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skvělý týden pro tvoje město 🏙️"
           }
         }
       }
@@ -2728,6 +3058,12 @@
             "state": "translated",
             "value": "Sto nocí, ktoré niečo postavili."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sto nocí, které něco postavily."
+          }
         }
       }
     },
@@ -2743,6 +3079,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Žolík ochráni tvoju 🔥 sériu"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Žolík ochrání tvoji 🔥 sérii"
           }
         }
       }
@@ -2760,6 +3102,12 @@
             "state": "translated",
             "value": "Žolík zapnutý teraz začína nocou %@."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Žolík zapnutý teď začíná nocí %@."
+          }
         }
       }
     },
@@ -2775,6 +3123,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odpočinok sa dá začať iba v tomto okne, raz za deň. Za hotový odpočinok dostaneš %lld 🪙."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinek jde zahájit jen v tomto okně, jednou denně. Za hotový odpočinek dostaneš %lld 🪙."
           }
         }
       }
@@ -2814,6 +3168,12 @@
             "state": "translated",
             "value": "Park, múzeum alebo knižnica v tvojom meste."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Park, muzeum nebo knihovna ve tvém městě."
+          }
         }
       }
     },
@@ -2829,6 +3189,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dokonalý týždeň – každá noc hotová! 🌟"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dokonalý týden – každá noc hotová! 🌟"
           }
         }
       }
@@ -2846,6 +3212,12 @@
             "state": "translated",
             "value": "Pokojný týždeň. Dnes večer je nový začiatok 🌱"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klidný týden. Dnes večer je nový začátek 🌱"
+          }
         }
       }
     },
@@ -2861,6 +3233,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Simulácia trvá, kým ju nevrátiš na Naživo alebo kým sa appka nespustí znova. Potrebuje mesto."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simulace trvá, dokud ji nevrátíš na Naživo, nebo dokud se appka nespustí znovu. Potřebuje město."
           }
         }
       }
@@ -2900,6 +3278,12 @@
             "state": "translated",
             "value": "Radnica, škola, hasiči, polícia alebo nemocnica."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Radnice, škola, hasiči, policie nebo nemocnice."
+          }
         }
       }
     },
@@ -2938,6 +3322,12 @@
             "state": "translated",
             "value": "Celý týždeň hotových nocí za sebou."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Celý týden hotových nocí za sebou."
+          }
         }
       }
     },
@@ -2954,6 +3344,12 @@
             "state": "translated",
             "value": "O appke"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O appce"
+          }
         }
       }
     },
@@ -2969,6 +3365,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Úspechy"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Úspěchy"
           }
         }
       }
@@ -3008,6 +3410,12 @@
             "state": "translated",
             "value": "Po každej noci sa záloha uloží aj automaticky: Súbory → Na mojom iPhone → SleepHole → %@."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Po každé noci se záloha uloží i automaticky: Soubory → Na mém iPhonu → SleepHole → %@."
+          }
         }
       }
     },
@@ -3042,6 +3450,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budík"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Budík"
@@ -3106,6 +3520,12 @@
             "state": "translated",
             "value": "Hudba budíkov"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hudba budíků"
+          }
         }
       }
     },
@@ -3143,6 +3563,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Všetky budovy, cesty, autá, stromy a časť zvukov pochádzajú z Kenney Game Assets (licencia CC0). Ďakujeme za nádherné assety a za to, že ich Kenney dáva svetu. 💛"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Všechny budovy, cesty, auta, stromy a část zvuků pocházejí z Kenney Game Assets (licence CC0). Děkujeme za nádherné assety a za to, že je Kenney dává světu. 💛"
           }
         }
       }
@@ -3182,6 +3608,12 @@
             "state": "translated",
             "value": "Povoliť"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Povolit"
+          }
         }
       }
     },
@@ -3219,6 +3651,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tento mesiac už použitý"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tento měsíc už použitý"
           }
         }
       }
@@ -3258,6 +3696,12 @@
             "state": "translated",
             "value": "Animácie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animace"
+          }
         }
       }
     },
@@ -3273,6 +3717,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odpovedal zdroj"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpověděl zdroj"
           }
         }
       }
@@ -3290,6 +3740,12 @@
             "state": "translated",
             "value": "Vzhľad a zvuky"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vzhled a zvuky"
+          }
         }
       }
     },
@@ -3305,6 +3761,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Autori"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autoři"
           }
         }
       }
@@ -3322,6 +3784,12 @@
             "state": "translated",
             "value": "Priemer (posledných 14 nocí)"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Průměr (posledních 14 nocí)"
+          }
         }
       }
     },
@@ -3337,6 +3805,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Priemerný štart %1$@ · vstávanie %2$@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Průměrný začátek %@ · vstávání %@"
           }
         }
       }
@@ -3398,6 +3872,12 @@
             "state": "translated",
             "value": "Návrat včas"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Návrat včas"
+          }
         }
       }
     },
@@ -3414,6 +3894,12 @@
             "state": "translated",
             "value": "Zvuk v pozadí"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuk na pozadí"
+          }
         }
       }
     },
@@ -3426,6 +3912,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Záloha"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Záloha"
@@ -3467,6 +3959,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Večierka"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večerka"
           }
         }
       }
@@ -3618,6 +4116,12 @@
             "state": "translated",
             "value": "Najdlhšia séria: %lld 🔥"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nejdelší série: %lld 🔥"
+          }
         }
       }
     },
@@ -3633,6 +4137,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Lepšie ako minulý týždeň – tvoje mesto si to všimlo 💪"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lepší než minulý týden – tvoje město si toho všimlo 💪"
           }
         }
       }
@@ -3672,6 +4182,12 @@
             "state": "translated",
             "value": "Obe sú nahrávky CC0 (orezané, so zjemneným začiatkom a koncom). Počuješ ich, keď mačku hladkáš: pradenie a mňau."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obě jsou nahrávky CC0 (ořezané, se zjemněným začátkem a koncem). Uslyšíš je, když kočku hladíš: předení a mňau."
+          }
         }
       }
     },
@@ -3687,6 +4203,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vánok"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Větřík"
           }
         }
       }
@@ -3722,6 +4244,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bronzový žolík"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Bronzový žolík"
@@ -3764,6 +4292,12 @@
             "state": "translated",
             "value": "Štart stavby"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Začátek stavby"
+          }
         }
       }
     },
@@ -3779,6 +4313,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Začiatok stavby"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavba začala"
           }
         }
       }
@@ -3796,6 +4336,12 @@
             "state": "translated",
             "value": "Budova"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budova"
+          }
         }
       }
     },
@@ -3808,6 +4354,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavba hotová (WOW)"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Stavba hotová (WOW)"
@@ -3850,6 +4402,12 @@
             "state": "translated",
             "value": "Bezvetrie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bezvětří"
+          }
         }
       }
     },
@@ -3865,6 +4423,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zrušiť"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zrušit"
           }
         }
       }
@@ -3926,6 +4490,12 @@
             "state": "translated",
             "value": "Zrušiť skúšobný budík"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zrušit zkušební budík"
+          }
         }
       }
     },
@@ -3963,6 +4533,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zvuky mačky"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuky kočky"
           }
         }
       }
@@ -4002,6 +4578,12 @@
             "state": "translated",
             "value": "Mesto"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Město"
+          }
         }
       }
     },
@@ -4017,6 +4599,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mesto nie je overené"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Město není ověřeno"
           }
         }
       }
@@ -4034,6 +4622,12 @@
             "state": "translated",
             "value": "Mesto overené"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Město ověřeno"
+          }
         }
       }
     },
@@ -4049,6 +4643,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vymazať"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vymazat"
           }
         }
       }
@@ -4088,6 +4688,12 @@
             "state": "translated",
             "value": "Oblačnosť"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oblačnost"
+          }
         }
       }
     },
@@ -4100,6 +4706,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oblačno"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Oblačno"
@@ -4120,6 +4732,12 @@
             "state": "translated",
             "value": "Kód"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kód"
+          }
         }
       }
     },
@@ -4132,6 +4750,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mince"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Mince"
@@ -4218,6 +4842,12 @@
             "state": "translated",
             "value": "Hotové odpočinky: %lld 😴"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotové odpočinky: %lld 😴"
+          }
         }
       }
     },
@@ -4233,6 +4863,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hotové noci minulý týždeň: %lld"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotové noci minulý týden: %lld"
           }
         }
       }
@@ -4250,6 +4886,12 @@
             "state": "translated",
             "value": "Hotová 🎉"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová 🎉"
+          }
         }
       }
     },
@@ -4262,6 +4904,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová 🏢"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Hotová 🏢"
@@ -4304,6 +4952,12 @@
             "state": "translated",
             "value": "Poďakovanie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poděkování"
+          }
         }
       }
     },
@@ -4320,6 +4974,12 @@
             "state": "translated",
             "value": "Vstávanie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vstávání"
+          }
         }
       }
     },
@@ -4335,6 +4995,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zásady ochrany súkromia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zásady ochrany soukromí"
           }
         }
       }
@@ -4396,6 +5062,12 @@
             "state": "translated",
             "value": "Deň"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Den"
+          }
         }
       }
     },
@@ -4411,6 +5083,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Denné svetlo"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Denní světlo"
           }
         }
       }
@@ -4472,6 +5150,12 @@
             "state": "translated",
             "value": "Vymazať"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smazat vše"
+          }
         }
       }
     },
@@ -4487,6 +5171,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Test detekcie"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test detekce"
           }
         }
       }
@@ -4504,6 +5194,12 @@
             "state": "translated",
             "value": "Test detekcie (F2)"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test detekce (F2)"
+          }
         }
       }
     },
@@ -4516,6 +5212,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vývoj"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Vývoj"
@@ -4554,6 +5256,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotovo"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Hotovo"
@@ -4640,6 +5348,12 @@
             "state": "translated",
             "value": "Ťukni na noc a uvidíš ju."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klepni na noc a uvidíš ji."
+          }
         }
       }
     },
@@ -4655,6 +5369,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ · začiatok %2$@ · spánok prišiel %3$@ · po %4$lld min"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · začátek %2$@ · usnutí %3$@ · po %4$lld min"
           }
         }
       }
@@ -4672,6 +5392,12 @@
             "state": "translated",
             "value": "%1$@ · začiatok %2$@"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · začátek %@"
+          }
         }
       }
     },
@@ -4684,6 +5410,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Detail noci"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Detail noci"
@@ -4748,6 +5480,12 @@
             "state": "translated",
             "value": "Počas Sústredenia (Spánok, Nerušiť) môžu varovanie „SleepHole musí zostať otvorená“ aj záložný budík ostať potichu. Zapni ich pre SleepHole v nastaveniach upozornení 🌙"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Během Soustředění (Spánek, Nerušit) mohou varování „SleepHole musí zůstat otevřený“ i záložní budík zůstat zticha. Zapni je pro SleepHole v nastavení oznámení 🌙"
+          }
         }
       }
     },
@@ -4763,6 +5501,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Každé Sústredenie má aj vlastný prepínač časovo citlivých upozornení – ten SleepHole nevidí."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každé Soustředění má i vlastní přepínač pro časově citlivá oznámení – ten SleepHole nevidí."
           }
         }
       }
@@ -4780,6 +5524,12 @@
             "state": "translated",
             "value": "Staršie týždne"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dřívější týdny"
+          }
         }
       }
     },
@@ -4792,6 +5542,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Efekty"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Efekty"
@@ -4878,6 +5634,12 @@
             "state": "translated",
             "value": "Každá noc sa počíta – tvoje mesto rastie ďalej 🌱"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Každá noc se počítá – tvoje město dál roste 🌱"
+          }
         }
       }
     },
@@ -4893,6 +5655,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Exportovať zálohu"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportovat zálohu"
           }
         }
       }
@@ -4910,6 +5678,12 @@
             "state": "translated",
             "value": "Päťdesiat nocí, ktoré niečo postavili."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padesát nocí, které něco postavily."
+          }
         }
       }
     },
@@ -4925,6 +5699,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Neskôr dostavaná 💪"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Později dostavěná 💪"
           }
         }
       }
@@ -4942,6 +5722,12 @@
             "state": "translated",
             "value": "Prvá budova"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "První budova"
+          }
         }
       }
     },
@@ -4957,6 +5743,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Prvá budova levelu 2"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "První budova úrovně 2"
           }
         }
       }
@@ -4974,6 +5766,12 @@
             "state": "translated",
             "value": "Prvá budova levelu 3"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "První budova úrovně 3"
+          }
         }
       }
     },
@@ -4989,6 +5787,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Prvý odpočinok"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "První odpočinek"
           }
         }
       }
@@ -5006,6 +5810,12 @@
             "state": "translated",
             "value": "Prvý mrakodrap"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "První mrakodrap"
+          }
         }
       }
     },
@@ -5021,6 +5831,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hmla"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mlha"
           }
         }
       }
@@ -5082,6 +5898,12 @@
             "state": "translated",
             "value": "Zadarmo"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zdarma"
+          }
         }
       }
     },
@@ -5097,6 +5919,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zadarmo znova %@."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zdarma znovu %@."
           }
         }
       }
@@ -5114,6 +5942,12 @@
             "state": "translated",
             "value": "Zadarmo – raz za rok môžeš mesto premenovať bezplatne."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zdarma – jednou za rok můžeš město přejmenovat bez poplatku."
+          }
         }
       }
     },
@@ -5126,6 +5960,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Od"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Od"
@@ -5168,6 +6008,12 @@
             "state": "translated",
             "value": "Víchor"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vichřice"
+          }
         }
       }
     },
@@ -5183,6 +6029,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vygenerovať nový kód"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vygenerovat nový kód"
           }
         }
       }
@@ -5222,6 +6074,12 @@
             "state": "translated",
             "value": "Ísť spať"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jít spát"
+          }
         }
       }
     },
@@ -5234,6 +6092,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zlatý žolík"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Zlatý žolík"
@@ -5320,6 +6184,12 @@
             "state": "translated",
             "value": "Animácia Dobrú noc"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animace Dobrou noc"
+          }
         }
       }
     },
@@ -5380,6 +6250,12 @@
             "state": "translated",
             "value": "Vstávanie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vstání"
+          }
         }
       }
     },
@@ -5392,6 +6268,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grafika a zvuky"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Grafika a zvuky"
@@ -5456,6 +6338,12 @@
             "state": "translated",
             "value": "Sprievodca"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Průvodce"
+          }
         }
       }
     },
@@ -5493,6 +6381,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Silný dážď"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silný déšť"
           }
         }
       }
@@ -5554,6 +6448,12 @@
             "state": "translated",
             "value": "Ak nič necítiš, skontroluj na iPhone"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokud nic necítíš, zkontroluj na iPhonu"
+          }
         }
       }
     },
@@ -5569,6 +6469,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ak vynecháš noc a bronzový žolík tento mesiac ešte nebol použitý, použije sa sám."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokud vynecháš noc a bronzový žolík tento měsíc ještě nebyl použitý, použije se sám."
           }
         }
       }
@@ -5586,6 +6492,12 @@
             "state": "translated",
             "value": "Choroba alebo dovolenka?"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nemoc nebo dovolená?"
+          }
         }
       }
     },
@@ -5601,6 +6513,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ráno zatras telefónom alebo zadaj tento kód."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ráno zatřes telefonem nebo zadej tento kód."
           }
         }
       }
@@ -5618,6 +6536,12 @@
             "state": "translated",
             "value": "Inšpirácia"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inspirace"
+          }
         }
       }
     },
@@ -5630,6 +6554,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intenzita"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Intenzita"
@@ -5672,6 +6602,12 @@
             "state": "translated",
             "value": "Ochráni %1$@ od %2$@. Tento druh je na tento mesiac minutý."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ochrání %@ od %@. Tento druh je na tento měsíc vyčerpaný."
+          }
         }
       }
     },
@@ -5709,6 +6645,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Žolíky 🛡️"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Žolíci 🛡️"
           }
         }
       }
@@ -5814,6 +6756,12 @@
             "state": "translated",
             "value": "Druh"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Druh"
+          }
         }
       }
     },
@@ -5852,6 +6800,12 @@
             "state": "translated",
             "value": "Posledná chyba"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poslední chyba"
+          }
         }
       }
     },
@@ -5868,6 +6822,12 @@
             "state": "translated",
             "value": "Posledné zlyhanie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poslední selhání"
+          }
         }
       }
     },
@@ -5883,6 +6843,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Posledný úspech"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poslední úspěch"
           }
         }
       }
@@ -5922,6 +6888,12 @@
             "state": "translated",
             "value": "Čas na prípravu"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas na přípravu"
+          }
         }
       }
     },
@@ -5938,6 +6910,12 @@
             "state": "translated",
             "value": "Koľko času máš po „Ísť spať“ na dokončenie toho, čo robíš – počíta sa od večierky. Po skoršom štarte je príprava vždy 15 min."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kolik času máš po „Jít spát“ na dokončení toho, co děláš – počítá se od večerky. Po dřívějším startu je příprava vždy 15 min."
+          }
         }
       }
     },
@@ -5953,6 +6931,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dĺžka"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Délka"
           }
         }
       }
@@ -6014,6 +6998,12 @@
             "state": "translated",
             "value": "Odomknutý level %lld zo 4"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odemčená úroveň %lld ze 4"
+          }
         }
       }
     },
@@ -6052,6 +7042,12 @@
             "state": "translated",
             "value": "Nový level"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nová úroveň"
+          }
         }
       }
     },
@@ -6067,6 +7063,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Levely"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Úrovně"
           }
         }
       }
@@ -6084,6 +7086,12 @@
             "state": "translated",
             "value": "Licencia CC BY 4.0 – upravené (orezané, zmiešané do slučky). Použité ako „Dážď na okno“."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Licence CC BY 4.0 – upraveno (ořezáno, prolnuto do smyčky). Použito jako „Déšť za oknem“."
+          }
         }
       }
     },
@@ -6099,6 +7107,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Licencia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Licence"
           }
         }
       }
@@ -6134,6 +7148,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naživo"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Naživo"
@@ -6198,6 +7218,12 @@
             "state": "translated",
             "value": "Záznam (%lld)"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Záznam (%lld)"
+          }
         }
       }
     },
@@ -6214,6 +7240,12 @@
             "state": "translated",
             "value": "Vytvoril Zrebec s pomocou Clauda (Anthropic) 🐰🦊"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vytvořil Zrebec s pomocí Clauda (Anthropic) 🐰🦊"
+          }
         }
       }
     },
@@ -6226,6 +7258,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mňau"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Mňau"
@@ -6290,6 +7328,12 @@
             "state": "translated",
             "value": "Ranné potvrdenie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ranní potvrzení"
+          }
         }
       }
     },
@@ -6328,6 +7372,12 @@
             "state": "translated",
             "value": "Moje mesto"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moje město"
+          }
         }
       }
     },
@@ -6343,6 +7393,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pomenovať mesto je zadarmo."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pojmenovat město je zdarma."
           }
         }
       }
@@ -6360,6 +7416,12 @@
             "state": "translated",
             "value": "Odpočinok"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinek"
+          }
         }
       }
     },
@@ -6375,6 +7437,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odpočinok %1$@–%2$@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinek %@–%@"
           }
         }
       }
@@ -6458,6 +7526,12 @@
             "state": "translated",
             "value": "Animácia Odpočinok"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animace Odpočinek"
+          }
         }
       }
     },
@@ -6470,6 +7544,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odpočinky"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Odpočinky"
@@ -6512,6 +7592,12 @@
             "state": "translated",
             "value": "Nový úspech!"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nový úspěch!"
+          }
         }
       }
     },
@@ -6528,6 +7614,12 @@
             "state": "translated",
             "value": "Nové úspechy!"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nové úspěchy!"
+          }
         }
       }
     },
@@ -6540,6 +7632,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nové budovy: %lld"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Nové budovy: %lld"
@@ -6559,6 +7657,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nová simulácia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nová simulace"
           }
         }
       }
@@ -6598,6 +7702,12 @@
             "state": "translated",
             "value": "Ďalšia testovacia noc sa počíta do mesta"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Další testovací noc se počítá do města"
+          }
         }
       }
     },
@@ -6610,6 +7720,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noc"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Noc"
@@ -6630,6 +7746,12 @@
             "state": "translated",
             "value": "Kalendár nocí"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kalendář nocí"
+          }
         }
       }
     },
@@ -6646,6 +7768,12 @@
             "state": "translated",
             "value": "Nočný denník"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noční deník"
+          }
         }
       }
     },
@@ -6658,6 +7786,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noc na %@"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Noc na %@"
@@ -6677,6 +7811,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nočné pauzy: %lld 🌙"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noční pauzy: %lld 🌙"
           }
         }
       }
@@ -6716,6 +7856,12 @@
             "state": "translated",
             "value": "Simulácia noci"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simulace noci"
+          }
         }
       }
     },
@@ -6731,6 +7877,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Noci %1$@ – %2$@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noci %@ – %@"
           }
         }
       }
@@ -6770,6 +7922,12 @@
             "state": "translated",
             "value": "Nie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne"
+          }
         }
       }
     },
@@ -6786,6 +7944,12 @@
             "state": "translated",
             "value": "Tento týždeň ešte žiadna noc – dnešná môže byť prvá 🌙"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tento týden ještě žádná noc – dnešní může být první 🌙"
+          }
         }
       }
     },
@@ -6801,6 +7965,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Také mesto sa nenašlo"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takové město se nenašlo"
           }
         }
       }
@@ -6862,6 +8032,12 @@
             "state": "translated",
             "value": "Žiadne"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Žádné"
+          }
         }
       }
     },
@@ -6921,6 +8097,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nemáš dosť mincí"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nemáš dost mincí"
           }
         }
       }
@@ -6982,6 +8164,12 @@
             "state": "translated",
             "value": "Poznámka"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poznámka"
+          }
         }
       }
     },
@@ -7019,6 +8207,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Upozornenia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oznámení"
           }
         }
       }
@@ -7058,6 +8252,12 @@
             "state": "translated",
             "value": "OK"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
         }
       }
     },
@@ -7073,6 +8273,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Namerané o"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas měření"
           }
         }
       }
@@ -7112,6 +8318,12 @@
             "state": "translated",
             "value": "Zapnutý"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapnuto"
+          }
         }
       }
     },
@@ -7127,6 +8339,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Žolíky ochránia tvoju 🔥 sériu počas choroby alebo keď nie si doma: séria počká – nepreruší sa ani nenarastie. Každý druh môžeš použiť raz za mesiac: bronzový je zadarmo, strieborný a zlatý stoja mince. Chránené noci nič nestavajú a neplatia mince; dobrá noc sa aj tak počíta ako zvyčajne."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Žolíci ochrání tvoji 🔥 sérii během nemoci nebo když nejsi doma: série počká – nepřeruší se ani nenaroste. Každý druh můžeš použít jednou za měsíc: bronzový je zdarma, stříbrný a zlatý stojí mince. Chráněné noci nic nestaví a nevynášejí mince; dobrá noc se přesto počítá jako obvykle."
           }
         }
       }
@@ -7188,6 +8406,12 @@
             "state": "translated",
             "value": "Otvoriť SleepHole v Nastaveniach iOS"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otevřít SleepHole v Nastavení iOS"
+          }
         }
       }
     },
@@ -7203,6 +8427,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vypnuté: ráno žiadny systémový budík – budík SleepHole a záložné upozornenia zazvonia aj tak. Varovanie prísneho režimu na zamknutej obrazovke zvoní ako systémový budík naďalej."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vypnuto: ráno žádný systémový budík – budík SleepHole a záložní oznámení zazvoní i tak. Varování přísného režimu na zamčené obrazovce zvoní jako systémový budík dál."
           }
         }
       }
@@ -7220,6 +8450,12 @@
             "state": "translated",
             "value": "Otvoriť nastavenia upozornení"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otevřít nastavení oznámení"
+          }
         }
       }
     },
@@ -7235,6 +8471,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ďalšie zdroje údajov"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Další zdroje dat"
           }
         }
       }
@@ -7292,6 +8534,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hodinové hodnoty z minulosti"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Hodinové hodnoty z minulosti"
@@ -7400,6 +8648,12 @@
             "state": "translated",
             "value": "Pohladkanie mačky"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hlazení kočky"
+          }
         }
       }
     },
@@ -7415,6 +8669,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Telefón zamknutý"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Telefon zamčený"
           }
         }
       }
@@ -7476,6 +8736,12 @@
             "state": "translated",
             "value": "Hrať"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hrát"
+          }
         }
       }
     },
@@ -7491,6 +8757,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Prehrať ukážku"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přehrát ukázku"
           }
         }
       }
@@ -7508,6 +8780,12 @@
             "state": "translated",
             "value": "Spustiť na začiatku noci"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spustit na začátku noci"
+          }
         }
       }
     },
@@ -7520,6 +8798,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bublinka"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Bublinka"
@@ -7562,6 +8846,12 @@
             "state": "translated",
             "value": "Chránená žolíkom 🛡️ – séria na teba počkala."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chráněná žolíkem 🛡️ – série na tebe počkala."
+          }
         }
       }
     },
@@ -7578,6 +8868,12 @@
             "state": "translated",
             "value": "Ochráni %@"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ochrání %@"
+          }
         }
       }
     },
@@ -7593,6 +8889,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pradenie"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Předení"
           }
         }
       }
@@ -7898,6 +9200,12 @@
             "state": "translated",
             "value": "Rýchla noc (4 min, príprava %llds)"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rychlá noc (4 min, příprava %llds)"
+          }
         }
       }
     },
@@ -7913,6 +9221,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dážď"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Déšť"
           }
         }
       }
@@ -7974,6 +9288,12 @@
             "state": "translated",
             "value": "Obnoviť teraz"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obnovit teď"
+          }
         }
       }
     },
@@ -7989,6 +9309,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pravidelnosť: ±%1$lld min – %2$@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pravidelnost: ±%lld min – %@"
           }
         }
       }
@@ -8050,6 +9376,12 @@
             "state": "translated",
             "value": "Premenovať za %lld 🪙"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přejmenovat za %lld 🪙"
+          }
         }
       }
     },
@@ -8065,6 +9397,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Premenovať mesto"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přejmenovat město"
           }
         }
       }
@@ -8082,6 +9420,12 @@
             "state": "translated",
             "value": "Premenovať…"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přejmenovat…"
+          }
         }
       }
     },
@@ -8097,6 +9441,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Premenovanie stojí %lld 🪙."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přejmenování stojí %lld 🪙."
           }
         }
       }
@@ -8114,6 +9464,12 @@
             "state": "translated",
             "value": "Neskôr opravená 🛠️"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Později opravená 🛠️"
+          }
         }
       }
     },
@@ -8126,6 +9482,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opravená 🛠️ – z ruiny je zase budova"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Opravená 🛠️ – z ruiny je zase budova"
@@ -8146,6 +9508,12 @@
             "state": "translated",
             "value": "Obnoviť"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obnovit"
+          }
         }
       }
     },
@@ -8162,6 +9530,12 @@
             "state": "translated",
             "value": "Obnoviť zo zálohy…"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obnovit ze zálohy…"
+          }
         }
       }
     },
@@ -8177,6 +9551,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Obnoviť zálohu? Terajšie noci, mesto a nastavenia sa nahradia."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obnovit zálohu? Stávající noci, město a nastavení se nahradí."
           }
         }
       }
@@ -8226,6 +9606,36 @@
                 "stringUnit": {
                   "state": "translated",
                   "value": "Obnovené: %lld nocí ✓"
+                }
+              }
+            }
+          }
+        },
+        "cs": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Obnovena: %lld noc ✓"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Obnoveny: %lld noci ✓"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Obnoveno: %lld noci ✓"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Obnoveno: %lld nocí ✓"
                 }
               }
             }
@@ -8312,6 +9722,12 @@
             "state": "translated",
             "value": "Zazvoniť o 20 sekúnd"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zazvonit za 20 sekund"
+          }
         }
       }
     },
@@ -8350,6 +9766,12 @@
             "state": "translated",
             "value": "Opravená ruina"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opravená ruina"
+          }
         }
       }
     },
@@ -8362,6 +9784,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruina"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Ruina"
@@ -8382,6 +9810,12 @@
             "state": "translated",
             "value": "Ruiny"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruiny"
+          }
         }
       }
     },
@@ -8398,6 +9832,12 @@
             "state": "translated",
             "value": "Ruina – aj to patrí k mestu 🌱"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruina – i ta patří k městu 🌱"
+          }
         }
       }
     },
@@ -8410,6 +9850,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruina 🧱"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Ruina 🧱"
@@ -8452,6 +9898,12 @@
             "state": "translated",
             "value": "Uložiť"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uložit"
+          }
         }
       }
     },
@@ -8464,6 +9916,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozvrh"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Rozvrh"
@@ -8506,6 +9964,12 @@
             "state": "translated",
             "value": "Nastavenia → Prístupnosť → Dotyk → Vibrácie: zapnuté"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastavení → Zpřístupnění → Dotyk → Vibrace: zapnuto"
+          }
         }
       }
     },
@@ -8521,6 +9985,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nastavenia → Zvuky a haptika → Haptika: Vždy prehrávať"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastavení → Zvuky a haptika → Haptika: Vždy přehrávat"
           }
         }
       }
@@ -8538,6 +10008,12 @@
             "state": "translated",
             "value": "Nastavenia → Zvuky a haptika → Systémová haptika: zapnutá"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastavení → Zvuky a haptika → Systémová haptika: zapnutá"
+          }
         }
       }
     },
@@ -8553,6 +10029,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Príprava je skrátená na 10s (v appke 5 min). Po nej sa stavba zrúti, ak je appka v pozadí dlhšie ako 10s. Zamknutie telefónu je v poriadku."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Příprava je zkrácená na 10s (v appce 5 min). Po ní se stavba zřítí, pokud je appka na pozadí déle než 10s. Zamknutí telefonu je v pořádku."
           }
         }
       }
@@ -8591,6 +10073,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Príprava: ešte %llds"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Příprava: ještě %llds"
           }
         }
       }
@@ -8696,6 +10184,12 @@
             "state": "translated",
             "value": "Znova ukázať sprievodcu a prvú noc"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Znovu ukázat průvodce a první noc"
+          }
         }
       }
     },
@@ -8711,6 +10205,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zobrazené na obrazovke Dnes"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zobrazeno na obrazovce Dnes"
           }
         }
       }
@@ -8750,6 +10250,12 @@
             "state": "translated",
             "value": "Strieborný žolík"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stříbrný žolík"
+          }
         }
       }
     },
@@ -8765,6 +10271,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Simulácia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simulace"
           }
         }
       }
@@ -8804,6 +10316,12 @@
             "state": "translated",
             "value": "Obloha"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obloha"
+          }
         }
       }
     },
@@ -8820,6 +10338,12 @@
             "state": "translated",
             "value": "Zvuk na zaspávanie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuk na usínání"
+          }
         }
       }
     },
@@ -8835,6 +10359,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zvuky na zaspávanie"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuky na usínání"
           }
         }
       }
@@ -8940,6 +10470,12 @@
             "state": "translated",
             "value": "SleepHole – záloha"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole – záloha"
+          }
         }
       }
     },
@@ -9000,6 +10536,12 @@
             "state": "translated",
             "value": "Podpis appky SleepHole vyprší v čase uvedenom vyššie. Dovtedy pripoj iPhone k Macu a nainštaluj SleepHole znova – dáta zostanú. Deň a 3 hodiny vopred dostaneš pripomienku."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podpis appky SleepHole vyprší v termínu uvedeném výše. Do té doby připoj iPhone k Macu a nainstaluj SleepHole znovu – data zůstanou. Připomínku dostaneš den a 3 hodiny předem."
+          }
         }
       }
     },
@@ -9015,6 +10557,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "SleepTown od Seekrtech – hra, ktorá ukázala, že spánok môže byť stavba mesta."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepTown od Seekrtech – hra, která ukázala, že spánek může stavět město."
           }
         }
       }
@@ -9032,6 +10580,12 @@
             "state": "translated",
             "value": "Sneh"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sníh"
+          }
         }
       }
     },
@@ -9047,6 +10601,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sneh na zemi"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sníh na zemi"
           }
         }
       }
@@ -9086,6 +10646,12 @@
             "state": "translated",
             "value": "Zvuk"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuk"
+          }
         }
       }
     },
@@ -9098,6 +10664,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvukové efekty"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Zvukové efekty"
@@ -9118,6 +10690,12 @@
             "state": "translated",
             "value": "Test zvukových efektov"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test zvukových efektů"
+          }
         }
       }
     },
@@ -9130,6 +10708,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zdroj"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Zdroj"
@@ -9150,6 +10734,12 @@
             "state": "translated",
             "value": "Iskričky"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jiskřičky"
+          }
         }
       }
     },
@@ -9165,6 +10755,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Štart"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Začátek"
           }
         }
       }
@@ -9226,6 +10822,12 @@
             "state": "translated",
             "value": "Štart noci"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Začátek noci"
+          }
         }
       }
     },
@@ -9286,6 +10888,12 @@
             "state": "translated",
             "value": "Zapni test a vyskúšaj: zamknúť telefón, odomknúť, prepnúť do inej appky, stiahnuť Control Center, otvoriť kameru zo zamknutej obrazovky, nechať sa zavolať. Nakoniec pošli záznam cez „Zdieľať“."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapni test a zkus: zamknout telefon, odemknout, přepnout do jiné appky, stáhnout Ovládací centrum, otevřít Fotoaparát ze zamčené obrazovky, nechat si zavolat. Nakonec pošli záznam přes „Sdílet“."
+          }
         }
       }
     },
@@ -9324,6 +10932,12 @@
             "state": "translated",
             "value": "Zastaviť"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zastavit"
+          }
         }
       }
     },
@@ -9340,6 +10954,12 @@
             "state": "translated",
             "value": "Zastaviť zvoniaci budík"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zastavit zvonící budík"
+          }
         }
       }
     },
@@ -9355,6 +10975,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Keď počas noci zvuk zastavíš, tento prepínač sa vypne; keď počas noci stlačíš ▶, zapne sa znova."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Když během noci zvuk zastavíš, tento přepínač se vypne; když během noci stiskneš ▶, zapne se znovu."
           }
         }
       }
@@ -9460,6 +11086,12 @@
             "state": "translated",
             "value": "Zapnúť za %lld 🪙"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapnout za %lld 🪙"
+          }
         }
       }
     },
@@ -9476,6 +11108,12 @@
             "state": "translated",
             "value": "Zapnúť zadarmo"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapnout zdarma"
+          }
         }
       }
     },
@@ -9491,6 +11129,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zapnúť: %@?"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zapnout: %@?"
           }
         }
       }
@@ -9530,6 +11174,12 @@
             "state": "translated",
             "value": "Systémový budík"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systémový budík"
+          }
         }
       }
     },
@@ -9545,6 +11195,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Test systémového budíka"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test systémového budíku"
           }
         }
       }
@@ -9562,6 +11218,12 @@
             "state": "translated",
             "value": "Systém sa riadi svetlým / tmavým režimom iPhonu. Nočná obrazovka je vždy tmavá."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systém se řídí světlým / tmavým režimem iPhonu. Noční obrazovka je vždy tmavá."
+          }
         }
       }
     },
@@ -9578,6 +11240,12 @@
             "state": "translated",
             "value": "Ťukni na deň a uvidíš, ako tá noc prebehla."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klepni na den a uvidíš, jak ta noc proběhla."
+          }
         }
       }
     },
@@ -9593,6 +11261,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ťukni na mačku"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klepni na kočku"
           }
         }
       }
@@ -9632,6 +11306,12 @@
             "state": "translated",
             "value": "Teplota"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplota"
+          }
         }
       }
     },
@@ -9644,6 +11324,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplota: %lld °C"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Teplota: %lld °C"
@@ -9664,6 +11350,12 @@
             "state": "translated",
             "value": "Desať nocí, ktoré niečo postavili (hotové či rozostavané)."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deset nocí, které něco postavily (hotové či nedokončené)."
+          }
         }
       }
     },
@@ -9679,6 +11371,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Skúšobný budík je nastavený na %@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zkušební budík je nastavený na %@"
           }
         }
       }
@@ -9696,6 +11394,12 @@
             "state": "translated",
             "value": "Testovacia noc (15 min, príprava 5 min)"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testovací noc (15 min, příprava 5 min)"
+          }
         }
       }
     },
@@ -9711,6 +11415,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Test beží"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test běží"
           }
         }
       }
@@ -9794,6 +11504,12 @@
             "state": "translated",
             "value": "Appka v túto noc nebežala – nestavalo sa."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appka tu noc neběžela – nic se nestavělo."
+          }
         }
       }
     },
@@ -9806,6 +11522,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appka funguje do"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Appka funguje do"
@@ -9848,6 +11570,12 @@
             "state": "translated",
             "value": "Stavba sa zrútila"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavba se zřítila"
+          }
         }
       }
     },
@@ -9863,6 +11591,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stavba sa zrútila o %@ 🧱"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavba se zřítila v %@ 🧱"
           }
         }
       }
@@ -9902,6 +11636,12 @@
             "state": "translated",
             "value": "Stavba stojí ✅"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavba stojí ✅"
+          }
         }
       }
     },
@@ -9917,6 +11657,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Katalóg sa nedá načítať: %@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Katalog se nepodařilo načíst: %@"
           }
         }
       }
@@ -9934,6 +11680,12 @@
             "state": "translated",
             "value": "Graf sa naplní po prvých nociach."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Graf se naplní po prvních nocích."
+          }
         }
       }
     },
@@ -9949,6 +11701,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Súbor sa nedá prečítať: %@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soubor nejde přečíst: %@"
           }
         }
       }
@@ -9966,6 +11724,12 @@
             "state": "translated",
             "value": "Hľadanie ide cez Apple Mapy. SleepHole sa nikdy nepýta na tvoju polohu."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hledání jde přes Apple Mapy. SleepHole se nikdy neptá na tvou polohu."
+          }
         }
       }
     },
@@ -9981,6 +11745,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zvuk sa nespustil: %@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvuk se nespustil: %@"
           }
         }
       }
@@ -9998,6 +11768,12 @@
             "state": "translated",
             "value": "Zvukové príbehy sú zložené z CC0 zvukov od Kenneyho (Impact Sounds, RPG Audio, Foley Sounds) a CC0 nahrávok z Freesound.org – ďakujeme ich autorom (celý zoznam je v projekte v CREDITS-freesound.txt)."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zvukové příběhy jsou složené z CC0 zvuků od Kenneyho (Impact Sounds, RPG Audio, Foley Sounds) a CC0 nahrávek z Freesound.org – děkujeme jejich autorům (celý seznam je v projektu v CREDITS-freesound.txt)."
+          }
         }
       }
     },
@@ -10013,6 +11789,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zdroj údajov"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zdroj údajů"
           }
         }
       }
@@ -10030,6 +11812,12 @@
             "state": "translated",
             "value": "Systémový budík je ďalšia záloha popri záložných upozorneniach: zvoní aj v tichom režime a počas Sústredenia, aj keď iOS appku SleepHole ukončil – 30s po budíčku, alebo keď po 2 minútach stíchne vlastný budík SleepHole."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systémový budík je další záloha vedle záložních oznámení: zvoní i v tichém režimu a během Soustředění, i když iOS appku SleepHole ukončil – 30s po budíčku, nebo když po 2 minutách utichne vlastní budík SleepHole."
+          }
         }
       }
     },
@@ -10045,6 +11833,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Teplota na obrazovke Dnes pochádza z Apple Weather, a keď nie je dostupné, z MET Norway."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplota na obrazovce Dnes pochází z Apple Weather, a když není k dispozici, z MET Norway."
           }
         }
       }
@@ -10106,6 +11900,12 @@
             "state": "translated",
             "value": "Tieto skladby sú voľné dielo, v SleepHole nanovo syntetizované. „Budíček“ a „Poplach“ sú vlastné skladby."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tyto skladby jsou volné dílo, v SleepHole nově nasyntetizované. „Budíček“ a „Poplach“ jsou vlastní skladby."
+          }
         }
       }
     },
@@ -10121,6 +11921,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tridsať hotových nocí za sebou – to je už naozajstný zvyk!"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Třicet hotových nocí za sebou – to už je opravdový zvyk!"
           }
         }
       }
@@ -10138,6 +11944,12 @@
             "state": "translated",
             "value": "Tento týždeň · %@"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tento týden · %@"
+          }
         }
       }
     },
@@ -10153,6 +11965,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tri hotové noci za sebou."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tři hotové noci za sebou."
           }
         }
       }
@@ -10170,6 +11988,12 @@
             "state": "translated",
             "value": "Búrka"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bouřka"
+          }
         }
       }
     },
@@ -10185,6 +12009,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Časovo citlivé upozornenia sú vypnuté"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Časově citlivá oznámení jsou vypnutá"
           }
         }
       }
@@ -10224,6 +12054,12 @@
             "state": "translated",
             "value": "Do"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do"
+          }
         }
       }
     },
@@ -10239,6 +12075,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Povoliť ho môžeš v Nastaveniach iOS → SleepHole."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Povolit ho můžeš v Nastavení iOS → SleepHole."
           }
         }
       }
@@ -10278,6 +12120,12 @@
             "state": "translated",
             "value": "Dnes nezobrazuje počasie."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnes nezobrazuje počasí."
+          }
         }
       }
     },
@@ -10293,6 +12141,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dnes ukazuje skutočné slnko a mesiac pre %@."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnes ukazuje skutečné slunce a měsíc pro město %@."
           }
         }
       }
@@ -10332,6 +12186,12 @@
             "state": "translated",
             "value": "Čas mimo appky spolu: %llds"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas mimo appku celkem: %llds"
+          }
         }
       }
     },
@@ -10370,6 +12230,12 @@
             "state": "translated",
             "value": "Mestský denník"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Městský deník"
+          }
         }
       }
     },
@@ -10385,6 +12251,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Názov mesta"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Název města"
           }
         }
       }
@@ -10402,6 +12274,12 @@
             "state": "translated",
             "value": "Odchody po príprave"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odchody po přípravě"
+          }
         }
       }
     },
@@ -10417,6 +12295,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odchody počas prípravy (do %@)"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odchody během přípravy (do %@)"
           }
         }
       }
@@ -10456,6 +12340,12 @@
             "state": "translated",
             "value": "Napíš svoje mesto a Dnes ukáže skutočné slnko a mesiac. Bez mesta sa obloha riadi tvojou večierkou."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Napiš své město a Dnes ukáže skutečné slunce a měsíc. Bez města se obloha řídí tvou večerkou."
+          }
         }
       }
     },
@@ -10471,6 +12361,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rozostavaná"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nedokončená"
           }
         }
       }
@@ -10488,6 +12384,12 @@
             "state": "translated",
             "value": "Rozostavaná – dokončí ju ďalšia dobrá noc"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nedokončená – dokončí ji další dobrá noc"
+          }
         }
       }
     },
@@ -10503,6 +12405,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rozostavaná 🚧"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nedokončená 🚧"
           }
         }
       }
@@ -10520,6 +12428,12 @@
             "state": "translated",
             "value": "Použiť"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Použít"
+          }
         }
       }
     },
@@ -10535,6 +12449,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Použité"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Použito"
           }
         }
       }
@@ -10552,6 +12472,12 @@
             "state": "translated",
             "value": "Test vibrácií"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test vibrací"
+          }
         }
       }
     },
@@ -10564,6 +12490,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hlas"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Hlas"
@@ -10583,6 +12515,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Hlas (dobrú noc, dobré ráno)"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hlas (dobrou noc, dobré ráno)"
           }
         }
       }
@@ -10622,6 +12560,12 @@
             "state": "translated",
             "value": "Počasie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Počasí"
+          }
         }
       }
     },
@@ -10637,6 +12581,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Údaje o počasí: MET Norway"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data o počasí: MET Norway"
           }
         }
       }
@@ -10654,6 +12604,12 @@
             "state": "translated",
             "value": "Test počasia"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test počasí"
+          }
         }
       }
     },
@@ -10669,6 +12625,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Týždeň %@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Týden %@"
           }
         }
       }
@@ -10730,6 +12692,12 @@
             "state": "translated",
             "value": "Kedy začínaš a vstávaš"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kdy začínáš a vstáváš"
+          }
         }
       }
     },
@@ -10745,6 +12713,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kým čaká, Dnes ho ukazuje ako poistný budík – jeho vypnutie zruší aj skúšku."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dokud čeká, Dnes ho ukazuje jako pojistný budík – jeho vypnutí zruší i zkoušku."
           }
         }
       }
@@ -10784,6 +12758,12 @@
             "state": "translated",
             "value": "Šuch"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svist"
+          }
         }
       }
     },
@@ -10799,6 +12779,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vietor"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vítr"
           }
         }
       }
@@ -10816,6 +12802,12 @@
             "state": "translated",
             "value": "Veterno"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Větrno"
+          }
         }
       }
     },
@@ -10831,6 +12823,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bez upozornení nedostaneš varovanie „SleepHole musí zostať otvorená“ ani záložný budík. Upozornenia SleepHole sú časovo citlivé – prídu aj počas Sústredenia (Spánok, Nerušiť). Ak sa iOS spýta, nechaj ich povolené."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez oznámení nedostaneš varování „SleepHole musí zůstat otevřený“ ani záložní budík. Oznámení SleepHole jsou časově citlivá – přijdou i během Soustředění (Spánek, Nerušit). Pokud se iOS zeptá, nech je povolená."
           }
         }
       }
@@ -10870,6 +12868,12 @@
             "state": "translated",
             "value": "Áno"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ano"
+          }
         }
       }
     },
@@ -10907,6 +12911,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Preklep môžeš zadarmo opraviť do 10 minút po premenovaní."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Překlep můžeš zdarma opravit do 10 minut po přejmenování."
           }
         }
       }
@@ -10968,6 +12978,12 @@
             "state": "translated",
             "value": "Noc je zrušená"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noc je zrušená"
+          }
         }
       }
     },
@@ -11005,6 +13021,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Máš %1$lld 🪙 – chýba ešte %2$lld."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máš %lld 🪙 – chybí ještě %lld."
           }
         }
       }
@@ -11066,6 +13088,12 @@
             "state": "translated",
             "value": "Pravidelnosť uvidíš po 2 nociach."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pravidelnost uvidíš po 2 nocích."
+          }
         }
       }
     },
@@ -11126,6 +13154,12 @@
             "state": "translated",
             "value": "Tvoje mesto"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje město"
+          }
         }
       }
     },
@@ -11164,6 +13198,12 @@
             "state": "translated",
             "value": "Prvá budova pribudne po prvej noci 🌙"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "První budova přibude po první noci 🌙"
+          }
         }
       }
     },
@@ -11180,6 +13220,12 @@
             "state": "translated",
             "value": "Prvé pomenovanie a jedno premenovanie za rok sú zadarmo, inak premenovanie stojí %lld 🪙."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "První pojmenování a jedno přejmenování za rok jsou zdarma, jinak přejmenování stojí %lld 🪙."
+          }
         }
       }
     },
@@ -11195,6 +13241,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tvoja prvá noc, ktorá niečo postavila."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje první noc, která něco postavila."
           }
         }
       }
@@ -11322,6 +13374,12 @@
             "state": "translated",
             "value": "Tvoje mesto"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje město"
+          }
         }
       }
     },
@@ -11337,6 +13395,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tvoje mesto siaha do neba."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje město sahá do nebe."
           }
         }
       }
@@ -11398,6 +13462,12 @@
             "state": "translated",
             "value": "automaticky"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "automaticky"
+          }
         }
       }
     },
@@ -11413,6 +13483,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "najdlhšia séria"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nejdelší série"
           }
         }
       }
@@ -11452,6 +13528,12 @@
             "state": "translated",
             "value": "zavretá appka"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zavřená appka"
+          }
         }
       }
     },
@@ -11464,6 +13546,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mince"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "mince"
@@ -11484,6 +13572,12 @@
             "state": "translated",
             "value": "hotová"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hotová"
+          }
         }
       }
     },
@@ -11500,6 +13594,12 @@
             "state": "translated",
             "value": "séria teraz"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "aktuální série"
+          }
         }
       }
     },
@@ -11515,6 +13615,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "skrátený"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zkrácený"
           }
         }
       }
@@ -11554,6 +13660,12 @@
             "state": "translated",
             "value": "nezazvonil – vstávanie bolo skôr"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nezazvonil – vstávalo se dřív"
+          }
         }
       }
     },
@@ -11569,6 +13681,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "nepodaril sa"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nepovedl se"
           }
         }
       }
@@ -11586,6 +13704,12 @@
             "state": "translated",
             "value": "napr. Bratislava"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "např. Praha"
+          }
         }
       }
     },
@@ -11602,6 +13726,12 @@
             "state": "translated",
             "value": "výborná 🌟"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "výborná 🌟"
+          }
         }
       }
     },
@@ -11614,6 +13744,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "dobrá 👍"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "dobrá 👍"
@@ -11656,6 +13792,12 @@
             "state": "translated",
             "value": "iOS dovolí appke vibrovať, len keď je na obrazovke. V noci vibrujú varovania cez svoje upozornenie – na to treba nastavenia vyššie. Sú časovo citlivé, takže prídu aj počas Sústredenia – ak sa iOS spýta, nechaj ich povolené."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iOS dovolí appce vibrovat, jen když je na obrazovce. V noci vibrují varování přes svoje oznámení – na to potřebuješ nastavení výše. Jsou časově citlivá, takže přijdou i během Soustředění – pokud se iOS zeptá, nech je povolená."
+          }
         }
       }
     },
@@ -11694,6 +13836,12 @@
             "state": "translated",
             "value": "prebieha"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "probíhá"
+          }
         }
       }
     },
@@ -11706,6 +13854,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "žolík 🛡️"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "žolík 🛡️"
@@ -11748,6 +13902,12 @@
             "state": "translated",
             "value": "zamknutý"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zamčený"
+          }
         }
       }
     },
@@ -11764,6 +13924,12 @@
             "state": "translated",
             "value": "odpočinok"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "odpočinek"
+          }
         }
       }
     },
@@ -11776,6 +13942,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "postavené noci"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "postavené noci"
@@ -11862,6 +14034,12 @@
             "state": "translated",
             "value": "zazvonil %@"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zazvonil v %@"
+          }
         }
       }
     },
@@ -11878,6 +14056,12 @@
             "state": "translated",
             "value": "zazvonil %1$@, stíchol %2$@"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zazvonil v %1$@, utichl v %2$@"
+          }
         }
       }
     },
@@ -11890,6 +14074,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ruina"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "ruina"
@@ -11932,6 +14122,12 @@
             "state": "translated",
             "value": "sprites/catalog.json chýba v balíku appky"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sprites/catalog.json chybí v balíku appky"
+          }
         }
       }
     },
@@ -11970,6 +14166,12 @@
             "state": "translated",
             "value": "rozostavaná"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nedokončená"
+          }
         }
       }
     },
@@ -11982,6 +14184,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "získaný"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "získaný"
@@ -12002,6 +14210,12 @@
             "state": "translated",
             "value": "telefón použitý mimo appky"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "telefon použit mimo appku"
+          }
         }
       }
     },
@@ -12018,6 +14232,12 @@
             "state": "translated",
             "value": "kolíše – skús začínať v rovnaký čas 🌙"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "kolísá – zkus začínat ve stejnou dobu 🌙"
+          }
         }
       }
     },
@@ -12030,6 +14250,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bez návratu do appky"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "bez návratu do appky"
@@ -12072,6 +14298,12 @@
             "state": "translated",
             "value": "„Ranné vtáctvo“, „Spievajúca miska“, „Hracia skrinka“ („Klosterglocken“ od Louisa Lefébure-Wélyho, voľné dielo) a „Kalimba“ sú CC0 nahrávky z Freesound.org."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Ranní ptáci“, „Zpívající mísa“, „Hrací skříňka“ („Klosterglocken“ od Louise Lefébure-Wélyho, volné dílo) a „Kalimba“ jsou CC0 nahrávky z Freesound.org."
+          }
         }
       }
     },
@@ -12087,6 +14319,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "„Ranná nálada“ – Edvard Grieg, Peer Gynt (1875)"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Ranní nálada“ – Edvard Grieg, Peer Gynt (1875)"
           }
         }
       }
@@ -12104,6 +14342,12 @@
             "state": "translated",
             "value": "„Óda na radosť“ – Ludwig van Beethoven, 9. symfónia (1824)"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Óda na radost“ – Ludwig van Beethoven, 9. symfonie (1824)"
+          }
         }
       }
     },
@@ -12120,6 +14364,12 @@
             "state": "translated",
             "value": "„Prelúdium“ – Johann Sebastian Bach, Prelúdium C dur BWV 846 (1722)"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Preludium“ – Johann Sebastian Bach, Preludium C dur BWV 846 (1722)"
+          }
         }
       }
     },
@@ -12135,6 +14385,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "„Dážď na stan“ a všetky šumy sú syntetizované priamo v SleepHole."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Déšť na stanu“ a všechny šumy jsou nasyntetizované přímo v SleepHole."
           }
         }
       }
@@ -12284,6 +14540,12 @@
             "state": "translated",
             "value": "🌙 Pauzy: %lld×"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌙 Pauzy: %lld×"
+          }
         }
       }
     },
@@ -12299,6 +14561,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "👀 Pohľady na displej: %lld×"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "👀 Pohledy na displej: %lld×"
           }
         }
       }
@@ -12316,6 +14584,12 @@
             "state": "translated",
             "value": "📞 Telefonáty"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📞 Hovory"
+          }
         }
       }
     },
@@ -12331,6 +14605,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "🔄 Appka sa reštartovala"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔄 Appka se restartovala"
           }
         }
       }
@@ -12482,6 +14762,12 @@
             "state": "translated",
             "value": "Bez kódu s Face ID alebo Touch ID SleepHole nevie rozlíšiť zamknutie telefónu od odchodu z appky, preto sa na tomto iPhone odchody nepočítajú."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez kódu s Face ID nebo Touch ID SleepHole nerozliší zamčení telefonu od odchodu z appky, proto se na tomto iPhonu odchody nepočítají."
+          }
         }
       }
     },
@@ -12520,6 +14806,12 @@
             "state": "translated",
             "value": "Testovacia noc (30 min, príprava %llds)"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testovací noc (30 min, příprava %llds)"
+          }
         }
       }
     },
@@ -12536,6 +14828,12 @@
             "state": "translated",
             "value": "Prísny režim"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přísný režim"
+          }
         }
       }
     },
@@ -12551,6 +14849,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vypnutý: keď v noci telefón odomkneš a používaš ho, SleepHole ti to len jemne pripomenie a stavba zostáva. Zapnutý: telefón nahlas zazvoní a dnešná stavba spadne, ak ho používaš ďalej."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vypnuto: když v noci telefon odemkneš a používáš ho, SleepHole ti to jen jemně připomene a stavba zůstane. Zapnuto: telefon hlasitě zazvoní a dnešní stavba spadne, pokud ho používáš dál."
           }
         }
       }
@@ -12682,6 +14986,12 @@
             "state": "translated",
             "value": "Apple Zdravie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Zdraví"
+          }
         }
       }
     },
@@ -12697,6 +15007,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ukázať, kedy prišiel spánok"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukázat čas usnutí"
           }
         }
       }
@@ -12714,6 +15030,12 @@
             "state": "translated",
             "value": "Apple Zdravie na tomto zariadení nie je dostupné."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Zdraví na tomto zařízení není dostupné."
+          }
         }
       }
     },
@@ -12729,6 +15051,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "SleepHole číta tvoj spánok z appky Zdravie (zapisujú ho tam Apple Watch alebo iná appka na spánok) a ukáže, kedy naozaj prišiel spánok, vedľa začiatku noci. Iba číta – do Zdravia nič nezapisuje a nič neopúšťa tvoj iPhone."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SleepHole čte tvůj spánek z appky Zdraví (zapisují ho tam Apple Watch nebo jiná appka na spánek) a vedle začátku noci ukáže skutečný čas usnutí. Jen čte – do Zdraví nic nezapisuje a nic neopouští tvůj iPhone."
           }
         }
       }
@@ -12746,6 +15074,12 @@
             "state": "translated",
             "value": "Noci s údajmi o spánku: %1$lld z %2$lld"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noci s údaji o spánku: %lld z %lld"
+          }
         }
       }
     },
@@ -12761,6 +15095,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zatiaľ žiadne údaje? V appke Zdravie otvor svoj profil → Appky → SleepHole a povoľ Spánok."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatím žádná data? V appce Zdraví otevři svůj profil → Aplikace → SleepHole a povol Spánek."
           }
         }
       }
@@ -12778,6 +15118,12 @@
             "state": "translated",
             "value": "Čas zaspávania"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doba usínání"
+          }
         }
       }
     },
@@ -12794,6 +15140,12 @@
             "state": "translated",
             "value": "Prišiel spánok"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usnutí"
+          }
         }
       }
     },
@@ -12806,6 +15158,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " (po %lld min)"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": " (po %lld min)"
@@ -12826,6 +15184,12 @@
             "state": "translated",
             "value": "Zdroj: %@"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zdroj: %@"
+          }
         }
       }
     },
@@ -12842,6 +15206,12 @@
             "state": "translated",
             "value": "Prespané"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naspáno"
+          }
         }
       }
     },
@@ -12854,6 +15224,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$lld h %2$lld min"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$lld h %2$lld min"
@@ -12874,6 +15250,12 @@
             "state": "translated",
             "value": "Pre túto noc nie sú údaje o spánku"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pro tuto noc nejsou údaje o spánku"
+          }
         }
       }
     },
@@ -12886,6 +15268,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "iCloud"
@@ -12906,6 +15294,12 @@
             "state": "translated",
             "value": "Tvoje noci, mince a nastavenia sa ukladajú do tvojho vlastného iCloudu. Mesto je potom rovnaké na všetkých tvojich zariadeniach a po preinštalovaní SleepHole sa vráti. Z Apple Zdravia sa tam neukladá nič. Noc začni aj dokonči na tom istom zariadení."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje noci, mince a nastavení se ukládají do tvého vlastního iCloudu. Město je pak stejné na všech tvých zařízeních a po přeinstalování SleepHole se vrátí. Z Apple Zdraví se tam neukládá nic. Noc začni i dokonči na stejném zařízení."
+          }
         }
       }
     },
@@ -12921,6 +15315,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Naposledy synchronizované: %@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naposledy synchronizováno: %@"
           }
         }
       }
@@ -12938,6 +15338,12 @@
             "state": "translated",
             "value": "Zatiaľ nesynchronizované"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatím nesynchronizováno"
+          }
         }
       }
     },
@@ -12953,6 +15359,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "iCloud nie je dostupný. V Nastaveniach iPhonu sa prihlás do iCloudu a zapni iCloud Drive."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud není dostupný. V Nastavení iPhonu se přihlas k iCloudu a zapni iCloud Drive."
           }
         }
       }
@@ -12970,6 +15382,12 @@
             "state": "translated",
             "value": "Teraz sa nepodarilo synchronizovať. SleepHole to skúsi znova sama."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teď se synchronizace nepovedla. SleepHole to zkusí znovu sám."
+          }
         }
       }
     },
@@ -12985,6 +15403,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Test synchronizácie"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test synchronizace"
           }
         }
       }
@@ -13002,6 +15426,12 @@
             "state": "translated",
             "value": "Prenos"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přenos"
+          }
         }
       }
     },
@@ -13017,6 +15447,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Súbor tohto zariadenia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soubor tohoto zařízení"
           }
         }
       }
@@ -13034,6 +15470,12 @@
             "state": "translated",
             "value": "Prepínač synchronizácie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přepínač synchronizace"
+          }
         }
       }
     },
@@ -13049,6 +15491,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Miesto synchronizácie"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Místo synchronizace"
           }
         }
       }
@@ -13066,6 +15514,12 @@
             "state": "translated",
             "value": "Zatiaľ neskúšané"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatím nezkoušeno"
+          }
         }
       }
     },
@@ -13078,6 +15532,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dostupné"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Dostupné"
@@ -13098,6 +15558,12 @@
             "state": "translated",
             "value": "Nedostupné"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nedostupné"
+          }
         }
       }
     },
@@ -13113,6 +15579,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Posledná synchronizácia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poslední synchronizace"
           }
         }
       }
@@ -13130,6 +15602,12 @@
             "state": "translated",
             "value": "Prečítané súbory iných zariadení"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přečtené soubory jiných zařízení"
+          }
         }
       }
     },
@@ -13145,6 +15623,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pečiatka nastavení"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Razítko nastavení"
           }
         }
       }
@@ -13162,6 +15646,12 @@
             "state": "translated",
             "value": "Prvé čítanie hotové"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "První čtení hotové"
+          }
         }
       }
     },
@@ -13177,6 +15667,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Synchronizácia čaká"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synchronizace čeká"
           }
         }
       }
@@ -13194,6 +15690,12 @@
             "state": "translated",
             "value": "Synchronizovať teraz"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synchronizovat teď"
+          }
         }
       }
     },
@@ -13209,6 +15711,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Spustí jednu synchronizáciu hneď. Počas noci alebo odpočinku si len zapamätá, že nejaká čaká."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spustí jednu synchronizaci hned. Během noci nebo odpočinku si jen zapamatuje, že nějaká čeká."
           }
         }
       }
@@ -13226,6 +15734,12 @@
             "state": "translated",
             "value": "Obyčajný priečinok"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obyčejná složka"
+          }
         }
       }
     },
@@ -13241,6 +15755,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vypnutý"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vypnuto"
           }
         }
       }
@@ -13258,6 +15778,12 @@
             "state": "translated",
             "value": "Synchronizovať cez iCloud"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synchronizovat přes iCloud"
+          }
         }
       }
     },
@@ -13274,6 +15800,12 @@
             "state": "translated",
             "value": "Načítať spánok znova"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Načíst spánek znovu"
+          }
         }
       }
     },
@@ -13286,6 +15818,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Texty"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Texty"
@@ -13306,6 +15844,12 @@
             "state": "translated",
             "value": "Plány a návrhy"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plány a návrhy"
+          }
         }
       }
     },
@@ -13321,6 +15865,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dokument s plánmi nie je súčasťou tohto buildu."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dokument s plány není součástí tohoto buildu."
           }
         }
       }
@@ -13414,6 +15964,36 @@
                 "stringUnit": {
                   "state": "translated",
                   "value": "Býva tu %lld ľudí"
+                }
+              }
+            }
+          }
+        },
+        "cs": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Bydlí tu %lld člověk"
+                }
+              },
+              "few": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Bydlí tu %lld lidé"
+                }
+              },
+              "many": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Bydlí tu %lld lidí"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Bydlí tu %lld lidí"
                 }
               }
             }
@@ -13560,6 +16140,12 @@
             "state": "translated",
             "value": "Hotové budovy"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotové budovy"
+          }
         }
       }
     },
@@ -13597,6 +16183,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Osvetlené kúsky ulíc"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Osvětlené kousky ulic"
           }
         }
       }
@@ -13636,6 +16228,12 @@
             "state": "translated",
             "value": "Postavené noci"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postavené noci"
+          }
         }
       }
     },
@@ -13652,6 +16250,12 @@
             "state": "translated",
             "value": "Obyvatelia"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obyvatelé"
+          }
         }
       }
     },
@@ -13667,6 +16271,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ruiny, rozostavané budovy aj osvetlené ulice patria k mestu, preto sa čísla môžu líšiť od počtu postavených nocí."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ruiny, nedokončené budovy i osvětlené ulice patří k městu, proto se čísla mohou lišit od počtu postavených nocí."
           }
         }
       }
@@ -13706,6 +16316,12 @@
             "state": "translated",
             "value": "Mesto v číslach"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Město v číslech"
+          }
         }
       }
     },
@@ -13721,6 +16337,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rozostavané budovy"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nedokončené budovy"
           }
         }
       }
@@ -15098,6 +17720,12 @@
             "state": "translated",
             "value": "Mačka"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kočka"
+          }
         }
       }
     },
@@ -15113,6 +17741,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Všetky texty"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Všechny texty"
           }
         }
       }
@@ -15130,6 +17764,12 @@
             "state": "translated",
             "value": "Rozvrh môžeš zmeniť. Prvá zmena otvorí týždeň na zmeny (7 dní), potom ostane rozvrh mesiac rovnaký."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozvrh můžeš změnit. První změna otevře týden na změny (7 dní), potom zůstane rozvrh měsíc stejný."
+          }
         }
       }
     },
@@ -15145,6 +17785,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "🔧 Týždeň na zmeny: ešte %@ (do %@). Meniť môžeš, koľkokrát chceš."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔧 Týden na změny: ještě %@ (do %@). Měnit můžeš, kolikrát chceš."
           }
         }
       }
@@ -15162,6 +17808,12 @@
             "state": "translated",
             "value": "🔒 Rozvrh platí do %@. Týždeň na zmeny zadarmo znova od %@."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Rozvrh platí do %@. Týden na změny zdarma znovu od %@."
+          }
         }
       }
     },
@@ -15177,6 +17829,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odomknúť teraz · 2 000 🪙"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odemknout hned · 2 000 🪙"
           }
         }
       }
@@ -15194,6 +17852,12 @@
             "state": "translated",
             "value": "Začať týždeň na zmeny?"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zahájit týden na změny?"
+          }
         }
       }
     },
@@ -15209,6 +17873,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odteraz máš 7 dní (do %@) na skúšanie času. Potom bude rozvrh do %@ rovnaký – skôr ho zmeníš za 2 000 🪙."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odteď máš 7 dní (do %@) na zkoušení časů. Potom bude rozvrh do %@ stejný – dřív ho změníš za 2 000 🪙."
           }
         }
       }
@@ -15226,6 +17896,12 @@
             "state": "translated",
             "value": "Potvrdiť"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Potvrdit"
+          }
         }
       }
     },
@@ -15241,6 +17917,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odomknúť rozvrh za 2 000 🪙?"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odemknout rozvrh za 2 000 🪙?"
           }
         }
       }
@@ -15258,6 +17940,12 @@
             "state": "translated",
             "value": "Otvorí sa nový týždeň na zmeny (do %@). Potom bude rozvrh do %@ rovnaký."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otevře se nový týden na změny (do %@). Potom bude rozvrh do %@ stejný."
+          }
         }
       }
     },
@@ -15273,6 +17961,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nový čas platí od zajtra – dnešná stavba sa už dá začať."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nové časy platí od zítřka – dnešní stavba se už dá zahájit."
           }
         }
       }
@@ -15416,6 +18110,12 @@
             "state": "translated",
             "value": "%1$@ · začiatok %2$@ · spánok prišiel %3$@ · po %4$lld min · vstal %5$@"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · začátek %2$@ · usnutí %3$@ · po %4$lld min · vstání %5$@"
+          }
         }
       }
     },
@@ -15432,6 +18132,12 @@
             "state": "translated",
             "value": "%1$@ · začiatok %2$@ · vstal %3$@"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · začátek %@ · vstání %@"
+          }
         }
       }
     },
@@ -15447,6 +18153,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kedy ideš spať, zaspávaš a vstávaš"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kdy jdeš spát, usínáš a vstáváš"
           }
         }
       }
@@ -15486,6 +18198,12 @@
             "state": "translated",
             "value": "Bodka začiatku má farbu noci z kalendára. Indigová časť vedie po zaspatie – čím je kratšia, tým skôr prišiel spánok. Modrá je tvoj spánok až po vstávanie (tvoje potvrdenie, inak Apple Zdravie). Prerušované čiary sú tvoja večierka a čas vstávania."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tečka začátku má barvu noci z kalendáře. Indigová část vede až k usnutí – čím je kratší, tím dřív přišel spánek. Modrá je tvůj spánek až do vstání (tvoje potvrzení, jinak Apple Zdraví). Přerušované čáry jsou tvoje večerka a budíček."
+          }
         }
       }
     },
@@ -15501,6 +18219,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bodka začiatku má farbu noci z kalendára. Čiara vedie od začiatku po vstávanie a k ránu bledne. Prerušované čiary sú tvoja večierka a čas vstávania."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tečka začátku má barvu noci z kalendáře. Čára vede od začátku až do vstání a k ránu bledne. Přerušované čáry jsou tvoje večerka a budíček."
           }
         }
       }
@@ -15518,6 +18242,12 @@
             "state": "translated",
             "value": "Zaspávanie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usínání"
+          }
         }
       }
     },
@@ -15534,6 +18264,12 @@
             "state": "translated",
             "value": "Spánok"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spánek"
+          }
         }
       }
     },
@@ -15549,6 +18285,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bez Apple Zdravia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez Apple Zdraví"
           }
         }
       }
@@ -15940,6 +18682,12 @@
             "state": "translated",
             "value": "Rovnaký čas každý deň"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stejný čas každý den"
+          }
         }
       }
     },
@@ -15955,6 +18703,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Keď chodíš spať a vstávaš v podobnom čase aj cez voľné dni, telo sa naučí, kedy je čas na spánok."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Když chodíš spát a vstáváš v podobnou dobu i o volných dnech, tělo se naučí, kdy je čas na spánek."
           }
         }
       }
@@ -15972,6 +18726,12 @@
             "state": "translated",
             "value": "Víkend s mierou"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Víkend s mírou"
+          }
         }
       }
     },
@@ -15987,6 +18747,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Skús, aby sa víkendové ukladanie do postele líšilo od všedných dní najviac o hodinu. Vnútorné hodiny sa potešia."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zkus, aby se víkendové uléhání lišilo od všedních dní nejvýš o hodinu. Vnitřní hodiny ti poděkují."
           }
         }
       }
@@ -16004,6 +18770,12 @@
             "state": "translated",
             "value": "Obrazovky preč na hodinu"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obrazovky pryč na hodinu"
+          }
         }
       }
     },
@@ -16019,6 +18791,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mobil, tablet a počítač odlož hodinu pred spaním – ich svetlo môže sťažiť zaspávanie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mobil, tablet a počítač odlož hodinu před spaním – jejich světlo může ztížit usínání."
           }
         }
       }
@@ -16036,6 +18814,12 @@
             "state": "translated",
             "value": "Pokojný večerný rituál"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klidný večerní rituál"
+          }
         }
       }
     },
@@ -16051,6 +18835,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Čítanie, tichá hudba či audiokniha každý večer dajú telu vedieť, že spánok je blízko."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čtení, tichá hudba či audiokniha každý večer dají tělu vědět, že spánek je blízko."
           }
         }
       }
@@ -16068,6 +18858,12 @@
             "state": "translated",
             "value": "Teplý kúpeľ"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplá koupel"
+          }
         }
       }
     },
@@ -16083,6 +18879,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Teplý kúpeľ 30 minút až 2 hodiny pred spaním pomáha uvoľniť sa."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplá koupel 30 minut až 2 hodiny před spaním pomáhá se uvolnit."
           }
         }
       }
@@ -16100,6 +18902,12 @@
             "state": "translated",
             "value": "Pripomienka na upokojenie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Připomínka ke zklidnění"
+          }
         }
       }
     },
@@ -16115,6 +18923,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nastav si jemnú pripomienku 90 minút pred spaním, potom stlmuj svetlá a spomaľ."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nastav si jemnou připomínku 90 minut před spaním, pak začni ztlumovat světla a zpomal."
           }
         }
       }
@@ -16132,6 +18946,12 @@
             "state": "translated",
             "value": "Starosti na papier"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Starosti na papír"
+          }
         }
       }
     },
@@ -16147,6 +18967,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Napíš si starosti alebo zajtrajšie úlohy ešte pred spaním. Potom môžu počkať na papieri."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Napiš si starosti nebo zítřejší úkoly ještě před spaním. Pak mohou počkat na papíře."
           }
         }
       }
@@ -16164,6 +18990,12 @@
             "state": "translated",
             "value": "Skús uvoľnenie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zkus se uvolnit"
+          }
         }
       }
     },
@@ -16179,6 +19011,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vedená predstava, tichá hudba, jemná joga či meditácia pomáhajú pustiť stres dňa."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Řízená imaginace, tichá hudba, jemná jóga či meditace pomáhají setřást stres celého dne."
           }
         }
       }
@@ -16196,6 +19034,12 @@
             "state": "translated",
             "value": "Neskorá káva"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pozdní káva"
+          }
         }
       }
     },
@@ -16211,6 +19055,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kofeín môže pôsobiť až 8 hodín, takže popoludňajšia káva môže byť hore ešte pri ukladaní do postele."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kofein může působit až 8 hodin, takže odpolední káva může být vzhůru ještě při uléhání."
           }
         }
       }
@@ -16228,6 +19078,12 @@
             "state": "translated",
             "value": "Ťažké rozhovory cez deň"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Těžké rozhovory přes den"
+          }
         }
       }
     },
@@ -16243,6 +19099,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Rozrušujúce rozhovory si nechaj radšej na deň, nech je večer pokojný."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rozrušující rozhovory si nech raději na den, ať je večer klidný."
           }
         }
       }
@@ -16260,6 +19122,12 @@
             "state": "translated",
             "value": "Ľahká večera"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lehká večeře"
+          }
         }
       }
     },
@@ -16275,6 +19143,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nech je večera najľahším jedlom dňa a dojedz 3 až 4 hodiny pred spaním."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ať je večeře nejlehčím jídlem dne a dojez 3 až 4 hodiny před spaním."
           }
         }
       }
@@ -16292,6 +19166,12 @@
             "state": "translated",
             "value": "Pi radšej skôr"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pij raději dřív"
+          }
         }
       }
     },
@@ -16307,6 +19187,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pár hodín pred spaním pi menej a svoj pitný režim si splň radšej skôr cez deň."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pár hodin před spaním pij méně a většinu pití si nech na dřívější část dne."
           }
         }
       }
@@ -16324,6 +19210,12 @@
             "state": "translated",
             "value": "Chladnejšia spálňa"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chladnější ložnice"
+          }
         }
       }
     },
@@ -16339,6 +19231,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "V chladnejšej izbe sa spí príjemne – skús približne 18 – 20 °C."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V chladnějším pokoji se spí příjemně – zkus přibližně 18–20 °C."
           }
         }
       }
@@ -16356,6 +19254,12 @@
             "state": "translated",
             "value": "Nech je tma"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ať je tma"
+          }
         }
       }
     },
@@ -16371,6 +19275,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zatemňovacie závesy alebo maska na oči udržia svetlo mimo, kým spíš."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatemňovací závěsy nebo maska na oči ti ve spánku nepustí světlo do očí."
           }
         }
       }
@@ -16388,6 +19298,12 @@
             "state": "translated",
             "value": "Pokoj v izbe"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klid v pokoji"
+          }
         }
       }
     },
@@ -16403,6 +19319,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mäkké štuple do uší zmiernia hluk a jemné zvuky ako dážď spravia izbu útulnejšou."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Měkké špunty do uší ztlumí hluk a jemné zvuky jako déšť dodají pokoji útulnost."
           }
         }
       }
@@ -16420,6 +19342,12 @@
             "state": "translated",
             "value": "Posteľ je na spanie"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Postel je na spaní"
+          }
         }
       }
     },
@@ -16435,6 +19363,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Skús používať posteľ len na spanie – bez jedenia a práce – nech mozgu hovorí „spánok“."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zkus používat postel jen na spaní – nejez v ní a nepracuj – ať mozku říká „spánek“."
           }
         }
       }
@@ -16452,6 +19386,12 @@
             "state": "translated",
             "value": "Hodiny otoč bokom"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hodiny otoč stranou"
+          }
         }
       }
     },
@@ -16467,6 +19407,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Otoč hodiny od postele – ak nevidíš ubiehať minúty, máš o jednu starosť menej."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otoč hodiny od postele – když nevidíš ubíhat minuty, máš o starost míň."
           }
         }
       }
@@ -16484,6 +19430,12 @@
             "state": "translated",
             "value": "Aj trocha pohybu pomôže"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I trocha pohybu pomůže"
+          }
         }
       }
     },
@@ -16499,6 +19451,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Už trochu pravidelného pohybu môže pomôcť spánku a môžeš ho pomaly pridávať."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I trochu pravidelného pohybu může spánku pomoct a můžeš ho pomalu přidávat."
           }
         }
       }
@@ -16516,6 +19474,12 @@
             "state": "translated",
             "value": "Cvič skôr počas dňa"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cvič dřív během dne"
+          }
         }
       }
     },
@@ -16531,6 +19495,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Skús dokončiť cvičenie aspoň 3 hodiny pred plánovaným spaním."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zkus dokončit cvičení aspoň 3 hodiny před plánovaným spaním."
           }
         }
       }
@@ -16548,6 +19518,12 @@
             "state": "translated",
             "value": "Ranné svetlo"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ranní světlo"
+          }
         }
       }
     },
@@ -16563,6 +19539,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Asi 30 minút vonku v prvých hodinách dňa pomôže – aj zamračená obloha je lepšia než slabé svetlo v interiéri."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pomůže zhruba 30 minut venku v prvních hodinách dne – i zatažená obloha je lepší než slabé světlo v interiéru."
           }
         }
       }
@@ -16580,6 +19562,12 @@
             "state": "translated",
             "value": "Pohľadnica %lld z %lld"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohlednice %lld z %lld"
+          }
         }
       }
     },
@@ -16595,6 +19583,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "– tvoj spánkový kamarát 🐾"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "– tvůj spánkový kamarád 🐾"
           }
         }
       }
@@ -16612,6 +19606,12 @@
             "state": "translated",
             "value": "Otvoriť zdroj"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otevřít zdroj"
+          }
         }
       }
     },
@@ -16627,6 +19627,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pohľadnica od kamaráta"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohlednice od kamaráda"
           }
         }
       }
@@ -16644,6 +19650,12 @@
             "state": "translated",
             "value": "Aspoň sedem hodín"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aspoň sedm hodin"
+          }
         }
       }
     },
@@ -16659,6 +19671,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dospelým zvyčajne najlepšie vyhovuje 7 a viac hodín spánku. Naplánuj si večer od rána dozadu."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dospělým obvykle nejlépe vyhovuje 7 a více hodin spánku. Naplánuj si večer od rána pozpátku."
           }
         }
       }
@@ -16676,6 +19694,12 @@
             "state": "translated",
             "value": "Daj spánku čas"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dej spánku čas"
+          }
         }
       }
     },
@@ -16691,6 +19715,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Čas na spánok pomáha chrániť zdravie a pohodu – daj mu pevné miesto vo svojom dni."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dostatek času na spánek pomáhá chránit zdraví a pohodu – dej mu pevné místo ve svém dni."
           }
         }
       }
@@ -16708,6 +19738,12 @@
             "state": "translated",
             "value": "Teplý večerný nápoj"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teplý večerní nápoj"
+          }
         }
       }
     },
@@ -16723,6 +19759,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Večernú kávu či čierny čaj vymeň za teplé mlieko alebo bylinkový čaj."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Večerní kávu či černý čaj vyměň za teplé mléko nebo bylinkový čaj."
           }
         }
       }
@@ -16740,6 +19782,12 @@
             "state": "translated",
             "value": "Pohodlná posteľ"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohodlná postel"
+          }
         }
       }
     },
@@ -16755,6 +19803,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pohodlný matrac a vankúš urobia zo spálne príjemnejšie miesto na spanie."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohodlná matrace a polštář udělají z ložnice příjemnější místo ke spaní."
           }
         }
       }
@@ -16772,6 +19826,12 @@
             "state": "translated",
             "value": "Sladkosti s mierou"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sladkosti s mírou"
+          }
         }
       }
     },
@@ -16787,6 +19847,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Mobil displejom nadol"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mobil displejem dolů"
           }
         }
       }
@@ -16804,6 +19870,12 @@
             "state": "translated",
             "value": "Otoč mobil displejom nadol, nech ťa v noci neruší jeho svetlo."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Otoč mobil displejem dolů, ať tě v noci neruší jeho světlo."
+          }
         }
       }
     },
@@ -16819,6 +19891,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pravidlo 20 minút"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pravidlo 20 minut"
           }
         }
       }
@@ -16836,6 +19914,12 @@
             "state": "translated",
             "value": "Stále hore po zhruba 20 minútach? Vstaň, rob niečo pokojné, napríklad čítaj, a vráť sa, keď sa spánok vráti."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nespíš ani po zhruba 20 minutách? Vstaň, dělej něco klidného, třeba si čti, a vrať se, až přijde ospalost."
+          }
         }
       }
     },
@@ -16851,6 +19935,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Spánok pomáha učeniu"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spánek pomáhá učení"
           }
         }
       }
@@ -16868,6 +19958,12 @@
             "state": "translated",
             "value": "Počas spánku sa upevňujú spomienky – dobrý spánok pomáha učeniu aj jasnému mysleniu."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Během spánku se upevňují vzpomínky – dobrý spánek pomáhá učení i jasnému myšlení."
+          }
         }
       }
     },
@@ -16883,6 +19979,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Šlofík do tretej"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Šlofík do tří"
           }
         }
       }
@@ -16900,6 +20002,12 @@
             "state": "translated",
             "value": "Šlofík si dopraj radšej pred 15:00, aby večer prišla poriadna ospalosť."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Šlofíka si dopřej raději před 15:00, aby večer přišla pořádná ospalost."
+          }
         }
       }
     },
@@ -16915,6 +20023,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Svetlo nechaj slabé"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Světlo nech slabé"
           }
         }
       }
@@ -16932,6 +20046,12 @@
             "state": "translated",
             "value": "Ak v noci vstaneš, nechaj svetlo slabé – stačí tlmené nočné svetielko."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pokud v noci vstaneš, nech světlo slabé – stačí tlumená noční lampička."
+          }
         }
       }
     },
@@ -16947,6 +20067,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sladké nápoje a maškrty môžu sťažiť zaspávanie aj spánok – dopraj si ich s mierou."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sladké nápoje a mlsky mohou ztížit usínání i spánek – dopřej si je s mírou."
           }
         }
       }
@@ -16964,6 +20090,12 @@
             "state": "translated",
             "value": "Nočná čiapka"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noční čepice"
+          }
         }
       }
     },
@@ -16979,6 +20111,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Cylinder"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cylindr"
           }
         }
       }
@@ -16996,6 +20134,12 @@
             "state": "translated",
             "value": "Prilba staviteľa"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stavitelská přilba"
+          }
         }
       }
     },
@@ -17012,6 +20156,12 @@
             "state": "translated",
             "value": "Slnečné okuliare"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sluneční brýle"
+          }
         }
       }
     },
@@ -17024,6 +20174,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Miska s rybou"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Miska s rybou"
@@ -17044,6 +20200,12 @@
             "state": "translated",
             "value": "Koberček"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kobereček"
+          }
         }
       }
     },
@@ -17059,6 +20221,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Má na sebe: %@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Má na sobě: %@"
           }
         }
       }
@@ -17076,6 +20244,12 @@
             "state": "translated",
             "value": "Padajúce hviezdy"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padající hvězdy"
+          }
         }
       }
     },
@@ -17091,6 +20265,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Polárna žiara"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polární záře"
           }
         }
       }
@@ -17108,6 +20288,12 @@
             "state": "translated",
             "value": "Súhvezdie Mačky"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Souhvězdí Kočky"
+          }
         }
       }
     },
@@ -17123,6 +20309,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kométa"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kometa"
           }
         }
       }
@@ -17140,6 +20332,12 @@
             "state": "translated",
             "value": "Obsah balíčkov"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obsah balíčků"
+          }
         }
       }
     },
@@ -17156,6 +20354,12 @@
             "state": "translated",
             "value": "Pohľadnice"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohlednice"
+          }
         }
       }
     },
@@ -17168,6 +20372,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ozdoby"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Ozdoby"
@@ -17188,6 +20398,12 @@
             "state": "translated",
             "value": "Doplnky mačky"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doplňky kočky"
+          }
         }
       }
     },
@@ -17204,6 +20420,12 @@
             "state": "translated",
             "value": "Nočné oblohy"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noční oblohy"
+          }
         }
       }
     },
@@ -17216,6 +20438,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hlava"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Hlava"
@@ -17236,6 +20464,12 @@
             "state": "translated",
             "value": "Tvár"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obličej"
+          }
         }
       }
     },
@@ -17251,6 +20485,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pri pelechu"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "U pelíšku"
           }
         }
       }
@@ -17268,6 +20508,12 @@
             "state": "translated",
             "value": "Mačka"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kočka"
+          }
         }
       }
     },
@@ -17284,6 +20530,12 @@
             "state": "translated",
             "value": "Hore"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vzhůru"
+          }
         }
       }
     },
@@ -17296,6 +20548,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spí"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Spí"
@@ -17315,6 +20573,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Padajúce hviezdy: jedna za 6 – 12s. Kométa prejde oblohou raz za %lld min."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Padající hvězdy: jedna za 6–12s. Kometa přeletí oblohu jednou za %lld min."
           }
         }
       }
@@ -17354,6 +20618,12 @@
             "state": "translated",
             "value": "Dnešný balíček"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dnešní balíček"
+          }
         }
       }
     },
@@ -17366,6 +20636,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje mince: %lld 🪙"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Tvoje mince: %lld 🪙"
@@ -17386,6 +20662,12 @@
             "state": "translated",
             "value": "Balíček %lld z %lld tento mesiac"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Balíček %lld z %lld tento měsíc"
+          }
         }
       }
     },
@@ -17401,6 +20683,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Kúpiť balíček za %lld 🪙"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koupit balíček za %lld 🪙"
           }
         }
       }
@@ -17418,6 +20706,12 @@
             "state": "translated",
             "value": "Kúpiť"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koupit"
+          }
         }
       }
     },
@@ -17433,6 +20727,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ešte %lld 🪙 do balíčka %lld"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ještě %lld 🪙 do balíčku %lld"
           }
         }
       }
@@ -17450,6 +20750,12 @@
             "state": "translated",
             "value": "%lld 🪙 ti vždy zostane na strieborného žolíka."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld 🪙 ti vždy zůstane na stříbrného žolíka."
+          }
         }
       }
     },
@@ -17465,6 +20771,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Balíček sa otvorí ráno po hotovej noci."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Balíček se otevře ráno po hotové noci."
           }
         }
       }
@@ -17482,6 +20794,12 @@
             "state": "translated",
             "value": "Jeden balíček denne – ďalší po tvojej najbližšej hotovej noci."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jeden balíček denně – další po tvé nejbližší hotové noci."
+          }
         }
       }
     },
@@ -17497,6 +20815,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tento mesiac je to deväť balíčkov. Ďalšie od %@."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tento měsíc je to devět balíčků. Další od %@."
           }
         }
       }
@@ -17514,6 +20838,12 @@
             "state": "translated",
             "value": "Čo môže byť v balíčku"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Co může být v balíčku"
+          }
         }
       }
     },
@@ -17529,6 +20859,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Polovica ceny späť"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Polovina ceny zpět"
           }
         }
       }
@@ -17546,6 +20882,12 @@
             "state": "translated",
             "value": "Cena späť"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cena zpět"
+          }
         }
       }
     },
@@ -17561,6 +20903,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dvojnásobok ceny"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dvojnásobek ceny"
           }
         }
       }
@@ -17578,6 +20926,12 @@
             "state": "translated",
             "value": "Trojnásobok ceny"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trojnásobek ceny"
+          }
         }
       }
     },
@@ -17593,6 +20947,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pohľadnica s tipom na spánok"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohlednice s tipem na spánek"
           }
         }
       }
@@ -17610,6 +20970,12 @@
             "state": "translated",
             "value": "Ozdoba mesta"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ozdoba města"
+          }
         }
       }
     },
@@ -17625,6 +20991,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Niečo pre mačku"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Něco pro kočku"
           }
         }
       }
@@ -17642,6 +21014,12 @@
             "state": "translated",
             "value": "Nočná obloha"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noční obloha"
+          }
         }
       }
     },
@@ -17654,6 +21032,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld z %lld"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld z %lld"
@@ -17674,6 +21058,12 @@
             "state": "translated",
             "value": "Tvoja najbližšia hotová noc vyplatí dvojnásobok."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoje nejbližší hotová noc vynese dvojnásobek."
+          }
         }
       }
     },
@@ -17689,6 +21079,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Už je v zbierke – namiesto toho +%lld 🪙."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Už je ve sbírce – místo toho +%lld 🪙."
           }
         }
       }
@@ -17706,6 +21102,12 @@
             "state": "translated",
             "value": "Nové v zbierke."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nové ve sbírce."
+          }
         }
       }
     },
@@ -17721,6 +21123,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pohľadnica"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohlednice"
           }
         }
       }
@@ -17738,6 +21146,12 @@
             "state": "translated",
             "value": "Ozdoba mesta"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ozdoba města"
+          }
         }
       }
     },
@@ -17753,6 +21167,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pre mačku"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pro kočku"
           }
         }
       }
@@ -17770,6 +21190,12 @@
             "state": "translated",
             "value": "Nočná obloha"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noční obloha"
+          }
         }
       }
     },
@@ -17782,6 +21208,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Platí do %@."
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Platí do %@."
@@ -17802,6 +21234,12 @@
             "state": "translated",
             "value": "Taký už máš – namiesto toho +%lld 🪙."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takový už máš – místo toho +%lld 🪙."
+          }
         }
       }
     },
@@ -17817,6 +21255,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Výhra z novšej verzie SleepHole."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Výhra z novější verze SleepHole."
           }
         }
       }
@@ -17834,6 +21278,12 @@
             "state": "translated",
             "value": "Prečítať"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přečíst"
+          }
         }
       }
     },
@@ -17849,6 +21299,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Balíčky 1–3 v mesiaci stoja 20 %% tvojich mincí, balíčky 4–6 stoja 40 %%, balíčky 7–9 stoja 60 %% – nikdy menej ako %lld 🪙. Najviac deväť za mesiac."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Balíčky 1–3 v měsíci stojí 20 %% tvých mincí, balíčky 4–6 stojí 40 %%, balíčky 7–9 stojí 60 %% – nikdy méně než %lld 🪙. Nejvýše devět za měsíc."
           }
         }
       }
@@ -17866,6 +21322,12 @@
             "state": "translated",
             "value": "Kúpiť balíček?"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koupit balíček?"
+          }
         }
       }
     },
@@ -17881,6 +21343,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Stojí %lld 🪙, ostane ti %lld 🪙."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stojí %lld 🪙, zbyde ti %lld 🪙."
           }
         }
       }
@@ -17898,6 +21366,12 @@
             "state": "translated",
             "value": "Vec do zbierky je vždy nová, kým nemáš celú zbierku; potom sa opakovaná vec zmení na štvrtinu ceny v minciach. Žolík z balíčka platí do konca budúceho mesiaca; druhý rovnaký sa tiež zmení na štvrtinu ceny. Mince sa dajú iba vyspať – kúpiť sa nedajú nikdy."
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Věc do sbírky je vždy nová, dokud nemáš celou sbírku; potom se opakovaná věc změní na čtvrtinu ceny v mincích. Žolík z balíčku platí do konce příštího měsíce; druhý stejný se také změní na čtvrtinu ceny. Mince se dají jen naspat – koupit se nedají nikdy."
+          }
         }
       }
     },
@@ -17910,6 +21384,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@× ceny"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "%@× ceny"
@@ -17930,6 +21410,12 @@
             "state": "translated",
             "value": "Kúpené balíčky"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Koupené balíčky"
+          }
         }
       }
     },
@@ -17945,6 +21431,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zatiaľ žiadne balíčky. Prvý sa dá kúpiť ráno po hotovej noci."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zatím žádné balíčky. První se dá koupit ráno po hotové noci."
           }
         }
       }
@@ -17962,6 +21454,12 @@
             "state": "translated",
             "value": "Minuté na balíčky: %lld 🪙"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utraceno za balíčky: %lld 🪙"
+          }
         }
       }
     },
@@ -17978,6 +21476,12 @@
             "state": "translated",
             "value": "Mince späť z balíčkov: %lld 🪙"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mince zpět z balíčků: %lld 🪙"
+          }
         }
       }
     },
@@ -17990,6 +21494,12 @@
           }
         },
         "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cena %lld 🪙"
+          }
+        },
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Cena %lld 🪙"
@@ -18010,6 +21520,12 @@
             "state": "translated",
             "value": "+%lld 🪙"
           }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld 🪙"
+          }
         }
       }
     },
@@ -18025,6 +21541,232 @@
           "stringUnit": {
             "state": "translated",
             "value": "+%lld 🪙 späť"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "+%lld 🪙 zpět"
+          }
+        }
+      }
+    },
+    "Texts: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Texts: %lld"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Texty: %lld"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Texty: %lld"
+          }
+        }
+      }
+    },
+    "No string tables found in this build.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No string tables found in this build."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V tomto builde nie sú žiadne tabuľky textov."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "V tomto buildu nejsou žádné tabulky textů."
+          }
+        }
+      }
+    },
+    "Search": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hľadať"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hledat"
+          }
+        }
+      }
+    },
+    "%@: %lld h %lld min asleep, from %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %lld h %lld min asleep, from %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: spánok %lld h %lld min, od %@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: spánek %lld h %lld min, od %@"
+          }
+        }
+      }
+    },
+    "stages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "stages"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "fázy"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "fáze"
+          }
+        }
+      }
+    },
+    "no stages": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "no stages"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bez fáz"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bez fází"
+          }
+        }
+      }
+    },
+    "first-party": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "first-party"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "vlastný zdroj Apple"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "vlastní zdroj Apple"
+          }
+        }
+      }
+    },
+    "done": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "done"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hotový"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hotový"
+          }
+        }
+      }
+    },
+    "none": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "none"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "žiadny"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "žádný"
+          }
+        }
+      }
+    },
+    "simulated": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "simulated"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "simulovaný"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "simulovaný"
           }
         }
       }
