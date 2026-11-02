@@ -40,14 +40,15 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    Czech (`docs/PREHLAD-PLANOV.cs.md`, his pick "Czech copy + test") – merged ~08:15; both on his phone since 2026-11-02 08:31 (Debug build of `f6f61a5`, his yes, the store backed up first)**
    (store backed up first). His checks c1–c6 / n1–n2 / d1–d6 and notes `cz` / `n13` on his build 13 page
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`) are open. His Chrome is signed out of
-   App Store Connect (2026-11-02 07:00) – ask him to sign in before reading Apple's review state. Next on his
-   word: 13c postcards batch 1, 13d the cat's lines about owned buildings, accessibility and the other polishing items. Build 12 (1.0 (12), the parcels) is with the testers since
+   App Store Connect (2026-11-02 07:00) – ask him to sign in before reading Apple's review state. **13c batch 1 – postcards 1–10 with a "why" (one checked study each, his ten "sedí", new fronts 06 / 07, one longer
+   card, no flip) – merged 2026-11-02 ~16:00, NOT on his phone yet (install on his word, store backed up first).** Next on his
+   word: the install, 13c batches 2 (11–20) and 3 (21–30), 13d the cat's lines about owned buildings, accessibility and the other polishing items. Build 12 (1.0 (12), the parcels) is with the testers since
    2026-11-01 ~07:55, PR #3 merged by him (`8c75eb3`); his ticks b1–b3, o2, m1, m2 on
    https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h are still open (11b4d → 🟢 on his b1). On screen a box is a "parcel" /
    "balíček" (Czech: "balíček"); never "box" or "package" in a UI text. The App Store gets the parcels as 1.1 after Apple's
    answer on 1.0 (10): "Loot Boxes" YES, "Simulated Gambling" re-read, a parcels sentence in `docs/REVIEW-NOTES.md` – each
    his yes. Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered.
-2. **His ask 2026-11-02 ~15:10:** the ideas get prioritized again and a retrospective follows; **Opus starts the October retrospective now** from every source (commits, memory, the claude.ai pages, the `.md` files, `docs/`). New ideas the same afternoon, all in plan §0b "Later" and waiting: RECAP (a monthly recap – Opus proposes build 14), sleep sounds as a parcel reward (build 16), the Kenney kits still unused.
+2. **His ask 2026-11-02 ~15:10:** the ideas get prioritized again and a retrospective follows; **the October retrospective is his private page https://claude.ai/artifact/PdFvgxZyZfmjPNLLpgRZ9Z (published 2026-11-02 ~15:30; it holds his Health numbers – never copy them into the repo)**: the nights, the builds, what worked, what went wrong with the lessons, the patterns, proposals N1–N6 for November and four text fields (store `state/answers`, browser prefix `r10.` – never rename `n1`–`n6`, `agree`, `keep`, `change`, `missing`); none of N1–N6 applies before his answer. New ideas the same afternoon, all in plan §0b "Later" and waiting: RECAP (a monthly recap – Opus proposes build 14), sleep sounds as a parcel reward (build 16), the Kenney kits still unused.
 3. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
    and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (still on
    2026-11-01 ~07:57, no message from Apple; on
