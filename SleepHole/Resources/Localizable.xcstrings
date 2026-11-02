@@ -18878,7 +18878,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nastav si jemnú pripomienku 90 minút pred spaním, potom stlmuj svetlá a spomaľ."
+            "value": "Nastav si jemnú pripomienku 90 minút pred spaním, potom začni tlmiť svetlá a spomaľ."
           }
         },
         "cs": {
@@ -22266,13 +22266,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kofeín tlmí signál, ktorý sa počas dňa hromadí a hovorí ti, že je čas odpočívať. Vyprcháva pomaly, takže popoludňajšia šálka môže pôsobiť ešte vtedy, keď si líhaš."
+            "value": "Kofeín blokuje signál, ktorý sa počas dňa hromadí a hovorí ti, že je čas odpočívať. Vyprcháva pomaly, takže popoludňajšia šálka môže pôsobiť ešte vtedy, keď si líhaš."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kofein tlumí signál, který se během dne hromadí a říká ti, že je čas odpočívat. Vyprchává pomalu, takže odpolední šálek může působit ještě ve chvíli, kdy si lehneš."
+            "value": "Kofein blokuje signál, který se během dne hromadí a říká ti, že je čas odpočívat. Vyprchává pomalu, takže odpolední šálek může působit ještě ve chvíli, kdy si lehneš."
           }
         }
       }
@@ -22398,13 +22398,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kofeín drží tvoj mozog hodiny v pohotovosti, aj keď ho už necítiš. Teplý nápoj bez kofeínu ti dá útulný večerný rituál, ale nepovzbudí ťa."
+            "value": "Kofeín drží mozog hodiny v pohotovosti, aj keď ho už necítiš. Teplý nápoj bez kofeínu ti dá príjemný večerný rituál, ale nepovzbudí ťa."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kofein drží tvůj mozek hodiny v pohotovosti, i když ho už necítíš. Teplý nápoj bez kofeinu ti dá útulný večerní rituál, ale nepovzbudí tě."
+            "value": "Kofein drží mozek hodiny v pohotovosti, i když ho už necítíš. Teplý nápoj bez kofeinu ti dá příjemný večerní rituál, ale nepovzbudí tě."
           }
         }
       }
@@ -22442,13 +22442,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Len 12 dospelých, vysoká dávka a štúdiu zaplatil grant od firmy. Teplé mlieko ani bylinkový čaj sa neskúšali – istý prínos je vynechať kofeín."
+            "value": "Len 12 dospelých, vysoká dávka a štúdiu zaplatil grant od firmy. Teplé mlieko ani bylinkový čaj sa neskúšali – isté je len to, že pomôže vynechať kofeín."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jen 12 dospělých, vysoká dávka a studii zaplatil grant od firmy. Teplé mléko ani bylinkový čaj se nezkoušely – jistý přínos je vynechat kofein."
+            "value": "Jen 12 dospělých, vysoká dávka a studii zaplatil grant od firmy. Teplé mléko ani bylinkový čaj se nezkoušely – jisté je jen to, že pomůže vynechat kofein."
           }
         }
       }
@@ -22464,13 +22464,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Keď ťa posteľ dobre podopiera, menej sa vrtíš a hľadáš pohodlnú polohu, takže ľahšie zaspíš a menej sa budíš."
+            "value": "Keď ťa posteľ dobre podopiera, menej sa vrtíš pri hľadaní pohodlnej polohy, takže ľahšie zaspíš a menej sa budíš."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Když tě postel dobře podpírá, méně se vrtíš a hledáš pohodlnou polohu, takže snáz usneš a méně se budíš."
+            "value": "Když tě postel dobře podpírá, méně se vrtíš při hledání pohodlné polohy, takže snáz usneš a méně se budíš."
           }
         }
       }
@@ -22486,7 +22486,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prehľad 24 kontrolovaných štúdií z roku 2015 dospel k záveru, že stredne tuhý matrac, najmä taký, ktorý si môžeš nastaviť podľa seba, je najlepší pre pohodlie a kvalitu spánku."
+            "value": "Prehľad 24 kontrolovaných štúdií z roku 2015 dospel k záveru, že stredne tvrdý matrac, najmä taký, ktorý si môžeš nastaviť podľa seba, je najlepší pre pohodlie a kvalitu spánku."
           }
         },
         "cs": {
@@ -22574,13 +22574,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Len 26 dospelých a jeden deň vlastného výberu jedla – ide o súvislosť, nie príčinu. Iné štúdie sú zmiešané – podľa niektorých boli ľudia po jedle bohatom na sacharidy ospalejší."
+            "value": "Len 26 dospelých a jeden deň vlastného výberu jedla – ide o súvislosť, nie príčinu. Výsledky iných štúdií sa rozchádzajú – podľa niektorých boli ľudia po jedle bohatom na sacharidy ospalejší."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jen 26 dospělých a jeden den vlastního výběru jídla – jde o souvislost, ne příčinu. Jiné studie jsou smíšené – podle některých byli lidé po jídle bohatém na sacharidy ospalejší."
+            "value": "Jen 26 dospělých a jeden den vlastního výběru jídla – jde o souvislost, ne příčinu. Výsledky jiných studií se rozcházejí – podle některých byli lidé po jídle bohatém na sacharidy ospalejší."
           }
         }
       }
@@ -22596,7 +22596,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Trávenie jedla telo zamestnáva. Keď dojíš večeru o pár hodín skôr, telo sa stihne upokojiť ešte predtým, ako si ľahneš."
+            "value": "Trávenie jedla telo zamestnáva. Keď doješ večeru o pár hodín skôr, telo sa stihne upokojiť ešte predtým, ako si ľahneš."
           }
         },
         "cs": {
@@ -22640,13 +22640,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Len 13 mladých žien a skúšala sa len 1 hodina oproti 5 hodinám. Iná laboratórna štúdia s 20 dospelými nenašla pri neskorej večeri jasnú ujmu, dôkazy sú teda zmiešané."
+            "value": "Len 13 mladých žien a skúšala sa len 1 hodina oproti 5 hodinám. Iná laboratórna štúdia s 20 dospelými nenašla pri neskorej večeri jasný škodlivý vplyv, dôkazy sú teda nejednoznačné."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jen 13 mladých žen a zkoušela se jen 1 hodina proti 5 hodinám. Jiná laboratorní studie s 20 dospělými u pozdní večeře nenašla jasnou újmu, důkazy jsou tedy smíšené."
+            "value": "Jen 13 mladých žen a zkoušela se jen 1 hodina proti 5 hodinám. Jiná laboratorní studie s 20 dospělými u pozdní večeře nenašla jasný škodlivý vliv, důkazy jsou tedy nejednoznačné."
           }
         }
       }
@@ -22684,13 +22684,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "V štúdii z roku 2023 nosilo 62 dospelých doma 14 nocí náramkový monitor a ich spálne sa merali. V najteplejšej pätine meraní bola účinnosť spánku (podiel času v posteli v spánku) asi o 3 percentá nižšia než v najchladnejšej."
+            "value": "V štúdii z roku 2023 nosilo 62 dospelých doma 14 nocí náramkový monitor a v ich spálňach sa merala teplota. V najteplejšej pätine meraní bola účinnosť spánku (koľko z času v posteli naozaj spali) asi o 3 percentá nižšia než v najchladnejšej."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ve studii z roku 2023 nosilo 62 dospělých doma 14 nocí náramkový monitor a jejich ložnice se měřily. V nejteplejší pětině měření byla účinnost spánku (podíl času v posteli ve spánku) asi o 3 procenta nižší než v nejchladnější."
+            "value": "Ve studii z roku 2023 nosilo 62 dospělých doma 14 nocí náramkový monitor a v jejich ložnicích se měřila teplota. V nejteplejší pětině měření byla účinnost spánku (kolik z času v posteli opravdu spali) asi o 3 procenta nižší než v nejchladnější."
           }
         }
       }
@@ -22750,7 +22750,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "V štúdii z roku 2010 spalo v spánkovom laboratóriu 14 zdravých dobrovoľníkov pri nahratom nemocničnom hluku a zapnutom svetle, s maskou na oči a štuplami do uší aj bez nich. S nimi mali viac REM spánku a menej krátkych prebudení."
+            "value": "V štúdii z roku 2010 spalo v spánkovom laboratóriu 14 zdravých dobrovoľníkov pri nahratom nemocničnom hluku a zapnutom svetle, s maskou na oči a štupľami do uší aj bez nich. S nimi mali viac REM spánku a menej krátkych prebudení."
           }
         },
         "cs": {
@@ -22794,13 +22794,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stály jemný zvuk dokáže prekryť náhle hluky, preto majú niektorí ľudia radi dážď alebo ventilátor. Najbezpečnejší začiatok je však tichá izba, lebo hluk môže brániť dobrému spánku."
+            "value": "Stály jemný zvuk dokáže prekryť náhle hluky, preto majú niektorí ľudia radi dážď alebo ventilátor. Najbezpečnejší začiatok je však tichá izba, lebo hluk môže dobrému spánku aj brániť."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stálý jemný zvuk dokáže přehlušit náhlé hluky, proto má někdo rád déšť nebo ventilátor. Nejbezpečnější začátek je ale tichý pokoj, protože hluk může bránit dobrému spánku."
+            "value": "Stálý jemný zvuk dokáže přehlušit náhlé hluky, proto má někdo rád déšť nebo ventilátor. Nejbezpečnější začátek je ale tichý pokoj, protože hluk může dobrému spánku i bránit."
           }
         }
       }
@@ -22816,13 +22816,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prehľad 38 štúdií z roku 2021 o stálom hluku na pozadí, napríklad bielom šume, ako pomôcke na spánok priniesol zmiešané výsledky – od pomoci až po rušenie spánku. Autori hodnotili dôkazy, že spánok zlepšuje, ako veľmi nízkej kvality."
+            "value": "Prehľad 38 štúdií z roku 2021 o stálom hluku na pozadí, napríklad bielom šume, ako pomôcke na spánok priniesol zmiešané výsledky – od pomoci až po rušenie spánku. Autori hodnotili dôkazy, že zlepšuje spánok, ako veľmi nízkej kvality."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Přehled 38 studií z roku 2021 o stálém hluku na pozadí, například bílém šumu, jako pomůcce ke spánku přinesl smíšené výsledky – od pomoci až po rušení spánku. Autoři hodnotili důkazy, že spánek zlepšuje, jako velmi nízké kvality."
+            "value": "Přehled 38 studií z roku 2021 o stálém hluku na pozadí, například bílém šumu, jako pomůcce ke spánku přinesl smíšené výsledky – od pomoci až po rušení spánku. Autoři hodnotili důkazy, že zlepšuje spánek, jako velmi nízké kvality."
           }
         }
       }
@@ -22860,7 +22860,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kofeín môže pôsobiť 8 hodín aj dlhšie, takže popoludňajšia káva môže byť hore ešte pri ukladaní do postele."
+            "value": "Kofeín môže pôsobiť 8 hodín aj dlhšie, takže popoludňajšia káva môže byť hore ešte pri líhaní."
           }
         },
         "cs": {
@@ -22992,13 +22992,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jasné svetlo displeja, najmä jeho modrá zložka, môže pôsobiť povzbudzujúco. Displejom nadol jeho žiara nesvieti do očí a v izbe zostane tma."
+            "value": "Jasné svetlo displeja, najmä jeho modrá zložka, môže pôsobiť povzbudzujúco. Keď telefón leží displejom nadol, jeho žiara ti nesvieti do očí a v izbe zostane tma."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jasné světlo displeje, hlavně jeho modrá složka, může působit povzbudivě. Displejem dolů jeho záře nesvítí do očí a v pokoji zůstane tma."
+            "value": "Jasné světlo displeje, hlavně jeho modrá složka, může působit povzbudivě. Když telefon leží displejem dolů, jeho záře ti nesvítí do očí a v pokoji zůstane tma."
           }
         }
       }
@@ -23014,13 +23014,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "V pokuse z roku 2017 hralo 22 zdravých dospelých večer 2,5 hodiny hry na telefóne, raz s bežným svetlom displeja a raz s menším podielom modrého svetla. S bežným svetlom boli výrazne menej ospalí."
+            "value": "V pokuse z roku 2017 hralo 22 zdravých dospelých večer 2,5 hodiny hry na telefóne, raz s bežným svetlom displeja a raz s menším podielom modrého svetla. S bežným svetlom sa cítili výrazne menej ospalí."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "V pokusu z roku 2017 hrálo 22 zdravých dospělých večer 2,5 hodiny hry na telefonu, jednou s běžným světlem displeje a jednou s menším podílem modrého světla. S běžným světlem byli výrazně méně ospalí."
+            "value": "V pokusu z roku 2017 hrálo 22 zdravých dospělých večer 2,5 hodiny hry na telefonu, jednou s běžným světlem displeje a jednou s menším podílem modrého světla. S běžným světlem se cítili výrazně méně ospalí."
           }
         }
       }
@@ -23080,13 +23080,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "V prieskume z roku 2025 medzi takmer 40 000 nórskymi študentmi vo veku 18 až 28 rokov, ktorí v posteli používali obrazovky, súvisela každá ďalšia hodina pri obrazovke v posteli s asi o 24 min kratším spánkom."
+            "value": "V prieskume z roku 2025 medzi takmer 40 000 nórskymi študentmi vo veku 18 až 28 rokov, ktorí v posteli používali obrazovky, súvisela každá ďalšia hodina pri obrazovke v posteli so spánkom kratším asi o 24 min."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "V průzkumu z roku 2025 mezi téměř 40 000 norskými studenty ve věku 18 až 28 let, kteří v posteli používali obrazovky, souvisela každá další hodina u obrazovky v posteli s asi o 24 min kratším spánkem."
+            "value": "V průzkumu z roku 2025 mezi téměř 40 000 norskými studenty ve věku 18 až 28 let, kteří v posteli používali obrazovky, souvisela každá další hodina u obrazovky v posteli se spánkem kratším asi o 24 min."
           }
         }
       }
@@ -23124,13 +23124,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ak ležíš dlho hore, mozog sa môže naučiť, že posteľ znamená „bdenie“. Vstať, venovať sa niečomu pokojnému a vrátiť sa, keď príde spánok, pomáha, aby posteľ znova znamenala spánok."
+            "value": "Ak ležíš dlho hore, mozog sa môže naučiť, že posteľ znamená „bdenie“. Vstať, venovať sa niečomu pokojnému a vrátiť sa, keď príde ospalosť, pomáha, aby posteľ znova znamenala spánok."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Když ležíš dlouho vzhůru, mozek se může naučit, že postel znamená „bdění“. Vstát, věnovat se něčemu klidnému a vrátit se, až přijde spánek, pomáhá, aby postel zase znamenala spánek."
+            "value": "Když ležíš dlouho vzhůru, mozek se může naučit, že postel znamená „bdění“. Vstát, věnovat se něčemu klidnému a vrátit se, až přijde ospalost, pomáhá, aby postel zase znamenala spánek."
           }
         }
       }
@@ -23278,13 +23278,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prehľad z roku 2015 spojil 66 štúdií. Pravidelné cvičenie súviselo so stredne veľkým zlepšením kvality spánku a o niečo rýchlejším zaspávaním. Výsledky jasne nezáviseli od toho, ako intenzívne ľudia cvičili."
+            "value": "Prehľad z roku 2015 spojil 66 štúdií. Pravidelné cvičenie súviselo so stredne veľkým zlepšením kvality spánku a o niečo rýchlejším zaspávaním. Intenzita cvičenia nemala na výsledky jasný vplyv."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Přehled z roku 2015 spojil 66 studií. Pravidelné cvičení souviselo se středně velkým zlepšením kvality spánku a o něco rychlejším usínáním. Výsledky jasně nezávisely na tom, jak intenzivně lidé cvičili."
+            "value": "Přehled z roku 2015 spojil 66 studií. Pravidelné cvičení souviselo se středně velkým zlepšením kvality spánku a o něco rychlejším usínáním. Intenzita cvičení neměla na výsledky jasný vliv."
           }
         }
       }
@@ -23300,13 +23300,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Rôznorodé štúdie a účinky boli malé až stredné. Výsledky menilo, ako dlho ľudia cvičili a ako dobre pri tom vydržali."
+            "value": "Štúdie boli rôznorodé a účinky malé až stredné. Výsledky menilo, ako dlho ľudia cvičili a ako dobre pri tom vydržali."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Různorodé studie a účinky byly malé až střední. Výsledky měnilo, jak dlouho lidé cvičili a jak dobře u toho vydrželi."
+            "value": "Studie byly různorodé a účinky malé až střední. Výsledky měnilo, jak dlouho lidé cvičili a jak dobře u toho vydrželi."
           }
         }
       }
@@ -23344,13 +23344,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Prehľad z roku 2019 spojil 23 štúdií so zdravými dospelými, ktorí si večer raz zacvičili, alebo nie. Večerné cvičenie v priemere spánku neublížilo – hlbokého spánku dokonca trochu pribudlo. Uškodiť by mu mohlo len namáhavé cvičenie, ktoré skončí do hodiny pred spaním."
+            "value": "Prehľad z roku 2019 spojil 23 štúdií so zdravými dospelými, ktorí si večer raz zacvičili, alebo nie. Večerné cvičenie v priemere spánku neublížilo – hlbokého spánku dokonca trochu pribudlo. Uškodiť by mu mohlo len namáhavé cvičenie, ktoré skončí menej ako hodinu pred spaním."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Přehled z roku 2019 spojil 23 studií se zdravými dospělými, kteří si večer jednou zacvičili, nebo ne. Večerní cvičení v průměru spánku neublížilo – hlubokého spánku dokonce trochu přibylo. Uškodit by mu mohlo jen namáhavé cvičení, které skončí do hodiny před spaním."
+            "value": "Přehled z roku 2019 spojil 23 studií se zdravými dospělými, kteří si večer jednou zacvičili, nebo ne. Večerní cvičení v průměru spánku neublížilo – hlubokého spánku dokonce trochu přibylo. Uškodit by mu mohlo jen namáhavé cvičení, které skončí méně než hodinu před spaním."
           }
         }
       }
@@ -23366,13 +23366,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Každá štúdia skúšala jeden večer. Varovanie „do hodiny pred spaním“ je len možnosť a niektoré výsledky zmizli po vynechaní jedinej štúdie."
+            "value": "Každá štúdia skúšala jeden večer. Varovanie „menej ako hodinu pred spaním“ je len možnosť a niektoré výsledky zmizli po vynechaní jedinej štúdie."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Každá studie zkoušela jeden večer. Varování „do hodiny před spaním“ je jen možnost a některé výsledky zmizely po vynechání jediné studie."
+            "value": "Každá studie zkoušela jeden večer. Varování „méně než hodinu před spaním“ je jen možnost a některé výsledky zmizely po vynechání jediné studie."
           }
         }
       }
@@ -23454,13 +23454,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Počas spánku mozog prehráva naučené a ukladá to na správne miesto, aby to zostalo. Oddýchnutý mozog sa tiež ľahšie sústredí a jasnejšie myslí."
+            "value": "Počas spánku si mozog prehráva nové poznatky a ukladá ich na správne miesto, aby zostali. Oddýchnutý mozog sa tiež ľahšie sústredí a jasnejšie myslí."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Během spánku mozek přehrává naučené a ukládá to na správné místo, aby to zůstalo. Odpočatý mozek se také snáz soustředí a jasněji myslí."
+            "value": "Během spánku si mozek přehrává nové poznatky a ukládá je na správné místo, aby zůstaly. Odpočatý mozek se také snáz soustředí a jasněji myslí."
           }
         }
       }
@@ -23542,13 +23542,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "V pokuse z roku 2026 si 14 študentov športovcov dalo šlofík 25 min, 90 min, alebo žiadny, vždy do 15:00. Ich spánok v noci sa takmer nezmenil: zakaždým asi 7 hodín."
+            "value": "V pokuse z roku 2026 si 14 študentov športovcov dalo šlofíka na 25 min, na 90 min alebo žiadneho, vždy s koncom o 15:00. Ich spánok v noci sa takmer nezmenil: zakaždým asi 7 hodín."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "V pokusu z roku 2026 si 14 studentů sportovců dalo šlofík 25 min, 90 min, nebo žádný, vždy do 15:00. Jejich spánek v noci se téměř nezměnil: pokaždé asi 7 hodin."
+            "value": "V pokusu z roku 2026 si 14 studentů sportovců dalo šlofíka na 25 min, na 90 min, nebo žádného, vždy s koncem v 15:00. Jejich spánek v noci se téměř nezměnil: pokaždé asi 7 hodin."
           }
         }
       }
@@ -23608,13 +23608,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "V laboratórnej štúdii z roku 2022 spalo 20 zdravých dospelých v tlmenom svetle (pod 3 lux), no druhú noc mala polovica z nich bežné svetlo v izbe (100 lux). Pri rozsvietenom svetle tvoril hlboký a REM spánok menšiu časť ich spánku a srdce im počas spánku bilo rýchlejšie."
+            "value": "V laboratórnej štúdii z roku 2022 spalo 20 zdravých dospelých v tlmenom svetle (pod 3 lx), no druhú noc mala polovica z nich bežné svetlo v izbe (100 lx). Pri rozsvietenom svetle tvoril hlboký a REM spánok menšiu časť ich spánku a srdce im počas spánku bilo rýchlejšie."
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "V laboratorní studii z roku 2022 spalo 20 zdravých dospělých v tlumeném světle (pod 3 lux), ale druhou noc měla polovina z nich běžné světlo v místnosti (100 lux). Při rozsvíceném světle tvořil hluboký a REM spánek menší část jejich spánku a srdce jim během spánku bilo rychleji."
+            "value": "V laboratorní studii z roku 2022 spalo 20 zdravých dospělých v tlumeném světle (pod 3 lx), ale druhou noc měla polovina z nich běžné světlo v místnosti (100 lx). Při rozsvíceném světle tvořil hluboký a REM spánek menší část jejich spánku a srdce jim během spánku bilo rychleji."
           }
         }
       }
@@ -23696,7 +23696,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stále hore po zhruba štvrťhodine? Vstaň, rob niečo pokojné, napríklad čítaj, a vráť sa, keď sa spánok vráti."
+            "value": "Stále nespíš ani po zhruba štvrťhodine? Vstaň, rob niečo pokojné, napríklad čítaj, a vráť sa, keď príde ospalosť."
           }
         },
         "cs": {
@@ -23960,13 +23960,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hasiči mali dnes cvičný poplach – boli pripravení ako blesk a potom si zaslúžene zdriemli 🚒"
+            "value": "Hasiči mali dnes cvičný poplach – boli bleskovo pripravení a potom si zaslúžene zdriemli 🚒"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hasiči měli dnes cvičný poplach – byli připravení jako blesk a pak si zaslouženě zdřímli 🚒"
+            "value": "Hasiči měli dnes cvičný poplach – byli bleskově připravení a pak si zaslouženě zdřímli 🚒"
           }
         }
       }
@@ -24136,7 +24136,7 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hasiči zložili zo stromu mačku – %@ je v bezpečí a zase spokojne priade 🐈"
+            "value": "Hasiči zložili zo stromu mačku – %@ je v bezpečí a zase spokojne pradie 🐈"
           }
         },
         "cs": {
@@ -24158,13 +24158,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polícia našla stratenú mačku – volá sa %@ a do spania je už doma 🐾"
+            "value": "Polícia našla stratenú mačku – volá sa %@ a pred spaním je už zase doma 🐾"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Policie našla ztracenou kočku – jmenuje se %@ a do spaní je už doma 🐾"
+            "value": "Policie našla ztracenou kočku – jmenuje se %@ a před spaním je už zase doma 🐾"
           }
         }
       }
@@ -24180,13 +24180,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Trieda má mačku – volá sa %@ a v spaní je najlepšia z celej školy 🏆"
+            "value": "Trieda má mačku menom %@ – v hlasovaní ju vyhlásili za najlepšieho spáča celej školy 🏆"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Třída má kočku – jmenuje se %@ a ve spaní je nejlepší z celé školy 🏆"
+            "value": "Třída má kočku jménem %@ – v hlasování ji zvolili nejlepším spáčem celé školy 🏆"
           }
         }
       }
@@ -24202,13 +24202,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Na radnici majú novú úradníčku – mačku menom %@. Pečiatkuje labkou 🐾"
+            "value": "Na radnici majú novú posilu – mačku menom %@. Pečiatkuje labkou 🐾"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Na radnici mají novou úřednici – kočku jménem %@. Razítkuje tlapkou 🐾"
+            "value": "Na radnici mají novou posilu – kočku jménem %@. Razítkuje tlapkou 🐾"
           }
         }
       }
@@ -24246,13 +24246,13 @@
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mačka menom %@ každý večer navštívi iný prah, len aby povedala dobrú noc 🐈"
+            "value": "Mačka menom %@ sa každý večer zastaví pri iných dverách, len aby povedala dobrú noc 🐈"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kočka jménem %@ každý večer navštíví jiný práh, jen aby řekla dobrou noc 🐈"
+            "value": "Kočka jménem %@ se každý večer zastaví u jiných dveří, jen aby řekla dobrou noc 🐈"
           }
         }
       }
