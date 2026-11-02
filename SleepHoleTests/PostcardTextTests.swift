@@ -51,9 +51,58 @@ struct PostcardTextTests {
         }
     }
 
+    @Test func theStudyPartIsCompleteWhereAStudyExists() {
+        for id in ids {
+            guard Postcards.study(for: id) != nil else {
+                #expect(!PostcardText.hasStudy(id), "\(id)")
+                #expect(PostcardText.why(for: id) == nil && PostcardText.finding(for: id) == nil && PostcardText.evidence(for: id) == nil, "\(id)")
+                continue
+            }
+            #expect(PostcardText.hasStudy(id), "\(id)")
+            func texts(_ lang: AppLanguage) -> [String] {
+                inLanguage(lang) { [PostcardText.why(for: id), PostcardText.finding(for: id), PostcardText.evidence(for: id)].map { $0 ?? "" } }
+            }
+            let en = texts(.en)
+            for lang in AppLanguage.allCases {
+                let t = texts(lang)
+                let limits = lang == .en ? [260, 240, 170] : [300, 280, 200]
+                for (i, x) in t.enumerated() {
+                    #expect(!x.isEmpty && !x.contains("%"), "\(lang) \(id) \(i)")
+                    #expect(x.count <= limits[i], "\(lang) \(id) \(i) \(x.count)")
+                    #expect(x.range(of: #"\d s\b"#, options: .regularExpression) == nil, "\(lang) \(id) \(i)")
+                    if lang != .en { #expect(x != en[i], "\(lang) \(id) \(i) untranslated") }
+                }
+            }
+        }
+    }
+
+    @Test func theTenFirstPostcardsHaveAStudyAndTheRestHaveNone() {
+        for n in 1...30 {
+            let id = String(format: "postcard-%02d", n)
+            #expect((Postcards.study(for: id) != nil) == (n <= 10), "\(id)")
+            #expect(PostcardText.hasStudy(id) == (n <= 10), "\(id)")
+        }
+        #expect(Postcards.studies.count == 10)
+    }
+
+    @Test func theCitationResolves() throws {
+        let s = try #require(Postcards.study(for: "postcard-05"))
+        inLanguage(.en) { #expect(PostcardText.citation(for: s) == "Chang et al., PNAS, 2015") }
+        inLanguage(.sk) { #expect(PostcardText.citation(for: s) == "Chang a kol., PNAS, 2015") }
+        inLanguage(.cs) { #expect(PostcardText.citation(for: s) == "Chang a kol., PNAS, 2015") }
+    }
+
+    @Test func aTwoAuthorCitationResolves() throws {
+        let s = try #require(Postcards.study(for: "postcard-02"))
+        #expect(s.secondAuthor == "Carskadon")
+        inLanguage(.en) { #expect(PostcardText.citation(for: s) == "Crowley and Carskadon, Chronobiol Int, 2010") }
+        inLanguage(.sk) { #expect(PostcardText.citation(for: s) == "Crowley a Carskadon, Chronobiol Int, 2010") }
+        inLanguage(.cs) { #expect(PostcardText.citation(for: s) == "Crowley a Carskadon, Chronobiol Int, 2010") }
+    }
+
     @Test func theDebugKeysAreUniqueAndInTheCatalog() {
         #expect(Set(PostcardText.keys).count == PostcardText.keys.count)
-        #expect(PostcardText.keys.count == 65)
+        #expect(PostcardText.keys.count == 101)
         let entries = AppTexts.load()
         let have = Set(entries.map(\.key))
         #expect(PostcardText.keys.allSatisfy { have.contains($0) })
@@ -88,13 +137,14 @@ struct PostcardTextTests {
                 try png.write(to: URL(fileURLWithPath: dir).appendingPathComponent(name))
             }
         }
-        for n in [1, 4, 7, 14, 15, 19, 28, 30] {
-            let id = String(format: "postcard-%02d", n)
-            try write("postcard-\(n)-en-light.png", lang: .en, scheme: .light, size: .large, id: id)
-            try write("postcard-\(n)-sk-light.png", lang: .sk, scheme: .light, size: .large, id: id)
-            try write("postcard-\(n)-sk-dark.png", lang: .sk, scheme: .dark, size: .large, id: id)
-            guard [1, 7, 19, 30].contains(n) else { continue }
-            try write("postcard-\(n)-sk-light-xxxl.png", lang: .sk, scheme: .light, size: .accessibility2, id: id)
+        func id(_ n: Int) -> String { String(format: "postcard-%02d", n) }
+        for n in 1...10 { try write("card-\(n)-sk-light.png", lang: .sk, scheme: .light, size: .large, id: id(n)) }
+        for n in [6, 7] {
+            try write("card-\(n)-en-light.png", lang: .en, scheme: .light, size: .large, id: id(n))
+            try write("card-\(n)-cs-light.png", lang: .cs, scheme: .light, size: .large, id: id(n))
         }
+        try write("card-2-cs-light.png", lang: .cs, scheme: .light, size: .large, id: id(2))
+        try write("card-10-sk-dark.png", lang: .sk, scheme: .dark, size: .large, id: id(10))
+        try write("card-4-sk-light-xxxl.png", lang: .sk, scheme: .light, size: .accessibility2, id: id(4))
     }
 }
