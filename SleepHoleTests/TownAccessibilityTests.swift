@@ -116,4 +116,55 @@ struct TownAccessibilityTests {
         let moved = (view.accessibilityElements ?? []).compactMap { $0 as? TownAccessibilityElement }
         #expect(moved[1].accessibilityFrameInContainerSpace.minX != f0.minX)
     }
+
+    /// A zoomed-in town on a phone-sized view (camera scale 3, so every building is narrower than the view).
+    func zoomedTown() -> (view: TownSKView, scene: TownScene, count: Int) {
+        let ids = ["l1-block-a-0", "l1-bigblock-e", "l2-library-a", "l3-firestation", "l4-sky-a-0", "l1-house-a-0", "l2-library-a"]
+        let k = NightKey("2026-10-01")!
+        let results = ids.enumerated().map { i, id in NightResult(key: k.adding(days: i, calendar: .current), outcome: .complete, buildingId: id) }
+        let town = TownBuilder.build(results: results, catalog: sprites.catalog!)
+        let model = TownRender.build(town, catalog: sprites.catalog!, today: NightKey("2026-10-20")!, calendar: .current)
+        let view = TownSKView(frame: CGRect(x: 0, y: 0, width: 402, height: 874))
+        let scene = TownScene(size: view.bounds.size)
+        scene.imageProvider = { sprites.image(for: $0) }
+        scene.cameraDefaults = UserDefaults(suiteName: "TownAccessibilityTests-\(UUID().uuidString)")!
+        scene.reduceMotion = { true }
+        view.presentScene(scene)
+        scene.show(model, focus: nil)
+        view.entries = TownAccessibility.entries(town) { _ in "B" }
+        view.summary = "Summary"
+        scene.zoom(by: scene.camera!.xScale / 3.0, at: CGPoint(x: 201, y: 437), in: view)
+        return (view, scene, ids.count)
+    }
+
+    @Test func aThreeFingerSwipeMovesTheCameraAndStopsAtTheEdge() {
+        let (view, scene, _) = zoomedTown()
+        let start = scene.camera!.position
+        #expect(view.accessibilityScroll(.left))                                  // shows what is to the right
+        #expect(scene.camera!.position.x > start.x)
+        #expect(view.accessibilityScroll(.right))
+        #expect(view.accessibilityScroll(.down) || view.accessibilityScroll(.up))
+        var guardCount = 0
+        while view.accessibilityScroll(.left), guardCount < 100 { guardCount += 1 }   // at the edge: false
+        #expect(guardCount < 100 && !view.accessibilityScroll(.left))
+    }
+
+    @Test func focusingABuildingOutsideTheViewBringsItIn() {
+        let (view, scene, count) = zoomedTown()
+        let model = scene.model!
+        var tried = 0
+        for i in 0..<count {
+            scene.pan(by: CGPoint(x: 0, y: 0))
+            // look at every building from the far side so that at least one starts outside
+            _ = view.accessibilityScroll(i % 2 == 0 ? .left : .right)
+            guard let f = TownSKView.viewFrame(ofBuilding: i, in: model, scene: scene), !view.bounds.contains(f) else { continue }
+            tried += 1
+            let els = (view.accessibilityElements ?? []).compactMap { $0 as? TownAccessibilityElement }
+            els.first { $0.buildingIndex == i }?.accessibilityElementDidBecomeFocused()
+            let after = TownSKView.viewFrame(ofBuilding: i, in: model, scene: scene)!
+            #expect(view.bounds.contains(after), "building \(i)")
+        }
+        #expect(tried > 0)
+    }
 }
+

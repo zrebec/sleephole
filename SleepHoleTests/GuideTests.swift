@@ -63,7 +63,7 @@ struct GuideTests {
         m.acknowledgeFirstNightBriefing()
         #expect(!m.needsFirstNightBriefing && m.firstNightBriefed)
         m.resetGuide()
-        #expect(!m.onboardingDone && m.needsFirstNightBriefing)
+        #expect(m.needsGuide && m.needsFirstNightBriefing)
         m.startNight()                                                   // a started real night also ends it
         #expect(!m.needsFirstNightBriefing)
         _ = clock

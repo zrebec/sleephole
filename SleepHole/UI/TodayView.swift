@@ -77,6 +77,15 @@ struct HomeView: View {
     @Environment(AppModel.self) private var model
     @State private var briefing = false
     @State private var confirmEarly = false
+    @Environment(\.dynamicTypeSize) private var typeSize
+    /// 13g: the bubble is an overlay (it takes no room); at text sizes above the default a long line reaches below the
+    /// cat's box and slid under the panel. These two heights make the hero reserve exactly the missing room – never at
+    /// the default size, where Today keeps its confirmed look.
+    @State private var heroBuddyHeight: CGFloat = 0
+    @State private var heroBubbleHeight: CGFloat = 0
+    static let bubbleOffset: CGFloat = 80
+    /// Room below the hero before the panel starts: its bottom padding (14) and the column spacing (16).
+    static let roomBelowHero: CGFloat = 30
     /// The hero cat: 50 % of the screen width (200 pt on a 402 pt wide phone), at most this wide.
     static let buddyMaxWidth: CGFloat = 200
     /// Space between the bottom of the buddy's layout box and the tip of the bubble's tail while the cat has a bed item
@@ -92,15 +101,19 @@ struct HomeView: View {
                       hold: AppModel.forcedBuddyReaction, outfit: model.buddyOutfit)
                 .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.5) })
         if model.buddyOutfit.bed == nil {
+            let missing = typeSize > .large
+                ? max(0, Self.bubbleOffset + heroBubbleHeight + 8 - heroBuddyHeight - Self.roomBelowHero) : 0
             buddy
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heroBuddyHeight = $0 }
                 .overlay(alignment: .top) {
                     // the buddy talks (phase TALK): an overlay, so Today's layout does not change
                     BuddyBubble(now: now)
                         .containerRelativeFrame(.horizontal) { w, _ in min(330, w - 32) }
-                        .offset(y: 80)
+                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heroBubbleHeight = $0 }
+                        .offset(y: Self.bubbleOffset)
                 }
                 .padding(.top, 25)
-                .padding(.bottom, 14)
+                .padding(.bottom, 14 + missing)
                 .appearIn(delay: 0.1)
         } else {
             VStack(spacing: Self.bedBubbleGap) {
