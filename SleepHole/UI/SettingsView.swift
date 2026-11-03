@@ -3,7 +3,6 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
-    @State private var showGuide = false
     @State private var showRules = false
     @State private var notificationStatus = "…"
     /// The system alarm's consent (phase F6b); read when the screen opens and after every change.
@@ -79,7 +78,7 @@ struct SettingsView: View {
 
                 Section {
                     ScheduleEditor()
-                    Button(L("Guide")) { showGuide = true }
+                    Button(L("Guide")) { model.showGuideReplay = true }
                     Button(L("All rules")) { showRules = true }
                 } header: {
                     Text(L("Schedule"))
@@ -370,7 +369,6 @@ struct SettingsView: View {
             .navigationDestination(isPresented: $boxContents) { BoxContentsView() }
             #endif
             .renameTownAlert(isPresented: $renaming)
-            .sheet(isPresented: $showGuide) { GuideView(replay: true) }
             .sheet(isPresented: $showRules) { RulesView() }
             .task {
                 notificationStatus = await Notifications.statusText()

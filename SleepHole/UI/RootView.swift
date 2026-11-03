@@ -81,6 +81,11 @@ struct RootView: View {
         .fullScreenCover(isPresented: Binding(get: { model.needsGuide && !screenshotMode }, set: { _ in })) {
             GuideView().id(lang).environment(\.locale, lang.locale)
         }
+        // the guide replayed from Settings (B40): presented here, outside the tabs' `.id(lang)`, so switching the
+        // language on its first page rebuilds Settings without closing the sheet
+        .sheet(isPresented: Bindable(model).showGuideReplay) {
+            GuideView(replay: true).id(lang).environment(\.locale, lang.locale)
+        }
     }
 }
 
