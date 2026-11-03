@@ -379,6 +379,63 @@ struct SyncEngineTests {
         #expect(content(a).spends?.count == 1)
     }
 
+    // MARK: 8b – the Developer replay of the guide survives the sync (B39)
+
+    @Test func theReplayedGuideIsNotClosedByTheSyncedDate() async throws {
+        let folder = tempFolder(); defer { try? FileManager.default.removeItem(at: folder) }
+        let a = device(folder, id: "A", at: date(1, 12))
+        defer { stopAll(a) }
+        a.model.completeOnboarding()
+        a.model.acknowledgeFirstNightBriefing()
+        let original = a.model.makeBackup().onboardingCompletedAt
+        await a.sync.syncNow()
+
+        // device B: its own store and defaults, kept for the "relaunch" below
+        let c = try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self, ScheduleChange.self,
+                                    JokerRecord.self, BoxRecord.self, configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+        let defaults = UserDefaults(suiteName: "sleephole-replay-\(UUID().uuidString)")!
+        func makeB(_ id: String) -> AppModel {
+            var s = AppSettings(); s.wakeCode = "1234"; s.usesSync = true
+            let m = AppModel(context: c.mainContext, catalog: sprites.catalog, clock: FakeClock(date(2, 12)), settings: s,
+                             servicesEnabled: false, defaults: defaults,
+                             syncTransport: FolderSyncTransport(folder: folder, deviceId: id, pollInterval: 0.05), syncDelay: 0)
+            m.sync.firstReadDone = true
+            return m
+        }
+        let b = makeB("B")
+        await b.sync.syncNow()
+        #expect(b.onboardingDone && !b.needsGuide)                                   // adopted from A
+
+        b.resetGuide()
+        #expect(b.needsGuide && b.needsFirstNightBriefing)
+        await b.sync.syncNow(); await b.sync.syncNow(); await b.sync.settled()       // the merge brings the old date back …
+        #expect(b.needsGuide && b.needsFirstNightBriefing)                           // … the guide stays open
+        #expect(b.makeBackup().onboardingCompletedAt == original)
+
+        b.completeOnboarding()
+        b.acknowledgeFirstNightBriefing()
+        #expect(!b.needsGuide && !b.needsFirstNightBriefing)
+        #expect(b.makeBackup().onboardingCompletedAt == original)                    // the stored date is the original one
+        let again = makeB("B")                                                       // a relaunch over the same store and defaults
+        #expect(!again.needsGuide && !again.needsFirstNightBriefing)
+        b.sync.stop(); again.sync.stop()
+    }
+
+    @Test func theReplayRequestIsNotPartOfTheBackupOrTheSyncFile() throws {
+        let folder = tempFolder()
+        let a = device(folder, id: "A", at: date(1, 12))
+        defer { stopAll(a) }
+        a.model.completeOnboarding()
+        let beforeSync = try JSONEncoder().encode(a.model.makeSyncFile())
+        a.model.resetGuide()
+        #expect(a.model.guideReplayRequested)
+        let backupAfter = String(decoding: try a.model.makeBackup().encoded(), as: UTF8.self)
+        #expect(!backupAfter.contains("guideReplay") && !backupAfter.contains("briefingReplay"))
+        let after = String(decoding: try JSONEncoder().encode(a.model.makeSyncFile()), as: UTF8.self)
+        #expect(!after.contains("guideReplay") && !after.contains("briefingReplay"))
+        #expect(a.model.makeSyncFile().onboardingCompletedAt == (try JSONDecoder().decode(BackupFile.self, from: beforeSync)).onboardingCompletedAt)
+    }
+
     // MARK: 8 – the guide waits for the first read
 
     @Test func aFileWithAFinishedGuideMeansNoGuideOnAFreshDevice() async throws {

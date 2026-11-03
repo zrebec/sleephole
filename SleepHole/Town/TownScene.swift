@@ -11,6 +11,8 @@ final class TownScene: SKScene {
     private var velocity = CGVector.zero
     private var lastUpdate: TimeInterval = 0
     var imageProvider: ((String) -> UIImage?)?
+    /// Replaceable so that tests can make the glide a jump.
+    var reduceMotion: () -> Bool = { UIAccessibility.isReduceMotionEnabled }
 
     static let minScale: CGFloat = 0.6      // camera scale: smaller = closer
     static let maxScale: CGFloat = 10
@@ -146,11 +148,11 @@ final class TownScene: SKScene {
     }
 
     /// Glides to the newest building keeping the scale; a touch stops it. Reduce Motion: a jump.
-    private func glide(to focus: ScenePoint) {
+    private func glide(to focus: ScenePoint, lift: Double = 120) {
         if needsFit { pendingGlide = focus; return }       // the first fit has not happened yet
-        let target = TownRender.clamp(ScenePoint(x: focus.x, y: focus.y + 120), to: model?.bounds ?? SceneRect(minX: focus.x, minY: focus.y, maxX: focus.x, maxY: focus.y))
+        let target = TownRender.clamp(ScenePoint(x: focus.x, y: focus.y + lift), to: model?.bounds ?? SceneRect(minX: focus.x, minY: focus.y, maxX: focus.x, maxY: focus.y))
         let point = CGPoint(x: target.x, y: target.y)
-        if UIAccessibility.isReduceMotionEnabled {
+        if reduceMotion() {
             cameraNode.position = point
             clampCamera()
             saveCamera()
@@ -192,6 +194,22 @@ final class TownScene: SKScene {
         cameraNode.position.x -= translation.x * cameraNode.xScale
         cameraNode.position.y += translation.y * cameraNode.yScale
         clampCamera()
+    }
+
+    /// VoiceOver's three-finger scroll: moves like a finger drag by `translation` (view points). False = the camera did
+    /// not move (already at that edge).
+    func scrollForAccessibility(by translation: CGPoint) -> Bool {
+        let before = cameraNode.position
+        pan(by: translation)
+        let moved = abs(cameraNode.position.x - before.x) > 0.01 || abs(cameraNode.position.y - before.y) > 0.01
+        if moved { saveCamera() }
+        return moved
+    }
+
+    /// VoiceOver focus on a building outside the view: the camera centres it (a glide; Reduce Motion: a jump).
+    func bringIntoView(viewFrame: CGRect) {
+        let c = convertPoint(fromView: CGPoint(x: viewFrame.midX, y: viewFrame.midY))
+        glide(to: ScenePoint(x: c.x, y: c.y), lift: 0)
     }
 
     func fling(velocity v: CGPoint) {

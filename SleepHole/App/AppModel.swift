@@ -325,6 +325,8 @@ final class AppModel {
         self.timeSensitiveCheck = timeSensitiveCheck
         self.protectedDataAvailable = protectedDataAvailable
         self.defaults = defaults
+        self.guideReplayRequested = defaults.bool(forKey: Self.guideReplayKey)
+        self.briefingReplayRequested = defaults.bool(forKey: Self.briefingReplayKey)
         self.bootDate = bootDate
         self.sync = SyncEngine(transport: syncTransport, defaults: defaults, settleDelay: syncDelay, guideWait: syncGuideWait,
                                retryDelay: syncRetryDelay)
@@ -844,7 +846,13 @@ final class AppModel {
     private(set) var onboardingDone = false
     /// The first-run guide is due: not finished, and not held back while a fresh install makes its first read of the
     /// sync place (a guide finished on another device is then not shown at all – phase SYNC).
-    var needsGuide: Bool { !onboardingDone && !sync.holdsGuide }
+    var needsGuide: Bool { (!onboardingDone || guideReplayRequested) && !sync.holdsGuide }
+    /// Debug replay requests: local only (never in the backup, the sync file or SwiftData), so a synced date cannot
+    /// close a replayed guide (B39).
+    static let guideReplayKey = "debug.guideReplay"
+    static let briefingReplayKey = "debug.briefingReplay"
+    private(set) var guideReplayRequested = false
+    private(set) var briefingReplayRequested = false
     private(set) var firstNightBriefed = false
 
     private func progress() -> UserProgress {
@@ -1082,7 +1090,9 @@ final class AppModel {
 
     func completeOnboarding() {
         let p = progress()
-        p.onboardingCompletedAt = clock.now
+        if p.onboardingCompletedAt == nil { p.onboardingCompletedAt = clock.now }
+        defaults.removeObject(forKey: Self.guideReplayKey)
+        guideReplayRequested = false
         if p.changeWeekStart == nil { p.changeWeekStart = clock.now }       // the guide set the first schedule: day 1 of the first change week
         save()
         onboardingDone = true
@@ -1092,11 +1102,14 @@ final class AppModel {
 
     /// The "Tvoja prvá noc" checklist is shown once, before the first REAL night is started.
     var needsFirstNightBriefing: Bool {
-        !firstNightBriefed && debugWindow == nil && !records().contains { !$0.isDebug && $0.startedAt != nil }
+        (!firstNightBriefed || briefingReplayRequested) && debugWindow == nil && !records().contains { !$0.isDebug && $0.startedAt != nil }
     }
 
     func acknowledgeFirstNightBriefing() {
-        progress().firstNightBriefingAt = clock.now
+        let p = progress()
+        if p.firstNightBriefingAt == nil { p.firstNightBriefingAt = clock.now }
+        defaults.removeObject(forKey: Self.briefingReplayKey)
+        briefingReplayRequested = false
         save()
         firstNightBriefed = true
     }
@@ -1333,11 +1346,10 @@ final class AppModel {
 
     /// Debug: show the guide and the first-night checklist again.
     func resetGuide() {
-        let p = progress()
-        p.onboardingCompletedAt = nil
-        p.firstNightBriefingAt = nil
-        save()
-        loadProgress()
+        defaults.set(true, forKey: Self.guideReplayKey)
+        defaults.set(true, forKey: Self.briefingReplayKey)
+        guideReplayRequested = true
+        briefingReplayRequested = true
     }
 
     // MARK: - phase machine

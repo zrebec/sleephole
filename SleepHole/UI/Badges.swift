@@ -5,6 +5,8 @@ import SwiftUI
 struct StreakBadge: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Side by side with the coins the headline must stay on ONE line (13g); stacked it may wrap.
+    var singleLine = false
 
     var body: some View {
         let n = model.streak
@@ -21,6 +23,7 @@ struct StreakBadge: View {
             }
             VStack(alignment: .leading, spacing: 0) {
                 Text(n > 0 ? L("\(n) nights in a row") : L("Your streak starts today")).font(.headline)
+                    .lineLimit(singleLine ? 1 : nil)
                 Text(n > 0 ? L("keep it going 💪") : L("your first good night lights it")).font(.caption).cardCaption()
             }
         }
@@ -54,11 +57,24 @@ struct StatusBadges: View {
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        // at accessibility sizes the badges are stacked, each with the full width (13e2)
-        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 10))
-        layout {
-            StreakBadge()
-            CoinBadge()
+        // at accessibility sizes the badges are stacked, each with the full width (13e2); below them side by side while
+        // the streak's headline fits on one line, otherwise the coins go under it (13g)
+        if typeSize.isAccessibilitySize {
+            VStackLayout(spacing: 10) {
+                StreakBadge()
+                CoinBadge()
+            }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStackLayout(spacing: 10) {
+                    StreakBadge(singleLine: true)
+                    CoinBadge()
+                }
+                VStackLayout(spacing: 10) {
+                    StreakBadge()
+                    CoinBadge()
+                }
+            }
         }
     }
 }

@@ -29,12 +29,17 @@ enum TownAccessibility {
 final class TownAccessibilityElement: UIAccessibilityElement {
     let buildingIndex: Int?
     var onActivate: ((Int) -> Void)?
+    var onFocus: ((Int) -> Void)?
 
     init(container: Any, label: String, buildingIndex: Int?) {
         self.buildingIndex = buildingIndex
         super.init(accessibilityContainer: container)
         accessibilityLabel = label
         accessibilityTraits = buildingIndex == nil ? .staticText : .button
+    }
+
+    override func accessibilityElementDidBecomeFocused() {
+        if let buildingIndex { onFocus?(buildingIndex) }
     }
 
     override func accessibilityActivate() -> Bool {
@@ -65,6 +70,7 @@ final class TownSKView: SKView {
             }
             for e in elements {
                 e.onActivate = onActivate
+                e.onFocus = { [weak self] i in self?.bringIntoViewIfNeeded(building: i) }
                 if let i = e.buildingIndex {
                     e.accessibilityFrameInContainerSpace = Self.viewFrame(ofBuilding: i, in: model, scene: scene) ?? .zero
                 } else {
@@ -74,6 +80,30 @@ final class TownSKView: SKView {
             return elements
         }
         set {}
+    }
+
+    /// VoiceOver moved to a building that is not fully inside the view: the camera brings it in.
+    func bringIntoViewIfNeeded(building index: Int) {
+        guard let scene = scene as? TownScene, let model = scene.model,
+              let frame = Self.viewFrame(ofBuilding: index, in: model, scene: scene), !bounds.contains(frame) else { return }
+        scene.bringIntoView(viewFrame: frame)
+    }
+
+    /// A three-finger swipe moves the camera by about 80 % of the view, as a finger drag in that direction would.
+    override func accessibilityScroll(_ direction: UIAccessibilityScrollDirection) -> Bool {
+        guard let scene = scene as? TownScene else { return false }
+        let w = bounds.width * 0.8, h = bounds.height * 0.8
+        let translation: CGPoint
+        switch direction {
+        case .left: translation = CGPoint(x: -w, y: 0)
+        case .right: translation = CGPoint(x: w, y: 0)
+        case .up: translation = CGPoint(x: 0, y: -h)
+        case .down: translation = CGPoint(x: 0, y: h)
+        default: return false
+        }
+        guard scene.scrollForAccessibility(by: translation) else { return false }
+        UIAccessibility.post(notification: .pageScrolled, argument: summary)
+        return true
     }
 
     /// The building's sprites (all pieces with its index, the unfinished ones only as high as they are shown) in view space.
