@@ -193,8 +193,16 @@ struct CalendarGrid: View {
     }
 
     /// The day number on its square (B7): dark text on the bright squares of dark mode (white on bright green is
-    /// unreadable there), the primary colour everywhere else.
-    static func numberColor(_ o: Outcome?, dark: Bool) -> Color {
+    /// unreadable there), the primary colour everywhere else. With iOS "Increase Contrast" (13e7) full opacity.
+    static func numberColor(_ o: Outcome?, dark: Bool, increased: Bool = false) -> Color {
+        if increased {
+            // light mode: iOS darkens the fills, white reads better than black on the grey "ruins" square
+            guard dark else { return o == .ruins ? .white : .primary }
+            switch o {
+            case .complete, .unfinished, .ruins: return .black
+            case .excused, .missed, .none: return .primary
+            }
+        }
         guard dark else { return .primary.opacity(0.7) }
         switch o {
         case .complete, .unfinished, .ruins: return .black.opacity(0.78)
@@ -203,6 +211,8 @@ struct CalendarGrid: View {
     }
 
     @Environment(\.colorScheme) private var scheme
+    /// iOS "Increase Contrast": the day numbers and glyphs at full opacity (13e7).
+    @Environment(\.colorSchemeContrast) private var contrast
     /// iOS "Differentiate Without Color": each outcome also gets a glyph (13e2).
     @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiate
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -236,11 +246,11 @@ struct CalendarGrid: View {
                             .aspectRatio(1, contentMode: .fit)
                             .overlay(Text(verbatim: "\(d.key.day)").font(.caption2)
                                 .dynamicTypeSize(...DynamicTypeSize.xxxLarge)       // a dense grid: the numbers stop growing here (13e2)
-                                .foregroundStyle(Self.numberColor(d.outcome, dark: scheme == .dark)))
+                                .foregroundStyle(Self.numberColor(d.outcome, dark: scheme == .dark, increased: contrast == .increased)))
                             .overlay(alignment: .topTrailing) {
                                 if differentiate, let g = Self.glyph(d.outcome) {
                                     Image(systemName: g).font(.system(size: 8, weight: .bold))
-                                        .foregroundStyle(Self.numberColor(d.outcome, dark: scheme == .dark))
+                                        .foregroundStyle(Self.numberColor(d.outcome, dark: scheme == .dark, increased: contrast == .increased))
                                         .padding(2).accessibilityHidden(true)
                                 }
                             }
@@ -269,7 +279,7 @@ struct CalendarGrid: View {
             RoundedRectangle(cornerRadius: 3).fill(c).frame(width: 10, height: 10)
                 .overlay {
                     if differentiate, let glyph {
-                        Image(systemName: glyph).font(.system(size: 6, weight: .bold)).foregroundStyle(.black.opacity(0.78))
+                        Image(systemName: glyph).font(.system(size: 6, weight: .bold)).foregroundStyle(contrast == .increased ? Color.black : Color.black.opacity(0.78))
                     }
                 }
             Text(t)
