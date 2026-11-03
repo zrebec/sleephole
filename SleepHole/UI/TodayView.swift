@@ -357,14 +357,42 @@ private struct MinHeightLayout: Layout {
     }
 }
 
+/// The column's height and the share of its `Spacer`, reported together so `NightView.refit` never combines the
+/// numbers of two different layout passes (13e6).
+private struct NightFit: Equatable { var column: CGFloat?; var slack: CGFloat? }
+private struct NightFitKey: PreferenceKey {
+    static let defaultValue = NightFit()
+    static func reduce(value: inout NightFit, nextValue: () -> NightFit) {
+        let next = nextValue()
+        if let c = next.column { value.column = c }
+        if let s = next.slack { value.slack = s }
+    }
+}
+
 struct NightView: View {
     @Environment(AppModel.self) private var model
     @State private var confirmAbandon = false
     @State private var soundSheet = false
     @State private var confirmPause = false
     @State private var confirmReroll = false
+    // 13e6: on the night screen (setup and after, never compact) the site shrinks (0.6…1) just enough for the screen to fit above the tab bar.
+    // `contentNatural` = the column's height minus the Spacer's share (both read in the same pass, `NightFitKey`), `siteNatural` = the site's own height,
+    // `room` = the height above the tab bar; none of them depends on the scale once it is taken out (see `refit`).
+    @State private var siteScale = 1.0
+    @State private var siteNatural: CGFloat = 0
+    @State private var contentNatural: CGFloat = 0
+    @State private var room: CGFloat = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
+
+    /// The floating tab bar covers the bottom of the screen; the last control must end above it.
+    private func refit() {
+        guard siteNatural > 0, contentNatural > 0, room > 0 else { return }
+        let natural = Double(contentNatural + siteNatural * (1 - CGFloat(siteScale)))
+        let s = NightLayout.siteScale(natural: natural, available: Double(room), siteHeight: Double(siteNatural))
+        let rounded = (s * 200).rounded() / 200
+        if abs(rounded - siteScale) > 0.001 { siteScale = rounded }
+    }
 
     /// "9:41" left of a pause.
     static func countdown(_ seconds: TimeInterval) -> String {
@@ -407,8 +435,10 @@ struct NightView: View {
                             .id(rec.buildingId)
                             .transition(.opacity)
                             .animation(reduceMotion ? nil : .easeInOut(duration: Motion.t(0.5)), value: rec.buildingId)
-                            .scaleEffect(compact ? 0.6 : 1, anchor: .top)
-                            .frame(height: compact ? 190 : nil, alignment: .top)
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { siteNatural = $0; refit() }
+                            .scaleEffect(compact ? 0.6 : siteScale, anchor: .top)
+                            .frame(height: compact ? 190 : (siteScale < 1 ? siteNatural * siteScale : nil),
+                                   alignment: .top)
                         let buildingName = model.catalog?[rec.buildingId]?.displayName ?? ""
                         let inSetup = model.graceEnds.map { $0 > now } ?? false
                         if inSetup && model.isNewInTown(rec) {
@@ -470,6 +500,7 @@ struct NightView: View {
                         ConfirmPanel()
                     }
                     Spacer(minLength: 0)
+                        .background(GeometryReader { g in Color.clear.preference(key: NightFitKey.self, value: NightFit(slack: g.size.height)) })
                     Button(role: .destructive) { confirmAbandon = true } label: {
                         Text(rec.isNap ? L("End nap") : L("Cancel night"))
                             .padding(.vertical, 13).contentShape(Rectangle()).padding(.vertical, -13)   // a bigger hit area, same layout (13e2)
@@ -483,7 +514,23 @@ struct NightView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
+                .background(GeometryReader { g in Color.clear.preference(key: NightFitKey.self, value: NightFit(column: g.size.height)) })
+                .onPreferenceChange(NightFitKey.self) { fit in
+                    guard let column = fit.column, let slack = fit.slack else { return }
+                    contentNatural = column - slack
+                    refit()
                 }
+                }
+                .onGeometryChange(for: CGFloat.self) { proxy in
+                    // the room from the screen's own top safe area down to the tab bar. In the very first frame the
+                    // view still has a bigger top inset (153 pt on a 17e) that shrinks `size.height` by 106 pt and
+                    // would draw the site too small for a moment (13e6), so the window's inset is used instead
+                    let top = MainActor.assumeIsolated {
+                        UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+                            .flatMap { $0.windows }.first { $0.isKeyWindow }?.safeAreaInsets.top
+                    } ?? proxy.safeAreaInsets.top
+                    return proxy.frame(in: .global).maxY - top
+                } action: { room = $0; refit() }
             }
         }
         .background { NightSky() }
