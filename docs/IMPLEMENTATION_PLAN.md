@@ -3847,9 +3847,12 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         texts: příst → "přede" (its example "Kočka slastně předla"), razítkovat → "razítkuje", šlofík ("ob. expr.", "dát si
         šlofíka"), špunt ("zátka"), odpočatý (SSČ beside odpočinutý), zdřímnout → "zdřímli", přehlušit, uléhat → "uléhání",
         sundat ("hovor."), zaslouženě, bleskově, spáč → "spáčem", posila ("reprezentace s posilami"), tlapka, náramkový,
-        vrtět → "vrtíš", povzbudivě, různorodý. Four (vyprchávat, nejednoznačný, usínání, sacharid) stayed behind the
-        IJP's "server je přetížen" page for 40 min and the Academic Dictionary (slovnikcestiny.cz) answers 403 to scripts →
-        the macOS Czech spell checker knows all four (a made-up control word was flagged). JULS confirmed 18 Slovak forms:
+        vrtět → "vrtíš", povzbudivě, různorodý. Four (vyprchávat, nejednoznačný, usínání, sacharid) first stayed behind the
+        IJP's "server je přetížen" page (a timed-out query kept the address locked; the page's own "nechci čekat" link,
+        `&action=free`, releases it) and were then confirmed ~02:00: sacharid ("Sacharidy patří mezi základní živiny"),
+        usínat → "usínání", nejednoznačný ("nejednoznačný postoj"), vyprchat (its examples "účinek vyprchá", "vůně
+        vyprchala"; "vyprchávat" has no headword of its own, the regular imperfective). The macOS Czech spell checker knows
+        all four as well; the Academic Dictionary (slovnikcestiny.cz) answers 403 to scripts. JULS confirmed 18 Slovak forms:
         vyprchávať (KSSJ "vyprchať … kniž. stratiť sa"), štupeľ ("hovor. zátka"), priasť → "pradie" ("mača pradie"),
         zdriemnuť, pečiatkovať → "pečiatkuje", posila ("oddiel získal posilu nového hráča"), oddýchnutý (SSSJ), bleskovo,
         spáč, povzbudzujúco, nejednoznačný (SSSJ), prekryť, nahratý (PSP 2013 "nahrať … ‑atý/‑aný"), zaslúžene (SSJ
