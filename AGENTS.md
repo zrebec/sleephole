@@ -38,7 +38,7 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    (Debug build of `86387b1`, the store backed up first). **13b2 – the whole app in Czech (938 texts, developer screens
    too) + Czech signs on seven sprites – merged 2026-11-02 ~07:50 (`ce5ac9d`); 13b3 – Developer → "Plans and proposals" in
    Czech (`docs/PREHLAD-PLANOV.cs.md`, his pick "Czech copy + test") – merged ~08:15; both on his phone since 2026-11-02 08:31 (Debug build of `f6f61a5`, his yes, the store backed up first)**
-   (store backed up first). His checks c1–c6 / n1–n2 / d1–d7, **a1–a10 (13c–13e7 after the install, a4 answered in chat ~07:14: "with 13e6"; added 2026-11-03 ~03:30)** and notes `cz` / `n13` on his build 13 page
+   (store backed up first). His checks c1–c6 / n1–n2 / d1–d7, **a1–a10 (13c–13e7 after the install, a4 answered in chat ~07:14: "with 13e6", **a2 confirmed in chat ~15:00 – the cat with the buildings and names, 13d 🟢**; added 2026-11-03 ~03:30)** and notes `cz` / `n13` on his build 13 page
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`) are open. His Chrome is signed out of
    App Store Connect (2026-11-02 07:00) – ask him to sign in before reading Apple's review state. **13c batch 1 – postcards 1–10 with a "why" (one checked study each, his ten "sedí", new fronts 06 / 07, one longer
    card, no flip) – merged 2026-11-02 ~16:00, on his phone since 16:18 (Debug build of `f963a46`, the store backed up first).** **His goal message
