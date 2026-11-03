@@ -49,10 +49,9 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    16, 18, 20, 22, 23, 25, 26, 27; 17 without a "why"); **all 30 in sk / cs / en on his page
    https://claude.ai/artifact/JD9SGXVqygs9vkkNPcq4ae** (screenshots only, no form). **13d (the cat about standing buildings,
    named cats) merged ~18:55 (`4aa98b1`); 13e1 (VoiceOver, Reduce Motion) ~19:15 (`0ac8dea`); 13e2 (text size, contrast,
-   tap areas) ~21:35 (`986f0c8`); 13e3 (the town for VoiceOver) ~22:10 (`5b54c9e`); the final check on the tip ~22:15: SleepCore 514 / 0, app 652 / 0, i18n 1 076 keys 0 / 0 / 0 / 0 (plan §10 REL "Build 13").** 13e4 (UI tests of the accessibility tree, scheme `SleepHoleUITests`) ~23:05 (`4fec434`); 13c4 (the third, independent text review: 8 errors + 24 style fixes, the postcards page re-rendered) ~23:15 (`038e260`). Owed on his phone (only on his word): VoiceOver, Larger Text, Differentiate Without Color, Reduce Motion, postcards 11–30. Open for his pick: "Cancel night" under the tab
-   bar during the setup on the 17e / 16 Pro (the screen scrolls; a fix changes the night screen's look) – option (a), a smaller
-   site when it does not fit (17e 0.785, 16 Pro 0.835, big phones unchanged), is ready on `proposal/13e6-setup-fits`
-   (`8f848bd`, pushed), never merged without his word. Nothing from
+   tap areas) ~21:35 (`986f0c8`); 13e3 (the town for VoiceOver) ~22:10 (`5b54c9e`); the final check on the tip ~22:15: SleepCore 514 / 0, app 652 / 0, i18n 1 076 keys 0 / 0 / 0 / 0 (plan §10 REL "Build 13").** 13e4 (UI tests of the accessibility tree, scheme `SleepHoleUITests`) ~23:05 (`4fec434`); 13c4 (the third, independent text review: 8 errors + 24 style fixes, the postcards page re-rendered) ~23:15 (`038e260`). Owed on his phone (only on his word): VoiceOver, Larger Text, Increase Contrast, Differentiate Without Color, Reduce Motion, postcards 11–30. **13e6 merged 2026-11-03 ~00:30 (`7c92cc9`) under his goal message:** "Cancel night" above the tab bar
+   on the 17e / 16 Pro (the site shrinks to 0.785 / 0.835 only when the screen does not fit; big phones unchanged) – tell
+   him; `git revert -m 1 7c92cc9` if he does not want it. 13e5 (Xcode's accessibility audit, 17 UI tests; contrast not auditable over the sky) merged ~02:00 (`607b32f`). Nothing from
    17:15 on is installed – only on his word, never after 21:30. Build 12 (1.0 (12), the parcels) is with the testers since
    2026-11-01 ~07:55, PR #3 merged by him (`8c75eb3`); his ticks b1–b3, o2, m1, m2 on
    https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h are still open (11b4d → 🟢 on his b1). On screen a box is a "parcel" /

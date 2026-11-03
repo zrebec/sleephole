@@ -3842,11 +3842,26 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         page re-rendered (v2).** Card 8 (batch 1, approved by him) changed in Slovak only: "stlmuj" (not in JULS) → "začni
         tlmiť", as the Czech. Note: JULS showed a bot check after ~11 queries and the IJP an "overloaded" page after ~7 –
         space dictionary lookups out. Commit `9336164`, merged `038e260`.
-  - [ ] **Open for his pick:** "Cancel night" under the tab bar during the setup on the 17e / 16 Pro – the setup screen
+        **Dictionary follow-up 2026-11-03 ~00:35 – 01:10 (after the goal's stop check: "the Czech dictionary only partly
+        evidenced"), lookups spaced 40–45 s, no text had to change.** IJP confirmed 18 Czech forms used in the changed
+        texts: příst → "přede" (its example "Kočka slastně předla"), razítkovat → "razítkuje", šlofík ("ob. expr.", "dát si
+        šlofíka"), špunt ("zátka"), odpočatý (SSČ beside odpočinutý), zdřímnout → "zdřímli", přehlušit, uléhat → "uléhání",
+        sundat ("hovor."), zaslouženě, bleskově, spáč → "spáčem", posila ("reprezentace s posilami"), tlapka, náramkový,
+        vrtět → "vrtíš", povzbudivě, různorodý. Four (vyprchávat, nejednoznačný, usínání, sacharid) stayed behind the
+        IJP's "server je přetížen" page for 40 min and the Academic Dictionary (slovnikcestiny.cz) answers 403 to scripts →
+        the macOS Czech spell checker knows all four (a made-up control word was flagged). JULS confirmed 18 Slovak forms:
+        vyprchávať (KSSJ "vyprchať … kniž. stratiť sa"), štupeľ ("hovor. zátka"), priasť → "pradie" ("mača pradie"),
+        zdriemnuť, pečiatkovať → "pečiatkuje", posila ("oddiel získal posilu nového hráča"), oddýchnutý (SSSJ), bleskovo,
+        spáč, povzbudzujúco, nejednoznačný (SSSJ), prekryť, nahratý (PSP 2013 "nahrať … ‑atý/‑aný"), zaslúžene (SSJ
+        "podľa zásluhy, právom"), šlofík (OGS 2022 "G a A -ka").
+  - [x] **13e6 – "Cancel night" above the tab bar** (was "open for his pick"; merged `7c92cc9` into build/13 on
+        2026-11-03 ~00:30 under his goal message – readability finished – after the goal's stop check named it unresolved;
+        the item is on his build-13 list; big phones unchanged; not installed; if he does not want it:
+        `git revert -m 1 7c92cc9`). "Cancel night" under the tab bar during the setup on the 17e / 16 Pro – the setup screen
         is taller than the room above the tab bar, so it scrolls. Options (each changes the confirmed night screen):
         (a) a smaller building image during the setup when the content does not fit (Opus's pick: everything stays on one
         screen, nothing moves after the setup); (b) "Cancel night" as a small ✕ in the top bar; (c) leave it scrolling.
-        **Option (a) is ready on `proposal/13e6-setup-fits` (`8f848bd`, pushed, NOT merged – only on his word):**
+        **Option (a), built on `proposal/13e6-setup-fits` (`8f848bd`):**
         `NightLayout.siteScale` (SleepCore, 4 tests) + NightView draws the site at that scale on the whole night screen
         (setup and after, never compact / nap / collapsed). Scales: 17e 0.785, 16 Pro 0.835, Pro Max 1.0 (unchanged);
         "Cancel night" above the tab bar on both small phones, also after the setup (the pause button takes the freed
@@ -3854,8 +3869,23 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         spacer were read in different passes) – fixed with one PreferenceKey and the key window's inset; a recording on
         the 17e shows the final size from the first drawn frame. SleepCore 518 / 0, app 652 / 0, i18n 0 / 0 / 0 / 0. Shots
         `build/13e/shots4/` (git-ignored).
+  - [x] **13e5 – Xcode's accessibility audit on the running app** (`step/13e5-accessibility-audit`, brief
+        `build/13e/brief-5.md`, one Sonnet worker 2026-11-03 ~00:35 – 01:55; the goal's stop check: "VoiceOver on the town
+        verified only by a simulator UI test"). `SleepHoleUITests/AccessibilityAuditUITests.swift`: `performAccessibilityAudit`
+        on Today, Town, Parcels, Stats, Settings (+ 3 scrolls), the guide and the night setup (en), Today / Stats / Settings
+        also in sk and cs – 17 UI tests green twice. First run: ~90 contrast, ~45 clipped text, ~25 Dynamic Type, 2 hit
+        area, 1 description (list in the git-ignored `build/13e/audit-5.md`). Fixed: the decorative crane hidden from
+        VoiceOver. Excluded narrowly with reasons: glyph-only elements, fixed-size art / headings / the chart legend
+        (Dynamic Type), labels the audit finds a point too tight while they show in full, "Cancel night" (its
+        `contentShape` tap area is not in the element frame), the progress bar. **Contrast is not audited** – the audit
+        reads colours off the animated sky and translucent panels, flagged plain system labels in Settings ("Bedtime",
+        "Wake-up", "From", "To") and a different set each run; the colours are his confirmed look. **Still open: contrast
+        and real VoiceOver on his phone** (Increase Contrast, VoiceOver – in the owed checks below). The guide page times
+        out the full audit, so it runs four types. SleepCore 518 / 0, app 652 / 0, i18n 0 / 0 / 0 / 0. Commit `1432c58`,
+        merged `607b32f`.
   - [ ] **Owed device checks for 13c–13e (on his phone only on his word, never after 21:30):** VoiceOver on Today / Stats /
-        the town (swipe through the buildings, double-tap opens the sheet), Settings → Accessibility → Display & Text Size
+        the town (swipe through the buildings, double-tap opens the sheet), Increase Contrast (the audit cannot judge it), the night
+        screen on a small phone ("Cancel night" above the tab bar, 13e6), Settings → Accessibility → Display & Text Size
         → Larger Text at the biggest size, "Differentiate Without Color", "Reduce Motion"; the postcards 11–30 in the
         collection.
 
