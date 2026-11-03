@@ -38,7 +38,7 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    (Debug build of `86387b1`, the store backed up first). **13b2 – the whole app in Czech (938 texts, developer screens
    too) + Czech signs on seven sprites – merged 2026-11-02 ~07:50 (`ce5ac9d`); 13b3 – Developer → "Plans and proposals" in
    Czech (`docs/PREHLAD-PLANOV.cs.md`, his pick "Czech copy + test") – merged ~08:15; both on his phone since 2026-11-02 08:31 (Debug build of `f6f61a5`, his yes, the store backed up first)**
-   (store backed up first). His checks c1–c6 / n1–n2 / d1–d7, **a1–a10 (13c–13e7 after the install, a4 = add 13e6 or not; added 2026-11-03 ~03:30)** and notes `cz` / `n13` on his build 13 page
+   (store backed up first). His checks c1–c6 / n1–n2 / d1–d7, **a1–a10 (13c–13e7 after the install, a4 answered in chat ~07:14: "with 13e6"; added 2026-11-03 ~03:30)** and notes `cz` / `n13` on his build 13 page
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`) are open. His Chrome is signed out of
    App Store Connect (2026-11-02 07:00) – ask him to sign in before reading Apple's review state. **13c batch 1 – postcards 1–10 with a "why" (one checked study each, his ten "sedí", new fronts 06 / 07, one longer
    card, no flip) – merged 2026-11-02 ~16:00, on his phone since 16:18 (Debug build of `f963a46`, the store backed up first).** **His goal message
@@ -49,10 +49,11 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    16, 18, 20, 22, 23, 25, 26, 27; 17 without a "why"); **all 30 in sk / cs / en on his page
    https://claude.ai/artifact/JD9SGXVqygs9vkkNPcq4ae** (screenshots only, no form). **13d (the cat about standing buildings,
    named cats) merged ~18:55 (`4aa98b1`); 13e1 (VoiceOver, Reduce Motion) ~19:15 (`0ac8dea`); 13e2 (text size, contrast,
-   tap areas) ~21:35 (`986f0c8`); 13e3 (the town for VoiceOver) ~22:10 (`5b54c9e`); the final check on the tip ~22:15: SleepCore 514 / 0, app 652 / 0, i18n 1 076 keys 0 / 0 / 0 / 0 (plan §10 REL "Build 13").** 13e4 (UI tests of the accessibility tree, scheme `SleepHoleUITests`) ~23:05 (`4fec434`); 13c4 (the third, independent text review: 8 errors + 24 style fixes, the postcards page re-rendered) ~23:15 (`038e260`). Owed on his phone (only on his word): VoiceOver, Larger Text, Increase Contrast, Differentiate Without Color, Reduce Motion, postcards 11–30. **13e6 ("Cancel night" above the tab bar on the 17e / 16 Pro: the site shrinks to 0.785 / 0.835 only when
-   the screen does not fit) was merged ~00:30 without his word and reverted ~03:48 (`7d3f341`) – tell him so; it waits
-   on `proposal/13e6-setup-fits` for his a4 or his word (to bring it back: `git revert 7d3f341` on build/13).** 13e5 (Xcode's accessibility audit, 17 UI tests; contrast not auditable over the sky) merged ~01:45 (`607b32f`); 13e7 (the calendar numbers follow Increase Contrast, default look unchanged) ~03:30. Nothing from
-   17:15 on is installed – only on his word, never after 21:30. Build 12 (1.0 (12), the parcels) is with the testers since
+   tap areas) ~21:35 (`986f0c8`); 13e3 (the town for VoiceOver) ~22:10 (`5b54c9e`); the final check on the tip ~22:15: SleepCore 514 / 0, app 652 / 0, i18n 1 076 keys 0 / 0 / 0 / 0 (plan §10 REL "Build 13").** 13e4 (UI tests of the accessibility tree, scheme `SleepHoleUITests`) ~23:05 (`4fec434`); 13c4 (the third, independent text review: 8 errors + 24 style fixes, the postcards page re-rendered) ~23:15 (`038e260`). Owed on his phone (installed, his checks a1–a10): VoiceOver, Larger Text, Increase Contrast, Differentiate Without Color, Reduce Motion, postcards 11–30. **13e6 ("Cancel night" above the tab bar on the 17e / 16 Pro: the site shrinks to 0.785 / 0.835 only when
+   the screen does not fit) was merged ~00:30 without his word, reverted ~03:48 (`7d3f341`) and brought back on his pick
+   ~07:14 (`52e4278`).** 13e5 (Xcode's accessibility audit, 17 UI tests; contrast not auditable over the sky) merged ~01:45 (`607b32f`); 13e7 (the calendar numbers follow Increase Contrast, default look unchanged) ~03:30. **All of it – 13c 11–30, 13c4,
+   13d, 13e1–13e7 – on his phone since 2026-11-03 07:16** (Debug build of `52e4278`, his word, the store backed up first
+   and unchanged after). Build 12 (1.0 (12), the parcels) is with the testers since
    2026-11-01 ~07:55, PR #3 merged by him (`8c75eb3`); his ticks b1–b3, o2, m1, m2 on
    https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h are still open (11b4d → 🟢 on his b1). On screen a box is a "parcel" /
    "balíček" (Czech: "balíček"); never "box" or "package" in a UI text. The App Store gets the parcels as 1.1 after Apple's
