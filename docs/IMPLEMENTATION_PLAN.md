@@ -3870,7 +3870,7 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         the 17e shows the final size from the first drawn frame. SleepCore 518 / 0, app 652 / 0, i18n 0 / 0 / 0 / 0. Shots
         `build/13e/shots4/` (git-ignored).
   - [x] **13e5 – Xcode's accessibility audit on the running app** (`step/13e5-accessibility-audit`, brief
-        `build/13e/brief-5.md`, one Sonnet worker 2026-11-03 ~00:35 – 01:55; the goal's stop check: "VoiceOver on the town
+        `build/13e/brief-5.md`, one Sonnet worker 2026-11-03 ~00:35 – 01:40; the goal's stop check: "VoiceOver on the town
         verified only by a simulator UI test"). `SleepHoleUITests/AccessibilityAuditUITests.swift`: `performAccessibilityAudit`
         on Today, Town, Parcels, Stats, Settings (+ 3 scrolls), the guide and the night setup (en), Today / Stats / Settings
         also in sk and cs – 17 UI tests green twice. First run: ~90 contrast, ~45 clipped text, ~25 Dynamic Type, 2 hit
