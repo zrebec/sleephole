@@ -3884,7 +3884,25 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
         reads colours off the animated sky and translucent panels, flagged plain system labels in Settings ("Bedtime",
         "Wake-up", "From", "To") and a different set each run; the colours are his confirmed look. **Still open: contrast
         and real VoiceOver on his phone** (Increase Contrast, VoiceOver – in the owed checks below). The guide page times
-        out the full audit, so it runs four types. SleepCore 518 / 0, app 652 / 0, i18n 0 / 0 / 0 / 0. Commit `1432c58`,
+        out the full audit, so it runs four types. **Contrast measured instead (2026-11-03 ~02:15, WCAG 2 ratio from the
+        screenshots' pixels – text = the 5–15 % pixels farthest from the median background of its line or box, a scratchpad
+        script):** night screen (17e, setup and after) clock / name 17–19 : 1, "Building in progress" 4.7–7.3 (it pulses),
+        setup text yellow 12.5, the grey lines 6.1–6.9, "Cancel night" red 5.7, the capsule buttons blue 5.0–5.3; Today
+        title 5.1, "keep it going" 8.3, the panel lines 8.9–9.0, coins 17; the disabled "Go to sleep" 4.5 (disabled controls
+        are exempt); Settings white 12–19, footers 5.8–6.2, the city field's system placeholder 2.5 (iOS's own placeholder
+        colour, its label above it); Stats tile captions 9.0, footer 9.1, calendar numbers on green 5.6 and orange 5.5 but
+        **on grey (ruins) 4.27 and on the joker square 4.22 – below 4.5** → 13e7. Night-sky art and clouds are not text.
+  - [x] **13e7 – the calendar numbers follow iOS "Increase Contrast"** (`step/13e7-increase-contrast`, brief
+        `build/13e/brief-7.md`, one Sonnet worker 2026-11-03 ~02:20 – 03:20). The app read `colorSchemeContrast` nowhere.
+        Default look unchanged (the calendar card pixel-identical before / after); with Increase Contrast the day numbers
+        and the Differentiate-Without-Color glyphs are drawn at full opacity – light: primary, but white on the ruins square
+        (iOS darkens its grey: black 3.84, white 5.46); dark: black on the bright squares, primary on the joker. Measured
+        with Increase Contrast: light green 4.51, orange 4.55, grey 5.46, joker 8.25; dark 4.82 – 14.8. The default light
+        grey / joker numbers (4.2 – 4.3) stay as his confirmed look – Increase Contrast is the way out for whoever needs it.
+        Also: `testSettingsEnglishScrolled` (13e5) was flaky – pass / Dynamic Type / timeout over three runs, the issues
+        depend on which rows the swipe leaves on screen, several with no element → the scrolled pages audit descriptions
+        and hit areas only. App 653 / 0, UI 17 / 0 twice + the scrolled test 3 / 3, i18n 0 / 0 / 0 / 0. Commit and merge on
+        build/13 (see git log). SleepCore 518 / 0, app 652 / 0, i18n 0 / 0 / 0 / 0. Commit `1432c58`,
         merged `607b32f`.
   - [ ] **Owed device checks for 13c–13e (on his phone only on his word, never after 21:30):** VoiceOver on Today / Stats /
         the town (swipe through the buildings, double-tap opens the sheet), Increase Contrast (the audit cannot judge it), the night
