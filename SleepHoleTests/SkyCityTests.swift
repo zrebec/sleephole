@@ -537,4 +537,15 @@ struct SkyCityTests {
         #expect(CalendarGrid.numberColor(.excused, dark: true) == .primary.opacity(0.72))
         #expect(CalendarGrid.numberColor(nil, dark: true) == .primary.opacity(0.72))
     }
+
+    @Test func calendarNumbersAreFullOpacityWithIncreaseContrast() {
+        for o in [Outcome.complete, .unfinished, .ruins] {
+            #expect(CalendarGrid.numberColor(o, dark: true, increased: true) == .black)
+            #expect(CalendarGrid.numberColor(o, dark: false, increased: true) == (o == .ruins ? .white : .primary))
+        }
+        for o in [Outcome.excused, .missed, nil] {
+            #expect(CalendarGrid.numberColor(o, dark: true, increased: true) == .primary)
+            #expect(CalendarGrid.numberColor(o, dark: false, increased: true) == .primary)
+        }
+    }
 }
