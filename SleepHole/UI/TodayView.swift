@@ -796,6 +796,7 @@ struct ConstructionSite: View {
                             .scaledToFit()
                             .frame(height: 250)
                             .offset(x: 45 + shift)
+                            .accessibilityHidden(true)      // decorative: the crane is not read by VoiceOver
                     }
                     BuildingImage(id: siteId, maxHeight: 110)       // building site under the building
                         .frame(width: 190)
