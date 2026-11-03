@@ -852,6 +852,9 @@ final class AppModel {
     static let guideReplayKey = "debug.guideReplay"
     static let briefingReplayKey = "debug.briefingReplay"
     private(set) var guideReplayRequested = false
+    /// Settings → Guide: the replayed guide is open. A plain UI flag (never stored, backed up or synced) that lives here
+    /// because a language switch rebuilds Settings (`.id(lang)`) and would reset a `@State` there (B40).
+    var showGuideReplay = false
     private(set) var briefingReplayRequested = false
     private(set) var firstNightBriefed = false
 
