@@ -24866,6 +24866,50 @@
           }
         }
       }
+    },
+    "🔒 Lock the phone – it saves the battery": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Lock the phone – it saves the battery"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Zamkni telefón – šetrí batériu"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔒 Zamkni telefon – šetří baterii"
+          }
+        }
+      }
+    },
+    "Show the night screen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show the night screen"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukázať nočnú obrazovku"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ukázat noční obrazovku"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
