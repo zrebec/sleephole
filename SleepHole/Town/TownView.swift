@@ -11,6 +11,7 @@ struct TownSpriteView: UIViewRepresentable {
     let imageProvider: (String) -> UIImage?
     var accessibilityEntries: [TownAccessibility.Entry] = []     // 13e3: the buildings for VoiceOver
     var accessibilitySummary = ""
+    var paused = false                       // 13k: the rest screen stops the town's drawing
     let onTap: (Int?) -> Void
 
     func makeCoordinator() -> Coordinator { Coordinator(onTap: onTap) }
@@ -48,6 +49,7 @@ struct TownSpriteView: UIViewRepresentable {
 
     func updateUIView(_ view: SKView, context: Context) {
         context.coordinator.onTap = onTap
+        view.isPaused = paused
         if let town = view as? TownSKView {
             town.entries = accessibilityEntries
             town.summary = accessibilitySummary
@@ -116,6 +118,7 @@ struct TownTab: View {
                                    accessibilityEntries: snapshot.map { s in
                                        TownAccessibility.entries(s) { model.catalog?[$0]?.displayName } } ?? [],
                                    accessibilitySummary: TownAccessibility.summary(buildings: snapshot?.buildings.count ?? 0),
+                                   paused: model.rest.resting,
                                    onTap: { selected = $0 })
                         .ignoresSafeArea(edges: [.horizontal, .bottom])
                 }

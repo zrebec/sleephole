@@ -18,6 +18,8 @@ final class AppModel {
     }
 
     private(set) var phase: Phase = .idle
+    /// The black rest screen of the night (13k): a look only, it never changes what a night counts.
+    let rest = RestController()
     private(set) var window: NightWindow
     /// Started and not yet finalized.
     private(set) var active: NightRecord?
@@ -128,6 +130,8 @@ final class AppModel {
     ///   -rerollDialog                 open the "Another building" confirmation 2 s after the night screen shows
     ///   -expiresIn HOURS              pretend the provisioning profile runs out then (AppExpiry)
     ///   -mute                         silence every sound (alarm, effects) – for screenshots of a night's end
+    ///   -restAfter S                  the black rest screen (13k) comes S seconds after the last touch instead of 30; with -screenshot
+    ///                                 the rest screen is off unless this is given
     ///   -buddy awake|asleep           force the sleep buddy's state (screenshots)
     ///   -buddyReaction purr|arch|wink show that tap reaction's hold frame (hearts / sparkle too) on Today (screenshots)
     ///   -skyCity "Name,lat,lon"       set the city of the real sky for this run (e.g. "Bratislava,48.1486,17.1077")
@@ -348,6 +352,7 @@ final class AppModel {
         }
         #endif
         sync.attach(self)
+        configureRestScreen()
         if initialSettings == nil, let lang = Self.launchLanguage() { language = lang }
         resumeActiveNight()
         if DevArgs.list.contains("-forgiveNight") { forgiveNight() }
@@ -391,6 +396,23 @@ final class AppModel {
             MainActor.assumeIsolated { self?.refresh() }
         }
     }
+
+    /// The rest screen (13k) reads the night through these facts; it is off in unit tests and in `-screenshot` runs
+    /// (unless `-restAfter S` is given, which also shortens the 30 s).
+    private func configureRestScreen() {
+        let args = DevArgs.list
+        let after = Self.devValue("-restAfter", in: args).flatMap(Double.init)
+        rest.now = { [weak self] in self?.clock.now ?? Date() }
+        rest.night = { [weak self] in
+            guard let self else { return .init(isBuilding: false, isNap: false, setupEnds: nil, pauseRunning: false) }
+            return .init(isBuilding: phase == .building, isNap: active?.isNap ?? false, setupEnds: graceEnds,
+                         pauseRunning: pauseEnds() != nil)
+        }
+        if let after, after > 0 { rest.delay = after }
+        rest.enabled = servicesEnabled && (!args.contains("-screenshot") || after != nil)
+    }
+
+    private static func devValue(_ flag: String, in args: [String]) -> String? { DevArgs.value(after: flag, in: args) }
 
     // MARK: - queries
 
@@ -1360,6 +1382,7 @@ final class AppModel {
     func refresh() { refresh(now: clock.now) }
 
     func refresh(now: Date) {
+        defer { rest.evaluate() }          // at once when the phase leaves .building or a pause starts
         applyPendingScheduleIfDue(now: now)
         // the lock-screen warning ends with its promised seconds, at the wake time and with the night
         if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false { endLockWarning() }

@@ -24,7 +24,7 @@ struct TodayView: View {
             // full screen: a background on a Group is sized to each child's content (owner bug 2026-10-02: the nap
             // result showed a small 16:9 patch of sky with black bars) – the night screen covers it with its NightSky
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background { LivingSky(semicircle: true, nightSky: model.nightSky) }
+            .background { LivingSky(semicircle: true, nightSky: model.nightSky, frozen: model.phase == .building) }
             .overlay {
                 if let nap = splash {
                     GoodNightSplash(nap: nap) { withAnimation { splash = nil } }
@@ -414,6 +414,12 @@ struct NightView: View {
     }
 
     var body: some View {
+        // resting (13k): a plain black view, so none of the timelines below runs; this struct and its @State (dialogs,
+        // sheets, the fit) stay alive
+        Group {
+        if model.rest.resting {
+            Color.black.ignoresSafeArea()
+        } else {
         TimelineView(.periodic(from: .now, by: 1)) { ctx in
             let now = ctx.date
             if let rec = model.active {
@@ -546,9 +552,20 @@ struct NightView: View {
                 } action: { room = $0; refit() }
             }
         }
-        .background { NightSky() }
+        }
+        }
+        .background { if !model.rest.resting { NightSky() } }
         .preferredColorScheme(.dark)
-        .onShake { model.shakeBeforeConfirm() }
+        .onShake {
+            model.shakeBeforeConfirm()
+            // resting (13k): the confirm panel is not on screen, so its own shake handler is not listening – a shake
+            // still confirms getting up once that is open (`confirm()` itself refuses a shake before that)
+            if model.rest.resting { _ = model.confirm() }
+        }
+        .onChange(of: confirmAbandon || soundSheet || confirmPause || confirmReroll) { _, open in
+            model.rest.nightDialogOpen = open
+        }
+        .onDisappear { model.rest.nightDialogOpen = false }
     }
 
     /// Seconds out of the app tonight (owner 2026-10-08): a grey footnote while there is plenty of budget, an orange
@@ -957,6 +974,7 @@ struct ConfirmPanel: View {
                     .frame(maxWidth: 140)
                     .multilineTextAlignment(.center)
                     .focused($codeFocused)
+                    .onChange(of: codeFocused) { _, focused in model.rest.codeFieldFocused = focused }
                 Button(L("I'm up")) {
                     wrong = !model.confirm(code: code)
                     if wrong { code = "" }
@@ -970,6 +988,7 @@ struct ConfirmPanel: View {
         .padding()
         .glassCard()
         .onShake { model.confirm() }
+        .onDisappear { model.rest.codeFieldFocused = false }
         .onAppear {
             // Debug aid for the simulator (B31 proof): focus the code field so the software keyboard shows up
             if DevArgs.list.contains("-focusWakeCode") { codeFocused = true }
