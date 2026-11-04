@@ -1092,6 +1092,8 @@ struct ResultView: View {
 struct CoinReceiptView: View {
     let receipt: Economy.Receipt
     @Environment(\.dynamicTypeSize) private var typeSize
+    /// The width cap grows with the text size (the receipt is `.footnote`); 320 pt at the default size.
+    @ScaledMetric(relativeTo: .footnote) private var maxWidth: CGFloat = 320
 
     /// One row: label left, amount right; at accessibility sizes the amount goes under the label so nothing wraps mid-word.
     @ViewBuilder private func row(_ label: Text, _ amount: String) -> some View {
@@ -1142,6 +1144,6 @@ struct CoinReceiptView: View {
         .font(.footnote)
         .foregroundStyle(Color.cardCaption)
         .padding(.horizontal, 24)
-        .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : 320)
+        .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : maxWidth)
     }
 }
