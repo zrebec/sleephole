@@ -651,7 +651,9 @@ private struct ChipFlow: Layout {
         var x: CGFloat = 0, y: CGFloat = 0, rowH: CGFloat = 0, maxW: CGFloat = 0
         for v in subviews {
             let sz = v.sizeThatFits(.unspecified)
-            if x > 0, x + sz.width > width { x = 0; y += rowH + lineSpacing; rowH = 0 }
+            // a tolerance: the parent places the flow in exactly the width it reported, and a float sum a hair over that
+            // width wrapped the last chip into a row the measured height did not have (B45)
+            if x > 0, x + sz.width > width + 0.5 { x = 0; y += rowH + lineSpacing; rowH = 0 }
             frames.append(CGRect(origin: CGPoint(x: x, y: y), size: sz))
             x += sz.width + spacing; rowH = max(rowH, sz.height); maxW = max(maxW, x - spacing)
         }
