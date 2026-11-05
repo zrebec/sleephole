@@ -74,6 +74,33 @@ struct LockScreenTests {
         #expect(l.count == 1 && abs((l.first ?? .distantPast).timeIntervalSince(t0)) < 0.4)   // not the 0.8 s later
     }
 
+    // M3 (13o): a night that ends while the app is away must not leak its state into the next one.
+    @Test func aStopWhileAwayDoesNotHideTheNextNightsFirstTrip() async {
+        let r = Rig()
+        r.monitor.start()
+        r.monitor.didEnterBackground()
+        await waitUntil { leftApps(r).count == 1 }
+        #expect(leftApps(r).count == 1)                           // the night ends here, away, with no return
+        r.monitor.stop()
+        r.monitor.start()
+        r.monitor.didEnterBackground()                            // the next night's first trip
+        await waitUntil { leftApps(r).count == 2 }
+        r.monitor.stop()
+        #expect(leftApps(r).count == 2)
+    }
+
+    @Test func aCallActiveAtStopDoesNotHideTheNextNightsFirstCall() {
+        let r = Rig()
+        let id = UUID()
+        r.monitor.start()
+        r.monitor.callChanged(CallInfo(uuid: id, isOutgoing: false, hasConnected: true, hasEnded: false))
+        r.monitor.stop()
+        r.monitor.start()
+        r.monitor.callChanged(CallInfo(uuid: UUID(), isOutgoing: false, hasConnected: true, hasEnded: false))
+        r.monitor.stop()
+        #expect(r.events.filter { $0 == .callStarted }.count == 2)
+    }
+
     @Test func aBackgroundThatIsActiveAgainAtTheDecisionIsNothing() async {
         let r = Rig()
         r.monitor.didEnterBackground()

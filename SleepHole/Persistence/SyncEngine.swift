@@ -205,7 +205,7 @@ final class SyncEngine {
     /// Is another try pending? (tests)
     var isRetrying: Bool { retryTask != nil }
 
-    private func releaseGuide() {
+    func releaseGuide() {                                    // not private: tests release it before the first read ends (M9)
         guideTimer?.cancel(); guideTimer = nil
         holdsGuide = false
     }

@@ -347,7 +347,9 @@ final class NoKeepAlive: KeepAlive {
 @MainActor
 final class UIKitKeepAlive: KeepAlive {
     func begin(name: String, onExpire: @escaping @MainActor () -> Void) -> Int {
-        UIApplication.shared.beginBackgroundTask(withName: name) { Task { @MainActor in onExpire() } }.rawValue
+        // iOS requires `endBackgroundTask` before the expiration handler returns, so the expiry runs in place (the
+        // handler is called on the main thread) – a `Task` would let the handler return first and iOS may kill the app
+        UIApplication.shared.beginBackgroundTask(withName: name) { MainActor.assumeIsolated { onExpire() } }.rawValue
     }
 
     func end(_ token: Int) {

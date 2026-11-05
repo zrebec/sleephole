@@ -451,6 +451,34 @@ struct SyncEngineTests {
         #expect(b.model.onboardingDone && !b.sync.holdsGuide && !b.model.needsGuide)
     }
 
+    @Test func aGuideAlreadyOnScreenIsNotClosedByAMergeThatBringsAFinishedGuide() async throws {
+        let folder = tempFolder(); defer { try? FileManager.default.removeItem(at: folder) }
+        let a = device(folder, id: "A", at: date(1, 12)), b = device(folder, id: "B", at: date(1, 12))
+        defer { stopAll(a, b) }
+        a.model.completeOnboarding()
+        await a.sync.syncNow()
+        let original = a.model.makeBackup().onboardingCompletedAt
+
+        b.sync.releaseGuide()                                                        // the first read took longer than guideWait
+        #expect(b.model.needsGuide && !b.model.onboardingDone)
+        b.model.guideCoverAppeared()                                                 // the guide cover is on screen
+        await b.sync.syncNow()                                                       // … and the merge brings A's finished guide
+        #expect(b.model.onboardingDone && b.model.needsGuide)                        // the date is kept, the guide stays open
+        #expect(b.model.makeBackup().onboardingCompletedAt == original)
+        b.model.completeOnboarding()
+        #expect(!b.model.needsGuide && !b.model.firstRunGuideOpen)
+        #expect(b.model.makeBackup().onboardingCompletedAt == original)
+    }
+
+    @Test func theCoverFlagIsOnlySetWhileTheGuideIsDue() async throws {
+        let folder = tempFolder(); defer { try? FileManager.default.removeItem(at: folder) }
+        let a = device(folder, id: "A", at: date(1, 12))
+        defer { stopAll(a) }
+        a.model.completeOnboarding()
+        a.model.guideCoverAppeared()                                                 // not due: nothing to keep open
+        #expect(!a.model.firstRunGuideOpen && !a.model.needsGuide)
+    }
+
     @Test func withoutAFileOrWithoutATransportTheGuideIsNeededAsBefore() async throws {
         let folder = tempFolder(); defer { try? FileManager.default.removeItem(at: folder) }
         let alone = device(folder, id: "A", at: date(1, 12))

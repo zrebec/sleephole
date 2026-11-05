@@ -7,7 +7,11 @@ import SleepCore
 /// It returns several rows, so it can sit directly in a List section or in a VStack.
 struct ScheduleEditor: View {
     @Environment(AppModel.self) private var model
-    @State private var draft: Schedule?
+    /// The unsaved draft lives on the model: a language switch rebuilds Settings and a `@State` would be lost (L5).
+    private var draft: Schedule? {
+        get { model.scheduleDraft }
+        nonmutating set { model.scheduleDraft = newValue }
+    }
     @State private var confirmSchedule: Bool
     @State private var confirmUnlock = false
 

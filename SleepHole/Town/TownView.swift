@@ -101,7 +101,8 @@ struct TownSpriteView: UIViewRepresentable {
 struct TownTab: View {
     @Environment(AppModel.self) private var model
     @Environment(SpriteLibrary.self) private var sprites
-    @State private var selected: Int?
+    /// The open building sheet, by the building's night (not its index: a rebuilt town can shift the indices – L3).
+    @State private var selected: NightKey?
     @State private var renaming = false
     @State private var showNumbers = false
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -119,7 +120,7 @@ struct TownTab: View {
                                        TownAccessibility.entries(s) { model.catalog?[$0]?.displayName } } ?? [],
                                    accessibilitySummary: TownAccessibility.summary(buildings: snapshot?.buildings.count ?? 0),
                                    paused: model.rest.resting,
-                                   onTap: { selected = $0 })
+                                   onTap: { selected = $0.flatMap { snapshot?.buildings[safe: $0]?.nightKey } })
                         .ignoresSafeArea(edges: [.horizontal, .bottom])
                 }
                 header(snapshot)
@@ -131,8 +132,8 @@ struct TownTab: View {
             .sheet(isPresented: $showNumbers) {
                 if let snapshot { TownNumbersSheet(town: snapshot) }
             }
-            .sheet(item: Binding(get: { selected.map(SelectedBuilding.init) }, set: { selected = $0?.index })) { sel in
-                if let b = snapshot?.buildings[safe: sel.index] {
+            .sheet(item: Binding(get: { selected.map(SelectedBuilding.init) }, set: { selected = $0?.key })) { sel in
+                if let b = snapshot?.building(forNight: sel.key) {
                     BuildingSheet(building: b)
                         .presentationDetents(typeSize.isAccessibilitySize ? [.fraction(0.42), .large] : [.fraction(0.42)])
                 }
@@ -193,8 +194,13 @@ struct TrailingIconLabelStyle: LabelStyle {
 }
 
 private struct SelectedBuilding: Identifiable {
-    let index: Int
-    var id: Int { index }
+    let key: NightKey
+    var id: NightKey { key }
+}
+
+extension TownSnapshot {
+    /// The building of a night – the stable handle for a selection, whatever a rebuild did to the order (L3).
+    func building(forNight key: NightKey) -> TownBuilding? { buildings.first { $0.nightKey == key } }
 }
 
 struct BuildingSheet: View {

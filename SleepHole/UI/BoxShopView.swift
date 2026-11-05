@@ -83,6 +83,13 @@ struct BoxShopView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .glassCard()
+        // the Buy button's branch can vanish under the open dialog (midnight): the flag must not wait for the next offer (L2)
+        .onChange(of: offerIsAvailable(offer)) { _, available in if !available { confirming = false } }
+    }
+
+    private func offerIsAvailable(_ offer: BoxOffer) -> Bool {
+        if case .available = offer { return true }
+        return false
     }
 
     /// The 1st of the month after today's.

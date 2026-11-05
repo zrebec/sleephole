@@ -10,7 +10,11 @@ struct SettingsView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var preview = SoundPreview()
     @State private var importing = false
-    @State private var pendingRestore: BackupFile?
+    /// On the model, so a language switch (which rebuilds this view) keeps it (L5).
+    private var pendingRestore: BackupFile? {
+        get { model.pendingRestore }
+        nonmutating set { model.pendingRestore = newValue }
+    }
     @State private var backupMessage: String?
     @State private var renaming = false
     #if DEBUG
