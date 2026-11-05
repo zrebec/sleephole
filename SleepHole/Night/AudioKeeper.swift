@@ -118,6 +118,15 @@ final class AudioKeeper {
     private var fadingBed: AVAudioPlayerNode?
     private var bedFadeTask: Task<Void, Never>?
     private static var loopBuffers: [String: AVAudioPCMBuffer] = [:]
+    /// File of the bed that is fading out (kept in the cache until the crossfade is over).
+    private var fadingFile: String?
+    /// True while the sound is stopped (timer over, ■, silence): only the silent source node renders, the loop and
+    /// story players are paused and the reverb is bypassed. The engine always keeps one running source – without
+    /// it iOS may shut the hardware down and suspend the app (13m, audit M5).
+    private var isIdle = false
+    /// What the sleep sound should be right now (mode, level, stopped, timer end) – what a reset restarts.
+    private(set) var desired = SleepSoundState(ambience: .silence, volume: 0, stopped: true, endsAt: nil)
+    private var resumeRetry: Task<Void, Never>?
     /// Current sleep-sound level (applies to the generator OR the loop player).
     private var level: Float = 0
     // sound stories: random one-shots → mixer → reverb → main mixer, over the bed loop
@@ -152,23 +161,16 @@ final class AudioKeeper {
         engine.connect(node, to: engine.mainMixerNode, format: mono)
         engine.mainMixerNode.outputVolume = Self.muted ? 0 : 1
         bedPlayers.filter { $0.engine == nil }.forEach(engine.attach)
-        if storyMixer.engine == nil {
-            [storyMixer, storyReverb].forEach(engine.attach)
-            engine.connect(storyMixer, to: storyReverb, format: nil)
-            engine.connect(storyReverb, to: engine.mainMixerNode, format: nil)
-            if let sample = Self.sample("st_grass_0.caf") {
-                for p in storyPlayers {
-                    engine.attach(p)
-                    engine.connect(p, to: storyMixer, format: sample.format)
-                }
-            }
-        }
         try engine.start()
         source = node
         isRunning = true
         Self.runningKeepers += 1
+        isIdle = false
+        desired = SleepSoundState(ambience: ambience, volume: volume, stopped: ambience == .silence || volume <= 0,
+                                  endsAt: nil)
         applyMode(ambience)
         setLevel(ambience == .silence ? 0 : volume)
+        if ambience == .silence { enterIdle() }
 
         let nc = NotificationCenter.default
         observers.append(nc.addObserver(forName: AVAudioSession.interruptionNotification, object: nil,
@@ -177,7 +179,7 @@ final class AudioKeeper {
             let began = raw == AVAudioSession.InterruptionType.began.rawValue
             MainActor.assumeIsolated {
                 self?.onInterruption?(began ? .interruptionBegan : .interruptionEnded)
-                if !began { try? self?.engine.start() }          // resume after a call
+                if !began { self?.resumeAfterInterruption() }     // resume after a call
             }
         })
         // headphones / Bluetooth / a speaker change stop AVAudioEngine – start it again
@@ -192,9 +194,89 @@ final class AudioKeeper {
                                         queue: .main) { [weak self] _ in
             MainActor.assumeIsolated {
                 self?.onInterruption?(.servicesReset)
-                if let self, self.isRunning { try? self.start(ambience: ambience, volume: volume) }
+                if let self, self.isRunning { self.restartAfterReset() }
             }
         })
+    }
+
+    /// The story graph (4 players → mixer → reverb) exists only while a story ambience is chosen.
+    private func attachStoryGraph() {
+        guard storyMixer.engine == nil, let sample = Self.sample("st_grass_0.caf") else { return }
+        [storyMixer, storyReverb].forEach(engine.attach)
+        engine.connect(storyMixer, to: storyReverb, format: nil)
+        engine.connect(storyReverb, to: engine.mainMixerNode, format: nil)
+        for p in storyPlayers {
+            engine.attach(p)
+            engine.connect(p, to: storyMixer, format: sample.format)
+        }
+        storyReverb.bypass = isIdle
+    }
+
+    private func detachStoryGraph() {
+        guard storyMixer.engine != nil else { return }
+        storyPlayers.forEach { $0.stop(); engine.detach($0) }
+        [storyReverb, storyMixer].forEach(engine.detach)
+    }
+
+    /// A media-services reset: restart with what the sound is NOW (mode, level, stopped, the timer's end) – never
+    /// with what the night started with (audit M6: a stopped rain came back at 3 a.m. at full volume).
+    func restartAfterReset() {
+        let now = Date()
+        let plan = desired.restartPlan(now: now)
+        let ends = desired.endsAt
+        try? start(ambience: plan.ambience, volume: plan.volume)
+        if let seconds = plan.timerSeconds { sleepTimer(seconds: seconds, volume: plan.volume) }
+        else { sleepSoundEndsAt = ends }
+    }
+
+    /// An interruption (a call) ended: the engine starts again and the players the engine took down are scheduled
+    /// again (audit M7). iOS may end an interruption without the "should resume" option – the keep-alive must
+    /// restart anyway, so the option is not looked at; when the session is still held a second try follows.
+    func resumeAfterInterruption() {
+        guard isRunning else { return }
+        resumeRetry?.cancel()
+        if !engine.isRunning {
+            if !ensureRunning() { retryResume() }
+        } else {
+            restorePlayers(force: true)
+        }
+    }
+
+    private func retryResume() {
+        resumeRetry = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(3))
+            guard let self, !Task.isCancelled, self.isRunning, !self.engine.isRunning else { return }
+            if !self.ensureRunning() { self.retryResume() }
+        }
+    }
+
+    /// Schedules again what the current state needs and iOS (or an idle phase) stopped: the loop and the story
+    /// teller. Does nothing while the sound is stopped; `force` also reschedules a loop that still claims to play
+    /// (a player keeps `isPlaying` when its engine was stopped under it).
+    private func restorePlayers(force: Bool = false) {
+        guard isRunning, !isIdle, engine.isRunning else { return }
+        if let file = loopFile, force || !loopPlayer.isPlaying, let buffer = Self.loopBuffer(file) {
+            finishBedFade()
+            loopPlayer.stop()
+            loopPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
+            loopPlayer.play()
+        }
+        if let world = storyWorld, storyTask == nil { launchTeller(world) }
+        setLevel(level)
+    }
+
+    /// Stops all work except the silent source node (see `isIdle`).
+    private func enterIdle() {
+        fadeTask?.cancel()                                  // a running fade must not wake the stopped sound
+        isIdle = true
+        desired.stopped = true
+        setLevel(0)
+        finishBedFade()
+        bedPlayers.forEach { $0.pause() }
+        storyTask?.cancel()
+        storyTask = nil
+        storyPlayers.forEach { $0.stop() }
+        if storyReverb.engine != nil { storyReverb.bypass = true }
     }
 
     /// Must be `nonisolated`: a closure created inside this @MainActor class would inherit MainActor
@@ -267,12 +349,9 @@ final class AudioKeeper {
         if !isAlarmRinging { try? session.setCategory(.playback, mode: .default, options: [.mixWithOthers]) }
         try? session.setActive(true)
         guard (try? engine.start()) != nil else { return false }
-        // the players stopped with the engine → schedule the current bed again
+        // the players stopped with the engine → schedule the current bed again (not while the sound is stopped)
         finishBedFade()
-        if let file = loopFile, let buffer = Self.loopBuffer(file) {
-            loopPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
-            loopPlayer.play()
-        }
+        restorePlayers(force: true)
         setLevel(level)
         return true
     }
@@ -285,21 +364,32 @@ final class AudioKeeper {
     func setVolume(_ volume: Float, ambience: Ambience) {
         ensureRunning()
         noise.mode = ambience
+        let wantsSound = ambience != .silence && volume > 0
+        let wasIdle = isIdle
+        if wantsSound { isIdle = false; if storyReverb.engine != nil { storyReverb.bypass = false } }
+        desired.ambience = ambience
+        desired.volume = volume
+        desired.stopped = !wantsSound
         applyMode(ambience)
-        setLevel(ambience == .silence ? 0 : volume)
+        if wantsSound && wasIdle { restorePlayers() }        // ▶ after the timer / ■
+        setLevel(wantsSound ? volume : 0)
+        if !wantsSound { enterIdle() }
     }
 
     /// Generator modes play through the source node, loop modes through `loopPlayer` (seamless .loops),
     /// stories additionally run their scene scheduler.
     private func applyMode(_ ambience: Ambience) {
         guard isRunning else { return }
+        if ambience.storyWorld != nil { attachStoryGraph() }
         if ambience.storyWorld != storyWorld {
             startStory(ambience.storyWorld)
+            if ambience.storyWorld == nil { detachStoryGraph() }
         } else if ambience.storyWorld != nil, loopFile != nil {
             return                          // same story (e.g. a volume change): keep the current chapter's bed
         }
         guard let file = ambience.loopFile else {
             if loopFile != nil { finishBedFade(); loopPlayer.stop(); loopFile = nil }
+            Self.trimBeds(keeping: [])
             return
         }
         guard file != loopFile, let buffer = Self.loopBuffer(file) else { return }
@@ -310,6 +400,7 @@ final class AudioKeeper {
         loopPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
         loopPlayer.play()
         loopFile = file
+        trimBeds()
     }
 
     /// Journey: the next chapter's bed fades in while the old one fades out (`seconds`).
@@ -317,6 +408,7 @@ final class AudioKeeper {
         guard isRunning, file != loopFile, let buffer = Self.loopBuffer(file) else { return }
         finishBedFade()
         let old = loopPlayer
+        let oldFile = loopFile
         currentBed = 1 - currentBed
         loopPlayer.stop()
         engine.disconnectNodeOutput(loopPlayer)
@@ -324,6 +416,7 @@ final class AudioKeeper {
         loopPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
         loopFile = file
         fadingBed = old
+        fadingFile = oldFile
         bedFade = 0
         setLevel(level)
         loopPlayer.play()
@@ -336,6 +429,7 @@ final class AudioKeeper {
                 self.setLevel(self.level)
             }
             self?.finishBedFade()
+            self?.trimBeds()
         }
     }
 
@@ -344,6 +438,7 @@ final class AudioKeeper {
         bedFadeTask = nil
         fadingBed?.stop()
         fadingBed = nil
+        fadingFile = nil
         bedFade = 1
         setLevel(level)
     }
@@ -369,6 +464,12 @@ final class AudioKeeper {
         storyChapter = nil
         guard let world else { return }
         enter(world.chapters[0])
+        launchTeller(world)
+    }
+
+    /// The scene scheduler: random scenes over the bed, a journey moving on every 10–20 min.
+    private func launchTeller(_ world: StoryWorld) {
+        storyTask?.cancel()
         storyTask = Task { [weak self] in
             var teller = StoryTeller(world: world)
             var rng = SeededGenerator(seed: UInt64.random(in: 0...UInt64.max))
@@ -402,6 +503,28 @@ final class AudioKeeper {
     /// A story sample from the bundle (cached like the loops).
     static func sample(_ file: String) -> AVAudioPCMBuffer? { loopBuffer(file) }
 
+    /// Cache policy (audit M8): of the decoded beds / loops only the ones that play, the one fading out and the next
+    /// chapter's bed stay in memory; story one-shots (`st_…`, small) stay while a keeper runs.
+    nonisolated static func bedsToDrop(cached: [String], keeping: Set<String>) -> [String] {
+        cached.filter { !$0.hasPrefix("st_") && !keeping.contains($0) }
+    }
+
+    /// The files in the cache (tests).
+    static var cachedFiles: [String] { Array(loopBuffers.keys) }
+
+    private static func trimBeds(keeping: Set<String>) {
+        for file in bedsToDrop(cached: Array(loopBuffers.keys), keeping: keeping) { loopBuffers[file] = nil }
+    }
+
+    private func trimBeds() {
+        var keep = Set([loopFile, fadingFile].compactMap { $0 })
+        if let world = storyWorld, let chapter = storyChapter, let i = world.chapters.firstIndex(of: chapter),
+           world.chapters.indices.contains(i + 1) {
+            keep.insert(world.chapters[i + 1].bed)
+        }
+        Self.trimBeds(keeping: keep)
+    }
+
     private static func loopBuffer(_ file: String) -> AVAudioPCMBuffer? {
         if let b = loopBuffers[file] { return b }
         guard let url = Bundle.main.url(forResource: file, withExtension: nil),
@@ -413,6 +536,11 @@ final class AudioKeeper {
     }
 
     private func setLevel(_ g: Float) {
+        if g > 0, isIdle {                                  // the sound is wanted again (a timer set after ■, …)
+            isIdle = false
+            if storyReverb.engine != nil { storyReverb.bypass = false }
+            restorePlayers()
+        }
         level = g
         let isLoop = noise.mode.loopFile != nil
         noise.gain = isLoop ? 0 : g
@@ -432,16 +560,25 @@ final class AudioKeeper {
     func sleepTimer(seconds: TimeInterval?, volume: Float) {
         ensureRunning()
         fadeTask?.cancel()
-        setLevel(noise.mode == .silence ? 0 : volume)
-        guard let seconds else { sleepSoundEndsAt = nil; return }
+        let wantsSound = noise.mode != .silence && volume > 0
+        setLevel(wantsSound ? volume : 0)
+        desired.volume = volume
+        desired.stopped = !wantsSound
+        guard let seconds else {
+            sleepSoundEndsAt = nil
+            desired.endsAt = nil
+            if !wantsSound { enterIdle() }
+            return
+        }
         let end = Date() + max(0, seconds)
         sleepSoundEndsAt = end
+        desired.endsAt = end
         fadeTask = Task { [weak self] in
             let fadeStart = end - Self.fadeSeconds
             if fadeStart > Date() { try? await Task.sleep(for: .seconds(fadeStart.timeIntervalSinceNow)) }
             while let self, !Task.isCancelled {
                 let left = end.timeIntervalSinceNow
-                if left <= 0 { self.setLevel(0); return }
+                if left <= 0 { self.enterIdle(); return }       // the lullaby really stops (audit M5)
                 self.setLevel(volume * Float(min(1, left / Self.fadeSeconds)))
                 try? await Task.sleep(for: .milliseconds(100))
             }
@@ -451,18 +588,25 @@ final class AudioKeeper {
     /// Stops the sleep sound immediately (engine keeps running in silence).
     func silenceNow() {
         fadeTask?.cancel()
-        setLevel(0)
+        enterIdle()
         sleepSoundEndsAt = Date()
+        desired.endsAt = sleepSoundEndsAt
     }
 
     var currentGain: Float { level }
     var isLoopPlaying: Bool { loopFile != nil && loopPlayer.isPlaying }
     var currentBedFile: String? { loopFile }
     var currentMode: Ambience { noise.mode }
+    /// Tests: what runs while the sound is stopped.
+    var isTellerRunning: Bool { storyTask != nil }
+    var isStoryGraphAttached: Bool { storyMixer.engine != nil }
+    var isStoryReverbBypassed: Bool { storyReverb.bypass }
 
     func stop() {
         stopAlarm()
         fadeTask?.cancel()
+        resumeRetry?.cancel()
+        resumeRetry = nil
         observers.forEach(NotificationCenter.default.removeObserver)
         observers.removeAll()
         finishBedFade()
@@ -470,10 +614,13 @@ final class AudioKeeper {
         loopFile = nil
         startStory(nil)
         engine.stop()
+        detachStoryGraph()                                  // the graph lives only with a story (not into the next night)
         if let source { engine.detach(source) }
         source = nil
         if isRunning { Self.runningKeepers -= 1 }
         isRunning = false
+        isIdle = false
+        if Self.runningKeepers == 0 { Self.loopBuffers.removeAll() }       // end of the night / nap: free the memory
         // only the last running keeper releases the shared session (never under a running night)
         if Self.runningKeepers == 0 {
             try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
@@ -506,8 +653,10 @@ private final class NoiseState: @unchecked Sendable {
 
     func render(frameCount: Int, into buffers: UnsafeMutableAudioBufferListPointer) {
         let g = gain, m = mode
+        let silent = g == 0 || m.loopFile != nil                // the cheapest keep-alive: zeros, no synthesis
         for buffer in buffers {
             guard let data = buffer.mData?.assumingMemoryBound(to: Float.self) else { continue }
+            if silent { data.update(repeating: 0, count: frameCount); continue }
             for i in 0..<frameCount {
                 let w = white()
                 var s: Float
@@ -525,5 +674,24 @@ private final class NoiseState: @unchecked Sendable {
                 data[i] = s * g
             }
         }
+    }
+}
+
+/// What the sleep sound should be right now. Pure, so the decisions after an audio reset can be tested without an
+/// engine (13m, audit M6).
+struct SleepSoundState: Equatable {
+    var ambience: AudioKeeper.Ambience
+    var volume: Float
+    /// Silenced by ■, by the end of the timer or by choosing silence.
+    var stopped: Bool
+    /// When the sleep timer ends (nil = plays until stopped).
+    var endsAt: Date?
+
+    /// What a restart of the audio (media-services reset) starts: the sound at its current level, with the timer's
+    /// remaining time when its end is still ahead; a stopped sound restarts only the silent keep-alive.
+    func restartPlan(now: Date) -> (ambience: AudioKeeper.Ambience, volume: Float, timerSeconds: TimeInterval?) {
+        let ended = endsAt.map { $0 <= now } ?? false
+        if stopped || ended || ambience == .silence || volume <= 0 { return (.silence, 0, nil) }
+        return (ambience, volume, endsAt.map { $0.timeIntervalSince(now) })
     }
 }
