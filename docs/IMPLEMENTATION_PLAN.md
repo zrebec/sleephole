@@ -4024,8 +4024,15 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
           XCUITest's idle wait after a tap outlasts 4 s and an earlier run's test night was resumed – now `-restAfter 15`
           and `-clearNights`. The B42 owner of the typed code (13n) must also survive the rest (the ConfirmPanel goes away
           while resting) – added to the 13n brief.
-    - [ ] **13l – j3: the battery reminder** (`step/13l-battery-reminder`): at the night's start, not charging and ≤ 30 %
-          → a short reminder on the night screen; it never blocks the start.
+    - [x] **13l – j3: the battery reminder** (`step/13l-battery-reminder`, merged 2026-11-05 `8572672`, not on his phone):
+          in the night's setup, unplugged and ≤ 30 % (rounded; never a nap, charging, full or unknown) → a calm card under
+          "Another building": "🪫 The battery is at 24%. Put the phone on the charger so it lasts until the morning." (sk / cs
+          "24 %"; 🪫 because Apple's 🔋 is a full green battery). Gone when plugged in and with the setup; nothing stored;
+          battery monitoring only while the card exists. Rule `SleepCore.BatteryReminder`, view `UI/BatteryNote.swift`, dev
+          `-fakeBattery 0.24[,state[,S]]`. "Cancel night" stays above the tab bar on the 16 Pro and the 17e – **on the 17e in
+          English it sits right at the bar's edge (visible, tappable) – show him**; the SE's setup scrolled before already.
+          Review: the UI tests that start a test night left it in the store and the next class (GuideLanguageUITests) resumed
+          it – both now clear it in `tearDown`. Tests: SleepCore 535, app 666, UI 21 / 21, i18n 1079 keys 0 / 0 / 0 / 0.
     - [ ] **13m – j4: cheaper, sturdier audio** (`step/13m-audio`): M5 – M8.
     - [ ] **13n – j5a: the wake code and texts that do not fit** (`step/13n-wake-code`): B42 (L1), B43 (M1), B45, the SE
           truncations, the hyphenated "Notificati-ons".
