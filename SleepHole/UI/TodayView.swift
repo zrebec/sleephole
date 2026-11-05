@@ -501,6 +501,7 @@ struct NightView: View {
                         } else {
                             Text(L("You can confirm getting up from \(Fmt.time(rec.window.confirmOpens)) – shake your phone or enter your code."))
                                 .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                     Button { soundSheet = true } label: {
@@ -598,6 +599,8 @@ struct NightView: View {
             Button { confirmReroll = true } label: {
                 Label(price > 0 ? L("Another building · \(price) 🪙") : L("Another building · free (test night)"),
                       systemImage: "dice")
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)       // wraps instead of "free…" at the large text sizes (13n)
             }
             .buttonStyle(.bordered)
             .task {
@@ -938,50 +941,52 @@ struct AlarmView: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        // the awake cat greets the owner – left out when it does not fit (small phone, number pad up)
-        ViewThatFits(in: .vertical) {
-            content(withBuddy: true)
-            content(withBuddy: false)
+        // ONE ConfirmPanel for good (13n, B43): an earlier `ViewThatFits` swapped between a copy with the cat and one
+        // without when the keyboard came up, so the field lost its focus and the keyboard never stayed. The screen is a
+        // `FitOrScroll` like the night screen: the awake cat greets the owner and scrolls away when the room is short
+        FitOrScroll {
+            VStack(spacing: 12) {
+                Text(L("Good morning ☀️")).font(.largeTitle.bold())
+                BuddyView(state: model.buddyState()).frame(width: 159)
+                ConfirmPanel()
+                Spacer(minLength: 0)
+            }
+            .padding()
         }
-        .padding()
         .preferredColorScheme(.dark)
-    }
-
-    private func content(withBuddy: Bool) -> some View {
-        VStack(spacing: withBuddy ? 12 : 24) {
-            Text(L("Good morning ☀️")).font(.largeTitle.bold())
-            if withBuddy { BuddyView(state: model.buddyState()).frame(width: 159) }
-            ConfirmPanel()
-            Spacer()
-        }
     }
 }
 
 /// Shake or type the wake code (D15).
 struct ConfirmPanel: View {
     @Environment(AppModel.self) private var model
-    @State private var code = ""
     @State private var wrong = false
+    @State private var onScreen = false
     @FocusState private var codeFocused: Bool
 
     var body: some View {
+        @Bindable var model = model
         VStack(spacing: 12) {
             Label(L("Shake your phone"), systemImage: "iphone.radiowaves.left.and.right").font(.headline)
             Text(L("or enter the code from Settings")).font(.callout).cardCaption()
+                .fixedSize(horizontal: false, vertical: true)
             HStack {
-                TextField(L("Code"), text: $code)
+                TextField(L("Code"), text: $model.wakeCode)
                     .keyboardType(.numberPad)
                     .textFieldStyle(.roundedBorder)
                     .frame(maxWidth: 140)
                     .multilineTextAlignment(.center)
                     .focused($codeFocused)
-                    .onChange(of: codeFocused) { _, focused in model.rest.codeFieldFocused = focused }
+                    .onChange(of: codeFocused) { _, focused in
+                        model.rest.codeFieldFocused = focused
+                        if onScreen { model.wakeCodeFocus = focused }      // the swap to another screen is not the user closing the keyboard
+                    }
                 Button(L("I'm up")) {
-                    wrong = !model.confirm(code: code)
-                    if wrong { code = "" }
+                    wrong = !model.confirm(code: model.wakeCode)
+                    if wrong { model.wakeCode = "" }
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(code.isEmpty)
+                .disabled(model.wakeCode.isEmpty)
             }
             if wrong { Text(L("Wrong code")).font(.footnote).foregroundStyle(.red) }
         }
@@ -989,8 +994,11 @@ struct ConfirmPanel: View {
         .padding()
         .glassCard()
         .onShake { model.confirm() }
-        .onDisappear { model.rest.codeFieldFocused = false }
+        .onDisappear { onScreen = false; model.rest.codeFieldFocused = false }
         .onAppear {
+            onScreen = true
+            // the keyboard the user had before the screen swapped (night → alarm) comes back with the digits
+            if model.wakeCodeFocus { codeFocused = true }
             // Debug aid for the simulator (B31 proof): focus the code field so the software keyboard shows up
             if DevArgs.list.contains("-focusWakeCode") { codeFocused = true }
         }

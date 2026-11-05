@@ -17,7 +17,14 @@ final class AppModel {
         case result        // outcome screen until "Pokračovať"
     }
 
-    private(set) var phase: Phase = .idle
+    private(set) var phase: Phase = .idle {
+        // the typed wake code lives only through the night and its alarm (13n)
+        didSet { if phase != .building && phase != .alarm { wakeCode = ""; wakeCodeFocus = false } }
+    }
+    /// The digits typed into the wake-code field and whether the field has the keyboard (13n, B42): one owner above the
+    /// night and the alarm screens, which swap at the wake time, and above the black rest screen. Never stored or synced.
+    var wakeCode = ""
+    var wakeCodeFocus = false
     /// The black rest screen of the night (13k): a look only, it never changes what a night counts.
     let rest = RestController()
     private(set) var window: NightWindow

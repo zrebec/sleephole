@@ -131,10 +131,17 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    HStack {
-                        Text(L("Notifications"))
-                        Spacer()
-                        Text(notificationStatus).foregroundStyle(.secondary)
+                    // the word is never split (13n): when the label and the status do not fit side by side, the status goes under it
+                    ViewThatFits(in: .horizontal) {
+                        HStack {
+                            Text(L("Notifications")).fixedSize()
+                            Spacer()
+                            Text(notificationStatus).foregroundStyle(.secondary)
+                        }
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(L("Notifications"))
+                            Text(notificationStatus).foregroundStyle(.secondary)
+                        }
                     }
                     .id("notifications")
                     if model.timeSensitiveOff {
