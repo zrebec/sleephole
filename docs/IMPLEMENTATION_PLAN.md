@@ -4033,7 +4033,19 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
           English it sits right at the bar's edge (visible, tappable) – show him**; the SE's setup scrolled before already.
           Review: the UI tests that start a test night left it in the store and the next class (GuideLanguageUITests) resumed
           it – both now clear it in `tearDown`. Tests: SleepCore 535, app 666, UI 21 / 21, i18n 1079 keys 0 / 0 / 0 / 0.
-    - [ ] **13m – j4: cheaper, sturdier audio** (`step/13m-audio`): M5 – M8.
+    - [x] **13m – j4: cheaper, sturdier audio** (`step/13m-audio`, merged 2026-11-05 `9f7e999`, not on his phone): M5 – a
+          stopped sound (timer over, ■, Silence) renders only the silent keep-alive: `enterIdle()` cancels the fade, pauses the
+          beds, stops the teller, bypasses the reverb; the noise node writes zeros at gain 0 / in loop modes; the story graph
+          lives only with a story (detached on a switch and in `stop()` – the app's keeper lives all day); ▶ restarts a
+          journey at its first chapter. M6 – a media-services reset restarts the CURRENT sound (`SleepSoundState.restartPlan`:
+          the level now, the timer's rest, a stopped sound only the keep-alive). M7 – an ended interruption starts the engine
+          again (retry every 3s while the session is held) or reschedules the loop and the teller; the "should resume"
+          option is not required. M8 – only the playing, the fading and the next chapter's bed stay decoded; the cache is
+          cleared with the last running keeper. Simulator, background, app CPU: rain after the timer 7.2 → 2.7 %, journey
+          6.8 → 3.6 %; memory after three crossfades 192.9 → 167.3 MB. Review (Opus): a running fade could wake a sound
+          stopped by choosing Silence, and the story graph outlived the night – both fixed by the worker with tests.
+          Tests: app 676 (`NightAudioTests` 10), i18n 1079 keys 0 / 0 / 0 / 0. To try on the phone: a real call during a night
+          sound, the Battery screen after a night with a timer.
     - [ ] **13n – j5a: the wake code and texts that do not fit** (`step/13n-wake-code`): B42 (L1), B43 (M1), B45, the SE
           truncations, the hyphenated "Notificati-ons".
     - [ ] **13o – j5b: the night monitor and small state bugs** (`step/13o-state`): M2, M3, M9, L2, L3, L5, L9.
