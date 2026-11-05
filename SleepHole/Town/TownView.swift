@@ -9,6 +9,7 @@ struct TownSpriteView: UIViewRepresentable {
     let newest: String?
     let version: Int
     let imageProvider: (String) -> UIImage?
+    var textureProvider: ((String) -> SKTexture?)?     // 13p: textures prepared in the background
     var accessibilityEntries: [TownAccessibility.Entry] = []     // 13e3: the buildings for VoiceOver
     var accessibilitySummary = ""
     var paused = false                       // 13k: the rest screen stops the town's drawing
@@ -27,6 +28,7 @@ struct TownSpriteView: UIViewRepresentable {
         view.preferredFramesPerSecond = 60
         let scene = TownScene(size: CGSize(width: 400, height: 800))
         scene.imageProvider = imageProvider
+        scene.textureProvider = textureProvider
         view.presentScene(scene)
         context.coordinator.scene = scene
         context.coordinator.view = view
@@ -49,7 +51,7 @@ struct TownSpriteView: UIViewRepresentable {
 
     func updateUIView(_ view: SKView, context: Context) {
         context.coordinator.onTap = onTap
-        view.isPaused = paused
+        context.coordinator.scene?.suspended = paused
         if let town = view as? TownSKView {
             town.entries = accessibilityEntries
             town.summary = accessibilitySummary
@@ -105,6 +107,9 @@ struct TownTab: View {
     @State private var selected: NightKey?
     @State private var renaming = false
     @State private var showNumbers = false
+    /// L7 (13p): the town is not drawn while its tab is not on screen or the app is not active.
+    @State private var onScreen = true
+    @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
@@ -116,10 +121,11 @@ struct TownTab: View {
                 if let render {
                     TownSpriteView(model: render, focus: model.townFocus, newest: model.townNewest, version: model.townVersion,
                                    imageProvider: { sprites.image(for: $0) },
+                                   textureProvider: { sprites.texture(for: $0) },
                                    accessibilityEntries: snapshot.map { s in
                                        TownAccessibility.entries(s) { model.catalog?[$0]?.displayName } } ?? [],
                                    accessibilitySummary: TownAccessibility.summary(buildings: snapshot?.buildings.count ?? 0),
-                                   paused: model.rest.resting,
+                                   paused: model.rest.resting || !onScreen || scenePhase != .active,
                                    onTap: { selected = $0.flatMap { snapshot?.buildings[safe: $0]?.nightKey } })
                         .ignoresSafeArea(edges: [.horizontal, .bottom])
                 }
@@ -128,7 +134,11 @@ struct TownTab: View {
             .navigationTitle(L("Town"))
             .toolbar(.hidden, for: .navigationBar)          // the header card already names the town
             .renameTownAlert(isPresented: $renaming)
-            .onAppear { if DevArgs.list.contains("-openTownNumbers") { showNumbers = true } }   // screenshots
+            .onAppear {
+                onScreen = true
+                if DevArgs.list.contains("-openTownNumbers") { showNumbers = true }          // screenshots
+            }
+            .onDisappear { onScreen = false }
             .sheet(isPresented: $showNumbers) {
                 if let snapshot { TownNumbersSheet(town: snapshot) }
             }
