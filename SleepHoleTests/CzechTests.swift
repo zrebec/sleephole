@@ -212,6 +212,15 @@ struct CzechTests {
         #expect(L("Today") == "Today")
     }
 
+    @Test func aFinishedNapIsDokonceny() {
+        defer { Lang.current = .en }
+        Lang.current = .cs
+        #expect(L("Nap complete!") == "Odpočinek dokončený!")
+        #expect(L("\(1) complete naps") == "1 dokončený odpočinek")
+        Lang.current = .sk
+        #expect(L("Nap complete!") == "Odpočinok hotový!")
+    }
+
     @Test func veBeforeSomeClockTimes() {
         #expect(Czech.prepositions("Večerka v 22:30") == "Večerka ve 22:30")
         #expect(Czech.prepositions("Budík v 6:00") == "Budík v 6:00")
