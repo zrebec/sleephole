@@ -4,6 +4,15 @@ import XCTest
 final class RestScreenUITests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
 
+    /// The app is not reinstalled between tests: a night left in the store would be resumed by the next test class
+    /// (13l: `GuideLanguageUITests` then found a running night instead of Settings). Leave an empty store behind.
+    override func tearDown() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-clearNights", "-screenshot", "-mute"]
+        app.launch()
+        app.terminate()
+    }
+
     func testTheNightScreenRestsAfterTheSetupAndWakesOnATap() {
         // `-clearNights`: the app is not reinstalled between runs, and a night left by an earlier run (40 min long) would
         // be resumed – or already at its alarm – instead of a fresh one.
