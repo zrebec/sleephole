@@ -24910,6 +24910,28 @@
           }
         }
       }
+    },
+    "🪫 The battery is at %lld%%. Put the phone on the charger so it lasts until the morning.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🪫 The battery is at %lld%%. Put the phone on the charger so it lasts until the morning."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🪫 Batéria má %lld %%. Daj telefón na nabíjačku, nech vydrží do rána."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🪫 Baterie má %lld %%. Dej telefon na nabíječku, ať vydrží do rána."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

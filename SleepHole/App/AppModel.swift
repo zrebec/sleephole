@@ -130,6 +130,8 @@ final class AppModel {
     ///   -rerollDialog                 open the "Another building" confirmation 2 s after the night screen shows
     ///   -expiresIn HOURS              pretend the provisioning profile runs out then (AppExpiry)
     ///   -mute                         silence every sound (alarm, effects) – for screenshots of a night's end
+    ///   -fakeBattery 0.24[,unplugged|charging|full[,S]]   SIMULATOR + DEBUG only: the battery reminder (13l) sees that level and state
+    ///                                 (default unplugged); with S the state flips after S seconds (unplugged → charging, else → unplugged)
     ///   -restAfter S                  the black rest screen (13k) comes S seconds after the last touch instead of 30; with -screenshot
     ///                                 the rest screen is off unless this is given
     ///   -buddy awake|asleep           force the sleep buddy's state (screenshots)

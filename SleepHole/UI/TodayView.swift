@@ -484,6 +484,7 @@ struct NightView: View {
                                             : L("Setup: \(left)s left for a podcast or story"))
                                 .font(.callout).foregroundStyle(.yellow)
                             rerollSection(now: now)
+                            BatteryNote()
                         } else if let pauseEnds {
                             Text(L("Pause: \(Self.countdown(pauseEnds.timeIntervalSince(now))) left – you can leave SleepHole now"))
                                 .font(.callout).foregroundStyle(.yellow).multilineTextAlignment(.center)
