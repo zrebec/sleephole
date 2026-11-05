@@ -321,25 +321,25 @@
               "one": {
                 "stringUnit": {
                   "state": "translated",
-                  "value": "%lld hotový odpočinek"
+                  "value": "%lld dokončený odpočinek"
                 }
               },
               "few": {
                 "stringUnit": {
                   "state": "translated",
-                  "value": "%lld hotové odpočinky"
+                  "value": "%lld dokončené odpočinky"
                 }
               },
               "many": {
                 "stringUnit": {
                   "state": "translated",
-                  "value": "%lld hotového odpočinku"
+                  "value": "%lld dokončeného odpočinku"
                 }
               },
               "other": {
                 "stringUnit": {
                   "state": "translated",
-                  "value": "%lld hotových odpočinků"
+                  "value": "%lld dokončených odpočinků"
                 }
               }
             }
@@ -736,7 +736,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lld nebo %lld minut, v okně %@–%@ (dá se změnit), jednou denně. Hotový +%lld 🪙, zkrácený +%lld 🪙. Nic se nestaví."
+            "value": "%lld nebo %lld minut, v okně %@–%@ (dá se změnit), jednou denně. Dokončený +%lld 🪙, zkrácený +%lld 🪙. Nic se nestaví."
           }
         }
       }
@@ -1412,7 +1412,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hotový odpolední odpočinek."
+            "value": "Dokončený odpolední odpočinek."
           }
         }
       }
@@ -3128,7 +3128,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Odpočinek jde zahájit jen v tomto okně, jednou denně. Za hotový odpočinek dostaneš %lld 🪙."
+            "value": "Odpočinek jde zahájit jen v tomto okně, jednou denně. Za dokončený odpočinek dostaneš %lld 🪙."
           }
         }
       }
@@ -4846,7 +4846,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hotové odpočinky: %lld 😴"
+            "value": "Dokončené odpočinky: %lld 😴"
           }
         }
       }
@@ -7464,7 +7464,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Odpočinek hotový!"
+            "value": "Odpočinek dokončený!"
           }
         }
       }
@@ -12938,7 +12938,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dnes do %1$@ · hotový odpočinek +%2$lld 🪙"
+            "value": "Dnes do %1$@ · dokončený odpočinek +%2$lld 🪙"
           }
         }
       }
@@ -21370,7 +21370,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "hotový"
+            "value": "dokončený"
           }
         }
       }

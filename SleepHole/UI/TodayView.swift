@@ -1023,6 +1023,7 @@ struct ResultView: View {
                         .popIn(delay: 0.1)
                     Text(outcome == .complete ? L("Nap complete!") : outcome == .unfinished ? L("Nap cut short")
                          : L("Nap didn't work out")).font(.largeTitle.bold())
+                        .multilineTextAlignment(.center)
                     Text(outcome == .complete ? L("Well rested 💙") : L("No worries, again tomorrow 🌱"))
                         .multilineTextAlignment(.center)
                 } else {

@@ -103,7 +103,7 @@ final class AppModel {
     ///                                 finished night's), so the "New in town" label is absent (screenshots, 11b6b)
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
-    ///   -showResult [unfinished]      SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
+    ///   -showResult [unfinished|nap]  SIMULATOR ONLY, with -seedNights (nap: also -seedNap): show the result screen of the newest complete seeded night
     ///                                 (with `unfinished`: of the newest unfinished one, which was confirmed 30 min after the alarm)
     ///   -openTab town|boxes           start on the Mesto / Boxes tab
     ///   -openBoxContents [postcards|decorations|cat|skies]   DEBUG only: open Settings > Developer > Box contents at once (11b5e)
@@ -247,6 +247,16 @@ final class AppModel {
                                                          seed: UInt64(i + 1), tableVersion: 1, prize: prize, payout: 0)))
                 }
             }
+            if args.contains("-seedNap") {                        // screenshots: one complete afternoon nap (see -showResult nap)
+                let day = cal.date(byAdding: .day, value: -1, to: Date())!
+                let w = settings.schedule.window(containing: cal.startOfDay(for: day) + 12 * 3600, calendar: cal)
+                let nap = NightRecord(window: w, buildingId: "", isDebug: false, setupGrace: 300, isNap: true)
+                nap.append(.started, at: w.bedtime)
+                nap.append(.confirmed, at: w.wake)
+                nap.outcomeRaw = Outcome.complete.rawValue
+                nap.finalizedAt = w.wake + 60
+                context.insert(nap)
+            }
             try? context.save()
         }
         #endif
@@ -372,12 +382,15 @@ final class AppModel {
         #if targetEnvironment(simulator)
         let wantedResult: Outcome = DevArgs.list.firstIndex(of: "-showResult").map {
             DevArgs.list.indices.contains($0 + 1) && DevArgs.list[$0 + 1] == "unfinished" } == true ? .unfinished : .complete
+        let wantsNap = DevArgs.list.firstIndex(of: "-showResult").map {
+            DevArgs.list.indices.contains($0 + 1) && DevArgs.list[$0 + 1] == "nap" } == true       // with -seedNap
         if DevArgs.list.contains("-showResult"), active == nil, initialSettings == nil,
-           let rec = realResults().last(where: { $0.outcome == wantedResult }) {       // store screenshots: the morning screen
+           let rec = wantsNap ? napResults().last(where: { $0.outcome == .complete })
+                              : realResults().last(where: { $0.outcome == wantedResult }) {       // store screenshots: the morning screen
             let entry = Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
                 .last { $0.key.description == rec.keyString }
             shownResult = rec
-            lastReward = entry?.coins ?? 0
+            lastReward = rec.isNap ? NapPlan.reward(.complete) : entry?.coins ?? 0
             lastReceipt = entry.flatMap { Economy.Receipt($0, calmTotal: rec.result?.calmHoursTotal) }
             if DevArgs.list.contains("-calmDemo"), let r = lastReceipt {     // screenshots: a night with 7 of 8 calm hours
                 var lines = r.lines.filter { if case .calmHours = $0.kind { false } else { true } }
