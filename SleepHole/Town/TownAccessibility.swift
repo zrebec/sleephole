@@ -60,7 +60,7 @@ final class TownSKView: SKView {
 
     override var accessibilityElements: [Any]? {
         get {
-            guard let scene = scene as? TownScene, let model = scene.model else { return [] }
+            guard let scene = scene as? TownScene, scene.model != nil else { return [] }
             let wanted = [TownAccessibility.Entry(label: summary, index: -1)] + entries
             if elements.map({ $0.accessibilityLabel }) != wanted.map({ $0.label })
                 || elements.map({ $0.buildingIndex ?? -1 }) != wanted.map(\.index) {
@@ -72,7 +72,7 @@ final class TownSKView: SKView {
                 e.onActivate = onActivate
                 e.onFocus = { [weak self] i in self?.bringIntoViewIfNeeded(building: i) }
                 if let i = e.buildingIndex {
-                    e.accessibilityFrameInContainerSpace = Self.viewFrame(ofBuilding: i, in: model, scene: scene) ?? .zero
+                    e.accessibilityFrameInContainerSpace = Self.viewFrame(ofBuilding: i, scene: scene) ?? .zero
                 } else {
                     e.accessibilityFrameInContainerSpace = CGRect(x: bounds.minX, y: bounds.minY, width: bounds.width, height: 1)
                 }
@@ -84,8 +84,8 @@ final class TownSKView: SKView {
 
     /// VoiceOver moved to a building that is not fully inside the view: the camera brings it in.
     func bringIntoViewIfNeeded(building index: Int) {
-        guard let scene = scene as? TownScene, let model = scene.model,
-              let frame = Self.viewFrame(ofBuilding: index, in: model, scene: scene), !bounds.contains(frame) else { return }
+        guard let scene = scene as? TownScene,
+              let frame = Self.viewFrame(ofBuilding: index, scene: scene), !bounds.contains(frame) else { return }
         scene.bringIntoView(viewFrame: frame)
     }
 
@@ -107,14 +107,17 @@ final class TownSKView: SKView {
     }
 
     /// The building's sprites (all pieces with its index, the unfinished ones only as high as they are shown) in view space.
+    /// The scene rect comes from the scene's per-building cache (built once per `show`), so a query is O(1) per building (13p).
+    static func viewFrame(ofBuilding index: Int, scene: TownScene) -> CGRect? {
+        scene.sceneRect(ofBuilding: index).map { viewRect($0, scene: scene) }
+    }
+
+    /// The same frame by scanning every sprite of `model` – the reference the cache must equal.
     static func viewFrame(ofBuilding index: Int, in model: TownRenderModel, scene: SKScene) -> CGRect? {
-        var rect: SceneRect?
-        for s in model.sprites where s.buildingIndex == index {
-            var f = s.frame
-            if s.reveal < 1 { f.maxY = f.minY + (f.maxY - f.minY) * s.reveal }
-            rect = rect.map { $0.union(f) } ?? f
-        }
-        guard let rect else { return nil }
+        TownScene.sceneRectByScan(ofBuilding: index, in: model).map { viewRect($0, scene: scene) }
+    }
+
+    private static func viewRect(_ rect: SceneRect, scene: SKScene) -> CGRect {
         let a = scene.convertPoint(toView: CGPoint(x: rect.minX, y: rect.minY))
         let b = scene.convertPoint(toView: CGPoint(x: rect.maxX, y: rect.maxY))
         return CGRect(x: min(a.x, b.x), y: min(a.y, b.y), width: abs(a.x - b.x), height: abs(a.y - b.y))

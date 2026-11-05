@@ -673,15 +673,16 @@ struct NightDetail: View {
     }
 
     var body: some View {
+        let record = model.nightRecord(for: key)            // resolved once per body (L6, 13p)
         VStack(alignment: .leading, spacing: 10) {
             Text(L("Night of \(Fmt.fullDate(key))")).font(.headline).accessibilityAddTraits(.isHeader)
             if model.coreResults().contains(where: { $0.key == key && $0.outcome == .excused }) {
                 Label(L("Protected by a joker 🛡️ – your streak waited for you."), systemImage: "shield.fill")
                     .font(.subheadline).foregroundStyle(.indigo)
             }
-            if let rec = model.nightRecord(for: key), let outcome = rec.outcome {
+            if let rec = record, let outcome = rec.outcome {
                 let r = NightReport(log: rec.log, rules: rec.rules)
-                building(outcome: outcome)
+                building(outcome: outcome, record: rec)
                 row("🌙", L("Build started"), r.startedAt.map(Fmt.timeSec))
                 row("🔒", L("Phone locked"), r.firstLockAt.map(Fmt.timeSec))
                 sleepRows(rec)
@@ -713,15 +714,15 @@ struct NightDetail: View {
     }
 
     @ViewBuilder
-    private func building(outcome: Outcome) -> some View {
+    private func building(outcome: Outcome, record: NightRecord) -> some View {
         let b = model.townBuilding(for: key)
         let id = b.map { $0.state == .ruins ? "o-ruin-\($0.placement.size)" : $0.buildingId }
-            ?? model.nightRecord(for: key)?.buildingId ?? ""
+            ?? record.buildingId
         HStack(spacing: 12) {
             BuildingImage(id: id, progress: b?.state == .unfinished ? 0.6 : 1, maxHeight: 90)
                 .frame(width: 110)
             VStack(alignment: .leading, spacing: 4) {
-                Text(model.catalog?[model.nightRecord(for: key)?.buildingId ?? ""]?.displayName ?? "").font(.headline)
+                Text(model.catalog?[record.buildingId]?.displayName ?? "").font(.headline)
                 Text(outcome == .complete ? L("Complete 🏢") : outcome == .unfinished ? L("Unfinished 🚧") : L("Ruins 🧱"))
                 if b?.repairedLater == true { Text(L("Repaired later 🛠️")).foregroundStyle(Color.readableGreen) }
                 if b?.completedLater == true { Text(L("Finished later 💪")).foregroundStyle(Color.readableGreen) }

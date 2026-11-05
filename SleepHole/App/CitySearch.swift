@@ -158,25 +158,31 @@ final class CityField {
 /// case the network never answers) and a newer query cancels the older one.
 @MainActor
 final class MapKitCitySearch: NSObject, CitySearch, MKLocalSearchCompleterDelegate {
-    private let completer = MKLocalSearchCompleter()
+    /// Created on the first real query (13p): opening Settings no longer builds an `MKLocalSearchCompleter`.
+    private var made: MKLocalSearchCompleter?
+    private var completer: MKLocalSearchCompleter {
+        if let made { return made }
+        let c = MKLocalSearchCompleter()
+        c.delegate = self
+        c.resultTypes = .address
+        // no address filter here: with `.locality` the completer lists Bratislava's districts but not "Bratislava"
+        // itself (tried in the simulator); `resolve` below does use it, so a tapped street or region still ends in a city
+        made = c
+        return c
+    }
     private var waiting: CheckedContinuation<[CitySuggestion], Never>?
     private var generation = 0
     private static let timeout: Duration = .seconds(6)
 
-    override init() {
-        super.init()
-        completer.delegate = self
-        completer.resultTypes = .address
-        // no address filter here: with `.locality` the completer lists Bratislava's districts but not "Bratislava"
-        // itself (tried in the simulator); `resolve` below does use it, so a tapped street or region still ends in a city
-    }
+    /// True once the completer exists (a test asserts that it does not before the first query).
+    var completerCreated: Bool { made != nil }
 
     /// Only cities (localities) for `resolve` – no streets or postcodes.
     private static let cities = MKAddressFilter(including: .locality)
 
     func suggestions(for text: String) async -> [CitySuggestion] {
         finish([])                                   // a newer query cancels the older one
-        completer.cancel()
+        made?.cancel()
         let query = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !query.isEmpty else { return [] }
         generation += 1

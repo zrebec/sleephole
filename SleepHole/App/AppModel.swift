@@ -404,6 +404,7 @@ final class AppModel {
         ticker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.refresh() }
         }
+        ticker?.tolerance = 0.3                   // L8: the system may coalesce the tick with other wake-ups
     }
 
     /// The rest screen (13k) reads the night through these facts; it is off in unit tests and in `-screenshot` runs
@@ -446,6 +447,9 @@ final class AppModel {
         var jokerState: (results: [NightResult], uses: [JokerUse])?
         var coinsEarned: Int?, streak: Int?
         var stats: StatsSummary?
+        var achievements: [Achievements.Unlocked]?
+        var journalWeeks: [WeekSummary]?
+        var coinsByNight: [NightKey: Int]?              // the ledger's coins per night (L6)
     }
 
     /// Not observed: filling the cache inside a view body must not invalidate that view. The reads of `dataRevision`
@@ -458,10 +462,31 @@ final class AppModel {
         if derived.key != key { derived = Derived(key: key) }
     }
 
+    /// The fetched rows between two writes (13p, j5c): the 1 s ticker and every view read them, a fetch each time cost
+    /// 4 ms at 100 nights and 12 ms at 365. The cache can never be stale: it is dropped by `dataRevision` (every write
+    /// through `save()`, a merged sync file, a Health read, a restore), by every `ModelContext.didSave` – a save from
+    /// anywhere – and by `dropRecordsCache()` where rows are deleted; and while the context has unsaved changes (an
+    /// insert or a delete not saved yet) the rows are fetched fresh and not stored.
+    @ObservationIgnored private var recordsCache: (revision: Int, rows: [NightRecord])?
+    @ObservationIgnored nonisolated(unsafe) private var didSaveObserver: (any NSObjectProtocol)?
+
     func records() -> [NightRecord] {
-        _ = dataRevision
-        return (try? context.fetch(FetchDescriptor<NightRecord>(sortBy: [SortDescriptor(\.bedtime)]))) ?? []
+        let revision = dataRevision
+        if didSaveObserver == nil {
+            didSaveObserver = NotificationCenter.default.addObserver(forName: ModelContext.didSave, object: nil, queue: nil) { [weak self] _ in
+                guard Thread.isMainThread else { return }
+                MainActor.assumeIsolated { self?.recordsCache = nil }
+            }
+        }
+        if !context.hasChanges, let cache = recordsCache, cache.revision == revision { return cache.rows }
+        let rows = (try? context.fetch(FetchDescriptor<NightRecord>(sortBy: [SortDescriptor(\.bedtime)]))) ?? []
+        recordsCache = context.hasChanges ? nil : (revision, rows)
+        return rows
     }
+
+    deinit { if let didSaveObserver { NotificationCenter.default.removeObserver(didSaveObserver) } }
+
+    private func dropRecordsCache() { recordsCache = nil }
 
     /// Finalized real nights, oldest first (debug nights never count).
     func realResults() -> [NightRecord] {
@@ -645,9 +670,16 @@ final class AppModel {
         townSnapshot?.buildings.first { $0.nightKey == key }
     }
 
+    /// What the night paid; the ledger is replayed once per change of the data, not once per call (L6, 13p).
     func coinsEarned(for key: NightKey) -> Int? {
-        Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
-            .last { $0.key == key }?.coins
+        validateDerived()
+        if let cached = derived.coinsByNight { return cached[key] }
+        var byNight: [NightKey: Int] = [:]
+        for entry in Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes()) {
+            byNight[entry.key] = entry.coins                     // the last entry of a night wins, as `.last` did
+        }
+        derived.coinsByNight = byNight
+        return byNight[key]
     }
 
     /// The results Stats averages over. A counted test night (`bonus-…`) stays a night of the streak, the town and the
@@ -713,9 +745,13 @@ final class AppModel {
 
     /// Unlocked achievements, oldest first (replayed like the coins – old nights count too).
     var achievements: [Achievements.Unlocked] {
-        Achievements.unlocked(results: coreResults(), naps: napResults().compactMap(\.result),
-                              repairs: townSnapshot?.repairs ?? [], catalog: catalog, calendar: calendar,
-                              breaks: streakBreaks)
+        validateDerived()
+        if let cached = derived.achievements { return cached }
+        let value = Achievements.unlocked(results: coreResults(), naps: napResults().compactMap(\.result),
+                                          repairs: townSnapshot?.repairs ?? [], catalog: catalog, calendar: calendar,
+                                          breaks: streakBreaks)
+        derived.achievements = value
+        return value
     }
     /// Achievements earned by the night in `shownResult` (result screen).
     private(set) var newAchievements: [Achievement] = []
@@ -724,8 +760,12 @@ final class AppModel {
 
     /// Weeks (Monday–Sunday evenings) with nights or naps, newest first.
     var journalWeeks: [WeekSummary] {
-        WeeklyJournal.weeks(results: coreResults(), naps: napResults().compactMap(\.result),
-                            calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
+        validateDerived()
+        if let cached = derived.journalWeeks { return cached }
+        let value = WeeklyJournal.weeks(results: coreResults(), naps: napResults().compactMap(\.result),
+                                        calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
+        derived.journalWeeks = value
+        return value
     }
 
     func journalWeek(monday: NightKey) -> WeekSummary {
@@ -811,6 +851,15 @@ final class AppModel {
     private(set) var townFocus: ScenePoint?
     /// Identifies the newest building (its night key) – the camera glides to it once per new one (B30).
     private(set) var townNewest: String?
+
+    /// The sprites the Town and the journal's thumbnails draw (13p): decoded in the background so that their first visit
+    /// does not stall the main thread. The town's own pieces first, then the buildings of the nights.
+    var spriteIdsToPrepare: [String] {
+        var seen = Set<String>()
+        let town = townRender?.sprites.map(\.spriteId) ?? []
+        let nights = realResults().map(\.buildingId)
+        return (town + nights).filter { !$0.isEmpty && seen.insert($0).inserted }
+    }
 
     /// The town decorations won from boxes, in the order won; with the debug flag `-showAllDecorations` all twelve.
     private func ownedDecorations() -> [String] {
@@ -1235,6 +1284,7 @@ final class AppModel {
         guard active == nil else { throw BackupError.nightRunning }
         guard b.version <= BackupFile.currentVersion else { throw BackupError.tooNew }
         try context.delete(model: NightRecord.self)
+        dropRecordsCache()
         for n in b.nights { context.insert(NightRecord(backup: n)) }
         let p = progress()
         p.onboardingCompletedAt = b.onboardingCompletedAt
@@ -1413,24 +1463,28 @@ final class AppModel {
                 finalize(rec)
             } else if now >= log.window.wake {
                 if !log.has(.alarmFired) { ringAlarm() } else { startAlarmSound() }
-                phase = .alarm
+                setPhase(.alarm)
             } else {
-                phase = .building
+                setPhase(.building)
             }
             return
         }
         tidySystemAlarm(now: now)
         if shownResult != nil {
             setEarlyFlags(canStartEarly: false, tonightPlayed: false)
-            phase = .result
+            setPhase(.result)
             return
         }
-        window = debugWindow ?? settings.schedule.window(containing: now, calendar: calendar)
+        let w = debugWindow ?? settings.schedule.window(containing: now, calendar: calendar)
+        if window != w { window = w }
         let alreadyPlayed = debugWindow == nil && records().contains { $0.id == window.key.description }
-        phase = !alreadyPlayed && window.canStart(at: now, rules: nextNightRules) ? .canStart : .idle
+        setPhase(!alreadyPlayed && window.canStart(at: now, rules: nextNightRules) ? .canStart : .idle)
         setEarlyFlags(canStartEarly: debugWindow == nil && !alreadyPlayed && window.canStartEarly(at: now),
                       tonightPlayed: alreadyPlayed)
     }
+
+    /// Writes the phase only when it changes, so the 1 s tick of an unchanged state never notifies observers (M4).
+    private func setPhase(_ new: Phase) { if phase != new { phase = new } }
 
     /// Writes the two flags only when they change, so an unchanged value never notifies observers.
     private func setEarlyFlags(canStartEarly new: Bool, tonightPlayed played: Bool) {
@@ -1572,6 +1626,7 @@ final class AppModel {
     func clearNights() {
         guard active == nil else { return }
         try? context.delete(model: NightRecord.self)
+        dropRecordsCache()
         save()
         shownResult = nil
         rebuildTown()
