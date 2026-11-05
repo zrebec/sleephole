@@ -4057,7 +4057,17 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
           Tests: `WakeCodeUITests` 2 (both failed before the fix), app 676 (the SyncEngine flake once, alone 54 / 54), UI
           23 / 23 on the 16 Pro, i18n 1079 keys 0 / 0 / 0 / 0. The rest-screen case is covered by design only (XCUITest
           cannot close the number pad so that the screen rests) – try it on the phone.
-    - [ ] **13o – j5b: the night monitor and small state bugs** (`step/13o-state`): M2, M3, M9, L2, L3, L5, L9.
+    - [x] **13o – j5b: the night monitor and small state bugs** (`step/13o-state`, merged 2026-11-05 `135b327`, not on his
+          phone), all seven real: M2 – the keep-alive's expiry runs in place inside the expiration handler
+          (`MainActor.assumeIsolated`), so `endBackgroundTask` comes before it returns; M3 – `LifecycleMonitor.stop()` resets
+          the away / lock-trip / call / lock-signal state, so the next night's first trip and first call are reported; M9 –
+          a non-persisted `firstRunGuideOpen` (set when the first-run cover appears, cleared by `completeOnboarding()`) keeps a
+          guide on screen open when a sync merge brings a finished guide; L2 – the parcel dialog's flag resets when the
+          offer goes; L3 – the town's open building is held by its night key (`TownSnapshot.building(forNight:)`); L5 – the
+          schedule draft, the half-typed city and a pending restore live on `AppModel` (never stored), so a language switch
+          keeps them; L9 – `Fmt`'s cached formatters take `NSTimeZone.default` on every use. Tests: app 682 (M3 ×2 failed
+          before, M9 ×2, L3, L9), `SettingsDraftUITests` (failed before), UI 24 / 24, i18n 1079 keys 0 / 0 / 0 / 0. M2 and L2
+          have no test (a real UIKit expiry; a view's `@State`).
     - [ ] **13p – j5c: speed** (`step/13p-speed`): B44 (the VoiceOver town), the cold opens (Town textures, Settings'
           city search, Stats' journal), M4's guard + test, L4, L6 – L8.
   - [ ] **Owed device checks for 13c–13e (on his phone only on his word, never after 21:30):** VoiceOver on Today / Stats /
