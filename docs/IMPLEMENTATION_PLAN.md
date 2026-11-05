@@ -4046,8 +4046,17 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
           stopped by choosing Silence, and the story graph outlived the night – both fixed by the worker with tests.
           Tests: app 676 (`NightAudioTests` 10), i18n 1079 keys 0 / 0 / 0 / 0. To try on the phone: a real call during a night
           sound, the Battery screen after a night with a timer.
-    - [ ] **13n – j5a: the wake code and texts that do not fit** (`step/13n-wake-code`): B42 (L1), B43 (M1), B45, the SE
-          truncations, the hyphenated "Notificati-ons".
+    - [x] **13n – j5a: the wake code and texts that do not fit** (`step/13n-wake-code`, merged 2026-11-05 `4dbef66`, not on
+          his phone): B42 – the typed digits and the keyboard flag live on `AppModel` (`wakeCode`, `wakeCodeFocus`, never
+          stored or synced, cleared when the phase leaves `.building` / `.alarm`), so the night → alarm swap and 13k's rest
+          screen keep them; B43 – `AlarmView` is a `FitOrScroll` with ONE `ConfirmPanel` (the cat scrolls away instead of a
+          second copy without it); the truncated texts on the SE wrap ("or enter the code from Settings", "You can confirm
+          getting up from …", the test night's "Another building · free"); B45 – `ChipFlow` wrapped the last chip into a row
+          its measured height did not have (a float sum a hair over the reported width) → 0.5 pt tolerance; "Notificati-ons"
+          → the status goes under the label when both do not fit. Default look unchanged (shots `build/13n/shots/`).
+          Tests: `WakeCodeUITests` 2 (both failed before the fix), app 676 (the SyncEngine flake once, alone 54 / 54), UI
+          23 / 23 on the 16 Pro, i18n 1079 keys 0 / 0 / 0 / 0. The rest-screen case is covered by design only (XCUITest
+          cannot close the number pad so that the screen rests) – try it on the phone.
     - [ ] **13o – j5b: the night monitor and small state bugs** (`step/13o-state`): M2, M3, M9, L2, L3, L5, L9.
     - [ ] **13p – j5c: speed** (`step/13p-speed`): B44 (the VoiceOver town), the cold opens (Town textures, Settings'
           city search, Stats' journal), M4's guard + test, L4, L6 – L8.
