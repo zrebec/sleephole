@@ -103,7 +103,13 @@ final class LifecycleMonitor {
         tokens.forEach(NotificationCenter.default.removeObserver)
         tokens.removeAll()
         callObserver.setDelegate(nil, queue: nil)
-        pendingBackground?.cancel(); pendingLockUse?.cancel(); pendingLockUse = nil
+        pendingBackground?.cancel(); pendingBackground = nil
+        pendingLockUse?.cancel(); pendingLockUse = nil
+        // a night that ended while the app was away must not leak its state into the next one (audit M3)
+        isAway = false            // also clears `lockTrip`
+        activeCalls.removeAll()
+        lastLockSignal = nil
+        foregroundHandled = false
         isRunning = false
         raw("monitor stopped")
     }

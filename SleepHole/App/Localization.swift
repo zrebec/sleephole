@@ -144,7 +144,8 @@ enum Fmt {
 
     private static func formatter(seconds: Bool) -> DateFormatter {
         let cacheKey = "\(Lang.current.rawValue)-\(systemUses12h)-\(seconds)"
-        if let f = cache[cacheKey] { return f }
+        // a cached formatter keeps the zone of its creation: follow the default zone (what a new DateFormatter takes) on every use (L9)
+        if let f = cache[cacheKey] { f.timeZone = NSTimeZone.default; return f }
         let f = DateFormatter()
         cache[cacheKey] = f
         f.locale = Lang.current.locale

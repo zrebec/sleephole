@@ -877,7 +877,12 @@ final class AppModel {
     private(set) var onboardingDone = false
     /// The first-run guide is due: not finished, and not held back while a fresh install makes its first read of the
     /// sync place (a guide finished on another device is then not shown at all – phase SYNC).
-    var needsGuide: Bool { (!onboardingDone || guideReplayRequested) && !sync.holdsGuide }
+    var needsGuide: Bool { (!onboardingDone || guideReplayRequested || firstRunGuideOpen) && !sync.holdsGuide }
+    /// The first-run guide cover is on screen. A plain UI flag (never stored, backed up or synced): once the guide is
+    /// open it finishes by itself – a sync merge that brings a finished guide from another device must not close it
+    /// mid-way (M9); the merged date is kept either way. Cleared by `completeOnboarding()`.
+    private(set) var firstRunGuideOpen = false
+    func guideCoverAppeared() { if needsGuide { firstRunGuideOpen = true } }
     /// Debug replay requests: local only (never in the backup, the sync file or SwiftData), so a synced date cannot
     /// close a replayed guide (B39).
     static let guideReplayKey = "debug.guideReplay"
@@ -886,6 +891,11 @@ final class AppModel {
     /// Settings → Guide: the replayed guide is open. A plain UI flag (never stored, backed up or synced) that lives here
     /// because a language switch rebuilds Settings (`.id(lang)`) and would reset a `@State` there (B40).
     var showGuideReplay = false
+    // Unsaved Settings drafts (L5): plain UI state (never stored, backed up or synced) that lives here because a language
+    // switch rebuilds Settings (`.id(lang)`) and would reset a `@State` there – cleared when saved or cancelled.
+    var scheduleDraft: Schedule?
+    var pendingRestore: BackupFile?
+    var cityField: CityField?
     private(set) var briefingReplayRequested = false
     private(set) var firstNightBriefed = false
 
@@ -1127,6 +1137,7 @@ final class AppModel {
         if p.onboardingCompletedAt == nil { p.onboardingCompletedAt = clock.now }
         defaults.removeObject(forKey: Self.guideReplayKey)
         guideReplayRequested = false
+        firstRunGuideOpen = false
         if p.changeWeekStart == nil { p.changeWeekStart = clock.now }       // the guide set the first schedule: day 1 of the first change week
         save()
         onboardingDone = true
