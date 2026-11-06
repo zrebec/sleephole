@@ -214,6 +214,9 @@ Opravy po builde 11 a chyby, ktoré sa medzitým nájdu. (B38 si 25. 10. presunu
 - **13q – „Odpočinek dokončený!“ (5. 11., tvoj nález):** v češtine sa dokončený odpočinok volá všade „dokončený“ (nadpis, ocenenie, Nastavenia, denník, tlačidlo na Dnes, riadok v Štatistikách, sprievodca, počet odpočinkov). Slovenčina a angličtina ostali, texty o nociach tiež. Na iPhone SE sa nadpis zalomí na dva vycentrované riadky. Appka 693 testov, texty 0 / 0 / 0 / 0.
 - **🎉 Apple schválil 1.0 (10)** – 4. 11. o 23:48 sa začalo posudzovanie, o 23:59 „Pending Developer Release“. Vydanie je tvoje kliknutie (alebo tvoje slovo). Potom pôjde build 13 ako 1.1 (balíčky sú v ňom, build 12 samostatnú verziu nepotrebuje).
 - **13k – 13q na telefóne od 5. 11. 19:53** (tvoje slovo): žiadna noc nebežala, dáta zálohované pred inštaláciou a po nej bajt po bajte rovnaké. Na stránke buildu 13 sú tvoje skúšky k1 – k12 a nová q1 (český nadpis po odpočinku).
+- **Prvá skutočná noc s celým buildom (5. → 6. 11.):** dokončená, telefón zamknutý a bez nabíjačky: 96 → 78 % aj s asi 20 min podcastu, teda asi 2,2 % za hodinu.
+- **13r a 13s (tvoj výber 6. 11.):** 13r – keď je stíšená hlasitosť médií, appka na nočnej obrazovke upozorní, že budík v appke bude tichý (W1); 13s – skúška vo Vývoji, či telefón zavibruje na pozadí, keď je zamknutý a appka hrá (W3).
+- **Stránka buildu 13 je od 6. 11. prehľad celého buildu:** o čom bol, čo pribudlo, čo sa vylepšilo, opravené chyby B39 – B45, čo zmizlo a všetky kroky so stavom.
 
 
 ## Build 14 – Nové veci: mesto a voľné noci (návrh)
@@ -226,12 +229,14 @@ všade, alebo horizont).
 
 ## Build 15 – Doladenie (návrh)
 
-Opravy po buildoch 12 a 14.
+Opravy po buildoch 12 a 14. **W4 (tvoj výber 6. 11.):** záložný systémový budík so zosilnením nahratým priamo vo zvuku. Najprv odmerať na telefóne, ako dlho AlarmKit vlastný zvuk hrá a či ho opakuje.
 
 ## Build 16 – Nové veci: živé mesto (návrh)
 
 Dážď a sneh nad mestom, deň a noc so svetlami lámp a okien. Live Activity a Dynamic Island s odpočtom noci (najprv
 skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón len leží.
+
+**W2 – mäkké ráno (tvoj výber 6. 11.):** 5 – 10 min pred budíkom sa nočný zvuk prelnie do ranného (napríklad vtáky) a pomaly zosilnie, potom príde budík. Voľba v Nastaveniach, predvolene vypnutá.
 
 **Tvoje nápady 29. 10. (návrh, čakajú na tvoje slovo):** hudba pri prezeraní mesta (tichá slučka len na záložke Mesto, vypínač v Nastaveniach, nikdy počas noci ani odpočinku, ~1 – 2 kroky); **otáčanie mesta po 90° má prednosť (tvoja voľba 29. 10.: v builde 16, možno 15)** (každá budova vykreslená zo štyroch strán, najprv skúška vzhľadu, ~4 – 5 krokov). Ak ich chceš skôr, hudba sa zmestí ako malý build hneď po 13.
 
@@ -249,6 +254,7 @@ skúška). Skúška pohybu cez noc – od nej závisí +11 🪙, keď telefón l
 - **Zvuky na spanie ako odmena v balíčkoch (tvoj nápad 2. 11.):** biely / ružový / hnedý šum a pokojná klasická hudba (vlastná, zo skladieb, ktoré sú voľné, nikdy cudzia nahrávka); vybraný zvuk potom hrá v noci. Mení šance v balíčkoch (nová tabuľka, odpovede pre App Store – tvoje áno), preto Claude navrhuje build 16 pri hudbe v meste. Pohľadnica 20 poctivo povie, že pri šume sú dôkazy veľmi slabé a má hrať potichu.
 - **Kenney – čo ešte použiť (prehľad 2. 11.):** nové budovy úrovne 2–3 vrátane kina, autá pri budovách (hasiči, sanitka, polícia), zima, viac parkov, vlak, pobrežie, hrad, hvezdáreň, obyvatelia. Claude odporúča najprv budovy a autá; náhľady na výber na tvoje slovo.
 - **Kenney 3.8.0 – nové modely (5. 11., tvoje slovo „zapíš to do plánu na neskôr“):** v City Kit Industrial pribudlo 12 modelov – veterná turbína (dve výšky), päť solárnych panelov, vodojem, veľká nádrž a tri lodné kontajnery. Dali by sa z nich spraviť nové budovy (veterná elektráreň, solárny park, vodojem), možno aj ako odmena z balíčka. Nová budova je funkcia, Claude ju navrhuje do buildu 16 (živé mesto – lopatky turbíny by sa mohli točiť). Náš balík 3.7.0 ostáva: hasičská stanica stojí na modeli, ktorý Kenney v 3.8.0 upravil, a nové vykreslenie by ju mohlo zmeniť. Ostatné sady, ktoré používame, sú nezmenené. 3.8.0 sa použije len pre nové modely, rozbalená vedľa 3.7.0.
+- **W5 – Apple Watch (tvoj výber 6. 11.):** jemné ťuknutie na zápästí pred budíkom cez Smart alarm vo watchOS. Je to jediná oficiálna cesta k „najprv vibrovať“. Veľká práca, až po vydaní 1.0.
 - **Potom spolu:** znova zoradiť nápady a retrospektíva; **retrospektívu za október Claude začína teraz** (commity, pamäť, stránky, dokumenty).
 - maják ako ozdoba mesta „na pobrežie“ (tvoje slovo 28. 10. pri výbere 12 ozdôb do balíčkov) – je už vykreslený, počká na pobrežie alebo vodu v meste
 
