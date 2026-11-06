@@ -24932,6 +24932,50 @@
           }
         }
       }
+    },
+    "🔈 The sound is turned down – the app's alarm will be quiet. Turn it up with the button on the side of the phone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔈 The sound is turned down – the app's alarm will be quiet. Turn it up with the button on the side of the phone."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔈 Zvuk je stíšený – budík v appke bude tichý. Zosilni ho tlačidlom na boku telefónu."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔈 Zvuk je ztlumený – budík v aplikaci bude tichý. Zesil ho tlačítkem na boku telefonu."
+          }
+        }
+      }
+    },
+    "🔇 The sound is off – the app's alarm won't be heard. Turn it up with the button on the side of the phone.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔇 The sound is off – the app's alarm won't be heard. Turn it up with the button on the side of the phone."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔇 Zvuk je vypnutý – budík v appke nebude počuť. Zosilni ho tlačidlom na boku telefónu."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🔇 Zvuk je vypnutý – budík v aplikaci nebude slyšet. Zesil ho tlačítkem na boku telefonu."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

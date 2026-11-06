@@ -494,6 +494,7 @@ struct NightView: View {
                         }
                     }
                     Text(L("Alarm at \(Fmt.time(rec.wake))")).font(.footnote).foregroundStyle(.secondary)
+                    if now < rec.wake { VolumeNote() }
                     if now < rec.window.confirmOpens {
                         if let at = model.earlyShakeAt, now.timeIntervalSince(at) < AppModel.earlyShakeNoteSeconds {
                             Text(L("Too early 🌙 Getting up can be confirmed from \(Fmt.time(rec.window.confirmOpens))."))
