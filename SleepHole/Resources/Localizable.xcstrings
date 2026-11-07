@@ -24976,6 +24976,270 @@
           }
         }
       }
+    },
+    "Vibration in the background": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vibration in the background"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vibrácie na pozadí"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vibrace na pozadí"
+          }
+        }
+      }
+    },
+    "Start the background test": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start the background test"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spustiť test na pozadí"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spustit test na pozadí"
+          }
+        }
+      }
+    },
+    "Cancel test": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel test"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zrušiť test"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zrušit test"
+          }
+        }
+      }
+    },
+    "Lock the phone now and keep it in your hand – %llds": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lock the phone now and keep it in your hand – %llds"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamkni telefón a drž ho v ruke – %llds"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zamkni telefon a drž ho v ruce – %llds"
+          }
+        }
+      }
+    },
+    "The three calls are running…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The three calls are running…"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tri volania bežia…"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tři volání běží…"
+          }
+        }
+      }
+    },
+    "audio on": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "audio on"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zvuk beží"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zvuk běží"
+          }
+        }
+      }
+    },
+    "audio off": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "audio off"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zvuk nebeží"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zvuk neběží"
+          }
+        }
+      }
+    },
+    "Tell Claude which of the three you felt.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tell Claude which of the three you felt."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Povedz Claudovi, ktorú z troch vibrácií bolo cítiť."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Řekni Claudovi, kterou ze tří vibrací bylo cítit."
+          }
+        }
+      }
+    },
+    "Not while a night or a nap is running.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not while a night or a nap is running."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nie počas noci ani odpočinku."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ne během noci ani odpočinku."
+          }
+        }
+      }
+    },
+    "Plays a silent keep-alive like the night, then vibrates three ways while the phone is locked: 20s countdown, three calls 6s apart.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plays a silent keep-alive like the night, then vibrates three ways while the phone is locked: 20s countdown, three calls 6s apart."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pustí tiché udržiavanie ako noc a potom zavibruje tromi spôsobmi, kým je telefón zamknutý: odpočet 20s, tri volania po 6s."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pustí tiché udržování jako noc a pak zavibruje třemi způsoby, dokud je telefon zamčený: odpočet 20s, tři volání po 6s."
+          }
+        }
+      }
+    },
+    "phone locked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "phone locked"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zamknutý"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zamčený"
+          }
+        }
+      }
+    },
+    "phone unlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "phone unlocked"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "odomknutý"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "odemčený"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
