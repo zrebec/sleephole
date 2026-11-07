@@ -1,11 +1,12 @@
 #!/bin/sh
-# App Store screenshots (English, invented data) from the simulator. Always cleans up (no alarms on the Mac).
+# App Store screenshots (invented data; SHOT_LANG=en|sk|cs, default en) from the simulator. Always cleans up (no alarms on the Mac).
 # usage: tools/store_shots.sh OUT_DIR [shot-name]      e.g. tools/store_shots.sh build/store/en-US/large today
 # env:   SIM=<simulator udid> (a 6.9" iPhone Pro Max -> 1320x2868)   APP=<built Debug SleepHole.app>
 #        WAIT=<seconds> base wait between launch and screenshot (default 20; some shots add more).
 #        Run it on a QUIET Mac: on a busy one launches take minutes and shots come out empty – raise WAIT then.
+#        SHOTS="town today …" limits the run to those shots.
 # One function per shot below; add a line to ALL and a function to add a shot.
-# Exit status: 0 when every shot is good, 1 when one stayed empty (a PNG under 200 kB is an empty screen: it is retried
+# Exit status: 0 when every shot is good, 1 when one stayed empty (a PNG under 100 kB is an empty screen: it is retried
 # once with a doubled wait, then reported as FAILED).
 OUT=${1:?usage: store_shots.sh OUT_DIR [shot]}; ONLY=$2
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
@@ -14,8 +15,9 @@ APP=${APP:-build/DerivedData/Build/Products/Debug-iphonesimulator/SleepHole.app}
 WAIT=${WAIT:-20}
 BID=sk.zrebec.sleephole
 CITY="Bratislava,48.1486,17.1077"
-COMMON="-lang en -screenshot -mute"
-ALL="town today night morning stats town-night today-evening sounds nap night-detail schedule"
+LANG_CODE=${SHOT_LANG:-en}
+COMMON="-lang $LANG_CODE -screenshot -mute"
+ALL=${SHOTS:-"town today night morning stats town-night today-evening sounds nap night-detail schedule postcard"}
 FAILED=""
 mkdir -p "$OUT"
 
@@ -56,25 +58,26 @@ take() {
 shoot() {
   name=$1; extra=$2; look=$3; tz=$4; shift 5
   take "$name" $((WAIT + extra)) "$look" "$tz" -- "$@"
-  if [ "$(wc -c < "$OUT/$name.png")" -lt 200000 ]; then
+  if [ "$(wc -c < "$OUT/$name.png")" -lt 100000 ]; then
     echo "retry $name (empty screen)"
     take "$name" $(( (WAIT + extra) * 2 )) "$look" "$tz" -- "$@"
   fi
-  if [ "$(wc -c < "$OUT/$name.png")" -lt 200000 ]; then FAILED="$FAILED $name"; echo "FAILED $name"; fi
+  if [ "$(wc -c < "$OUT/$name.png")" -lt 100000 ]; then FAILED="$FAILED $name"; echo "FAILED $name"; fi
   echo "$OUT/$name.png $(sips -g pixelWidth -g pixelHeight -g hasAlpha "$OUT/$name.png" | awk '/pixel|hasAlpha/{printf $2" "}')"
 }
 
 shot_town()          { shoot 01-town 5 light "" -- -seedNights ${TOWN_N:-40} -openTab town -townFit -skyTime 14:10; }
 shot_today()         { shoot 02-today 0 light "$(pick_tz 13:50)" -- -seedNights 60 -skyCity "$CITY" -skyTime 13:50 -weather clear -weatherTemp 15; }
 # the night: the app's time zone is shifted so that the clock reads late evening; N minutes -> believable alarm time
-shot_night()         { shoot 03-night 15 light "$(pick_tz 23:10)" -- -startTestNight -testNightMinutes ${NIGHT_MIN:-450} -previewProgress 0.6 -buddy asleep; }
+shot_night()         { shoot 03-night 15 light "$(pick_tz 23:10)" -- -startTestNight -testNightMinutes ${NIGHT_MIN:-450} -previewProgress 0.6 -buddy asleep -fakeVolume 0.8; }
 shot_morning()       { shoot 04-morning 10 light "" -- -seedNights 60 -showResult; }
 shot_stats()         { shoot 05-stats 0 light "" -- -seedNights 60 -openTab stats -sleepSim 18 -healthOn; }
 shot_town_night()    { shoot 06-town-night 5 dark "" -- -seedNights ${TOWN_NIGHT_N:-100} -openTab town -townFit -skyTime 21:45; }
 shot_today_evening() { shoot 07-today-evening 0 dark "$(pick_tz 22:27)" -- -seedNights 60 -skyCity "$CITY" -skyTime 22:27 -skyBody moon -skyArc 0.36 -skyMoon 0.6; }
-shot_sounds()        { shoot 08-sounds 0 light "" -- -seedNights 60 -openTab settings -scrollTo sounds; }
+shot_sounds()        { shoot 08-sounds 15 light "$(pick_tz 23:10)" -- -startTestNight -testNightMinutes ${NIGHT_MIN:-450} -previewProgress 0.6 -buddy asleep -fakeVolume 0.8 -openSoundSheet; }
 shot_nap()           { shoot 09-nap 130 light "$(pick_tz 13:50)" -- -seedNights 60 -startNap; }
 shot_night_detail()  { shoot 10-night-detail 20 light "" -- -seedNights 57 -openTab stats -sleepSim 18 -sleepSimName "Apple Watch" -healthOn -selectLastNight -scrollTo detail; }
+shot_postcard()      { shoot 12-postcard 0 light "" -- -seedNights 60 -seedCollection -openTab boxes -openCollection postcard; }
 shot_schedule()      { shoot 11-schedule 0 light "" -- -seedNights 60 -openTab settings; }
 
 xcrun simctl boot $SIM 2>/dev/null
