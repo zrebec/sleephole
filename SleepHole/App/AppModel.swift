@@ -152,7 +152,7 @@ final class AppModel {
     ///   -skyTime HH:MM                pin the sky's time of day; -skyArc 0.3 / -skyBody sun|moon|none / -skyMoon 0.5
     ///                                 force the drawn arc / body / moon's lit fraction (see `SkyOverrides`)
     ///   -cityQuery Brat               pre-fill Settings → Sky → city so the real Apple Maps search runs
-    ///   -scrollTo sky                 scroll Settings to the Sky section (also: sounds, notifications, health, icloud)
+    ///   -scrollTo sky                 scroll Settings to the Sky section (also: alarm, alarmRise, sounds, notifications, health, icloud)
     ///   -systemAlarm allowed|denied|notAsked   SIMULATOR ONLY: pretend that consent for the system alarm (a silent
     ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
     ///   -weather clear|cloudy|fog|rain|heavyRain|thunder|snow, -weatherTemp N, -weatherSnowCover   simulate the weather
@@ -2194,7 +2194,8 @@ final class AppModel {
         // after a kill the alarm may be late: ring only for what is left of the 2 minutes
         let left = rec.rules.alarmDuration - clock.now.timeIntervalSince(rec.wake)
         guard left > 0 else { return }
-        let ringing = audio.ringAlarm(file: settings.alarmSound.fileName, ramp: settings.alarmSound.rampSeconds,
+        let ringing = audio.ringAlarm(file: settings.alarmSound.fileName, ramp: settings.effectiveRiseSeconds,
+                                      startLevel: settings.alarmStartLevel, endLevel: settings.alarmEndLevel,
                                       maxDuration: left) { [weak self] in
             self?.append(.alarmStopped)
         }

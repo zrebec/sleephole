@@ -25240,6 +25240,160 @@
           }
         }
       }
+    },
+    "Start at": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start at"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Začať na"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Začít na"
+          }
+        }
+      }
+    },
+    "Rise to": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rise to"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zosilniť na"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zesílit na"
+          }
+        }
+      }
+    },
+    "Rise time": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rise time"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Čas zosilnenia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doba zesílení"
+          }
+        }
+      }
+    },
+    "By the melody (%@)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "By the melody (%@)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podľa melódie (%@)"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Podle melodie (%@)"
+          }
+        }
+      }
+    },
+    "at once": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "at once"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hneď"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "hned"
+          }
+        }
+      }
+    },
+    "Try the rise": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try the rise"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vyskúšať zosilnenie"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vyzkoušet zesílení"
+          }
+        }
+      }
+    },
+    "The percentages are a share of the phone's media volume (the buttons on the side) – SleepHole can't turn that up itself. SleepHole's alarm rings for %lld min; then the system alarm takes over, if it is on.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The percentages are a share of the phone's media volume (the buttons on the side) – SleepHole can't turn that up itself. SleepHole's alarm rings for %lld min; then the system alarm takes over, if it is on."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Percentá sú podiel z hlasitosti médií v telefóne (tlačidlá na boku) – tú SleepHole zvýšiť nevie. Budík v SleepHole zvoní %lld min, potom zvonenie prevezme systémový budík, ak je zapnutý."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Procenta jsou podíl z hlasitosti médií v telefonu (tlačítka na boku) – tu SleepHole zvýšit neumí. Budík v SleepHole zvoní %lld min, poté zvonění převezme systémový budík, pokud je zapnutý."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

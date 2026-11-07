@@ -8,6 +8,7 @@ struct SettingsView: View {
     /// The system alarm's consent (phase F6b); read when the screen opens and after every change.
     @State private var alarmConsent: SystemAlarmConsent = .unavailable
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var preview = SoundPreview()
     @State private var importing = false
     /// On the model, so a language switch (which rebuilds this view) keeps it (L5).
@@ -35,7 +36,21 @@ struct SettingsView: View {
     @State private var vibrationTest = DevArgs.list.contains("-openVibrationTest")
     #endif
 
+    /// "15s" / "at once" for the alarm's rise time; seconds never have a space (all languages).
+    static func secondsText(_ n: Int) -> String { n == 0 ? L("at once") : "\(n)s" }
+
     /// The warning triangle on Today: list's rows may not be laid out yet right after the tab switch → scroll twice.
+    @ViewBuilder private var riseMenuItems: some View {
+        Text(L("By the melody (\(Self.secondsText(Int(model.settings.alarmSound.rampSeconds))))")).tag(Int?.none)
+        ForEach(AlarmVolume.riseOptions, id: \.self) { n in
+            Text(Self.secondsText(n)).tag(Int?.some(n))
+        }
+    }
+    private var riseValueText: String {
+        if let n = model.settings.alarmRiseSeconds { return Self.secondsText(n) }
+        return L("By the melody (\(Self.secondsText(Int(model.settings.alarmSound.rampSeconds))))")
+    }
+
     private func scrollToNotifications(_ proxy: ScrollViewProxy) {
         proxy.scrollTo("notifications", anchor: .top)
         Task { @MainActor in
@@ -283,16 +298,73 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.menu)
                     .onChange(of: model.settings.alarmSound) { _, sound in
-                        if model.active == nil { SoundFX.previewAlarm(sound.rawValue) }
+                        if model.active == nil {
+                            SoundFX.previewAlarm(sound.rawValue, level: Float(model.settings.alarmEndLevel))
+                        }
                     }
                     PreviewButtons(playing: false,
-                                   play: { SoundFX.previewAlarm(model.settings.alarmSound.rawValue) },
+                                   play: {
+                                       SoundFX.previewAlarm(model.settings.alarmSound.rawValue,
+                                                            level: Float(model.settings.alarmEndLevel))
+                                   },
                                    stop: { SoundFX.stopPreview() })
                         .disabled(model.active != nil)
+                    AlarmLevelSlider(title: L("Start at"), percent: Binding(
+                        get: { model.settings.alarmStartPercent },
+                        set: { model.settings.alarmStartPercent = $0 }))
+                    AlarmLevelSlider(title: L("Rise to"), percent: Binding(
+                        get: { model.settings.alarmEndPercent },
+                        set: { model.settings.alarmEndPercent = $0 }))
+                    if typeSize.isAccessibilitySize {
+                        // accessibility sizes: the title on its own row and a menu with a wrapping label under it
+                        // (a menu Picker clips its value to the row's measured height)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(L("Rise time")).fixedSize(horizontal: false, vertical: true)
+                                .accessibilityHidden(true)
+                            Menu {
+                                Picker(L("Rise time"), selection: $model.settings.alarmRiseSeconds) {
+                                    riseMenuItems
+                                }
+                            } label: {
+                                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                                    Text(riseValueText).multilineTextAlignment(.leading)
+                                    Image(systemName: "chevron.up.chevron.down").font(.footnote)
+                                }
+                                .fixedSize(horizontal: false, vertical: true)
+                            }
+                            .accessibilityLabel(L("Rise time"))
+                            .accessibilityValue(riseValueText)
+                        }
+                        .id("alarmRise")
+                    } else {
+                        Picker(L("Rise time"), selection: $model.settings.alarmRiseSeconds) {
+                            riseMenuItems
+                        }
+                        .pickerStyle(.menu)
+                        .id("alarmRise")
+                    }
+                    (typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 0))
+                                                  : AnyLayout(HStackLayout(spacing: 14))) {
+                        Button {
+                            SoundFX.previewAlarmRise(model.settings.alarmSound.rawValue,
+                                                     start: model.settings.alarmStartLevel,
+                                                     end: model.settings.alarmEndLevel,
+                                                     rise: model.settings.effectiveRiseSeconds)
+                        } label: {
+                            Text(L("Try the rise")).frame(minHeight: 44)
+                        }
+                        .buttonStyle(.borderless)
+                        if !typeSize.isAccessibilitySize { Spacer() }
+                        GlassCircleButton(systemImage: "stop.fill", label: L("Stop")) { SoundFX.stopPreview() }
+                    }
+                    .disabled(model.active != nil)
                 } header: {
-                    Text(L("Alarm"))
+                    Text(L("Alarm")).id("alarm")
                 } footer: {
-                    Text(model.settings.alarmSound.detail)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(model.settings.alarmSound.detail)
+                        Text(L("The percentages are a share of the phone's media volume (the buttons on the side) – SleepHole can't turn that up itself. SleepHole's alarm rings for \(Int(SleepRules.forNewNights.alarmDuration / 60)) min; then the system alarm takes over, if it is on."))
+                    }
                 }
 
                 Section {
@@ -357,6 +429,8 @@ struct SettingsView: View {
             }
             .onAppear {                                   // `-scrollTo sounds|sky` (screenshots)
                 let target = DevArgs.value(after: "-scrollTo")
+                if target == "alarm" { proxy.scrollTo("alarm", anchor: .top) }
+                if target == "alarmRise" { proxy.scrollTo("alarmRise", anchor: .top) }
                 if target == "sounds" { proxy.scrollTo("sounds", anchor: UnitPoint(x: 0.5, y: -0.004)) }
                 if target == "health" { proxy.scrollTo("health", anchor: .top) }
                 if target == "icloud" { proxy.scrollTo("icloud", anchor: .top) }
@@ -478,6 +552,30 @@ struct NightLogView: View {
 }
 #endif
 
+/// 13v: a 10…100 % slider (steps of 10) with its title and value. VoiceOver reads "Start at, 30 %" and adjusts by tens.
+struct AlarmLevelSlider: View {
+    let title: String
+    @Binding var percent: Int
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            // at accessibility sizes the value goes under the title (a long title must not break inside a word)
+            (typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 2))
+                                          : AnyLayout(HStackLayout(alignment: .firstTextBaseline))) {
+                Text(title)
+                if !typeSize.isAccessibilitySize { Spacer() }
+                Text(Fmt.percent(percent)).foregroundStyle(.secondary).monospacedDigit()
+            }
+            .accessibilityHidden(true)
+            Slider(value: Binding(get: { Double(percent) }, set: { percent = Int($0) }), in: 10...100, step: 10)
+                .frame(minHeight: 44)
+                .accessibilityLabel(title)
+                .accessibilityValue(Fmt.percent(percent))
+        }
+    }
+}
+
 /// Round ▶ / ■ preview buttons (Liquid Glass on iOS 26), left-aligned. `.borderless` gives each button its own
 /// hit area – with default styles a List row fires ALL its buttons on a tap (owner bug 2026-09-30).
 struct PreviewButtons: View {
@@ -499,13 +597,16 @@ struct GlassCircleButton: View {
     let label: String
     var highlighted = false
     let action: () -> Void
+    @ScaledMetric(relativeTo: .title3) private var diameter: CGFloat = 46      // 46 pt at the default size, grows with the text
 
     var body: some View {
+        let side = min(diameter, 84)
         Button(action: action) {
             Image(systemName: systemImage)
                 .font(.title3)
+                .dynamicTypeSize(...DynamicTypeSize.accessibility2)             // the icon never outgrows its circle
                 .foregroundStyle(highlighted ? Color.accentColor : .primary)
-                .frame(width: 46, height: 46)
+                .frame(width: side, height: side)
                 .modifier(GlassCircle())
                 .contentShape(Circle())
         }

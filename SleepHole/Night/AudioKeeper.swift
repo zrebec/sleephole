@@ -289,13 +289,13 @@ final class AudioKeeper {
         }
     }
 
-    /// Rings `file` in a loop, volume ramping 0.3 → 1.0 over `ramp` s (0 = full volume at once), for at
+    /// Rings `file` in a loop, volume rising `startLevel` → `endLevel` (shares of the media volume) over `ramp` s (0 = `endLevel` at once), for at
     /// most `maxDuration` (D15: 2 min). The ambience is muted meanwhile. `onStop` fires when it stops on its own.
     /// Returns whether the alarm really rings: false when the sound can't start (the file is missing, a phone
     /// call or another app's alarm holds the audio) – the caller keeps the backup notifications then and tries
     /// again (audit 2026-10-03, B1: `play()` on an engine that is not running raises an exception).
     @discardableResult
-    func ringAlarm(file: String, ramp: TimeInterval, maxDuration: TimeInterval,
+    func ringAlarm(file: String, ramp: TimeInterval, startLevel: Double = 0.3, endLevel: Double = 1, maxDuration: TimeInterval,
                    onStop: @escaping @MainActor () -> Void) -> Bool {
         guard !isAlarmRinging, let url = Bundle.main.url(forResource: file, withExtension: nil),
               let audioFile = try? AVAudioFile(forReading: url),
@@ -313,7 +313,7 @@ final class AudioKeeper {
         engine.connect(alarmPlayer, to: engine.mainMixerNode, format: buffer.format)
         if !engine.isRunning { try? engine.start() }
         guard engine.isRunning else { return false }
-        alarmPlayer.volume = ramp > 0 ? 0.3 : 1
+        alarmPlayer.volume = Float(AlarmVolume.initialLevel(start: startLevel, end: endLevel, rise: ramp))
         alarmPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
         alarmPlayer.play()
         isAlarmRinging = true
@@ -321,7 +321,8 @@ final class AudioKeeper {
             let started = Date()
             while let self, !Task.isCancelled, Date().timeIntervalSince(started) < maxDuration {
                 if ramp > 0 {
-                    self.alarmPlayer.volume = min(1, 0.3 + Float(Date().timeIntervalSince(started) / ramp) * 0.7)
+                    self.alarmPlayer.volume = Float(AlarmVolume.level(elapsed: Date().timeIntervalSince(started),
+                                                                      start: startLevel, end: endLevel, rise: ramp))
                 }
                 try? await Task.sleep(for: .seconds(1))
             }
