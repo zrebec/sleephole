@@ -59,7 +59,7 @@ def sfx_events():
     """(time, file, gain) – shared by the audio mix; picture is synced to the same numbers."""
     ev = [(1.0, "fx_sparkle.caf", 0.5), (TL["S2"][0] + 0.15, "fx_whoosh.caf", 0.32),
           (TL["S3"][0] + 0.15, "fx_whoosh.caf", 0.32), (TL["S3"][0] + 0.5, "fx_sleep.caf", 0.30),
-          (TL["S4"][0] + 0.15, "fx_whoosh.caf", 0.32), (TL["S4"][0] + 0.55, "building_done.caf", 0.55),
+          (TL["S4"][0] + 0.15, "fx_whoosh.caf", 0.32), (TL["S4"][0] + 0.55, "fx_wow.caf", 0.5), (TL["S4"][0] + 1.65, "fx_coins.caf", 0.32),
           (S5_PHASE2 - 0.1, "fx_whoosh.caf", 0.32),
           (TL["S6a"][0] + 0.05, "fx_whoosh.caf", 0.3), (TL["S6a"][0] + 0.30, "fx_whoosh.caf", 0.3),
           (TL["S6a"][0] + 0.55, "fx_whoosh.caf", 0.3), (TL["S7"][0] + 0.6, "fx_sparkle.caf", 0.45)]
@@ -859,12 +859,31 @@ def synth_music(total):
     return out
 
 
-def mix_audio(total, wav_path):
-    music = synth_music(total + 2.0)
+def load_music(path, start, total):
+    """External track: from `start` s, looped if too short, trimmed to the video, RMS-levelled, 1.5 s in / 2 s out."""
+    p = subprocess.run([FFMPEG, "-v", "error", "-ss", str(start), "-i", path, "-f", "f32le", "-ar", str(SR),
+                        "-ac", "2", "-"], capture_output=True, check=True)
+    m = np.frombuffer(p.stdout, np.float32).reshape(-1, 2).astype(np.float64)
+    n = int(total * SR)
+    if len(m) == 0:
+        raise SystemExit("--music: nothing to read at that offset")
+    if len(m) < n:
+        m = np.tile(m, (int(np.ceil(n / len(m))), 1))
+    m = m[:n]
+    m *= 0.06 / max(1e-6, np.sqrt((m ** 2).mean()))
+    tt = np.arange(n) / SR
+    fi = np.clip(tt / 1.5, 0, 1)
+    fo = np.clip((total - tt) / 2.0, 0, 1)
+    return m * (fi * fi * (3 - 2 * fi) * fo * fo * (3 - 2 * fo))[:, None]
+
+
+def mix_audio(total, wav_path, music_path=None, music_start=0.0):
     n = int(total * SR)
     mix = np.zeros((n, 2), np.float64)
-    mix += music[:n]
     cache = {}
+    if music_path is None:
+        mix += synth_music(total + 2.0)[:n]
+    sfx = np.zeros((n, 2), np.float64)
     for t, name, g in sfx_events():
         if name not in cache:
             cache[name] = read_caf(name).astype(np.float64)
@@ -872,7 +891,14 @@ def mix_audio(total, wav_path):
         i0 = int(t * SR)
         i1 = min(n, i0 + len(s))
         if i0 < n:
-            mix[i0:i1] += s[:i1 - i0] * g * 0.5
+            sfx[i0:i1] += s[:i1 - i0] * g * 0.5
+    if music_path is not None:
+        music = load_music(music_path, music_start, total)
+        k = int(0.4 * SR)
+        env = np.convolve(np.abs(sfx).max(axis=1), np.ones(k) / k, mode="same")
+        duck = 1 - 0.29 * np.clip(env / 0.04, 0, 1)          # about -3 dB under the sound effects
+        mix += music * duck[:, None]
+    mix += sfx
     data = mix.astype(np.float32)
     raw = wav_path + ".raw.wav"
     write_wav(raw, data)
@@ -888,9 +914,10 @@ def mix_audio(total, wav_path):
                    check=True)
     d = read_wav(norm)[:n].astype(np.float64)
     tt = np.arange(len(d)) / SR
-    fade_in = np.clip(tt / 2.0, 0, 1)
+    fin, fout = (2.0, 1.6) if music_path is None else (1.5, 2.0)
+    fade_in = np.clip(tt / fin, 0, 1)
     fade_in = fade_in * fade_in * (3 - 2 * fade_in)
-    fade_out = np.clip((total - tt) / 1.6, 0, 1)
+    fade_out = np.clip((total - tt) / fout, 0, 1)
     fade_out = fade_out * fade_out * (3 - 2 * fade_out)
     d *= (fade_in * fade_out)[:, None]
     write_wav(wav_path, d.astype(np.float32))
@@ -961,6 +988,9 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--thumb", action="store_true", help="also write the 1280x720 thumbnail (landscape only)")
     ap.add_argument("--stills-only", action="store_true", help="write the stills, skip the video")
+    ap.add_argument("--music", help="audio file (mp3/wav/m4a/caf) that replaces the synthesised pad, plucks and rain")
+    ap.add_argument("--music-start", type=float, default=0.0, help="offset in seconds into --music (default 0)")
+    ap.add_argument("--mp4-name", help="output file name instead of sleephole-promo-<lang>-<tag>.mp4")
     ap.add_argument("--skip-audio", action="store_true", help="reuse build/promo/_audio.wav")
     ap.add_argument("--workers", type=int, default=7)
     a = ap.parse_args()
@@ -981,11 +1011,11 @@ def main():
         thumbnail(fm, copy, os.path.join(out, f"sleephole-thumb-{a.lang}.jpg"))
     if a.stills_only:
         return
-    wav = os.path.join(out, "_audio.wav")
+    wav = os.path.join(out, "_audio.wav" if not a.music else "_audio-music.wav")
     if not (a.skip_audio and os.path.exists(wav)):
         print("audio ...", flush=True)
-        mix_audio(TOTAL, wav)
-    mp4 = os.path.join(out, f"sleephole-promo-{a.lang}-{tag}.mp4")
+        mix_audio(TOTAL, wav, a.music, a.music_start)
+    mp4 = os.path.join(out, a.mp4_name or f"sleephole-promo-{a.lang}-{tag}.mp4")
     nfr = int(round(TOTAL * FPS))
     cmd = [FFMPEG, "-y", "-hide_banner", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
            "-s", f"{fm.W}x{fm.H}", "-r", str(FPS), "-i", "-", "-i", wav,
