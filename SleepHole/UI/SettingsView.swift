@@ -351,7 +351,7 @@ struct SettingsView: View {
                                                      end: model.settings.alarmEndLevel,
                                                      rise: model.settings.effectiveRiseSeconds)
                         } label: {
-                            Text(L("Try the rise")).frame(minHeight: 44)
+                            Text(L("Try the rise")).multilineTextAlignment(.leading).frame(minHeight: 44)
                         }
                         .buttonStyle(.borderless)
                         if !typeSize.isAccessibilitySize { Spacer() }
