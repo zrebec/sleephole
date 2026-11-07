@@ -114,6 +114,9 @@ enum Fmt {
         return f.string(from: NSNumber(value: Double(p) / 1000)) ?? "\(p / 10)%"
     }
 
+    /// A whole percent in the app's language: "30%" in English, "30 %" (non-breaking space) in Slovak and Czech (13v).
+    static func percent(_ p: Int) -> String { Lang.current.usesContinentalFormats ? "\(p)\u{00A0}%" : "\(p)%" }
+
     /// "30. 9." / "9/30"
     static func dayMonth(_ k: NightKey) -> String {
         Lang.current.usesContinentalFormats ? "\(k.day). \(k.month)." : "\(k.month)/\(k.day)"

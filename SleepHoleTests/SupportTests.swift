@@ -120,6 +120,35 @@ struct SupportTests {
         log.clear()
         #expect(ProbeLog().entries.isEmpty)
     }
+
+    @Test func alarmVolumeSettingsLoadFromOldFilesAndAreClamped() throws {
+        let dec = JSONDecoder()
+        // 13v: settings saved before the fields existed → 30 / 100 / by the melody
+        let old = #"{"alarmSound":"alarm_gentle","wakeCode":"0000","volume":0.16,"ambience":"Ticho","schedule":{"bedtime":{"hour":21,"minute":0},"wake":{"hour":4,"minute":30},"reminderOffsets":[30]}}"#
+        var s = try dec.decode(AppSettings.self, from: Data(old.utf8))
+        #expect(s.alarmStartPercent == 30 && s.alarmEndPercent == 100 && s.alarmRiseSeconds == nil)
+        #expect(s.effectiveRiseSeconds == AppSettings.AlarmSound.gentle.rampSeconds)      // 60: today's behaviour
+        s.alarmSound = .digital
+        #expect(s.effectiveRiseSeconds == 0)
+        #expect(abs(s.alarmStartLevel - 0.3) < 1e-9 && s.alarmEndLevel == 1)
+        // values off the grid read as the nearest allowed one; a rise time off the list reads as "by the melody"
+        s.alarmStartPercentRaw = 35; s.alarmEndPercentRaw = 77; s.alarmRiseSecondsRaw = 20
+        #expect(s.alarmStartPercent == 40 && s.alarmEndPercent == 80 && s.alarmRiseSeconds == nil)
+        s.alarmRiseSeconds = 90
+        #expect(s.effectiveRiseSeconds == 90)
+        // the end never goes below the start, either way round
+        s.alarmEndPercentRaw = 20; s.alarmStartPercentRaw = 60
+        #expect(s.alarmStartPercent == 20)
+        s.alarmStartPercent = 50
+        #expect(s.alarmEndPercent == 50)
+        s.alarmEndPercent = 10
+        #expect(s.alarmStartPercent == 10)
+        // they survive a save / load round trip
+        s.alarmStartPercent = 20; s.alarmEndPercent = 70
+        let back = try dec.decode(AppSettings.self, from: JSONEncoder().encode(s))
+        #expect(back.alarmStartPercent == 20 && back.alarmEndPercent == 70 && back.alarmRiseSeconds == 90)
+        #expect(Fmt.percent(30).hasSuffix("%"))
+    }
 }
 
 private final class BundleToken {}
