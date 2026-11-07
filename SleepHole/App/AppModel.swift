@@ -109,6 +109,8 @@ final class AppModel {
     ///   -openBoxContents [postcards|decorations|cat|skies]   DEBUG only: open Settings > Developer > Box contents at once (11b5e)
     ///   -boxCatFull                   DEBUG only: the Box contents cat starts with a full outfit (first head, face and bed item)
     ///   -boxCatAsleep                 DEBUG only: the Box contents cat starts asleep
+    ///   -openVibrationTest            DEBUG only: open Settings > Developer > Vibration test at once (13s); with -startVibrationProbe the
+    ///                                 background test starts, with -fakeVibrationResult a finished result list is shown (screenshots)
     ///   -showAllDecorations           DEBUG only: the Town view shows all 12 town decorations (11b5c; screenshots, preview)
     ///   -nightSky sky-02              DEBUG only: show that night sky (sky-01 … sky-04, 11b5d) on Today and the Town tab
     ///   -skyClock 12.5|still          DEBUG only: pin the night sky effect's clock (seconds) / show its frozen Reduce Motion frame

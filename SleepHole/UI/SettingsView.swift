@@ -30,6 +30,9 @@ struct SettingsView: View {
     @State private var textsView = DevArgs.list.contains("-openTextsView")
     /// Dev aid: `-openBoxContents [postcards|decorations|cat|skies]` opens Developer → Box contents at once.
     @State private var boxContents = DevArgs.list.contains("-openBoxContents")
+    /// Dev aid: `-openVibrationTest` opens Developer → Vibration test at once (screenshots; `-startVibrationProbe`
+    /// starts the background test, `-fakeVibrationResult` shows a finished list).
+    @State private var vibrationTest = DevArgs.list.contains("-openVibrationTest")
     #endif
 
     /// The warning triangle on Today: list's rows may not be laid out yet right after the tab switch → scroll twice.
@@ -378,6 +381,7 @@ struct SettingsView: View {
             .navigationDestination(isPresented: $syncTest) { SyncTestView() }
             .navigationDestination(isPresented: $textsView) { TextsView() }
             .navigationDestination(isPresented: $boxContents) { BoxContentsView() }
+            .navigationDestination(isPresented: $vibrationTest) { VibrationTestView() }
             #endif
             .renameTownAlert(isPresented: $renaming)
             .sheet(isPresented: $showRules) { RulesView() }
