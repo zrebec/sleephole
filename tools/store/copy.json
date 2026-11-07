@@ -1,0 +1,32 @@
+{
+ "en": [
+  {"headline": "Sleep on time.\nGrow a town.", "sub": "A new building for every good night."},
+  {"headline": "Start a building\nat bedtime", "sub": "One tap on “Go to sleep”."},
+  {"headline": "Put the phone away.\nIt builds as you sleep.", "sub": "Leave the app open and lock the screen."},
+  {"headline": "Wake up to\na finished building", "sub": "Confirm you're up with a shake or a code."},
+  {"headline": "Your town grows\nnight after night", "sub": "Houses, a museum, schools – and one day a skyscraper."},
+  {"headline": "See your nights\nat a glance", "sub": "A calendar of good nights, your streak and sleep times."},
+  {"headline": "Parcels and postcards\nabout sleep", "sub": "30 postcards, almost all backed by a real study."},
+  {"headline": "Calm sounds\nto fall asleep", "sub": "Noise, rain or a sound story for the whole night."}
+ ],
+ "sk": [
+  {"headline": "Choď spať načas.\nPostav si mesto.", "sub": "Za každú dobrú noc nová budova."},
+  {"headline": "Pred spaním\nzačni stavbu", "sub": "Stačí ťuknúť na „Ísť spať“."},
+  {"headline": "Odlož telefón.\nStavia sa, kým spíš.", "sub": "Nechaj appku otvorenú a zamkni obrazovku."},
+  {"headline": "Ráno je\nbudova hotová", "sub": "Vstávanie potvrdíš zatrasením alebo kódom."},
+  {"headline": "Mesto rastie\nnoc čo noc", "sub": "Domy, múzeum, školy – a raz aj mrakodrap."},
+  {"headline": "Tvoje noci\nna jeden pohľad", "sub": "Kalendár dobrých nocí, séria a časy spánku."},
+  {"headline": "Balíčky a pohľadnice\no spánku", "sub": "30 pohľadníc, takmer každá s overenou štúdiou."},
+  {"headline": "Pokojné zvuky\nna zaspávanie", "sub": "Šum, dážď alebo zvukový príbeh na celú noc."}
+ ],
+ "cs": [
+  {"headline": "Jdi spát včas.\nPostav si město.", "sub": "Za každou dobrou noc nová budova."},
+  {"headline": "Před spaním\nzačni stavbu", "sub": "Stačí klepnout na „Jít spát“."},
+  {"headline": "Odlož telefon.\nStaví se, zatímco spíš.", "sub": "Nech aplikaci otevřenou a zamkni obrazovku."},
+  {"headline": "Ráno je\nbudova hotová", "sub": "Vstávání potvrdíš zatřesením nebo kódem."},
+  {"headline": "Město roste\nnoc co noc", "sub": "Domy, muzeum, školy – a jednou i mrakodrap."},
+  {"headline": "Tvoje noci\nna jeden pohled", "sub": "Kalendář dobrých nocí, série a časy spánku."},
+  {"headline": "Balíčky a pohlednice\no spánku", "sub": "30 pohlednic, téměř každá s ověřenou studií."},
+  {"headline": "Klidné zvuky\nna usínání", "sub": "Šum, déšť nebo zvukový příběh na celou noc."}
+ ]
+}

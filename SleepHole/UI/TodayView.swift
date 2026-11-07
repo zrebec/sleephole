@@ -385,7 +385,7 @@ private struct NightFitKey: PreferenceKey {
 struct NightView: View {
     @Environment(AppModel.self) private var model
     @State private var confirmAbandon = false
-    @State private var soundSheet = false
+    @State private var soundSheet = DevArgs.list.contains("-openSoundSheet")      // screenshots (Debug only)
     @State private var confirmPause = false
     @State private var confirmReroll = false
     // 13e6: on the night screen (setup and after, never compact) the site shrinks (0.6…1) just enough for the screen to fit above the tab bar.
@@ -515,7 +515,7 @@ struct NightView: View {
                     }
                     .buttonStyle(.bordered)
                     .sheet(isPresented: $soundSheet) {
-                        SleepSoundSheet().presentationDetents([.height(330)])
+                        SleepSoundSheet().presentationDetents(DevArgs.list.contains("-openSoundSheet") ? [.large] : [.height(330)])
                     }
                     pauseButton(now: now)
                     if rec.window.canConfirm(at: now) {
@@ -913,10 +913,17 @@ struct SleepSoundSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Picker(L("Sound"), selection: $ambience) {
-                    ForEach(AudioKeeper.Ambience.allCases.filter { $0 != .silence }) { Text($0.title).tag($0) }
+                if DevArgs.list.contains("-openSoundSheet") {      // screenshots (Debug only): the whole list instead of the closed menu
+                    Picker(L("Sound"), selection: $ambience) {
+                        ForEach(AudioKeeper.Ambience.allCases.filter { $0 != .silence }) { Text($0.title).tag($0) }
+                    }
+                    .pickerStyle(.inline)
+                } else {
+                    Picker(L("Sound"), selection: $ambience) {
+                        ForEach(AudioKeeper.Ambience.allCases.filter { $0 != .silence }) { Text($0.title).tag($0) }
+                    }
+                    .pickerStyle(.menu)
                 }
-                .pickerStyle(.menu)
                 Picker(L("Play for"), selection: $minutes) {
                     ForEach(AppSettings.ambienceTimerOptions, id: \.self) { Text(AppSettings.timerTitle($0)).tag($0) }
                 }
