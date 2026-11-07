@@ -1,0 +1,26 @@
+{
+  "en": {
+    "intro": {"title": "SleepHole", "sub": "Sleep on time. Grow a town."},
+    "start": {"headline": "Start a building\nat bedtime."},
+    "night": {"headline": "Put the\nphone away.", "sub": "It builds while you sleep."},
+    "morning": {"headline": "Wake up to a\nfinished building."},
+    "grow": {
+      "headline": "Night by night,\na town grows.",
+      "counter": "Night {n}",
+      "headline2": "Your nights\nbecome a town.",
+      "sub2": "Every finished night adds a building."
+    },
+    "features": {
+      "stats": "Streaks & stats",
+      "postcards": "30 postcards – almost all backed by a real study",
+      "sounds": "Rain, noise or a sound story"
+    },
+    "promise": {"headline": "No account.\nNo ads.\nNo tracking."},
+    "cta": {
+      "headline": "Join the free beta\non TestFlight",
+      "link": "departures.to/apps/23674",
+      "langs": "English · Slovenčina · Čeština"
+    },
+    "thumb": {"title": "SleepHole", "sub": "Sleep on time.\nGrow a town.", "pill": "Free beta · TestFlight"}
+  }
+}
