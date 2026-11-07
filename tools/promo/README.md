@@ -9,6 +9,12 @@ text, so it works muted. Texts: `copy.json`, keyed by language (add `sk` / `cs` 
 python3 tools/promo/make_promo.py --format landscape --lang en --shots build/store/raw-2026-11/en/large --out build/promo --thumb
 python3 tools/promo/make_promo.py --format vertical  --lang en --shots build/store/raw-2026-11/en/large --out build/promo --skip-audio
 ```
+`--music <audio file>` (mp3 / wav / m4a / caf, read by ffmpeg) replaces the synthesised pad, plucks and rain with that
+track; `--music-start <seconds>` (default 0) is the offset into it. The track is looped if too short, trimmed to the video,
+levelled, faded in 1.5 s / out 2 s with the picture, ducked about 3 dB under the sound effects, then the same two-pass
+loudnorm (about -16 LUFS) is applied. Without `--music` the synth is the default. `--mp4-name` sets another output file name.
+Sound effects: `fx_wow` + `fx_coins` (1.1 s later) when the morning phone lands, like the app's complete-night sounds; never
+`building_done`, `building_unfinished` or `building_ruin`.
 `--stills-only` writes only `build/promo/frames/*.png`; `--skip-audio` reuses `build/promo/_audio.wav` (the audio is the same
 for both formats). Output (git-ignored): `sleephole-promo-<lang>-16x9.mp4` (1920x1080) / `-9x16.mp4` (1080x1920), 30 fps,
 H.264 High yuv420p crf 18, AAC 48 kHz stereo 192 kb/s, 44.0 s; `sleephole-thumb-<lang>.jpg` (1280x720, landscape run with `--thumb`).
