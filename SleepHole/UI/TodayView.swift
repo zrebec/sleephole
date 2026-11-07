@@ -441,8 +441,7 @@ struct NightView: View {
                     } else if rec.isNap {
                         NapResting(progress: progress, buddy: model.buddyState(at: now))
                         if let graceEnds = model.graceEnds, graceEnds > now {
-                            Text(L("Setup: \(Int(graceEnds.timeIntervalSince(now).rounded(.up)))s left for a story or sound"))
-                                .font(.callout).foregroundStyle(.yellow)
+                            SetupCountdown(kind: .nap, left: Int(graceEnds.timeIntervalSince(now).rounded(.up)), graceEnds: graceEnds)
                         } else {
                             Text(L("Lock your phone and have a nice rest 🧸")).font(.callout).foregroundStyle(.secondary)
                             budgetNote(now: now, warningsOnly: true)
@@ -480,14 +479,11 @@ struct NightView: View {
                         }
                         if let graceEnds = model.graceEnds, graceEnds > now {
                             let left = Int(graceEnds.timeIntervalSince(now).rounded(.up))
-                            Text(left >= 60 ? L("Setup until \(Fmt.time(graceEnds)) (\(Plural.minutes(Double(left))) left)")
-                                            : L("Setup: \(left)s left for a podcast or story"))
-                                .font(.callout).foregroundStyle(.yellow)
+                            SetupCountdown(kind: .night, left: left, graceEnds: graceEnds)
                             rerollSection(now: now)
                             BatteryNote()
                         } else if let pauseEnds {
-                            Text(L("Pause: \(Self.countdown(pauseEnds.timeIntervalSince(now))) left – you can leave SleepHole now"))
-                                .font(.callout).foregroundStyle(.yellow).multilineTextAlignment(.center)
+                            PauseCountdown(remaining: pauseEnds.timeIntervalSince(now))
                         } else {
                             Text(L("Lock your phone and good night 🌙")).font(.callout).foregroundStyle(.secondary)
                             budgetNote(now: now)
@@ -578,14 +574,14 @@ struct NightView: View {
         if let use = model.awayBudgetUse(at: now), use.used >= 1 {
             switch model.awayBudgetState(at: now) {
             case .low:
-                Text(L("Out of the app tonight: \(Int(use.used))s of \(Int(use.budget))s – the next trip may be your last 🌙"))
+                Text(L("Out of the app tonight: \(Int(use.used))s of \(Int(use.budget))s – the next trip may be your last 🌙")).monospacedDigit()
                     .font(.footnote.weight(.semibold)).foregroundStyle(.orange).multilineTextAlignment(.center)
             case .spent:
                 Text(L("Tonight's \(Int(use.budget))s out of the app are used up – please stay with SleepHole now: one more trip and tonight's building comes down 🌙"))
                     .font(.callout.weight(.semibold)).foregroundStyle(.orange).multilineTextAlignment(.center)
             default:
                 if !warningsOnly {
-                    Text(L("Out of the app tonight: \(Int(use.used))s of \(Int(use.budget))s"))
+                    Text(L("Out of the app tonight: \(Int(use.used))s of \(Int(use.budget))s")).monospacedDigit()
                         .font(.footnote).foregroundStyle(.secondary)
                 }
             }

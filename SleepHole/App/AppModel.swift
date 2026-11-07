@@ -101,6 +101,7 @@ final class AppModel {
     ///   -testNightGrace S             with -startTestNight: the setup lasts S seconds (default 15)
     ///   -forceBuilding had            DEBUG builds only, with -startTestNight: tonight's building is one already in the town (the newest
     ///                                 finished night's), so the "New in town" label is absent (screenshots, 11b6b)
+    ///   -pinSetupLeft S               DEBUG only: the setup countdown on Today shows S seconds whatever the clock says (13x screenshots)
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
     ///   -showResult [unfinished|nap]  SIMULATOR ONLY, with -seedNights (nap: also -seedNap): show the result screen of the newest complete seeded night

@@ -10083,50 +10083,6 @@
         }
       }
     },
-    "Setup: %llds left for a podcast or story": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Setup: %llds left for a podcast or story"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Príprava: ešte %llds na podcast či rozprávku"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Příprava: ještě %llds na podcast nebo pohádku"
-          }
-        }
-      }
-    },
-    "Setup: %llds left for a story or sound": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Setup: %llds left for a story or sound"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Príprava: ešte %llds na rozprávku či zvuk"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Příprava: ještě %llds na pohádku nebo zvuk"
-          }
-        }
-      }
-    },
     "Shake your phone": {
       "localizations": {
         "en": {
@@ -25391,6 +25347,50 @@
           "stringUnit": {
             "state": "translated",
             "value": "Procenta jsou podíl z hlasitosti médií v telefonu (tlačítka na boku) – tu SleepHole zvýšit neumí. Budík v SleepHole zvoní %lld min, poté zvonění převezme systémový budík, pokud je zapnutý."
+          }
+        }
+      }
+    },
+    "for a story or sound": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "for a story or sound"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "na rozprávku či zvuk"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "na pohádku nebo zvuk"
+          }
+        }
+      }
+    },
+    "for a podcast or story": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "for a podcast or story"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "na podcast či rozprávku"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "na podcast nebo pohádku"
           }
         }
       }
