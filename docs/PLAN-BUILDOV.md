@@ -231,6 +231,8 @@ Pohľad na mesto (B30) sa presunul do buildu 10. **Z buildu 11 sem prišli (25. 
 budov úrovne 3 – dnes sa ich päť opakuje. Ostrov, ktorého pobrežie kopíruje mesto (čaká na tvoju odpoveď: voda
 všade, alebo horizont).
 
+**Mesto potrebuje a výber z troch (tvoje áno 7. 11. ~14:50, po pripomienke testera k buildu 12 a tvojej poznámke: asi 5 parkov, 2 školy a 2 knižnice na 998 obyvateľov – ale nie zoznam všetkých budov):** (1) prvá budova každého druhu príde ako dnes, ďalšia až s rastom mesta (napríklad radnica raz, škola na 1 500 obyvateľov, nemocnica na 5 000, park na 300 – čísla doladíme); úroveň, z ktorej mesto nič nepotrebuje, losovanie vynechá; pred buildom prepočet mincí. (2) Pri príprave noci ukáže mačka tri budovy z tej istej vylosovanej úrovne a jednu si vyberieš zadarmo; mince od výberu nezávisia; „Iná budova“ vylosuje tri nové. (3) Viac budov úrovne 2 a 3 (obchody, kancelárie, bytovky z Kenney balíkov) – spolu s „viac budov úrovne 3“, ktoré tu už boli; najprv hárok s kandidátmi, vyberáš ty.
+
 ## Build 15 – Doladenie (návrh)
 
 Opravy po buildoch 12 a 14. **W4 (tvoj výber 6. 11.):** záložný systémový budík so zosilnením nahratým priamo vo zvuku. Najprv odmerať na telefóne, ako dlho AlarmKit vlastný zvuk hrá a či ho opakuje.

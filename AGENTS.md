@@ -71,7 +71,7 @@ is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-A
    November brings its own bronze (automatic). Level 4 unlocked on 31 Oct (his 30th building night). Be kind if a night fails.
 5. **Later builds (renumbered 2026-10-29):** 13 polishing + accessibility (11d, incl. 10h's `ThickProgressStyle`; the flaky
    `SyncEngineTests` test; "Cancel night" under the tab bar); 14 nights off (11c) + statistics, the bug list and Plans (his
-   answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 13):** the store and TestFlight
+   answer 2026-10-25) + town needs and a choice of three buildings (his yes 2026-11-07, plan §0b row 14). **PURPOSE (his idea 2026-10-24, §0b row 13):** the store and TestFlight
    texts are done (plan §12); the guide's first page and the Strict-mode footer wait for build 13; the testers' answers about
    missing notifications decide a stronger gentle mode. Still open: the eight questions at the end of
    `docs/NAVRH-MESTO-STATISTIKY.md`; from 2026-10-14 the seller name on the Business page, "a little tuning of the home screen
