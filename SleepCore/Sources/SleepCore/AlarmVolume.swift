@@ -6,7 +6,8 @@ public enum AlarmVolume {
     /// The levels the user can pick, in percent (10…100, steps of 10).
     public static let percentOptions = Array(stride(from: 10, through: 100, by: 10))
     /// The explicit rise times the user can pick, in seconds (0 = at once). "By the melody" is nil.
-    public static let riseOptions = [0, 15, 30, 45, 60, 90]
+    /// The longest option equals the app's own ring (`SleepRules.alarmDuration`), so the end level is reached at the hand-over to the system alarm.
+    public static let riseOptions = [0, 15, 30, 45, 60, 90, 120]
     public static let defaultStartPercent = 30
     public static let defaultEndPercent = 100
 

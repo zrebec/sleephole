@@ -134,6 +134,8 @@ struct SupportTests {
         // values off the grid read as the nearest allowed one; a rise time off the list reads as "by the melody"
         s.alarmStartPercentRaw = 35; s.alarmEndPercentRaw = 77; s.alarmRiseSecondsRaw = 20
         #expect(s.alarmStartPercent == 40 && s.alarmEndPercent == 80 && s.alarmRiseSeconds == nil)
+        s.alarmRiseSeconds = 120
+        #expect(s.alarmRiseSeconds == 120 && s.effectiveRiseSeconds == 120)
         s.alarmRiseSeconds = 90
         #expect(s.effectiveRiseSeconds == 90)
         // the end never goes below the start, either way round

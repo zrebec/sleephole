@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import SleepCore
 
@@ -31,5 +32,11 @@ struct AlarmVolumeTests {
         #expect(AlarmVolume.snapPercent(250) == 100)
         #expect(AlarmVolume.percentOptions.first == 10 && AlarmVolume.percentOptions.last == 100
                 && AlarmVolume.percentOptions.count == 10)
+    }
+    @Test func riseOptionsFitTheAppsRing() {
+        let ring = SleepRules.forNewNights.alarmDuration
+        #expect(AlarmVolume.riseOptions.allSatisfy { $0 >= 0 && TimeInterval($0) <= ring })
+        #expect(AlarmVolume.riseOptions.contains(120))
+        #expect(AlarmVolume.riseOptions.max() == Int(ring))
     }
 }
