@@ -356,8 +356,10 @@ struct SettingsView: View {
                         .buttonStyle(.borderless)
                         if !typeSize.isAccessibilitySize { Spacer() }
                         GlassCircleButton(systemImage: "stop.fill", label: L("Stop")) { SoundFX.stopPreview() }
+                            .accessibilityIdentifier("riseStop")
                     }
                     .disabled(model.active != nil)
+                    if let rise = SoundFX.riseHolder.state { RisePreviewLine(state: rise) }
                 } header: {
                     Text(L("Alarm")).id("alarm")
                 } footer: {
@@ -429,6 +431,13 @@ struct SettingsView: View {
             }
             .onAppear {                                   // `-scrollTo sounds|sky` (screenshots)
                 let target = DevArgs.value(after: "-scrollTo")
+                if DevArgs.list.contains("-tryRise"), model.active == nil {
+                    Task {
+                        try? await Task.sleep(for: .milliseconds(1500))
+                        SoundFX.previewAlarmRise(model.settings.alarmSound.rawValue, start: model.settings.alarmStartLevel,
+                                                 end: model.settings.alarmEndLevel, rise: model.settings.effectiveRiseSeconds)
+                    }
+                }
                 if target == "alarm" { proxy.scrollTo("alarm", anchor: .top) }
                 if target == "alarmRise" { proxy.scrollTo("alarmRise", anchor: .top) }
                 if target == "sounds" { proxy.scrollTo("sounds", anchor: UnitPoint(x: 0.5, y: -0.004)) }
@@ -690,3 +699,33 @@ struct SoundEffectsTestView: View {
     }
 }
 #endif
+
+
+/// 13z: the line under "Try the rise" – the current level, the time and a thin bar. Redrawn twice a second only
+/// while the preview exists (the view disappears with it).
+struct RisePreviewLine: View {
+    let state: SoundFX.RiseState
+
+    var body: some View {
+        TimelineView(.periodic(from: state.began, by: 0.5)) { context in
+            let now = context.date
+            let done = state.rise <= 0 || state.elapsed(at: now) >= state.rise
+            let pct = Fmt.percent(state.percent(at: now))
+            let text = done
+                ? L("Now \(pct) – the alarm stays at this level")
+                : L("Now \(pct) · \(Self.seconds(state.elapsed(at: now))) / \(Self.seconds(state.rise))")
+            VStack(alignment: .leading, spacing: 6) {
+                Text(text).font(.footnote).monospacedDigit().fixedSize(horizontal: false, vertical: true)
+                ProgressView(value: state.fraction(at: now))
+                    .progressViewStyle(ThickProgressStyle(title: L("Rise preview progress"), fill: .blue,
+                                                           track: Color.secondary.opacity(0.25)))
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(text)
+            .accessibilityIdentifier("risePreviewLine")
+        }
+    }
+
+    /// Whole seconds with no space before the "s" (all languages).
+    static func seconds(_ t: Double) -> String { "\(Int(t.rounded(.down)))s" }
+}

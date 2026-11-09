@@ -153,6 +153,8 @@ final class AppModel {
     ///   -skyTime HH:MM                pin the sky's time of day; -skyArc 0.3 / -skyBody sun|moon|none / -skyMoon 0.5
     ///                                 force the drawn arc / body / moon's lit fraction (see `SkyOverrides`)
     ///   -cityQuery Brat               pre-fill Settings → Sky → city so the real Apple Maps search runs
+    ///   -riseSeconds N                set Settings → Alarm → Rise time (0, 15, 30, 45, 60, 90, 120)
+    ///   -tryRise                      Settings presses "Try the rise" itself 1.5 s after it appears (screenshots, 13z)
     ///   -scrollTo sky                 scroll Settings to the Sky section (also: alarm, alarmRise, sounds, notifications, health, icloud)
     ///   -systemAlarm allowed|denied|notAsked   SIMULATOR ONLY: pretend that consent for the system alarm (a silent
     ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
@@ -188,6 +190,7 @@ final class AppModel {
             try? context.save()
         }
         if args.contains("-healthOn") { settings.usesHealth = true }
+        if let n = value("-riseSeconds").flatMap(Int.init), AlarmVolume.riseOptions.contains(n) { settings.alarmRiseSeconds = n }
         if args.contains("-mute") { AudioKeeper.muted = true }          // screenshots: no alarm on the Mac's speakers
         if let t = time(value("-bedtime")) { settings.schedule.bedtime = t }
         if let t = time(value("-wake")) { settings.schedule.wake = t }
@@ -2134,6 +2137,7 @@ final class AppModel {
             sleepSound = (ambience, settings.ambienceSeconds.map { (rec.startedAt ?? clock.now) + $0 })
         }
         guard servicesEnabled else { return }
+        SoundFX.stopPreview()                       // 13z: a Settings alarm preview never plays on into a night or nap
         UIApplication.shared.isIdleTimerDisabled = false
         try? audio.start(ambience: ambience, volume: settings.volume)
         if ambience != .silence, let total = settings.ambienceSeconds {   // sleep timer from the start of the night

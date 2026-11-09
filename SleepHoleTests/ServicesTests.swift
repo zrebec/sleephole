@@ -208,9 +208,6 @@ struct ServicesTests {
         #expect(shaken)
         SoundFX.play("ui_confirm")
         SoundFX.play("missing")
-        SoundFX.previewAlarm("alarm_gentle", seconds: 0.1)
-        SoundFX.previewAlarm("missing")
-        SoundFX.stopPreview()
     }
 }
 

@@ -31,4 +31,9 @@ public enum AlarmVolume {
     public static func initialLevel(start: Double, end: Double, rise: TimeInterval) -> Double {
         level(elapsed: 0, start: start, end: end, rise: rise)
     }
+
+    /// 13z: the level `elapsed` seconds into the alarm as a whole percent (the unit of the "Start at" / "Rise to" sliders).
+    public static func percent(elapsed: TimeInterval, start: Double, end: Double, rise: TimeInterval) -> Int {
+        Int((level(elapsed: elapsed, start: start, end: end, rise: rise) * 100).rounded())
+    }
 }

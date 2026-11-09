@@ -682,6 +682,9 @@ struct ThickProgressStyle: ProgressViewStyle {
     static let height: CGFloat = 12
     /// What VoiceOver calls the bar (the configuration's label is a view, not a string).
     var title: String = L("Progress")
+    /// 13z: colours of the fill and the track; the defaults are the night screen's look (yellow on a soft white track).
+    var fill: Color = .yellow.opacity(0.8)
+    var track: Color = .white.opacity(0.18)
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     /// The spoken value, e.g. "42 %" – the locale's own percent format (sk / cs write a space before the sign).
@@ -697,8 +700,8 @@ struct ThickProgressStyle: ProgressViewStyle {
         let f = min(1, max(0, configuration.fractionCompleted ?? 0))
         GeometryReader { g in
             ZStack(alignment: .leading) {
-                Capsule().fill(.white.opacity(0.18))
-                Capsule().fill(.yellow.opacity(0.8))
+                Capsule().fill(track)
+                Capsule().fill(fill)
                     .frame(width: max(Self.height, g.size.width * f))
                     .opacity(f > 0 ? 1 : 0)
             }
