@@ -23,15 +23,59 @@ struct TownAccessibilityTests {
         defer { Lang.current = before }
         let town = snapshot()
         Lang.current = .en
-        let en = TownAccessibility.entries(town) { _ in "House" }
+        let en = TownAccessibility.entries(town, name: { _ in "House" }, level: { _ in 1 })
         #expect(en.map(\.index) == Array(town.buildings.indices))
         #expect(en.count == town.buildings.count)
-        #expect(en.map(\.label) == ["House", "House", "House, in ruins", "House, unfinished"])
-        Lang.current = .cs
-        #expect(TownAccessibility.entries(town) { _ in "Dům" }.map(\.label) == ["Dům", "Dům", "Dům, v ruinách", "Dům, nedokončená stavba"])
-        Lang.current = .sk
-        let sk = TownAccessibility.entries(town) { _ in "Dom" }
-        #expect(sk.map(\.label) == ["Dom", "Dom", "Dom, v ruinách", "Dom, rozostavaná stavba"])
+        #expect(en.map(\.label) == ["House", "House", "House", "House"])
+    }
+
+    @Test func theValueCarriesTheWholeBuildingCard() {
+        let before = Lang.current
+        defer { Lang.current = before }
+        let town = snapshot()
+        func values(_ lang: AppLanguage) -> [String] {
+            Lang.current = lang
+            return TownAccessibility.entries(town, name: { _ in "House" }, level: { _ in 1 }).map(\.value)
+        }
+        let people = town.buildings.map { Population.residents(of: $0) }
+        func expected(_ lang: AppLanguage, _ states: [String], _ night: (Int) -> String, _ level: String, _ live: (Int) -> String) -> [String] {
+            Lang.current = lang
+            return town.buildings.indices.map { i in
+                var p = [states[i], night(i), level]
+                if people[i] > 0 { p.append(live(people[i])) }
+                return p.joined(separator: ", ")
+            }
+        }
+        // order of the snapshot: complete, complete, ruins, unfinished
+        let en = values(.en)
+        #expect(en == expected(.en, ["Complete", "Complete", "In ruins", "Unfinished"],
+                               { "Night of \(Fmt.fullDate(town.buildings[$0].nightKey))" }, "Level 1", { L("\($0) people live here") }))
+        #expect(en.allSatisfy { $0.contains("Night of") && $0.contains("Level 1") })
+        #expect(en[3].hasPrefix("Unfinished, ") && en[2].hasPrefix("In ruins, "))
+        // residents are read only when there are any
+        let sk = values(.sk), cs = values(.cs)
+        #expect(sk[0].hasPrefix("Hotová, Noc na ") && sk[0].contains("Level 1"))
+        #expect(sk[3].hasPrefix("Rozostavaná, ") && sk[2].hasPrefix("V ruinách, "))
+        #expect(cs[0].hasPrefix("Hotová, Noc na ") && cs[0].contains("Úroveň 1"))
+        #expect(cs[3].hasPrefix("Nedokončená, ") && cs[2].hasPrefix("V ruinách, "))
+        for (l, v) in [("en", en), ("sk", sk), ("cs", cs)] { for x in v { print("13Y \(l): House | \(x)") } }
+    }
+
+    @Test func aChangedValueRefreshesTheElements() {
+        let town = snapshot()
+        let view = TownSKView(frame: CGRect(x: 0, y: 0, width: 402, height: 874))
+        let scene = TownScene(size: view.bounds.size)
+        scene.imageProvider = { sprites.image(for: $0) }
+        scene.cameraDefaults = UserDefaults(suiteName: "TownAccessibilityTests-\(UUID().uuidString)")!
+        view.presentScene(scene)
+        scene.show(TownRender.build(town, catalog: sprites.catalog!, today: NightKey("2026-10-10")!, calendar: .current), focus: nil)
+        view.summary = "S"
+        view.entries = TownAccessibility.entries(town, name: { _ in "House" }, level: { _ in 1 })
+        let first = (view.accessibilityElements ?? []).compactMap { $0 as? TownAccessibilityElement }
+        #expect(first[1].accessibilityValue?.contains("Level 1") == true)
+        view.entries = TownAccessibility.entries(town, name: { _ in "House" }, level: { _ in 2 })
+        let second = (view.accessibilityElements ?? []).compactMap { $0 as? TownAccessibilityElement }
+        #expect(second[1].accessibilityValue?.contains("Level 2") == true)
     }
 
     @Test func summaryHasRealPlurals() {

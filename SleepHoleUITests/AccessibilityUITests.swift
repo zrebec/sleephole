@@ -40,6 +40,8 @@ final class AccessibilityUITests: XCTestCase {
             let button = app.buttons[label].firstMatch
             guard button.exists else { continue }
             let name = label.components(separatedBy: ", ").first ?? label
+            let value = (button.value as? String) ?? ""          // 13y: the rest of the building card is the value
+            XCTAssertTrue(value.contains("Night of") && value.contains("Level"), "no card in the value of '\(label)': '\(value)'")
             button.tap()
             let night = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Night of'")).firstMatch
             if night.waitForExistence(timeout: 3) {
