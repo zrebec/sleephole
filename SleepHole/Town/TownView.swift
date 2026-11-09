@@ -123,7 +123,7 @@ struct TownTab: View {
                                    imageProvider: { sprites.image(for: $0) },
                                    textureProvider: { sprites.texture(for: $0) },
                                    accessibilityEntries: snapshot.map { s in
-                                       TownAccessibility.entries(s) { model.catalog?[$0]?.displayName } } ?? [],
+                                       TownAccessibility.entries(s, name: { model.catalog?[$0]?.displayName }, level: { model.catalog?[$0]?.level }) } ?? [],
                                    accessibilitySummary: TownAccessibility.summary(buildings: snapshot?.buildings.count ?? 0),
                                    paused: model.rest.resting || !onScreen || scenePhase != .active,
                                    onTap: { selected = $0.flatMap { snapshot?.buildings[safe: $0]?.nightKey } })
