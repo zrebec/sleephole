@@ -33,10 +33,12 @@ by build – the roadmap is plan §0b.
 
 1. **Build 13 = polishing, in work since 2026-11-01** – plan §10 REL "Build 13"; his page
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`; the "sedí" checks sit in its
-   "done" part). On his phone: everything 13a – 13x and 13v2 (since 2026-11-09 06:30). **Open: 13y** (VoiceOver reads
-   the whole building card – his k11, his yes 2026-11-09 ~06:50; install only on his word, never after 21:30) and his
-   checks k2, k5, k6, k7, k8, v2, v3, x1, a10, a12 (+ k11 after 13y). 13w moved to build 15.
-2. **Release of build 13: 2026-11-10 morning, after the night** – the journal first, then 1.1 (13) (`MARKETING_VERSION`
+   "done" part). On his phone: everything 13a – 13y (13y since 2026-11-09 08:50). **Open: 13z** (B47 – "Try the rise"
+   plays the whole rise + a progress line; his pick 2026-11-09 ~08:50; merged ~09:45, install only on his word, never
+   after 21:30)
+   and his checks k11 (now), v3 (after 13z), a12 (the morning); k7, a10 optional. 13w → build 15, B48 (shake) proposed
+   for build 14.
+2. **Release of build 13: 2026-11-10 morning, after the night** (a day later if 13z is not on his phone on 9 Nov) – the journal first, then 1.1 (13) (`MARKETING_VERSION`
    1.1 – 1.0 is approved), the Release archive check, the upload, "What to Test" EN + SK by Opus, Kamaráti + SE, the PR
    `build/13` → `main`. **His "Áno" is given; he wants no questions about build 13 tomorrow** – only a problem stops it.
 3. **Next: build 14** (features – nights off, the statistics, town needs + a choice of three; plan §0b) – only on his word.
