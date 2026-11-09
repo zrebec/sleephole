@@ -39,4 +39,13 @@ struct AlarmVolumeTests {
         #expect(AlarmVolume.riseOptions.contains(120))
         #expect(AlarmVolume.riseOptions.max() == Int(ring))
     }
+
+    @Test func percentForTheProgressLine() {
+        #expect(AlarmVolume.percent(elapsed: 0, start: 0.3, end: 1, rise: 120) == 30)
+        #expect(AlarmVolume.percent(elapsed: 45, start: 0.3, end: 1, rise: 120) == 56)
+        #expect(AlarmVolume.percent(elapsed: 120, start: 0.3, end: 1, rise: 120) == 100)
+        #expect(AlarmVolume.percent(elapsed: 130, start: 0.3, end: 1, rise: 120) == 100)
+        #expect(AlarmVolume.percent(elapsed: 0, start: 0.3, end: 1, rise: 0) == 100)
+        #expect(AlarmVolume.percent(elapsed: 50, start: 0.9, end: 0.5, rise: 60) == 50)   // start above the end
+    }
 }

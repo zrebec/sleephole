@@ -25460,6 +25460,72 @@
           }
         }
       }
+    },
+    "Now %@ · %@ / %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now %@ · %@ / %@"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teraz %@ · %@ / %@"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teď %@ · %@ / %@"
+          }
+        }
+      }
+    },
+    "Now %@ – the alarm stays at this level": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Now %@ – the alarm stays at this level"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teraz %@ – budík ostane takto hlasný"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teď %@ – budík zůstane takto hlasitý"
+          }
+        }
+      }
+    },
+    "Rise preview progress": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rise preview progress"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Priebeh zosilňovania"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Průběh zesilování"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
