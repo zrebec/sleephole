@@ -4276,7 +4276,7 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
           99s on the SE at `accessibility-large` (cs); Opus's own SE shot at AX XXXL shows "Vyskúšať zosilnenie" leading-
           aligned. Noted, not changed: at an accessibility size on the SE the night screen scrolls under the tab bar (the
           `FitOrScroll` design, older than 13x).
-    - [ ] **13y – VoiceOver reads the whole building card** (his k11 "nesedí" on the build 13 page 2026-11-09: "after a
+    - [x] **13y – VoiceOver reads the whole building card** (his k11 "nesedí" on the build 13 page 2026-11-09: "after a
           single tap on a building it should read everything: the name, the date it was built, how many people live there,
           the level and whether it is complete, under construction or unfinished – this is what I need from VoiceOver"; his
           yes ~06:50 to doing it today as 13y, installed before 21:30, on TestFlight with build 13). Today a town element
@@ -4284,6 +4284,15 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
           `BuildingSheet` after a double tap. 13y: the element's label stays the name, its value carries the rest in the
           sheet's own words (state, the night's date, the level, residents only when > 0), sk / cs / en; the summary element
           unchanged; tests on the entries and the UI test of the town tree.
+          **Merged 2026-11-09 ~07:35 (`6649694`, merge `4146239`), not on his phone yet (his word).** One Sonnet worker:
+          `TownAccessibility.Entry.value` = state (Complete / Finished later / Repaired / Unfinished / In ruins, decided as in
+          the sheet), "Night of <date>", "Level N" (catalog), "N people live here" only when > 0; computed once with the
+          entries (13p), `TownSKView` rebuilds on a changed value too. Five plain keys (the sheet's carry emoji): sk "Hotová",
+          "Dostavaná neskôr", "Opravená", "V ruinách", "Level %lld"; cs "Hotová", "Dostavěná později", "Opravená", "V ruinách",
+          "Úroveň %lld"; "%@, unfinished" / "%@, in ruins" removed. Read e.g. cs "Rodinný dům – Hotová, Noc na 8. 11. 2026,
+          Úroveň 1, Bydlí tu 5 lidí". Checks: app 702 / 0 (worker log), `TownAccessibilityTests` 8 / 0, `AccessibilityUITests`
+          3 / 0, i18n 1 103 keys 0 / 0 / 0 / 0 (re-run by Opus); Opus read the diff and the catalog delta (5 added, 2 removed,
+          0 changed). Dump in the git-ignored `build/13y/`.
   - [ ] **Build 13 → TestFlight on 2026-11-10 morning (his word 2026-11-09: "the release goes tomorrow"; no questions about
         build 13 tomorrow).** After tonight's night (the journal read first): `MARKETING_VERSION` 1.1 + `CURRENT_PROJECT_VERSION`
         13 (1.0 is approved – App Store Connect takes no other 1.0 build), the Release archive checked as for 12, the upload,
