@@ -40,12 +40,15 @@ final class AccessibilityUITests: XCTestCase {
             let button = app.buttons[label].firstMatch
             guard button.exists else { continue }
             let name = label.components(separatedBy: ", ").first ?? label
-            let value = (button.value as? String) ?? ""          // 13y: the rest of the building card is the value
-            XCTAssertTrue(value.contains("Night of") && value.contains("Level"), "no card in the value of '\(label)': '\(value)'")
+            // 13y2: the whole card is the label (one sentence), nothing in the value
+            XCTAssertTrue(label.hasPrefix(name) && label.contains("Night of") && label.contains("Level"), "no card in the label '\(label)'")
             button.tap()
-            let night = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH 'Night of'")).firstMatch
+            let night = app.descendants(matching: .any)["buildingSheetSummary"]
             if night.waitForExistence(timeout: 3) {
-                XCTAssertTrue(app.staticTexts[name].exists, "the sheet does not show '\(name)'")
+                let sentence = night.label
+                XCTAssertTrue(sentence.hasPrefix(name) && sentence.contains("Night of") && sentence.contains("Level"), "the sheet block: '\(sentence)'")
+                XCTAssertEqual(sentence, label, "the sheet and the town element differ")
+                XCTAssertFalse(app.staticTexts[name].exists, "a separate name element is left in the sheet")
                 opened = name
                 // a tap on the dimmed area above the sheet dismisses it
                 app.windows.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.08)).tap()

@@ -227,23 +227,30 @@ struct BuildingSheet: View {
 
     private var content: some View {
         let name = model.catalog?[building.buildingId]?.displayName ?? L("Building")
+        let spoken = TownAccessibility.sentence(of: building, name: name, level: model.catalog?[building.buildingId]?.level)
         return VStack(spacing: 10) {
             BuildingImage(id: sheetSprite, progress: building.state == .unfinished ? 0.6 : 1, maxHeight: 130)
-            Text(name).font(.title2.bold())
-            Text(L("Night of \(Fmt.fullDate(building.nightKey))")).foregroundStyle(.secondary)
-            let residents = Population.residents(of: building)
-            if residents > 0 {
-                Label(L("\(residents) people live here"), systemImage: "person.2.fill").foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            VStack(spacing: 10) {
+                Text(name).font(.title2.bold())
+                Text(L("Night of \(Fmt.fullDate(building.nightKey))")).foregroundStyle(.secondary)
+                let residents = Population.residents(of: building)
+                if residents > 0 {
+                    Label(L("\(residents) people live here"), systemImage: "person.2.fill").foregroundStyle(.secondary)
+                }
+                switch building.state {
+                case .complete:
+                    Label(building.repairedLater ? L("Repaired 🛠️ – the ruin is a building again")
+                          : building.completedLater ? L("Finished later 💪") : L("Complete 🎉"), systemImage: "checkmark.seal.fill")
+                        .foregroundStyle(Color.readableGreen)
+                case .unfinished:
+                    Label(L("Unfinished – your next good night will finish it"), systemImage: "hammer.fill").foregroundStyle(Color.readableOrange)
+                case .ruins:
+                    Label(L("Ruins – part of the town too 🌱"), systemImage: "leaf.fill").foregroundStyle(.secondary)
+                }
             }
-            switch building.state {
-            case .complete:
-                Label(building.repairedLater ? L("Repaired 🛠️ – the ruin is a building again")
-                      : building.completedLater ? L("Finished later 💪") : L("Complete 🎉"), systemImage: "checkmark.seal.fill")
-                    .foregroundStyle(Color.readableGreen)
-            case .unfinished:
-                Label(L("Unfinished – your next good night will finish it"), systemImage: "hammer.fill").foregroundStyle(Color.readableOrange)
-            case .ruins:
-                Label(L("Ruins – part of the town too 🌱"), systemImage: "leaf.fill").foregroundStyle(.secondary)
+            .accessibilityRepresentation {                      // 13y2: one element with the whole card, not line by line
+                Text(verbatim: spoken).accessibilityIdentifier("buildingSheetSummary")
             }
         }
         .padding()
