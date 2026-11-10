@@ -37,9 +37,13 @@ by build – the roadmap is plan §0b.
    k11 "sedí" ~19:35); nothing for him to confirm in the morning (told him ~19:45). Two setup-screen UI tests fail
    since 13x → B49 ("Cancel night" under the tab bar when a note shows – one swipe reaches it; proposed for build 14,
    not a release blocker). 13w and W6 (the rise like the Alarmo) proposed for build 15, B48 (shake) for build 14.
-2. **Release of build 13: 2026-11-11 morning, after the night** (moved a day: 13z went to his phone only on 10 Nov) – the journal first, then 1.1 (13) (`MARKETING_VERSION`
+   **NEW 2026-11-10 ~22:10 (after his bedtime – written down only): 13aa = B50, the last start minute counts whole**
+   (the night "by 22:00" refused at 22:00:xx; the nap's "until 15:00" the same) – his request, Opus agrees; **ask his
+   word first thing on 11 Nov, then one Sonnet worker (plan §10 REL 13aa), on his phone before the evening.**
+2. **Release of build 13: moves to 2026-11-12 morning** – the night 10 → 11 was not started (B50; his bronze joker), so
+   13z / 13y2 had no real night yet; with 13aa the night 11 → 12 is the real night. Then the journal first, 1.1 (13) (`MARKETING_VERSION`
    1.1 – 1.0 is approved), the Release archive check, the upload, "What to Test" EN + SK by Opus, Kamaráti + SE, the PR
-   `build/13` → `main`. **His "Áno" is given; he wants no questions about build 13 tomorrow** – only a problem stops it.
+   `build/13` → `main`. **His "Áno" is given; he wants no questions about the release itself** – only a problem stops it.
 3. **Next: build 14** – **its first step W7, the Watch buzzes ~30s before the alarm (his word 2026-11-10 ~19:45; plan
    §0b rows 14 / 15)**; then the features – nights off, the statistics, town needs + a choice of three (plan §0b) – only
    on his word.
