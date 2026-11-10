@@ -33,8 +33,8 @@ by build – the roadmap is plan §0b.
 
 1. **Build 13 = polishing, in work since 2026-11-01** – plan §10 REL "Build 13"; his page
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`; the "sedí" checks sit in its
-   "done" part). On his phone: every step 13a – 13y2 (13y2 since 2026-11-10 19:18). **Open: his k11** (VoiceOver reads
-   the whole building in one sentence). His v3 "sedí" (B47 🟢) and w7 "the Watch vibrates longer" came ~19:15. Two
+   "done" part). On his phone: every step 13a – 13y2 (13y2 since 2026-11-10 19:18). **Every check is done** (his v3, w7 ~19:15,
+   k11 "sedí" ~19:35). His proposal ~19:35: W7 now as 13aa – Opus recommends build 14, waits for his word. Two
    setup-screen UI tests fail since 13x → B49 ("Cancel night" under the tab bar when a note shows – one swipe reaches it;
    proposed for build 14, not a release blocker). 13w, W6 (the rise like the Alarmo) and W7 (the Watch before the alarm –
    option B looks viable after his w7) proposed for build 15, B48 (shake) for build 14.
