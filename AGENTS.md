@@ -33,12 +33,12 @@ by build – the roadmap is plan §0b.
 
 1. **Build 13 = polishing, in work since 2026-11-01** – plan §10 REL "Build 13"; his page
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`; the "sedí" checks sit in its
-   "done" part). On his phone: everything 13a – 13y (13y since 2026-11-09 08:50). **Open: 13z** (B47 – "Try the rise"
-   plays the whole rise + a progress line; his pick 2026-11-09 ~08:50; merged ~09:45, install only on his word, never
-   after 21:30)
-   and his checks k11 (now), v3 (after 13z), a12 (the morning); k7, a10 optional. 13w → build 15, B48 (shake) proposed
+   "done" part). On his phone: everything 13a – 13z (13z since 2026-11-10 16:25). **Open: 13y2** (VoiceOver reads the
+   whole building in one sentence – his k11 "nesedí" 2026-11-10; his yes ~16:20; merged ~17:35, install only on his word,
+   never after 21:30; two setup-screen UI tests fail since a step after 5 Nov – a worker bisects them) and his checks v3 (now), k11 (after 13y2); w7 (the Watch during the system alarm test) is a measurement for
+   build 15. 13w, W6 (the rise like the Alarmo) and W7 (the Watch before the alarm) proposed for build 15, B48 (shake)
    for build 14.
-2. **Release of build 13: 2026-11-10 morning, after the night** (a day later if 13z is not on his phone on 9 Nov) – the journal first, then 1.1 (13) (`MARKETING_VERSION`
+2. **Release of build 13: 2026-11-11 morning, after the night** (moved a day: 13z went to his phone only on 10 Nov) – the journal first, then 1.1 (13) (`MARKETING_VERSION`
    1.1 – 1.0 is approved), the Release archive check, the upload, "What to Test" EN + SK by Opus, Kamaráti + SE, the PR
    `build/13` → `main`. **His "Áno" is given; he wants no questions about build 13 tomorrow** – only a problem stops it.
 3. **Next: build 14** (features – nights off, the statistics, town needs + a choice of three; plan §0b) – only on his word.
