@@ -5,27 +5,33 @@ import UIKit
 /// The town for VoiceOver (13e3). The SKView draws everything itself, so each building is exposed as an accessibility element.
 enum TownAccessibility {
     struct Entry: Equatable {
-        let label: String       // the building's name
-        var value: String = ""  // the rest of the building card, read after the label (13y)
+        let name: String        // the building's name (Voice Control says this)
+        let label: String       // what VoiceOver speaks: the whole building card as one sentence (13y2)
         let index: Int          // index into `TownSnapshot.buildings`
     }
 
+    /// The whole card as ONE sentence – name, state, night, level, residents – joined with ", ". The town elements and the building
+    /// sheet both read it, so a tap in the town and a double tap say the same (13y2: a value was not spoken on the owner's phone).
+    static func sentence(of b: TownBuilding, name: String, level: Int?) -> String {
+        let state: String
+        switch b.state {
+        case .complete: state = b.repairedLater ? L("Repaired") : b.completedLater ? L("Finished later") : L("Complete")
+        case .unfinished: state = L("Unfinished")
+        case .ruins: state = L("In ruins")
+        }
+        var parts = [name, state, L("Night of \(Fmt.fullDate(b.nightKey))")]
+        if let level { parts.append(L("Level \(level)")) }
+        let residents = Population.residents(of: b)
+        if residents > 0 { parts.append(L("\(residents) people live here")) }
+        return parts.joined(separator: ", ")
+    }
+
     /// One entry per building, in the order the buildings were built (the snapshot's order). Roads and decorations are not buildings.
-    /// The label is the name; the value is what the building sheet shows – state, night, level, residents (13y). Computed once here,
-    /// never per accessibility query (13p).
+    /// Computed once here, never per accessibility query (13p).
     static func entries(_ town: TownSnapshot, name: (String) -> String?, level: (String) -> Int? = { _ in nil }) -> [Entry] {
         town.buildings.enumerated().map { i, b in
-            let state: String
-            switch b.state {
-            case .complete: state = b.repairedLater ? L("Repaired") : b.completedLater ? L("Finished later") : L("Complete")
-            case .unfinished: state = L("Unfinished")
-            case .ruins: state = L("In ruins")
-            }
-            var parts = [state, L("Night of \(Fmt.fullDate(b.nightKey))")]
-            if let lv = level(b.buildingId) { parts.append(L("Level \(lv)")) }
-            let residents = Population.residents(of: b)
-            if residents > 0 { parts.append(L("\(residents) people live here")) }
-            return Entry(label: name(b.buildingId) ?? L("Building"), value: parts.joined(separator: ", "), index: i)
+            let n = name(b.buildingId) ?? L("Building")
+            return Entry(name: n, label: sentence(of: b, name: n, level: level(b.buildingId)), index: i)
         }
     }
 
@@ -39,11 +45,11 @@ final class TownAccessibilityElement: UIAccessibilityElement {
     var onActivate: ((Int) -> Void)?
     var onFocus: ((Int) -> Void)?
 
-    init(container: Any, label: String, value: String = "", buildingIndex: Int?) {
+    init(container: Any, label: String, name: String? = nil, buildingIndex: Int?) {
         self.buildingIndex = buildingIndex
         super.init(accessibilityContainer: container)
         accessibilityLabel = label
-        if !value.isEmpty { accessibilityValue = value }
+        if let name { accessibilityUserInputLabels = [name] }
         accessibilityTraits = buildingIndex == nil ? .staticText : .button
     }
 
@@ -70,12 +76,11 @@ final class TownSKView: SKView {
     override var accessibilityElements: [Any]? {
         get {
             guard let scene = scene as? TownScene, scene.model != nil else { return [] }
-            let wanted = [TownAccessibility.Entry(label: summary, value: "", index: -1)] + entries
+            let wanted = [TownAccessibility.Entry(name: summary, label: summary, index: -1)] + entries
             if elements.map({ $0.accessibilityLabel }) != wanted.map({ $0.label })
-                || elements.map({ $0.accessibilityValue ?? "" }) != wanted.map({ $0.value })
                 || elements.map({ $0.buildingIndex ?? -1 }) != wanted.map(\.index) {
                 elements = wanted.map {
-                    TownAccessibilityElement(container: self, label: $0.label, value: $0.value, buildingIndex: $0.index < 0 ? nil : $0.index)
+                    TownAccessibilityElement(container: self, label: $0.label, name: $0.index < 0 ? nil : $0.name, buildingIndex: $0.index < 0 ? nil : $0.index)
                 }
             }
             for e in elements {
