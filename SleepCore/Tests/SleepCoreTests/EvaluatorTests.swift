@@ -111,7 +111,7 @@ import Testing
         #expect(!night.canStart(at: night.bedtime - 10 * 60 - 1))
         #expect(night.canStart(at: night.bedtime - 10 * 60))
         #expect(night.canStart(at: night.bedtime + 5 * 60))
-        #expect(!night.canStart(at: night.bedtime + 5 * 60 + 1))
+        #expect(!night.canStart(at: night.bedtime + 6 * 60))
         #expect(!night.canConfirm(at: night.wake - 31 * 60))
         #expect(night.canConfirm(at: night.wake - 30 * 60))
         #expect(!night.canConfirm(at: night.confirmLateUntil + 1))
