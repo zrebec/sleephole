@@ -35,7 +35,8 @@ by build – the roadmap is plan §0b.
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`; the "sedí" checks sit in its
    "done" part). On his phone: everything 13a – 13z (13z since 2026-11-10 16:25). **Open: 13y2** (VoiceOver reads the
    whole building in one sentence – his k11 "nesedí" 2026-11-10; his yes ~16:20; merged ~17:35, install only on his word,
-   never after 21:30; two setup-screen UI tests fail since a step after 5 Nov – a worker bisects them) and his checks v3 (now), k11 (after 13y2); w7 (the Watch during the system alarm test) is a measurement for
+   never after 21:30; two setup-screen UI tests fail since 13x → B49, "Cancel night" under the tab bar when a note
+   shows – one swipe reaches it; proposed for build 14, not a release blocker) and his checks v3 (now), k11 (after 13y2); w7 (the Watch during the system alarm test) is a measurement for
    build 15. 13w, W6 (the rise like the Alarmo) and W7 (the Watch before the alarm) proposed for build 15, B48 (shake)
    for build 14.
 2. **Release of build 13: 2026-11-11 morning, after the night** (moved a day: 13z went to his phone only on 10 Nov) – the journal first, then 1.1 (13) (`MARKETING_VERSION`

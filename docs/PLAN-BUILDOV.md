@@ -234,6 +234,8 @@ Pohľad na mesto (B30) sa presunul do buildu 10. **Z buildu 11 sem prišli (25. 
 budov úrovne 3 – dnes sa ich päť opakuje. Ostrov, ktorého pobrežie kopíruje mesto (čaká na tvoju odpoveď: voda
 všade, alebo horizont).
 
+**Najprv B49 – „Zrušit noc“ pod lištou (môj návrh 10. 11., čaká na tvoje slovo):** od 13x (odpočet na dvoch riadkoch) sa pri poznámke o batérii alebo hlasitosti v príprave noci „Zrušit noc“ posunie pod lištu dole. Jedno potiahnutie prstom nahor ho vráti a funguje. Tvoj dvojriadkový odpočet ostane, miesto sa nájde inde.
+
 **Citlivejšie zatrasenie (B48, môj návrh 9. 11. po tvojom k2 – čaká na tvoje slovo):** appka dnes počúva len prísne systémové gesto iOS „zatrasenie“. Vlastné rozpoznanie pohybu by zatrasenie spoznalo ľahšie, aj na čiernej odpočinkovej obrazovke. Najprv odmerať na telefóne.
 
 **Mesto potrebuje a výber z troch (tvoje áno 7. 11. ~14:50, po pripomienke testera k buildu 12 a tvojej poznámke: asi 5 parkov, 2 školy a 2 knižnice na 998 obyvateľov – ale nie zoznam všetkých budov):** (1) prvá budova každého druhu príde ako dnes, ďalšia až s rastom mesta (napríklad radnica raz, škola na 1 500 obyvateľov, nemocnica na 5 000, park na 300 – čísla doladíme); úroveň, z ktorej mesto nič nepotrebuje, losovanie vynechá; pred buildom prepočet mincí. (2) Pri príprave noci ukáže mačka tri budovy z tej istej vylosovanej úrovne a jednu si vyberieš zadarmo; mince od výberu nezávisia; „Iná budova“ vylosuje tri nové. (3) Viac budov úrovne 2 a 3 (obchody, kancelárie, bytovky z Kenney balíkov) – spolu s „viac budov úrovne 3“, ktoré tu už boli; najprv hárok s kandidátmi, vyberáš ty.
