@@ -63,6 +63,25 @@ struct AppModelTests {
         #expect(h.model.phase == .idle)
     }
 
+    /// B50 (owner 2026-11-10): the last start minute shown on Today counts whole.
+    @Test func theShownLastStartMinuteCountsWhole() {
+        let h = harness(at: date(5, 12))
+        h.clock.now = date(5, 23, 0) + 30; h.model.refresh()                  // gentle: 22:30 + 30 min = 23:00:30
+        #expect(h.model.phase == .canStart)
+        h.model.startNight()
+        #expect(h.model.phase == .building && h.model.active != nil)
+        let late = harness(at: date(5, 12))
+        late.clock.now = date(5, 23, 1); late.model.refresh()
+        #expect(late.model.phase != .canStart)
+    }
+
+    @Test func theNapsShownLastMinuteCountsWhole() {
+        let h = harness(at: date(5, 15, 0) + 30)
+        #expect(h.model.napBlockReason() == nil)
+        h.clock.now = date(5, 15, 1)
+        #expect(h.model.napBlockReason()?.contains("15:00") == true)                 // "You can't nap now (13:00–15:00)."
+    }
+
     /// Owner 2026-10-19, build 10b: the gentle mode starts until bedtime + 30 min; Strict mode closes at + 5 min.
     @Test func gentleModeStartsUntilBedtimePlus30() {
         let h = harness(at: date(5, 12))
@@ -71,7 +90,7 @@ struct AppModelTests {
         #expect(h.model.phase == .canStart)
         h.clock.now = date(5, 23, 0); h.model.refresh()
         #expect(h.model.phase == .canStart)                                   // exactly + 30 min
-        h.clock.now = date(5, 23, 0) + 1; h.model.refresh()
+        h.clock.now = date(5, 23, 1); h.model.refresh()
         #expect(h.model.phase == .idle)
         h.clock.now = date(5, 22, 50); h.model.refresh()
         h.model.startNight()

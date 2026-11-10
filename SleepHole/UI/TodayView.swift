@@ -212,7 +212,7 @@ struct HomeView: View {
         if canSleep {
             return L("Start building by \(Fmt.time(w.startCloses(model.nextNightRules))). You have until \(Fmt.time(Self.captionSetupEnd(now: now, w: w, rules: model.nextNightRules))) to set up (podcast, bedtime story), then keep SleepHole open and lock your phone.")
         }
-        if now > w.startCloses(model.nextNightRules) {
+        if now >= w.startClosedFrom(model.nextNightRules) {
             return L("It's too late to build tonight 🌙 Tomorrow from \(Fmt.time(w.startOpens)).")
         }
         if played {
