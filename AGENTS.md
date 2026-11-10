@@ -34,14 +34,15 @@ by build – the roadmap is plan §0b.
 1. **Build 13 = polishing, in work since 2026-11-01** – plan §10 REL "Build 13"; his page
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`; the "sedí" checks sit in its
    "done" part). On his phone: every step 13a – 13y2 (13y2 since 2026-11-10 19:18). **Every check is done** (his v3, w7 ~19:15,
-   k11 "sedí" ~19:35). His proposal ~19:35: W7 now as 13aa – Opus recommends build 14, waits for his word. Two
-   setup-screen UI tests fail since 13x → B49 ("Cancel night" under the tab bar when a note shows – one swipe reaches it;
-   proposed for build 14, not a release blocker). 13w, W6 (the rise like the Alarmo) and W7 (the Watch before the alarm –
-   option B looks viable after his w7) proposed for build 15, B48 (shake) for build 14.
+   k11 "sedí" ~19:35); nothing for him to confirm in the morning (told him ~19:45). Two setup-screen UI tests fail
+   since 13x → B49 ("Cancel night" under the tab bar when a note shows – one swipe reaches it; proposed for build 14,
+   not a release blocker). 13w and W6 (the rise like the Alarmo) proposed for build 15, B48 (shake) for build 14.
 2. **Release of build 13: 2026-11-11 morning, after the night** (moved a day: 13z went to his phone only on 10 Nov) – the journal first, then 1.1 (13) (`MARKETING_VERSION`
    1.1 – 1.0 is approved), the Release archive check, the upload, "What to Test" EN + SK by Opus, Kamaráti + SE, the PR
    `build/13` → `main`. **His "Áno" is given; he wants no questions about build 13 tomorrow** – only a problem stops it.
-3. **Next: build 14** (features – nights off, the statistics, town needs + a choice of three; plan §0b) – only on his word.
+3. **Next: build 14** – **its first step W7, the Watch buzzes ~30s before the alarm (his word 2026-11-10 ~19:45; plan
+   §0b rows 14 / 15)**; then the features – nights off, the statistics, town needs + a choice of three (plan §0b) – only
+   on his word.
 
 ## Standing notes for Opus (never list them to the owner – his wish 2026-11-09)
 
