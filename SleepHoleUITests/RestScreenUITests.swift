@@ -44,4 +44,16 @@ final class RestScreenUITests: XCTestCase {
         // untouched again → rests again
         XCTAssertTrue(rest.waitForExistence(timeout: 60), "the night screen did not rest a second time")
     }
+
+    /// B51 (13ad): a nap rests like a night – the setup of a nap is 2 min, then 15 s without a touch (`-restAfter 15`).
+    func testTheNapScreenRestsToo() {
+        let app = XCUIApplication()
+        app.launchArguments += ["-clearNights", "-startNap", "-restAfter", "15", "-mute", "-screenshot", "-lang", "en"]
+        app.launch()
+        let rest = app.descendants(matching: .any)["restScreen"]
+        XCTAssertTrue(rest.waitForExistence(timeout: 240), "the nap screen did not rest")
+        XCTAssertTrue(rest.label.contains("Lock the phone"), "label: \(rest.label)")
+        app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        XCTAssertTrue(rest.waitForNonExistence(timeout: 5), "a tap did not end the nap's rest")
+    }
 }

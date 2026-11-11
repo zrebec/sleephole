@@ -956,6 +956,13 @@ struct AlarmView: View {
                 Text(L("Good morning ☀️")).font(.largeTitle.bold())
                 BuddyView(state: model.buddyState()).frame(width: 159)
                 ConfirmPanel()
+                // 13ad (B54): why the alarm is silent, when it is – BELOW the panel, so at the largest text the code field never
+                // moves down (AX5 screenshots, 16 Pro and 17e). Only while it should ring (the texts speak of the
+                // alarm in the future tense; once it stopped by itself the line would be wrong for up to an hour)
+                TimelineView(.periodic(from: .now, by: 5)) { _ in
+                    if let rec = model.active, !rec.log.has(.alarmStopped),
+                       model.clock.now < rec.wake + rec.rules.alarmDuration { VolumeNote() }
+                }
                 Spacer(minLength: 0)
             }
             .padding()
