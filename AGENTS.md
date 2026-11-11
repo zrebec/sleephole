@@ -38,7 +38,8 @@ by build – the roadmap is plan §0b.
    https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`; v40). On his phone: every step
    13a – 13aa (**13aa = B50, the last start minute counts whole, since 2026-11-11 09:49**). **Open: his aa1 (the nap
    started at 13:30, today) and aa2 (the night started at 21:35 – the edge in Strict mode; gentle is 22:00) – 13aa is not
-   confirmed until then (his word 2026-11-11 ~10:15);** every other check is done. Two setup-screen UI tests fail since 13x → B49 (proposed for build 14, not a release
+   confirmed until then (his word 2026-11-11 ~10:15); **he switched Strict mode ON ~10:25 for aa2 (so it is not
+   forgotten) – the nap today is strict too; ask in the morning whether Strict stays on.** every other check is done. Two setup-screen UI tests fail since 13x → B49 (proposed for build 14, not a release
    blocker). 13w and W6 proposed for build 15, B48 (shake) for build 14. The night 10 → 11 was missed (B50) and is
    covered by November's automatic bronze (read 2026-11-11).
 2. **Release of build 13: moves to 2026-11-12 morning** – the night 10 → 11 was not started (B50; his bronze joker), so
