@@ -50,11 +50,11 @@ struct VolumeNote: View {
 
     #if DEBUG && targetEnvironment(simulator)
     /// `-fakeVolume 0.12[,S,0.6]` (simulator and DEBUG only). With S,V the volume becomes V after S seconds.
-    private static var fakeParts: [String]? {
+    static var fakeParts: [String]? {
         DevArgs.value(after: "-fakeVolume").map { $0.split(separator: ",").map(String.init) }
     }
-    private static var fake: Double? { fakeParts?.first.flatMap(Double.init) }
-    private static var fakeFlip: (after: Double, volume: Double)? {
+    static var fake: Double? { fakeParts?.first.flatMap(Double.init) }
+    static var fakeFlip: (after: Double, volume: Double)? {
         guard let p = fakeParts, p.count > 2, let after = Double(p[1]), let v = Double(p[2]) else { return nil }
         return (after, v)
     }

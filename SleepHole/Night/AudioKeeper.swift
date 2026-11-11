@@ -82,7 +82,8 @@ final class AudioKeeper {
         }
     }
 
-    private let engine = AVAudioEngine()
+    /// A `var`: after a media-services reset an engine that cannot start again is replaced by a fresh one (with fresh nodes).
+    private var engine = AVAudioEngine()
     private var source: AVAudioSourceNode?
     private let noise = NoiseState()
     private var observers: [NSObjectProtocol] = []
@@ -105,11 +106,11 @@ final class AudioKeeper {
         }
     }
     var onInterruption: ((Report) -> Void)?
-    private let alarmPlayer = AVAudioPlayerNode()
+    private var alarmPlayer = AVAudioPlayerNode()
     private var alarmTask: Task<Void, Never>?
     private(set) var isAlarmRinging = false
     /// Two players for the bed loops, so a journey can crossfade from one chapter's bed to the next.
-    private let bedPlayers = [AVAudioPlayerNode(), AVAudioPlayerNode()]
+    private var bedPlayers = [AVAudioPlayerNode(), AVAudioPlayerNode()]
     private var currentBed = 0
     private var loopPlayer: AVAudioPlayerNode { bedPlayers[currentBed] }
     private var loopFile: String?
@@ -127,12 +128,14 @@ final class AudioKeeper {
     /// What the sleep sound should be right now (mode, level, stopped, timer end) – what a reset restarts.
     private(set) var desired = SleepSoundState(ambience: .silence, volume: 0, stopped: true, endsAt: nil)
     private var resumeRetry: Task<Void, Never>?
+    /// The retry of a restart after a media-services reset that failed (not cancelled by the restart's own teardown).
+    private var resetRetry: Task<Void, Never>?
     /// Current sleep-sound level (applies to the generator OR the loop player).
     private var level: Float = 0
     // sound stories: random one-shots → mixer → reverb → main mixer, over the bed loop
-    private let storyMixer = AVAudioMixerNode()
-    private let storyReverb = AVAudioUnitReverb()
-    private let storyPlayers = (0..<4).map { _ in AVAudioPlayerNode() }
+    private var storyMixer = AVAudioMixerNode()
+    private var storyReverb = AVAudioUnitReverb()
+    private var storyPlayers = (0..<4).map { _ in AVAudioPlayerNode() }
     private var nextStoryPlayer = 0
     private var storyTask: Task<Void, Never>?
     private(set) var storyWorld: StoryWorld?
@@ -146,7 +149,15 @@ final class AudioKeeper {
     private(set) static var runningKeepers = 0
 
     func start(ambience: Ambience, volume: Float) throws {
-        stop()
+        resetRetry?.cancel()
+        resetRetry = nil
+        try begin(ambience: ambience, volume: volume)
+        if wantedHold { setCallHold(true) }                 // a call that began while the keeper was down is still on
+    }
+
+    /// The real start (also the restart after a media-services reset – which must not cancel its own retry).
+    private func begin(ambience: Ambience, volume: Float) throws {
+        teardown()
         let session = AVAudioSession.sharedInstance()
         // .mixWithOthers: a podcast / bedtime story started in another app must NOT interrupt us –
         // otherwise our audio stops and iOS suspends the app after the lock (no detection, no alarm).
@@ -161,7 +172,7 @@ final class AudioKeeper {
         engine.connect(node, to: engine.mainMixerNode, format: mono)
         engine.mainMixerNode.outputVolume = Self.muted ? 0 : 1
         bedPlayers.filter { $0.engine == nil }.forEach(engine.attach)
-        try engine.start()
+        do { try engine.start() } catch { engine.detach(node); throw error }
         source = node
         isRunning = true
         Self.runningKeepers += 1
@@ -170,24 +181,28 @@ final class AudioKeeper {
                                   endsAt: nil)
         applyMode(ambience)
         setLevel(ambience == .silence ? 0 : volume)
-        if ambience == .silence { enterIdle() }
+        if ambience == .silence { enterIdle(why: "silence") }
+        diag("sound", "start amb=\(ambience.rawValue) level=\(Int((volume * 100).rounded()))")
 
         let nc = NotificationCenter.default
         observers.append(nc.addObserver(forName: AVAudioSession.interruptionNotification, object: nil,
                                         queue: .main) { [weak self] note in
-            let raw = note.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt
-            let began = raw == AVAudioSession.InterruptionType.began.rawValue
-            MainActor.assumeIsolated {
-                self?.onInterruption?(began ? .interruptionBegan : .interruptionEnded)
-                if !began { self?.resumeAfterInterruption() }     // resume after a call
-            }
+            let info = Self.interruption(from: note.userInfo)
+            MainActor.assumeIsolated { self?.receive(info) }
         })
         // headphones / Bluetooth / a speaker change stop AVAudioEngine – start it again
         observers.append(nc.addObserver(forName: .AVAudioEngineConfigurationChange, object: engine,
                                         queue: .main) { [weak self] _ in
             MainActor.assumeIsolated {
                 self?.onInterruption?(.configurationChange)
-                self?.ensureRunning()
+                self?.restartEngine(by: "config")
+            }
+        })
+        observers.append(nc.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil,
+                                        queue: .main) { [weak self] note in
+            let raw = note.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt
+            MainActor.assumeIsolated {
+                self?.diag("audio.route", "out=\(DeviceReading.routeTypes()) reason=\(Self.routeReasonName(raw))")
             }
         })
         observers.append(nc.addObserver(forName: AVAudioSession.mediaServicesWereResetNotification, object: nil,
@@ -219,34 +234,81 @@ final class AudioKeeper {
     }
 
     /// A media-services reset: restart with what the sound is NOW (mode, level, stopped, the timer's end) – never
-    /// with what the night started with (audit M6: a stopped rain came back at 3 a.m. at full volume).
+    /// with what the night started with (audit M6: a stopped rain came back at 3 a.m. at full volume). An alarm that
+    /// was ringing rings on (13ac); a call hold stays. An engine that cannot start again is replaced by a fresh one
+    /// (Apple's guidance after a reset); when even that fails the restart is tried again every 3 s.
     func restartAfterReset() {
         let now = Date()
         let plan = desired.restartPlan(now: now)
-        let ends = desired.endsAt
-        try? start(ambience: plan.ambience, volume: plan.volume)
+        performReset(plan: plan, ends: desired.endsAt, alarm: isAlarmRinging ? alarmRun : nil)
+    }
+
+    private func performReset(plan: (ambience: Ambience, volume: Float, timerSeconds: TimeInterval?), ends: Date?,
+                              alarm: AlarmRun?) {
+        resetRetry?.cancel()
+        resetRetry = nil
+        do {
+            do { try begin(ambience: plan.ambience, volume: plan.volume) } catch {
+                teardown()
+                rebuildEngine()
+                try begin(ambience: plan.ambience, volume: plan.volume)
+            }
+        } catch {
+            teardown()
+            diag("audio.engine", "restart by=reset ok=0 err=\((error as NSError).code)")
+            resetRetry = Task { [weak self] in
+                try? await Task.sleep(for: .seconds(3))
+                guard let self, !Task.isCancelled, !self.isRunning else { return }
+                self.performReset(plan: plan, ends: ends, alarm: alarm)
+            }
+            return
+        }
+        diag("audio.engine", "restart by=reset ok=1")
+        if wantedHold { setCallHold(true) }                 // the hold as it is NOW (a call may have begun or ended meanwhile)
         if let seconds = plan.timerSeconds { sleepTimer(seconds: seconds, volume: plan.volume) }
         else { sleepSoundEndsAt = ends }
+        if let alarm { resumeAlarm(alarm) }
+        onRestored?()
+    }
+
+    /// A fresh engine with fresh nodes (the old ones are dropped). Only while the keeper is not running.
+    private func rebuildEngine() {
+        guard !isRunning else { return }
+        engine = AVAudioEngine()
+        alarmPlayer = AVAudioPlayerNode()
+        bedPlayers = [AVAudioPlayerNode(), AVAudioPlayerNode()]
+        currentBed = 0
+        storyMixer = AVAudioMixerNode()
+        storyReverb = AVAudioUnitReverb()
+        storyPlayers = (0..<4).map { _ in AVAudioPlayerNode() }
     }
 
     /// An interruption (a call) ended: the engine starts again and the players the engine took down are scheduled
     /// again (audit M7). iOS may end an interruption without the "should resume" option – the keep-alive must
     /// restart anyway, so the option is not looked at; when the session is still held a second try follows.
-    func resumeAfterInterruption() {
+    func resumeAfterInterruption(by: String = "intEnded") {
         guard isRunning else { return }
         resumeRetry?.cancel()
         if !engine.isRunning {
-            if !ensureRunning() { retryResume() }
+            restartEngine(by: by)
         } else {
             restorePlayers(force: true)
+            if isAlarmRinging, !alarmPlayer.isPlaying { restoreAlarm() }
         }
+        onRestored?()
+    }
+
+    /// Starts the engine again; a failure is tried again every 3 s while the keeper runs.
+    private func restartEngine(by: String) {
+        if !ensureRunning(by: by) { retryResume() }
     }
 
     private func retryResume() {
+        resumeRetry?.cancel()
         resumeRetry = Task { [weak self] in
             try? await Task.sleep(for: .seconds(3))
             guard let self, !Task.isCancelled, self.isRunning, !self.engine.isRunning else { return }
-            if !self.ensureRunning() { self.retryResume() }
+            self.restartEngine(by: "retry")
         }
     }
 
@@ -266,7 +328,8 @@ final class AudioKeeper {
     }
 
     /// Stops all work except the silent source node (see `isIdle`).
-    private func enterIdle() {
+    private func enterIdle(why: String) {
+        if !isIdle { diag("sound", "idle why=\(why)") }
         fadeTask?.cancel()                                  // a running fade must not wake the stopped sound
         isIdle = true
         desired.stopped = true
@@ -289,70 +352,151 @@ final class AudioKeeper {
         }
     }
 
+    /// Everything the alarm needs to ring again after an engine restart (13ac, B57): the decoded melody, when it
+    /// began and how its volume rises. The volume for a moment is computed from the elapsed time – a restart never
+    /// restarts the rise.
+    struct AlarmRun {
+        let buffer: AVAudioPCMBuffer
+        let started: Date
+        let ramp: TimeInterval
+        let startLevel: Double
+        let endLevel: Double
+        let maxDuration: TimeInterval
+        let onStop: @MainActor () -> Void
+
+        func volume(at now: Date) -> Float {
+            Float(AlarmVolume.level(elapsed: now.timeIntervalSince(started), start: startLevel, end: endLevel, rise: ramp))
+        }
+        func isOver(at now: Date) -> Bool { now.timeIntervalSince(started) >= maxDuration }
+    }
+    private var alarmRun: AlarmRun?
+    /// The alarm has started at least once since `start`: the sleep sound is over for this night (`setVolume` and
+    /// `sleepTimer` do nothing any more). Cleared by `stop()` only – a reset restart keeps it.
+    private var alarmHasStarted = false
+    /// Why the last `ringAlarm` returned false: `file` (missing / unreadable), `engine` (would not run: a call, another
+    /// app's alarm) or `ringing` (it already rings). For the diagnostic track (13ac).
+    private(set) var lastRingFailure = "file"
+    /// The alarm player's gain as a whole percent (the share of the media volume it plays at): now while it rings, else
+    /// what it was when it last stopped.
+    var alarmGainPercent: Int { isAlarmRinging ? Int((alarmPlayer.volume * 100).rounded()) : lastAlarmGainPercent }
+    private var lastAlarmGainPercent = 0
+
     /// Rings `file` in a loop, volume rising `startLevel` → `endLevel` (shares of the media volume) over `ramp` s (0 = `endLevel` at once), for at
-    /// most `maxDuration` (D15: 2 min). The ambience is muted meanwhile. `onStop` fires when it stops on its own.
+    /// most `maxDuration` (D15: 2 min). The ambience is muted meanwhile – for good: once the alarm starts, the sleep sound
+    /// is over for this night (13ac). `onStop` fires when it stops on its own.
     /// Returns whether the alarm really rings: false when the sound can't start (the file is missing, a phone
     /// call or another app's alarm holds the audio) – the caller keeps the backup notifications then and tries
     /// again (audit 2026-10-03, B1: `play()` on an engine that is not running raises an exception).
+    /// The alarm player is never gated by the call hold.
     @discardableResult
     func ringAlarm(file: String, ramp: TimeInterval, startLevel: Double = 0.3, endLevel: Double = 1, maxDuration: TimeInterval,
                    onStop: @escaping @MainActor () -> Void) -> Bool {
-        guard !isAlarmRinging, let url = Bundle.main.url(forResource: file, withExtension: nil),
+        guard !isAlarmRinging else { lastRingFailure = "ringing"; return false }
+        guard let url = Bundle.main.url(forResource: file, withExtension: nil),
               let audioFile = try? AVAudioFile(forReading: url),
               let buffer = AVAudioPCMBuffer(pcmFormat: audioFile.processingFormat,
-                                            frameCapacity: AVAudioFrameCount(audioFile.length)) else { return false }
+                                            frameCapacity: AVAudioFrameCount(audioFile.length)) else {
+            lastRingFailure = "file"
+            return false
+        }
         try? audioFile.read(into: buffer)
         if !isRunning { try? start(ambience: .silence, volume: 0) }
         // the alarm must win: switch to a non-mixable session (interrupts a podcast still playing)
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
         try? AVAudioSession.sharedInstance().setActive(true)
-        setLevel(0)
-        if alarmPlayer.engine == nil {
-            engine.attach(alarmPlayer)
-        }
-        engine.connect(alarmPlayer, to: engine.mainMixerNode, format: buffer.format)
-        if !engine.isRunning { try? engine.start() }
-        guard engine.isRunning else { return false }
-        alarmPlayer.volume = Float(AlarmVolume.initialLevel(start: startLevel, end: endLevel, rise: ramp))
-        alarmPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
-        alarmPlayer.play()
+        alarmHasStarted = true
+        enterIdle(why: "alarm")                             // the sleep sound is over (the restart plan is silent too)
+        if !engine.isRunning { _ = startEngine(by: "alarm") }
+        guard engine.isRunning else { lastRingFailure = "engine"; return false }
+        let run = AlarmRun(buffer: buffer, started: Date(), ramp: ramp, startLevel: startLevel, endLevel: endLevel,
+                           maxDuration: maxDuration, onStop: onStop)
+        alarmRun = run
+        playAlarmPlayer(run)
         isAlarmRinging = true
+        launchAlarmTask(run)
+        return true
+    }
+
+    /// (Re)connects, schedules and plays the alarm player with the volume of the elapsed time.
+    private func playAlarmPlayer(_ run: AlarmRun) {
+        if alarmPlayer.engine == nil { engine.attach(alarmPlayer) }
+        alarmPlayer.stop()
+        engine.disconnectNodeOutput(alarmPlayer)
+        engine.connect(alarmPlayer, to: engine.mainMixerNode, format: run.buffer.format)
+        alarmPlayer.volume = run.volume(at: Date())
+        alarmPlayer.scheduleBuffer(run.buffer, at: nil, options: .loops)
+        alarmPlayer.play()
+    }
+
+    private func launchAlarmTask(_ run: AlarmRun) {
+        alarmTask?.cancel()
         alarmTask = Task { [weak self] in
-            let started = Date()
-            while let self, !Task.isCancelled, Date().timeIntervalSince(started) < maxDuration {
-                if ramp > 0 {
-                    self.alarmPlayer.volume = Float(AlarmVolume.level(elapsed: Date().timeIntervalSince(started),
-                                                                      start: startLevel, end: endLevel, rise: ramp))
-                }
+            while let self, !Task.isCancelled, !run.isOver(at: Date()) {
+                if run.ramp > 0 { self.alarmPlayer.volume = run.volume(at: Date()) }
                 try? await Task.sleep(for: .seconds(1))
             }
             guard let self, !Task.isCancelled else { return }
             self.stopAlarm()
-            onStop()
+            run.onStop()
         }
-        return true
+    }
+
+    /// The engine was restarted (or an interruption ended) while the alarm rings: ring again, no restart of the rise.
+    private func restoreAlarm() {
+        guard isAlarmRinging, let run = alarmRun, engine.isRunning else { return }
+        playAlarmPlayer(run)
+    }
+
+    /// After a media-services reset: the alarm that was ringing rings on for what is left of its time.
+    private func resumeAlarm(_ run: AlarmRun) {
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+        try? AVAudioSession.sharedInstance().setActive(true)
+        guard !run.isOver(at: Date()) else { run.onStop(); return }
+        guard engine.isRunning else { return }
+        alarmRun = run
+        playAlarmPlayer(run)
+        isAlarmRinging = true
+        launchAlarmTask(run)
     }
 
     func stopAlarm() {
         alarmTask?.cancel()
         alarmTask = nil
-        if isAlarmRinging { alarmPlayer.stop() }
+        if isAlarmRinging {
+            lastAlarmGainPercent = Int((alarmPlayer.volume * 100).rounded())
+            alarmPlayer.stop()
+        }
         isAlarmRinging = false
+        alarmRun = nil
+    }
+
+    /// Starts the engine, noting the attempt in the diagnostic track.
+    private func startEngine(by: String) -> Bool {
+        do {
+            try engine.start()
+            diag("audio.engine", "restart by=\(by) ok=1")
+            return true
+        } catch {
+            diag("audio.engine", "restart by=\(by) ok=0 err=\((error as NSError).code)")
+            return false
+        }
     }
 
     /// Starts the engine again when iOS (or anything else) stopped it while we are supposed to run.
-    /// Called before every change of the sleep sound, so starting / switching a sound always works.
+    /// Called before every change of the sleep sound, so starting / switching a sound always works. `by` names the
+    /// caller in the diagnostic track (only an attempt that was really needed is noted).
     @discardableResult
-    func ensureRunning() -> Bool {
+    func ensureRunning(by: String = "ui") -> Bool {
         guard isRunning else { return false }
         if engine.isRunning { return true }
         let session = AVAudioSession.sharedInstance()
         if !isAlarmRinging { try? session.setCategory(.playback, mode: .default, options: [.mixWithOthers]) }
         try? session.setActive(true)
-        guard (try? engine.start()) != nil else { return false }
+        guard startEngine(by: by) else { return false }
         // the players stopped with the engine → schedule the current bed again (not while the sound is stopped)
         finishBedFade()
         restorePlayers(force: true)
+        restoreAlarm()
         setLevel(level)
         return true
     }
@@ -363,18 +507,20 @@ final class AudioKeeper {
     func stopEngineForTesting() { engine.stop() }
 
     func setVolume(_ volume: Float, ambience: Ambience) {
+        guard !alarmHasStarted else { return }              // the alarm has rung: the sleep sound is over for this night
         ensureRunning()
         noise.mode = ambience
         let wantsSound = ambience != .silence && volume > 0
         let wasIdle = isIdle
         if wantsSound { isIdle = false; if storyReverb.engine != nil { storyReverb.bypass = false } }
+        if ambience != desired.ambience { diag("sound", "mode amb=\(ambience.rawValue)") }
         desired.ambience = ambience
         desired.volume = volume
         desired.stopped = !wantsSound
         applyMode(ambience)
-        if wantsSound && wasIdle { restorePlayers() }        // ▶ after the timer / ■
+        if wantsSound && wasIdle { diag("sound", "wake"); restorePlayers() }        // ▶ after the timer / ■
         setLevel(wantsSound ? volume : 0)
-        if !wantsSound { enterIdle() }
+        if !wantsSound { enterIdle(why: "silence") }
     }
 
     /// Generator modes play through the source node, loop modes through `loopPlayer` (seamless .loops),
@@ -398,8 +544,12 @@ final class AudioKeeper {
         loopPlayer.stop()
         engine.disconnectNodeOutput(loopPlayer)
         engine.connect(loopPlayer, to: engine.mainMixerNode, format: buffer.format)
-        loopPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
-        loopPlayer.play()
+        // B58: `play()` on an engine that is not running raises an Obj-C exception – only the state is recorded then,
+        // `restorePlayers(force:)` schedules the bed at the next successful `ensureRunning`
+        if engine.isRunning {
+            loopPlayer.scheduleBuffer(buffer, at: nil, options: .loops)
+            loopPlayer.play()
+        }
         loopFile = file
         trimBeds()
     }
@@ -408,6 +558,14 @@ final class AudioKeeper {
     func crossfadeBed(to file: String, seconds: TimeInterval = 8) {
         guard isRunning, file != loopFile, let buffer = Self.loopBuffer(file) else { return }
         finishBedFade()
+        guard engine.isRunning else {                       // B58: only record the bed, `restorePlayers` plays it later
+            loopPlayer.stop()
+            engine.disconnectNodeOutput(loopPlayer)
+            engine.connect(loopPlayer, to: engine.mainMixerNode, format: buffer.format)
+            loopFile = file
+            trimBeds()
+            return
+        }
         let old = loopPlayer
         let oldFile = loopFile
         currentBed = 1 - currentBed
@@ -451,6 +609,7 @@ final class AudioKeeper {
 
     private func enter(_ chapter: StoryChapter) {
         guard chapter != storyChapter else { return }
+        if storyWorld == .journey { diag("sound", "chapter=\(chapter.rawValue)") }
         storyReverb.loadFactoryPreset(chapter.reverb.preset)
         storyReverb.wetDryMix = chapter.reverb.wet
         if storyChapter != nil { crossfadeBed(to: chapter.bed) }            // the first bed comes from applyMode
@@ -491,7 +650,9 @@ final class AudioKeeper {
     }
 
     private func playStory(_ e: StoryEvent) {
-        guard level > 0, let buffer = Self.sample(e.sample), engine.isRunning || ensureRunning() else { return }
+        // during a call nothing is scheduled and the engine is not touched (13ac, B52)
+        guard !isCallHeld, level > 0, let buffer = Self.sample(e.sample),
+              engine.isRunning || ensureRunning(by: "story") else { return }
         let p = storyPlayers[nextStoryPlayer]
         nextStoryPlayer = (nextStoryPlayer + 1) % storyPlayers.count
         p.volume = e.volume
@@ -539,15 +700,17 @@ final class AudioKeeper {
     private func setLevel(_ g: Float) {
         if g > 0, isIdle {                                  // the sound is wanted again (a timer set after ■, …)
             isIdle = false
+            diag("sound", "wake")
             if storyReverb.engine != nil { storyReverb.bypass = false }
             restorePlayers()
         }
-        level = g
+        level = g                                           // what the sound should be – never changed by a call
+        let applied = isCallHeld ? 0 : g                    // what is audible: silent during a call (13ac, B52)
         let isLoop = noise.mode.loopFile != nil
-        noise.gain = isLoop ? 0 : g
-        loopPlayer.volume = isLoop ? g * bedFade : 0
-        fadingBed?.volume = isLoop ? g * (1 - bedFade) : 0
-        storyMixer.outputVolume = noise.mode.storyWorld != nil ? g : 0
+        noise.gain = isLoop ? 0 : applied
+        loopPlayer.volume = isLoop ? applied * bedFade : 0
+        fadingBed?.volume = isLoop ? applied * (1 - bedFade) : 0
+        storyMixer.outputVolume = noise.mode.storyWorld != nil ? applied : 0
     }
 
     private var fadeTask: Task<Void, Never>?
@@ -559,7 +722,9 @@ final class AudioKeeper {
     /// and the sound is silent precisely at the end. The engine keeps running in silence afterwards – it keeps
     /// the app alive (night detection, alarm, background playback with the screen off).
     func sleepTimer(seconds: TimeInterval?, volume: Float) {
+        guard !alarmHasStarted else { return }
         ensureRunning()
+        diag("sound", "timer=\(seconds.map { "\(Int($0))s" } ?? "all")")
         fadeTask?.cancel()
         let wantsSound = noise.mode != .silence && volume > 0
         setLevel(wantsSound ? volume : 0)
@@ -568,7 +733,7 @@ final class AudioKeeper {
         guard let seconds else {
             sleepSoundEndsAt = nil
             desired.endsAt = nil
-            if !wantsSound { enterIdle() }
+            if !wantsSound { enterIdle(why: "silence") }
             return
         }
         let end = Date() + max(0, seconds)
@@ -579,7 +744,7 @@ final class AudioKeeper {
             if fadeStart > Date() { try? await Task.sleep(for: .seconds(fadeStart.timeIntervalSinceNow)) }
             while let self, !Task.isCancelled {
                 let left = end.timeIntervalSinceNow
-                if left <= 0 { self.enterIdle(); return }       // the lullaby really stops (audit M5)
+                if left <= 0 { self.enterIdle(why: "timer"); return }       // the lullaby really stops (audit M5)
                 self.setLevel(volume * Float(min(1, left / Self.fadeSeconds)))
                 try? await Task.sleep(for: .milliseconds(100))
             }
@@ -589,12 +754,16 @@ final class AudioKeeper {
     /// Stops the sleep sound immediately (engine keeps running in silence).
     func silenceNow() {
         fadeTask?.cancel()
-        enterIdle()
+        enterIdle(why: "stop")
         sleepSoundEndsAt = Date()
         desired.endsAt = sleepSoundEndsAt
     }
 
     var currentGain: Float { level }
+    /// Tests: what is audible – `currentGain` is what the sound should be, this is what the players really apply.
+    var appliedGain: Float {
+        max(noise.gain, loopPlayer.volume, fadingBed?.volume ?? 0, storyMixer.engine == nil ? 0 : storyMixer.outputVolume)
+    }
     var isLoopPlaying: Bool { loopFile != nil && loopPlayer.isPlaying }
     var currentBedFile: String? { loopFile }
     var currentMode: Ambience { noise.mode }
@@ -602,8 +771,118 @@ final class AudioKeeper {
     var isTellerRunning: Bool { storyTask != nil }
     var isStoryGraphAttached: Bool { storyMixer.engine != nil }
     var isStoryReverbBypassed: Bool { storyReverb.bypass }
+    /// Tests: the alarm player (ungated by the call hold) and what a story event does.
+    var isAlarmPlayerPlaying: Bool { alarmPlayer.isPlaying }
+    var alarmPlayerVolume: Float { alarmPlayer.volume }
+    func playStoryForTesting(_ e: StoryEvent) { playStory(e) }
+    /// Tests: what a reset that cannot restart the old engine does – a fresh engine with fresh nodes.
+    func rebuildEngineForTesting() { rebuildEngine() }
+    func postConfigurationChangeForTesting() {
+        NotificationCenter.default.post(name: .AVAudioEngineConfigurationChange, object: engine)
+    }
 
+    // MARK: call hold (13ac, B52)
+
+    /// True while a phone call is live: every audible gain is 0 (the stored level and `desired` stay), the story teller
+    /// schedules nothing, the alarm player is not gated. The engine keeps running – the silent source is the keep-alive
+    /// that stops iOS from suspending the app in the background, so a call never stops the engine or the session.
+    private(set) var isCallHeld = false
+    /// The hold as the last `setCallHold` wanted it – applied after a restart. Cleared by `stop()` only.
+    private var wantedHold = false
+    /// Called after an ended interruption and after a reset restart: `AppModel` reads the media volume again then (a
+    /// change made while the session was down never reached its observer).
+    var onRestored: (() -> Void)?
+
+    /// Set by `AppModel` at the start / end of a call. Only while the keeper runs (`stop()` clears it); it comes back
+    /// after a reset restart. Release: the engine is checked and the current level applied again.
+    func setCallHold(_ on: Bool) {
+        wantedHold = on                                     // recorded even while the keeper is down (a failed reset restart)
+        guard isRunning, on != isCallHeld else { return }
+        isCallHeld = on
+        diag("sound", "hold \(on ? "on" : "off")")
+        if !on { restartEngine(by: "hold") }
+        setLevel(level)
+        if !on { restorePlayers() }
+    }
+
+    // MARK: diagnostics (13ac)
+
+    /// The diagnostic track's line writer (`AppModel` wires it to `model.diag.note`; nil for the Settings preview).
+    var onDiag: ((String, String) -> Void)?
+    private func diag(_ k: String, _ v: String) { onDiag?(k, v) }
+
+    /// "sound state engine=1 bed=1 teller=1" – at each interruption and at the end.
+    private func noteState() {
+        diag("sound", "state engine=\(engine.isRunning ? 1 : 0) bed=\(isLoopPlaying ? 1 : 0) teller=\(storyTask != nil ? 1 : 0)")
+    }
+
+    /// An interruption notification: what it says is read and noted, a call's end brings the engine back. A notification
+    /// without a readable type is ignored (it used to count as "ended"). Internal for tests.
+    func receiveInterruption(userInfo: [AnyHashable: Any]?) { receive(Self.interruption(from: userInfo)) }
+
+    private func receive(_ info: InterruptionInfo?) {
+        guard let info else { return }
+        diag("audio.int", "\(info.began ? "began" : "ended") reason=\(info.reason) resume=\(info.shouldResume ? 1 : 0) suspended=\(info.wasSuspended ? 1 : 0)")
+        noteState()
+        onInterruption?(info.began ? .interruptionBegan : .interruptionEnded)
+        if !info.began { resumeAfterInterruption() }        // resume after a call
+    }
+
+    struct InterruptionInfo: Equatable, Sendable {
+        var began: Bool
+        var reason: String
+        var shouldResume: Bool
+        var wasSuspended: Bool
+    }
+
+    /// Reads an interruption notification: nil when it carries no readable type (it is then ignored).
+    nonisolated static func interruption(from userInfo: [AnyHashable: Any]?) -> InterruptionInfo? {
+        // only the two known values count (an imported C enum accepts any raw value)
+        let began = AVAudioSession.InterruptionType.began.rawValue, ended = AVAudioSession.InterruptionType.ended.rawValue
+        guard let raw = userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt, raw == began || raw == ended else { return nil }
+        let reasonName: String
+        if let r = userInfo?[AVAudioSessionInterruptionReasonKey] as? UInt {
+            switch r {
+            case 0: reasonName = "default"
+            case 1: reasonName = "appWasSuspended"
+            case 2: reasonName = "builtInMicMuted"
+            case 4: reasonName = "routeDisconnected"
+            default: reasonName = "raw\(r)"
+            }
+        } else { reasonName = "none" }
+        let options = (userInfo?[AVAudioSessionInterruptionOptionKey] as? UInt)
+            .map(AVAudioSession.InterruptionOptions.init(rawValue:)) ?? []
+        let suspended = (userInfo?["AVAudioSessionInterruptionWasSuspendedKey"] as? Bool) ?? false
+        return InterruptionInfo(began: raw == began, reason: reasonName,
+                                shouldResume: options.contains(.shouldResume), wasSuspended: suspended)
+    }
+
+    nonisolated static func routeReasonName(_ raw: UInt?) -> String {
+        guard let raw, let r = AVAudioSession.RouteChangeReason(rawValue: raw) else { return "none" }
+        switch r {
+        case .newDeviceAvailable: return "newDevice"
+        case .oldDeviceUnavailable: return "oldDeviceGone"
+        case .categoryChange: return "category"
+        case .override: return "override"
+        case .wakeFromSleep: return "wake"
+        case .noSuitableRouteForCategory: return "noRoute"
+        case .routeConfigurationChange: return "config"
+        default: return "unknown"
+        }
+    }
+
+    /// Stops everything. The session is released – and its category put back to `.ambient` – when the last keeper
+    /// stops (13ac, B59: the alarm made it non-mixable `.playback`, and every later effect ignored the silent switch).
     func stop() {
+        resetRetry?.cancel()
+        resetRetry = nil
+        wantedHold = false
+        alarmHasStarted = false
+        if isRunning { noteState() }
+        teardown()
+    }
+
+    private func teardown() {
         stopAlarm()
         fadeTask?.cancel()
         resumeRetry?.cancel()
@@ -621,10 +900,13 @@ final class AudioKeeper {
         if isRunning { Self.runningKeepers -= 1 }
         isRunning = false
         isIdle = false
+        isCallHeld = false
         if Self.runningKeepers == 0 { Self.loopBuffers.removeAll() }       // end of the night / nap: free the memory
         // only the last running keeper releases the shared session (never under a running night)
         if Self.runningKeepers == 0 {
-            try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            let session = AVAudioSession.sharedInstance()
+            try? session.setActive(false, options: .notifyOthersOnDeactivation)
+            try? session.setCategory(.ambient)
         }
     }
 }
