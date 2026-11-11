@@ -142,7 +142,9 @@ final class LifecycleMonitor {
         if locked {
             pendingLockUse?.cancel(); pendingLockUse = nil
             lockSignal("protectedData")
-        } else if changed, !isAway, !isAppActive() {
+        } else if changed, !isAway, !isAppActive(), activeCalls.isEmpty {
+            // X1 (13ae): not during a live call – the phone is in the call's hands, not in use; the window starts at the
+            // call's end instead (`callChanged`)
             startLockUseWindow()
         }
     }
@@ -164,6 +166,7 @@ final class LifecycleMonitor {
             try? await Task.sleep(for: self?.screenWindow ?? Self.lockScreenWindow)
             guard let self, !Task.isCancelled else { return }
             self.pendingLockUse = nil
+            guard self.activeCalls.isEmpty else { return }        // a call began inside the window: it starts again at its end
             let active = self.isAppActive()
             self.raw("recognised \(Int(Self.lockScreenWindow.components.seconds))s ago · active=\(active) · locked=\(self.dataLocked)")
             if !active, !self.dataLocked, !self.isAway {
@@ -241,12 +244,20 @@ final class LifecycleMonitor {
             if let t = callTimes.removeValue(forKey: call.uuid) {
                 onDiag?("call", "end dur=\(Int(at.timeIntervalSince(t.began)))s connected=\(t.connected != nil || call.hasConnected ? 1 : 0)")
             }
-            if activeCalls.remove(call.uuid) != nil, activeCalls.isEmpty { emit(.callEnded, "") }
+            if activeCalls.remove(call.uuid) != nil, activeCalls.isEmpty {
+                emit(.callEnded, "")
+                // X1: the user is recognised, the app is not in front and no trip is open → the phone is in use now; the 8 s
+                // window is anchored at the call's end (a hang-up on the unlocked phone, not 8 s of "use" during the call)
+                if !dataLocked, !isAway, !isAppActive() { startLockUseWindow() }
+            }
         } else {
             if activeCalls.insert(call.uuid).inserted {
                 callTimes[call.uuid] = (at, nil)
                 onDiag?("call", "start dir=\(call.isOutgoing ? "out" : "in") live=\(activeCalls.count)")
-                if activeCalls.count == 1 { emit(.callStarted, "") }
+                if activeCalls.count == 1 {
+                    pendingLockUse?.cancel(); pendingLockUse = nil      // X1: a window that was running is void during the call
+                    emit(.callStarted, "")
+                }
             }
             if call.hasConnected, let t = callTimes[call.uuid], t.connected == nil {
                 callTimes[call.uuid] = (t.began, at)
