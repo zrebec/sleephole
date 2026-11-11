@@ -721,8 +721,11 @@ struct LockScreenTests {
         m.refresh(); m.startNight()
         let g = m.graceEnds!
         m.append(.leftApp, at: g - 30)
-        #expect(m.collapseNoticeAt == nil)
+        // 13ae (owner 2026-11-11, B56): a trip still open when the setup ends is counted from its end, so its collapse
+        // notice (and the warning) are set in advance – it used to be nil here
+        #expect(m.collapseNoticeAt == g + 18)
         m.append(.returned, at: g - 20)
+        #expect(m.collapseNoticeAt == nil)
         m.append(.leftApp, at: g + 60)
         m.append(.leftApp, at: g + 100)                                      // already collapsed at g + 73
         #expect(m.collapseNoticeAt == g + 78)                                // unchanged: nothing new was set

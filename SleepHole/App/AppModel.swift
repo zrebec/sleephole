@@ -1489,8 +1489,11 @@ final class AppModel {
         defer { rest.evaluate() }          // at once when the phase leaves .building or a pause starts
         applyPendingScheduleIfDue(now: now)
         // the lock-screen warning ends with its promised seconds, at the wake time and with the night
-        if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false { endLockWarning() }
+        if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false {
+            endLockWarning(why: now >= deadline ? "deadline" : (active == nil ? "end" : "wake"))
+        }
         if let rec = active {
+            fireSetupEndWarningIfDue(now: now)
             setEarlyFlags(canStartEarly: false, tonightPlayed: false)
             if !diag.setupEndNoted, diag.record === rec, let g = graceEnds, now >= g {
                 diag.setupEndNoted = true
@@ -1989,7 +1992,8 @@ final class AppModel {
     /// `shown` = the seconds the title / notification promise; `ringFor` = the whole trip allowance (from the trip's
     /// start), so the warning rings until the real collapse moment (B33: the alarm starts sounding ~2.5 s late).
     private func startLockWarning(shown seconds: TimeInterval, ringFor: TimeInterval, at date: Date) {
-        endLockWarning()
+        endLockWarning(why: "restart")
+        diag.note("warn", "lock start secs=\(Int(seconds)) ring=\(Int(ringFor))")
         lockWarningDeadline = date + ringFor
         // B28: the system alarm interrupts our audio session and iOS then suspends the app ~4 s later, so the deadline
         // would never run; a background task keeps it alive until the warning has ended
@@ -2013,8 +2017,9 @@ final class AppModel {
         }
     }
 
-    private func endLockWarning() {
+    private func endLockWarning(why: String = "end") {
         guard lockWarningDeadline != nil else { return }
+        diag.note("warn", "lock end why=\(why)")
         lockWarningDeadline = nil
         lockWarningTask?.cancel()
         lockWarningTask = nil
@@ -2237,7 +2242,10 @@ final class AppModel {
         setupReminderAt = nil
         if servicesEnabled { Notifications.cancelSetupReminder() }
         if closedAt != nil, servicesEnabled { Notifications.cancelClosed() }       // the owner is back
-        if closedAt != nil { cancelCollapseNotice() }
+        // a relaunch ends every trip in the log (`.appLaunched`): a warning or a collapse notice set in advance (13ae) would
+        // now be false
+        if servicesEnabled { Notifications.cancelNudge() }
+        cancelCollapseNotice(why: "relaunch")
         diagOpen(rec, resume: (restarted: restarted, closed: closedAt != nil))
         startServices(for: rec)
         diagBegin(rec)
@@ -2358,6 +2366,10 @@ final class AppModel {
     private func stopServices() {
         sleepSound = nil
         waitingForReturn = false
+        setupEndWarning = nil                               // 13ae: nothing set for the setup's end outlives the night
+        setupEndTask?.cancel()
+        setupEndTask = nil
+        nudgeLive = false
         backupNotificationsOn = false                       // cancelled with the night's other notifications below
         alarmInaudible = false
         guard servicesEnabled else { return }
@@ -2539,8 +2551,9 @@ final class AppModel {
     func forgiveNight() {
         guard let rec = active, clock.now < rec.wake, !rec.log.has(.abandoned) else { return }
         append(.forgiven)
-        if servicesEnabled { Notifications.cancelNudge(); Notifications.cancelClosed() }
-        cancelCollapseNotice()
+        if servicesEnabled { Notifications.cancelClosed() }
+        cancelPendingNudge(why: "forgiven")
+        cancelCollapseNotice(why: "forgiven")
         waitingForReturn = false
     }
 
@@ -2672,82 +2685,243 @@ final class AppModel {
         // (bug found by the owner 2026-09-29).
         let alreadyCollapsed = collapsedAt != nil
         let lockTripWasOpen = Self.lockScreenTripOpen(rec.log)
+        let callWasOpen = TripState.callIsOpen(rec.log, at: date)          // 13ae (B55): the rule side, from the log
+        let tripWasOpen = TripState.openTrip(rec.log, rules: rec.rules) != nil
         if !rec.append(kind, at: date) { diag.note("journal", "unreadable, event \(kind.rawValue) not stored") }
         save()
         noteDiagnostics(after: kind)
         if kind == .alarmStopped { alarmInaudible = false }         // ours is over: a later volume change stands nothing down
         updateSetupReminder(after: kind, at: date)
+        // B55: a trip that begins while a call is live is stored like any other, but the evaluator excuses the call, so
+        // nothing is sent and nothing scheduled – `.callEnded` warns if the owner is still out then. (`.closedByOwner`
+        // is not held: the process dies, the relaunch ends the call in the log and the evaluator counts the closure.)
+        if callWasOpen, kind == .leftApp || kind == .usedLockScreen {
+            diag.note("warn", "held why=call kind=\(kind.rawValue)")
+            return
+        }
         switch kind {
         case .leftApp where lockTripWasOpen && rec.rules.lockScreenCollapses:
             break           // strict: the lock-screen trip is counted and warned about since it began; nothing new
-        case .usedLockScreen where !rec.rules.lockScreenCollapses:
+        case .leftApp, .closedByOwner, .usedLockScreen:
+            warnForTrip(kind, at: date, rec: rec, alreadyCollapsed: alreadyCollapsed, tripWasOpen: tripWasOpen)
+        case .returned, .locked:
+            if servicesEnabled { Notifications.cancelPauseNotices() }
+            cancelPendingNudge(why: kind.rawValue)
+            cancelCollapseNotice(why: kind.rawValue)
+            endLockWarning(why: kind.rawValue)
+            if kind == .returned, waitingForReturn, collapsedAt == nil { buzz(.relief) }
+            waitingForReturn = false
+        case .callStarted, .pauseStarted:
+            cancelCollapseNotice(why: kind == .callStarted ? "call" : "pause")     // a call or a pause excuses the trip that is running
+            if kind == .callStarted {
+                // B55: the warning that is already out (a pending nudge, a ringing lock warning, one set for the setup's
+                // end) is withdrawn too – the call is excused, nobody should be warned during it
+                cancelPendingNudge(why: "call")
+                endLockWarning(why: "call")
+            }
+            // ... but if the owner is still out when the pause runs out, the trip goes on and so does the notice
+            if kind == .pauseStarted { scheduleProjectedCollapseNotice(after: date) }
+        case .callEnded:
+            // B55: still out after the call → the trip counts again, from this moment: the normal warning with the full
+            // tolerance and the collapse notice (the evaluator subtracts the call, so its allowance starts here)
+            if !alreadyCollapsed, !TripState.callIsOpen(rec.log, at: date),
+               let trip = TripState.openTrip(rec.log, rules: rec.rules), trip != .closedByOwner {
+                warnForTrip(trip, at: date, rec: rec, alreadyCollapsed: alreadyCollapsed)
+            }
+            scheduleProjectedCollapseNotice(after: date)
+        default:
+            break
+        }
+    }
+
+    /// The warning for a trip out of the app that begins (or, after a call, begins to count) at `date`: inside a pause, in
+    /// the setup, or the normal one. `kind` is the event that owns the trip.
+    private func warnForTrip(_ kind: NightEventKind, at stamped: Date, rec: NightRecord, alreadyCollapsed: Bool,
+                             tripWasOpen: Bool = false) {
+        // a `.leftApp` is stamped with the moment of `didEnterBackground`, up to 3 s before it is emitted: when a call ended
+        // in between, the evaluator counts the trip from the call's end, so the warning does too
+        let date = TripState.countedFrom(rec.log, at: stamped)
+        if kind == .usedLockScreen, !rec.rules.lockScreenCollapses {
             // gentle mode (owner 2026-10-09): the lock-screen use is only logged and met with one calm reminder – no
             // system alarm, no keep-alive, no deadline, no collapse notice, no "come back" state; the building stays
             if let graceEnds, date >= graceEnds, date < rec.wake, !alreadyCollapsed,
                PausePolicy.activeUntil(rec.log, at: date) == nil {
                 lockRemindersSent += 1
                 if servicesEnabled { Notifications.lockScreenReminder() }
+            } else if let graceEnds, date < graceEnds {
+                // inside the setup nothing has collapsed yet (see below): not asked here
+                scheduleSetupEndWarning(kind, rec: rec)
             }
-        case .leftApp, .closedByOwner, .usedLockScreen:
-            // no vibration here: the app is in the background now and iOS only lets the notification vibrate
-            if let pauseEnds = PausePolicy.activeUntil(rec.log, at: date) {
-                // inside a pause (D17) leaving is free – only remind when it is about to end
-                if servicesEnabled { Notifications.pauseEnding(at: pauseEnds) }
-                scheduleProjectedCollapseNotice(after: date)      // out when the pause runs out → it can collapse then
-            } else if let graceEnds, date >= graceEnds, !alreadyCollapsed, date < rec.wake {
-                // nothing counts after the wake time (away intervals are clipped to it): picking up the ringing
-                // phone must not produce "Come back … or the building collapses"
-                // a trip that starts with budget left is a full one (18 s for new nights); with the budget used up there is no time
-                // for a warning (left = 0) and the building has already collapsed
-                // owner 2026-10-09: the collapse always comes with a notice, scheduled now because the app may be dead
-                // or suspended when it happens (also with the budget used up: then it fires at once)
-                let lockTrip = kind == .usedLockScreen
-                if let fire = Notifications.collapseNoticeTime(log: rec.log, rules: rec.rules, at: date,
-                                                               alreadyCollapsed: alreadyCollapsed, lockScreen: lockTrip) {
-                    collapseNoticeAt = fire
-                    if servicesEnabled { Notifications.collapsed(isNap: rec.isNap, at: fire) }
-                }
-                // the whole trip (lock-screen trips are longer: 3 s + 15 s) and the seconds the warning promises
-                let tripAllowance = NightEvaluator.allowance(rec.log, rules: rec.rules, at: date, lockScreen: lockTrip)
-                let left = tripAllowance - rec.rules.noticeDelay
-                guard left >= 1 else { break }                // the warning would come too late
-                nudgesSent += 1
-                lastNudgeSeconds = Int(left)
-                if kind == .closedByOwner {
-                    // the process dies now: the notice is all that is left, and the relaunch ends the trip
-                    if servicesEnabled { Notifications.closed(tolerance: left) }
-                } else if kind == .usedLockScreen {
-                    // "come back" is the wrong advice on the lock screen (Face ID wants the passcode): switch the screen off.
-                    // The notification may reach only the Apple Watch, so the phone sounds the warning itself.
-                    waitingForReturn = true
-                    lastWarning = .lockScreen
-                    if servicesEnabled { Notifications.lockScreenNudge(tolerance: left) }
-                    startLockWarning(shown: left, ringFor: tripAllowance, at: date)
-                } else {
-                    waitingForReturn = true
-                    lastWarning = .comeBack
-                    if servicesEnabled { Notifications.nudge(tolerance: left) }
-                }
+            return
+        }
+        // no vibration here: the app is in the background now and iOS only lets the notification vibrate
+        if let pauseEnds = PausePolicy.activeUntil(rec.log, at: date) {
+            // inside a pause (D17) leaving is free – only remind when it is about to end
+            if servicesEnabled { Notifications.pauseEnding(at: pauseEnds) }
+            scheduleProjectedCollapseNotice(after: date)      // out when the pause runs out → it can collapse then
+        } else if let graceEnds, date >= graceEnds, !alreadyCollapsed, date < rec.wake {
+            // nothing counts after the wake time (away intervals are clipped to it): picking up the ringing
+            // phone must not produce "Come back … or the building collapses"
+            // a trip that starts with budget left is a full one (18 s for new nights); with the budget used up there is no time
+            // for a warning (left = 0) and the building has already collapsed
+            // owner 2026-10-09: the collapse always comes with a notice, scheduled now because the app may be dead
+            // or suspended when it happens (also with the budget used up: then it fires at once)
+            let lockTrip = kind == .usedLockScreen
+            var tripAllowance = NightEvaluator.allowance(rec.log, rules: rec.rules, at: date, lockScreen: lockTrip)
+            if kind == .closedByOwner, tripWasOpen, let collapse = collapseAfterRelaunch(rec: rec, at: date) {
+                // a trip was already open (e.g. a leave held during a call) and the relaunch will count it from ITS start:
+                // the evaluator's collapse moment, not "15 s from the closure", is what the notice promises (13ae review)
+                tripAllowance = max(0, collapse.timeIntervalSince(date))
+                scheduleCollapseNotice(at: max(collapse, date), rec: rec)
+            } else if let fire = Notifications.collapseNoticeTime(log: rec.log, rules: rec.rules, at: date,
+                                                                  alreadyCollapsed: alreadyCollapsed, lockScreen: lockTrip) {
+                scheduleCollapseNotice(at: fire, rec: rec)
             }
-        case .returned, .locked:
-            if servicesEnabled {
-                Notifications.cancelNudge()
-                Notifications.cancelPauseNotices()
+            // the whole trip (lock-screen trips are longer: 3 s + 15 s) and the seconds the warning promises
+            let left = tripAllowance - rec.rules.noticeDelay
+            guard left >= 1 else { return }                // the warning would come too late
+            nudgesSent += 1
+            lastNudgeSeconds = Int(left)
+            if kind == .closedByOwner {
+                // the process dies now: the notice is all that is left, and the relaunch ends the trip
+                diag.note("notice", "closed scheduled at=+0s secs=\(Int(left))")
+                if servicesEnabled { Notifications.closed(tolerance: left) }
+            } else if kind == .usedLockScreen {
+                // "come back" is the wrong advice on the lock screen (Face ID wants the passcode): switch the screen off.
+                // The notification may reach only the Apple Watch, so the phone sounds the warning itself.
+                waitingForReturn = true
+                lastWarning = .lockScreen
+                nudgeLive = true
+                diag.note("warn", "nudge scheduled at=+0s secs=\(Int(left)) kind=lock")
+                if servicesEnabled { Notifications.lockScreenNudge(tolerance: left) }
+                startLockWarning(shown: left, ringFor: tripAllowance, at: date)
+            } else {
+                waitingForReturn = true
+                lastWarning = .comeBack
+                nudgeLive = true
+                diag.note("warn", "nudge scheduled at=+0s secs=\(Int(left)) kind=back")
+                if servicesEnabled { Notifications.nudge(tolerance: left) }
             }
-            cancelCollapseNotice()
-            endLockWarning()
-            if kind == .returned, waitingForReturn, collapsedAt == nil { buzz(.relief) }
-            waitingForReturn = false
-        case .callStarted, .pauseStarted:
-            cancelCollapseNotice()                      // a call or a pause excuses the trip that is running
-            // ... but if the owner is still out when the pause runs out, the trip goes on and so does the notice
-            if kind == .pauseStarted { scheduleProjectedCollapseNotice(after: date) }
-        case .callEnded:
-            scheduleProjectedCollapseNotice(after: date)    // still out after the call → the trip counts again
-        default:
-            break
+        } else if let graceEnds, date < graceEnds {
+            // inside the setup nothing has collapsed yet: an earlier event of this very trip makes `alreadyCollapsed` look
+            // true (an open trip is projected to the wake time), so it is not asked here
+            scheduleSetupEndWarning(kind, rec: rec)
         }
     }
+
+    /// When the evaluator will collapse the building if the app is reopened after the closure just stored (a copy of the log
+    /// with a relaunch far enough ahead): `.appLaunched` ends the trip at the relaunch and DROPS an open call instead of
+    /// subtracting it, so a trip begun during a call counts from its own start.
+    private func collapseAfterRelaunch(rec: NightRecord, at date: Date) -> Date? {
+        var sim = rec.log
+        sim.append(.appLaunched, at: max(date, rec.wake - 1))
+        return NightEvaluator.collapsedAt(sim, rules: rec.rules)
+    }
+
+    // MARK: - the warning at the setup's end (13ae, B56)
+
+    /// A warning set in advance for a trip that began INSIDE the setup and is still open: the evaluator counts such a trip
+    /// from the setup's end and collapses at the setup's end + 3s + 15s, so the normal warning comes `noticeDelay` after the
+    /// setup ends (owner 2026-11-11) and the collapse notice for the projected collapse. A user who left earlier keeps the
+    /// "15s of setup left" reminder first – a second notification with another meaning.
+    struct SetupEndWarning: Equatable {
+        var kind: NightEventKind            // .leftApp / .usedLockScreen / .closedByOwner – the event that owns the trip
+        var fireAt: Date
+        var seconds: TimeInterval           // what the notification promises
+        var tripAllowance: TimeInterval
+        var gentle: Bool                    // a gentle-mode lock-screen use: the calm reminder, no seconds
+    }
+    private(set) var setupEndWarning: SetupEndWarning?
+    /// When the notification set for the setup's end fires (nil = none is waiting) – diagnostics + tests.
+    var pendingNudgeAt: Date? { setupEndWarning?.fireAt }
+    @ObservationIgnored private var setupEndTask: Task<Void, Never>?
+    /// A nudge was scheduled and not withdrawn since (a delivered one counts; only for the diagnostic track).
+    private var nudgeLive = false
+
+    private func scheduleSetupEndWarning(_ kind: NightEventKind, rec: NightRecord) {
+        guard let graceEnds else { return }
+        let fire = graceEnds + rec.rules.noticeDelay
+        guard fire < rec.wake else { return }
+        // what an earlier event of the same trip scheduled is replaced, never doubled (one warning per trip)
+        if let old = setupEndWarning {
+            if servicesEnabled { old.kind == .closedByOwner ? Notifications.cancelClosed() : Notifications.cancelNudge() }
+            diag.note("warn", "setupEnd replaced kind=\(old.kind.rawValue)")
+            setupEndWarning = nil
+        }
+        let lockTrip = kind == .usedLockScreen
+        let gentle = lockTrip && !rec.rules.lockScreenCollapses
+        if !gentle,
+           let collapse = Notifications.collapseNoticeTime(log: rec.log, rules: rec.rules, at: graceEnds,
+                                                           alreadyCollapsed: false, lockScreen: lockTrip) {
+            scheduleCollapseNotice(at: collapse, rec: rec)
+        }
+        let allowance = NightEvaluator.allowance(rec.log, rules: rec.rules, at: graceEnds, lockScreen: lockTrip)
+        let left = allowance - rec.rules.noticeDelay
+        guard gentle || left >= 1 else { return }
+        setupEndWarning = SetupEndWarning(kind: kind, fireAt: fire, seconds: left, tripAllowance: allowance, gentle: gentle)
+        diag.note("warn", "setupEnd scheduled kind=\(kind.rawValue) at=\(inSeconds(fire))")
+        if kind == .closedByOwner {
+            diag.note("notice", "closed scheduled at=\(inSeconds(fire)) secs=\(Int(left))")
+            if servicesEnabled { Notifications.closed(tolerance: left, at: fire) }
+        } else if gentle {
+            nudgeLive = true
+            diag.note("warn", "reminder scheduled at=\(inSeconds(fire))")
+            if servicesEnabled { Notifications.lockScreenReminder(at: fire) }
+        } else {
+            nudgeLive = true
+            diag.note("warn", "nudge scheduled at=\(inSeconds(fire)) secs=\(Int(left)) kind=\(lockTrip ? "lock" : "back")")
+            if servicesEnabled {
+                lockTrip ? Notifications.lockScreenNudge(tolerance: left, at: fire) : Notifications.nudge(tolerance: left, at: fire)
+            }
+        }
+        guard servicesEnabled else { return }
+        setupEndTask?.cancel()
+        setupEndTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(max(0, fire.timeIntervalSince(self?.clock.now ?? fire))))
+            guard !Task.isCancelled else { return }
+            self?.refresh()
+        }
+    }
+
+    /// The moment of the setup-end warning has come (driven by `refresh`): the notification is the OS's; here the app's own
+    /// state follows – the count, the "come back" state and, in Strict mode, the lock warning for a lock-screen use.
+    private func fireSetupEndWarningIfDue(now: Date) {
+        guard let w = setupEndWarning, now >= w.fireAt else { return }
+        setupEndWarning = nil
+        setupEndTask?.cancel()
+        setupEndTask = nil
+        guard let rec = active, now < rec.wake, now < w.fireAt + w.seconds else { return }    // already over: nothing to warn about
+        switch w.kind {
+        case .closedByOwner:
+            break                                                   // the process is dead; the notice was the OS's
+        case .usedLockScreen where w.gentle:
+            lockRemindersSent += 1
+        case .usedLockScreen:
+            nudgesSent += 1
+            lastNudgeSeconds = Int(w.seconds)
+            waitingForReturn = true
+            lastWarning = .lockScreen
+            startLockWarning(shown: w.seconds, ringFor: w.seconds, at: w.fireAt)
+        default:
+            nudgesSent += 1
+            lastNudgeSeconds = Int(w.seconds)
+            waitingForReturn = true
+            lastWarning = .comeBack
+        }
+    }
+
+    /// Withdraws the "Come back" style warning that is pending or out (the trip ended, a call began, a relaunch…).
+    private func cancelPendingNudge(why: String) {
+        if servicesEnabled { Notifications.cancelNudge() }
+        setupEndTask?.cancel()
+        setupEndTask = nil
+        if nudgeLive || setupEndWarning != nil { diag.note("warn", "nudge cancelled why=\(why)") }
+        nudgeLive = false
+        setupEndWarning = nil
+    }
+
+    /// "+Ns" – how far ahead `date` is, for the diagnostic track.
+    private func inSeconds(_ date: Date) -> String { "+\(Int(max(0, date.timeIntervalSince(clock.now)).rounded()))s" }
 
     /// The "15s of setup left" reminder is pending only while the user is outside SleepHole during the setup
     /// (`SetupReminder`, owner 2026-10-15). Observable for tests through `setupReminderAt`.
@@ -2770,13 +2944,19 @@ final class AppModel {
     /// The evaluator already knows the collapse moment of a trip that is still open (an open `.leftApp` runs to the
     /// wake time, calls and pauses are cut out of it): when that moment is still ahead, the notice is set for it.
     private func scheduleProjectedCollapseNotice(after date: Date) {
-        guard let rec = active, let fire = collapsedAt, fire > date else { return }
+        guard let rec = active, let fire = collapsedAt, fire > date, collapseNoticeAt != fire else { return }
+        scheduleCollapseNotice(at: fire, rec: rec)
+    }
+
+    private func scheduleCollapseNotice(at fire: Date, rec: NightRecord) {
         collapseNoticeAt = fire
+        diag.note("notice", "collapse scheduled at=\(inSeconds(fire))")
         if servicesEnabled { Notifications.collapsed(isNap: rec.isNap, at: fire) }
     }
 
     /// The trip ended in time or is excused: the pending collapse notice is withdrawn (a delivered one stays).
-    private func cancelCollapseNotice() {
+    private func cancelCollapseNotice(why: String) {
+        if collapseNoticeAt != nil { diag.note("notice", "collapse cancelled why=\(why)") }
         collapseNoticeAt = nil
         if servicesEnabled { Notifications.cancelCollapsed() }
     }

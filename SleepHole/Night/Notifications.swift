@@ -164,22 +164,24 @@ enum Notifications {
     /// Exactly ONE notification per trip (owner 2026-10-09: "each one must have its meaning"). Apps cannot vibrate in
     /// the background – the notification's sound is what vibrates the phone. `.default`, not `.defaultCritical`:
     /// critical sounds need an Apple entitlement and stay silent without it (owner 2026-09-30).
-    static func nudge(tolerance: TimeInterval) {
-        schedule("nudge", at: Date() + 0.2, title: L("⚠️ Heads up! SleepHole must stay open"),
+    /// `at` (13ae, B56): a trip begun inside the setup gets the same warning scheduled for the moment the setup ends + the
+    /// notice delay; the default is "now" (a trip detected after the setup).
+    static func nudge(tolerance: TimeInterval, at date: Date = Date() + 0.2) {
+        schedule("nudge", at: date, title: L("⚠️ Heads up! SleepHole must stay open"),
                  body: L("Come back within \(Int(tolerance)) seconds so tonight's building goes on 🏗️"), sound: .default)
     }
 
     /// The lock-screen variant of `nudge` (same identifier): "come back" would be wrong advice there – unlocking
     /// needs Face ID or the passcode – the fast, correct reaction is to switch the screen off. One notification only.
-    static func lockScreenNudge(tolerance: TimeInterval) {
-        schedule("nudge", at: Date() + 0.2, title: L("💤 Your phone is off duty now"),
+    static func lockScreenNudge(tolerance: TimeInterval, at date: Date = Date() + 0.2) {
+        schedule("nudge", at: date, title: L("💤 Your phone is off duty now"),
                  body: L("Switch the screen off within \(Int(tolerance)) seconds so tonight's building goes on 🏗️"), sound: .default)
     }
 
     /// Gentle mode (owner 2026-10-09, "care instead of enforcement"): the one calm reminder for using the phone on the
     /// lock screen. No seconds, no building at stake – the building stays.
-    static func lockScreenReminder() {
-        schedule(lockReminderId, at: Date() + 0.2, title: L("💤 Your phone is off duty now"),
+    static func lockScreenReminder(at date: Date = Date() + 0.2) {
+        schedule(lockReminderId, at: date, title: L("💤 Your phone is off duty now"),
                  body: L("Switch the screen off and the calm night goes on."), sound: .default)
     }
 
@@ -193,8 +195,8 @@ enum Notifications {
     /// away counts as leaving it): the owner has `tolerance` seconds to open it again. One notification. Scheduled in
     /// the last moments of the process – the notification centre keeps it, so it still arrives. A restart of the phone
     /// sends the same notice; the relaunch cancels these and recognises the restart by the boot time.
-    static func closed(tolerance: TimeInterval) {
-        schedule("closed", at: Date() + 0.2, title: L("⚠️ Heads up! SleepHole was closed"),
+    static func closed(tolerance: TimeInterval, at date: Date = Date() + 0.2) {
+        schedule("closed", at: date, title: L("⚠️ Heads up! SleepHole was closed"),
                  body: L("Open it within \(Int(tolerance)) seconds so tonight's building goes on 🏗️"), sound: .default)
     }
 
