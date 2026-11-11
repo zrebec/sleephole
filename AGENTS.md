@@ -35,17 +35,19 @@ by build – the roadmap is plan §0b.
    before it on his word).** After his restart check `xcodebuild -version` and `xcrun devicectl list devices` before the
    release's archive. Remove this line once he says it is done.
 1. **Build 13 = polishing, in work since 2026-11-01** – plan §10 REL "Build 13"; his page
-   https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`; v40). On his phone: every step
-   13a – 13aa (**13aa = B50, the last start minute counts whole, since 2026-11-11 09:49**). **Open: his aa1 (the nap
-   started at 13:30, today) and aa2 (the night started at 21:35 – the edge in Strict mode; gentle is 22:00) – 13aa is not
-   confirmed until then (his word 2026-11-11 ~10:15); **he switched Strict mode ON ~10:25 for aa2 (so it is not
-   forgotten) – the nap today is strict too; ask in the morning whether Strict stays on.** every other check is done. Two setup-screen UI tests fail since 13x → B49 (proposed for build 14, not a release
-   blocker). 13w and W6 proposed for build 15, B48 (shake) for build 14. The night 10 → 11 was missed (B50) and is
-   covered by November's automatic bronze (read 2026-11-11).
-2. **Release of build 13: moves to 2026-11-12 morning** – the night 10 → 11 was not started (B50; his bronze joker), so
-   13z / 13y2 had no real night yet; with 13aa the night 11 → 12 is the real night. Then the journal first, 1.1 (13) (`MARKETING_VERSION`
-   1.1 – 1.0 is approved), the Release archive check, the upload, "What to Test" EN + SK by Opus, Kamaráti + SE, the PR
-   `build/13` → `main`. **His "Áno" is given; he wants no questions about the release itself** – only a problem stops it.
+   https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`). On his phone: every step 13a – 13aa
+   and **13ab – 13ad since 2026-11-11 19:25** (his nap's fixes: the diagnostic track, the call hold + the alarm at media
+   volume 0, the rest screen for naps + the 🔇 line). **13ae (warnings around a call and at the setup's end, B55 / B56)
+   is merged (`d3e8a42`) but NOT on his phone** – Opus advised a daytime check first; install on his word. **Morning
+   2026-11-12: read the journal + the diagnostic track of the night (Strict mode; aa2 only if he started in the 21:35 minute –
+   he counts his 13:30 nap as aa2, Opus explained the night's own check; Auto-Lock off on purpose – the lit rest screen measured all night, his battery % evening / morning); ask whether Strict
+   stays on; ask his evaluator question (plan §12 2026-11-11 ~18:00 – 20:25: a call open at a relaunch is dropped, not
+   subtracted).** Then the daytime device checks of 13ab – 13ae (plan §10 REL). Two setup-screen UI tests fail since 13x →
+   B49 (build 14). 13w and W6 proposed for build 15, B48 (shake) for build 14.
+2. **Release of build 13: after the device checks of 13ab – 13ae and one real night with the whole tree (13ae included)**
+   – then the journal first, 1.1 (13) (`MARKETING_VERSION` 1.1 – 1.0 is approved), the Release archive check, the upload,
+   "What to Test" EN + SK by Opus, Kamaráti + SE, the PR `build/13` → `main`. **His "Áno" is given; he wants no questions
+   about the release itself** – only a problem stops it.
 3. **Next: build 14** – **its first step W7, the Watch buzzes ~30s before the alarm (his word 2026-11-10 ~19:45; plan
    §0b rows 14 / 15)**; then the features – nights off, the statistics, town needs + a choice of three (plan §0b) – only
    on his word.
