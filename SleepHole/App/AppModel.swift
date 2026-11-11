@@ -80,6 +80,8 @@ final class AppModel {
     private let container: ModelContainer
     private let calendar = Calendar.current
     private let monitor = LifecycleMonitor()
+    /// The diagnostic track of the running night / nap (13ab): local only, never through `append` / `save()`.
+    let diag = Diagnostics()
     private let lockLab = LockLab()
     private var alarmTask: Task<Void, Never>?
     private var ticker: Timer?
@@ -379,6 +381,7 @@ final class AppModel {
         }
         #endif
         sync.attach(self)
+        configureDiagnostics()
         configureRestScreen()
         if initialSettings == nil, let lang = Self.launchLanguage() { language = lang }
         resumeActiveNight()
@@ -932,6 +935,7 @@ final class AppModel {
         save()
         active = rec
         startServices(for: rec)
+        diagBegin(rec)
         armAlarm(for: rec, setupEnds: window.setupEnds(start: now, rules: NapPlan.rules))
         fx("fx_sleep", volume: 0.6)
         say(.napStart, after: Motion.t(1.4))
@@ -1479,6 +1483,10 @@ final class AppModel {
         if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false { endLockWarning() }
         if let rec = active {
             setEarlyFlags(canStartEarly: false, tonightPlayed: false)
+            if !diag.setupEndNoted, diag.record === rec, let g = graceEnds, now >= g {
+                diag.setupEndNoted = true
+                diag.notePower("setup")
+            }
             let log = rec.log
             if log.confirmedAt != nil || now > log.window.confirmLateUntil {
                 finalize(rec)
@@ -1580,6 +1588,7 @@ final class AppModel {
         active = rec
         debugWindow = nil
         startServices(for: rec)
+        diagBegin(rec)
         armAlarm(for: rec, setupEnds: rec.window.setupEnds(start: now, rules: rec.rules))
         fx("fx_sleep", volume: 0.6)
         say(.goodNight, after: Motion.t(1.4))
@@ -2122,10 +2131,71 @@ final class AppModel {
         if closedAt != nil, servicesEnabled { Notifications.cancelClosed() }       // the owner is back
         if closedAt != nil { cancelCollapseNotice() }
         startServices(for: rec)
+        diagBegin(rec, resume: (restarted: restarted, closed: closedAt != nil))
         // came back in time after a "SleepHole was closed" warning → the same "phew" as after "Come back!"
         if let c = closedAt, !restarted, now < rec.wake, let graceEnds, c >= graceEnds,
            PausePolicy.activeUntil(rec.log, at: c) == nil, collapsedAt == nil {
             buzz(.relief)
+        }
+    }
+
+    // MARK: - diagnostic track (13ab)
+
+    private func configureDiagnostics() {
+        diag.now = { [weak self] in self?.clock.now ?? Date() }
+        diag.commit = { [weak self] in try? self?.context.save() }      // never `save()`: no revision bump, no sync wake-up
+        diag.observesSystem = servicesEnabled
+    }
+
+    /// The start snapshot (`ctx.*`) of a night / nap that was just started or, with `resume`, picked up after a relaunch
+    /// (`ctx.resume` first). Device state only; saved at once.
+    private func diagBegin(_ rec: NightRecord, resume: (restarted: Bool, closed: Bool)? = nil) {
+        diag.begin(rec)
+        if let resume {
+            diag.setupEndNoted = graceEnds.map { clock.now >= $0 } ?? false
+            diag.note("ctx.resume", "restart=\(resume.restarted ? 1 : 0) closed=\(resume.closed ? 1 : 0)")
+        }
+        let began = rec.startedAt ?? rec.bedtime
+        let early = rec.window.isEarlyStart(began)
+        diag.note("ctx.app", "v=\(DeviceReading.appVersionText()) ios=\(UIDevice.current.systemVersion) lang=\(language.rawValue) nap=\(rec.isNap ? 1 : 0) strict=\(rec.rules.lockScreenCollapses ? 1 : 0) setup=\(Int(rec.window.setupEnds(start: began, rules: rec.rules).timeIntervalSince(began))) early=\(early ? 1 : 0)")
+        let timer = settings.ambienceMinutes.map { "\($0)min" } ?? "all"
+        diag.note("ctx.sound", "amb=\(sleepSound?.ambience.rawValue ?? "silence") vol=\(Int((settings.volume * 100).rounded())) timer=\(timer)")
+        let consent: String = switch systemAlarm.consent {
+        case .allowed: "allowed"
+        case .denied: "denied"
+        case .notAsked: "notAsked"
+        case .unavailable: "unavailable"
+        }
+        let alarm = "sound=\(settings.alarmSound.rawValue) start=\(settings.alarmStartPercent) end=\(settings.alarmEndPercent) rise=\(Int(settings.effectiveRiseSeconds)) sys=\(settings.usesSystemAlarm ? "on" : "off") alarmkit=\(consent)"
+        if servicesEnabled {
+            Task { [weak self, weak rec] in
+                let notif = await Notifications.diagnosticSummary()       // may land a moment after the other ctx lines
+                guard let self, let rec, self.diag.record === rec else { return }
+                self.diag.note("ctx.alarm", "\(alarm) \(notif)")
+            }
+        } else {
+            diag.note("ctx.alarm", "\(alarm) notif=na ts=na")
+        }
+        diag.note("ctx.device", "vo=\(UIAccessibility.isVoiceOverRunning ? 1 : 0) lock=\(monitor.canTellLockFromLeaving() ? 1 : 0) \(DeviceReading.powerText()) vol=\(DeviceReading.volumePercent()) out=\(DeviceReading.routeTypes()) bright=\(DeviceReading.brightnessPercent())")
+        diag.flush()
+    }
+
+    /// A `life` / `call` line from the lifecycle monitor. Going to the background saves the track at once: iOS may suspend
+    /// the app right after, and the track must hold what happened up to there.
+    func diagFromMonitor(_ k: String, _ v: String) {
+        diag.note(k, v)
+        if k == "life", v == "background" { diag.flush() }
+    }
+
+    /// Power lines at the rule events the owner asked for, and the immediate save at the alarm.
+    private func noteDiagnostics(after kind: NightEventKind) {
+        switch kind {
+        case .locked, .returned: diag.notePower(kind.rawValue)
+        case .confirmed: diag.notePower("confirmed")
+        case .alarmFired:
+            diag.notePower("alarm")
+            diag.flush()
+        default: break
         }
     }
 
@@ -2149,6 +2219,8 @@ final class AppModel {
         }
         monitor.onEvent = { [weak self] kind, date in self?.append(kind, at: date) }
         monitor.onTerminate = { [weak self] in self?.appWillTerminate() }
+        monitor.now = { [weak self] in self?.clock.now ?? Date() }
+        monitor.onDiag = { [weak self] k, v in self?.diagFromMonitor(k, v) }
         monitor.start()
         if LockLab.shouldRecord(arguments: DevArgs.list, isDebugNight: rec.isDebug) {
             monitor.onRaw = { [weak self] text in self?.lockLab.note(text) }
@@ -2175,6 +2247,7 @@ final class AppModel {
         if lockLab.isRunning { lockLab.stop(); monitor.onRaw = nil }
         monitor.onEvent = nil
         monitor.onTerminate = nil
+        monitor.onDiag = nil
         audio.stop()
         Notifications.cancelNight()
     }
@@ -2224,6 +2297,7 @@ final class AppModel {
     /// `append` stores the event synchronously (`context.save()`) before it returns – the process is about to die –
     /// and sends the warning, exactly where leaving the app would.
     func appWillTerminate() {
+        defer { diag.flush() }                              // the process dies right after: the track must be saved now
         guard let rec = active, clock.now < rec.wake else { return }
         append(.closedByOwner)
     }
@@ -2366,8 +2440,9 @@ final class AppModel {
         // (bug found by the owner 2026-09-29).
         let alreadyCollapsed = collapsedAt != nil
         let lockTripWasOpen = Self.lockScreenTripOpen(rec.log)
-        rec.append(kind, at: date)
+        if !rec.append(kind, at: date) { diag.note("journal", "unreadable, event \(kind.rawValue) not stored") }
         save()
+        noteDiagnostics(after: kind)
         updateSetupReminder(after: kind, at: date)
         switch kind {
         case .leftApp where lockTripWasOpen && rec.rules.lockScreenCollapses:
@@ -2550,7 +2625,11 @@ final class AppModel {
         rec.awaySeconds = result.awaySeconds
         rec.finalizedAt = clock.now
         save()
+        diag.notePower("end")                        // before `stopServices`: the battery switch is still held
+        diag.note("end", "outcome=\(result.outcome.rawValue)")
         stopServices()
+        diag.end()
+        diag.prune(records())                        // the last 30 days keep their track (one pass, one save)
         active = nil
         collapseNoticeAt = nil                       // stopServices already withdrew the pending notice
         sync.activityEnded()                         // a sync owed since the night began runs now

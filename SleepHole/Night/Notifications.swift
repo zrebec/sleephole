@@ -240,6 +240,26 @@ enum Notifications {
         cancelCollapsed()
     }
 
+    /// The notification permission and the Time Sensitive switch as enum names, for the diagnostic track (13ab).
+    static func diagnosticSummary() async -> String {
+        let s = await center.notificationSettings()
+        let auth: String = switch s.authorizationStatus {
+        case .notDetermined: "notDetermined"
+        case .denied: "denied"
+        case .authorized: "authorized"
+        case .provisional: "provisional"
+        case .ephemeral: "ephemeral"
+        @unknown default: "unknown"
+        }
+        let ts: String = switch s.timeSensitiveSetting {
+        case .notSupported: "notSupported"
+        case .disabled: "disabled"
+        case .enabled: "enabled"
+        @unknown default: "unknown"
+        }
+        return "notif=\(auth) ts=\(ts)"
+    }
+
     /// "allowed" / "denied" / "not allowed yet" for the Settings screen.
     static func statusText() async -> String {
         switch await center.notificationSettings().authorizationStatus {

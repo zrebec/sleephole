@@ -51,14 +51,14 @@ struct BatteryNote: View {
         #if DEBUG && targetEnvironment(simulator)
         if fake != nil { return }
         #endif
-        UIDevice.current.isBatteryMonitoringEnabled = true
+        BatteryMonitoring.set("batteryNote", on: true)        // shared with the diagnostic track (13ab)
     }
 
     private static func stopMonitoring() {
         #if DEBUG && targetEnvironment(simulator)
         if fake != nil { return }
         #endif
-        UIDevice.current.isBatteryMonitoringEnabled = false
+        BatteryMonitoring.set("batteryNote", on: false)       // the night's own claim stays
     }
 
     private static func reading() -> (level: Double, plug: BatteryPlug) {
