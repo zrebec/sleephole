@@ -35,9 +35,10 @@ by build – the roadmap is plan §0b.
    before it on his word).** After his restart check `xcodebuild -version` and `xcrun devicectl list devices` before the
    release's archive. Remove this line once he says it is done.
 1. **Build 13 = polishing, in work since 2026-11-01** – plan §10 REL "Build 13"; his page
-   https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`; v38). On his phone: every step
-   13a – 13aa (**13aa = B50, the last start minute counts whole, since 2026-11-11 09:49**). **Every check is done**;
-   nothing for him to confirm. Two setup-screen UI tests fail since 13x → B49 (proposed for build 14, not a release
+   https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`; v40). On his phone: every step
+   13a – 13aa (**13aa = B50, the last start minute counts whole, since 2026-11-11 09:49**). **Open: his aa1 (the nap
+   started at 13:30, today) and aa2 (the night started at 21:35 – the edge in Strict mode; gentle is 22:00) – 13aa is not
+   confirmed until then (his word 2026-11-11 ~10:15);** every other check is done. Two setup-screen UI tests fail since 13x → B49 (proposed for build 14, not a release
    blocker). 13w and W6 proposed for build 15, B48 (shake) for build 14. The night 10 → 11 was missed (B50) and is
    covered by November's automatic bronze (read 2026-11-11).
 2. **Release of build 13: moves to 2026-11-12 morning** – the night 10 → 11 was not started (B50; his bronze joker), so
@@ -290,8 +291,8 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | Path | What |
 |---|---|
 | `docs/IMPLEMENTATION_PLAN.md` | the plan (read first) |
-| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (source: a scratchpad file of 2026-10-19 – gone with the session; read the page with the Artifact tool, edit, republish) – **when §0b changes, update all three** |
-| (claude.ai page) | the owner's bug list B1–B50, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (updated 2026-11-11, v24; source: a scratchpad file – read the page with the Artifact tool to edit it) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
+| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (v114 of 2026-11-11; read the page with the Artifact tool – `path: "index.html"` saves it to a file –, edit, republish) – **when §0b changes, update all three** |
+| (claude.ai page) | the owner's bug list B1–B50, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (updated 2026-11-11, v25; source: a scratchpad file – read the page with the Artifact tool to edit it) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
 | (claude.ai pages) | per-build pages for the owner (Slovak, 2026-10-22), each with a reply form whose answers (and ticks) go to the page's shared store – read them with `ArtifactData` `get` `state/answers` (the browser also keeps a local copy under the `b10.` / `b9.` keys; never rename them): build 13 https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (13a + 13b, the Czech double check, screenshots, c1–c6 for the morning, n1–n2 for a night in Czech; prefix `b13.`), build 10 https://claude.ai/artifact/P5jc2DhAxdEwfEtKnhzkLX (what 10a–10e fixed, what to try, the switch for the night, the morning questions), build 9 https://claude.ai/artifact/T1hEdc9dpk56MAmwQxk7nr (9a–9o, the bugs, what was confirmed, what is open). Sources: scratchpad files of 2026-10-22 – read a page with the Artifact tool to edit it |
 | (claude.ai page) | all 30 postcards as app screenshots in sk / cs / en (2026-11-02, private, static, no form): https://claude.ai/artifact/JD9SGXVqygs9vkkNPcq4ae – the images come from `SleepHoleTests/PostcardTextTests` `screenshotsForTheReview()` (`TEST_RUNNER_POSTCARD_SHOTS=<dir>`, 92 PNGs); the page generator was a scratchpad script of 2026-11-02 – read the page with the Artifact tool to edit it |
 | (claude.ai page) | the price-model comparison (Slovak, 2026-10-22, private): https://claude.ai/artifact/1mJPVNdRK9EAVjsLAkGfRD – a one-time price vs a subscription with a trial vs a 7-day trial + one-time unlock: Apple's rules, money per sale, indie practice, effort, Opus's view. His decision is open; never push (memory) |
