@@ -1,3 +1,4 @@
+import CallKit
 import Foundation
 import Observation
 import SleepCore
@@ -56,6 +57,9 @@ final class AppModel {
                 if changed || settings.usesSync != oldValue.usesSync { sync.noteLocalChange() }
             }
             settings.save()
+            if active != nil, settings.volume != oldValue.volume {
+                appVolumeNote.change(from: Self.percent(Double(oldValue.volume)), to: Self.percent(Double(settings.volume)))
+            }
             // during a night, Settings switch the sound that is playing (a stopped sound stays stopped)
             if active != nil, sleepSoundPlaying,
                settings.ambience != oldValue.ambience || settings.volume != oldValue.volume {
@@ -84,6 +88,8 @@ final class AppModel {
     let diag = Diagnostics()
     private let lockLab = LockLab()
     private var alarmTask: Task<Void, Never>?
+    /// Watches a call that was already live when the night started (13ac); nil otherwise.
+    private var seededHoldTask: Task<Void, Never>?
     private var ticker: Timer?
 
     static let debugGrace: TimeInterval = 15
@@ -934,6 +940,7 @@ final class AppModel {
         context.insert(rec)
         save()
         active = rec
+        diagOpen(rec)                               // the track opens first: the services' own lines are kept
         startServices(for: rec)
         diagBegin(rec)
         armAlarm(for: rec, setupEnds: window.setupEnds(start: now, rules: NapPlan.rules))
@@ -1587,6 +1594,7 @@ final class AppModel {
         save()
         active = rec
         debugWindow = nil
+        diagOpen(rec)                               // the track opens first: the services' own lines are kept
         startServices(for: rec)
         diagBegin(rec)
         armAlarm(for: rec, setupEnds: rec.window.setupEnds(start: now, rules: rec.rules))
@@ -1833,6 +1841,74 @@ final class AppModel {
     @ObservationIgnored private var systemAlarmQueue: Task<Void, Never>?
     @ObservationIgnored private var consentTask: Task<Void, Never>?
 
+    // MARK: the media volume and the alarm hand-over (13ac-2, B53)
+
+    /// The media volume (0…1) as the one night-long observer reports it; -1 = unknown (no night services, no reading yet).
+    /// Tests set it with `setMediaVolume(_:)`; `-fakeVolume V[,S,V2]` drives it in the simulator.
+    private(set) var mediaVolume: Double = -1
+    /// Our own alarm rings but cannot be heard (the media volume is 0): the backup notifications and the system alarm
+    /// stay as they were armed until the volume comes up.
+    @ObservationIgnored private var alarmInaudible = false
+    /// The yield to a due system alarm was written to the track already (once per alarm).
+    @ObservationIgnored private var yieldNoted = false
+    /// Our alarm player has started and its end is not noted yet (diagnostics).
+    @ObservationIgnored private var alarmSounding = false
+    @ObservationIgnored private var alarmTries = 0
+    @ObservationIgnored private var alarmRetries = 0
+    @ObservationIgnored private var alarmTryFailureNoted = false
+    @ObservationIgnored private var alarmTrySuccessNoted = false
+    @ObservationIgnored private let volumeWatcher = MediaVolumeWatcher()
+    @ObservationIgnored private lazy var mediaVolumeNote = QuietNote { [weak self] now, was in
+        self?.diag.note("vol", "media=\(now) was=\(was)")
+    }
+    @ObservationIgnored private lazy var appVolumeNote = QuietNote { [weak self] now, was in
+        self?.diag.note("vol", "app=\(now) was=\(was)")
+    }
+
+    /// Our alarm counts as audible unless the media volume reads 0 %. An unknown reading counts as audible.
+    private var alarmIsAudible: Bool { VolumeReminder.level(volume: mediaVolume) != .off }
+
+    private static func percent(_ v: Double) -> Int { Int((min(max(v, 0), 1) * 100).rounded()) }
+    private var mediaPercentText: String { mediaVolume < 0 ? "na" : "\(Self.percent(mediaVolume))" }
+
+    /// The reading of the media volume (the observer, the fake, or a test). Rising above 0 % while our alarm rings
+    /// without being heard does the normal stand-down, once.
+    func setMediaVolume(_ v: Double) {
+        let old = mediaVolume
+        mediaVolume = v
+        if old >= 0, v >= 0, Self.percent(old) != Self.percent(v) {
+            mediaVolumeNote.change(from: Self.percent(old), to: Self.percent(v))
+        }
+        if alarmInaudible, alarmIsAudible, let rec = active {
+            alarmInaudible = false
+            // the normal stand-down only while OUR alarm really rings (its two minutes are not over, and with services on
+            // its engine runs); otherwise a rising volume must not touch a system alarm that is the only audible channel.
+            // An engine lost to a system alarm is picked up by the next `startAlarmSound` tick, which rings ours and then
+            // stands down in `alarmSoundStarted` – the system alarm is never stopped before ours plays.
+            let over = rec.log.has(.alarmStopped) || clock.now >= rec.wake + rec.rules.alarmDuration - 1
+            let ours = !servicesEnabled || (audio.isAlarmRinging && audio.isEngineRunning)
+            if !over, ours { standDownBehindOurAlarm() }
+        }
+    }
+
+    /// Where the media volume is read from at the decision points (the alarm); a seam for tests.
+    @ObservationIgnored var mediaVolumeReader: () -> Double = { MediaVolumeWatcher.reading() }
+
+    /// B53: the observer reports only while the audio session is active – a change made during a call, another app's
+    /// alarm or a failed restart never reaches it. So the volume is read again where it decides something: at the alarm,
+    /// at every try of the alarm sound, and after the audio came back.
+    private func rereadMediaVolume() {
+        guard servicesEnabled else { return }
+        setMediaVolume(mediaVolumeReader())
+    }
+
+    /// "wake+30s" – a time relative to the wake time of the running (or just tracked) night.
+    private func wakeRelative(_ date: Date) -> String {
+        guard let wake = (active ?? diag.record)?.wake else { return "na" }
+        let d = Int(date.timeIntervalSince(wake).rounded())
+        return "wake\(d >= 0 ? "+" : "-")\(abs(d))s"
+    }
+
     /// When the safety alarm rings (nil = none, or its time has passed): the owner confirmed waking up early, and the
     /// system alarm stays on in case he falls asleep again.
     var safetyAlarmAt: Date? {
@@ -1843,7 +1919,7 @@ final class AppModel {
     /// "I'm really up": cancels the safety alarm.
     func switchOffSafetyAlarm() {
         guard systemAlarmIsSafety else { return }
-        cancelSystemAlarm()
+        cancelSystemAlarm(why: "safetyOff")
     }
 
     // MARK: system alarm test (Settings → Developer → System alarm test)
@@ -1984,6 +2060,7 @@ final class AppModel {
         enqueueSystemAlarm { [weak self] in
             guard let self else { return }
             let accepted = await self.systemAlarm.schedule(at: date, soundFile: file)
+            if !safety { self.diag.note("sysalarm", "schedule at=\(self.wakeRelative(date)) ok=\(accepted ? 1 : 0)") }
             if !accepted, self.systemAlarmAt == date {
                 self.systemAlarmAt = before.at
                 self.systemAlarmIsSafety = before.safety
@@ -1991,7 +2068,8 @@ final class AppModel {
         }
     }
 
-    private func cancelSystemAlarm() {
+    private func cancelSystemAlarm(why: String = "other") {
+        if systemAlarmAt != nil { diag.note("sysalarm", "cancel why=\(why)") }
         systemAlarmAt = nil
         systemAlarmIsSafety = false
         testAlarmTime = nil
@@ -2005,8 +2083,10 @@ final class AppModel {
     private func armAlarm(for rec: NightRecord, setupEnds: Date) {
         systemAlarmMoved = false
         backupNotificationsOn = true
+        resetAlarmDiagState()
         if servicesEnabled {
             Notifications.scheduleNight(wake: rec.wake, alarmFile: settings.alarmSound.fileName)
+            diag.note("notif", "backup scheduled n=5")
         }
         // the night starts with SleepHole in front: no "setup is running out" reminder until the user leaves it
         outsideApp = false
@@ -2037,7 +2117,7 @@ final class AppModel {
         guard settings.usesSystemAlarm != on else { return }
         settings.usesSystemAlarm = on
         if !on {
-            cancelSystemAlarm()
+            cancelSystemAlarm(why: "switchedOff")
             return
         }
         let rec = active.flatMap { $0.wake > clock.now ? $0 : nil }     // a night / nap whose own alarm has not rung yet
@@ -2064,16 +2144,25 @@ final class AppModel {
     /// two minutes, set again for the moment ours stops, so it still takes over when the owner sleeps through them.
     private func moveSystemAlarmBehindOurs() {
         guard !systemAlarmMoved, let rec = active, !systemAlarmIsSafety, let at = systemAlarmAt else { return }
+        // B53: ours cannot be heard (media volume 0) → the system alarm stays where it is, due, ringing or waiting
+        guard alarmIsAudible else {
+            if !yieldNoted { yieldNoted = true; diag.note("sysalarm", "keep why=inaudible") }
+            return
+        }
         let now = clock.now
         let target = rec.wake + rec.rules.alarmDuration
         if at <= now {
             systemAlarmMoved = true
-            cancelSystemAlarm()                                   // stops a ringing one
-            if target.timeIntervalSince(now) > 1 { scheduleSystemAlarm(at: target) }
+            cancelSystemAlarm(why: "moved")                       // stops a ringing one
+            if target.timeIntervalSince(now) > 1 {
+                diag.note("sysalarm", "move at=\(wakeRelative(target))")
+                scheduleSystemAlarm(at: target)
+            }
             return
         }
         guard at < target else { return }
         systemAlarmMoved = true
+        diag.note("sysalarm", "move at=\(wakeRelative(target))")
         scheduleSystemAlarm(at: target)
     }
 
@@ -2081,13 +2170,24 @@ final class AppModel {
     /// expired → the system alarm is cancelled. Confirmed EARLY (a night, from wake − 30 min) → it moves to the wake
     /// time and stays as a safety alarm. Without consent there is no safety alarm. A nap confirmed early (its last
     /// 20 %) leaves none: it is cancelled like any nap's alarm.
+    /// The track's line for `settleSystemAlarm` (written before the track ends; the settling itself runs after it).
+    private func noteSystemAlarmSettle(for rec: NightRecord) {
+        guard systemAlarmAt != nil else { return }
+        let early = !rec.isNap && rec.log.confirmedAt.map { $0 < rec.wake } == true
+        if early, settings.usesSystemAlarm, systemAlarm.consent == .allowed, rec.wake > clock.now {
+            diag.note("sysalarm", "move at=wake+0s")
+        } else {
+            diag.note("sysalarm", "cancel why=\(rec.log.confirmedAt != nil ? "confirmed" : "abandoned")")
+        }
+    }
+
     private func settleSystemAlarm(for rec: NightRecord) {
         systemAlarmMoved = false
         let early = !rec.isNap && rec.log.confirmedAt.map { $0 < rec.wake } == true
         if early, settings.usesSystemAlarm, systemAlarm.consent == .allowed, rec.wake > clock.now {
             scheduleSystemAlarm(at: rec.wake, safety: true)
         } else {
-            cancelSystemAlarm()
+            cancelSystemAlarm(why: rec.log.confirmedAt != nil ? "confirmed" : "abandoned")
         }
     }
 
@@ -2130,8 +2230,9 @@ final class AppModel {
         if servicesEnabled { Notifications.cancelSetupReminder() }
         if closedAt != nil, servicesEnabled { Notifications.cancelClosed() }       // the owner is back
         if closedAt != nil { cancelCollapseNotice() }
+        diagOpen(rec, resume: (restarted: restarted, closed: closedAt != nil))
         startServices(for: rec)
-        diagBegin(rec, resume: (restarted: restarted, closed: closedAt != nil))
+        diagBegin(rec)
         // came back in time after a "SleepHole was closed" warning → the same "phew" as after "Come back!"
         if let c = closedAt, !restarted, now < rec.wake, let graceEnds, c >= graceEnds,
            PausePolicy.activeUntil(rec.log, at: c) == nil, collapsedAt == nil {
@@ -2147,14 +2248,19 @@ final class AppModel {
         diag.observesSystem = servicesEnabled
     }
 
-    /// The start snapshot (`ctx.*`) of a night / nap that was just started or, with `resume`, picked up after a relaunch
-    /// (`ctx.resume` first). Device state only; saved at once.
-    private func diagBegin(_ rec: NightRecord, resume: (restarted: Bool, closed: Bool)? = nil) {
+    /// The track opens BEFORE `startServices`, so what the services write while they start (`sound start`, `sound hold on`,
+    /// …) is kept; with `resume` the `ctx.resume` line comes first.
+    private func diagOpen(_ rec: NightRecord, resume: (restarted: Bool, closed: Bool)? = nil) {
         diag.begin(rec)
         if let resume {
             diag.setupEndNoted = graceEnds.map { clock.now >= $0 } ?? false
             diag.note("ctx.resume", "restart=\(resume.restarted ? 1 : 0) closed=\(resume.closed ? 1 : 0)")
         }
+    }
+
+    /// The start snapshot (`ctx.*`) of a night / nap that was just started or picked up after a relaunch. Device state
+    /// only; saved at once.
+    private func diagBegin(_ rec: NightRecord) {
         let began = rec.startedAt ?? rec.bedtime
         let early = rec.window.isEarlyStart(began)
         diag.note("ctx.app", "v=\(DeviceReading.appVersionText()) ios=\(UIDevice.current.systemVersion) lang=\(language.rawValue) nap=\(rec.isNap ? 1 : 0) strict=\(rec.rules.lockScreenCollapses ? 1 : 0) setup=\(Int(rec.window.setupEnds(start: began, rules: rec.rules).timeIntervalSince(began))) early=\(early ? 1 : 0)")
@@ -2202,14 +2308,19 @@ final class AppModel {
     private func startServices(for rec: NightRecord) {
         // the sound from Settings plays from the start – unless the owner stopped it during an earlier night
         // (B19): then the engine still starts (it keeps the app alive) but silent, and there is no sleep timer
-        let ambience: AudioKeeper.Ambience = settings.playsAtStart ? settings.ambience : .silence
+        // B60: a night picked up at or after its wake time plays no sleep sound at all (keep-alive only, no `sleepSound`)
+        let ambience: AudioKeeper.Ambience = settings.playsAtStart && clock.now < rec.wake ? settings.ambience : .silence
         if ambience != .silence {
             sleepSound = (ambience, settings.ambienceSeconds.map { (rec.startedAt ?? clock.now) + $0 })
         }
         guard servicesEnabled else { return }
         SoundFX.stopPreview()                       // 13z: a Settings alarm preview never plays on into a night or nap
         UIApplication.shared.isIdleTimerDisabled = false
+        audio.onDiag = { [weak self] k, v in self?.diag.note(k, v) }
+        audio.onRestored = { [weak self] in self?.rereadMediaVolume() }
         try? audio.start(ambience: ambience, volume: settings.volume)
+        volumeWatcher.start { [weak self] v in self?.setMediaVolume(v) }     // one observer for the whole night / nap
+        seedCallHold()
         if ambience != .silence, let total = settings.ambienceSeconds {   // sleep timer from the start of the night
             let elapsed = clock.now.timeIntervalSince(rec.startedAt ?? clock.now)
             audio.sleepTimer(seconds: max(0, total - elapsed), volume: settings.volume)
@@ -2217,7 +2328,7 @@ final class AppModel {
         audio.onInterruption = { [weak self] report in
             self?.append(report.journalKind)
         }
-        monitor.onEvent = { [weak self] kind, date in self?.append(kind, at: date) }
+        monitor.onEvent = { [weak self] kind, date in self?.monitorEvent(kind, at: date) }
         monitor.onTerminate = { [weak self] in self?.appWillTerminate() }
         monitor.now = { [weak self] in self?.clock.now ?? Date() }
         monitor.onDiag = { [weak self] k, v in self?.diagFromMonitor(k, v) }
@@ -2240,7 +2351,10 @@ final class AppModel {
         sleepSound = nil
         waitingForReturn = false
         backupNotificationsOn = false                       // cancelled with the night's other notifications below
+        alarmInaudible = false
         guard servicesEnabled else { return }
+        volumeWatcher.stop()
+        mediaVolume = -1
         alarmTask?.cancel()
         alarmTask = nil
         monitor.stop()
@@ -2248,12 +2362,60 @@ final class AppModel {
         monitor.onEvent = nil
         monitor.onTerminate = nil
         monitor.onDiag = nil
-        audio.stop()
+        seededHoldTask?.cancel()
+        seededHoldTask = nil
+        audio.stop()                                        // clears the call hold; notes the sound's last state first
+        audio.onDiag = nil
+        audio.onRestored = nil
         Notifications.cancelNight()
+    }
+
+    // MARK: - phone calls and the sleep sound (13ac, B52)
+
+    /// An event from the lifecycle monitor. A call holds the sleep sound silent from the ring until it ends: the audio hold
+    /// is set here, directly, whatever `append` later decides about the rule event.
+    func monitorEvent(_ kind: NightEventKind, at date: Date) {
+        switch kind {
+        case .callStarted:
+            seededHoldTask?.cancel(); seededHoldTask = nil
+            if servicesEnabled { audio.setCallHold(true) }
+        case .callEnded:
+            seededHoldTask?.cancel(); seededHoldTask = nil
+            // another call (one the monitor never saw, e.g. a seeded one) may still be live: then the hold stays
+            if servicesEnabled { liveCallProbe() ? seedCallHold() : audio.setCallHold(false) }
+        default: break
+        }
+        append(kind, at: date)
+    }
+
+    /// A night or nap that starts or is picked up while a call is live: the audio hold only – no rule events (the monitor
+    /// reports a call only when it changes; the call's end may never reach it, so the live calls are watched until none is left).
+    private func seedCallHold() {
+        seededHoldTask?.cancel()
+        seededHoldTask = nil
+        guard liveCallProbe() else { return }
+        audio.setCallHold(true)
+        seededHoldTask = Task { [weak self] in
+            while !Task.isCancelled, let self, self.liveCallProbe() { try? await Task.sleep(for: self.callPollInterval) }
+            guard !Task.isCancelled, let self else { return }
+            self.seededHoldTask = nil
+            self.audio.setCallHold(false)
+        }
+    }
+
+    /// Whether a call is live – a seam for tests; CallKit by default.
+    @ObservationIgnored var liveCallProbe: () -> Bool = { AppModel.liveCallExists() }
+    @ObservationIgnored var callPollInterval: Duration = .seconds(2)
+
+    /// A call that has not ended is on (CallKit).
+    nonisolated static func liveCallExists() -> Bool {
+        CXCallObserver().calls.contains { !$0.hasEnded }
     }
 
     private func ringAlarm() {
         guard active != nil else { return }
+        rereadMediaVolume()
+        diag.note("vol", "media=\(mediaPercentText) at=alarm")      // before `append`: it saves the track at the alarm
         append(.alarmFired)
         guard servicesEnabled else { return }
         Notifications.alarmScreen()                     // light up the lock screen
@@ -2265,8 +2427,16 @@ final class AppModel {
     /// time can keep our audio from starting, and then they are the alarm (audit 2026-10-03, B1).
     private func startAlarmSound() {
         guard servicesEnabled, let rec = active, !rec.log.has(.alarmStopped) else { return }
+        rereadMediaVolume()
+        if audio.isAlarmRinging, audio.isEngineRunning { return }
+        // B53: a system alarm that is due (it rings, or has just interrupted our engine) while ours could not be heard
+        // anyway: ours does not start on top of it, and nothing here cancels or moves it
+        if yieldsToDueSystemAlarm {
+            if !yieldNoted { yieldNoted = true; diag.note("sysalarm", "keep why=inaudible") }
+            return
+        }
         if audio.isAlarmRinging {
-            if audio.isEngineRunning { return }
+            noteAlarmEnd(by: "engineLost")
             audio.stopAlarm()                           // the engine was stopped under the alarm → ring again
         }
         // after a kill the alarm may be late: ring only for what is left of the 2 minutes
@@ -2275,15 +2445,69 @@ final class AppModel {
         let ringing = audio.ringAlarm(file: settings.alarmSound.fileName, ramp: settings.effectiveRiseSeconds,
                                       startLevel: settings.alarmStartLevel, endLevel: settings.alarmEndLevel,
                                       maxDuration: left) { [weak self] in
+            self?.noteAlarmEnd(by: "timeout")
             self?.append(.alarmStopped)
         }
-        if ringing { alarmSoundStarted() }
+        alarmTries += 1
+        if ringing {
+            alarmSounding = true
+            if !alarmTrySuccessNoted { alarmTrySuccessNoted = true; diag.note("alarm.sound", "try ok=1") }
+            diag.note("alarm.sound", "start gain=\(settings.alarmStartPercent)>\(settings.alarmEndPercent) media=\(mediaPercentText) route=\(DeviceReading.routeTypes()) audible=\(alarmIsAudible ? 1 : 0)")
+            alarmSoundStarted()
+        } else {
+            alarmRetries += 1
+            if !alarmTryFailureNoted { alarmTryFailureNoted = true; diag.note("alarm.sound", "try ok=0 why=\(audio.lastRingFailure)") }
+        }
+    }
+
+    /// B53: the backup system alarm is due (it rings, or has just interrupted our engine) while our own alarm could not
+    /// be heard anyway. Our alarm then neither starts on top of it nor cancels or moves it.
+    var yieldsToDueSystemAlarm: Bool {
+        guard !alarmIsAudible, !systemAlarmIsSafety, let at = systemAlarmAt else { return false }
+        return at <= clock.now
+    }
+
+    /// The alarm sound ended (diagnostics only): its gain at that moment and how long it rang.
+    private func noteAlarmEnd(by why: String) {
+        guard alarmSounding, let rec = active else { return }
+        alarmSounding = false
+        let after = Int(max(0, clock.now.timeIntervalSince(rec.wake)).rounded())
+        diag.note("alarm.sound", "end gain=\(audio.alarmGainPercent) after=\(after)s by=\(why)")
+    }
+
+    private func resetAlarmDiagState() {
+        alarmInaudible = false
+        yieldNoted = false
+        alarmSounding = false
+        alarmTries = 0
+        alarmRetries = 0
+        alarmTryFailureNoted = false
+        alarmTrySuccessNoted = false
     }
 
     /// Our own alarm really sounds (called by `startAlarmSound`; a seam for tests, which have no audio). The app is
     /// alive and audible → the backup notifications are cancelled; and the system alarm moves behind our two minutes,
-    /// so it takes over when the owner sleeps through them.
+    /// so it takes over when the owner sleeps through them. B53: with the media volume at 0 our alarm rings but nobody
+    /// hears it – then none of that happens (the notifications and the system alarm stay as armed) until the volume
+    /// rises (`setMediaVolume`).
     func alarmSoundStarted() {
+        guard alarmIsAudible else {
+            if !alarmInaudible {
+                alarmInaudible = true
+                diag.note("notif", "backup kept why=inaudible")
+                diag.note("sysalarm", "keep why=inaudible")
+                yieldNoted = true
+            }
+            return
+        }
+        alarmInaudible = false
+        standDownBehindOurAlarm()
+    }
+
+    /// The normal hand-over once our alarm can be heard: the backup notifications go, the system alarm moves behind
+    /// our two minutes (or stops, when it is due).
+    private func standDownBehindOurAlarm() {
+        if backupNotificationsOn { diag.note("notif", "backup cancelled why=soundStarted") }
         if servicesEnabled { Notifications.cancelBackupAlarm() }
         backupNotificationsOn = false
         moveSystemAlarmBehindOurs()
@@ -2443,6 +2667,7 @@ final class AppModel {
         if !rec.append(kind, at: date) { diag.note("journal", "unreadable, event \(kind.rawValue) not stored") }
         save()
         noteDiagnostics(after: kind)
+        if kind == .alarmStopped { alarmInaudible = false }         // ours is over: a later volume change stands nothing down
         updateSetupReminder(after: kind, at: date)
         switch kind {
         case .leftApp where lockTripWasOpen && rec.rules.lockScreenCollapses:
@@ -2627,6 +2852,12 @@ final class AppModel {
         save()
         diag.notePower("end")                        // before `stopServices`: the battery switch is still held
         diag.note("end", "outcome=\(result.outcome.rawValue)")
+        diag.note("vol", "media=\(mediaPercentText) at=end")
+        mediaVolumeNote.flush()
+        appVolumeNote.flush()
+        noteAlarmEnd(by: rec.log.confirmedAt != nil ? "confirm" : "timeout")
+        if alarmTries > 0 { diag.note("alarm.sound", "retries=\(alarmRetries) tries=\(alarmTries)") }
+        noteSystemAlarmSettle(for: rec)
         stopServices()
         diag.end()
         diag.prune(records())                        // the last 30 days keep their track (one pass, one save)

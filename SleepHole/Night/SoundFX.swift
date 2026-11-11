@@ -95,13 +95,24 @@ enum SoundFX {
 
     static func stopPreview() {
         previewStop?.cancel()
+        let wasPlaying = preview != nil
         preview?.stop()
         preview = nil
+        if wasPlaying { restoreAmbientSession() }
         riseHolder.state = nil
         if let saved = savedIdleTimer {
             UIApplication.shared.isIdleTimerDisabled = saved
             savedIdleTimer = nil
         }
+    }
+
+    /// A Settings preview made the session `.playback`; when it ends and no keeper runs it goes back to `.ambient`
+    /// (13ac, B59), so that effects follow the silent switch again and other apps' music may resume.
+    private static func restoreAmbientSession() {
+        guard AudioKeeper.runningKeepers == 0 else { return }
+        let session = AVAudioSession.sharedInstance()
+        try? session.setActive(false, options: .notifyOthersOnDeactivation)
+        try? session.setCategory(.ambient)
     }
 
     /// Test hook: the idle timer is restored after the preview.
@@ -111,8 +122,10 @@ enum SoundFX {
         guard let url = Bundle.main.url(forResource: name, withExtension: "caf"),
               let p = try? AVAudioPlayer(contentsOf: url) else { return }
         let session = AVAudioSession.sharedInstance()
-        // never downgrade the night's .playback session (it keeps the app alive in the background)
-        if session.category != .playback {
+        // never downgrade the night's .playback session (it keeps the app alive in the background) – but with no
+        // keeper running an effect follows the silent switch and mixes with other apps' music (13ac, B59). It is the
+        // keepers, not the current category, that decide: an alarm used to leave the category at .playback for good.
+        if AudioKeeper.runningKeepers == 0, preview == nil {
             try? session.setCategory(.ambient)
             try? session.setActive(true)
         }
