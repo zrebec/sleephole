@@ -22,6 +22,10 @@ import UIKit
 final class LifecycleMonitor {
     var onEvent: ((NightEventKind, Date) -> Void)?
     var onRaw: ((String) -> Void)?
+    /// The diagnostic track (13ab): `k=life` lines (inactive / active / background / foreground / terminate / data=…) and
+    /// `k=call` lines (shape only: direction, live calls, seconds – never a number, a name or the app). Wired on every
+    /// night and nap, unlike `onRaw`, which only the lock lab uses.
+    var onDiag: ((String, String) -> Void)?
     /// iOS tells the running app that it is about to be terminated: swiped away in the app switcher (owner 2026-10-04,
     /// R4: that counts as leaving the app) or the phone restarts / shuts down. Called synchronously on the main
     /// thread – the process dies right after, so whatever must survive has to be saved before this returns.
@@ -41,6 +45,9 @@ final class LifecycleMonitor {
     var canTellLockFromLeaving: () -> Bool = { LockCapability.canTellLockFromLeaving() }
     var screenWindow: Duration = LifecycleMonitor.lockScreenWindow
     var backgroundDelay: Duration = LifecycleMonitor.decisionDelay
+    var now: () -> Date = { Date() }
+    /// An identical `life` line within this many seconds of the last one is dropped (iOS posts some signals twice).
+    static let duplicateWindow: TimeInterval = 0.2
 
     private var tokens: [NSObjectProtocol] = []
     private var lastLockSignal: Date?
@@ -61,6 +68,9 @@ final class LifecycleMonitor {
     private let callObserver = CXCallObserver()
     private var callDelegate: CallDelegate?
     private var activeCalls = Set<UUID>()
+    /// When each live call began and when it connected – for the call shape lines of the diagnostic track.
+    private var callTimes: [UUID: (began: Date, connected: Date?)] = [:]
+    private var lastLife: (text: String, at: Date)?
     private(set) var isRunning = false
 
     func start() {
@@ -75,6 +85,7 @@ final class LifecycleMonitor {
         }
         observe(UIApplication.willResignActiveNotification) { [weak self] in
             self?.raw("willResignActive")
+            self?.life("inactive")
             self?.foregroundHandled = false
         }
         observe(UIApplication.didEnterBackgroundNotification) { [weak self] in self?.didEnterBackground() }
@@ -90,6 +101,7 @@ final class LifecycleMonitor {
         // to the main queue could come too late – the process is about to die
         observe(UIApplication.willTerminateNotification, queue: nil) { [weak self] in
             self?.raw("willTerminate")
+            self?.life("terminate")
             self?.onTerminate?()
         }
 
@@ -108,6 +120,8 @@ final class LifecycleMonitor {
         // a night that ended while the app was away must not leak its state into the next one (audit M3)
         isAway = false            // also clears `lockTrip`
         activeCalls.removeAll()
+        callTimes.removeAll()
+        lastLife = nil
         lastLockSignal = nil
         foregroundHandled = false
         isRunning = false
@@ -121,6 +135,7 @@ final class LifecycleMonitor {
     /// change of the state is reported.
     func dataProtectionChanged(locked: Bool) {
         raw(locked ? "protectedDataWillBecomeUnavailable" : "protectedDataDidBecomeAvailable")
+        life("data=\(locked ? "locked" : "unlocked")")
         let changed = dataLocked != locked
         dataLocked = locked
         if changed { emit(locked ? .dataLocked : .ownerRecognised, "") }
@@ -164,23 +179,29 @@ final class LifecycleMonitor {
         raw(String(format: "didEnterBackground · protectedData=%@ · brightness=%.2f · calls=%d",
                    UIApplication.shared.isProtectedDataAvailable ? "yes" : "no", brightness, activeCalls.count))
         foregroundHandled = false
+        life("background")
         pendingBackground?.cancel()
         pendingBackground = Task { [weak self] in
             try? await Task.sleep(for: self?.backgroundDelay ?? Self.decisionDelay)
             guard let self, !Task.isCancelled else { return }
             self.pendingBackground = nil
             if let lock = self.lastLockSignal, abs(lock.timeIntervalSince(now)) < 2.5 {
+                self.life("decision=lock")
                 self.emit(.locked, "(background by lock)", at: now)
             } else if !self.isAppActive(), !self.isAway || self.lockTrip {
                 // One trip, one `.leftApp` (B29): a real leave that is already open needs nothing more. An open
                 // lock-screen trip is not a real leave, so a background that follows it still reports one.
                 guard self.canTellLockFromLeaving() else {
+                    self.life("decision=cannotTell")
                     // no passcode / no Face ID or Touch ID: a lock looks exactly like leaving → the user's favour
                     self.raw("(background not counted: this phone cannot tell a lock from leaving)")
                     return
                 }
                 self.isAway = true; self.lockTrip = false
+                self.life("decision=leave")
                 self.emit(.leftApp, "(background without a lock signal)", at: now)
+            } else {
+                self.life("decision=none")          // the app is in front again, or the trip is already open
             }
         }
     }
@@ -188,12 +209,14 @@ final class LifecycleMonitor {
     /// The user is back (B-return, owner 2026-10-16): counted now, not 0.8 s later at `didBecomeActive`.
     func willEnterForeground() {
         raw("willEnterForeground")
+        life("foreground")
         foregroundHandled = true
         returnToApp()
     }
 
     func didBecomeActive() {
         raw("didBecomeActive")
+        life("active")
         pendingLockUse?.cancel(); pendingLockUse = nil
         if foregroundHandled { foregroundHandled = false; return }     // already counted at willEnterForeground
         returnToApp()
@@ -204,6 +227,7 @@ final class LifecycleMonitor {
         if pendingBackground != nil {     // came back before the decision → nothing happened
             pendingBackground?.cancel(); pendingBackground = nil
             raw("(short background ignored)")
+            life("decision=short")
             return
         }
         isAway = false
@@ -212,16 +236,36 @@ final class LifecycleMonitor {
 
     func callChanged(_ call: CallInfo) {
         raw("call \(call.uuid.uuidString.prefix(4)) outgoing=\(call.isOutgoing) connected=\(call.hasConnected) ended=\(call.hasEnded)")
+        let at = now()
         if call.hasEnded {
+            if let t = callTimes.removeValue(forKey: call.uuid) {
+                onDiag?("call", "end dur=\(Int(at.timeIntervalSince(t.began)))s connected=\(t.connected != nil || call.hasConnected ? 1 : 0)")
+            }
             if activeCalls.remove(call.uuid) != nil, activeCalls.isEmpty { emit(.callEnded, "") }
-        } else if activeCalls.insert(call.uuid).inserted, activeCalls.count == 1 {
-            emit(.callStarted, "")
+        } else {
+            if activeCalls.insert(call.uuid).inserted {
+                callTimes[call.uuid] = (at, nil)
+                onDiag?("call", "start dir=\(call.isOutgoing ? "out" : "in") live=\(activeCalls.count)")
+                if activeCalls.count == 1 { emit(.callStarted, "") }
+            }
+            if call.hasConnected, let t = callTimes[call.uuid], t.connected == nil {
+                callTimes[call.uuid] = (t.began, at)
+                onDiag?("call", "connected after=\(Int(at.timeIntervalSince(t.began)))s")
+            }
         }
     }
 
     // MARK: - output
 
     private func raw(_ text: String) { onRaw?(text) }
+
+    /// A `k=life` line for the diagnostic track; an identical line within `duplicateWindow` is dropped.
+    private func life(_ text: String) {
+        let at = now()
+        if let last = lastLife, last.text == text, at.timeIntervalSince(last.at) < Self.duplicateWindow { return }
+        lastLife = (text, at)
+        onDiag?("life", text)
+    }
 
     private func emit(_ kind: NightEventKind, _ note: String, at date: Date = Date()) {
         onRaw?("→ \(kind.rawValue) \(note)")

@@ -50,6 +50,10 @@ final class NightRecord {
     /// choice rule the stored values were made with (nil = read before the version existed).
     var sleepSourcesData: Data?
     var sleepRuleVersion: Int?
+    /// The diagnostic track (13ab, owner 2026-11-11): what the phone did around this night, `[DiagEntry]` as JSON. LOCAL
+    /// ONLY – never in a backup, never in the sync file, never part of a fingerprint or an event count – and it never
+    /// changes what the night counts. Optional with no default, so the store migrates by itself.
+    var diagData: Data?
 
     /// `idPrefix`: "bonus" for a test night that counts for the town (one-shot, owner request) –
     /// a unique id so it never collides with the real night of the same date.
@@ -97,19 +101,33 @@ final class NightRecord {
         return r
     }
 
+    /// The stored events, read leniently (B61): an event kind this build does not know, or a malformed element, is skipped
+    /// and the others keep their order. Bytes that are no array at all read as empty (and are never overwritten, see `append`).
     var log: NightLog {
-        let events = (try? JSONDecoder().decode([NightEvent].self, from: eventsData)) ?? []
-        return NightLog(window: window, buildingId: buildingId, events: events)
+        NightLog(window: window, buildingId: buildingId, events: NightEvent.decodeLossy(eventsData) ?? [])
     }
 
-    func append(_ kind: NightEventKind, at date: Date) {
-        var l = log
-        l.append(kind, at: date)
-        eventsData = (try? JSONEncoder().encode(l.events)) ?? eventsData
+    /// Stores one event. Returns false when the stored journal is not readable at all (not a JSON array): it is then left
+    /// exactly as it is (the bytes may still be of use) and the event is not stored; the caller notes it in the diagnostic
+    /// track. The side values (start, confirmation, pauses) are kept either way.
+    @discardableResult
+    func append(_ kind: NightEventKind, at date: Date) -> Bool {
+        var stored = true
+        if let events = NightEvent.decodeLossy(eventsData) {
+            var l = NightLog(window: window, buildingId: buildingId, events: events)
+            l.append(kind, at: date)
+            eventsData = (try? JSONEncoder().encode(l.events)) ?? eventsData
+        } else {
+            stored = false
+        }
         if kind == .started { startedAt = startedAt ?? date }
         if kind == .confirmed { confirmedAt = confirmedAt ?? date }
         if kind == .pauseStarted { pauses = (pauses ?? 0) + 1 }
+        return stored
     }
+
+    /// The diagnostic track stored with this night (empty when there is none).
+    var diagLog: DiagLog { DiagLog.decode(diagData) }
 
     var outcome: Outcome? { outcomeRaw.flatMap(Outcome.init(rawValue:)) }
     var isFinalized: Bool { finalizedAt != nil }

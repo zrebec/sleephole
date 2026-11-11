@@ -66,7 +66,6 @@ final class LockLab {
     private var peaks = Peaks()
     private var sampler: Timer?
     private var blanked: Bool?
-    private var batteryWasMonitored = false
 
     private static let timestamp: DateFormatter = {
         let f = DateFormatter()
@@ -107,8 +106,7 @@ final class LockLab {
         }
 
         let device = UIDevice.current
-        batteryWasMonitored = device.isBatteryMonitoringEnabled
-        device.isBatteryMonitoringEnabled = true
+        BatteryMonitoring.set("lockLab", on: true)
         device.beginGeneratingDeviceOrientationNotifications()
         let nc = NotificationCenter.default
         func observe(_ name: Notification.Name, _ handler: @escaping @MainActor (Notification) -> Void) {
@@ -171,7 +169,7 @@ final class LockLab {
         tokens.removeAll()
         darwin.removeAll()
         UIDevice.current.endGeneratingDeviceOrientationNotifications()
-        UIDevice.current.isBatteryMonitoringEnabled = batteryWasMonitored
+        BatteryMonitoring.set("lockLab", on: false)
         note("=== lab stopped ===")
         try? handle?.close()
         handle = nil

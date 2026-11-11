@@ -535,14 +535,25 @@ extension SettingsView {
 struct NightLogView: View {
     @Environment(AppModel.self) private var model
 
+    struct Line { let at: Date; let text: String; let isDiag: Bool }
+
+    /// Rule events and diagnostic entries of one night in time order (a rule event first when the moments are equal).
+    static func merged(_ rec: NightRecord) -> [Line] {
+        let events = rec.log.sortedEvents.map { Line(at: $0.at, text: $0.kind.rawValue, isDiag: false) }
+        let diag = rec.diagLog.entries.map { Line(at: $0.at, text: "· \($0.k)" + ($0.v.map { " \($0)" } ?? ""), isDiag: true) }
+        return (events + diag).enumerated().sorted { ($0.element.at, $0.offset) < ($1.element.at, $1.offset) }.map(\.element)
+    }
+
     var body: some View {
         List(model.records().reversed()) { rec in
             DisclosureGroup {
-                ForEach(Array(rec.log.sortedEvents.enumerated()), id: \.offset) { _, e in
-                    HStack {
-                        Text(ProbeLog.timeFormat.string(from: e.at)).font(.caption2.monospacedDigit())
-                        Text(e.kind.rawValue).font(.caption.monospaced())
+                // the rule events and the diagnostic track (13ab, Debug only) merged by time; the track is grey, with a dot
+                ForEach(Array(Self.merged(rec).enumerated()), id: \.offset) { _, line in
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(ProbeLog.timeFormat.string(from: line.at)).font(.caption2.monospacedDigit())
+                        Text(verbatim: line.text).font(.caption.monospaced())
                     }
+                    .foregroundStyle(line.isDiag ? Color.secondary : Color.primary)
                 }
             } label: {
                 VStack(alignment: .leading) {
