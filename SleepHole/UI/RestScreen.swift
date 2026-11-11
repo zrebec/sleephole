@@ -24,29 +24,42 @@ final class SceneScreenBrightness: ScreenBrightness {
 }
 
 /// Turns the screen down for the rest screen and gives back exactly what it found. The remembered value lives in memory
-/// only. A second `dim` while dimmed keeps the first value; `restore` without a `dim` does nothing.
+/// only. A second `dim` while dimmed keeps the first value; `restore` without a `dim` does nothing. A screen that reads
+/// brightness 0 is never dimmed – a 0 is never saved and so never restored (13ad). The rest screen is still shown then:
+/// the reading is 0 both at a lock (the controller's `appActive` check keeps the rest away there) and, possibly, with the
+/// slider at its minimum – where the black screen and the "Lock the phone" line must not be lost.
 @MainActor
 final class BrightnessDimmer {
     static let level: CGFloat = 0.1
     private let screen: ScreenBrightness
     private var saved: CGFloat?
+    /// Diagnostic lines (`bright dim from=80 to=10`, `bright restore to=80`); set by the controller.
+    var onDiag: ((String, String?) -> Void)?
 
     init(screen: ScreenBrightness) { self.screen = screen }
 
     var isDimmed: Bool { saved != nil }
 
-    func dim() {
-        guard saved == nil else { return }
+    /// True when the screen is dimmed afterwards (already was, or now is); false when the reading is 0 and nothing was done.
+    @discardableResult
+    func dim() -> Bool {
+        guard saved == nil else { return true }
         let now = screen.brightness
+        guard now > 0 else { onDiag?("bright", "skip at=0"); return false }
         saved = now
         if now > Self.level { screen.brightness = min(now, Self.level) }
+        onDiag?("bright", "dim from=\(Self.percent(now)) to=\(Self.percent(min(now, Self.level)))")
+        return true
     }
 
     func restore() {
         guard let value = saved else { return }
         saved = nil
         screen.brightness = value
+        onDiag?("bright", "restore to=\(Self.percent(value))")
     }
+
+    private static func percent(_ b: CGFloat) -> Int { Int((min(max(b, 0), 1) * 100).rounded()) }
 }
 
 // MARK: - the controller
@@ -61,9 +74,9 @@ final class RestController {
 
     /// What the model knows (set by `AppModel`).
     struct Night {
-        var isBuilding: Bool, isNap: Bool, setupEnds: Date?, pauseRunning: Bool
+        var isBuilding: Bool, setupEnds: Date?, pauseRunning: Bool
     }
-    @ObservationIgnored var night: () -> Night = { Night(isBuilding: false, isNap: false, setupEnds: nil, pauseRunning: false) }
+    @ObservationIgnored var night: () -> Night = { Night(isBuilding: false, setupEnds: nil, pauseRunning: false) }
     @ObservationIgnored var now: () -> Date = { Date() }
     /// Off in unit tests and in `-screenshot` runs without `-restAfter`.
     @ObservationIgnored var enabled = true
@@ -78,6 +91,16 @@ final class RestController {
     @ObservationIgnored private var buildingSince = Date.distantPast
     @ObservationIgnored private var wasBuilding = false
     @ObservationIgnored var sceneActive = true               // internal: unit tests set it (the test host is not active)
+    /// The application is really in front (not only the scene flag): a lock or a screen-off keeps `sceneActive` stale for
+    /// a moment. Replaced in unit tests.
+    @ObservationIgnored var appActive: () -> Bool = { UIApplication.shared.applicationState == .active }
+    /// Diagnostic lines of the night's track (`rest on`, `rest off why=…`, `rest blocked why=…`, `bright …`); set by the model.
+    @ObservationIgnored var onDiag: ((String, String?) -> Void)? {
+        didSet { dimmer.onDiag = onDiag }
+    }
+    /// The black screen ended by a touch or VoiceOver (not by the volume wake, which comes from a fresh reading).
+    @ObservationIgnored var onWoke: (() -> Void)?
+    @ObservationIgnored private var blockedNoted: Set<String> = []
     /// Is a view controller presented over the window (sheets, dialogs)? Replaced in unit tests.
     @ObservationIgnored var uikitPresentation: () -> Bool = {
         let root = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
@@ -114,41 +137,68 @@ final class RestController {
         wake()
     }
 
-    /// The black screen ends (a tap, VoiceOver's activate); the 30 s start again.
-    func wake() {
+    /// The black screen ends (a tap, VoiceOver's activate, the media volume turned down); the 30 s start again.
+    func wake(why: String = "touch") {
         lastTouch = now()
         guard resting else { return }
         dimmer.restore()                       // the brightness first, then the picture
         resting = false
+        onDiag?("rest", "off why=\(why)")
+        if why != "volume" { onWoke?() }
     }
 
     /// Called every second by the model's ticker and whenever a fact changes.
     func evaluate() {
         let n = now()
         let night = night()
-        if night.isBuilding && !wasBuilding { buildingSince = n }
+        if night.isBuilding && !wasBuilding { buildingSince = n; blockedNoted = [] }
         wasBuilding = night.isBuilding
-        guard enabled else { if resting { stop() }; return }
-        let facts = RestScreen.Facts(isBuilding: night.isBuilding, isNap: night.isNap, setupEnds: night.setupEnds,
-                                     pauseRunning: night.pauseRunning, sceneActive: sceneActive,
+        guard enabled else { if resting { stop(why: "disabled") }; return }
+        let facts = RestScreen.Facts(isBuilding: night.isBuilding, setupEnds: night.setupEnds,
+                                     pauseRunning: night.pauseRunning, sceneActive: sceneActive && appActive(),
                                      voiceOverRunning: UIAccessibility.isVoiceOverRunning,
                                      presentationOpen: presentationOpen)
+        let blocker = RestScreen.blocker(facts, now: n)
         if resting {
-            if !RestScreen.mayRest(facts, now: n) { stop() }       // a latched state: touches wake it, nothing else
+            if let blocker { stop(why: Self.why(blocker)) }          // a latched state: touches wake it, nothing else
         } else {
             let last = max(lastTouch, activeSince, buildingSince)
-            if RestScreen.shouldRest(facts, now: n, lastActivity: last, delay: delay) { start() }
+            if RestScreen.shouldRest(facts, now: n, lastActivity: last, delay: delay) {
+                start()
+            } else if let blocker, let setupEnds = night.setupEnds,
+                      n.timeIntervalSince(max(last, setupEnds)) >= delay {
+                noteBlocked(blocker)                                 // it would be resting now if it could
+            }
         }
     }
 
     private func start() {
-        dimmer.dim()
+        dimmer.dim()                                                 // a reading of 0 is never saved nor dimmed, the rest still shows
         resting = true
+        onDiag?("rest", "on")
     }
 
-    private func stop() {
+    private func stop(why: String) {
         dimmer.restore()
         resting = false
+        onDiag?("rest", "off why=\(why)")
+    }
+
+    private static func why(_ blocker: RestScreen.Blocker) -> String {
+        blocker == .presentation ? "sheet" : blocker.rawValue
+    }
+
+    /// "rest blocked why=…": once per reason per night, only for the reasons a user can act on.
+    private func noteBlocked(_ blocker: RestScreen.Blocker) {
+        let reason: String
+        switch blocker {
+        case .pause: reason = "pause"
+        case .voiceOver: reason = "voiceOver"
+        case .presentation: reason = (codeFieldFocused || keyboardUp) ? "keyboard" : "sheet"
+        case .phase, .inactive: return
+        }
+        guard blockedNoted.insert(reason).inserted else { return }
+        onDiag?("rest", "blocked why=\(reason)")
     }
 
     private var presentationOpen: Bool {

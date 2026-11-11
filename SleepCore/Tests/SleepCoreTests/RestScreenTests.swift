@@ -6,7 +6,7 @@ import Testing
 @Suite struct RestScreenTests {
     let setupEnds = Date(timeIntervalSinceReferenceDate: 1_000)
     var facts: RestScreen.Facts {
-        RestScreen.Facts(isBuilding: true, isNap: false, setupEnds: setupEnds, pauseRunning: false, sceneActive: true,
+        RestScreen.Facts(isBuilding: true, setupEnds: setupEnds, pauseRunning: false, sceneActive: true,
                          voiceOverRunning: false, presentationOpen: false)
     }
     func rests(_ f: RestScreen.Facts, at s: Double, lastActivity: Double = 0) -> Bool {
@@ -26,9 +26,27 @@ import Testing
         #expect(rests(facts, at: 2_030, lastActivity: 2_000))
     }
 
-    @Test func aNapNeverRests() {
-        var f = facts; f.isNap = true
-        #expect(!rests(f, at: 5_000))
+    /// B51 (owner 2026-11-11): the nap's screen did not go dark – a nap rests exactly like a night (the facts carry no
+    /// difference any more: the same setup, the same 30 s, the same blockers).
+    @Test func aNapRestsLikeANight() {
+        #expect(!rests(facts, at: 1_029, lastActivity: 500))
+        #expect(rests(facts, at: 1_030, lastActivity: 500))
+        #expect(RestScreen.mayRest(facts, now: Date(timeIntervalSinceReferenceDate: 5_000)))
+    }
+
+    @Test func theBlockerNamesTheFirstReason() {
+        func b(_ f: RestScreen.Facts, _ s: Double = 5_000) -> RestScreen.Blocker? {
+            RestScreen.blocker(f, now: Date(timeIntervalSinceReferenceDate: s))
+        }
+        #expect(b(facts) == nil)
+        #expect(b(facts, 999) == .phase)                       // the setup is not over
+        var f = facts; f.isBuilding = false; #expect(b(f) == .phase)
+        f = facts; f.setupEnds = nil; #expect(b(f) == .phase)
+        f = facts; f.sceneActive = false; #expect(b(f) == .inactive)
+        f = facts; f.pauseRunning = true; #expect(b(f) == .pause)
+        f = facts; f.voiceOverRunning = true; #expect(b(f) == .voiceOver)
+        f = facts; f.presentationOpen = true; #expect(b(f) == .presentation)
+        f.pauseRunning = true; #expect(b(f) == .pause)         // the order: pause first
     }
 
     @Test func aRunningPauseDoesNotRest() {

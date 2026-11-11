@@ -1,7 +1,7 @@
 import Foundation
 
-/// The rest screen (build 13k, owner 2026-11-04): after the setup, with the app in front and nobody touching it, the
-/// night screen turns black (a dim clock and one line) so a phone whose Auto-Lock is "Never" does not burn its display
+/// The rest screen (build 13k, owner 2026-11-04; naps rest like nights since 13ad, B51): after the setup, with the app
+/// in front and nobody touching it, the night or nap screen turns black (a dim clock and one line) so a phone whose Auto-Lock is "Never" does not burn its display
 /// all night. It is only a look – it never changes what a night counts. The app feeds the facts in; this decides.
 public enum RestScreen {
     /// Seconds without a touch before the screen rests.
@@ -9,10 +9,8 @@ public enum RestScreen {
 
     /// What the app knows about the moment.
     public struct Facts: Equatable, Sendable {
-        /// The night phase is on (not idle, the alarm or the result).
+        /// The night / nap phase is on (not idle, the alarm or the result).
         public var isBuilding: Bool
-        /// The active record is a nap.
-        public var isNap: Bool
         /// The end of the setup of the active night; nil = unknown (no night).
         public var setupEnds: Date?
         public var pauseRunning: Bool
@@ -21,20 +19,38 @@ public enum RestScreen {
         /// A sheet, dialog or alert is open, or the wake-code field has the keyboard.
         public var presentationOpen: Bool
 
-        public init(isBuilding: Bool, isNap: Bool, setupEnds: Date?, pauseRunning: Bool, sceneActive: Bool,
+        public init(isBuilding: Bool, setupEnds: Date?, pauseRunning: Bool, sceneActive: Bool,
                     voiceOverRunning: Bool, presentationOpen: Bool) {
-            self.isBuilding = isBuilding; self.isNap = isNap; self.setupEnds = setupEnds
+            self.isBuilding = isBuilding; self.setupEnds = setupEnds
             self.pauseRunning = pauseRunning; self.sceneActive = sceneActive
             self.voiceOverRunning = voiceOverRunning; self.presentationOpen = presentationOpen
         }
     }
 
-    /// Everything but the waiting: the screen may rest (or keep resting) at `now`.
-    public static func mayRest(_ f: Facts, now: Date) -> Bool {
-        guard f.isBuilding, !f.isNap, f.sceneActive, !f.pauseRunning, !f.voiceOverRunning, !f.presentationOpen,
-              let setupEnds = f.setupEnds, now >= setupEnds else { return false }
-        return true
+    /// Why the screen may not rest at `now` (diagnostics name these; the first that applies is reported).
+    public enum Blocker: String, Sendable, Equatable {
+        /// No running night / nap, or its setup is not over.
+        case phase
+        /// The app is not in front (a lock, another app, the control centre).
+        case inactive
+        case pause
+        case voiceOver
+        /// A sheet, dialog or alert is open, or the wake-code field has the keyboard.
+        case presentation
     }
+
+    /// What keeps the screen from resting at `now`; nil = nothing (a night or a nap alike).
+    public static func blocker(_ f: Facts, now: Date) -> Blocker? {
+        guard f.isBuilding, let setupEnds = f.setupEnds, now >= setupEnds else { return .phase }
+        if !f.sceneActive { return .inactive }
+        if f.pauseRunning { return .pause }
+        if f.voiceOverRunning { return .voiceOver }
+        if f.presentationOpen { return .presentation }
+        return nil
+    }
+
+    /// Everything but the waiting: the screen may rest (or keep resting) at `now`.
+    public static func mayRest(_ f: Facts, now: Date) -> Bool { blocker(f, now: now) == nil }
 
     /// The screen starts to rest: `mayRest` and `delay` seconds have passed since the latest of the last touch, the scene
     /// becoming active, the night screen appearing and (here) the end of the setup.

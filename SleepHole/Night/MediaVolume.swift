@@ -6,7 +6,8 @@ import Foundation
 /// alarm hand-over decides from it whether our own alarm can be heard at all. The watcher only reads – it never
 /// activates or configures the audio session (`AudioKeeper` owns it).
 ///
-/// In the simulator (DEBUG) `-fakeVolume V[,S,V2]` replaces the reading: V from the start, V2 after S seconds.
+/// In the simulator (DEBUG) `-fakeVolume V[,S,V2]` replaces the reading: V from the start, V2 after S seconds – and
+/// every re-read (`reading()`) returns the fake's CURRENT value, so a flip is never undone by the next re-read.
 @MainActor
 final class MediaVolumeWatcher {
     private var observation: NSKeyValueObservation?
@@ -19,17 +20,21 @@ final class MediaVolumeWatcher {
     func start(onChange: @escaping (Double) -> Void) {
         stop()
         self.onChange = onChange
+        #if DEBUG && targetEnvironment(simulator)
+        Self.fakeCurrent = Self.fake                     // every night starts at the fake's first value
+        #endif
         onChange(Self.reading())
         #if DEBUG && targetEnvironment(simulator)
-        if let flip = VolumeNote.fakeFlip {
+        if let flip = Self.fakeFlip {
             flipTask = Task { [weak self] in
                 try? await Task.sleep(for: .seconds(flip.after))
                 guard !Task.isCancelled else { return }
+                Self.fakeCurrent = flip.volume
                 self?.onChange?(flip.volume)
             }
             return
         }
-        if VolumeNote.fake != nil { return }
+        if Self.fake != nil { return }
         #endif
         observation = AVAudioSession.sharedInstance().observe(\.outputVolume, options: [.new]) { [weak self] _, change in
             guard let v = change.newValue else { return }
@@ -47,10 +52,23 @@ final class MediaVolumeWatcher {
 
     static func reading() -> Double {
         #if DEBUG && targetEnvironment(simulator)
-        if let f = VolumeNote.fake { return f }
+        if let f = fakeCurrent ?? fake { return f }
         #endif
         return Double(AVAudioSession.sharedInstance().outputVolume)
     }
+
+    #if DEBUG && targetEnvironment(simulator)
+    /// `-fakeVolume 0.12[,S,0.6]` (simulator and DEBUG only). With S,V the volume becomes V after S seconds. Tests replace
+    /// the parts to inject a fake.
+    static var fakeParts: [String]? = DevArgs.value(after: "-fakeVolume").map { $0.split(separator: ",").map(String.init) }
+    static var fake: Double? { fakeParts?.first.flatMap(Double.init) }
+    static var fakeFlip: (after: Double, volume: Double)? {
+        guard let p = fakeParts, p.count > 2, let after = Double(p[1]), let v = Double(p[2]) else { return nil }
+        return (after, v)
+    }
+    /// The fake's value right now: the first one at the start, the flipped one after the flip.
+    static var fakeCurrent: Double?
+    #endif
 }
 
 /// A burst of changes of one value becomes ONE diagnostic line after `quiet` seconds without a change, carrying the

@@ -444,10 +444,12 @@ final class AppModel {
         let after = Self.devValue("-restAfter", in: args).flatMap(Double.init)
         rest.now = { [weak self] in self?.clock.now ?? Date() }
         rest.night = { [weak self] in
-            guard let self else { return .init(isBuilding: false, isNap: false, setupEnds: nil, pauseRunning: false) }
-            return .init(isBuilding: phase == .building, isNap: active?.isNap ?? false, setupEnds: graceEnds,
-                         pauseRunning: pauseEnds() != nil)
+            guard let self else { return .init(isBuilding: false, setupEnds: nil, pauseRunning: false) }
+            return .init(isBuilding: phase == .building, setupEnds: graceEnds, pauseRunning: pauseEnds() != nil)
         }
+        rest.onDiag = { [weak self] k, v in self?.diag.note(k, v) }
+        // the black screen ends by a touch: read the volume again (the observer may have missed a change, B53)
+        rest.onWoke = { [weak self] in self?.rereadMediaVolume() }
         if let after, after > 0 { rest.delay = after }
         rest.enabled = servicesEnabled && (!args.contains("-screenshot") || after != nil)
     }
@@ -1878,6 +1880,11 @@ final class AppModel {
         mediaVolume = v
         if old >= 0, v >= 0, Self.percent(old) != Self.percent(v) {
             mediaVolumeNote.change(from: Self.percent(old), to: Self.percent(v))
+            // 13ad (B54): the volume buttons make no touch, so the black screen would never show the 🔇 / 🔉 line – a
+            // turn DOWN into the line's range lights the screen up (it rests again after the normal 30 s). Never on a rise.
+            if rest.resting, Self.percent(v) < Self.percent(old), VolumeReminder.level(volume: v) != nil {
+                rest.wake(why: "volume")
+            }
         }
         if alarmInaudible, alarmIsAudible, let rec = active {
             alarmInaudible = false
@@ -1961,6 +1968,7 @@ final class AppModel {
 
     /// The app became active: with no night / nap running, opening SleepHole silences a ringing safety / test alarm.
     func appBecameActive() {
+        if active != nil { rereadMediaVolume() }        // 13ad: the observer may have missed a change (B53's stale reading)
         guard active == nil else { return }
         stopRingingSystemAlarms()
         Task { await refreshSleepIfIdle() }
