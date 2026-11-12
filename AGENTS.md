@@ -35,9 +35,9 @@ by build – the roadmap is plan §0b.
    before it on his word).** After his restart check `xcodebuild -version` and `xcrun devicectl list devices` before the
    release's archive. Remove this line once he says it is done.
 1. **Build 13 = polishing, in work since 2026-11-01** – plan §10 REL "Build 13"; his page
-   https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`). **Every step 13a – 13ae is on his
-   phone (13ae since 2026-11-12 06:30, the store byte-identical before / after); 13af (the Czech museum line, his finding)
-   merged `ccecc52`, NOT on his phone – on his word, before bedtime.** The night 11 → 12: complete (gentle
+   https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`). **Every step 13a – 13af is on his
+   phone (13ae since 2026-11-12 06:30, 13af – the Czech museum line, his finding – since 07:44; the store byte-identical
+   before / after each).** The night 11 → 12: complete (gentle
    mode, started 22:00:03 – aa2 ✅, B50 🟢), the rest screen all night and the 🔇 wake on a volume turn-down confirmed by
    him; battery 95 → 40 % with Auto-Lock off (plan §12 2026-11-12). **Open today: his daytime device checks of 13ab – 13ae
    (plan §10 REL, the build 13 page); his evaluator question (plan §12 2026-11-11 ~18:00 – 20:25: a call open at a
