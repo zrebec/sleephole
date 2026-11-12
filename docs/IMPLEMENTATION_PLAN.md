@@ -4439,6 +4439,14 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
           2026-11-12 ~09:11 `b51600e` (step `a404100`); SleepCore 572, app 805 / 805, i18n 1 106 keys 0 / 0 / 0 / 0; **on his
           phone since 09:11 on his word** (Debug of `b51600e`, the store byte-identical before / after,
           `docs/device-logs/2026-11-12-pred-13ag/`, `-po-13ag/`); his checks ag1 – ag4 on the build 13 page v46.
+    - [ ] **13ah – the system alarm at once when ours cannot be heard (his ev4 by chat 2026-11-12 ~09:50: "13ah still in
+          build 13 … install it straight to the phone"; `step/13ah-sysalarm-now`):** his ag1 showed that with the iPhone locked
+          and the Watch on the wrist iOS delivers the sounding banner to the Watch only, and an app cannot light the screen.
+          So at the alarm, when ours is inaudible (< 10 %), the armed system alarm moves from wake + 30s to now – it lights
+          and rings the iPhone (also in silent mode) and vibrates the Watch; audible → unchanged (behind our two minutes);
+          a raised volume later still hands over to ours as in 13ac; the banner carries the alarm sound only when no system
+          alarm is armed (switched off, no consent, refused) – never two melodies at once. Afterwards: his checks on the
+          build 13 page with the Watch on and off.
     - [ ] **Device checks after 13ab – 13ae (Debug test nights – the Developer screen has no test nap –, the journal read after each; the checks dc1 – dc11 on the build 13 page v42; 13ae on his phone
           since 2026-11-12 06:30, the store byte-identical before / after; the volume turn-down wake and the night's rest
           screen already confirmed by him in the night 11 → 12):** media volume 0
