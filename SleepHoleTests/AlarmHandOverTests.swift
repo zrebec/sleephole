@@ -2,6 +2,7 @@ import Foundation
 import SleepCore
 import SwiftData
 import Testing
+import UserNotifications
 @testable import SleepHole
 
 /// 13ac-2 (B53): with the media volume at 0 our alarm "rings" but nobody hears it, so the backup notifications and the
@@ -121,11 +122,96 @@ extension SystemAlarmTests {
     @Test func aLowButNotZeroVolumeStillHandsOver() async {
         let h = await harness(consent: .allowed, at: date(5, 12))
         await startTonight(h)
-        h.model.setMediaVolume(0.0625)                                      // the first step: 6 %, quiet but heard
+        h.model.setMediaVolume(0.125)                                       // the second step: 12 %, quiet but heard (13ag: 6 % is not)
         h.clock.now = wake; h.model.refresh()
         h.model.alarmSoundStarted()
         await h.model.systemAlarmIdle()
         #expect(!h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 120)
+    }
+
+    // MARK: 13ag – below 10 % is inaudible, and the banner carries the sound then
+
+    @Test func atFivePercentOurAlarmLeavesTheBackupsAndTheSystemAlarmWhereTheyWere() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.model.setMediaVolume(0.05)
+        h.clock.now = wake; h.model.refresh()
+        h.model.alarmSoundStarted()
+        h.model.alarmSoundStarted()
+        await h.model.systemAlarmIdle()
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 30)
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile)])
+        let lines = diagLines(h)
+        #expect(lines.filter { $0 == "notif backup kept why=inaudible" }.count == 1)
+        #expect(lines.filter { $0 == "sysalarm keep why=inaudible" }.count == 1)
+    }
+
+    @Test func atTenPercentTheNormalStandDownHappens() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.model.setMediaVolume(0.10)
+        h.clock.now = wake; h.model.refresh()
+        h.model.alarmSoundStarted()
+        await h.model.systemAlarmIdle()
+        #expect(!h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 120)
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 120, alarmFile)])
+    }
+
+    @Test func fiveThenHalfWhileOursRingsStandsDownOnce() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.model.setMediaVolume(0.05)
+        h.clock.now = wake; h.model.refresh()
+        h.model.alarmSoundStarted()
+        await h.model.systemAlarmIdle()
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 30)
+        h.clock.now = wake + 10
+        h.model.setMediaVolume(0.5)
+        h.model.setMediaVolume(0.6)
+        await h.model.systemAlarmIdle()
+        #expect(!h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 120)
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 120, alarmFile)])
+        #expect(diagLines(h).filter { $0 == "notif backup cancelled why=soundStarted" }.count == 1)
+    }
+
+    @Test func fiveToEightPercentStillStandsNothingDown() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.model.setMediaVolume(0.05)
+        h.clock.now = wake; h.model.refresh()
+        h.model.alarmSoundStarted()
+        h.clock.now = wake + 10
+        h.model.setMediaVolume(0.08)
+        await h.model.systemAlarmIdle()
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 30)
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile)])
+    }
+
+    @Test func theRetryYieldsToADueSystemAlarmAtFivePercentButNotAtTen() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.clock.now = wake + 30
+        h.model.setMediaVolume(0.05)
+        #expect(h.model.yieldsToDueSystemAlarm)
+        h.model.setMediaVolume(0.10)
+        #expect(!h.model.yieldsToDueSystemAlarm)
+    }
+
+    @Test func theBannerCarriesTheAlarmSoundOnlyWhenOursIsInaudible() {
+        #expect(Notifications.alarmScreenSound(audible: true, alarmFile: alarmFile) == nil)
+        let sound = Notifications.alarmScreenSound(audible: false, alarmFile: alarmFile)
+        #expect(sound != nil)
+        #expect(sound == UNNotificationSound(named: UNNotificationSoundName(alarmFile)))
+    }
+
+    @Test func theAlarmWritesWhichBannerItPosted() async {
+        for (v, word) in [(0.05, "alarm"), (0.5, "none")] {
+            let h = await harness(consent: .allowed, at: date(5, 12))
+            await startTonight(h)
+            h.model.setMediaVolume(v)                                       // no services here: the alarm reads `mediaVolume`
+            h.clock.now = wake; h.model.refresh()
+            #expect(diagLines(h).contains("notif alarmScreen sound=\(word)"), "volume \(v)")
+        }
     }
 
     @Test func aNapAtVolumeZeroKeepsItsBackupsToo() async {

@@ -7,6 +7,16 @@ import UserNotifications
 /// Phase F6a: which notifications are time sensitive (break through a Focus) and which stay normal.
 /// Pure functions only – nothing is scheduled and the authorization is never requested (its alert would block the run).
 struct NotificationsTests {
+    @Test func foregroundPresentsOnlyTheNotificationsWithTheAlarmSound() {
+        let loud: UNNotificationPresentationOptions = [.banner, .list, .sound]
+        #expect(Notifications.foregroundPresentation(id: "alarm-screen", hasSound: true) == loud)
+        #expect(Notifications.foregroundPresentation(id: "alarm-screen", hasSound: false) == [])
+        for id in Notifications.backupAlarmIds { #expect(Notifications.foregroundPresentation(id: id, hasSound: true) == loud, "\(id)") }
+        for id in ["nudge", "nudge-2", "closed", "collapsed", "grace-end", "pause-over", Notifications.lockReminderId, "reminder-1"] {
+            #expect(Notifications.foregroundPresentation(id: id, hasSound: true) == [], "\(id)")
+        }
+    }
+
     @Test func contentLevelFollowsUrgency() {
         let urgent = Notifications.content(title: "t", body: "b", sound: .default, urgent: true)
         #expect(urgent.interruptionLevel == .timeSensitive)
