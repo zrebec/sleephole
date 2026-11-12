@@ -54,8 +54,9 @@ extension SystemAlarmConsent {
 enum SystemAlarmPlan {
     /// The system alarm first rings this long after the wake time; our own alarm gets the first word.
     static let afterWake: TimeInterval = 30
-    /// 13ah: how far ahead "at once" is set (AlarmKit needs a future date).
-    static let atOnce: TimeInterval = 1
+    /// 13ah: how far ahead "at once" is set. It must clear `AlarmKitSystemAlarm.minimumLead` with room for the enqueued
+    /// call (1s was refused on the owner's iPhone, `ok=0`, 2026-11-12).
+    static let atOnce: TimeInterval = 2
 
     /// 13ah: at the alarm, when ours cannot be heard, the armed system alarm moves from wake + 30s to now (the only
     /// thing that lights and rings a locked iPhone). Returns the new time, or nil = leave it (audible, none armed, the
@@ -224,9 +225,12 @@ final class AlarmKitSystemAlarm: SystemAlarm {
         return consent
     }
 
+    /// AlarmKit needs a date in the future, so `schedule` refuses a date that is not more than this far ahead.
+    static let minimumLead: TimeInterval = 1
+
     @discardableResult
     func schedule(at date: Date, soundFile: String) async -> Bool {
-        guard #available(iOS 26.0, *), consent == .allowed, date.timeIntervalSinceNow > 1 else { return false }
+        guard #available(iOS 26.0, *), consent == .allowed, date.timeIntervalSinceNow > Self.minimumLead else { return false }
         let id = UUID()
         do {
             try await Self.submit(id: id, at: date, soundFile: soundFile)
