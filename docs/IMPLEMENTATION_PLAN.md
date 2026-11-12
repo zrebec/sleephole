@@ -4470,13 +4470,22 @@ submission are `docs/ROZBOR-APP-REVIEW.md`; the texts for the store are in his i
           the Watch on and off, media 0, `sysalarm move at=wake+3s why=inaudible` → `sysalarm schedule at=wake+3s ok=1`
           (wake + 2s from an alarm handled ~0.8s late), "sedí"; ah3 (media 30 %) unchanged – his reservation "the rise is
           weak" is the linear gain ramp (W6, build 16 after the split of 2026-11-12), no fault.**
-    - [ ] **13ai – the date on the night / nap result screen (his word 2026-11-12 ~16:15 "13ai dnes"; his message ~16:00
+    - [x] **13ai – the date on the night / nap result screen (his word 2026-11-12 ~16:15 "13ai dnes"; his message ~16:00
           with his screenshot of the 12 Nov result: "when the night is complete and a new building is built, there must be
           a date too – definitely and unambiguously"):** the first line of `ResultView`, for every outcome and for naps – a
           night "Night from Wednesday Nov 11 to Thursday Nov 12, 2026" (sk "Noc zo stredy 11. 11. na štvrtok 12. 11.
           2026", cs "Noc ze středy 11. 11. na čtvrtek 12. 11. 2026"; the key is the wake date), a nap "Thursday Nov 12,
           2026"; one whole sentence per weekday pair (7 + 7 texts, no grammar assembled in code), `Fmt.resultDate`. A
-          Sonnet worker on `step/13ai-result-date`; install before his bedtime, the night 12 → 13 shows it.
+          Sonnet worker on `step/13ai-result-date`; install before his bedtime, the night 12 → 13 shows it. **Merged
+          `016e6ba` (step `adb0278`) 2026-11-12 ~16:40; Opus's review found the English "from" date built at noon UTC but
+          formatted in the device zone (a day late at UTC+13) – fixed by the worker; app 816 / 816 (Opus's run), i18n 1 120
+          keys 0 / 0 / 0 / 0. `MARKETING_VERSION` 1.1 + `CURRENT_PROJECT_VERSION` 13 committed the same evening (`b258f65`),
+          so the night 12 → 13 runs exactly what ships; the Release archive `SleepHole 1.1 (13)` built and checked ~16:45:
+          1.1 / 13, team 8V2VSXHQ86, entitlements as before, the three usage texts, the privacy manifest, en / sk / cs,
+          218 sprites, no `.md`, no lock-signal name, no Debug screen; three launch-hook names (`-openTownNumbers`,
+          `-revokeForgiveness`, `-selectLastNight`) remain as string literals but `DevArgs.list` is empty in Release, so
+          they never act (old since Sept / Oct – wrap them in `#if DEBUG` in build 16). Not on his phone yet – his word
+          when the phone is on the cable.**
     - [ ] **Device checks after 13ab – 13ae (Debug test nights – the Developer screen has no test nap –, the journal read after each; the checks dc1 – dc11 on the build 13 page v42; 13ae on his phone
           since 2026-11-12 06:30, the store byte-identical before / after; the volume turn-down wake and the night's rest
           screen already confirmed by him in the night 11 → 12):** media volume 0
