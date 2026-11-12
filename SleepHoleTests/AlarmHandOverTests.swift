@@ -25,11 +25,12 @@ extension SystemAlarmTests {
         h.model.alarmSoundStarted()                                         // the per-second retry
         await h.model.systemAlarmIdle()
         #expect(h.model.backupNotificationsOn)
-        #expect(h.model.systemAlarmAt == wake + 30)
-        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile)])
+        #expect(h.model.systemAlarmAt == wake + 1)                          // 13ah: at once, not wake + 30s
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile)])
         let lines = diagLines(h)
         #expect(lines.filter { $0 == "notif backup kept why=inaudible" }.count == 1)
         #expect(lines.filter { $0 == "sysalarm keep why=inaudible" }.count == 1)
+        #expect(lines.filter { $0 == "sysalarm move at=wake+1s why=inaudible" }.count == 1)
     }
 
     @Test func aDueSystemAlarmIsNeitherCancelledNorMovedWhileOursCannotBeHeard() async {
@@ -42,8 +43,8 @@ extension SystemAlarmTests {
         h.model.alarmSoundStarted()
         await h.model.systemAlarmIdle()
         #expect(h.model.yieldsToDueSystemAlarm)                             // the retry does not start ours on top of it
-        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile)])
-        #expect(h.model.systemAlarmAt == wake + 30 && h.model.backupNotificationsOn)
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile)])
+        #expect(h.model.systemAlarmAt == wake + 1 && h.model.backupNotificationsOn)
     }
 
     @Test func theRetryYieldsOnlyWhileTheSystemAlarmIsDueAndOursIsInaudible() async {
@@ -69,16 +70,17 @@ extension SystemAlarmTests {
         h.clock.now = wake; h.model.refresh()
         h.model.alarmSoundStarted()
         await h.model.systemAlarmIdle()
-        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 30)
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 1)
         h.clock.now = wake + 10
-        h.model.setMediaVolume(0.5)                                         // now it can be heard
+        h.model.setMediaVolume(0.5)                                         // now it can be heard (the at-once alarm is due: stopped)
         await h.model.systemAlarmIdle()
         #expect(!h.model.backupNotificationsOn)
         #expect(h.model.systemAlarmAt == wake + 120)
         h.model.setMediaVolume(0.6)                                         // a further change does nothing more
         h.model.setMediaVolume(0.7)
         await h.model.systemAlarmIdle()
-        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 120, alarmFile)])
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile), .cancel,
+                                   .schedule(wake + 120, alarmFile)])
         let lines = diagLines(h)
         #expect(lines.filter { $0 == "notif backup cancelled why=soundStarted" }.count == 1)
         #expect(lines.contains("sysalarm move at=wake+120s"))
@@ -93,7 +95,8 @@ extension SystemAlarmTests {
         h.clock.now = wake + 45
         h.model.setMediaVolume(0.3)
         await h.model.systemAlarmIdle()
-        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .cancel, .schedule(wake + 120, alarmFile)])
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile), .cancel,
+                                   .schedule(wake + 120, alarmFile)])
         #expect(!h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 120)
     }
 
@@ -139,8 +142,8 @@ extension SystemAlarmTests {
         h.model.alarmSoundStarted()
         h.model.alarmSoundStarted()
         await h.model.systemAlarmIdle()
-        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 30)
-        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile)])
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 1)
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile)])
         let lines = diagLines(h)
         #expect(lines.filter { $0 == "notif backup kept why=inaudible" }.count == 1)
         #expect(lines.filter { $0 == "sysalarm keep why=inaudible" }.count == 1)
@@ -164,13 +167,14 @@ extension SystemAlarmTests {
         h.clock.now = wake; h.model.refresh()
         h.model.alarmSoundStarted()
         await h.model.systemAlarmIdle()
-        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 30)
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 1)
         h.clock.now = wake + 10
         h.model.setMediaVolume(0.5)
         h.model.setMediaVolume(0.6)
         await h.model.systemAlarmIdle()
         #expect(!h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 120)
-        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 120, alarmFile)])
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile), .cancel,
+                                   .schedule(wake + 120, alarmFile)])
         #expect(diagLines(h).filter { $0 == "notif backup cancelled why=soundStarted" }.count == 1)
     }
 
@@ -183,8 +187,8 @@ extension SystemAlarmTests {
         h.clock.now = wake + 10
         h.model.setMediaVolume(0.08)
         await h.model.systemAlarmIdle()
-        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 30)
-        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile)])
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 1)
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile)])
     }
 
     @Test func theRetryYieldsToADueSystemAlarmAtFivePercentButNotAtTen() async {
@@ -198,14 +202,18 @@ extension SystemAlarmTests {
     }
 
     @Test func theBannerCarriesTheAlarmSoundOnlyWhenOursIsInaudible() {
-        #expect(Notifications.alarmScreenSound(audible: true, alarmFile: alarmFile) == nil)
-        let sound = Notifications.alarmScreenSound(audible: false, alarmFile: alarmFile)
+        #expect(Notifications.alarmScreenSound(audible: true, systemAlarmArmed: false, alarmFile: alarmFile) == nil)
+        #expect(Notifications.alarmScreenSound(audible: true, systemAlarmArmed: true, alarmFile: alarmFile) == nil)
+        let sound = Notifications.alarmScreenSound(audible: false, systemAlarmArmed: false, alarmFile: alarmFile)
         #expect(sound != nil)
         #expect(sound == UNNotificationSound(named: UNNotificationSoundName(alarmFile)))
+        // 13ah: a system alarm is armed → it rings at once, the banner stays silent
+        #expect(Notifications.alarmScreenSound(audible: false, systemAlarmArmed: true, alarmFile: alarmFile) == nil)
     }
 
     @Test func theAlarmWritesWhichBannerItPosted() async {
-        for (v, word) in [(0.05, "alarm"), (0.5, "none")] {
+        // consent given → a system alarm is armed → the banner is silent even when ours is inaudible (13ah)
+        for (v, word) in [(0.05, "none"), (0.5, "none")] {
             let h = await harness(consent: .allowed, at: date(5, 12))
             await startTonight(h)
             h.model.setMediaVolume(v)                                       // no services here: the alarm reads `mediaVolume`
@@ -225,7 +233,7 @@ extension SystemAlarmTests {
         h.clock.now = napWake; h.model.refresh()
         h.model.alarmSoundStarted()
         await h.model.systemAlarmIdle()
-        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == napWake + 30)
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == napWake + 1)   // 13ah: the same rule for a nap
     }
 
     @Test func theVolumeBurstBecomesOneLineWithWasAndTheEndIsWritten() async {
@@ -260,9 +268,93 @@ extension SystemAlarmTests {
             if late > 120 { h.model.append(.alarmStopped) }                 // ours ran out its two minutes
             h.model.setMediaVolume(0.5)                                     // a Bluetooth route, a sleepy volume press
             await h.model.systemAlarmIdle()
-            #expect(h.alarm.events == [.schedule(wake + 30, alarmFile)], "late \(late)")   // no cancel: it is the only audible channel
-            #expect(h.model.systemAlarmAt == wake + 30 && h.model.backupNotificationsOn)
+            #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile)], "late \(late)")   // no cancel: it is the only audible channel
+            #expect(h.model.systemAlarmAt == wake + 1 && h.model.backupNotificationsOn)
         }
+    }
+
+    // MARK: 13ah – the system alarm comes at once when ours cannot be heard
+
+    @Test func atOnceTargetDecidesFromAudibleArmedSafetyAndNow() {
+        let now = wake
+        let armed = wake + 30
+        #expect(SystemAlarmPlan.atOnceTarget(audible: false, armed: armed, isSafety: false, now: now) == now + 1)
+        #expect(SystemAlarmPlan.atOnceTarget(audible: true, armed: armed, isSafety: false, now: now) == nil)
+        #expect(SystemAlarmPlan.atOnceTarget(audible: false, armed: nil, isSafety: false, now: now) == nil)
+        #expect(SystemAlarmPlan.atOnceTarget(audible: false, armed: armed, isSafety: true, now: now) == nil)
+        #expect(SystemAlarmPlan.atOnceTarget(audible: false, armed: wake - 5, isSafety: false, now: now) == nil)   // past
+        #expect(SystemAlarmPlan.atOnceTarget(audible: false, armed: now, isSafety: false, now: now) == nil)        // due
+        #expect(SystemAlarmPlan.atOnceTarget(audible: false, armed: now + 1, isSafety: false, now: now) == nil)    // about to ring
+    }
+
+    @Test func atFivePercentTheSystemAlarmMovesToOneSecondAfterTheWake() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.model.setMediaVolume(0.05)
+        h.clock.now = wake; h.model.refresh()
+        await h.model.systemAlarmIdle()
+        #expect(h.model.systemAlarmAt == wake + 1 && h.model.backupNotificationsOn)
+        #expect(diagLines(h).filter { $0 == "sysalarm move at=wake+1s why=inaudible" }.count == 1)
+    }
+
+    @Test func anAudibleVolumeAtTheAlarmDoesNotMoveItToNow() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.model.setMediaVolume(0.5)
+        h.clock.now = wake; h.model.refresh()
+        h.model.alarmSoundStarted()
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 120, alarmFile)])
+        #expect(!diagLines(h).contains { $0.contains("why=inaudible") && $0.hasPrefix("sysalarm move") })
+    }
+
+    @Test func theVolumeRisingAfterTheAtOnceMoveStillStandsDownBehindOurTwoMinutes() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.model.setMediaVolume(0)
+        h.clock.now = wake; h.model.refresh()
+        h.model.alarmSoundStarted()
+        await h.model.systemAlarmIdle()
+        #expect(h.model.systemAlarmAt == wake + 1)
+        h.clock.now = wake + 5                                              // the system alarm rings by now
+        h.model.setMediaVolume(0.5)
+        h.model.alarmSoundStarted()                                         // ours sounds
+        await h.model.systemAlarmIdle()
+        #expect(!h.model.backupNotificationsOn)
+        #expect(h.model.systemAlarmAt == wake + 120)
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile), .cancel,
+                                   .schedule(wake + 120, alarmFile)])
+    }
+
+    @Test func withoutASystemAlarmTheInaudibleBannerCarriesTheSound() async {
+        for consent in [SystemAlarmConsent.denied, .unavailable] {
+            let h = await harness(consent: consent, at: date(5, 12))
+            await startTonight(h)
+            h.model.setMediaVolume(0)
+            h.clock.now = wake; h.model.refresh()
+            await h.model.systemAlarmIdle()
+            #expect(h.model.systemAlarmAt == nil)
+            #expect(diagLines(h).contains("notif alarmScreen sound=alarm"), "\(consent)")
+            #expect(h.alarm.events.isEmpty)
+        }
+        let h = await harness(consent: .allowed, at: date(5, 12))           // switched off in Settings
+        h.model.settings.usesSystemAlarm = false
+        await startTonight(h)
+        h.model.setMediaVolume(0)
+        h.clock.now = wake; h.model.refresh()
+        #expect(h.model.systemAlarmAt == nil)
+        #expect(diagLines(h).contains("notif alarmScreen sound=alarm"))
+    }
+
+    @Test func aLateAlarmWithTheSystemAlarmAlreadyDueMovesNothing() async {
+        let h = await harness(consent: .allowed, at: date(5, 12))
+        await startTonight(h)
+        h.model.setMediaVolume(0)
+        h.clock.now = wake + 45; h.model.refresh()                          // the app came back late
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile)])
+        #expect(h.model.systemAlarmAt == wake + 30)
+        #expect(!diagLines(h).contains { $0.hasPrefix("sysalarm move") })
     }
 
     // MARK: through startAlarmSound, with the real (muted) audio
@@ -289,21 +381,22 @@ extension SystemAlarmTests {
         h.model.setMediaVolume(0)
         h.clock.now = wake; h.model.refresh()                               // the alarm rings (muted), unheard
         #expect(h.model.audio.isAlarmRinging && h.model.audio.isEngineRunning)
-        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 30)
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 1)
         h.model.audio.stopEngineForTesting()                                // the system alarm rings and took our engine
         h.clock.now = wake + 31
         h.model.refresh()                                                   // the per-second retry
         await h.model.systemAlarmIdle()
         #expect(!h.model.audio.isEngineRunning)                             // ours did not start on top of it
-        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile)])        // not cancelled, not moved
-        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 30)
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile)])   // not cancelled, not moved again
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 1)
         // the volume comes up: the next tick rings ours and only THEN stands the system alarm down, once
         h.model.mediaVolumeReader = { 0.5 }
         h.model.refresh()
         await h.model.systemAlarmIdle()
         #expect(h.model.audio.isEngineRunning && h.model.audio.isAlarmRinging && h.model.audio.isAlarmPlayerPlaying)
         #expect(!h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 120)
-        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .cancel, .schedule(wake + 120, alarmFile)])
+        #expect(h.alarm.events == [.schedule(wake + 30, alarmFile), .schedule(wake + 1, alarmFile), .cancel,
+                                   .schedule(wake + 120, alarmFile)])
         h.model.abandonNight()
     }
 
@@ -315,7 +408,7 @@ extension SystemAlarmTests {
         h.model.mediaVolumeReader = { 0 }                                   // … then the volume went to 0 with no callback
         h.clock.now = wake; h.model.refresh()
         #expect(h.model.mediaVolume == 0)
-        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 30)   // so nothing was handed over
+        #expect(h.model.backupNotificationsOn && h.model.systemAlarmAt == wake + 1)   // so nothing was handed over (13ah: the alarm came at once)
         h.model.abandonNight()
     }
 

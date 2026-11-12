@@ -1851,8 +1851,8 @@ final class AppModel {
     /// The media volume (0…1) as the one night-long observer reports it; -1 = unknown (no night services, no reading yet).
     /// Tests set it with `setMediaVolume(_:)`; `-fakeVolume V[,S,V2]` drives it in the simulator.
     private(set) var mediaVolume: Double = -1
-    /// Our own alarm rings but cannot be heard (the media volume is 0): the backup notifications and the system alarm
-    /// stay as they were armed until the volume comes up.
+    /// Our own alarm rings but cannot be heard (media volume below 10 %): the backup notifications stay armed and the
+    /// system alarm has been moved to the alarm moment (13ah) until the volume comes up.
     @ObservationIgnored private var alarmInaudible = false
     /// The yield to a due system alarm was written to the track already (once per alarm).
     @ObservationIgnored private var yieldNoted = false
@@ -2157,7 +2157,7 @@ final class AppModel {
     /// two minutes, set again for the moment ours stops, so it still takes over when the owner sleeps through them.
     private func moveSystemAlarmBehindOurs() {
         guard !systemAlarmMoved, let rec = active, !systemAlarmIsSafety, let at = systemAlarmAt else { return }
-        // B53: ours cannot be heard (media volume below 10 %, 13ag) → the system alarm stays where it is, due, ringing or waiting
+        // B53: ours cannot be heard (media volume below 10 %, 13ag) → the system alarm is left alone (13ah: it was moved to the alarm moment), due, ringing or waiting
         guard alarmIsAudible else {
             if !yieldNoted { yieldNoted = true; diag.note("sysalarm", "keep why=inaudible") }
             return
@@ -2436,9 +2436,18 @@ final class AppModel {
         guard active != nil else { return }
         rereadMediaVolume()
         diag.note("vol", "media=\(mediaPercentText) at=alarm")      // before `append`: it saves the track at the alarm
-        // 13ag: an inaudible alarm gets a banner WITH the alarm sound (ringer volume, taps the Watch)
-        let bannerSound = Notifications.alarmScreenSound(audible: alarmIsAudible, alarmFile: settings.alarmSound.fileName)
+        // 13ag / 13ah: an inaudible alarm gets a banner WITH the alarm sound (ringer volume, taps the Watch) – unless a
+        // system alarm is armed: that one rings at once instead (decided before the move below)
+        let bannerSound = Notifications.alarmScreenSound(audible: alarmIsAudible, systemAlarmArmed: systemAlarmAt != nil,
+                                                         alarmFile: settings.alarmSound.fileName)
         diag.note("notif", "alarmScreen sound=\(bannerSound == nil ? "none" : "alarm")")   // before `append`, like the line above
+        // 13ah: ours cannot be heard → the armed system alarm (it lights and rings a locked iPhone) comes NOW, not at wake + 30s.
+        // `systemAlarmMoved` stays false: a volume raised to 10 % while ours plays still does the normal stand-down.
+        if let target = SystemAlarmPlan.atOnceTarget(audible: alarmIsAudible, armed: systemAlarmAt,
+                                                     isSafety: systemAlarmIsSafety, now: clock.now) {
+            diag.note("sysalarm", "move at=\(wakeRelative(target)) why=inaudible")
+            scheduleSystemAlarm(at: target)
+        }
         append(.alarmFired)
         guard servicesEnabled else { return }
         Notifications.alarmScreen(sound: bannerSound)   // light up the lock screen
@@ -2510,9 +2519,9 @@ final class AppModel {
 
     /// Our own alarm really sounds (called by `startAlarmSound`; a seam for tests, which have no audio). The app is
     /// alive and audible → the backup notifications are cancelled; and the system alarm moves behind our two minutes,
-    /// so it takes over when the owner sleeps through them. B53/13ag: with the media volume below 10 % our alarm rings but nobody
-    /// hears it – then none of that happens (the notifications and the system alarm stay as armed) until the volume
-    /// rises (`setMediaVolume`).
+    /// so it takes over when the owner sleeps through them. B53/13ag/13ah: with the media volume below 10 % our alarm rings but
+    /// nobody hears it – then none of that happens (the notifications stay armed, the system alarm already rings at once,
+    /// see `ringAlarm`) until the volume rises (`setMediaVolume`).
     func alarmSoundStarted() {
         guard alarmIsAudible else {
             if !alarmInaudible {
