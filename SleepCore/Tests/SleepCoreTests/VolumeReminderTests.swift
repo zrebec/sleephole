@@ -19,6 +19,10 @@ struct VolumeReminderTests {
         #expect(VolumeReminder.level(volume: 0.2551) == nil)
         #expect(VolumeReminder.level(volume: 0.004) == .off)
     }
+    @Test func alarmAudibility() {
+        for v in [0, 0.004, 0.05, 0.0625, 0.094] { #expect(!VolumeReminder.alarmAudible(volume: v), "\(v)") }
+        for v in [0.095, 0.10, 0.125, 1.0, 1.5, -1, .nan, .infinity] { #expect(VolumeReminder.alarmAudible(volume: v), "\(v)") }
+    }
     @Test func unknownIsNothing() {
         #expect(VolumeReminder.level(volume: -1) == nil)
         #expect(VolumeReminder.level(volume: .nan) == nil)

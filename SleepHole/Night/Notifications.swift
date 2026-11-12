@@ -224,11 +224,36 @@ enum Notifications {
         return fire < log.window.wake ? fire : nil
     }
 
-    /// At the alarm: a silent, time-sensitive notification lights up the lock screen
-    /// (apps cannot switch the screen on themselves). The sound comes from the app.
-    static func alarmScreen() {
+    /// At the alarm: a time-sensitive notification lights up the lock screen (apps cannot switch the screen on
+    /// themselves). 13ag: silent while our own alarm sound can be heard (it comes from the app); with `sound` (the
+    /// alarm sound, ringer volume, taps the Watch) when the media volume is too low for ours to be heard.
+    static func alarmScreen(sound: UNNotificationSound? = nil) {
         schedule("alarm-screen", at: Date() + 0.2, title: L("⏰ Good morning!"),
-                 body: L("Shake your phone or enter your code in SleepHole."), sound: nil)
+                 body: L("Shake your phone or enter your code in SleepHole."), sound: sound)
+    }
+
+    /// 13ag: what iOS shows while SleepHole is in the FOREGROUND (without a delegate it shows nothing). Only the
+    /// notifications that carry the alarm sound are presented; every warning and reminder stays as quiet as before.
+    static func foregroundPresentation(id: String, hasSound: Bool) -> UNNotificationPresentationOptions {
+        if backupAlarmIds.contains(id) || (id == "alarm-screen" && hasSound) { return [.banner, .list, .sound] }
+        return []
+    }
+
+    /// 13ag: presents the alarm notifications in the foreground. Only `willPresent` – a tap keeps the default behaviour.
+    final class ForegroundDelegate: NSObject, UNUserNotificationCenterDelegate, @unchecked Sendable {
+        func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification,
+                                    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+            completionHandler(Notifications.foregroundPresentation(id: notification.request.identifier,
+                                                                   hasSound: notification.request.content.sound != nil))
+        }
+    }
+    /// Strong reference: the center holds its delegate weakly.
+    static let foregroundDelegate = ForegroundDelegate()
+
+    /// 13ag: the banner is silent while our alarm can be heard; when it cannot (media volume below 10 %) it carries the
+    /// alarm sound, which plays at the ringer volume and taps the Apple Watch.
+    static func alarmScreenSound(audible: Bool, alarmFile: String) -> UNNotificationSound? {
+        audible ? nil : UNNotificationSound(named: UNNotificationSoundName(alarmFile))
     }
 
     // the "-2" ids are no longer scheduled; they are still cancelled for a notification a previous build left pending

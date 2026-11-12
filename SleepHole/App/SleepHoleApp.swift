@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UserNotifications
 
 @main
 struct SleepHoleApp: App {
@@ -9,6 +10,7 @@ struct SleepHoleApp: App {
     @State private var model: AppModel
 
     init() {
+        UNUserNotificationCenter.current().delegate = Notifications.foregroundDelegate     // 13ag: the alarm in the foreground
         // SYNC: with an iCloud container among the entitlements SwiftData would switch on CloudKit mirroring by itself
         // (`.automatic`) and refuse to load this store – the town travels as files (`ICloudSyncTransport`), never through
         // CloudKit. The configuration has no name, so it is the same `default.store` as before.

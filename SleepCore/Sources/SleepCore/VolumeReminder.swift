@@ -17,4 +17,16 @@ public enum VolumeReminder {
         if percent == 0 { return .off }
         return percent <= threshold * 100 ? .low : nil
     }
+
+    /// Below this volume (whole percent) our alarm cannot be heard: the first iPhone step (6 %) is quieter than the
+    /// alarm's own start gain allows (13ag, owner 2026-11-12).
+    public static let alarmInaudibleBelow = 0.10
+
+    /// Whether our own alarm, played through the media volume, can be heard (13ag, owner 2026-11-12). Unknown (negative
+    /// or non-finite) counts as audible; otherwise the whole percent (rounded like `level(volume:)`) must reach 10.
+    public static func alarmAudible(volume: Double) -> Bool {
+        guard volume.isFinite, volume >= 0 else { return true }
+        let percent = (min(volume, 1) * 100).rounded()
+        return percent >= alarmInaudibleBelow * 100
+    }
 }
