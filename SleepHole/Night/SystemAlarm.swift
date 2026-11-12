@@ -54,6 +54,16 @@ extension SystemAlarmConsent {
 enum SystemAlarmPlan {
     /// The system alarm first rings this long after the wake time; our own alarm gets the first word.
     static let afterWake: TimeInterval = 30
+    /// 13ah: how far ahead "at once" is set (AlarmKit needs a future date).
+    static let atOnce: TimeInterval = 1
+
+    /// 13ah: at the alarm, when ours cannot be heard, the armed system alarm moves from wake + 30s to now (the only
+    /// thing that lights and rings a locked iPhone). Returns the new time, or nil = leave it (audible, none armed, the
+    /// safety alarm, or already due / about to ring).
+    static func atOnceTarget(audible: Bool, armed: Date?, isSafety: Bool, now: Date) -> Date? {
+        guard !audible, !isSafety, let armed, armed > now + atOnce else { return nil }
+        return now + atOnce
+    }
 }
 
 // MARK: - stand-ins (nothing here can ring)

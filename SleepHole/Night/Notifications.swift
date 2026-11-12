@@ -250,10 +250,11 @@ enum Notifications {
     /// Strong reference: the center holds its delegate weakly.
     static let foregroundDelegate = ForegroundDelegate()
 
-    /// 13ag: the banner is silent while our alarm can be heard; when it cannot (media volume below 10 %) it carries the
-    /// alarm sound, which plays at the ringer volume and taps the Apple Watch.
-    static func alarmScreenSound(audible: Bool, alarmFile: String) -> UNNotificationSound? {
-        audible ? nil : UNNotificationSound(named: UNNotificationSoundName(alarmFile))
+    /// 13ag / 13ah: the banner is silent while our alarm can be heard, and also when a system alarm is armed (it then rings
+    /// at once – never two melodies). Only when ours cannot be heard (media volume below 10 %) AND no system alarm is armed
+    /// does it carry the alarm sound, which plays at the ringer volume and taps the Apple Watch.
+    static func alarmScreenSound(audible: Bool, systemAlarmArmed: Bool, alarmFile: String) -> UNNotificationSound? {
+        (audible || systemAlarmArmed) ? nil : UNNotificationSound(named: UNNotificationSoundName(alarmFile))
     }
 
     // the "-2" ids are no longer scheduled; they are still cancelled for a notification a previous build left pending
