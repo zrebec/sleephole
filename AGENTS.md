@@ -44,8 +44,10 @@ by build – the roadmap is plan §0b.
    ev2 (Strict).** **13ag – a silent alarm (his ev3: both parts in build 13) is on his phone since 2026-11-12 09:11 – ag2 + ag3 🟢; ag1 "sedí" with
    a reservation (the Watch only – iOS routes a locked phone's notifications to the Watch) → 13ah (his ev4 "still in build 13"):
    when ours is inaudible the system alarm rings at once – on his phone since 10:10 (`fa576e4`); his ah1 – ah4 "sedí", but
-   the track showed the 1s move refused (`ok=0`, the alarm at + 30s) → 13ah2 (2s ahead, `7ae6ce4`), on his phone since 11:08 on his word; his retests ah1b /
-   ah2b open (check `sysalarm schedule at=wake+2s ok=1`). ah3, ah4, ag4 🟢; the system alarm switch is on again.** His library idea
+   the track showed the 1s move refused (`ok=0`, the alarm at + 30s) → 13ah2 (2s ahead, `7ae6ce4`), on his phone since 11:08 on his word – **✅ confirmed by his retests 15:36 /
+   15:42 (`sysalarm schedule at=wake+3s ok=1`, the Watch on / off).** ah3, ah4, ag4 🟢. **Asked 2026-11-12 ~16:30: 13ai – the
+   date on the night / nap result screen – today in build 13 (Opus's recommendation) or in build 14; smaller builds after
+   13 (plan §12).** His library idea
    (2026-11-12) is a proposal page for build 14 (plan §0b row 14) – only on his word. Two setup-screen UI tests fail since 13x → B49
    (build 14). 13w and W6 proposed for build 15, B48 (shake) for build 14.
 2. **Release of build 13: after the device checks of 13ab – 13ah and one real night with the whole tree (13ae – 13ah included –
