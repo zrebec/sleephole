@@ -45,19 +45,20 @@ by build – the roadmap is plan §0b.
    a reservation (the Watch only – iOS routes a locked phone's notifications to the Watch) → 13ah (his ev4 "still in build 13"):
    when ours is inaudible the system alarm rings at once – on his phone since 10:10 (`fa576e4`); his ah1 – ah4 "sedí", but
    the track showed the 1s move refused (`ok=0`, the alarm at + 30s) → 13ah2 (2s ahead, `7ae6ce4`), on his phone since 11:08 on his word – **✅ confirmed by his retests 15:36 /
-   15:42 (`sysalarm schedule at=wake+3s ok=1`, the Watch on / off).** ah3, ah4, ag4 🟢. **Asked 2026-11-12 ~16:30: 13ai – the
-   date on the night / nap result screen – today in build 13 (Opus's recommendation) or in build 14; smaller builds after
-   13 (plan §12).** His library idea
+   15:42 (`sysalarm schedule at=wake+3s ok=1`, the Watch on / off).** ah3, ah4, ag4 🟢. **13ai – the date on the night / nap result
+   screen – in build 13 (his word ~16:15), a Sonnet worker on `step/13ai-result-date`; install before 21:30.** His library idea
    (2026-11-12) is a proposal page for build 14 (plan §0b row 14) – only on his word. Two setup-screen UI tests fail since 13x → B49
    (build 14). 13w and W6 proposed for build 15, B48 (shake) for build 14.
-2. **Release of build 13: after the device checks of 13ab – 13ah and one real night with the whole tree (13ae – 13ah included –
+2. **Release of build 13 on 2026-11-13 FIRST THING in the morning (his word: "otherwise not before Sunday"; prepared the
+   evening before – version, Release archive, texts): after the device checks of 13ab – 13ah and one real night with the whole tree (13ae – 13ah included –
    the night 12 → 13; his word 2026-11-12: "today afternoon or tomorrow morning, it does not matter")**
    – then the journal first, 1.1 (13) (`MARKETING_VERSION` 1.1 – 1.0 is approved), the Release archive check, the upload,
    "What to Test" EN + SK by Opus, Kamaráti + SE, the PR `build/13` → `main`. **His "Áno" is given; he wants no questions
    about the release itself** – only a problem stops it.
-3. **Next: build 14** – **its first step W7, the Watch buzzes ~30s before the alarm (his word 2026-11-10 ~19:45; plan
-   §0b rows 14 / 15)**; then the features – nights off, the statistics, town needs + a choice of three (plan §0b) – only
-   on his word.
+3. **Next: build 14 = the town (smaller builds from 2026-11-12, his yes: 14 the town, 15 the statistics + nights off, 16
+   polishing, 17 the living town)** – its first step W7, the Watch buzzes ~30s before the alarm (his word 2026-11-10);
+   town needs + a choice of three + the skyscraper guarantee, shopping centres and retail parks (his word 2026-11-12) –
+   plan §0b row 14, each step on his word.
 
 ## Standing notes for Opus (never list them to the owner – his wish 2026-11-09)
 
@@ -301,7 +302,7 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | Path | What |
 |---|---|
 | `docs/IMPLEMENTATION_PLAN.md` | the plan (read first) |
-| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (v121 of 2026-11-12; read the page with the Artifact tool – `path: "index.html"` saves it to a file –, edit, republish) – **when §0b changes, update all three** |
+| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (v122 of 2026-11-12 – builds 14 – 17 split; read the page with the Artifact tool – `path: "index.html"` saves it to a file –, edit, republish) – **when §0b changes, update all three** |
 | (claude.ai page) | the owner's bug list B1–B50, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (updated 2026-11-12, v27 – B51 – B61 added, B50 B53 B54 B56 B57 confirmed; source: a scratchpad file – read the page with the Artifact tool to edit it) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
 | (claude.ai pages) | per-build pages for the owner (Slovak, 2026-10-22), each with a reply form whose answers (and ticks) go to the page's shared store – read them with `ArtifactData` `get` `state/answers` (the browser also keeps a local copy under the `b10.` / `b9.` keys; never rename them): build 13 https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (13a + 13b, the Czech double check, screenshots, c1–c6 for the morning, n1–n2 for a night in Czech; prefix `b13.`), build 10 https://claude.ai/artifact/P5jc2DhAxdEwfEtKnhzkLX (what 10a–10e fixed, what to try, the switch for the night, the morning questions), build 9 https://claude.ai/artifact/T1hEdc9dpk56MAmwQxk7nr (9a–9o, the bugs, what was confirmed, what is open). Sources: scratchpad files of 2026-10-22 – read a page with the Artifact tool to edit it |
 | (claude.ai page) | all 30 postcards as app screenshots in sk / cs / en (2026-11-02, private, static, no form): https://claude.ai/artifact/JD9SGXVqygs9vkkNPcq4ae – the images come from `SleepHoleTests/PostcardTextTests` `screenshotsForTheReview()` (`TEST_RUNNER_POSTCARD_SHOTS=<dir>`, 92 PNGs); the page generator was a scratchpad script of 2026-11-02 – read the page with the Artifact tool to edit it |
