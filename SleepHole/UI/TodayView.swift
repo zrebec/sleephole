@@ -1032,6 +1032,8 @@ struct ResultView: View {
             let name = model.catalog?[rec.buildingId]?.displayName ?? L("building")
             FitOrScroll {
             VStack(spacing: 18) {
+                Text(verbatim: Fmt.resultDate(rec.window.key, nap: rec.isNap)).font(.headline)
+                    .multilineTextAlignment(.center)
                 if rec.isNap {
                     Text(verbatim: outcome == .complete ? "😴" : outcome == .unfinished ? "🥱" : "🧸").font(.system(size: 90))
                         .popIn(delay: 0.1)
