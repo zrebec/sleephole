@@ -122,6 +122,47 @@ enum Fmt {
         Lang.current.usesContinentalFormats ? "\(k.day). \(k.month)." : "\(k.month)/\(k.day)"
     }
 
+    /// The line on top of the result screen (13ai). A night (key = the WAKE date) reads "Night from Wednesday 11. 11. to
+    /// Thursday 12. 11. 2026"; a nap reads "Thursday 12. 11. 2026". Weekdays come from a fixed Gregorian calendar at noon.
+    static func resultDate(_ k: NightKey, nap: Bool) -> String {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let wake = cal.date(from: DateComponents(year: k.year, month: k.month, day: k.day, hour: 12))!
+        let wd = cal.component(.weekday, from: wake)   // 1 = Sunday … 7 = Saturday
+        let to = fullDate(k)
+        if nap {
+            switch wd {
+            case 2: return L("Monday \(to)")
+            case 3: return L("Tuesday \(to)")
+            case 4: return L("Wednesday \(to)")
+            case 5: return L("Thursday \(to)")
+            case 6: return L("Friday \(to)")
+            case 7: return L("Saturday \(to)")
+            default: return L("Sunday \(to)")
+            }
+        }
+        let start = cal.date(byAdding: .day, value: -1, to: wake)!
+        let sc = cal.dateComponents([.year, .month, .day], from: start)
+        let from: String
+        if Lang.current.usesContinentalFormats {
+            from = dayMonth(NightKey(year: sc.year!, month: sc.month!, day: sc.day!))
+        } else {
+            // format in the UTC zone `start` was built in – the device zone could shift noon UTC to the next day (UTC+13)
+            var style = Date.FormatStyle.dateTime.month(.abbreviated).day().locale(Lang.current.locale)
+            style.timeZone = cal.timeZone
+            from = start.formatted(style)
+        }
+        switch wd {
+        case 2: return L("Night from Sunday \(from) to Monday \(to)")
+        case 3: return L("Night from Monday \(from) to Tuesday \(to)")
+        case 4: return L("Night from Tuesday \(from) to Wednesday \(to)")
+        case 5: return L("Night from Wednesday \(from) to Thursday \(to)")
+        case 6: return L("Night from Thursday \(from) to Friday \(to)")
+        case 7: return L("Night from Friday \(from) to Saturday \(to)")
+        default: return L("Night from Saturday \(from) to Sunday \(to)")
+        }
+    }
+
     /// "30. 9. 2026" / "Sep 30, 2026" – never with a grouping separator in the year.
     static func fullDate(_ k: NightKey) -> String {
         guard !Lang.current.usesContinentalFormats else { return "\(k.day). \(k.month). \(k.year)" }
