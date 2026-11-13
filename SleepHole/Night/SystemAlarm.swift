@@ -54,6 +54,17 @@ extension SystemAlarmConsent {
 enum SystemAlarmPlan {
     /// The system alarm first rings this long after the wake time; our own alarm gets the first word.
     static let afterWake: TimeInterval = 30
+    /// 13ah: how far ahead "at once" is set. It must clear `AlarmKitSystemAlarm.minimumLead` with room for the enqueued
+    /// call (1s was refused on the owner's iPhone, `ok=0`, 2026-11-12).
+    static let atOnce: TimeInterval = 2
+
+    /// 13ah: at the alarm, when ours cannot be heard, the armed system alarm moves from wake + 30s to now (the only
+    /// thing that lights and rings a locked iPhone). Returns the new time, or nil = leave it (audible, none armed, the
+    /// safety alarm, or already due / about to ring).
+    static func atOnceTarget(audible: Bool, armed: Date?, isSafety: Bool, now: Date) -> Date? {
+        guard !audible, !isSafety, let armed, armed > now + atOnce else { return nil }
+        return now + atOnce
+    }
 }
 
 // MARK: - stand-ins (nothing here can ring)
@@ -214,9 +225,12 @@ final class AlarmKitSystemAlarm: SystemAlarm {
         return consent
     }
 
+    /// AlarmKit needs a date in the future, so `schedule` refuses a date that is not more than this far ahead.
+    static let minimumLead: TimeInterval = 1
+
     @discardableResult
     func schedule(at date: Date, soundFile: String) async -> Bool {
-        guard #available(iOS 26.0, *), consent == .allowed, date.timeIntervalSinceNow > 1 else { return false }
+        guard #available(iOS 26.0, *), consent == .allowed, date.timeIntervalSinceNow > Self.minimumLead else { return false }
         let id = UUID()
         do {
             try await Self.submit(id: id, at: date, soundFile: soundFile)
@@ -347,7 +361,9 @@ final class NoKeepAlive: KeepAlive {
 @MainActor
 final class UIKitKeepAlive: KeepAlive {
     func begin(name: String, onExpire: @escaping @MainActor () -> Void) -> Int {
-        UIApplication.shared.beginBackgroundTask(withName: name) { Task { @MainActor in onExpire() } }.rawValue
+        // iOS requires `endBackgroundTask` before the expiration handler returns, so the expiry runs in place (the
+        // handler is called on the main thread) – a `Task` would let the handler return first and iOS may kill the app
+        UIApplication.shared.beginBackgroundTask(withName: name) { MainActor.assumeIsolated { onExpire() } }.rawValue
     }
 
     func end(_ token: Int) {

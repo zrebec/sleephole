@@ -72,6 +72,8 @@ struct GoodNightSplash: View {
         .ignoresSafeArea()
         .contentShape(Rectangle())
         .onTapGesture { done() }                 // never in the way: a tap skips it
+        .accessibilityAddTraits(.isButton)
+        .accessibilityAction { done() }
         .task {
             try? await Task.sleep(for: .seconds(Self.duration))
             done()
@@ -134,6 +136,7 @@ struct SparkleBurst: View {
     var delay: Double = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var start = Date()
+    @State private var settled = false          // the particles are gone, only the slow shimmer is left (L4, 13p)
 
     private struct Bit { let angle, speed, size, spin: Double; let color: Color }
     private static let bits: [Bit] = {
@@ -148,7 +151,7 @@ struct SparkleBurst: View {
 
     var body: some View {
         if !reduceMotion {
-            TimelineView(.animation) { ctx in
+            TimelineView(.animation(minimumInterval: settled ? 1.0 / 20 : nil)) { ctx in
                 let t = (ctx.date.timeIntervalSince(start) - delay) / Motion.pace
                 Canvas { gc, size in
                     let c = CGPoint(x: size.width / 2, y: size.height * 0.55)
@@ -167,6 +170,10 @@ struct SparkleBurst: View {
             }
             .allowsHitTesting(false)
             .accessibilityHidden(true)
+            .task {
+                try? await Task.sleep(for: .seconds((delay + 2.2 * Motion.pace) + 0.3))
+                settled = true
+            }
         }
     }
 }
@@ -197,6 +204,7 @@ struct DustPuff: View {
     var delay: Double = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var start = Date()
+    @State private var over = false             // nothing is drawn after 1.6 s: the clock stops (L4, 13p)
 
     private struct Puff { let dir, speed, size, rise: Double }
     private static let puffs: [Puff] = {
@@ -209,7 +217,7 @@ struct DustPuff: View {
 
     var body: some View {
         if !reduceMotion {
-            TimelineView(.animation) { ctx in
+            TimelineView(.animation(paused: over)) { ctx in
                 let t = (ctx.date.timeIntervalSince(start) - delay) / Motion.pace
                 Canvas { gc, size in
                     guard t > 0, t < 1.6 else { return }
@@ -227,6 +235,10 @@ struct DustPuff: View {
             }
             .allowsHitTesting(false)
             .accessibilityHidden(true)
+            .task {
+                try? await Task.sleep(for: .seconds(delay + 1.6 * Motion.pace + 0.4))      // after the last, empty frame
+                over = true
+            }
         }
     }
 }

@@ -24,9 +24,17 @@ struct PostcardView: View {
     private var tip: String { PostcardText.tip(for: id) }
     private var source: PostcardSource? { Postcards.source(for: id) }
 
+    private var study: PostcardStudy? { Postcards.study(for: id) }
+    private var hasStudy: Bool { PostcardText.hasStudy(id) }
+
     private var accessibilitySummary: String {
-        [PostcardText.numberLine(number, of: BoxCatalog.size(.postcard)), title, tip, PostcardText.signature,
-         source.map { PostcardText.sourceLine($0.name) } ?? ""]
+        var studyPart: [String] = []
+        if hasStudy, let study {
+            studyPart = [PostcardText.whyItHelps, PostcardText.why(for: id) ?? "", PostcardText.studyHeading, PostcardText.citation(for: study),
+                    PostcardText.finding(for: id) ?? "", PostcardText.evidenceHeading, PostcardText.evidence(for: id) ?? ""]
+        }
+        return ([PostcardText.numberLine(number, of: BoxCatalog.size(.postcard)), title, tip, PostcardText.signature] + studyPart + [
+         source.map { PostcardText.sourceLine($0.name) } ?? ""])
             .filter { !$0.isEmpty }.joined(separator: ". ")
     }
 
@@ -56,13 +64,17 @@ struct PostcardView: View {
             Text(PostcardText.signature)
                 .font(.callout.italic()).foregroundStyle(Self.softInk)
                 .frame(maxWidth: .infinity, alignment: .trailing)
+            if hasStudy { whySections }
             Rectangle().fill(Self.softInk.opacity(0.35)).frame(height: 1)
             HStack(alignment: .firstTextBaseline, spacing: 12) {
                 Text(PostcardText.numberLine(number, of: BoxCatalog.size(.postcard)))
                     .font(.footnote).foregroundStyle(Self.softInk)
                 Spacer(minLength: 8)
                 if let source, let url = URL(string: source.url) {
-                    Link(PostcardText.sourceLine(source.name), destination: url)
+                    Link(destination: url) {
+                        Text(PostcardText.sourceLine(source.name))
+                            .padding(.vertical, 13).contentShape(Rectangle()).padding(.vertical, -13)   // a bigger hit area, same layout (13e2)
+                    }
                         .font(.footnote.weight(.semibold)).foregroundStyle(Self.linkBlue)
                         .multilineTextAlignment(.trailing)
                 }
@@ -76,5 +88,35 @@ struct PostcardView: View {
         .accessibilityAction(named: PostcardText.openSource) {
             if let s = source, let url = URL(string: s.url) { openURL(url) }
         }
+        .accessibilityActions {
+            if hasStudy, let s = study, let url = URL(string: s.url) {
+                Button(PostcardText.openStudy) { openURL(url) }
+            }
+        }
+    }
+
+    private var rule: some View { Rectangle().fill(Self.softInk.opacity(0.35)).frame(height: 1) }
+
+    /// The long part of a postcard that has a study (step 13c): why it helps, the study, how strong the evidence is.
+    @ViewBuilder private var whySections: some View {
+        rule
+        Text(PostcardText.whyItHelps).font(.headline).foregroundStyle(Self.ink).fixedSize(horizontal: false, vertical: true)
+        Text(PostcardText.why(for: id) ?? "").font(.body).foregroundStyle(Self.ink).fixedSize(horizontal: false, vertical: true)
+        rule
+        Text(PostcardText.studyHeading).font(.headline).foregroundStyle(Self.ink).fixedSize(horizontal: false, vertical: true)
+        if let study {
+            Text(PostcardText.citation(for: study)).font(.footnote.weight(.semibold)).foregroundStyle(Self.softInk)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        Text(PostcardText.finding(for: id) ?? "").font(.callout).foregroundStyle(Self.ink).fixedSize(horizontal: false, vertical: true)
+        if let study, let url = URL(string: study.url) {
+            Link(PostcardText.openStudy, destination: url)
+                .font(.footnote.weight(.semibold)).foregroundStyle(Self.linkBlue)
+                .frame(minHeight: 44, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        rule
+        Text(PostcardText.evidenceHeading).font(.headline).foregroundStyle(Self.ink).fixedSize(horizontal: false, vertical: true)
+        Text(PostcardText.evidence(for: id) ?? "").font(.callout).foregroundStyle(Self.ink).fixedSize(horizontal: false, vertical: true)
     }
 }

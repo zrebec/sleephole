@@ -190,6 +190,19 @@ struct SyncTests {
         #expect(a.model.settings.alarmSound == .bowl && !a.model.settings.usesSystemAlarm)
     }
 
+    /// 13v: the alarm's start / end level and rise time travel like the melody (they are plain settings).
+    @Test func theAlarmVolumeTravelsThroughTheSyncAndTheBackup() throws {
+        let a = device(at: date(1, 12)), b = device(at: date(1, 12))
+        b.clock.now = date(1, 14)
+        b.model.settings.alarmStartPercent = 20; b.model.settings.alarmEndPercent = 70
+        b.model.settings.alarmRiseSeconds = 45
+        #expect(b.model.makeBackup().settings.alarmEndPercent == 70)
+        a.clock.now = date(1, 15)
+        #expect(try a.model.mergeSync([b.model.makeSyncFile()]))
+        #expect(a.model.settings.alarmStartPercent == 20 && a.model.settings.alarmEndPercent == 70
+                && a.model.settings.alarmRiseSeconds == 45)
+    }
+
     @Test func aSyncFileHoldsNoSyncSwitchCarriesTheHealthSwitchAsAPreferenceAndTheLanguage() throws {
         let before = Lang.current
         defer { Lang.current = before }

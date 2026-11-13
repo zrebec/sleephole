@@ -22,45 +22,75 @@ steps **exactly and in order** – the morning journal check, build 9's upload, 
 message to his three friends), the clean-install review recipe, his reinstall test of B35, departures.to. Tick a step
 there only after its proof is seen. When the whole file is done, say so to him and remove this section.
 
-## 📌 FIRST THING EVERY SESSION – tell the owner (owner's explicit request, 2026-10-02)
+## 📌 FIRST THING EVERY SESSION – tell the owner (owner's explicit request, 2026-10-02; narrowed 2026-11-09)
 
 Whatever the owner's first message is (even just "Ahoj"), **start your reply by listing this agenda in Slovak**, then
-answer. **Keep it short (owner 2026-10-16):** only what is open now, about 30 lines at most. Remove an item the moment it
-is done; history goes to plan §12, and the old long agenda is in `docs/AGENDA-ARCHIVE.md` (moved there verbatim
-2026-10-16). Work by build – the roadmap is plan §0b.
+answer. **Only the builds (owner 2026-11-09: "focus only on builds – don't remind me of the rest"):** the build in work,
+its open steps and his open checks, and the next build – about 10 lines. Never list the 1.0 release, the streak, the
+retrospective, the promo video or anything from "Standing notes for Opus" below. Remove an item the moment it is done;
+history goes to plan §12 and `docs/AGENDA-ARCHIVE.md` (the long build 13 item of 2026-11-09 is there verbatim). Work
+by build – the roadmap is plan §0b.
 
-1. **Build 12 = the parcels – FINISHED 2026-11-01: 1.0 (12) uploaded 07:38, "Testing" in Kamaráti + SE ~07:55** (plan §10 REL
-   "Build 12", last item; §12 2026-11-01). The night 31 → 1 complete on the whole tree, parcel 4 06:10. **PR #3 `build/12` →
-   `main` is open – merging it is his click** (https://github.com/zrebec/sleephole/pull/3). Still his on the build page
-   https://claude.ai/artifact/HA3T7auWRYkfkhLfHRoY6h: b1–b3, o2, m1, m2 (read `state/answers`; move 11b4d in §0a to 🟢 on his b1).
-   On screen a box is a "parcel" / "balíček" – never the old Slovak word, never "box" or "package" in a UI text; the code keeps
-   "box". The App Store gets the parcels as 1.1 after Apple's answer on 1.0 (10): "Loot Boxes" YES, "Simulated Gambling"
-   re-read (his "no" stands; try "Infrequent" in the unsaved questionnaire first), one parcels sentence in
-   `docs/REVIEW-NOTES.md` (3 986 / 4 000) – each his yes. **Build 13 starts only on his word.** Leftover worktree
-   `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered; protecting `main` on GitHub is his click.
-2. **Apple's review:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
+0. **His MacBook update + restart (his request 2026-11-10 ~22:30 – reminded 2026-11-11 ~09:55; 13aa was installed
+   before it on his word).** After his restart check `xcodebuild -version` and `xcrun devicectl list devices` before the
+   release's archive. Remove this line once he says it is done.
+1. **Build 13 = polishing, in work since 2026-11-01** – plan §10 REL "Build 13"; his page
+   https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`). **Every step 13a – 13ah is on his
+   phone (13ae since 2026-11-12 06:30, 13af – the Czech museum line, his finding – since 07:44, 13ag since 09:11, 13ah since 10:10; the
+   store byte-identical before / after each).** The night 11 → 12: complete (gentle
+   mode, started 22:00:03 – aa2 ✅, B50 🟢), the rest screen all night and the 🔇 wake on a volume turn-down confirmed by
+   him; battery 95 → 40 % with Auto-Lock off (plan §12 2026-11-12). **Sets 1 and 4 done 2026-11-12 ~08:25 (dc1, dc2, dc3, dc8 🟢 – B53, B54, B56, B57 confirmed). Open today: the call
+   checks dc4 – dc7 (his wife will call); dc10 – dc11 optional (ag4 replaces dc9); his ev1 (a call open at a relaunch) and
+   ev2 (Strict).** **13ag – a silent alarm (his ev3: both parts in build 13) is on his phone since 2026-11-12 09:11 – ag2 + ag3 🟢; ag1 "sedí" with
+   a reservation (the Watch only – iOS routes a locked phone's notifications to the Watch) → 13ah (his ev4 "still in build 13"):
+   when ours is inaudible the system alarm rings at once – on his phone since 10:10 (`fa576e4`); his ah1 – ah4 "sedí", but
+   the track showed the 1s move refused (`ok=0`, the alarm at + 30s) → 13ah2 (2s ahead, `7ae6ce4`), on his phone since 11:08 on his word – **✅ confirmed by his retests 15:36 /
+   15:42 (`sysalarm schedule at=wake+3s ok=1`, the Watch on / off).** ah3, ah4, ag4 🟢. **13ai – the date on the night / nap result
+   screen – in build 13 (his word ~16:15): merged `016e6ba`, 1.1 (13) committed `b258f65`, the Release archive built and
+   checked; on his phone since 2026-11-12 18:26 (his word; the store and WAL byte-identical before / after) – every step 13a – 13ai is there.** His library idea
+   (2026-11-12) is a proposal page for build 14 (plan §0b row 14) – only on his word. Two setup-screen UI tests fail since 13x → B49
+   (build 14). 13w and W6 proposed for build 15, B48 (shake) for build 14.
+2. **Release of build 13 on 2026-11-13 FIRST THING in the morning (his word: "otherwise not before Sunday"; prepared the
+   evening before – version, Release archive, texts): after the device checks of 13ab – 13ah and one real night with the whole tree (13ae – 13ah included –
+   the night 12 → 13; his word 2026-11-12: "today afternoon or tomorrow morning, it does not matter")**
+   – then the journal first, 1.1 (13) (`MARKETING_VERSION` 1.1 – 1.0 is approved), the Release archive check, the upload,
+   "What to Test" EN + SK by Opus, Kamaráti + SE, the PR `build/13` → `main`. **His "Áno" is given; he wants no questions
+   about the release itself** – only a problem stops it.
+3. **Next: build 14 = the town (smaller builds from 2026-11-12, his yes: 14 the town, 15 the statistics + nights off, 16
+   polishing, 17 the living town)** – its first step W7, the Watch buzzes ~30s before the alarm (his word 2026-11-10);
+   town needs + a choice of three + the skyscraper guarantee, shopping centres and retail parks (his word 2026-11-12) –
+   plan §0b row 14, each step on his word.
+
+## Standing notes for Opus (never list them to the owner – his wish 2026-11-09)
+
+Kept for Opus's own memory; they are no longer part of the agenda. (Numbers kept from the old agenda.) His wish of
+2026-11-09 overrides every "tell him" / "repeat this agenda to him" below: 1.0 (10) waits for him in App Store Connect and
+is never mentioned again unless he asks; the retrospective waits for build 14 or 15 by his priorities; the promo video is his.
+
+2. **His ask 2026-11-02 ~15:10:** the ideas get prioritized again and a retrospective follows; **the October retrospective is his private page https://claude.ai/artifact/PdFvgxZyZfmjPNLLpgRZ9Z (published 2026-11-02 ~15:30; it holds his Health numbers – never copy them into the repo)**: the nights, the builds, what worked, what went wrong with the lessons, the patterns, proposals N1–N6 for November and four text fields (store `state/answers`, browser prefix `r10.` – never rename `n1`–`n6`, `agree`, `keep`, `change`, `missing`); none of N1–N6 applies before his answer. **His N4 by chat ~16:15 ("make the October recap as a page") → done: the October Recap is his private page https://claude.ai/artifact/KeKTayH6spQWHJJzthy8TF (Health numbers – never in the repo; store `state/answers`, prefix `rc10.`, fields `cards`, `when`, `missing`); his picks there decide the in-app Recap (§0b Later, proposed build 14).** New ideas the same afternoon, all in plan §0b "Later" and waiting: RECAP (a monthly recap – Opus proposes build 14), sleep sounds as a parcel reward (build 16), the Kenney kits still unused.
+3. **🎉 APPROVED: 1.0 (10) "Pending Developer Release" since 2026-11-04 23:59 – his word 2026-11-07: the release waits for his trade licence (živnosť), planned next week; the new screenshots go with 1.1 (his mail 2026-11-05, read in App Store Connect ~14:50 – price 0, 175 countries, the Free Apps Agreement active). The release is his click or his explicit word; Opus advised releasing soon (a pending version blocks the next submission) and sending build 13 as 1.1 after its real night (build 12 needs no version of its own). History:** 2026-10-24 ~19:32 build 7 was removed from the review and **1.0 (10) submitted with "Manually release"
    and the build-10 notes (`docs/REVIEW-NOTES.md` = the field, 3 986 / 4 000 characters)** – "Waiting for Review" (still on
    2026-11-01 ~07:57, no message from Apple; on
    2026-10-30 ~14:20 – 16 days in the queue with the 14 Oct submission; the new Developer Program License Agreement (issued 29 Oct) accepted by him 2026-10-30, checked; the new age-rating questions already
    read NO (nothing to save); **2026-10-30 ~14:55 he requested an expedited review – Apple: "We'll expedite review for SleepHole"** (plan §12); once 1.0 is
-   approved, build 12 goes up as 1.1 (12)). Tell him the answer at once. The release itself only on his word (and see the price note in 7). **When a build goes
+   approved, build 12 goes up as 1.1 (12)). Tell him the answer at once. The release itself only on his word (and see the price note in 8). **When a build goes
    to review, repeat this whole agenda to him (his request 2026-10-16).**
-3. **His streak:** safe again – parcel 3 (2026-10-31) held a silver joker (3 nights, by hand, valid until 30 Nov) and
+4. **His streak:** safe again – parcel 3 (2026-10-31) held a silver joker (3 nights, by hand, valid until 30 Nov) and
    November brings its own bronze (automatic). Level 4 unlocked on 31 Oct (his 30th building night). Be kind if a night fails.
-4. **Later builds (renumbered 2026-10-29):** 13 polishing + accessibility (11d, incl. 10h's `ThickProgressStyle`; the flaky
+5. **Later builds (renumbered 2026-10-29):** 13 polishing + accessibility (11d, incl. 10h's `ThickProgressStyle`; the flaky
    `SyncEngineTests` test; "Cancel night" under the tab bar); 14 nights off (11c) + statistics, the bug list and Plans (his
-   answer 2026-10-25). **PURPOSE (his idea 2026-10-24, §0b row 13):** the store and TestFlight
+   answer 2026-10-25) + town needs and a choice of three buildings (his yes 2026-11-07, plan §0b row 14). **PURPOSE (his idea 2026-10-24, §0b row 13):** the store and TestFlight
    texts are done (plan §12); the guide's first page and the Strict-mode footer wait for build 13; the testers' answers about
    missing notifications decide a stronger gentle mode. Still open: the eight questions at the end of
    `docs/NAVRH-MESTO-STATISTIKY.md`; from 2026-10-14 the seller name on the Business page, "a little tuning of the home screen
    UI", "some AI optimisation", "like a wiper on a car"; from `docs/ZAJTRA-RANO.md` departures.to (Health + Audio).
-5. **Owed device checks:** the review recipe on a clean install (NOT the second tester's phone – her iCloud brings her data
+6. **Owed device checks:** the review recipe on a clean install (NOT the second tester's phone – her iCloud brings her data
    back; a phone whose Apple ID never had SleepHole, or a fresh simulator – asked him), also trying 10f's first-run guide (his
    wish 2026-10-22); R4 – the app killed by iOS in the night and opened while the SYSTEM alarm rings → only one alarm (untried).
-6. **Open bugs (plan §11a):** none. B36, B10, B8, B30 and B37 are fixed in build 10 (B10 and the gentle start confirmed by
+7. **Open bugs (plan §11a):** none. B36, B10, B8, B30 and B37 are fixed in build 10 (B10 and the gentle start confirmed by
    him, B37's caption is his c8). His wishes for later: when a bad night comes he checks the cat's ruins line; next month the
    bronze joker → the cat's "streak was safe" line.
-7. **Standing notes:** the app is free for now (price 0 since 2026-10-12; a price only after an accountant – never push; his
+8. **Standing notes:** the app is free for now (price 0 since 2026-10-12; a price only after an accountant – never push; his
    reasons stay out of this public repo); he runs the gentle mode since 2026-10-22 (Strict off); App Store Connect can be
    read in his Chrome – every change needs his yes, agreements, bank, tax and legal declarations stay his own clicks; what
    the 2026-10-24 store edits replaced is in plan §12 (for a revert).
@@ -173,11 +203,13 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   Building prices (shop, next): L1 100, L2 200, L3 400, L4 1000.
 * Nap "Odpočinok" (plan D16): 30/60 min, only in its window (default 13:00–15:00), once a day, never builds.
   The home screen always shows both "Ísť spať" and "Odpočinok" buttons (disabled outside their windows).
-* UI languages: **English (default) + Slovak** (in-app switch stored in SwiftData `UserProgress.languageRaw`).
-  **Every UI string goes through `L("English key")`** (never a bare `Text("…")` literal); the Slovak text (correct
-  diacritics) goes into `SleepHole/Resources/Localizable.xcstrings`. Dates/times via `Fmt`. **Seconds are written with NO space after the number – `15s`, `%llds`, in English and Slovak, in every text (owner 2026-10-15: "nowhere with a space, nowhere at all"); minutes stay "10 min".** After adding strings:
-  build, then `python3 tools/i18n/keys.py` must report 0 missing / 0 without sk. `I18nTests` fails on any Slovak
-  literal left in `SleepHole/`. Code, comments, identifiers, agent docs: **English**.
+* UI languages: **English (default) + Slovak + Czech** (in-app switch stored in SwiftData `UserProgress.languageRaw`;
+  Czech since build 13b, **the whole app in Czech since 13b2 – owner 2026-11-02: "complete Czech, the whole app"**).
+  **Every UI string goes through `L("English key")`** (never a bare `Text("…")` literal); the Slovak AND the Czech text
+  (correct diacritics, the Czech glossary in `docs/IMPLEMENTATION_I18N.md`) go into `SleepHole/Resources/Localizable.xcstrings`
+  (`tools/i18n/add.py` takes `{"sk": …, "cs": …}`). Dates/times via `Fmt`. **Seconds are written with NO space after the number – `15s`, `%llds`, in English, Slovak and Czech, in every text (owner 2026-10-15: "nowhere with a space, nowhere at all"); minutes stay "10 min".** After adding strings:
+  build, then `python3 tools/i18n/keys.py` must report 0 missing / 0 without sk / 0 without cs. `I18nTests` fails on any Slovak
+  literal left in `SleepHole/`, `CzechTests.everyTextHasCzech` on any text without Czech. Code, comments, identifiers, agent docs: **English**.
 * Limits (owner 2026-09-30, plan LIM): renaming the town – first naming free, typo fix 10 min, 1× per 365 days free,
   else **5 000 🪙**; bedtime / wake follow the **change week** ("týždeň na zmeny", owner 2026-10-15, replaces days 1–3 + the streak reset): the first change opens 7 calendar days of free changes (a confirmation first; onboarding opens the first one), then the schedule is locked for a month (free again from the same day next month); an earlier unlock costs **2 000 🪙** and opens a new week; a change saved once tonight's building can start (early start included) applies from tomorrow; a schedule change never resets the streak; only bedtime and wake are limited; after the update to build 8 everyone starts with an unused week. Coins = earned − spent (`CoinSpend`), never negative.
 * Never rename a shipped sprite id (ids are persisted). Add new ones instead.
@@ -243,7 +275,10 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   project, bundled into Debug builds only (excluded from Release, like `docs/PREHLAD-PLANOV.md` in `project.yml`). The
   screen only reads it – filters and search are fine, but nothing on it can be set, edited or stored; a change is made
   only in the file, and the next build shows it. For documents the file is an `.md` in `docs/`; never keep a second
-  copy in Swift code or in the store. The "Texts" screen follows the same rule with its own source: it reads the app's
+  copy in Swift code or in the store. **One exception, his pick of 2026-11-02 ("Czech copy + test"):** the plans
+  document has a line-by-line Czech translation `docs/PREHLAD-PLANOV.cs.md`, shown when the app is in Czech. The Slovak
+  file stays the source; Opus changes the Czech copy in the same commit as every change of the Slovak one, and
+  `PlansTests` fails when their lines, table rows, `#` cells or `✅` marks differ. The "Texts" screen follows the same rule with its own source: it reads the app's
   compiled String Catalog (`Localizable.xcstrings` → `Localizable.strings` / `.stringsdict` in the bundle), which is
   the only source of every text – no `.md` copy of the texts. Tools on that page that DO something (detection test,
   lock lab, system alarm test, …) are not information screens and are not covered by this rule.
@@ -268,9 +303,10 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | Path | What |
 |---|---|
 | `docs/IMPLEMENTATION_PLAN.md` | the plan (read first) |
-| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (source: a scratchpad file of 2026-10-19 – gone with the session; read the page with the Artifact tool, edit, republish) – **when §0b changes, update all three** |
-| (claude.ai page) | the owner's bug list B1–B32, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (updated 2026-10-19) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
-| (claude.ai pages) | per-build pages for the owner (Slovak, 2026-10-22), each with a reply form whose answers (and ticks) go to the page's shared store – read them with `ArtifactData` `get` `state/answers` (the browser also keeps a local copy under the `b10.` / `b9.` keys; never rename them): build 10 https://claude.ai/artifact/P5jc2DhAxdEwfEtKnhzkLX (what 10a–10e fixed, what to try, the switch for the night, the morning questions), build 9 https://claude.ai/artifact/T1hEdc9dpk56MAmwQxk7nr (9a–9o, the bugs, what was confirmed, what is open). Sources: scratchpad files of 2026-10-22 – read a page with the Artifact tool to edit it |
+| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (v124 of 2026-11-12 – builds 14 – 17 split, 13ai on his phone; read the page with the Artifact tool – `path: "index.html"` saves it to a file –, edit, republish) – **when §0b changes, update all three** |
+| (claude.ai page) | the owner's bug list B1–B50, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (updated 2026-11-12, v27 – B51 – B61 added, B50 B53 B54 B56 B57 confirmed; source: a scratchpad file – read the page with the Artifact tool to edit it) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
+| (claude.ai pages) | per-build pages for the owner (Slovak, 2026-10-22), each with a reply form whose answers (and ticks) go to the page's shared store – read them with `ArtifactData` `get` `state/answers` (the browser also keeps a local copy under the `b10.` / `b9.` keys; never rename them): build 13 https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (13a + 13b, the Czech double check, screenshots, c1–c6 for the morning, n1–n2 for a night in Czech; prefix `b13.`), build 10 https://claude.ai/artifact/P5jc2DhAxdEwfEtKnhzkLX (what 10a–10e fixed, what to try, the switch for the night, the morning questions), build 9 https://claude.ai/artifact/T1hEdc9dpk56MAmwQxk7nr (9a–9o, the bugs, what was confirmed, what is open). Sources: scratchpad files of 2026-10-22 – read a page with the Artifact tool to edit it |
+| (claude.ai page) | all 30 postcards as app screenshots in sk / cs / en (2026-11-02, private, static, no form): https://claude.ai/artifact/JD9SGXVqygs9vkkNPcq4ae – the images come from `SleepHoleTests/PostcardTextTests` `screenshotsForTheReview()` (`TEST_RUNNER_POSTCARD_SHOTS=<dir>`, 92 PNGs); the page generator was a scratchpad script of 2026-11-02 – read the page with the Artifact tool to edit it |
 | (claude.ai page) | the price-model comparison (Slovak, 2026-10-22, private): https://claude.ai/artifact/1mJPVNdRK9EAVjsLAkGfRD – a one-time price vs a subscription with a trial vs a 7-day trial + one-time unlock: Apple's rules, money per sale, indie practice, effort, Opus's view. His decision is open; never push (memory) |
 | (claude.ai page) | the build 11 proposal (Slovak, 2026-10-22): https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo – 11a–11d, the economy numbers, the loot-box assessment, box rules and contents, nights off rules, accessibility, eight questions; answers in its store `state/answers` (browser prefix `b11.` – never rename the field names / ids). Source: a scratchpad file of 2026-10-22 – read the page with the Artifact tool to edit it |
 | (claude.ai page) | the economy simulation 11b1 for the owner (Slovak, 2026-10-26): https://claude.ai/artifact/9LZJ8RKQYyf9BJ6nr57tz4 – the three profiles, today's coins, the boxes by odds A / B / C / C-new / C-new-reserve / D, collections, the joker reserve, four questions; answers in its store `state/answers` (browser prefix `e11b1.` – never rename q1–q5; answered 2026-10-26 ~13:55, v10). Source: a scratchpad file of 2026-10-26; the numbers come from `ECON_SIM=… swift test --filter EconomySimulation` |
@@ -282,13 +318,13 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | `docs/NAVRH-ZVIERATKA.md` | next plans A/B/C: pause, sleep buddy, Cube Pets residents, living town (Slovak, owner picks) |
 | `docs/NAVRH-FLEXIBILITA.md` | research and options for a flexible bedtime / alarm outside Strict mode (Slovak, 2026-10-19, after the second tester's first run): sleep-regularity studies, Apple Health and SleepTown, options A–F, Opus's recommendation, five questions; a copy in his iCloud `SleepHole/` and the private claude.ai page https://claude.ai/artifact/EbHqHizVfMU8GFk4wr86L4 (source: a scratchpad file of 2026-10-19 – read the page with the Artifact tool to edit it) |
 | `docs/NAVRH-MESTO-STATISTIKY.md`, `docs/previews/navrh-2026-10-10/` | proposals of 2026-10-10 after the 100-night simulation (Slovak) and their SVG mock-ups – the spec of phase NEXT (plan §10); the owner picks |
-| `docs/PREHLAD-PLANOV.md` | the owner's overview of everything open (Slovak, 2026-10-11): one table with effort and priority per item + short descriptions; priorities are Opus's recommendation – the plan's §10 stays the spec. **Bundled into Debug builds and shown in Settings → Developer → "Plans and proposals" (`SleepHole/Debug/PlansView.swift`) – keep the main table's five columns (`#` first) or the parser loses it; no `http` links. A `✅` in a row's priority cell marks it finished (green badges on the screen) – set it only after the proof is seen** |
+| `docs/PREHLAD-PLANOV.md` | the owner's overview of everything open (Slovak, 2026-10-11): one table with effort and priority per item + short descriptions; priorities are Opus's recommendation – the plan's §10 stays the spec. **Bundled into Debug builds and shown in Settings → Developer → "Plans and proposals" (`SleepHole/Debug/PlansView.swift`) – keep the main table's five columns (`#` first) or the parser loses it; no `http` links. A `✅` in a row's priority cell marks it finished (green badges on the screen) – set it only after the proof is seen. Its Czech translation `docs/PREHLAD-PLANOV.cs.md` (2026-11-02) is shown in Czech and changes together with it, line by line** |
 | `docs/ROZBOR-APP-REVIEW.md` | what Apple's review can question and the way to a submission (Slovak, 2026-10-12): twelve risks with guideline numbers, the three undocumented lock signals and their documented fallback, the steps to a review with a manual release, five decisions asked from the owner. A copy is in his iCloud Drive `SleepHole/` |
 | `site/`, `.github/workflows/pages.yml` | the public support page and the privacy policy (English, owner's decision 2026-10-12: on GitHub, public contact `zrebec@zrebec.sk`); the workflow publishes `site/` to `https://zrebec.github.io/sleephole/` (+ `privacy.html`) – the App Store page and the app link there. Whatever the policy says must stay true of the shipped build: change it together with any change of what leaves the device |
 | `docs/IMPLEMENTATION_I18N.md` | full spec for the EN/SK multi-language phase (string inventory, architecture, tests) |
 | `SleepCore/` | pure Swift package: schedule, night evaluation, progression, picker, town layout |
 | `SleepHole/` | iOS app target (created in F0) |
-| `SleepHole/Resources/Localizable.xcstrings` | all UI texts: key = English, `sk` translation, plural variations |
+| `SleepHole/Resources/Localizable.xcstrings` | all UI texts: key = English, `sk` and `cs` translations, plural variations |
 | `tools/i18n/keys.py` | compares the keys extracted from `L(...)` (build output) with the String Catalog |
 | `project.yml` | XcodeGen spec (created in F0) |
 | `assets/sprites/` | 174 rendered isometric sprites + `catalog.json` (ship in the app) |

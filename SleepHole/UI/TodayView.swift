@@ -24,7 +24,7 @@ struct TodayView: View {
             // full screen: a background on a Group is sized to each child's content (owner bug 2026-10-02: the nap
             // result showed a small 16:9 patch of sky with black bars) – the night screen covers it with its NightSky
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background { LivingSky(semicircle: true, nightSky: model.nightSky) }
+            .background { LivingSky(semicircle: true, nightSky: model.nightSky, frozen: model.phase == .building) }
             .overlay {
                 if let nap = splash {
                     GoodNightSplash(nap: nap) { withAnimation { splash = nil } }
@@ -47,6 +47,8 @@ struct BuildingImage: View {
     let id: String
     var progress: Double = 1          // 0…1, reveals the building from the bottom
     var maxHeight: CGFloat = 220
+    /// VoiceOver: nil = decorative (hidden); pass the building's name where the image is the subject.
+    var label: String?
 
     var body: some View {
         if let image = sprites.image(for: id) {
@@ -63,6 +65,8 @@ struct BuildingImage: View {
                     }
                 }
                 .frame(maxHeight: maxHeight)
+                .accessibilityHidden(label == nil)
+                .accessibilityLabel(label ?? "")
         }
     }
 }
@@ -73,6 +77,15 @@ struct HomeView: View {
     @Environment(AppModel.self) private var model
     @State private var briefing = false
     @State private var confirmEarly = false
+    @Environment(\.dynamicTypeSize) private var typeSize
+    /// 13g: the bubble is an overlay (it takes no room); at text sizes above the default a long line reaches below the
+    /// cat's box and slid under the panel. These two heights make the hero reserve exactly the missing room – never at
+    /// the default size, where Today keeps its confirmed look.
+    @State private var heroBuddyHeight: CGFloat = 0
+    @State private var heroBubbleHeight: CGFloat = 0
+    static let bubbleOffset: CGFloat = 80
+    /// Room below the hero before the panel starts: its bottom padding (14) and the column spacing (16).
+    static let roomBelowHero: CGFloat = 30
     /// The hero cat: 50 % of the screen width (200 pt on a 402 pt wide phone), at most this wide.
     static let buddyMaxWidth: CGFloat = 200
     /// Space between the bottom of the buddy's layout box and the tip of the bubble's tail while the cat has a bed item
@@ -88,15 +101,19 @@ struct HomeView: View {
                       hold: AppModel.forcedBuddyReaction, outfit: model.buddyOutfit)
                 .containerRelativeFrame(.horizontal) { w, _ in min(Self.buddyMaxWidth, w * 0.5) })
         if model.buddyOutfit.bed == nil {
+            let missing = typeSize > .large
+                ? max(0, Self.bubbleOffset + heroBubbleHeight + 8 - heroBuddyHeight - Self.roomBelowHero) : 0
             buddy
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heroBuddyHeight = $0 }
                 .overlay(alignment: .top) {
                     // the buddy talks (phase TALK): an overlay, so Today's layout does not change
                     BuddyBubble(now: now)
                         .containerRelativeFrame(.horizontal) { w, _ in min(330, w - 32) }
-                        .offset(y: 80)
+                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { heroBubbleHeight = $0 }
+                        .offset(y: Self.bubbleOffset)
                 }
                 .padding(.top, 25)
-                .padding(.bottom, 14)
+                .padding(.bottom, 14 + missing)
                 .appearIn(delay: 0.1)
         } else {
             VStack(spacing: Self.bedBubbleGap) {
@@ -195,7 +212,7 @@ struct HomeView: View {
         if canSleep {
             return L("Start building by \(Fmt.time(w.startCloses(model.nextNightRules))). You have until \(Fmt.time(Self.captionSetupEnd(now: now, w: w, rules: model.nextNightRules))) to set up (podcast, bedtime story), then keep SleepHole open and lock your phone.")
         }
-        if now > w.startCloses(model.nextNightRules) {
+        if now >= w.startClosedFrom(model.nextNightRules) {
             return L("It's too late to build tonight 🌙 Tomorrow from \(Fmt.time(w.startOpens)).")
         }
         if played {
@@ -353,13 +370,42 @@ private struct MinHeightLayout: Layout {
     }
 }
 
+/// The column's height and the share of its `Spacer`, reported together so `NightView.refit` never combines the
+/// numbers of two different layout passes (13e6).
+private struct NightFit: Equatable { var column: CGFloat?; var slack: CGFloat? }
+private struct NightFitKey: PreferenceKey {
+    static let defaultValue = NightFit()
+    static func reduce(value: inout NightFit, nextValue: () -> NightFit) {
+        let next = nextValue()
+        if let c = next.column { value.column = c }
+        if let s = next.slack { value.slack = s }
+    }
+}
+
 struct NightView: View {
     @Environment(AppModel.self) private var model
     @State private var confirmAbandon = false
-    @State private var soundSheet = false
+    @State private var soundSheet = DevArgs.list.contains("-openSoundSheet")      // screenshots (Debug only)
     @State private var confirmPause = false
     @State private var confirmReroll = false
+    // 13e6: on the night screen (setup and after, never compact) the site shrinks (0.6…1) just enough for the screen to fit above the tab bar.
+    // `contentNatural` = the column's height minus the Spacer's share (both read in the same pass, `NightFitKey`), `siteNatural` = the site's own height,
+    // `room` = the height above the tab bar; none of them depends on the scale once it is taken out (see `refit`).
+    @State private var siteScale = 1.0
+    @State private var siteNatural: CGFloat = 0
+    @State private var contentNatural: CGFloat = 0
+    @State private var room: CGFloat = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    /// The floating tab bar covers the bottom of the screen; the last control must end above it.
+    private func refit() {
+        guard siteNatural > 0, contentNatural > 0, room > 0 else { return }
+        let natural = Double(contentNatural + siteNatural * (1 - CGFloat(siteScale)))
+        let s = NightLayout.siteScale(natural: natural, available: Double(room), siteHeight: Double(siteNatural))
+        let rounded = (s * 200).rounded() / 200
+        if abs(rounded - siteScale) > 0.001 { siteScale = rounded }
+    }
 
     /// "9:41" left of a pause.
     static func countdown(_ seconds: TimeInterval) -> String {
@@ -368,6 +414,12 @@ struct NightView: View {
     }
 
     var body: some View {
+        // resting (13k): a plain black view, so none of the timelines below runs; this struct and its @State (dialogs,
+        // sheets, the fit) stay alive
+        Group {
+        if model.rest.resting {
+            Color.black.ignoresSafeArea()
+        } else {
         TimelineView(.periodic(from: .now, by: 1)) { ctx in
             let now = ctx.date
             if let rec = model.active {
@@ -389,8 +441,7 @@ struct NightView: View {
                     } else if rec.isNap {
                         NapResting(progress: progress, buddy: model.buddyState(at: now))
                         if let graceEnds = model.graceEnds, graceEnds > now {
-                            Text(L("Setup: \(Int(graceEnds.timeIntervalSince(now).rounded(.up)))s left for a story or sound"))
-                                .font(.callout).foregroundStyle(.yellow)
+                            SetupCountdown(kind: .nap, left: Int(graceEnds.timeIntervalSince(now).rounded(.up)), graceEnds: graceEnds)
                         } else {
                             Text(L("Lock your phone and have a nice rest 🧸")).font(.callout).foregroundStyle(.secondary)
                             budgetNote(now: now, warningsOnly: true)
@@ -402,14 +453,21 @@ struct NightView: View {
                             .id(rec.buildingId)
                             .transition(.opacity)
                             .animation(reduceMotion ? nil : .easeInOut(duration: Motion.t(0.5)), value: rec.buildingId)
-                            .scaleEffect(compact ? 0.6 : 1, anchor: .top)
-                            .frame(height: compact ? 190 : nil, alignment: .top)
+                            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { siteNatural = $0; refit() }
+                            .scaleEffect(compact ? 0.6 : siteScale, anchor: .top)
+                            .frame(height: compact ? 190 : (siteScale < 1 ? siteNatural * siteScale : nil),
+                                   alignment: .top)
                         let buildingName = model.catalog?[rec.buildingId]?.displayName ?? ""
                         let inSetup = model.graceEnds.map { $0 > now } ?? false
                         if inSetup && model.isNewInTown(rec) {
                             // same line as the name – nothing below may move during the setup (11b6 lesson)
-                            HStack(spacing: 8) {
-                                Text(buildingName).font(.headline).lineLimit(1).minimumScaleFactor(0.6)
+                            // at accessibility sizes the capsule goes under the name, and the name may wrap (13e2)
+                            let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 6))
+                                                                      : AnyLayout(HStackLayout(spacing: 8))
+                            layout {
+                                Text(buildingName).font(.headline)
+                                    .lineLimit(typeSize.isAccessibilitySize ? nil : 1).minimumScaleFactor(0.6)
+                                    .multilineTextAlignment(.center)
                                 Text(L("New in town")).font(.caption.weight(.semibold)).lineLimit(1)
                                     .foregroundStyle(.black).padding(.horizontal, 8).padding(.vertical, 2)
                                     .background(Capsule().fill(Color.yellow))
@@ -421,19 +479,18 @@ struct NightView: View {
                         }
                         if let graceEnds = model.graceEnds, graceEnds > now {
                             let left = Int(graceEnds.timeIntervalSince(now).rounded(.up))
-                            Text(left >= 60 ? L("Setup until \(Fmt.time(graceEnds)) (\(Plural.minutes(Double(left))) left)")
-                                            : L("Setup: \(left)s left for a podcast or story"))
-                                .font(.callout).foregroundStyle(.yellow)
+                            SetupCountdown(kind: .night, left: left, graceEnds: graceEnds)
                             rerollSection(now: now)
+                            BatteryNote()
                         } else if let pauseEnds {
-                            Text(L("Pause: \(Self.countdown(pauseEnds.timeIntervalSince(now))) left – you can leave SleepHole now"))
-                                .font(.callout).foregroundStyle(.yellow).multilineTextAlignment(.center)
+                            PauseCountdown(remaining: pauseEnds.timeIntervalSince(now))
                         } else {
                             Text(L("Lock your phone and good night 🌙")).font(.callout).foregroundStyle(.secondary)
                             budgetNote(now: now)
                         }
                     }
                     Text(L("Alarm at \(Fmt.time(rec.wake))")).font(.footnote).foregroundStyle(.secondary)
+                    if now < rec.wake { VolumeNote() }
                     if now < rec.window.confirmOpens {
                         if let at = model.earlyShakeAt, now.timeIntervalSince(at) < AppModel.earlyShakeNoteSeconds {
                             Text(L("Too early 🌙 Getting up can be confirmed from \(Fmt.time(rec.window.confirmOpens))."))
@@ -441,6 +498,7 @@ struct NightView: View {
                         } else {
                             Text(L("You can confirm getting up from \(Fmt.time(rec.window.confirmOpens)) – shake your phone or enter your code."))
                                 .font(.footnote).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                                .fixedSize(horizontal: false, vertical: true)
                         }
                     }
                     Button { soundSheet = true } label: {
@@ -453,14 +511,18 @@ struct NightView: View {
                     }
                     .buttonStyle(.bordered)
                     .sheet(isPresented: $soundSheet) {
-                        SleepSoundSheet().presentationDetents([.height(330)])
+                        SleepSoundSheet().presentationDetents(DevArgs.list.contains("-openSoundSheet") ? [.large] : [.height(330)])
                     }
                     pauseButton(now: now)
                     if rec.window.canConfirm(at: now) {
                         ConfirmPanel()
                     }
                     Spacer(minLength: 0)
-                    Button(rec.isNap ? L("End nap") : L("Cancel night"), role: .destructive) { confirmAbandon = true }
+                        .background(GeometryReader { g in Color.clear.preference(key: NightFitKey.self, value: NightFit(slack: g.size.height)) })
+                    Button(role: .destructive) { confirmAbandon = true } label: {
+                        Text(rec.isNap ? L("End nap") : L("Cancel night"))
+                            .padding(.vertical, 13).contentShape(Rectangle()).padding(.vertical, -13)   // a bigger hit area, same layout (13e2)
+                    }
                         .font(.footnote)
                         .confirmationDialog(rec.isNap ? L("End the nap? It won't earn coins.")
                                                       : L("End tonight early? The building stays as a ruin – a good night repairs it later 🛠️"),
@@ -470,12 +532,39 @@ struct NightView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
+                .background(GeometryReader { g in Color.clear.preference(key: NightFitKey.self, value: NightFit(column: g.size.height)) })
+                .onPreferenceChange(NightFitKey.self) { fit in
+                    guard let column = fit.column, let slack = fit.slack else { return }
+                    contentNatural = column - slack
+                    refit()
                 }
+                }
+                .onGeometryChange(for: CGFloat.self) { proxy in
+                    // the room from the screen's own top safe area down to the tab bar. In the very first frame the
+                    // view still has a bigger top inset (153 pt on a 17e) that shrinks `size.height` by 106 pt and
+                    // would draw the site too small for a moment (13e6), so the window's inset is used instead
+                    let top = MainActor.assumeIsolated {
+                        UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+                            .flatMap { $0.windows }.first { $0.isKeyWindow }?.safeAreaInsets.top
+                    } ?? proxy.safeAreaInsets.top
+                    return proxy.frame(in: .global).maxY - top
+                } action: { room = $0; refit() }
             }
         }
-        .background { NightSky() }
+        }
+        }
+        .background { if !model.rest.resting { NightSky() } }
         .preferredColorScheme(.dark)
-        .onShake { model.shakeBeforeConfirm() }
+        .onShake {
+            model.shakeBeforeConfirm()
+            // resting (13k): the confirm panel is not on screen, so its own shake handler is not listening – a shake
+            // still confirms getting up once that is open (`confirm()` itself refuses a shake before that)
+            if model.rest.resting { _ = model.confirm() }
+        }
+        .onChange(of: confirmAbandon || soundSheet || confirmPause || confirmReroll) { _, open in
+            model.rest.nightDialogOpen = open
+        }
+        .onDisappear { model.rest.nightDialogOpen = false }
     }
 
     /// Seconds out of the app tonight (owner 2026-10-08): a grey footnote while there is plenty of budget, an orange
@@ -485,14 +574,14 @@ struct NightView: View {
         if let use = model.awayBudgetUse(at: now), use.used >= 1 {
             switch model.awayBudgetState(at: now) {
             case .low:
-                Text(L("Out of the app tonight: \(Int(use.used))s of \(Int(use.budget))s – the next trip may be your last 🌙"))
+                Text(L("Out of the app tonight: \(Int(use.used))s of \(Int(use.budget))s – the next trip may be your last 🌙")).monospacedDigit()
                     .font(.footnote.weight(.semibold)).foregroundStyle(.orange).multilineTextAlignment(.center)
             case .spent:
                 Text(L("Tonight's \(Int(use.budget))s out of the app are used up – please stay with SleepHole now: one more trip and tonight's building comes down 🌙"))
                     .font(.callout.weight(.semibold)).foregroundStyle(.orange).multilineTextAlignment(.center)
             default:
                 if !warningsOnly {
-                    Text(L("Out of the app tonight: \(Int(use.used))s of \(Int(use.budget))s"))
+                    Text(L("Out of the app tonight: \(Int(use.used))s of \(Int(use.budget))s")).monospacedDigit()
                         .font(.footnote).foregroundStyle(.secondary)
                 }
             }
@@ -507,6 +596,8 @@ struct NightView: View {
             Button { confirmReroll = true } label: {
                 Label(price > 0 ? L("Another building · \(price) 🪙") : L("Another building · free (test night)"),
                       systemImage: "dice")
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)       // wraps instead of "free…" at the large text sizes (13n)
             }
             .buttonStyle(.bordered)
             .task {
@@ -580,7 +671,7 @@ struct NapResting: View {
                     guard !reduceMotion else { return }
                     withAnimation(.easeInOut(duration: Motion.t(2.5)).repeatForever(autoreverses: true)) { dimmed = true }
                 }
-            ProgressView(value: progress).progressViewStyle(ThickProgressStyle()).frame(maxWidth: 240)
+            ProgressView(value: progress).progressViewStyle(ThickProgressStyle(title: L("Nap progress"))).frame(maxWidth: 240)
         }
     }
 }
@@ -589,19 +680,37 @@ struct NapResting: View {
 /// Used with `ProgressView(value:)`, so VoiceOver still reads the percentage.
 struct ThickProgressStyle: ProgressViewStyle {
     static let height: CGFloat = 12
+    /// What VoiceOver calls the bar (the configuration's label is a view, not a string).
+    var title: String = L("Progress")
+    /// 13z: colours of the fill and the track; the defaults are the night screen's look (yellow on a soft white track).
+    var fill: Color = .yellow.opacity(0.8)
+    var track: Color = .white.opacity(0.18)
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// The spoken value, e.g. "42 %" – the locale's own percent format (sk / cs write a space before the sign).
+    static func percentText(_ fraction: Double?, locale: Locale = Lang.current.locale) -> String {
+        let f = NumberFormatter()
+        f.numberStyle = .percent
+        f.maximumFractionDigits = 0
+        f.locale = locale
+        return f.string(from: NSNumber(value: min(1, max(0, fraction ?? 0)))) ?? ""
+    }
 
     func makeBody(configuration: Configuration) -> some View {
         let f = min(1, max(0, configuration.fractionCompleted ?? 0))
         GeometryReader { g in
             ZStack(alignment: .leading) {
-                Capsule().fill(.white.opacity(0.18))
-                Capsule().fill(.yellow.opacity(0.8))
+                Capsule().fill(track)
+                Capsule().fill(fill)
                     .frame(width: max(Self.height, g.size.width * f))
                     .opacity(f > 0 ? 1 : 0)
             }
         }
         .frame(height: Self.height)
-        .animation(.linear(duration: 0.9), value: f)
+        .animation(reduceMotion ? nil : .linear(duration: 0.9), value: f)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(title)
+        .accessibilityValue(Self.percentText(configuration.fractionCompleted))
     }
 }
 
@@ -708,10 +817,10 @@ struct ConstructionSite: View {
     }
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 0.05)) { ctx in
+        TimelineView(.animation(minimumInterval: 0.05, paused: reduceMotion)) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
-            let frame = resting ? 0 : Int(t / Self.frameDuration) % Self.frames
-            let breath = (1 + sin(t * 2 * .pi / 4)) / 2            // 0…1, 4 s period
+            let frame = (resting || reduceMotion) ? 0 : Int(t / Self.frameDuration) % Self.frames
+            let breath = reduceMotion ? 0.5 : (1 + sin(t * 2 * .pi / 4)) / 2   // 0…1, 4 s period; still: the middle
             VStack(spacing: 14) {
                 // Stage: the crane's mast stands behind the building's right side; the pair is centred.
                 ZStack(alignment: .bottom) {
@@ -721,11 +830,13 @@ struct ConstructionSite: View {
                             .scaledToFit()
                             .frame(height: 250)
                             .offset(x: 45 + shift)
+                            .accessibilityHidden(true)      // decorative: the crane is not read by VoiceOver
                     }
                     BuildingImage(id: siteId, maxHeight: 110)       // building site under the building
                         .frame(width: 190)
                         .offset(x: -40 + shift, y: 6)
-                    BuildingImage(id: shownBuildingId, progress: shownProgress, maxHeight: 150)
+                    BuildingImage(id: shownBuildingId, progress: shownProgress, maxHeight: 150,
+                                  label: sprites.catalog?[shownBuildingId]?.displayName)
                         .overlay { scaffold }                       // in front of the building, like in the town
                         .frame(width: 190)
                         .offset(x: -40 + shift, y: -4)
@@ -737,7 +848,7 @@ struct ConstructionSite: View {
                     .opacity(0.45 + 0.55 * breath)
                     .scaleEffect(0.97 + 0.06 * breath)
                 ProgressView(value: shownProgress)
-                    .progressViewStyle(ThickProgressStyle())
+                    .progressViewStyle(ThickProgressStyle(title: L("Night progress")))
                     .frame(maxWidth: 260)
             }
             .frame(maxWidth: .infinity)
@@ -762,6 +873,7 @@ struct ConstructionSite: View {
 
 /// Calm night background: deep blue gradient with a few softly twinkling stars.
 struct NightSky: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     private struct Star { let x, y, size, phase: Double }
     private static let stars: [Star] = {
         var rng = SeededGenerator(seed: 42)
@@ -772,8 +884,8 @@ struct NightSky: View {
     }()
 
     var body: some View {
-        TimelineView(.animation(minimumInterval: 0.1)) { ctx in
-            let t = ctx.date.timeIntervalSinceReferenceDate
+        TimelineView(.animation(minimumInterval: 0.1, paused: reduceMotion)) { ctx in
+            let t = reduceMotion ? 0 : ctx.date.timeIntervalSinceReferenceDate     // still: a fixed phase
             Canvas { gc, size in
                 for s in Self.stars {
                     let a = 0.25 + 0.35 * (1 + sin(t * 0.8 + s.phase)) / 2
@@ -800,10 +912,17 @@ struct SleepSoundSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Picker(L("Sound"), selection: $ambience) {
-                    ForEach(AudioKeeper.Ambience.allCases.filter { $0 != .silence }) { Text($0.title).tag($0) }
+                if DevArgs.list.contains("-openSoundSheet") {      // screenshots (Debug only): the whole list instead of the closed menu
+                    Picker(L("Sound"), selection: $ambience) {
+                        ForEach(AudioKeeper.Ambience.allCases.filter { $0 != .silence }) { Text($0.title).tag($0) }
+                    }
+                    .pickerStyle(.inline)
+                } else {
+                    Picker(L("Sound"), selection: $ambience) {
+                        ForEach(AudioKeeper.Ambience.allCases.filter { $0 != .silence }) { Text($0.title).tag($0) }
+                    }
+                    .pickerStyle(.menu)
                 }
-                .pickerStyle(.menu)
                 Picker(L("Play for"), selection: $minutes) {
                     ForEach(AppSettings.ambienceTimerOptions, id: \.self) { Text(AppSettings.timerTitle($0)).tag($0) }
                 }
@@ -829,49 +948,59 @@ struct AlarmView: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        // the awake cat greets the owner – left out when it does not fit (small phone, number pad up)
-        ViewThatFits(in: .vertical) {
-            content(withBuddy: true)
-            content(withBuddy: false)
+        // ONE ConfirmPanel for good (13n, B43): an earlier `ViewThatFits` swapped between a copy with the cat and one
+        // without when the keyboard came up, so the field lost its focus and the keyboard never stayed. The screen is a
+        // `FitOrScroll` like the night screen: the awake cat greets the owner and scrolls away when the room is short
+        FitOrScroll {
+            VStack(spacing: 12) {
+                Text(L("Good morning ☀️")).font(.largeTitle.bold())
+                BuddyView(state: model.buddyState()).frame(width: 159)
+                ConfirmPanel()
+                // 13ad (B54): why the alarm is silent, when it is – BELOW the panel, so at the largest text the code field never
+                // moves down (AX5 screenshots, 16 Pro and 17e). Only while it should ring (the texts speak of the
+                // alarm in the future tense; once it stopped by itself the line would be wrong for up to an hour)
+                TimelineView(.periodic(from: .now, by: 5)) { _ in
+                    if let rec = model.active, !rec.log.has(.alarmStopped),
+                       model.clock.now < rec.wake + rec.rules.alarmDuration { VolumeNote() }
+                }
+                Spacer(minLength: 0)
+            }
+            .padding()
         }
-        .padding()
         .preferredColorScheme(.dark)
-    }
-
-    private func content(withBuddy: Bool) -> some View {
-        VStack(spacing: withBuddy ? 12 : 24) {
-            Text(L("Good morning ☀️")).font(.largeTitle.bold())
-            if withBuddy { BuddyView(state: model.buddyState()).frame(width: 159) }
-            ConfirmPanel()
-            Spacer()
-        }
     }
 }
 
 /// Shake or type the wake code (D15).
 struct ConfirmPanel: View {
     @Environment(AppModel.self) private var model
-    @State private var code = ""
     @State private var wrong = false
+    @State private var onScreen = false
     @FocusState private var codeFocused: Bool
 
     var body: some View {
+        @Bindable var model = model
         VStack(spacing: 12) {
             Label(L("Shake your phone"), systemImage: "iphone.radiowaves.left.and.right").font(.headline)
             Text(L("or enter the code from Settings")).font(.callout).cardCaption()
+                .fixedSize(horizontal: false, vertical: true)
             HStack {
-                TextField(L("Code"), text: $code)
+                TextField(L("Code"), text: $model.wakeCode)
                     .keyboardType(.numberPad)
                     .textFieldStyle(.roundedBorder)
                     .frame(maxWidth: 140)
                     .multilineTextAlignment(.center)
                     .focused($codeFocused)
+                    .onChange(of: codeFocused) { _, focused in
+                        model.rest.codeFieldFocused = focused
+                        if onScreen { model.wakeCodeFocus = focused }      // the swap to another screen is not the user closing the keyboard
+                    }
                 Button(L("I'm up")) {
-                    wrong = !model.confirm(code: code)
-                    if wrong { code = "" }
+                    wrong = !model.confirm(code: model.wakeCode)
+                    if wrong { model.wakeCode = "" }
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(code.isEmpty)
+                .disabled(model.wakeCode.isEmpty)
             }
             if wrong { Text(L("Wrong code")).font(.footnote).foregroundStyle(.red) }
         }
@@ -879,7 +1008,11 @@ struct ConfirmPanel: View {
         .padding()
         .glassCard()
         .onShake { model.confirm() }
+        .onDisappear { onScreen = false; model.rest.codeFieldFocused = false }
         .onAppear {
+            onScreen = true
+            // the keyboard the user had before the screen swapped (night → alarm) comes back with the digits
+            if model.wakeCodeFocus { codeFocused = true }
             // Debug aid for the simulator (B31 proof): focus the code field so the software keyboard shows up
             if DevArgs.list.contains("-focusWakeCode") { codeFocused = true }
         }
@@ -899,11 +1032,14 @@ struct ResultView: View {
             let name = model.catalog?[rec.buildingId]?.displayName ?? L("building")
             FitOrScroll {
             VStack(spacing: 18) {
+                Text(verbatim: Fmt.resultDate(rec.window.key, nap: rec.isNap)).font(.headline)
+                    .multilineTextAlignment(.center)
                 if rec.isNap {
                     Text(verbatim: outcome == .complete ? "😴" : outcome == .unfinished ? "🥱" : "🧸").font(.system(size: 90))
                         .popIn(delay: 0.1)
                     Text(outcome == .complete ? L("Nap complete!") : outcome == .unfinished ? L("Nap cut short")
                          : L("Nap didn't work out")).font(.largeTitle.bold())
+                        .multilineTextAlignment(.center)
                     Text(outcome == .complete ? L("Well rested 💙") : L("No worries, again tomorrow 🌱"))
                         .multilineTextAlignment(.center)
                 } else {
@@ -913,7 +1049,7 @@ struct ResultView: View {
                     ZStack {
                         SunRays().frame(width: 340, height: 340)
                         DustPuff(delay: Motion.landing).frame(width: 340, height: 260)
-                        BuildingImage(id: rec.buildingId).dropIn(delay: 0.15)
+                        BuildingImage(id: rec.buildingId, label: name).dropIn(delay: 0.15)
                         SparkleBurst(delay: Motion.landing + 0.1).frame(width: 340, height: 300)
                     }
                     .frame(height: 260)
@@ -921,10 +1057,10 @@ struct ResultView: View {
                     Text(L("You built: \(name)")).font(.title3).appearIn(delay: 0.8)
                     if !rec.isNap, let b = model.townBuilding(for: rec.window.key), Population.residents(of: b) > 0 {
                         Label(L("\(Population.residents(of: b)) people moved in"), systemImage: "person.2.fill")
-                            .font(.subheadline).foregroundStyle(.secondary).appearIn(delay: 1.0)
+                            .font(.subheadline).cardCaption().appearIn(delay: 1.0)
                     }
                 case .unfinished:
-                    BuildingImage(id: rec.buildingId, progress: 0.6)
+                    BuildingImage(id: rec.buildingId, progress: 0.6, label: name)
                     Text(L("Unfinished 🚧")).font(.largeTitle.bold())
                     Text(L("\(name) is waiting – your next good night will finish it.")).multilineTextAlignment(.center)
                     if let late = rec.window.minutesLate(confirmedAt: rec.confirmedAt), !rec.isNap {
@@ -958,7 +1094,7 @@ struct ResultView: View {
                 if let level = model.levelUp {
                     Label(L("Level \(level) unlocked!"), systemImage: "star.fill")
                         .font(.headline).foregroundStyle(Color.readableYellow)
-                        .symbolEffect(.bounce, options: .repeat(3))
+                        .symbolEffect(.bounce, options: .repeat(3), isActive: !reduceMotion)
                 }
                 if rec.isDebug { Text(L("(quick test night – doesn't count for the town)")).font(.caption).cardCaption() }
                 if let at = model.safetyAlarmAt { SafetyAlarmCard(at: at) }
@@ -987,6 +1123,7 @@ struct ResultView: View {
                         LevelUpCard(level: level) { withAnimation { celebrationClosed = true } }
                     }
                     .transition(.opacity)
+                    .accessibilityAddTraits(.isModal)
                 }
             }
         }
@@ -1000,6 +1137,8 @@ struct ResultView: View {
 struct CoinReceiptView: View {
     let receipt: Economy.Receipt
     @Environment(\.dynamicTypeSize) private var typeSize
+    /// The width cap grows with the text size (the receipt is `.footnote`); 320 pt at the default size.
+    @ScaledMetric(relativeTo: .footnote) private var maxWidth: CGFloat = 320
 
     /// One row: label left, amount right; at accessibility sizes the amount goes under the label so nothing wraps mid-word.
     @ViewBuilder private func row(_ label: Text, _ amount: String) -> some View {
@@ -1050,6 +1189,6 @@ struct CoinReceiptView: View {
         .font(.footnote)
         .foregroundStyle(Color.cardCaption)
         .padding(.horizontal, 24)
-        .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : 320)
+        .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : maxWidth)
     }
 }

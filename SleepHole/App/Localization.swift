@@ -4,7 +4,7 @@ import SleepCore
 /// In-app language (owner 2026-09-30, docs/IMPLEMENTATION_I18N.md): English by default, stored in SwiftData
 /// (`UserProgress.languageRaw`). New languages = one case + translations in `Localizable.xcstrings`.
 enum AppLanguage: String, Codable, CaseIterable, Identifiable, Sendable {
-    case en, sk
+    case en, sk, cs
 
     static let fallback = AppLanguage.en
     var id: String { rawValue }
@@ -14,19 +14,24 @@ enum AppLanguage: String, Codable, CaseIterable, Identifiable, Sendable {
         switch self {
         case .en: "English"
         case .sk: "Slovenčina"   // i18n-ignore
+        case .cs: "Čeština"   // i18n-ignore
         }
     }
 
-    /// Formatting locale. EN keeps the iPhone's 12/24 h choice (Q3), SK is always 24 h.
+    /// Formatting locale. EN keeps the iPhone's 12/24 h choice (Q3), SK and CS are always 24 h.
     var locale: Locale {
         switch self {
         case .sk: return Locale(identifier: "sk_SK")
+        case .cs: return Locale(identifier: "cs_CZ")
         case .en:
             var c = Locale.Components(identifier: "en_US")
             c.hourCycle = Fmt.systemUses12h ? .oneToTwelve : .zeroToTwentyThree
             return Locale(components: c)
         }
     }
+
+    /// Slovak and Czech share the continental formats: "30. 9.", 24 h clock, no 12-hour variant.
+    var usesContinentalFormats: Bool { self != .en }
 
     /// The `<lang>.lproj` folder of the app bundle – `L(...)` looks strings up there, not in the system language.
     var bundle: Bundle { Self.bundles[self] ?? .main }
@@ -43,11 +48,44 @@ enum Lang {
 
 /// The ONLY way UI text is produced: `L("Bedtime at \(time)")`. Keys are the English text; interpolations and
 /// plural variations come from `Localizable.xcstrings`.
+///
+/// **Czech falls back to Slovak (build 13b):** a key without a Czech translation has no entry in `cs.lproj`, and the
+/// bundle then answers with the English source text. There is no public API to ask whether a key exists, so the text is
+/// looked up in the `cs` and in the `en` bundle; when both are equal the Czech text is missing and the Slovak one is
+/// shown (formatted with the Czech locale). `I18nTests` guarantees that no catalog key has a Czech value equal to its
+/// English value while its Slovak value differs, so a real translation is never mistaken for a missing one.
 func L(_ key: String.LocalizationValue) -> String {
-    String(localized: key, bundle: Lang.current.bundle, locale: Lang.current.locale)
+    let lang = Lang.current
+    let text = String(localized: key, bundle: lang.bundle, locale: lang.locale)
+    guard lang == .cs else { return text }
+    let english = String(localized: key, bundle: AppLanguage.en.bundle, locale: lang.locale)
+    guard text == english else { return Czech.prepositions(text) }
+    return Czech.prepositions(String(localized: key, bundle: AppLanguage.sk.bundle, locale: lang.locale))
 }
 
-/// Dates and times in the current language. SK always 24 h; EN follows the iPhone's 12/24 h setting (Q3).
+/// Czech grammar that depends on the formatted arguments (build 13b).
+enum Czech {
+    /// Hours before which Czech says "ve" instead of "v" ("ve 22:30", "ve 2:15", "ve 12:00").
+    private static let veHours: Set<Int> = [2, 3, 4, 12, 13, 14, 20, 21, 22, 23]
+    private static let beforeClock = try! NSRegularExpression(pattern: #"(?<![\p{L}\p{N}])([vV]) (\d{1,2}):\d{2}(?!\d)"#)
+
+    /// "v" / "V" directly before a clock time "H:MM" / "HH:MM" becomes "ve" / "Ve" when the hour needs it (2–4, 12–14,
+    /// 20–23); every other "v", an existing "ve", dates and other numbers are left alone. Applied to every Czech text,
+    /// so the translations can simply say "v %@" – also when the text fell back to Slovak (its "o" never matches).
+    static func prepositions(_ text: String) -> String {
+        let ns = text as NSString
+        var result = text
+        for m in beforeClock.matches(in: text, range: NSRange(location: 0, length: ns.length)).reversed() {
+            guard let hour = Int(ns.substring(with: m.range(at: 2))), veHours.contains(hour) else { continue }
+            let letter = m.range(at: 1)
+            let insert = ns.substring(with: letter) == "V" ? "Ve" : "ve"
+            result = (result as NSString).replacingCharacters(in: letter, with: insert)
+        }
+        return result
+    }
+}
+
+/// Dates and times in the current language. SK / CS always 24 h; EN follows the iPhone's 12/24 h setting (Q3).
 enum Fmt {
     /// true when the iPhone is set to a 12-hour clock.
     nonisolated(unsafe) static var systemUses12h: Bool =
@@ -76,14 +114,58 @@ enum Fmt {
         return f.string(from: NSNumber(value: Double(p) / 1000)) ?? "\(p / 10)%"
     }
 
+    /// A whole percent in the app's language: "30%" in English, "30 %" (non-breaking space) in Slovak and Czech (13v).
+    static func percent(_ p: Int) -> String { Lang.current.usesContinentalFormats ? "\(p)\u{00A0}%" : "\(p)%" }
+
     /// "30. 9." / "9/30"
     static func dayMonth(_ k: NightKey) -> String {
-        Lang.current == .sk ? "\(k.day). \(k.month)." : "\(k.month)/\(k.day)"
+        Lang.current.usesContinentalFormats ? "\(k.day). \(k.month)." : "\(k.month)/\(k.day)"
+    }
+
+    /// The line on top of the result screen (13ai). A night (key = the WAKE date) reads "Night from Wednesday 11. 11. to
+    /// Thursday 12. 11. 2026"; a nap reads "Thursday 12. 11. 2026". Weekdays come from a fixed Gregorian calendar at noon.
+    static func resultDate(_ k: NightKey, nap: Bool) -> String {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let wake = cal.date(from: DateComponents(year: k.year, month: k.month, day: k.day, hour: 12))!
+        let wd = cal.component(.weekday, from: wake)   // 1 = Sunday … 7 = Saturday
+        let to = fullDate(k)
+        if nap {
+            switch wd {
+            case 2: return L("Monday \(to)")
+            case 3: return L("Tuesday \(to)")
+            case 4: return L("Wednesday \(to)")
+            case 5: return L("Thursday \(to)")
+            case 6: return L("Friday \(to)")
+            case 7: return L("Saturday \(to)")
+            default: return L("Sunday \(to)")
+            }
+        }
+        let start = cal.date(byAdding: .day, value: -1, to: wake)!
+        let sc = cal.dateComponents([.year, .month, .day], from: start)
+        let from: String
+        if Lang.current.usesContinentalFormats {
+            from = dayMonth(NightKey(year: sc.year!, month: sc.month!, day: sc.day!))
+        } else {
+            // format in the UTC zone `start` was built in – the device zone could shift noon UTC to the next day (UTC+13)
+            var style = Date.FormatStyle.dateTime.month(.abbreviated).day().locale(Lang.current.locale)
+            style.timeZone = cal.timeZone
+            from = start.formatted(style)
+        }
+        switch wd {
+        case 2: return L("Night from Sunday \(from) to Monday \(to)")
+        case 3: return L("Night from Monday \(from) to Tuesday \(to)")
+        case 4: return L("Night from Tuesday \(from) to Wednesday \(to)")
+        case 5: return L("Night from Wednesday \(from) to Thursday \(to)")
+        case 6: return L("Night from Thursday \(from) to Friday \(to)")
+        case 7: return L("Night from Friday \(from) to Saturday \(to)")
+        default: return L("Night from Saturday \(from) to Sunday \(to)")
+        }
     }
 
     /// "30. 9. 2026" / "Sep 30, 2026" – never with a grouping separator in the year.
     static func fullDate(_ k: NightKey) -> String {
-        guard Lang.current != .sk else { return "\(k.day). \(k.month). \(k.year)" }
+        guard !Lang.current.usesContinentalFormats else { return "\(k.day). \(k.month). \(k.year)" }
         let date = Calendar.current.date(from: DateComponents(year: k.year, month: k.month, day: k.day, hour: 12))!
         return date.formatted(.dateTime.year().month(.abbreviated).day().locale(Lang.current.locale))
     }
@@ -92,7 +174,7 @@ enum Fmt {
     /// always there, so it never reads as a date in the past.
     static func dateTimeWithYear(_ date: Date) -> String {
         let day = fullDate(NightKey(date: date, calendar: .current)), clock = time(date)
-        return Lang.current == .sk ? "\(day) \(clock)" : L("\(day) at \(clock)")
+        return Lang.current.usesContinentalFormats ? "\(day) \(clock)" : L("\(day) at \(clock)")
     }
 
     /// A moment in the recent past for a status line: today → the clock time ("14:05"), another day → day, month and
@@ -106,11 +188,12 @@ enum Fmt {
 
     private static func formatter(seconds: Bool) -> DateFormatter {
         let cacheKey = "\(Lang.current.rawValue)-\(systemUses12h)-\(seconds)"
-        if let f = cache[cacheKey] { return f }
+        // a cached formatter keeps the zone of its creation: follow the default zone (what a new DateFormatter takes) on every use (L9)
+        if let f = cache[cacheKey] { f.timeZone = NSTimeZone.default; return f }
         let f = DateFormatter()
         cache[cacheKey] = f
         f.locale = Lang.current.locale
-        if Lang.current == .sk || !systemUses12h {
+        if Lang.current.usesContinentalFormats || !systemUses12h {
             f.dateFormat = seconds ? "H:mm:ss" : "H:mm"
         } else {
             f.setLocalizedDateFormatFromTemplate(seconds ? "hmmss" : "hmm")

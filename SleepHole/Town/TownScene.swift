@@ -11,6 +11,12 @@ final class TownScene: SKScene {
     private var velocity = CGVector.zero
     private var lastUpdate: TimeInterval = 0
     var imageProvider: ((String) -> UIImage?)?
+    /// Textures prepared in the background (13p); a miss falls back to `imageProvider`.
+    var textureProvider: ((String) -> SKTexture?)?
+    /// Each building's drawn rect in scene space, built once per `show` (13p): VoiceOver asks for every frame on every query.
+    private var buildingRects: [Int: SceneRect] = [:]
+    /// Replaceable so that tests can make the glide a jump.
+    var reduceMotion: () -> Bool = { UIAccessibility.isReduceMotionEnabled }
 
     static let minScale: CGFloat = 0.6      // camera scale: smaller = closer
     static let maxScale: CGFloat = 10
@@ -22,6 +28,17 @@ final class TownScene: SKScene {
     /// A glide to the newest building waiting for the first fit.
     private var pendingGlide: ScenePoint?
     private var wasMoving = false
+    /// L7 (13p): a static town is not redrawn 60 times a second. The view is paused once the camera has been at rest for
+    /// `idleFramesBeforePause` frames and woken by anything that moves it or changes the content.
+    var idlePauseEnabled = true
+    static let idleFramesBeforePause = 45
+    private var idleFrames = 0
+    /// The view is stopped from outside (another tab, the rest screen, the app not active): `wake()` then keeps it stopped.
+    var suspended = false {
+        didSet {
+            if suspended { view?.isPaused = true } else if oldValue { wake() }
+        }
+    }
     /// Dev aid for screenshots (`-townFit`): the whole town is always fitted, uncapped, and refitted when the view is sized.
     static let townFit = DevArgs.list.contains("-townFit")
 
@@ -42,7 +59,9 @@ final class TownScene: SKScene {
     /// `newest` = the id of the town's newest building (its night key): the camera glides to `focus` once per new one.
     func show(_ model: TownRenderModel, focus: ScenePoint?, newest: String? = nil) {
         let firstShow = self.model == nil
+        wake()
         self.model = model
+        buildingRects = Self.sceneRects(of: model)
         children.filter { $0 !== cameraNode }.forEach { $0.removeFromParent() }
         for s in model.sprites {
             guard let texture = texture(for: s.spriteId) else { continue }
@@ -146,11 +165,12 @@ final class TownScene: SKScene {
     }
 
     /// Glides to the newest building keeping the scale; a touch stops it. Reduce Motion: a jump.
-    private func glide(to focus: ScenePoint) {
+    private func glide(to focus: ScenePoint, lift: Double = 120) {
+        wake()
         if needsFit { pendingGlide = focus; return }       // the first fit has not happened yet
-        let target = TownRender.clamp(ScenePoint(x: focus.x, y: focus.y + 120), to: model?.bounds ?? SceneRect(minX: focus.x, minY: focus.y, maxX: focus.x, maxY: focus.y))
+        let target = TownRender.clamp(ScenePoint(x: focus.x, y: focus.y + lift), to: model?.bounds ?? SceneRect(minX: focus.x, minY: focus.y, maxX: focus.x, maxY: focus.y))
         let point = CGPoint(x: target.x, y: target.y)
-        if UIAccessibility.isReduceMotionEnabled {
+        if reduceMotion() {
             cameraNode.position = point
             clampCamera()
             saveCamera()
@@ -170,14 +190,55 @@ final class TownScene: SKScene {
         cameraNode.removeAction(forKey: "glide")
     }
 
+    /// Draws again (13p): called by everything that moves the camera or changes what is shown.
+    func wake() {
+        idleFrames = 0
+        if !suspended, let view, view.isPaused { view.isPaused = false }
+    }
+
     override func didChangeSize(_ oldSize: CGSize) {
         super.didChangeSize(oldSize)
+        wake()
         if Self.townFit { needsFit = true }
         fitIfPossible()
     }
 
+    /// The rect of a building's sprites in scene space (the unfinished ones only as high as they are shown), nil if it has none.
+    func sceneRect(ofBuilding index: Int) -> SceneRect? { buildingRects[index] }
+
+    /// All buildings' rects in one pass over the sprites.
+    static func sceneRects(of model: TownRenderModel) -> [Int: SceneRect] {
+        var rects: [Int: SceneRect] = [:]
+        for s in model.sprites {
+            guard let i = s.buildingIndex else { continue }
+            let f = shownFrame(s)
+            rects[i] = rects[i].map { $0.union(f) } ?? f
+        }
+        return rects
+    }
+
+    /// The reference: the same rect by scanning every sprite (what the accessibility tree did before 13p).
+    static func sceneRectByScan(ofBuilding index: Int, in model: TownRenderModel) -> SceneRect? {
+        var rect: SceneRect?
+        for s in model.sprites where s.buildingIndex == index {
+            let f = shownFrame(s)
+            rect = rect.map { $0.union(f) } ?? f
+        }
+        return rect
+    }
+
+    private static func shownFrame(_ s: SpriteInstance) -> SceneRect {
+        var f = s.frame
+        if s.reveal < 1 { f.maxY = f.minY + (f.maxY - f.minY) * s.reveal }
+        return f
+    }
+
     private func texture(for id: String) -> SKTexture? {
         if let t = textures[id] { return t }
+        if let t = textureProvider?(id) {
+            textures[id] = t
+            return t
+        }
         guard let image = imageProvider?(id) else { return nil }
         let t = SKTexture(image: image)
         textures[id] = t
@@ -187,6 +248,7 @@ final class TownScene: SKScene {
     // MARK: camera
 
     func pan(by translation: CGPoint) {
+        wake()
         stopGlide()
         velocity = .zero
         cameraNode.position.x -= translation.x * cameraNode.xScale
@@ -194,7 +256,24 @@ final class TownScene: SKScene {
         clampCamera()
     }
 
+    /// VoiceOver's three-finger scroll: moves like a finger drag by `translation` (view points). False = the camera did
+    /// not move (already at that edge).
+    func scrollForAccessibility(by translation: CGPoint) -> Bool {
+        let before = cameraNode.position
+        pan(by: translation)
+        let moved = abs(cameraNode.position.x - before.x) > 0.01 || abs(cameraNode.position.y - before.y) > 0.01
+        if moved { saveCamera() }
+        return moved
+    }
+
+    /// VoiceOver focus on a building outside the view: the camera centres it (a glide; Reduce Motion: a jump).
+    func bringIntoView(viewFrame: CGRect) {
+        let c = convertPoint(fromView: CGPoint(x: viewFrame.midX, y: viewFrame.midY))
+        glide(to: ScenePoint(x: c.x, y: c.y), lift: 0)
+    }
+
     func fling(velocity v: CGPoint) {
+        wake()
         velocity = CGVector(dx: -v.x * cameraNode.xScale, dy: v.y * cameraNode.yScale)
         wasMoving = abs(velocity.dx) + abs(velocity.dy) > 5
         if !wasMoving { saveCamera() }                  // otherwise `update` saves when the inertia dies out
@@ -202,6 +281,7 @@ final class TownScene: SKScene {
 
     /// Zoom by `factor` keeping the scene point under `viewPoint` fixed.
     func zoom(by factor: CGFloat, at viewPoint: CGPoint, in view: SKView) {
+        wake()
         stopGlide()
         let before = convertPoint(fromView: viewPoint)
         let newScale = min(Self.maxScale, max(Self.minScale, cameraNode.xScale / factor))
@@ -213,10 +293,12 @@ final class TownScene: SKScene {
     }
 
     func animateZoom(in viewPoint: CGPoint, view: SKView) {
+        wake()
         stopGlide()
         let target = cameraNode.xScale > 1.2 ? cameraNode.xScale / 2 : 2.2
         let p = convertPoint(fromView: viewPoint)
-        cameraNode.run(.sequence([.group([.scale(to: target, duration: 0.3), .move(to: p, duration: 0.3)]),
+        let d: TimeInterval = UIAccessibility.isReduceMotionEnabled ? 0 : 0.3        // Reduce Motion: straight to the end state
+        cameraNode.run(.sequence([.group([.scale(to: target, duration: d), .move(to: p, duration: d)]),
                                   .run { [weak self] in
             self?.clampCamera()
             self?.saveCamera()
@@ -229,8 +311,11 @@ final class TownScene: SKScene {
         guard abs(velocity.dx) + abs(velocity.dy) > 5 else {
             velocity = .zero
             if wasMoving { wasMoving = false; saveCamera() }
+            if cameraNode.hasActions() || needsFit || pendingGlide != nil { idleFrames = 0 } else { idleFrames += 1 }
+            if idlePauseEnabled, idleFrames > Self.idleFramesBeforePause { view?.isPaused = true }
             return
         }
+        idleFrames = 0
         cameraNode.position.x += velocity.dx * dt
         cameraNode.position.y += velocity.dy * dt
         let decay = pow(0.04, dt)                  // smooth deceleration (≈ 1 s)

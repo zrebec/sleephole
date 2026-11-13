@@ -38,6 +38,13 @@ struct WeatherTestView: View {
                                  snowOnGround: old?.snowOnGround ?? false, windMS: old?.windMS ?? 0)
     }
 
+    /// Localizes the internal source words ("none", "simulated"), also inside "A → B"; brand names stay.
+    private static func displayName(_ name: String) -> String {
+        name.components(separatedBy: " → ").map { part in
+            part == "none" ? L("none") : part == "simulated" ? L("simulated") : part
+        }.joined(separator: " → ")
+    }
+
     private func row(_ label: String, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(label).font(.footnote).foregroundStyle(.secondary)
@@ -81,7 +88,7 @@ struct WeatherTestView: View {
         let shown = store.shown(for: model.settings.city, at: now, daylight: daylight)
         List {
             Section {
-                row(L("Source"), store.source.name)
+                row(L("Source"), Self.displayName(store.source.name))
                 row(L("City"), model.settings.city?.name ?? L("None"))
                 row(L("Past hourly values"), "\(store.source.lastHourCount)")
             }

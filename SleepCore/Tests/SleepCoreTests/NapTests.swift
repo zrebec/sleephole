@@ -9,7 +9,8 @@ import Testing
         #expect(!plan.canStart(at: at(2026, 10, 1, 12, 59), calendar: bratislava))
         #expect(plan.canStart(at: at(2026, 10, 1, 13, 0), calendar: bratislava))
         #expect(plan.canStart(at: at(2026, 10, 1, 15, 0), calendar: bratislava))      // edge: exactly at the end
-        #expect(!plan.canStart(at: at(2026, 10, 1, 15, 0, 1), calendar: bratislava))
+        #expect(plan.canStart(at: at(2026, 10, 1, 15, 0, 1), calendar: bratislava))       // B50: the shown last minute counts whole
+        #expect(!plan.canStart(at: at(2026, 10, 1, 15, 1), calendar: bratislava))
         #expect(!plan.canStart(at: at(2026, 10, 1, 18, 0), calendar: bratislava))
     }
 

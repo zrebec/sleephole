@@ -4,26 +4,32 @@ import SwiftUI
 /// 🔥 streak badge with a flickering flame.
 struct StreakBadge: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    /// Side by side with the coins the headline must stay on ONE line (13g); stacked it may wrap.
+    var singleLine = false
 
     var body: some View {
         let n = model.streak
         HStack(spacing: 6) {
             // only the flame is on the 12.5 fps timeline – the texts and the capsule are drawn when the streak changes
-            TimelineView(.animation(minimumInterval: 0.08)) { ctx in
-                let t = ctx.date.timeIntervalSinceReferenceDate
+            TimelineView(.animation(minimumInterval: 0.08, paused: reduceMotion)) { ctx in
+                let t = reduceMotion ? 0 : ctx.date.timeIntervalSinceReferenceDate
                 Text(verbatim: "🔥")
                     .font(.system(size: 30))
                     .scaleEffect(n > 0 ? 1 + 0.06 * sin(t * 9) + 0.03 * sin(t * 23) : 0.9)
                     .saturation(n > 0 ? 1 : 0)
                     .opacity(n > 0 ? 1 : 0.5)
+                    .accessibilityHidden(true)
             }
             VStack(alignment: .leading, spacing: 0) {
                 Text(n > 0 ? L("\(n) nights in a row") : L("Your streak starts today")).font(.headline)
+                    .lineLimit(singleLine ? 1 : nil)
                 Text(n > 0 ? L("keep it going 💪") : L("your first good night lights it")).font(.caption).cardCaption()
             }
         }
         .padding(.horizontal, 14).padding(.vertical, 8)
         .glassCapsule(tint: n > 0 ? .orange : nil)
+        .accessibilityElement(children: .combine)       // one element: the flame is hidden, the two texts are read
     }
 }
 
@@ -33,23 +39,42 @@ struct CoinBadge: View {
 
     var body: some View {
         HStack(spacing: 6) {
-            Text(verbatim: "🪙").font(.system(size: 26))
+            Text(verbatim: "🪙").font(.system(size: 26)).accessibilityHidden(true)
             Text(verbatim: "\(model.coins)").font(.headline.monospacedDigit())
+                .lineLimit(1).fixedSize(horizontal: true, vertical: false)       // a number never breaks across lines (13e2)
                 .contentTransition(.numericText(value: Double(model.coins)))
                 .animation(.snappy, value: model.coins)
         }
         .padding(.horizontal, 14).padding(.vertical, 8)
         .glassCapsule(tint: .yellow)
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel(L("Coins: \(model.coins)"))
     }
 }
 
 /// Streak + coins side by side.
 struct StatusBadges: View {
+    @Environment(\.dynamicTypeSize) private var typeSize
+
     var body: some View {
-        HStack(spacing: 10) {
-            StreakBadge()
-            CoinBadge()
+        // at accessibility sizes the badges are stacked, each with the full width (13e2); below them side by side while
+        // the streak's headline fits on one line, otherwise the coins go under it (13g)
+        if typeSize.isAccessibilitySize {
+            VStackLayout(spacing: 10) {
+                StreakBadge()
+                CoinBadge()
+            }
+        } else {
+            ViewThatFits(in: .horizontal) {
+                HStackLayout(spacing: 10) {
+                    StreakBadge(singleLine: true)
+                    CoinBadge()
+                }
+                VStackLayout(spacing: 10) {
+                    StreakBadge()
+                    CoinBadge()
+                }
+            }
         }
     }
 }

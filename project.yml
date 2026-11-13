@@ -12,9 +12,9 @@ packages:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "1.0"
-    # every upload to App Store Connect / TestFlight needs a higher CURRENT_PROJECT_VERSION (builds 1 to 11 are uploaded)
-    CURRENT_PROJECT_VERSION: "12"
+    MARKETING_VERSION: "1.1"
+    # every upload to App Store Connect / TestFlight needs a higher CURRENT_PROJECT_VERSION (builds 1 to 12 are uploaded; 1.0 (10) is approved, so build 13 goes up as 1.1)
+    CURRENT_PROJECT_VERSION: "13"
 targets:
   SleepHole:
     type: application
@@ -32,6 +32,9 @@ targets:
       # the plans overview shown in Settings → Developer (Debug builds only – excluded from Release below)
       - path: docs/PREHLAD-PLANOV.md
         buildPhase: resources
+      # its Czech copy (shown when the app language is Czech; a test keeps the two structurally identical)
+      - path: docs/PREHLAD-PLANOV.cs.md
+        buildPhase: resources
     dependencies:
       - package: SleepCore
     info:
@@ -41,7 +44,7 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleDevelopmentRegion: en
-        CFBundleLocalizations: [en, sk]
+        CFBundleLocalizations: [en, sk, cs]
         UILaunchScreen: {}
         UIBackgroundModes: [audio]
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
@@ -85,7 +88,7 @@ targets:
         SWIFT_EMIT_LOC_STRINGS: YES
       configs:
         Release:
-          EXCLUDED_SOURCE_FILE_NAMES: PREHLAD-PLANOV.md
+          EXCLUDED_SOURCE_FILE_NAMES: "PREHLAD-PLANOV.md PREHLAD-PLANOV.cs.md"
     scheme:
       testTargets: [SleepHoleTests]
       gatherCoverageData: true
@@ -104,3 +107,25 @@ targets:
         DEVELOPMENT_TEAM: 8V2VSXHQ86
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/SleepHole.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SleepHole"
         BUNDLE_LOADER: "$(TEST_HOST)"
+  SleepHoleUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: SleepHoleUITests
+    dependencies:
+      - target: SleepHole
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: sk.zrebec.sleephole.uitests
+        DEVELOPMENT_TEAM: 8V2VSXHQ86
+        TEST_TARGET_NAME: SleepHole
+# A separate scheme: the running-app accessibility tests (13e4). The SleepHole scheme keeps only SleepHoleTests.
+schemes:
+  SleepHoleUITests:
+    build:
+      targets:
+        SleepHole: all
+        SleepHoleUITests: [test]
+    test:
+      targets: [SleepHoleUITests]

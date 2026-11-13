@@ -12,6 +12,7 @@
     "id" : "d-bench-lamp",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Lavička s lampou",
     "nameEN" : "Bench and lamp",
     "nameSK" : "Lavička s lampou",
     "size" : [
@@ -32,6 +33,7 @@
     "id" : "d-campfire",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Ohniště se stanem",
     "nameEN" : "Campfire and tent",
     "nameSK" : "Ohnisko so stanom",
     "size" : [
@@ -52,6 +54,7 @@
     "id" : "d-cat-statue",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Socha spící kočky",
     "nameEN" : "Sleeping cat statue",
     "nameSK" : "Socha spiacej mačky",
     "size" : [
@@ -72,6 +75,7 @@
     "id" : "d-clock-tower",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Hodinová věž",
     "nameEN" : "Clock tower",
     "nameSK" : "Hodinová veža",
     "size" : [
@@ -92,6 +96,7 @@
     "id" : "d-flower-bed",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Květinový záhon",
     "nameEN" : "Flower bed",
     "nameSK" : "Kvetinový záhon",
     "size" : [
@@ -112,6 +117,7 @@
     "id" : "d-fountain",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Fontána",
     "nameEN" : "Fountain",
     "nameSK" : "Fontána",
     "size" : [
@@ -132,6 +138,7 @@
     "id" : "d-gazebo",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Altán",
     "nameEN" : "Gazebo",
     "nameSK" : "Altánok",
     "size" : [
@@ -152,6 +159,7 @@
     "id" : "d-pines",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Smrkový hájek",
     "nameEN" : "Pine grove",
     "nameSK" : "Smrekový hájik",
     "size" : [
@@ -172,6 +180,7 @@
     "id" : "d-sign",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Cedule SleepHole",
     "nameEN" : "SleepHole sign",
     "nameSK" : "Tabuľa SleepHole",
     "size" : [
@@ -192,6 +201,7 @@
     "id" : "d-stall",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Tržní stánek",
     "nameEN" : "Market stall",
     "nameSK" : "Trhový stánok",
     "size" : [
@@ -212,6 +222,7 @@
     "id" : "d-well",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Studna přání",
     "nameEN" : "Wishing well",
     "nameSK" : "Studňa prianí",
     "size" : [
@@ -232,6 +243,7 @@
     "id" : "d-windmill",
     "kind" : "decoration",
     "level" : 0,
+    "nameCS" : "Větrný mlýn",
     "nameEN" : "Windmill",
     "nameSK" : "Veterný mlyn",
     "size" : [
@@ -252,6 +264,7 @@
     "id" : "o-crane-00",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -272,6 +285,7 @@
     "id" : "o-crane-01",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -292,6 +306,7 @@
     "id" : "o-crane-02",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -312,6 +327,7 @@
     "id" : "o-crane-03",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -332,6 +348,7 @@
     "id" : "o-crane-04",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -352,6 +369,7 @@
     "id" : "o-crane-05",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -372,6 +390,7 @@
     "id" : "o-crane-06",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -392,6 +411,7 @@
     "id" : "o-crane-07",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -412,6 +432,7 @@
     "id" : "o-crane-08",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -432,6 +453,7 @@
     "id" : "o-crane-09",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -452,6 +474,7 @@
     "id" : "o-crane-10",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -472,6 +495,7 @@
     "id" : "o-crane-11",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -492,6 +516,7 @@
     "id" : "o-crane-12",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -512,6 +537,7 @@
     "id" : "o-crane-13",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -532,6 +558,7 @@
     "id" : "o-crane-14",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -552,6 +579,7 @@
     "id" : "o-crane-15",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Jeřáb",
     "nameEN" : "Crane",
     "nameSK" : "Žeriav",
     "size" : [
@@ -572,6 +600,7 @@
     "id" : "o-ruin-1",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Ruina",
     "nameEN" : "Ruins",
     "nameSK" : "Ruina",
     "size" : [
@@ -592,6 +621,7 @@
     "id" : "o-ruin-2",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Ruina",
     "nameEN" : "Ruins",
     "nameSK" : "Ruina",
     "size" : [
@@ -612,6 +642,7 @@
     "id" : "o-ruin-flowers-1",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Zarostlá ruina",
     "nameEN" : "Overgrown ruins",
     "nameSK" : "Zarastená ruina",
     "size" : [
@@ -632,6 +663,7 @@
     "id" : "o-ruin-flowers-2",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Zarostlá ruina",
     "nameEN" : "Overgrown ruins",
     "nameSK" : "Zarastená ruina",
     "size" : [
@@ -652,6 +684,7 @@
     "id" : "o-scaffold-1",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Lešení",
     "nameEN" : "Scaffolding",
     "nameSK" : "Lešenie",
     "size" : [
@@ -672,6 +705,7 @@
     "id" : "o-scaffold-2",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Lešení",
     "nameEN" : "Scaffolding",
     "nameSK" : "Lešenie",
     "size" : [
@@ -692,6 +726,7 @@
     "id" : "o-site-1",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Staveniště",
     "nameEN" : "Building site",
     "nameSK" : "Stavenisko",
     "size" : [
@@ -712,6 +747,7 @@
     "id" : "o-site-2",
     "kind" : "overlay",
     "level" : 0,
+    "nameCS" : "Staveniště",
     "nameEN" : "Building site",
     "nameSK" : "Stavenisko",
     "size" : [
@@ -732,6 +768,7 @@
     "id" : "t-grass-a",
     "kind" : "terrain",
     "level" : 0,
+    "nameCS" : "Tráva",
     "nameEN" : "Grass",
     "nameSK" : "Tráva",
     "size" : [
@@ -752,6 +789,7 @@
     "id" : "t-grass-b",
     "kind" : "terrain",
     "level" : 0,
+    "nameCS" : "Tráva",
     "nameEN" : "Grass",
     "nameSK" : "Tráva",
     "size" : [
@@ -772,6 +810,7 @@
     "id" : "t-lot",
     "kind" : "terrain",
     "level" : 0,
+    "nameCS" : "Stavební pozemek",
     "nameEN" : "Building plot",
     "nameSK" : "Stavebný pozemok",
     "size" : [
@@ -792,6 +831,7 @@
     "id" : "t-plaza",
     "kind" : "terrain",
     "level" : 0,
+    "nameCS" : "Dlažba",
     "nameEN" : "Paving",
     "nameSK" : "Dlažba",
     "size" : [
@@ -813,6 +853,7 @@
     "id" : "t-road-bend-es",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -834,6 +875,7 @@
     "id" : "t-road-bend-ne",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -855,6 +897,7 @@
     "id" : "t-road-bend-nw",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -876,6 +919,7 @@
     "id" : "t-road-bend-sw",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -897,6 +941,7 @@
     "id" : "t-road-crossing-ew",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -918,6 +963,7 @@
     "id" : "t-road-crossing-ns",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -939,6 +985,7 @@
     "id" : "t-road-crossroad-nesw",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -960,6 +1007,7 @@
     "id" : "t-road-end-e",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -981,6 +1029,7 @@
     "id" : "t-road-end-n",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -1002,6 +1051,7 @@
     "id" : "t-road-end-s",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -1023,6 +1073,7 @@
     "id" : "t-road-end-w",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -1044,6 +1095,7 @@
     "id" : "t-road-intersection-esw",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -1065,6 +1117,7 @@
     "id" : "t-road-intersection-nes",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -1086,6 +1139,7 @@
     "id" : "t-road-intersection-new",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -1107,6 +1161,7 @@
     "id" : "t-road-intersection-nsw",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -1128,6 +1183,7 @@
     "id" : "t-road-straight-ew",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -1149,6 +1205,7 @@
     "id" : "t-road-straight-ns",
     "kind" : "road",
     "level" : 0,
+    "nameCS" : "Silnice",
     "nameEN" : "Road",
     "nameSK" : "Cesta",
     "size" : [
@@ -1169,6 +1226,7 @@
     "id" : "v-ambulance-ne",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1189,6 +1247,7 @@
     "id" : "v-ambulance-nw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1209,6 +1268,7 @@
     "id" : "v-ambulance-se",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1229,6 +1289,7 @@
     "id" : "v-ambulance-sw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1249,6 +1310,7 @@
     "id" : "v-delivery-ne",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1269,6 +1331,7 @@
     "id" : "v-delivery-nw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1289,6 +1352,7 @@
     "id" : "v-delivery-se",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1309,6 +1373,7 @@
     "id" : "v-delivery-sw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1329,6 +1394,7 @@
     "id" : "v-firetruck-ne",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1349,6 +1415,7 @@
     "id" : "v-firetruck-nw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1369,6 +1436,7 @@
     "id" : "v-firetruck-se",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1389,6 +1457,7 @@
     "id" : "v-firetruck-sw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1409,6 +1478,7 @@
     "id" : "v-garbage-truck-ne",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1429,6 +1499,7 @@
     "id" : "v-garbage-truck-nw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1449,6 +1520,7 @@
     "id" : "v-garbage-truck-se",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1469,6 +1541,7 @@
     "id" : "v-garbage-truck-sw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1489,6 +1562,7 @@
     "id" : "v-police-ne",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1509,6 +1583,7 @@
     "id" : "v-police-nw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1529,6 +1604,7 @@
     "id" : "v-police-se",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1549,6 +1625,7 @@
     "id" : "v-police-sw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1569,6 +1646,7 @@
     "id" : "v-sedan-ne",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1589,6 +1667,7 @@
     "id" : "v-sedan-nw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1609,6 +1688,7 @@
     "id" : "v-sedan-se",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1629,6 +1709,7 @@
     "id" : "v-sedan-sw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1649,6 +1730,7 @@
     "id" : "v-suv-ne",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1669,6 +1751,7 @@
     "id" : "v-suv-nw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1689,6 +1772,7 @@
     "id" : "v-suv-se",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1709,6 +1793,7 @@
     "id" : "v-suv-sw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1729,6 +1814,7 @@
     "id" : "v-taxi-ne",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1749,6 +1835,7 @@
     "id" : "v-taxi-nw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1769,6 +1856,7 @@
     "id" : "v-taxi-se",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1789,6 +1877,7 @@
     "id" : "v-taxi-sw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1809,6 +1898,7 @@
     "id" : "v-van-ne",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1829,6 +1919,7 @@
     "id" : "v-van-nw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1849,6 +1940,7 @@
     "id" : "v-van-se",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1869,6 +1961,7 @@
     "id" : "v-van-sw",
     "kind" : "vehicle",
     "level" : 0,
+    "nameCS" : "Auto",
     "nameEN" : "Car",
     "nameSK" : "Auto",
     "size" : [
@@ -1889,6 +1982,7 @@
     "id" : "l1-bigblock-e",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Velký bytový dům",
     "nameEN" : "Large apartment block",
     "nameSK" : "Veľký bytový dom",
     "size" : [
@@ -1909,6 +2003,7 @@
     "id" : "l1-bigblock-i",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Velký bytový dům",
     "nameEN" : "Large apartment block",
     "nameSK" : "Veľký bytový dom",
     "size" : [
@@ -1929,6 +2024,7 @@
     "id" : "l1-bigblock-j",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Velký bytový dům",
     "nameEN" : "Large apartment block",
     "nameSK" : "Veľký bytový dom",
     "size" : [
@@ -1949,6 +2045,7 @@
     "id" : "l1-bigblock-k",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Velký bytový dům",
     "nameEN" : "Large apartment block",
     "nameSK" : "Veľký bytový dom",
     "size" : [
@@ -1969,6 +2066,7 @@
     "id" : "l1-bigblock-l",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Velký bytový dům",
     "nameEN" : "Large apartment block",
     "nameSK" : "Veľký bytový dom",
     "size" : [
@@ -1989,6 +2087,7 @@
     "id" : "l1-bigblock-n",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Velký bytový dům",
     "nameEN" : "Large apartment block",
     "nameSK" : "Veľký bytový dom",
     "size" : [
@@ -2009,6 +2108,7 @@
     "id" : "l1-block-a-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2029,6 +2129,7 @@
     "id" : "l1-block-a-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2049,6 +2150,7 @@
     "id" : "l1-block-b-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2069,6 +2171,7 @@
     "id" : "l1-block-b-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2089,6 +2192,7 @@
     "id" : "l1-block-c-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2109,6 +2213,7 @@
     "id" : "l1-block-c-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2129,6 +2234,7 @@
     "id" : "l1-block-d-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2149,6 +2255,7 @@
     "id" : "l1-block-d-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2169,6 +2276,7 @@
     "id" : "l1-block-f-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2189,6 +2297,7 @@
     "id" : "l1-block-f-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2209,6 +2318,7 @@
     "id" : "l1-block-g-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2229,6 +2339,7 @@
     "id" : "l1-block-g-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2249,6 +2360,7 @@
     "id" : "l1-block-h-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2269,6 +2381,7 @@
     "id" : "l1-block-h-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Bytový dům",
     "nameEN" : "Apartment block",
     "nameSK" : "Bytový dom",
     "size" : [
@@ -2289,6 +2402,7 @@
     "id" : "l1-house-a-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2309,6 +2423,7 @@
     "id" : "l1-house-a-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2329,6 +2444,7 @@
     "id" : "l1-house-a-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2349,6 +2465,7 @@
     "id" : "l1-house-b-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2369,6 +2486,7 @@
     "id" : "l1-house-b-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2389,6 +2507,7 @@
     "id" : "l1-house-b-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2409,6 +2528,7 @@
     "id" : "l1-house-c-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2429,6 +2549,7 @@
     "id" : "l1-house-c-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2449,6 +2570,7 @@
     "id" : "l1-house-c-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2469,6 +2591,7 @@
     "id" : "l1-house-d-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2489,6 +2612,7 @@
     "id" : "l1-house-d-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2509,6 +2633,7 @@
     "id" : "l1-house-d-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2529,6 +2654,7 @@
     "id" : "l1-house-e-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2549,6 +2675,7 @@
     "id" : "l1-house-e-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2569,6 +2696,7 @@
     "id" : "l1-house-e-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2589,6 +2717,7 @@
     "id" : "l1-house-f-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2609,6 +2738,7 @@
     "id" : "l1-house-f-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2629,6 +2759,7 @@
     "id" : "l1-house-f-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2649,6 +2780,7 @@
     "id" : "l1-house-g-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2669,6 +2801,7 @@
     "id" : "l1-house-g-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2689,6 +2822,7 @@
     "id" : "l1-house-g-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2709,6 +2843,7 @@
     "id" : "l1-house-h-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2729,6 +2864,7 @@
     "id" : "l1-house-h-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2749,6 +2885,7 @@
     "id" : "l1-house-h-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2769,6 +2906,7 @@
     "id" : "l1-house-i-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2789,6 +2927,7 @@
     "id" : "l1-house-i-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2809,6 +2948,7 @@
     "id" : "l1-house-i-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2829,6 +2969,7 @@
     "id" : "l1-house-j-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2849,6 +2990,7 @@
     "id" : "l1-house-j-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2869,6 +3011,7 @@
     "id" : "l1-house-j-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2889,6 +3032,7 @@
     "id" : "l1-house-k-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2909,6 +3053,7 @@
     "id" : "l1-house-k-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2929,6 +3074,7 @@
     "id" : "l1-house-k-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2949,6 +3095,7 @@
     "id" : "l1-house-l-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2969,6 +3116,7 @@
     "id" : "l1-house-l-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -2989,6 +3137,7 @@
     "id" : "l1-house-l-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3009,6 +3158,7 @@
     "id" : "l1-house-m-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3029,6 +3179,7 @@
     "id" : "l1-house-m-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3049,6 +3200,7 @@
     "id" : "l1-house-m-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3069,6 +3221,7 @@
     "id" : "l1-house-n-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3089,6 +3242,7 @@
     "id" : "l1-house-n-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3109,6 +3263,7 @@
     "id" : "l1-house-n-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3129,6 +3284,7 @@
     "id" : "l1-house-o-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3149,6 +3305,7 @@
     "id" : "l1-house-o-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3169,6 +3326,7 @@
     "id" : "l1-house-o-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3189,6 +3347,7 @@
     "id" : "l1-house-p-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3209,6 +3368,7 @@
     "id" : "l1-house-p-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3229,6 +3389,7 @@
     "id" : "l1-house-p-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3249,6 +3410,7 @@
     "id" : "l1-house-q-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3269,6 +3431,7 @@
     "id" : "l1-house-q-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3289,6 +3452,7 @@
     "id" : "l1-house-q-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3309,6 +3473,7 @@
     "id" : "l1-house-r-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3329,6 +3494,7 @@
     "id" : "l1-house-r-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3349,6 +3515,7 @@
     "id" : "l1-house-r-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3369,6 +3536,7 @@
     "id" : "l1-house-s-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3389,6 +3557,7 @@
     "id" : "l1-house-s-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3409,6 +3578,7 @@
     "id" : "l1-house-s-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3429,6 +3599,7 @@
     "id" : "l1-house-t-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3449,6 +3620,7 @@
     "id" : "l1-house-t-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3469,6 +3641,7 @@
     "id" : "l1-house-t-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3489,6 +3662,7 @@
     "id" : "l1-house-u-0",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3509,6 +3683,7 @@
     "id" : "l1-house-u-a",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3529,6 +3704,7 @@
     "id" : "l1-house-u-b",
     "kind" : "building",
     "level" : 1,
+    "nameCS" : "Rodinný dům",
     "nameEN" : "Family house",
     "nameSK" : "Rodinný dom",
     "size" : [
@@ -3542,6 +3718,7 @@
       0.326
     ],
     "file" : "L2\/l2-library-a.png",
+    "fileCS" : "L2\/l2-library-a.cs.png",
     "fileEN" : "L2\/l2-library-a.en.png",
     "footprint" : [
       2,
@@ -3550,6 +3727,7 @@
     "id" : "l2-library-a",
     "kind" : "building",
     "level" : 2,
+    "nameCS" : "Knihovna",
     "nameEN" : "Library",
     "nameSK" : "Knižnica",
     "size" : [
@@ -3563,6 +3741,7 @@
       0.29
     ],
     "file" : "L2\/l2-library-b.png",
+    "fileCS" : "L2\/l2-library-b.cs.png",
     "fileEN" : "L2\/l2-library-b.en.png",
     "footprint" : [
       2,
@@ -3571,6 +3750,7 @@
     "id" : "l2-library-b",
     "kind" : "building",
     "level" : 2,
+    "nameCS" : "Městská knihovna",
     "nameEN" : "City library",
     "nameSK" : "Mestská knižnica",
     "size" : [
@@ -3584,6 +3764,7 @@
       0.273
     ],
     "file" : "L2\/l2-museum-a.png",
+    "fileCS" : "L2\/l2-museum-a.cs.png",
     "fileEN" : "L2\/l2-museum-a.en.png",
     "footprint" : [
       2,
@@ -3592,6 +3773,7 @@
     "id" : "l2-museum-a",
     "kind" : "building",
     "level" : 2,
+    "nameCS" : "Muzeum",
     "nameEN" : "Museum",
     "nameSK" : "Múzeum",
     "size" : [
@@ -3605,6 +3787,7 @@
       0.335
     ],
     "file" : "L2\/l2-museum-b.png",
+    "fileCS" : "L2\/l2-museum-b.cs.png",
     "fileEN" : "L2\/l2-museum-b.en.png",
     "footprint" : [
       2,
@@ -3613,6 +3796,7 @@
     "id" : "l2-museum-b",
     "kind" : "building",
     "level" : 2,
+    "nameCS" : "Muzeum umění",
     "nameEN" : "Art museum",
     "nameSK" : "Múzeum umenia",
     "size" : [
@@ -3633,6 +3817,7 @@
     "id" : "l2-park-fountain",
     "kind" : "park",
     "level" : 2,
+    "nameCS" : "Park s fontánou",
     "nameEN" : "Fountain park",
     "nameSK" : "Park s fontánou",
     "size" : [
@@ -3653,6 +3838,7 @@
     "id" : "l2-park-garden",
     "kind" : "park",
     "level" : 2,
+    "nameCS" : "Zahrada se sochou",
     "nameEN" : "Statue garden",
     "nameSK" : "Záhrada so sochou",
     "size" : [
@@ -3673,6 +3859,7 @@
     "id" : "l2-park-pond",
     "kind" : "park",
     "level" : 2,
+    "nameCS" : "Park s jezírkem",
     "nameEN" : "Pond park",
     "nameSK" : "Park s jazierkom",
     "size" : [
@@ -3693,6 +3880,7 @@
     "id" : "l2-park-small",
     "kind" : "park",
     "level" : 2,
+    "nameCS" : "Malý park",
     "nameEN" : "Small park",
     "nameSK" : "Malý park",
     "size" : [
@@ -3714,6 +3902,7 @@
     "id" : "l2-road-lit-ns",
     "kind" : "road-lit",
     "level" : 2,
+    "nameCS" : "Osvětlená ulice",
     "nameEN" : "Lit street",
     "nameSK" : "Osvetlená ulica",
     "size" : [
@@ -3735,6 +3924,7 @@
     "id" : "l2-road-lit-we",
     "kind" : "road-lit",
     "level" : 2,
+    "nameCS" : "Osvětlená ulice",
     "nameEN" : "Lit street",
     "nameSK" : "Osvetlená ulica",
     "size" : [
@@ -3756,6 +3946,7 @@
     "id" : "l3-firestation",
     "kind" : "building",
     "level" : 3,
+    "nameCS" : "Hasičská stanice",
     "nameEN" : "Fire station",
     "nameSK" : "Hasičská stanica",
     "size" : [
@@ -3769,6 +3960,7 @@
       0.279
     ],
     "file" : "L3\/l3-hospital.png",
+    "fileCS" : "L3\/l3-hospital.cs.png",
     "fileEN" : "L3\/l3-hospital.en.png",
     "footprint" : [
       2,
@@ -3777,6 +3969,7 @@
     "id" : "l3-hospital",
     "kind" : "building",
     "level" : 3,
+    "nameCS" : "Nemocnice",
     "nameEN" : "Hospital",
     "nameSK" : "Nemocnica",
     "size" : [
@@ -3790,6 +3983,7 @@
       0.319
     ],
     "file" : "L3\/l3-police.png",
+    "fileCS" : "L3\/l3-police.cs.png",
     "fileEN" : "L3\/l3-police.en.png",
     "footprint" : [
       2,
@@ -3798,6 +3992,7 @@
     "id" : "l3-police",
     "kind" : "building",
     "level" : 3,
+    "nameCS" : "Policie",
     "nameEN" : "Police station",
     "nameSK" : "Polícia",
     "size" : [
@@ -3819,6 +4014,7 @@
     "id" : "l3-school",
     "kind" : "building",
     "level" : 3,
+    "nameCS" : "Škola",
     "nameEN" : "School",
     "nameSK" : "Škola",
     "size" : [
@@ -3832,6 +4028,7 @@
       0.216
     ],
     "file" : "L3\/l3-townhall.png",
+    "fileCS" : "L3\/l3-townhall.cs.png",
     "fileEN" : "L3\/l3-townhall.en.png",
     "footprint" : [
       2,
@@ -3840,6 +4037,7 @@
     "id" : "l3-townhall",
     "kind" : "building",
     "level" : 3,
+    "nameCS" : "Radnice",
     "nameEN" : "Town hall",
     "nameSK" : "Radnica",
     "size" : [
@@ -3860,6 +4058,7 @@
     "id" : "l4-sky-a-0",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Mrakodrap",
     "nameEN" : "Skyscraper",
     "nameSK" : "Mrakodrap",
     "size" : [
@@ -3880,6 +4079,7 @@
     "id" : "l4-sky-a-a",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Mrakodrap",
     "nameEN" : "Skyscraper",
     "nameSK" : "Mrakodrap",
     "size" : [
@@ -3900,6 +4100,7 @@
     "id" : "l4-sky-b-0",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Mrakodrap",
     "nameEN" : "Skyscraper",
     "nameSK" : "Mrakodrap",
     "size" : [
@@ -3920,6 +4121,7 @@
     "id" : "l4-sky-b-a",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Mrakodrap",
     "nameEN" : "Skyscraper",
     "nameSK" : "Mrakodrap",
     "size" : [
@@ -3940,6 +4142,7 @@
     "id" : "l4-sky-c-0",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Mrakodrap",
     "nameEN" : "Skyscraper",
     "nameSK" : "Mrakodrap",
     "size" : [
@@ -3960,6 +4163,7 @@
     "id" : "l4-sky-c-a",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Mrakodrap",
     "nameEN" : "Skyscraper",
     "nameSK" : "Mrakodrap",
     "size" : [
@@ -3980,6 +4184,7 @@
     "id" : "l4-sky-d-0",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Mrakodrap",
     "nameEN" : "Skyscraper",
     "nameSK" : "Mrakodrap",
     "size" : [
@@ -4000,6 +4205,7 @@
     "id" : "l4-sky-d-a",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Mrakodrap",
     "nameEN" : "Skyscraper",
     "nameSK" : "Mrakodrap",
     "size" : [
@@ -4020,6 +4226,7 @@
     "id" : "l4-sky-e-0",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Mrakodrap",
     "nameEN" : "Skyscraper",
     "nameSK" : "Mrakodrap",
     "size" : [
@@ -4040,6 +4247,7 @@
     "id" : "l4-sky-e-a",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Mrakodrap",
     "nameEN" : "Skyscraper",
     "nameSK" : "Mrakodrap",
     "size" : [
@@ -4060,6 +4268,7 @@
     "id" : "l4-tower-m",
     "kind" : "building",
     "level" : 4,
+    "nameCS" : "Výšková budova",
     "nameEN" : "High-rise",
     "nameSK" : "Výšková budova",
     "size" : [

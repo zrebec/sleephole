@@ -29,4 +29,23 @@ import Testing
         let byName = Dictionary(grouping: Postcards.sources.values, by: \.name)
         #expect(byName.values.allSatisfy { $0.count <= 11 }, "\(byName.mapValues(\.count))")
     }
+
+    @Test func theStudiesBelongToTheCatalogAndAreWellFormed() throws {
+        #expect(Set(Postcards.studies.keys).isSubset(of: Set(BoxCatalog.ids(.postcard))))
+        #expect(Postcards.study(for: "postcard-05") != nil && Postcards.study(for: "postcard-17") == nil)
+        for (id, s) in Postcards.studies {
+            #expect(!s.pmid.isEmpty && s.pmid.allSatisfy(\.isASCII) && s.pmid.allSatisfy(\.isNumber), "\(id) pmid")
+            let url = try #require(URL(string: s.url), "\(id)")
+            #expect(url.scheme == "https", "\(id)")
+            let host = try #require(url.host, "\(id)")
+            #expect(Postcards.allowedDomains.contains { host == $0 || host.hasSuffix("." + $0) }, "\(id): \(host)")
+            #expect((1950...2026).contains(s.year), "\(id) year")
+            #expect(!s.firstAuthor.isEmpty && !s.journal.isEmpty, "\(id)")
+        }
+    }
+
+    @Test func noTwoPostcardsShareAStudy() {
+        let pmids = Postcards.studies.values.map(\.pmid)
+        #expect(Set(pmids).count == pmids.count)
+    }
 }

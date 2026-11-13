@@ -63,7 +63,7 @@ struct GuideTests {
         m.acknowledgeFirstNightBriefing()
         #expect(!m.needsFirstNightBriefing && m.firstNightBriefed)
         m.resetGuide()
-        #expect(!m.onboardingDone && m.needsFirstNightBriefing)
+        #expect(m.needsGuide && m.needsFirstNightBriefing)
         m.startNight()                                                   // a started real night also ends it
         #expect(!m.needsFirstNightBriefing)
         _ = clock
@@ -250,6 +250,26 @@ struct GuideTests {
         for (n, expected) in all.enumerated() {                                       // the first that fits, whatever the room
             #expect(GuideStyle.pick(fits: { s in all.firstIndex(of: s)! >= n }) == expected)
         }
+    }
+
+    @Test func theGuideStyleScalesWithTheTextSize() {
+        let base = GuideStyle.candidates[0]
+        #expect(base.scaled(by: 1) == base)                                           // the default size: today's numbers
+        let big = base.scaled(by: 2)
+        #expect(big.textSize == base.textSize * 2 && big.titleSize == base.titleSize * 2)
+        #expect(big.artSize(2) == base.artSize(2) * 2 && big.lineHeight == base.lineHeight)
+        #expect(GuideStyle.candidates.map { $0.scaled(by: 1) } == GuideStyle.candidates)
+    }
+
+    @Test func theStatsOutcomesHaveGlyphsAndShapesForDifferentiateWithoutColor() {
+        for o in [Outcome.complete, .unfinished, .ruins, .excused] { #expect(CalendarGrid.glyph(o) != nil) }
+        #expect(CalendarGrid.glyph(.missed) == nil && CalendarGrid.glyph(nil) == nil)
+        let glyphs = [Outcome.complete, .unfinished, .ruins, .excused].compactMap { CalendarGrid.glyph($0) }
+        #expect(Set(glyphs).count == 4)                                               // one glyph per outcome
+        for o in [Outcome.complete, .unfinished, .ruins, .excused, .missed] {
+            #expect(NightChart.dotShape(o, differentiate: false) == .circle)            // setting off: the plain dot as before
+        }
+        #expect(Set([Outcome.complete, .unfinished, .ruins, .excused].map { "\(NightChart.dotShape($0, differentiate: true))" }).count == 4)
     }
 
     @Test func theLateConfirmationLineReadsInBothLanguages() {

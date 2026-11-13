@@ -9,18 +9,26 @@ struct TownSpriteView: UIViewRepresentable {
     let newest: String?
     let version: Int
     let imageProvider: (String) -> UIImage?
+    var textureProvider: ((String) -> SKTexture?)?     // 13p: textures prepared in the background
+    var accessibilityEntries: [TownAccessibility.Entry] = []     // 13e3: the buildings for VoiceOver
+    var accessibilitySummary = ""
+    var paused = false                       // 13k: the rest screen stops the town's drawing
     let onTap: (Int?) -> Void
 
     func makeCoordinator() -> Coordinator { Coordinator(onTap: onTap) }
 
     func makeUIView(context: Context) -> SKView {
-        let view = SKView()
+        let view = TownSKView()
+        view.entries = accessibilityEntries
+        view.summary = accessibilitySummary
+        view.onActivate = { [weak coordinator = context.coordinator] in coordinator?.onTap($0) }
         view.allowsTransparency = true          // the living sky shows around the floating town
         view.backgroundColor = .clear
         view.ignoresSiblingOrder = false
         view.preferredFramesPerSecond = 60
         let scene = TownScene(size: CGSize(width: 400, height: 800))
         scene.imageProvider = imageProvider
+        scene.textureProvider = textureProvider
         view.presentScene(scene)
         context.coordinator.scene = scene
         context.coordinator.view = view
@@ -43,6 +51,11 @@ struct TownSpriteView: UIViewRepresentable {
 
     func updateUIView(_ view: SKView, context: Context) {
         context.coordinator.onTap = onTap
+        context.coordinator.scene?.suspended = paused
+        if let town = view as? TownSKView {
+            town.entries = accessibilityEntries
+            town.summary = accessibilitySummary
+        }
         guard context.coordinator.shownVersion != version else { return }
         context.coordinator.shownVersion = version
         context.coordinator.scene?.show(model, focus: focus, newest: newest)
@@ -90,9 +103,14 @@ struct TownSpriteView: UIViewRepresentable {
 struct TownTab: View {
     @Environment(AppModel.self) private var model
     @Environment(SpriteLibrary.self) private var sprites
-    @State private var selected: Int?
+    /// The open building sheet, by the building's night (not its index: a rebuilt town can shift the indices – L3).
+    @State private var selected: NightKey?
     @State private var renaming = false
     @State private var showNumbers = false
+    /// L7 (13p): the town is not drawn while its tab is not on screen or the app is not active.
+    @State private var onScreen = true
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         let snapshot = model.townSnapshot
@@ -103,7 +121,12 @@ struct TownTab: View {
                 if let render {
                     TownSpriteView(model: render, focus: model.townFocus, newest: model.townNewest, version: model.townVersion,
                                    imageProvider: { sprites.image(for: $0) },
-                                   onTap: { selected = $0 })
+                                   textureProvider: { sprites.texture(for: $0) },
+                                   accessibilityEntries: snapshot.map { s in
+                                       TownAccessibility.entries(s, name: { model.catalog?[$0]?.displayName }, level: { model.catalog?[$0]?.level }) } ?? [],
+                                   accessibilitySummary: TownAccessibility.summary(buildings: snapshot?.buildings.count ?? 0),
+                                   paused: model.rest.resting || !onScreen || scenePhase != .active,
+                                   onTap: { selected = $0.flatMap { snapshot?.buildings[safe: $0]?.nightKey } })
                         .ignoresSafeArea(edges: [.horizontal, .bottom])
                 }
                 header(snapshot)
@@ -111,14 +134,18 @@ struct TownTab: View {
             .navigationTitle(L("Town"))
             .toolbar(.hidden, for: .navigationBar)          // the header card already names the town
             .renameTownAlert(isPresented: $renaming)
-            .onAppear { if DevArgs.list.contains("-openTownNumbers") { showNumbers = true } }   // screenshots
+            .onAppear {
+                onScreen = true
+                if DevArgs.list.contains("-openTownNumbers") { showNumbers = true }          // screenshots
+            }
+            .onDisappear { onScreen = false }
             .sheet(isPresented: $showNumbers) {
                 if let snapshot { TownNumbersSheet(town: snapshot) }
             }
-            .sheet(item: Binding(get: { selected.map(SelectedBuilding.init) }, set: { selected = $0?.index })) { sel in
-                if let b = snapshot?.buildings[safe: sel.index] {
+            .sheet(item: Binding(get: { selected.map(SelectedBuilding.init) }, set: { selected = $0?.key })) { sel in
+                if let b = snapshot?.building(forNight: sel.key) {
                     BuildingSheet(building: b)
-                        .presentationDetents([.fraction(0.42)])
+                        .presentationDetents(typeSize.isAccessibilitySize ? [.fraction(0.42), .large] : [.fraction(0.42)])
                 }
             }
         }
@@ -137,18 +164,26 @@ struct TownTab: View {
                     .labelStyle(TrailingIconLabelStyle())
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(L("Town name: \(model.townName)"))
             .accessibilityHint(L("Rename the town"))
             Text(TownStats.sizeName(residents: people)).font(.caption).foregroundStyle(.secondary)
             Button {
                 showNumbers = true
             } label: {
-                HStack(spacing: 14) {
-                    Label { Text(verbatim: "\(count)") } icon: { Image(systemName: "building.2.fill") }
-                    Label { Text(verbatim: "\(people)") } icon: { Image(systemName: "person.2.fill") }
-                    Text(verbatim: "🪙 \(model.coins)")
+                // the numbers never break across lines; at accessibility sizes the three items are stacked (13e2)
+                let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 4)) : AnyLayout(HStackLayout(spacing: 14))
+                layout {
+                    Label { Text(verbatim: "\(count)").lineLimit(1).fixedSize(horizontal: true, vertical: false) }
+                        icon: { Image(systemName: "building.2.fill") }
+                    Label { Text(verbatim: "\(people)").lineLimit(1).fixedSize(horizontal: true, vertical: false) }
+                        icon: { Image(systemName: "person.2.fill") }
+                    Text(verbatim: "🪙 \(model.coins)").lineLimit(1).fixedSize(horizontal: true, vertical: false)
                 }
             }
             .buttonStyle(.plain)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(verbatim: "\(L("Complete buildings")): \(count), \(L("Residents")): \(people), \(L("Coins")): \(model.coins)"))
+            .accessibilityAddTraits(.isButton)
             .accessibilityHint(L("The town in numbers"))
             if (snapshot?.buildings.isEmpty ?? true) {
                 Text(L("Your first building appears after your first night 🌙")).font(.caption)
@@ -169,8 +204,13 @@ struct TrailingIconLabelStyle: LabelStyle {
 }
 
 private struct SelectedBuilding: Identifiable {
-    let index: Int
-    var id: Int { index }
+    let key: NightKey
+    var id: NightKey { key }
+}
+
+extension TownSnapshot {
+    /// The building of a night – the stable handle for a selection, whatever a rebuild did to the order (L3).
+    func building(forNight key: NightKey) -> TownBuilding? { buildings.first { $0.nightKey == key } }
 }
 
 struct BuildingSheet: View {
@@ -178,24 +218,39 @@ struct BuildingSheet: View {
     let building: TownBuilding
 
     var body: some View {
+        // as before at the default size; a text too tall for the sheet (big text sizes) scrolls instead (13e2)
+        ViewThatFits(in: .vertical) {
+            content
+            ScrollView { content }.scrollBounceBehavior(.basedOnSize)
+        }
+    }
+
+    private var content: some View {
         let name = model.catalog?[building.buildingId]?.displayName ?? L("Building")
-        VStack(spacing: 10) {
+        let spoken = TownAccessibility.sentence(of: building, name: name, level: model.catalog?[building.buildingId]?.level)
+        return VStack(spacing: 10) {
             BuildingImage(id: sheetSprite, progress: building.state == .unfinished ? 0.6 : 1, maxHeight: 130)
-            Text(name).font(.title2.bold())
-            Text(L("Night of \(Fmt.fullDate(building.nightKey))")).foregroundStyle(.secondary)
-            let residents = Population.residents(of: building)
-            if residents > 0 {
-                Label(L("\(residents) people live here"), systemImage: "person.2.fill").foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            VStack(spacing: 10) {
+                Text(name).font(.title2.bold())
+                Text(L("Night of \(Fmt.fullDate(building.nightKey))")).foregroundStyle(.secondary)
+                let residents = Population.residents(of: building)
+                if residents > 0 {
+                    Label(L("\(residents) people live here"), systemImage: "person.2.fill").foregroundStyle(.secondary)
+                }
+                switch building.state {
+                case .complete:
+                    Label(building.repairedLater ? L("Repaired 🛠️ – the ruin is a building again")
+                          : building.completedLater ? L("Finished later 💪") : L("Complete 🎉"), systemImage: "checkmark.seal.fill")
+                        .foregroundStyle(Color.readableGreen)
+                case .unfinished:
+                    Label(L("Unfinished – your next good night will finish it"), systemImage: "hammer.fill").foregroundStyle(Color.readableOrange)
+                case .ruins:
+                    Label(L("Ruins – part of the town too 🌱"), systemImage: "leaf.fill").foregroundStyle(.secondary)
+                }
             }
-            switch building.state {
-            case .complete:
-                Label(building.repairedLater ? L("Repaired 🛠️ – the ruin is a building again")
-                      : building.completedLater ? L("Finished later 💪") : L("Complete 🎉"), systemImage: "checkmark.seal.fill")
-                    .foregroundStyle(.green)
-            case .unfinished:
-                Label(L("Unfinished – your next good night will finish it"), systemImage: "hammer.fill").foregroundStyle(.orange)
-            case .ruins:
-                Label(L("Ruins – part of the town too 🌱"), systemImage: "leaf.fill").foregroundStyle(.secondary)
+            .accessibilityRepresentation {                      // 13y2: one element with the whole card, not line by line
+                Text(verbatim: spoken).accessibilityIdentifier("buildingSheetSummary")
             }
         }
         .padding()
@@ -226,6 +281,7 @@ enum TownStats {
 /// "The town in numbers": explains why the header's building count and the Stats' "nights built" can differ.
 struct TownNumbersSheet: View {
     @Environment(AppModel.self) private var model
+    @ScaledMetric(relativeTo: .body) private var emojiWidth: CGFloat = 26      // the emoji column grows with the text size (13e2)
     @Environment(\.dismiss) private var dismiss
     let town: TownSnapshot
 
@@ -261,7 +317,7 @@ struct TownNumbersSheet: View {
 
     private func row(_ icon: String, _ title: String, _ value: Int) -> some View {
         HStack {
-            Image(systemName: icon).frame(width: 26)
+            Image(systemName: icon).frame(width: emojiWidth)
             Text(title)
             Spacer()
             Text(verbatim: "\(value)").bold().monospacedDigit()

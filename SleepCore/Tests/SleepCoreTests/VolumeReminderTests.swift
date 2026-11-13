@@ -1,0 +1,31 @@
+import Testing
+@testable import SleepCore
+
+@Suite("Volume reminder (13r)")
+struct VolumeReminderTests {
+    @Test func zeroIsOff() { #expect(VolumeReminder.level(volume: 0) == .off) }
+    @Test func lowSteps() {
+        #expect(VolumeReminder.level(volume: 0.0625) == .low)
+        #expect(VolumeReminder.level(volume: 0.25) == .low)
+    }
+    @Test func aboveThresholdIsNothing() {
+        #expect(VolumeReminder.level(volume: 0.3125) == nil)
+        #expect(VolumeReminder.level(volume: 1) == nil)
+        #expect(VolumeReminder.level(volume: 1.5) == nil)
+    }
+    @Test func roundsToWholePercent() {
+        #expect(VolumeReminder.level(volume: 0.2500001) == .low)
+        #expect(VolumeReminder.level(volume: 0.2499) == .low)
+        #expect(VolumeReminder.level(volume: 0.2551) == nil)
+        #expect(VolumeReminder.level(volume: 0.004) == .off)
+    }
+    @Test func alarmAudibility() {
+        for v in [0, 0.004, 0.05, 0.0625, 0.094] { #expect(!VolumeReminder.alarmAudible(volume: v), "\(v)") }
+        for v in [0.095, 0.10, 0.125, 1.0, 1.5, -1, .nan, .infinity] { #expect(VolumeReminder.alarmAudible(volume: v), "\(v)") }
+    }
+    @Test func unknownIsNothing() {
+        #expect(VolumeReminder.level(volume: -1) == nil)
+        #expect(VolumeReminder.level(volume: .nan) == nil)
+        #expect(VolumeReminder.level(volume: .infinity) == nil)
+    }
+}

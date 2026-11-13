@@ -84,7 +84,8 @@ struct BackupFile: Codable, Equatable {
         var bedtime: Date
         var wake: Date
         var buildingId: String
-        var events: [NightEvent]
+        /// Lenient (B61): an event kind this build does not know is skipped, never a reason to refuse the whole night / file.
+        @LossyNightEvents var events: [NightEvent]
         var setupGrace: Double
         var outcomeRaw: String?
         var awaySeconds: Double

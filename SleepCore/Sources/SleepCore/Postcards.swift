@@ -14,6 +14,29 @@ public struct PostcardSource: Equatable, Sendable {
     public let url: String
 }
 
+/// The study behind a postcard (step 13c): the longer part of the same card explains why the tip helps, what ONE real study found
+/// and how strong the evidence is. Only the citation lives here (it is not translated); the texts are in the app
+/// (`PostcardText`). Every study was opened on PubMed and checked against the finding on the postcard.
+public struct PostcardStudy: Equatable, Sendable {
+    /// The first author's surname ("Chang"); the card reads "Chang et al., PNAS, 2015".
+    public let firstAuthor: String
+    /// The second author's surname when the study has exactly two authors ("Crowley and Carskadon"); nil otherwise.
+    public let secondAuthor: String?
+    /// A short journal name a reader knows ("PNAS").
+    public let journal: String
+    /// The year of publication.
+    public let year: Int
+    /// The PubMed id (digits only); the link is built from it, so it can only point to PubMed.
+    public let pmid: String
+    /// The study's PubMed page.
+    public var url: String { "https://pubmed.ncbi.nlm.nih.gov/\(pmid)/" }
+
+    public init(firstAuthor: String, secondAuthor: String? = nil, journal: String, year: Int, pmid: String) {
+        self.firstAuthor = firstAuthor; self.secondAuthor = secondAuthor
+        self.journal = journal; self.year = year; self.pmid = pmid
+    }
+}
+
 public enum Postcards {
     /// The sources by postcard id; exactly `BoxCatalog.ids(.postcard)`.
     public static let sources: [String: PostcardSource] = [
@@ -48,6 +71,42 @@ public enum Postcards {
         "postcard-29": PostcardSource(name: "NIH MedlinePlus", url: "https://medlineplus.gov/healthysleep.html"),  // don't nap after 3 p.m.
         "postcard-30": PostcardSource(name: "NIH NHLBI", url: "https://www.nhlbi.nih.gov/health/sleep-deprivation/healthy-sleep-habits"),  // "a dim night light is fine, if needed"
     ]
+
+    /// The studies behind the postcards, by postcard id; a postcard not listed here has no study part yet.
+    public static let studies: [String: PostcardStudy] = [
+        "postcard-01": PostcardStudy(firstAuthor: "Phillips", journal: "Sci Rep", year: 2017, pmid: "28607474"),  // irregular sleep went with a later body clock and lower grades in 61 students; checked 2026-11-02
+        "postcard-02": PostcardStudy(firstAuthor: "Crowley", secondAuthor: "Carskadon", journal: "Chronobiol Int", year: 2010, pmid: "20795887"),  // a typical weekend schedule shifted teenagers' body clock about 45 min later; checked 2026-11-02
+        "postcard-03": PostcardStudy(firstAuthor: "Watson", journal: "Sleep", year: 2015, pmid: "26039963"),  // two US sleep societies agreed adults need 7 hours or more; checked 2026-11-02
+        "postcard-04": PostcardStudy(firstAuthor: "Van Dongen", journal: "Sleep", year: 2003, pmid: "12683469"),  // 14 nights of 6 hours or less dulled performance while people did not notice; checked 2026-11-02
+        "postcard-05": PostcardStudy(firstAuthor: "Chang", journal: "PNAS", year: 2015, pmid: "25535358"),  // reading on a light-emitting e-reader vs print: slower to fall asleep, less alert next morning; checked 2026-11-02
+        "postcard-06": PostcardStudy(firstAuthor: "Harmat", journal: "J Adv Nurs", year: 2008, pmid: "18426457"),  // relaxing music at bedtime improved sleep quality in 94 students; an audiobook did not; checked 2026-11-02
+        "postcard-07": PostcardStudy(firstAuthor: "Haghayegh", journal: "Sleep Med Rev", year: 2019, pmid: "31102877"),  // review of 17 studies: a warm bath 1 to 2 hours before bed went with better sleep; checked 2026-11-02
+        "postcard-08": PostcardStudy(firstAuthor: "Gooley", journal: "J Clin Endocrinol Metab", year: 2011, pmid: "21193540"),  // room light before bedtime delayed and shortened the sleep hormone; checked 2026-11-02
+        "postcard-09": PostcardStudy(firstAuthor: "Scullin", journal: "J Exp Psychol Gen", year: 2018, pmid: "29058942"),  // writing a to-do list for 5 min before bed helped people fall asleep faster; checked 2026-11-02
+        "postcard-10": PostcardStudy(firstAuthor: "Rusch", journal: "Ann N Y Acad Sci", year: 2019, pmid: "30575050"),  // review of 18 trials: mindfulness meditation improved sleep quality; checked 2026-11-02
+        "postcard-11": PostcardStudy(firstAuthor: "Gardiner", journal: "Sleep Med Rev", year: 2023, pmid: "36870101"),  // review of 24 studies: caffeine cut sleep by about 45 min; a cup of coffee at least 8.8 h before bed; checked 2026-11-02
+        "postcard-12": PostcardStudy(firstAuthor: "McAlpine", journal: "J Behav Med", year: 2024, pmid: "37702911"),  // 74 students, wrist monitor: about 14 min less sleep after an unpleasant conversation before bed; checked 2026-11-02
+        "postcard-13": PostcardStudy(firstAuthor: "Drake", journal: "J Clin Sleep Med", year: 2013, pmid: "24235903"),  // 12 adults, 400 mg caffeine at 0, 3 or 6 h before bed: over an hour less sleep each time; checked 2026-11-02
+        "postcard-14": PostcardStudy(firstAuthor: "Radwan", journal: "Sleep Health", year: 2015, pmid: "29073401"),  // review of 24 controlled trials: a medium-firm, self-adjusted mattress was best for comfort and sleep quality; checked 2026-11-02
+        "postcard-15": PostcardStudy(firstAuthor: "St-Onge", journal: "J Clin Sleep Med", year: 2016, pmid: "26156950"),  // 26 adults in a sleep lab: more energy from sugar went with more arousals that night; checked 2026-11-02
+        "postcard-16": PostcardStudy(firstAuthor: "Enomoto", journal: "J Physiol Anthropol", year: 2026, pmid: "41975458"),  // 13 young women: dinner 1 h before bed vs 5 h – shorter, more broken sleep after the late dinners; checked 2026-11-02
+        "postcard-18": PostcardStudy(firstAuthor: "Basner", journal: "Sleep Health", year: 2023, pmid: "37076419"),  // 62 adults at home: sleep efficiency about 3 percent lower in the warmest fifth of bedroom readings; checked 2026-11-02
+        "postcard-19": PostcardStudy(firstAuthor: "Hu", journal: "Crit Care", year: 2010, pmid: "20398302"),  // 14 healthy volunteers in simulated hospital noise and light: an eye mask and earplugs gave more REM sleep, fewer arousals; checked 2026-11-02
+        "postcard-20": PostcardStudy(firstAuthor: "Riedy", journal: "Sleep Med Rev", year: 2021, pmid: "33007706"),  // review of 38 studies: evidence that continuous noise improves sleep is very low; results vary; checked 2026-11-02
+        "postcard-21": PostcardStudy(firstAuthor: "Heo", journal: "J Psychiatr Res", year: 2017, pmid: "28017916"),  // 22 adults, 2.5 h of phone games: less sleepy with normal screen light than with less blue light; checked 2026-11-02
+        "postcard-22": PostcardStudy(firstAuthor: "Hjetland", journal: "Front Psychiatry", year: 2025, pmid: "40270574"),  // survey of about 40,000 students: each extra hour of screens in bed went with about 24 min less sleep; checked 2026-11-02
+        "postcard-23": PostcardStudy(firstAuthor: "Espie", journal: "Behav Sleep Med", year: 2026, pmid: "42669058"),  // 44 adults, a quarter-of-an-hour rule for lying awake: faster sleep onset in diaries, home recordings unchanged; checked 2026-11-02
+        "postcard-24": PostcardStudy(firstAuthor: "Tang", journal: "J Behav Ther Exp Psychiatry", year: 2007, pmid: "16793001"),  // 60 good and poor sleepers: watching a clock brought more worry and slower sleep onset; checked 2026-11-02
+        "postcard-25": PostcardStudy(firstAuthor: "Kredlow", journal: "J Behav Med", year: 2015, pmid: "25596964"),  // review of 66 studies: regular exercise went with better sleep quality; intensity made no clear difference; checked 2026-11-02
+        "postcard-26": PostcardStudy(firstAuthor: "Stutz", journal: "Sports Med", year: 2019, pmid: "30374942"),  // review of 23 studies: one evening workout did not harm sleep; only hard exercise ending within 1 h of bed might; checked 2026-11-02
+        "postcard-27": PostcardStudy(firstAuthor: "Boubekri", journal: "J Clin Sleep Med", year: 2014, pmid: "24932139"),  // 49 office workers: windows at work went with better sleep, about 46 min more in the 21 with trackers; checked 2026-11-02
+        "postcard-28": PostcardStudy(firstAuthor: "Weighall", secondAuthor: "Kellar", journal: "Emerg Top Life Sci", year: 2023, pmid: "39288097"),  // review of 19 reviews: sleep strengthens memories, less so in older adults; checked 2026-11-02
+        "postcard-29": PostcardStudy(firstAuthor: "Boukhris", journal: "J Sleep Res", year: 2026, pmid: "40537913"),  // 14 student athletes: naps of 25 or 90 min ending at 15:00 did not change night sleep; checked 2026-11-02
+        "postcard-30": PostcardStudy(firstAuthor: "Mason", journal: "PNAS", year: 2022, pmid: "35286195"),  // 20 adults: one night with room light gave less deep and REM sleep and a faster heart rate; checked 2026-11-02
+    ]
+
+    /// The study of a postcard; nil when it has no study part (yet).
+    public static func study(for id: String) -> PostcardStudy? { studies[id] }
 
     /// The source of a postcard; nil for an unknown id (e.g. one added by a later build).
     public static func source(for id: String) -> PostcardSource? { sources[id] }

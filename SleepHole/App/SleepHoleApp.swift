@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UserNotifications
 
 @main
 struct SleepHoleApp: App {
@@ -9,6 +10,7 @@ struct SleepHoleApp: App {
     @State private var model: AppModel
 
     init() {
+        UNUserNotificationCenter.current().delegate = Notifications.foregroundDelegate     // 13ag: the alarm in the foreground
         // SYNC: with an iCloud container among the entitlements SwiftData would switch on CloudKit mirroring by itself
         // (`.automatic`) and refuse to load this store – the town travels as files (`ICloudSyncTransport`), never through
         // CloudKit. The configuration has no name, so it is the same `default.store` as before.
@@ -53,6 +55,9 @@ struct SleepHoleApp: App {
                     await model.refreshTimeSensitive()
                     await Self.askForNotificationsIfGuideDone(model)
                 }
+                .task { prepareSprites() }
+                .onChange(of: model.townVersion) { prepareSprites() }
+                .onChange(of: model.language) { prepareSprites() }
                 .task {
                     // phase SYNC: the first read of the sync place (a fresh install waits for it before the guide)
                     await model.sync.launch()
@@ -65,6 +70,12 @@ struct SleepHoleApp: App {
                     Task { await model.refreshTimeSensitive() }
                 }
         }
+    }
+
+    /// Decodes the town's sprites off the main thread (13p, item 2), so the first visit of the Town and Stats finds them ready.
+    private func prepareSprites() {
+        let ids = model.spriteIdsToPrepare, language = model.language, library = sprites
+        Task.detached(priority: .utility) { library.prepare(ids: ids, language: language) }
     }
 
     /// Asks for the notification permission and schedules the reminders – only once the guide is done (before that the

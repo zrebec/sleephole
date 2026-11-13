@@ -164,22 +164,24 @@ enum Notifications {
     /// Exactly ONE notification per trip (owner 2026-10-09: "each one must have its meaning"). Apps cannot vibrate in
     /// the background – the notification's sound is what vibrates the phone. `.default`, not `.defaultCritical`:
     /// critical sounds need an Apple entitlement and stay silent without it (owner 2026-09-30).
-    static func nudge(tolerance: TimeInterval) {
-        schedule("nudge", at: Date() + 0.2, title: L("⚠️ Heads up! SleepHole must stay open"),
+    /// `at` (13ae, B56): a trip begun inside the setup gets the same warning scheduled for the moment the setup ends + the
+    /// notice delay; the default is "now" (a trip detected after the setup).
+    static func nudge(tolerance: TimeInterval, at date: Date = Date() + 0.2) {
+        schedule("nudge", at: date, title: L("⚠️ Heads up! SleepHole must stay open"),
                  body: L("Come back within \(Int(tolerance)) seconds so tonight's building goes on 🏗️"), sound: .default)
     }
 
     /// The lock-screen variant of `nudge` (same identifier): "come back" would be wrong advice there – unlocking
     /// needs Face ID or the passcode – the fast, correct reaction is to switch the screen off. One notification only.
-    static func lockScreenNudge(tolerance: TimeInterval) {
-        schedule("nudge", at: Date() + 0.2, title: L("💤 Your phone is off duty now"),
+    static func lockScreenNudge(tolerance: TimeInterval, at date: Date = Date() + 0.2) {
+        schedule("nudge", at: date, title: L("💤 Your phone is off duty now"),
                  body: L("Switch the screen off within \(Int(tolerance)) seconds so tonight's building goes on 🏗️"), sound: .default)
     }
 
     /// Gentle mode (owner 2026-10-09, "care instead of enforcement"): the one calm reminder for using the phone on the
     /// lock screen. No seconds, no building at stake – the building stays.
-    static func lockScreenReminder() {
-        schedule(lockReminderId, at: Date() + 0.2, title: L("💤 Your phone is off duty now"),
+    static func lockScreenReminder(at date: Date = Date() + 0.2) {
+        schedule(lockReminderId, at: date, title: L("💤 Your phone is off duty now"),
                  body: L("Switch the screen off and the calm night goes on."), sound: .default)
     }
 
@@ -193,8 +195,8 @@ enum Notifications {
     /// away counts as leaving it): the owner has `tolerance` seconds to open it again. One notification. Scheduled in
     /// the last moments of the process – the notification centre keeps it, so it still arrives. A restart of the phone
     /// sends the same notice; the relaunch cancels these and recognises the restart by the boot time.
-    static func closed(tolerance: TimeInterval) {
-        schedule("closed", at: Date() + 0.2, title: L("⚠️ Heads up! SleepHole was closed"),
+    static func closed(tolerance: TimeInterval, at date: Date = Date() + 0.2) {
+        schedule("closed", at: date, title: L("⚠️ Heads up! SleepHole was closed"),
                  body: L("Open it within \(Int(tolerance)) seconds so tonight's building goes on 🏗️"), sound: .default)
     }
 
@@ -222,11 +224,37 @@ enum Notifications {
         return fire < log.window.wake ? fire : nil
     }
 
-    /// At the alarm: a silent, time-sensitive notification lights up the lock screen
-    /// (apps cannot switch the screen on themselves). The sound comes from the app.
-    static func alarmScreen() {
+    /// At the alarm: a time-sensitive notification lights up the lock screen (apps cannot switch the screen on
+    /// themselves). 13ag: silent while our own alarm sound can be heard (it comes from the app); with `sound` (the
+    /// alarm sound, ringer volume, taps the Watch) when the media volume is too low for ours to be heard.
+    static func alarmScreen(sound: UNNotificationSound? = nil) {
         schedule("alarm-screen", at: Date() + 0.2, title: L("⏰ Good morning!"),
-                 body: L("Shake your phone or enter your code in SleepHole."), sound: nil)
+                 body: L("Shake your phone or enter your code in SleepHole."), sound: sound)
+    }
+
+    /// 13ag: what iOS shows while SleepHole is in the FOREGROUND (without a delegate it shows nothing). Only the
+    /// notifications that carry the alarm sound are presented; every warning and reminder stays as quiet as before.
+    static func foregroundPresentation(id: String, hasSound: Bool) -> UNNotificationPresentationOptions {
+        if backupAlarmIds.contains(id) || (id == "alarm-screen" && hasSound) { return [.banner, .list, .sound] }
+        return []
+    }
+
+    /// 13ag: presents the alarm notifications in the foreground. Only `willPresent` – a tap keeps the default behaviour.
+    final class ForegroundDelegate: NSObject, UNUserNotificationCenterDelegate, @unchecked Sendable {
+        func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification,
+                                    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+            completionHandler(Notifications.foregroundPresentation(id: notification.request.identifier,
+                                                                   hasSound: notification.request.content.sound != nil))
+        }
+    }
+    /// Strong reference: the center holds its delegate weakly.
+    static let foregroundDelegate = ForegroundDelegate()
+
+    /// 13ag / 13ah: the banner is silent while our alarm can be heard, and also when a system alarm is armed (it then rings
+    /// at once – never two melodies). Only when ours cannot be heard (media volume below 10 %) AND no system alarm is armed
+    /// does it carry the alarm sound, which plays at the ringer volume and taps the Apple Watch.
+    static func alarmScreenSound(audible: Bool, systemAlarmArmed: Bool, alarmFile: String) -> UNNotificationSound? {
+        (audible || systemAlarmArmed) ? nil : UNNotificationSound(named: UNNotificationSoundName(alarmFile))
     }
 
     // the "-2" ids are no longer scheduled; they are still cancelled for a notification a previous build left pending
@@ -238,6 +266,26 @@ enum Notifications {
     static func cancelNight() {
         cancel(nightIds.filter { $0 != collapsedId })
         cancelCollapsed()
+    }
+
+    /// The notification permission and the Time Sensitive switch as enum names, for the diagnostic track (13ab).
+    static func diagnosticSummary() async -> String {
+        let s = await center.notificationSettings()
+        let auth: String = switch s.authorizationStatus {
+        case .notDetermined: "notDetermined"
+        case .denied: "denied"
+        case .authorized: "authorized"
+        case .provisional: "provisional"
+        case .ephemeral: "ephemeral"
+        @unknown default: "unknown"
+        }
+        let ts: String = switch s.timeSensitiveSetting {
+        case .notSupported: "notSupported"
+        case .disabled: "disabled"
+        case .enabled: "enabled"
+        @unknown default: "unknown"
+        }
+        return "notif=\(auth) ts=\(ts)"
     }
 
     /// "allowed" / "denied" / "not allowed yet" for the Settings screen.

@@ -99,10 +99,23 @@ NAME_EN = {
     "Ruina": "Ruins", "Zarastená ruina": "Overgrown ruins", "Žeriav": "Crane",
 }
 
+# Czech names (build 13b), keyed like NAME_EN by the Slovak name; the app falls back to the Slovak name without one.
+NAME_CS = {
+    "Rodinný dom": "Rodinný dům", "Bytový dom": "Bytový dům", "Veľký bytový dom": "Velký bytový dům",
+    "Malý park": "Malý park", "Park s fontánou": "Park s fontánou", "Záhrada so sochou": "Zahrada se sochou",
+    "Park s jazierkom": "Park s jezírkem", "Osvetlená ulica": "Osvětlená ulice", "Knižnica": "Knihovna",
+    "Mestská knižnica": "Městská knihovna", "Múzeum": "Muzeum", "Múzeum umenia": "Muzeum umění", "Radnica": "Radnice",
+    "Škola": "Škola", "Hasičská stanica": "Hasičská stanice", "Polícia": "Policie", "Nemocnica": "Nemocnice",
+    "Mrakodrap": "Mrakodrap", "Výšková budova": "Výšková budova", "Auto": "Auto", "Cesta": "Silnice", "Tráva": "Tráva",
+    "Dlažba": "Dlažba", "Stavebný pozemok": "Stavební pozemek", "Lešenie": "Lešení", "Stavenisko": "Staveniště",
+    "Ruina": "Ruina", "Zarastená ruina": "Zarostlá ruina", "Žeriav": "Jeřáb",
+}
+
 
 def add(rid, level, kind, name, fp, parts, signs=None, shadow=True, connects=None):
     assert all(r["id"] != rid for r in recipes), rid
-    r = {"id": rid, "level": level, "kind": kind, "nameSK": name, "nameEN": NAME_EN[name], "footprint": [fp, fp],
+    r = {"id": rid, "level": level, "kind": kind, "nameSK": name, "nameEN": NAME_EN[name], "nameCS": NAME_CS[name],
+         "footprint": [fp, fp],
          "parts": parts}
     if connects:
         r["connects"] = "".join(d for d in "NESW" if d in connects)
@@ -115,8 +128,11 @@ def add(rid, level, kind, name, fp, parts, signs=None, shadow=True, connects=Non
 
 def sign(text, color, height=0.72, text_color="#ffffff"):
     """`text` = {"sk": …, "en": …}: the Slovak sign is the normal sprite, the English one is rendered as
-    `<id>.en.png` (catalog `fileEN`) with the same bounds/anchor."""
-    return {"text": text["sk"], "textEN": text["en"], "color": color, "height": height, "textColor": text_color}
+    `<id>.en.png` (catalog `fileEN`) with the same bounds/anchor; optional "cs" likewise → `.cs.png`."""
+    r = {"text": text["sk"], "textEN": text["en"], "color": color, "height": height, "textColor": text_color}
+    if text.get("cs") and text["cs"] != text["sk"]:
+        r["textCS"] = text["cs"]   # Czech variant `<id>.cs.png` (catalog `fileCS`); omitted when equal to Slovak
+    return r
 
 
 # ───────────────────────── LEVEL 1 – ordinary buildings ─────────────────────────
@@ -199,23 +215,23 @@ add("l2-museum-a", 2, "building", "Múzeum", 2, [
     box(1.5, 0.05, 0.32, PLAZA, z=0.72),
     *[part(BK + "column", x=x, z=0.74, y=0.05, scale=0.24) for x in (-0.6, -0.2, 0.2, 0.6)],
     part(NAT + "statue_column", x=0.85, z=0.85, scale=0.5),
-], signs=[sign({"sk": "MÚZEUM", "en": "MUSEUM"}, "#7b4a2a", height=0.4)])
+], signs=[sign({"sk": "MÚZEUM", "en": "MUSEUM", "cs": "MUZEUM"}, "#7b4a2a", height=0.4)])
 add("l2-museum-b", 2, "building", "Múzeum umenia", 2, [
     part(COM + "building-e", z=-0.3, scale=1.0, texture=COM_VAR % "b", center=True),
     *[part(BK + "column-wide", x=x, z=0.35, scale=0.3) for x in (-0.55, 0, 0.55)],
     part(NAT + "statue_obelisk", x=-0.7, z=0.75, scale=0.7),
     part(SUB + "tree-small", x=0.75, z=0.75),
-], signs=[sign({"sk": "GALÉRIA", "en": "GALLERY"}, "#6b3f8f", height=0.8)])
+], signs=[sign({"sk": "GALÉRIA", "en": "GALLERY", "cs": "GALERIE"}, "#6b3f8f", height=0.8)])
 add("l2-library-a", 2, "building", "Knižnica", 2, [
     part(MOD + "building-sample-house-a", x=-0.2, z=-0.1, scale=0.85, center=True),
     part(HOL + "bench", x=0.35, z=0.7, scale=0.3),
     part(SUB + "tree-large", x=-0.75, z=0.7), part(SUB + "planter", x=0.75, z=0.35),
-], signs=[sign({"sk": "KNIŽNICA", "en": "LIBRARY"}, "#2f7a55", height=0.5)])
+], signs=[sign({"sk": "KNIŽNICA", "en": "LIBRARY", "cs": "KNIHOVNA"}, "#2f7a55", height=0.5)])
 add("l2-library-b", 2, "building", "Mestská knižnica", 2, [
     part(COM + "building-k", z=-0.3, scale=0.9, texture=COM_VAR % "a", center=True),
     part(HOL + "bench", x=-0.3, z=0.72, scale=0.3),
     part(SUB + "tree-large", x=0.75, z=0.72), part(SUB + "tree-small", x=-0.8, z=0.75),
-], signs=[sign({"sk": "KNIŽNICA", "en": "LIBRARY"}, "#2f7a55", height=0.55)])
+], signs=[sign({"sk": "KNIŽNICA", "en": "LIBRARY", "cs": "KNIHOVNA"}, "#2f7a55", height=0.55)])
 
 # ───────────────────────── LEVEL 3 – civic buildings ─────────────────────────
 add("l3-townhall", 3, "building", "Radnica", 2, [
@@ -229,7 +245,7 @@ add("l3-townhall", 3, "building", "Radnica", 2, [
     box(0.02, 0.2, 0.32, "#f2c14e", x=0.75, z=0.59, y=0.82),
     box(0.024, 0.06, 0.32, "#3a9a5b", x=0.75, z=0.59, y=0.89),
     box(0.03, 0.2, 0.03, "#8a6a3a", x=-0.62, z=0.78), box(0.03, 0.2, 0.03, "#8a6a3a", x=-0.08, z=0.78),
-], signs=[{**sign({"sk": "RADNICA", "en": "TOWN HALL"}, "#b8862b"), "pos": [-0.35, 0.24, 0.8]}])
+], signs=[{**sign({"sk": "RADNICA", "en": "TOWN HALL", "cs": "RADNICE"}, "#b8862b"), "pos": [-0.35, 0.24, 0.8]}])
 add("l3-school", 3, "building", "Škola", 2, [
     part(COM + "building-k", z=-0.35, scale=0.9, texture=COM_VAR % "b", center=True),
     box(0.5, 0.05, 0.4, "#e8d28a", x=0.55, z=0.55),
@@ -246,12 +262,12 @@ add("l3-police", 3, "building", "Polícia", 2, [
     part(COM + "building-c", x=-0.2, z=-0.3, scale=1.0, center=True),
     part(COM + "building-a", x=0.6, z=-0.45, scale=0.8, center=True),
     part(CAR + "police", x=0.45, z=0.6, rot=90, scale=CAR_SCALE),
-], signs=[sign({"sk": "POLÍCIA", "en": "POLICE"}, "#1f4fa3", height=0.7)])
+], signs=[sign({"sk": "POLÍCIA", "en": "POLICE", "cs": "POLICIE"}, "#1f4fa3", height=0.7)])
 add("l3-hospital", 3, "building", "Nemocnica", 2, [
     plate(2, PLAZA),
     part(COM + "building-j", z=-0.3, scale=0.85, center=True),
     part(CAR + "ambulance", x=0.55, z=0.65, rot=90, scale=CAR_SCALE),
-], signs=[sign({"sk": "NEMOCNICA", "en": "HOSPITAL"}, "#ffffff", height=0.82, text_color="#d8342b")])
+], signs=[sign({"sk": "NEMOCNICA", "en": "HOSPITAL", "cs": "NEMOCNICE"}, "#ffffff", height=0.82, text_color="#d8342b")])
 
 # ───────────────────────── LEVEL 4 – skyscrapers ─────────────────────────
 for c in "abcde":

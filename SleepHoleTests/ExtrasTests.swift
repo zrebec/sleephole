@@ -331,3 +331,19 @@ struct ExtrasTests {
         Notifications.scheduleLockEnded(on: nil, wake: TimeOfDay(6, 30))
     }
 }
+
+#if DEBUG
+@Suite struct BackgroundVibrationProbeTests {
+    @Test func scheduleIsCountdownThenThreeCallsThenStop() {
+        let s = BackgroundVibrationProbe.steps
+        #expect(s.map(\.offset) == [20, 26, 32, 38])
+        #expect(s.map(\.kind) == [.systemVibrate, .alertVibrate, .coreHaptics, .stop])
+    }
+
+    @Test func notStartableWhileANightOrNapRunsOrTheTestRuns() {
+        #expect(BackgroundVibrationProbe.canStart(nightOrNapRunning: false, testRunning: false))
+        #expect(!BackgroundVibrationProbe.canStart(nightOrNapRunning: true, testRunning: false))
+        #expect(!BackgroundVibrationProbe.canStart(nightOrNapRunning: false, testRunning: true))
+    }
+}
+#endif

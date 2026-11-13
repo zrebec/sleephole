@@ -3,15 +3,19 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
-    @State private var showGuide = false
     @State private var showRules = false
     @State private var notificationStatus = "…"
     /// The system alarm's consent (phase F6b); read when the screen opens and after every change.
     @State private var alarmConsent: SystemAlarmConsent = .unavailable
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var preview = SoundPreview()
     @State private var importing = false
-    @State private var pendingRestore: BackupFile?
+    /// On the model, so a language switch (which rebuilds this view) keeps it (L5).
+    private var pendingRestore: BackupFile? {
+        get { model.pendingRestore }
+        nonmutating set { model.pendingRestore = newValue }
+    }
     @State private var backupMessage: String?
     @State private var renaming = false
     #if DEBUG
@@ -27,9 +31,26 @@ struct SettingsView: View {
     @State private var textsView = DevArgs.list.contains("-openTextsView")
     /// Dev aid: `-openBoxContents [postcards|decorations|cat|skies]` opens Developer → Box contents at once.
     @State private var boxContents = DevArgs.list.contains("-openBoxContents")
+    /// Dev aid: `-openVibrationTest` opens Developer → Vibration test at once (screenshots; `-startVibrationProbe`
+    /// starts the background test, `-fakeVibrationResult` shows a finished list).
+    @State private var vibrationTest = DevArgs.list.contains("-openVibrationTest")
     #endif
 
+    /// "15s" / "at once" for the alarm's rise time; seconds never have a space (all languages).
+    static func secondsText(_ n: Int) -> String { n == 0 ? L("at once") : "\(n)s" }
+
     /// The warning triangle on Today: list's rows may not be laid out yet right after the tab switch → scroll twice.
+    @ViewBuilder private var riseMenuItems: some View {
+        Text(L("By the melody (\(Self.secondsText(Int(model.settings.alarmSound.rampSeconds))))")).tag(Int?.none)
+        ForEach(AlarmVolume.riseOptions, id: \.self) { n in
+            Text(Self.secondsText(n)).tag(Int?.some(n))
+        }
+    }
+    private var riseValueText: String {
+        if let n = model.settings.alarmRiseSeconds { return Self.secondsText(n) }
+        return L("By the melody (\(Self.secondsText(Int(model.settings.alarmSound.rampSeconds))))")
+    }
+
     private func scrollToNotifications(_ proxy: ScrollViewProxy) {
         proxy.scrollTo("notifications", anchor: .top)
         Task { @MainActor in
@@ -79,7 +100,7 @@ struct SettingsView: View {
 
                 Section {
                     ScheduleEditor()
-                    Button(L("Guide")) { showGuide = true }
+                    Button(L("Guide")) { model.showGuideReplay = true }
                     Button(L("All rules")) { showRules = true }
                 } header: {
                     Text(L("Schedule"))
@@ -132,10 +153,17 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    HStack {
-                        Text(L("Notifications"))
-                        Spacer()
-                        Text(notificationStatus).foregroundStyle(.secondary)
+                    // the word is never split (13n): when the label and the status do not fit side by side, the status goes under it
+                    ViewThatFits(in: .horizontal) {
+                        HStack {
+                            Text(L("Notifications")).fixedSize()
+                            Spacer()
+                            Text(notificationStatus).foregroundStyle(.secondary)
+                        }
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(L("Notifications"))
+                            Text(notificationStatus).foregroundStyle(.secondary)
+                        }
                     }
                     .id("notifications")
                     if model.timeSensitiveOff {
@@ -230,10 +258,11 @@ struct SettingsView: View {
                     Toggle(L("Play when the night starts"), isOn: $model.settings.playsAtStart)
                         .disabled(model.settings.ambience == .silence)
                     HStack {
-                        Image(systemName: "speaker.fill")
+                        Image(systemName: "speaker.fill").accessibilityHidden(true)
                         Slider(value: $model.settings.volume, in: 0...0.6)
+                            .accessibilityLabel(L("Volume"))
                             .onChange(of: model.settings.volume) { _, v in preview.setVolume(v) }
-                        Image(systemName: "speaker.wave.3.fill")
+                        Image(systemName: "speaker.wave.3.fill").accessibilityHidden(true)
                     }
                     // during a night ▶ / ■ control the night's own sound (a second player would fight over the
                     // shared audio session – owner bug 2026-09-30)
@@ -269,16 +298,75 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.menu)
                     .onChange(of: model.settings.alarmSound) { _, sound in
-                        if model.active == nil { SoundFX.previewAlarm(sound.rawValue) }
+                        if model.active == nil {
+                            SoundFX.previewAlarm(sound.rawValue, level: Float(model.settings.alarmEndLevel))
+                        }
                     }
                     PreviewButtons(playing: false,
-                                   play: { SoundFX.previewAlarm(model.settings.alarmSound.rawValue) },
+                                   play: {
+                                       SoundFX.previewAlarm(model.settings.alarmSound.rawValue,
+                                                            level: Float(model.settings.alarmEndLevel))
+                                   },
                                    stop: { SoundFX.stopPreview() })
                         .disabled(model.active != nil)
+                    AlarmLevelSlider(title: L("Start at"), percent: Binding(
+                        get: { model.settings.alarmStartPercent },
+                        set: { model.settings.alarmStartPercent = $0 }))
+                    AlarmLevelSlider(title: L("Rise to"), percent: Binding(
+                        get: { model.settings.alarmEndPercent },
+                        set: { model.settings.alarmEndPercent = $0 }))
+                    if typeSize.isAccessibilitySize {
+                        // accessibility sizes: the title on its own row and a menu with a wrapping label under it
+                        // (a menu Picker clips its value to the row's measured height)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(L("Rise time")).fixedSize(horizontal: false, vertical: true)
+                                .accessibilityHidden(true)
+                            Menu {
+                                Picker(L("Rise time"), selection: $model.settings.alarmRiseSeconds) {
+                                    riseMenuItems
+                                }
+                            } label: {
+                                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                                    Text(riseValueText).multilineTextAlignment(.leading)
+                                    Image(systemName: "chevron.up.chevron.down").font(.footnote)
+                                }
+                                .fixedSize(horizontal: false, vertical: true)
+                            }
+                            .accessibilityLabel(L("Rise time"))
+                            .accessibilityValue(riseValueText)
+                        }
+                        .id("alarmRise")
+                    } else {
+                        Picker(L("Rise time"), selection: $model.settings.alarmRiseSeconds) {
+                            riseMenuItems
+                        }
+                        .pickerStyle(.menu)
+                        .id("alarmRise")
+                    }
+                    (typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 0))
+                                                  : AnyLayout(HStackLayout(spacing: 14))) {
+                        Button {
+                            SoundFX.previewAlarmRise(model.settings.alarmSound.rawValue,
+                                                     start: model.settings.alarmStartLevel,
+                                                     end: model.settings.alarmEndLevel,
+                                                     rise: model.settings.effectiveRiseSeconds)
+                        } label: {
+                            Text(L("Try the rise")).multilineTextAlignment(.leading).frame(minHeight: 44)
+                        }
+                        .buttonStyle(.borderless)
+                        if !typeSize.isAccessibilitySize { Spacer() }
+                        GlassCircleButton(systemImage: "stop.fill", label: L("Stop")) { SoundFX.stopPreview() }
+                            .accessibilityIdentifier("riseStop")
+                    }
+                    .disabled(model.active != nil)
+                    if let rise = SoundFX.riseHolder.state { RisePreviewLine(state: rise) }
                 } header: {
-                    Text(L("Alarm"))
+                    Text(L("Alarm")).id("alarm")
                 } footer: {
-                    Text(model.settings.alarmSound.detail)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(model.settings.alarmSound.detail)
+                        Text(L("The percentages are a share of the phone's media volume (the buttons on the side) – SleepHole can't turn that up itself. SleepHole's alarm rings for \(Int(SleepRules.forNewNights.alarmDuration / 60)) min; then the system alarm takes over, if it is on."))
+                    }
                 }
 
                 Section {
@@ -343,6 +431,15 @@ struct SettingsView: View {
             }
             .onAppear {                                   // `-scrollTo sounds|sky` (screenshots)
                 let target = DevArgs.value(after: "-scrollTo")
+                if DevArgs.list.contains("-tryRise"), model.active == nil {
+                    Task {
+                        try? await Task.sleep(for: .milliseconds(1500))
+                        SoundFX.previewAlarmRise(model.settings.alarmSound.rawValue, start: model.settings.alarmStartLevel,
+                                                 end: model.settings.alarmEndLevel, rise: model.settings.effectiveRiseSeconds)
+                    }
+                }
+                if target == "alarm" { proxy.scrollTo("alarm", anchor: .top) }
+                if target == "alarmRise" { proxy.scrollTo("alarmRise", anchor: .top) }
                 if target == "sounds" { proxy.scrollTo("sounds", anchor: UnitPoint(x: 0.5, y: -0.004)) }
                 if target == "health" { proxy.scrollTo("health", anchor: .top) }
                 if target == "icloud" { proxy.scrollTo("icloud", anchor: .top) }
@@ -367,9 +464,9 @@ struct SettingsView: View {
             .navigationDestination(isPresented: $syncTest) { SyncTestView() }
             .navigationDestination(isPresented: $textsView) { TextsView() }
             .navigationDestination(isPresented: $boxContents) { BoxContentsView() }
+            .navigationDestination(isPresented: $vibrationTest) { VibrationTestView() }
             #endif
             .renameTownAlert(isPresented: $renaming)
-            .sheet(isPresented: $showGuide) { GuideView(replay: true) }
             .sheet(isPresented: $showRules) { RulesView() }
             .task {
                 notificationStatus = await Notifications.statusText()
@@ -438,14 +535,25 @@ extension SettingsView {
 struct NightLogView: View {
     @Environment(AppModel.self) private var model
 
+    struct Line { let at: Date; let text: String; let isDiag: Bool }
+
+    /// Rule events and diagnostic entries of one night in time order (a rule event first when the moments are equal).
+    static func merged(_ rec: NightRecord) -> [Line] {
+        let events = rec.log.sortedEvents.map { Line(at: $0.at, text: $0.kind.rawValue, isDiag: false) }
+        let diag = rec.diagLog.entries.map { Line(at: $0.at, text: "· \($0.k)" + ($0.v.map { " \($0)" } ?? ""), isDiag: true) }
+        return (events + diag).enumerated().sorted { ($0.element.at, $0.offset) < ($1.element.at, $1.offset) }.map(\.element)
+    }
+
     var body: some View {
         List(model.records().reversed()) { rec in
             DisclosureGroup {
-                ForEach(Array(rec.log.sortedEvents.enumerated()), id: \.offset) { _, e in
-                    HStack {
-                        Text(ProbeLog.timeFormat.string(from: e.at)).font(.caption2.monospacedDigit())
-                        Text(e.kind.rawValue).font(.caption.monospaced())
+                // the rule events and the diagnostic track (13ab, Debug only) merged by time; the track is grey, with a dot
+                ForEach(Array(Self.merged(rec).enumerated()), id: \.offset) { _, line in
+                    HStack(alignment: .firstTextBaseline) {
+                        Text(ProbeLog.timeFormat.string(from: line.at)).font(.caption2.monospacedDigit())
+                        Text(verbatim: line.text).font(.caption.monospaced())
                     }
+                    .foregroundStyle(line.isDiag ? Color.secondary : Color.primary)
                 }
             } label: {
                 VStack(alignment: .leading) {
@@ -463,6 +571,30 @@ struct NightLogView: View {
     }
 }
 #endif
+
+/// 13v: a 10…100 % slider (steps of 10) with its title and value. VoiceOver reads "Start at, 30 %" and adjusts by tens.
+struct AlarmLevelSlider: View {
+    let title: String
+    @Binding var percent: Int
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            // at accessibility sizes the value goes under the title (a long title must not break inside a word)
+            (typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 2))
+                                          : AnyLayout(HStackLayout(alignment: .firstTextBaseline))) {
+                Text(title)
+                if !typeSize.isAccessibilitySize { Spacer() }
+                Text(Fmt.percent(percent)).foregroundStyle(.secondary).monospacedDigit()
+            }
+            .accessibilityHidden(true)
+            Slider(value: Binding(get: { Double(percent) }, set: { percent = Int($0) }), in: 10...100, step: 10)
+                .frame(minHeight: 44)
+                .accessibilityLabel(title)
+                .accessibilityValue(Fmt.percent(percent))
+        }
+    }
+}
 
 /// Round ▶ / ■ preview buttons (Liquid Glass on iOS 26), left-aligned. `.borderless` gives each button its own
 /// hit area – with default styles a List row fires ALL its buttons on a tap (owner bug 2026-09-30).
@@ -485,13 +617,16 @@ struct GlassCircleButton: View {
     let label: String
     var highlighted = false
     let action: () -> Void
+    @ScaledMetric(relativeTo: .title3) private var diameter: CGFloat = 46      // 46 pt at the default size, grows with the text
 
     var body: some View {
+        let side = min(diameter, 84)
         Button(action: action) {
             Image(systemName: systemImage)
                 .font(.title3)
+                .dynamicTypeSize(...DynamicTypeSize.accessibility2)             // the icon never outgrows its circle
                 .foregroundStyle(highlighted ? Color.accentColor : .primary)
-                .frame(width: 46, height: 46)
+                .frame(width: side, height: side)
                 .modifier(GlassCircle())
                 .contentShape(Circle())
         }
@@ -575,3 +710,33 @@ struct SoundEffectsTestView: View {
     }
 }
 #endif
+
+
+/// 13z: the line under "Try the rise" – the current level, the time and a thin bar. Redrawn twice a second only
+/// while the preview exists (the view disappears with it).
+struct RisePreviewLine: View {
+    let state: SoundFX.RiseState
+
+    var body: some View {
+        TimelineView(.periodic(from: state.began, by: 0.5)) { context in
+            let now = context.date
+            let done = state.rise <= 0 || state.elapsed(at: now) >= state.rise
+            let pct = Fmt.percent(state.percent(at: now))
+            let text = done
+                ? L("Now \(pct) – the alarm stays at this level")
+                : L("Now \(pct) · \(Self.seconds(state.elapsed(at: now))) / \(Self.seconds(state.rise))")
+            VStack(alignment: .leading, spacing: 6) {
+                Text(text).font(.footnote).monospacedDigit().fixedSize(horizontal: false, vertical: true)
+                ProgressView(value: state.fraction(at: now))
+                    .progressViewStyle(ThickProgressStyle(title: L("Rise preview progress"), fill: .blue,
+                                                           track: Color.secondary.opacity(0.25)))
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(text)
+            .accessibilityIdentifier("risePreviewLine")
+        }
+    }
+
+    /// Whole seconds with no space before the "s" (all languages).
+    static func seconds(_ t: Double) -> String { "\(Int(t.rounded(.down)))s" }
+}

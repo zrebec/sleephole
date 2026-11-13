@@ -7,7 +7,11 @@ import SleepCore
 /// It returns several rows, so it can sit directly in a List section or in a VStack.
 struct ScheduleEditor: View {
     @Environment(AppModel.self) private var model
-    @State private var draft: Schedule?
+    /// The unsaved draft lives on the model: a language switch rebuilds Settings and a `@State` would be lost (L5).
+    private var draft: Schedule? {
+        get { model.scheduleDraft }
+        nonmutating set { model.scheduleDraft = newValue }
+    }
     @State private var confirmSchedule: Bool
     @State private var confirmUnlock = false
 
@@ -87,11 +91,15 @@ struct ScheduleEditor: View {
             Text(L("You can change your schedule. The first change opens a change week (7 days); after it your schedule stays the same for a month."))
                 .font(.footnote).foregroundStyle(.secondary)
         case .changeWeek(let lastDay):
-            Text(L("🔧 Change week: \(SettingsView.daysLeft(until: lastDay, now: model.clock.now)) left (until \(Fmt.fullDate(lastDay))). Change it as often as you like."))
+            let changeWeek = L("🔧 Change week: \(SettingsView.daysLeft(until: lastDay, now: model.clock.now)) left (until \(Fmt.fullDate(lastDay))). Change it as often as you like.")
+            Text(changeWeek)
                 .font(.footnote)
+                .accessibilityLabel(changeWeek.withoutLeadingSymbol)
         case .locked(let lastDay, let freeFrom):
-            Text(L("🔒 Your schedule is set until \(Fmt.fullDate(lastDay)). A free change week again from \(Fmt.fullDate(freeFrom))."))
+            let locked = L("🔒 Your schedule is set until \(Fmt.fullDate(lastDay)). A free change week again from \(Fmt.fullDate(freeFrom)).")
+            Text(locked)
                 .font(.footnote)
+                .accessibilityLabel(locked.withoutLeadingSymbol)
             let missing = max(0, SchedulePolicy.unlockPrice - model.coins)
             Button(L("Unlock now · 2,000 🪙")) { confirmUnlock = true }
                 .disabled(missing > 0)
@@ -100,5 +108,12 @@ struct ScheduleEditor: View {
                     .font(.footnote).foregroundStyle(.secondary)
             }
         }
+    }
+}
+
+extension String {
+    /// The text without a leading emoji / symbol and the space after it, so VoiceOver does not read "wrench" (the look is unchanged).
+    var withoutLeadingSymbol: String {
+        String(drop(while: { !($0.isLetter || $0.isNumber) }))
     }
 }

@@ -74,6 +74,33 @@ struct LockScreenTests {
         #expect(l.count == 1 && abs((l.first ?? .distantPast).timeIntervalSince(t0)) < 0.4)   // not the 0.8 s later
     }
 
+    // M3 (13o): a night that ends while the app is away must not leak its state into the next one.
+    @Test func aStopWhileAwayDoesNotHideTheNextNightsFirstTrip() async {
+        let r = Rig()
+        r.monitor.start()
+        r.monitor.didEnterBackground()
+        await waitUntil { leftApps(r).count == 1 }
+        #expect(leftApps(r).count == 1)                           // the night ends here, away, with no return
+        r.monitor.stop()
+        r.monitor.start()
+        r.monitor.didEnterBackground()                            // the next night's first trip
+        await waitUntil { leftApps(r).count == 2 }
+        r.monitor.stop()
+        #expect(leftApps(r).count == 2)
+    }
+
+    @Test func aCallActiveAtStopDoesNotHideTheNextNightsFirstCall() {
+        let r = Rig()
+        let id = UUID()
+        r.monitor.start()
+        r.monitor.callChanged(CallInfo(uuid: id, isOutgoing: false, hasConnected: true, hasEnded: false))
+        r.monitor.stop()
+        r.monitor.start()
+        r.monitor.callChanged(CallInfo(uuid: UUID(), isOutgoing: false, hasConnected: true, hasEnded: false))
+        r.monitor.stop()
+        #expect(r.events.filter { $0 == .callStarted }.count == 2)
+    }
+
     @Test func aBackgroundThatIsActiveAgainAtTheDecisionIsNothing() async {
         let r = Rig()
         r.monitor.didEnterBackground()
@@ -694,8 +721,11 @@ struct LockScreenTests {
         m.refresh(); m.startNight()
         let g = m.graceEnds!
         m.append(.leftApp, at: g - 30)
-        #expect(m.collapseNoticeAt == nil)
+        // 13ae (owner 2026-11-11, B56): a trip still open when the setup ends is counted from its end, so its collapse
+        // notice (and the warning) are set in advance – it used to be nil here
+        #expect(m.collapseNoticeAt == g + 18)
         m.append(.returned, at: g - 20)
+        #expect(m.collapseNoticeAt == nil)
         m.append(.leftApp, at: g + 60)
         m.append(.leftApp, at: g + 100)                                      // already collapsed at g + 73
         #expect(m.collapseNoticeAt == g + 78)                                // unchanged: nothing new was set
