@@ -360,3 +360,31 @@ then answer. Remove items here when they are done.
    "balíček" (Czech: "balíček"); never "box" or "package" in a UI text. The App Store gets the parcels as 1.1 after Apple's
    answer on 1.0 (10): "Loot Boxes" YES, "Simulated Gambling" re-read, a parcels sentence in `docs/REVIEW-NOTES.md` – each
    his yes. Leftover worktree `.claude/worktrees/agent-a17bd1e1fd4a93e5c` – removing it offered.
+
+## Agenda items 0 – 2 as they stood on the morning of 2026-11-13 (moved here verbatim when build 13 was released)
+
+0. **His MacBook update + restart (his request 2026-11-10 ~22:30 – reminded 2026-11-11 ~09:55; 13aa was installed
+   before it on his word).** After his restart check `xcodebuild -version` and `xcrun devicectl list devices` before the
+   release's archive. Remove this line once he says it is done.
+1. **Build 13 = polishing, in work since 2026-11-01** – plan §10 REL "Build 13"; his page
+   https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (prefix `b13.`, `state/answers`). **Every step 13a – 13ah is on his
+   phone (13ae since 2026-11-12 06:30, 13af – the Czech museum line, his finding – since 07:44, 13ag since 09:11, 13ah since 10:10; the
+   store byte-identical before / after each).** The night 11 → 12: complete (gentle
+   mode, started 22:00:03 – aa2 ✅, B50 🟢), the rest screen all night and the 🔇 wake on a volume turn-down confirmed by
+   him; battery 95 → 40 % with Auto-Lock off (plan §12 2026-11-12). **Sets 1 and 4 done 2026-11-12 ~08:25 (dc1, dc2, dc3, dc8 🟢 – B53, B54, B56, B57 confirmed). Open today: the call
+   checks dc4 – dc7 (his wife will call); dc10 – dc11 optional (ag4 replaces dc9); his ev1 (a call open at a relaunch) and
+   ev2 (Strict).** **13ag – a silent alarm (his ev3: both parts in build 13) is on his phone since 2026-11-12 09:11 – ag2 + ag3 🟢; ag1 "sedí" with
+   a reservation (the Watch only – iOS routes a locked phone's notifications to the Watch) → 13ah (his ev4 "still in build 13"):
+   when ours is inaudible the system alarm rings at once – on his phone since 10:10 (`fa576e4`); his ah1 – ah4 "sedí", but
+   the track showed the 1s move refused (`ok=0`, the alarm at + 30s) → 13ah2 (2s ahead, `7ae6ce4`), on his phone since 11:08 on his word – **✅ confirmed by his retests 15:36 /
+   15:42 (`sysalarm schedule at=wake+3s ok=1`, the Watch on / off).** ah3, ah4, ag4 🟢. **13ai – the date on the night / nap result
+   screen – in build 13 (his word ~16:15): merged `016e6ba`, 1.1 (13) committed `b258f65`, the Release archive built and
+   checked; on his phone since 2026-11-12 18:26 (his word; the store and WAL byte-identical before / after) – every step 13a – 13ai is there.** His library idea
+   (2026-11-12) is a proposal page for build 14 (plan §0b row 14) – only on his word. Two setup-screen UI tests fail since 13x → B49
+   (build 14). 13w and W6 proposed for build 15, B48 (shake) for build 14.
+2. **Release of build 13 on 2026-11-13 FIRST THING in the morning (his word: "otherwise not before Sunday"; prepared the
+   evening before – version, Release archive, texts): after the device checks of 13ab – 13ah and one real night with the whole tree (13ae – 13ah included –
+   the night 12 → 13; his word 2026-11-12: "today afternoon or tomorrow morning, it does not matter")**
+   – then the journal first, 1.1 (13) (`MARKETING_VERSION` 1.1 – 1.0 is approved), the Release archive check, the upload,
+   "What to Test" EN + SK by Opus, Kamaráti + SE, the PR `build/13` → `main`. **His "Áno" is given; he wants no questions
+   about the release itself** – only a problem stops it.
