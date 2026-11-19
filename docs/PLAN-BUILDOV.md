@@ -261,6 +261,8 @@ Oddelené z buildu 14 (12. 11., tvoje áno k deleniu).
 
 **Štatistiky (z buildu 11, 25. 10.):** mesačný kalendár, detail noci, graf so štyrmi farbami, zoznam chýb a Plány vo Vývoji. Recap za mesiac (Neskôr) navrhujem sem k štatistikám – na tvoje slovo.
 
+**Poznámka k noci (tvoj nápad 19. 11., na dovolenke):** krátka poznámka, prečo bola noc vynechaná alebo pokazená („dovolenka“, „chorý“, …) – napíšeš ju ráno po noci, ukáže sa v detaile noci a v mesačnom kalendári; nemení žiadne pravidlo. Navrhujem ju sem k detailu noci a kalendáru – na tvoje slovo.
+
 
 ## Build 16 – Doladenie (návrh)
 
