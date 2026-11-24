@@ -178,11 +178,12 @@ public enum NightEvaluator {
     }
 
     /// Outcome (owner rules of 2026-09-29):
-    /// missed – not started by bedtime + `startDeadline` (5 min, 30 min in the gentle mode) · ruins – collapsed, abandoned or not confirmed within
+    /// missed – not started within the shown minute of bedtime + `startDeadline` (5 min, 30 min in the gentle mode; the shown minute counts
+    /// whole, owner 2026-11-10, B50) · ruins – collapsed, abandoned or not confirmed within
     /// wake + 60 min · unfinished – confirmed after the alarm stopped (wake + 2…60 min) · complete – otherwise.
     public static func evaluate(_ log: NightLog?, rules: SleepRules = SleepRules()) -> Outcome {
         guard let log, let start = log.startedAt,
-              start <= log.window.bedtime + rules.startDeadline else { return .missed }
+              start < log.window.startClosedFrom(rules) else { return .missed }
         if log.has(.abandoned) || collapsedAt(log, rules: rules) != nil { return .ruins }
         guard let confirm = log.confirmedAt, confirm <= log.window.confirmLateUntil else { return .ruins }
         return confirm > log.window.confirmOnTimeUntil ? .unfinished : .complete
@@ -220,10 +221,21 @@ extension NightWindow {
         isEarlyStart(start) ? start + rules.earlySetup : max(start, bedtime) + rules.setupGrace
     }
 
-    /// "Začať stavbu" is enabled in [startOpens, startCloses].
+    /// The first instant after the minute that `t` falls in. The app shows clock times as HH:mm, so a limit shown as
+    /// 22:00 lasts until 22:00:59.999 (owner 2026-11-10, B50). Time zone offsets are whole minutes, so flooring the
+    /// absolute time to a minute is the same as flooring the local time.
+    public static func endOfShownMinute(_ t: Date) -> Date {
+        let seconds = t.timeIntervalSinceReferenceDate
+        return Date(timeIntervalSinceReferenceDate: (seconds / 60).rounded(.down) * 60 + 60)
+    }
+
+    /// The LAST start minute as shown on Today (bedtime + `startDeadline`); the whole minute still counts.
     public func startCloses(_ rules: SleepRules = SleepRules()) -> Date { bedtime + rules.startDeadline }
+    /// The first instant when starting is no longer possible: the end of the shown last minute.
+    public func startClosedFrom(_ rules: SleepRules = SleepRules()) -> Date { Self.endOfShownMinute(startCloses(rules)) }
+    /// "Začať stavbu" is enabled in [startOpens, startClosedFrom) – the shown last minute counts whole.
     public func canStart(at t: Date, rules: SleepRules = SleepRules()) -> Bool {
-        t >= startOpens && t <= startCloses(rules)
+        t >= startOpens && t < startClosedFrom(rules)
     }
     /// "Vstal som" (shake or code) is enabled in [confirmOpens, confirmLateUntil].
     public func canConfirm(at t: Date) -> Bool { t >= confirmOpens && t <= confirmLateUntil }

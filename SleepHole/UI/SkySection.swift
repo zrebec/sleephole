@@ -5,11 +5,14 @@ import SwiftUI
 /// green ✓ once the city is verified. Works during a running night too (it changes nothing about the night).
 struct SkySection: View {
     @Environment(AppModel.self) private var model
-    @State private var field: CityField?
+    /// A field handed in by a test; the app's own lives on the model, so a language switch (which rebuilds Settings)
+    /// keeps a half-typed city (L5).
+    private let injected: CityField?
+    private var field: CityField? { injected ?? model.cityField }
     @FocusState private var focused: Bool
 
     /// `field` is for tests (a field with a fake search in a chosen state); the app creates its own on appear.
-    init(field: CityField? = nil) { _field = State(initialValue: field) }
+    init(field: CityField? = nil) { injected = field }
 
     /// Dev aid: `-cityQuery Brat` pre-fills the field so the real Apple Maps search runs (screenshots).
     private static let launchQuery: String? = {
@@ -68,8 +71,8 @@ struct SkySection: View {
         }
         .onAppear {
             guard field == nil else { return }
-            let f = CityField(search: MapKitCitySearch(), city: model.settings.city) { model.settings.city = $0 }
-            field = f
+            let f = CityField(search: MapKitCitySearch(), city: model.settings.city) { [weak model] in model?.settings.city = $0 }
+            model.cityField = f
             if let q = Self.launchQuery { f.edit(q) }
         }
         .onChange(of: model.settings.city) { _, city in field?.sync(with: city) }   // e.g. a restored backup

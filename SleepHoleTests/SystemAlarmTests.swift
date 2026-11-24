@@ -568,7 +568,7 @@ struct SystemAlarmTests {
         #expect(L("While it waits, Today shows it as a safety alarm – switching that off cancels the test too.")
             == "Kým čaká, Dnes ho ukazuje ako poistný budík – jeho vypnutie zruší aj skúšku.")
         #expect(L("1. Tap “Ring in 20 seconds”.") == "1. Ťukni na „Zazvoniť o 20 sekúnd“.")
-        #expect(L("4. “Stop” silences it; “Open SleepHole” opens the app.") == "4. „Stop“ ho stíši, „Otvoriť SleepHole“ otvorí appku.")
+        #expect(L("4. “Stop” silences it; “Open SleepHole” opens the app.") == "4. „Zastaviť“ ho stíši, „Otvoriť SleepHole“ otvorí appku.")
     }
 
     // MARK: which alarm the app runs with

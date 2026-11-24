@@ -6,10 +6,11 @@ import SwiftUI
 struct AppTextEntry: Identifiable, Equatable {
     let key: String
     let sk: [String]          // one element for a plain text, one per plural form otherwise ("category: text")
+    let cs: [String]
     let en: [String]
     var id: String { key }
     var skMain: String { sk.first ?? key }
-    var haystack: String { (key + "\n" + sk.joined(separator: "\n") + "\n" + en.joined(separator: "\n")).lowercased() }
+    var haystack: String { (key + "\n" + sk.joined(separator: "\n") + "\n" + cs.joined(separator: "\n") + "\n" + en.joined(separator: "\n")).lowercased() }
 }
 
 enum AppTexts {
@@ -38,13 +39,14 @@ enum AppTexts {
     }
 
     static func load() -> [AppTextEntry] {
-        let skS = table("sk", "strings"), enS = table("en", "strings")
-        let skD = table("sk", "stringsdict"), enD = table("en", "stringsdict")
-        let keys = Set(skS.keys).union(enS.keys).union(skD.keys).union(enD.keys)
+        let skS = table("sk", "strings"), csS = table("cs", "strings"), enS = table("en", "strings")
+        let skD = table("sk", "stringsdict"), csD = table("cs", "stringsdict"), enD = table("en", "stringsdict")
+        let keys = Set(skS.keys).union(csS.keys).union(enS.keys).union(skD.keys).union(csD.keys).union(enD.keys)
         let entries = keys.map { key -> AppTextEntry in
             let sk = forms(skD[key]).isEmpty ? [(skS[key] as? String) ?? key] : forms(skD[key])
+            let cs = forms(csD[key]).isEmpty ? [(csS[key] as? String) ?? key] : forms(csD[key])
             let en = forms(enD[key]).isEmpty ? [(enS[key] as? String) ?? key] : forms(enD[key])
-            return AppTextEntry(key: key, sk: sk, en: en)
+            return AppTextEntry(key: key, sk: sk, cs: cs, en: en)
         }
         return entries.sorted { $0.skMain.localizedCaseInsensitiveCompare($1.skMain) == .orderedAscending }
     }
@@ -75,7 +77,7 @@ struct TextsView: View {
                     Text(L("Buddy")).tag(true)
                 }
                 .pickerStyle(.segmented)
-                Text(verbatim: "\(list.count) texts")
+                Text(verbatim: L("Texts: \(list.count)"))
                     .font(.footnote).foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 ForEach(list) { e in
@@ -84,6 +86,9 @@ struct TextsView: View {
                             Text(verbatim: t).font(.body.weight(.medium)).foregroundStyle(.primary)
                         }
                         Divider()
+                        ForEach(Array(e.cs.enumerated()), id: \.offset) { _, t in
+                            Text(verbatim: t).font(.footnote).foregroundStyle(.primary)
+                        }
                         ForEach(Array(e.en.enumerated()), id: \.offset) { _, t in
                             Text(verbatim: t).font(.footnote).foregroundStyle(.secondary)
                         }
@@ -94,7 +99,7 @@ struct TextsView: View {
                     .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12))
                 }
                 if entries.isEmpty {
-                    Text(verbatim: "No string tables found in this build.").foregroundStyle(.secondary)
+                    Text(verbatim: L("No string tables found in this build.")).foregroundStyle(.secondary)
                 }
             }
             .padding(16)
@@ -102,7 +107,7 @@ struct TextsView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle(L("Texts"))
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $query, prompt: Text(verbatim: "Search"))
+        .searchable(text: $query, prompt: Text(verbatim: L("Search")))
     }
 }
 #endif

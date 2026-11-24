@@ -21,7 +21,7 @@ public struct NapPlan: Codable, Equatable, Sendable {
     /// Detection rules for a nap: only 2 min to set up a story / sound.
     public static let rules: SleepRules = { var r = SleepRules(); r.setupGrace = 2 * 60; return r }()
 
-    /// Today's window [start, end] around `t` (inclusive: starting exactly at the end is allowed).
+    /// Today's window [start, end] around `t` (the end is the shown last minute: `canStart` allows the whole minute, owner 2026-11-10, B50).
     public func window(on t: Date, calendar: Calendar) -> (start: Date, end: Date) {
         let day = calendar.startOfDay(for: t)
         func at(_ tod: TimeOfDay) -> Date {
@@ -32,7 +32,7 @@ public struct NapPlan: Codable, Equatable, Sendable {
 
     public func canStart(at t: Date, calendar: Calendar) -> Bool {
         let w = window(on: t, calendar: calendar)
-        return t >= w.start && t <= w.end
+        return t >= w.start && t < NightWindow.endOfShownMinute(w.end)
     }
 
     /// A nap can be confirmed (shake / code) in its last 20 % (owner 2026-10-19, B10): from 24 min of 30, from 48 min

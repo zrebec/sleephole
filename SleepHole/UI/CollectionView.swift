@@ -9,6 +9,7 @@ import SwiftUI
 /// The card "Your collection" between today's card and the odds card.
 struct CollectionCard: View {
     @Environment(AppModel.self) private var model
+    @ScaledMetric(relativeTo: .body) private var emojiWidth: CGFloat = 30      // the emoji column grows with the text size (13e2)
     let boxes: [BoxPurchase]
     @State private var jokers = DevArgs.value(after: "-openCollection") == "jokers"      // screenshots (Debug only)
     @State private var autoOpen: String? = DevArgs.value(after: "-openCollection")
@@ -44,7 +45,7 @@ struct CollectionCard: View {
             destination()
         } label: {
             HStack(spacing: 10) {
-                Text(verbatim: emoji).frame(width: 30)
+                Text(verbatim: emoji).frame(width: emojiWidth)
                 Text(title).font(.subheadline)
                 Spacer(minLength: 8)
                 Text(count).font(.caption.monospacedDigit()).cardCaption()
@@ -66,7 +67,7 @@ struct CollectionCard: View {
             BoughtParcelsView()
         } label: {
             HStack(spacing: 10) {
-                Text(verbatim: "📜").frame(width: 30)
+                Text(verbatim: "📜").frame(width: emojiWidth)
                 Text(title).font(.subheadline)
                 Spacer(minLength: 8)
                 Text(verbatim: count).font(.caption.monospacedDigit()).cardCaption()
@@ -97,7 +98,7 @@ struct CollectionCard: View {
         let title = L("\(tier.title) from a parcel")
         let validity = L("Valid through \(until)")
         return HStack(spacing: 10) {
-            Text(verbatim: tier.emoji).frame(width: 30)
+            Text(verbatim: tier.emoji).frame(width: emojiWidth)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.subheadline).fixedSize(horizontal: false, vertical: true)
                 Text(validity).font(.caption).cardCaption()
@@ -138,6 +139,7 @@ private struct EmptyNote: View {
 /// The owned postcards, newest first; a tap opens the postcard.
 struct PostcardsListView: View {
     @Environment(AppModel.self) private var model
+    @ScaledMetric(relativeTo: .body) private var emojiWidth: CGFloat = 34      // the emoji column grows with the text size (13e2)
     @State private var openFirst = DevArgs.value(after: "-openCollection") == "postcard"      // screenshots (Debug only)
 
     var body: some View {
@@ -174,7 +176,7 @@ struct PostcardsListView: View {
     private func row(_ id: String, won: BoxPurchase) -> some View {
         let title = PostcardText.title(for: id), date = Fmt.fullDate(won.nightKey)
         return HStack(spacing: 10) {
-            Text(verbatim: PostcardText.stamp(for: id)).font(.title2).frame(width: 34)
+            Text(verbatim: PostcardText.stamp(for: id)).font(.title2).frame(width: emojiWidth)
             VStack(alignment: .leading, spacing: 2) {
                 Text(title).font(.subheadline).fixedSize(horizontal: false, vertical: true)
                 Text(date).font(.caption).cardCaption()
@@ -205,6 +207,7 @@ struct BoughtParcels: Equatable {
 /// Every parcel ever bought, newest first; a tap opens that parcel's prize card in a sheet.
 struct BoughtParcelsView: View {
     @Environment(AppModel.self) private var model
+    @ScaledMetric(relativeTo: .body) private var emojiWidth: CGFloat = 34      // the emoji column grows with the text size (13e2)
     @State private var shown: BoxPurchase?
     @State private var autoSheet = DevArgs.value(after: "-openCollection") == "boughtSheet"      // screenshots (Debug only)
 
@@ -254,7 +257,7 @@ struct BoughtParcelsView: View {
         var caption = L("Price \(box.price) 🪙")
         if box.payout > 0 { caption += " · " + L("+\(box.payout) 🪙 back") }
         return HStack(spacing: 10) {
-            Text(verbatim: text.emoji).font(.title2).frame(width: 34)
+            Text(verbatim: text.emoji).font(.title2).frame(width: emojiWidth)
             VStack(alignment: .leading, spacing: 2) {
                 Text(verbatim: text.title).font(.subheadline).fixedSize(horizontal: false, vertical: true)
                 Text(date).font(.caption).cardCaption()

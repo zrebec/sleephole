@@ -25,6 +25,10 @@ public enum BuddyLine: Hashable, Sendable {
     case tallest
     case noFireStation, noHospital, noPolice, noSchool, noTownHall
     case fireStation, hospital
+    // tier 4 – step 13d: what the standing buildings and their cats say
+    case owned(OwnedPlace, Int)
+    case catTale(CatTale, name: Int)
+    case newest(buildingId: String)
     // tier 2/4/5 – the real sky (phase and date only, phase 8f)
     case fullMoonTonight, newMoonTonight, longestNight, shortestNight, equinox
     case fullMoonTomorrow, fullMoonSoon(days: Int)
@@ -34,7 +38,10 @@ public enum BuddyLine: Hashable, Sendable {
     case tonight
 
     /// Number of everyday chatter sentences (`chatter(0..<count)`).
-    public static let chatterCount = 4
+    public static let chatterCount = 7
+
+    /// Number of cat names (`catTale`'s name index is in `0..<catNameCount`).
+    public static let catNameCount = 12
 
     public var tier: Int {
         switch self {
@@ -43,7 +50,8 @@ public enum BuddyLine: Hashable, Sendable {
         case .week, .streak, .newStreak: 3
         case .size, .nextSize, .firstNeighbours, .parks, .library, .museum, .tallest,
              .noFireStation, .noHospital, .noPolice, .noSchool, .noTownHall, .fireStation, .hospital,
-             .fullMoonTomorrow, .fullMoonSoon: 4
+             .fullMoonTomorrow, .fullMoonSoon, .owned, .newest: 4
+        case let .catTale(tale, _): tale == .doorstepCat ? 5 : 4
         case .chatter, .tonight, .moonPhase: 5
         }
     }
@@ -54,6 +62,62 @@ public enum BuddyLine: Hashable, Sendable {
 
     /// A stable text key of the line (used to remember which news already led today).
     public var newsKey: String { String(describing: self) }
+}
+
+/// A standing building that has sentences of its own (step 13d).
+public enum OwnedPlace: Hashable, Sendable, CaseIterable {
+    case library, museum, pondPark, fountainPark, statueGarden, fireStation, hospital, police, school, townHall, skyscraper
+
+    /// How many sentences the place has (`owned(place, 0..<variants)`).
+    public var variants: Int { self == .museum ? 2 : 1 }
+
+    /// Whether a building of this catalog id is this place.
+    func matches(_ id: String) -> Bool {
+        switch self {
+        case .library: id.hasPrefix("l2-library")
+        case .museum: id.hasPrefix("l2-museum")
+        case .pondPark: id == "l2-park-pond"
+        case .fountainPark: id == "l2-park-fountain"
+        case .statueGarden: id == "l2-park-garden"
+        case .fireStation: id == "l3-firestation"
+        case .hospital: id == "l3-hospital"
+        case .police: id == "l3-police"
+        case .school: id == "l3-school"
+        case .townHall: id == "l3-townhall"
+        case .skyscraper: id.hasPrefix("l4-sky-") || id.hasPrefix("l4-tower-")
+        }
+    }
+}
+
+/// A sentence about a named cat of the town (step 13d). `doorstepCat` needs no building.
+public enum CatTale: Hashable, Sendable, CaseIterable {
+    case libraryCat, benchCat, treeCat, lostCat, classCat, clerkCat, liftCat, doorstepCat
+
+    func isAvailable(standing ids: [String]) -> Bool {
+        func has(_ test: (String) -> Bool) -> Bool { ids.contains(where: test) }
+        switch self {
+        case .libraryCat: return has { OwnedPlace.library.matches($0) }
+        case .benchCat: return has { $0 == "l2-park-small" }
+        case .treeCat: return has { OwnedPlace.fireStation.matches($0) }
+        case .lostCat: return has { OwnedPlace.police.matches($0) }
+        case .classCat: return has { OwnedPlace.school.matches($0) }
+        case .clerkCat: return has { OwnedPlace.townHall.matches($0) }
+        case .liftCat: return has { OwnedPlace.skyscraper.matches($0) }
+        case .doorstepCat: return true
+        }
+    }
+
+    /// The cat's name index for a day: looks random, is the same for the whole day (a pure integer mix, never
+    /// `hashValue`), and differs between tales on one day (the tale only shifts the day's base by a step coprime to 12).
+    public func nameIndex(day: NightKey) -> Int {
+        var z = UInt64(day.year * 10_000 + day.month * 100 + day.day) &+ 0x9E37_79B9_7F4A_7C15
+        z = (z ^ (z >> 30)) &* 0xBF58_476D_1CE4_E5B9
+        z = (z ^ (z >> 27)) &* 0x94D0_49BB_1331_11EB
+        z ^= z >> 31
+        let base = Int(z % UInt64(BuddyLine.catNameCount))
+        let k = CatTale.allCases.firstIndex(of: self) ?? 0
+        return (base + k * 5) % BuddyLine.catNameCount
+    }
 }
 
 extension TownSize {
@@ -188,6 +252,18 @@ public enum BuddyTalk {
             // present services are mentioned whatever the level (they can only stand once built)
             if has("l3-firestation") { c.append(.fireStation) }
             if has("l3-hospital") { c.append(.hospital) }
+        }
+        // step 13d – the standing buildings and their cats
+        for place in OwnedPlace.allCases where standing.contains(where: { place.matches($0.buildingId) }) {
+            for v in 0..<place.variants { c.append(.owned(place, v)) }
+        }
+        let standingIds = standing.map(\.buildingId)
+        for tale in CatTale.allCases where tale.isAvailable(standing: standingIds) {
+            c.append(.catTale(tale, name: tale.nameIndex(day: today)))
+        }
+        if i.town.buildings.count >= 2, let newest = standing.max(by: { $0.nightKey < $1.nightKey }),
+           newest.nightKey != today {
+            c.append(.newest(buildingId: newest.buildingId))
         }
         // tier 5
         for k in 0..<BuddyLine.chatterCount { c.append(.chatter(k)) }

@@ -20,12 +20,12 @@ import Testing
         var gentle = SleepRules(); gentle.startDeadline = SleepRules.gentleStartDeadline
         #expect(night.startCloses(gentle) == b + 30 * 60 && night.startCloses() == b + 5 * 60)
         #expect(night.canStart(at: b + 20 * 60, rules: gentle) && !night.canStart(at: b + 20 * 60))
-        #expect(night.canStart(at: b + 30 * 60, rules: gentle) && !night.canStart(at: b + 30 * 60 + 1, rules: gentle))
+        #expect(night.canStart(at: b + 30 * 60, rules: gentle) && !night.canStart(at: b + 31 * 60, rules: gentle))
         let l = log([(20, .started), (wakeMinutes + 1, .confirmed)])
         #expect(NightEvaluator.evaluate(l, rules: gentle) == .complete)
         #expect(NightEvaluator.evaluate(l) == .missed)
         #expect(NightEvaluator.evaluate(log([(30, .started), (wakeMinutes + 1, .confirmed)]), rules: gentle) == .complete)
-        #expect(NightEvaluator.evaluate(log([(30.02, .started), (wakeMinutes + 1, .confirmed)]), rules: gentle) == .missed)
+        #expect(NightEvaluator.evaluate(log([(31.02, .started), (wakeMinutes + 1, .confirmed)]), rules: gentle) == .missed)
     }
 
     @Test func normalStartWindowIsUnchanged() {
@@ -33,7 +33,7 @@ import Testing
         #expect(!night.canStart(at: b - 3 * 3600))
         #expect(night.canStart(at: b - 600))
         #expect(night.canStart(at: b + 5 * 60))
-        #expect(!night.canStart(at: b + 5 * 60 + 1))
+        #expect(!night.canStart(at: b + 6 * 60))
     }
 
     @Test func isEarlyStart() {

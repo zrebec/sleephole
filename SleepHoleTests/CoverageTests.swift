@@ -68,7 +68,30 @@ struct CoverageTests {
         clock.now = cal.date(byAdding: .minute, value: 8 * 60 + 5 + 3, to: bed)!    // wake + 3 min: 2 min alarm over
         let m2 = AppModel(context: c.mainContext, catalog: sprites.catalog, clock: clock, settings: AppSettings())
         #expect(m2.phase == .alarm && !m2.audio.isAlarmRinging)
+        // B60: picked up after its wake time the night plays no sleep sound – only the keep-alive
+        #expect(m2.sleepSound == nil && m2.audio.currentGain == 0 && m2.audio.desired.stopped && m2.audio.isRunning)
         m2.abandonNight()
+    }
+
+    /// 13ac, B52: the call events from the lifecycle monitor set and clear the sleep sound's call hold directly.
+    @Test func callEventsHoldTheSleepSoundAndGiveItBack() {
+        let c = container()
+        let cal = Calendar.current
+        let start = cal.date(from: DateComponents(year: 2026, month: 10, day: 5, hour: 22, minute: 25))!
+        let clock = FakeClock(start)
+        var s = AppSettings()
+        s.ambience = .rainTent
+        let m = AppModel(context: c.mainContext, catalog: sprites.catalog, clock: clock, settings: s)
+        m.refresh()
+        m.startNight()
+        #expect(m.audio.isRunning && !m.audio.isCallHeld && m.audio.appliedGain > 0)
+        m.monitorEvent(.callStarted, at: start + 60)
+        #expect(m.audio.isCallHeld && m.audio.appliedGain == 0 && m.audio.currentGain > 0)
+        m.monitorEvent(.callEnded, at: start + 120)
+        #expect(!m.audio.isCallHeld && m.audio.appliedGain > 0)
+        m.monitorEvent(.callStarted, at: start + 180)
+        m.abandonNight()                                                     // the end of the night clears the hold
+        #expect(!m.audio.isCallHeld && !m.audio.isRunning)
     }
 
     @Test func townGesturesAndSheet() {

@@ -10,11 +10,19 @@ enum Voice {
         guard !AudioKeeper.muted else { return }
         synth.stopSpeaking(at: .immediate)
         let u = AVSpeechUtterance(string: text)
-        u.voice = bestVoice(Lang.current == .sk ? "sk-SK" : "en-US")
+        u.voice = bestVoice(Self.voiceLanguage(Lang.current))
         u.rate = AVSpeechUtteranceDefaultSpeechRate * 0.9
         u.pitchMultiplier = 1.1
         u.volume = 0.9
         synth.speak(u)
+    }
+
+    static func voiceLanguage(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .sk: "sk-SK"
+        case .cs: "cs-CZ"
+        case .en: "en-US"
+        }
     }
 
     /// The best installed voice for the language (premium/enhanced if the owner downloaded one in iOS Settings).

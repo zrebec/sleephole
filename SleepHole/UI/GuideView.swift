@@ -18,6 +18,7 @@ enum Plural {
 struct GuideView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     var replay = false
     @State private var page: Int
     @State private var notificationsAllowed: Bool?
@@ -39,14 +40,20 @@ struct GuideView: View {
 
     private struct PickKey: Hashable {
         var width: CGFloat, room: CGFloat, language: AppLanguage, replay: Bool, setup: TimeInterval, pending: Bool
+        var scale: CGFloat
     }
+
+    /// The user's text size relative to the default (`.large` = 1): the guide's sizes are fixed points picked to fit, so
+    /// they are multiplied by it (13e2); a page that no longer fits scrolls.
+    @ScaledMetric(relativeTo: .body) private var textScale: CGFloat = 1
 
     var body: some View {
         VStack(spacing: 0) {
             GeometryReader { proxy in
                 let room = proxy.size.height - GuideLayout.dotsHeight
                 let key = PickKey(width: proxy.size.width, room: room, language: model.language, replay: replay,
-                                  setup: model.settings.setupGrace, pending: model.settings.pendingSchedule != nil)
+                                  setup: model.settings.setupGrace, pending: model.settings.pendingSchedule != nil,
+                                  scale: textScale)
                 TabView(selection: $page) {
                     ForEach(0..<Self.pageCount, id: \.self) { i in
                         ScrollView {
@@ -67,10 +74,10 @@ struct GuideView: View {
                 .task(id: key) { pickStyle(key) }
             }
             HStack {
-                if page > 0 { Button(L("Back")) { withAnimation { page -= 1 } } }
+                if page > 0 { Button(L("Back")) { turn(-1) } }
                 Spacer()
                 if page < Self.pageCount - 1 {
-                    Button(L("Next")) { withAnimation { page += 1 } }.buttonStyle(.borderedProminent)
+                    Button(L("Next")) { turn(1) }.buttonStyle(.borderedProminent)
                 } else {
                     Button(replay ? L("Close") : L("Let's start 🌙")) { finish() }.buttonStyle(.borderedProminent)
                 }
@@ -86,11 +93,16 @@ struct GuideView: View {
         }
     }
 
+    /// Back / Next: the page slides, except with Reduce Motion (it changes at once).
+    private func turn(_ by: Int) {
+        if reduceMotion { page += by } else { withAnimation { page += by } }
+    }
+
     /// Picks the biggest style for which all nine pages fit the room (once per size / language / replay / setup time).
     private func pickStyle(_ key: PickKey) {
         guard key.width > 0, key.room > 0 else { return }
         let start = Date()
-        let chosen = GuideStyle.choose(width: key.width, room: key.room, replay: replay, model: model)
+        let chosen = GuideStyle.choose(width: key.width, room: key.room, replay: replay, model: model, scale: key.scale)
         style = chosen
         #if DEBUG
         let ms = Date().timeIntervalSince(start) * 1000
@@ -184,8 +196,19 @@ struct GuideStyle: Equatable {
         }
     }
 
-    @MainActor static func choose(width: CGFloat, room: CGFloat, replay: Bool, model: AppModel) -> GuideStyle {
-        pick { fits($0, width: width, room: room, replay: replay, model: model) }
+    /// This style with every size multiplied by the user's Dynamic Type scale (`1` = the default size: the same style).
+    func scaled(by scale: CGFloat) -> GuideStyle {
+        guard scale != 1 else { return self }
+        var copy = self
+        copy.textSize = textSize * scale
+        return copy
+    }
+
+    @MainActor static func choose(width: CGFloat, room: CGFloat, replay: Bool, model: AppModel,
+                                  scale: CGFloat = 1) -> GuideStyle {
+        pick(from: candidates.map { $0.scaled(by: scale) }) {
+            fits($0, width: width, room: room, replay: replay, model: model)
+        }
     }
 }
 

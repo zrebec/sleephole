@@ -155,6 +155,8 @@ struct I18nTests {
         let signs = ["l2-museum-a", "l2-museum-b", "l2-library-a", "l2-library-b", "l3-townhall", "l3-school",
                      "l3-firestation", "l3-police", "l3-hospital"]
         #expect(Set(catalog.entries.filter { $0.fileEN != nil }.map(\.id)) == Set(signs))
+        #expect(Set(catalog.entries.filter { $0.fileCS != nil }.map(\.id))
+                == ["l2-museum-a", "l2-museum-b", "l2-library-a", "l2-library-b", "l3-townhall", "l3-police", "l3-hospital"])
         for id in signs {
             let en = try #require(sprites.image(for: id, language: .en))
             let sk = try #require(sprites.image(for: id, language: .sk))

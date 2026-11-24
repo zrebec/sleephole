@@ -1,3 +1,4 @@
+import CallKit
 import Foundation
 import Observation
 import SleepCore
@@ -17,7 +18,16 @@ final class AppModel {
         case result        // outcome screen until "Pokračovať"
     }
 
-    private(set) var phase: Phase = .idle
+    private(set) var phase: Phase = .idle {
+        // the typed wake code lives only through the night and its alarm (13n)
+        didSet { if phase != .building && phase != .alarm { wakeCode = ""; wakeCodeFocus = false } }
+    }
+    /// The digits typed into the wake-code field and whether the field has the keyboard (13n, B42): one owner above the
+    /// night and the alarm screens, which swap at the wake time, and above the black rest screen. Never stored or synced.
+    var wakeCode = ""
+    var wakeCodeFocus = false
+    /// The black rest screen of the night (13k): a look only, it never changes what a night counts.
+    let rest = RestController()
     private(set) var window: NightWindow
     /// Started and not yet finalized.
     private(set) var active: NightRecord?
@@ -47,6 +57,9 @@ final class AppModel {
                 if changed || settings.usesSync != oldValue.usesSync { sync.noteLocalChange() }
             }
             settings.save()
+            if active != nil, settings.volume != oldValue.volume {
+                appVolumeNote.change(from: Self.percent(Double(oldValue.volume)), to: Self.percent(Double(settings.volume)))
+            }
             // during a night, Settings switch the sound that is playing (a stopped sound stays stopped)
             if active != nil, sleepSoundPlaying,
                settings.ambience != oldValue.ambience || settings.volume != oldValue.volume {
@@ -71,8 +84,12 @@ final class AppModel {
     private let container: ModelContainer
     private let calendar = Calendar.current
     private let monitor = LifecycleMonitor()
+    /// The diagnostic track of the running night / nap (13ab): local only, never through `append` / `save()`.
+    let diag = Diagnostics()
     private let lockLab = LockLab()
     private var alarmTask: Task<Void, Never>?
+    /// Watches a call that was already live when the night started (13ac); nil otherwise.
+    private var seededHoldTask: Task<Void, Never>?
     private var ticker: Timer?
 
     static let debugGrace: TimeInterval = 15
@@ -92,14 +109,17 @@ final class AppModel {
     ///   -testNightGrace S             with -startTestNight: the setup lasts S seconds (default 15)
     ///   -forceBuilding had            DEBUG builds only, with -startTestNight: tonight's building is one already in the town (the newest
     ///                                 finished night's), so the "New in town" label is absent (screenshots, 11b6b)
+    ///   -pinSetupLeft S               DEBUG only: the setup countdown on Today shows S seconds whatever the clock says (13x screenshots)
     ///   -testNightMinutes N           with -startTestNight: a debug night of N minutes (> 30 keeps the normal night layout)
     ///   -seedNights N                 SIMULATOR ONLY: replace all nights with N fake finished nights
-    ///   -showResult [unfinished]      SIMULATOR ONLY, with -seedNights: show the result screen of the newest complete seeded night
+    ///   -showResult [unfinished|nap]  SIMULATOR ONLY, with -seedNights (nap: also -seedNap): show the result screen of the newest complete seeded night
     ///                                 (with `unfinished`: of the newest unfinished one, which was confirmed 30 min after the alarm)
     ///   -openTab town|boxes           start on the Mesto / Boxes tab
     ///   -openBoxContents [postcards|decorations|cat|skies]   DEBUG only: open Settings > Developer > Box contents at once (11b5e)
     ///   -boxCatFull                   DEBUG only: the Box contents cat starts with a full outfit (first head, face and bed item)
     ///   -boxCatAsleep                 DEBUG only: the Box contents cat starts asleep
+    ///   -openVibrationTest            DEBUG only: open Settings > Developer > Vibration test at once (13s); with -startVibrationProbe the
+    ///                                 background test starts, with -fakeVibrationResult a finished result list is shown (screenshots)
     ///   -showAllDecorations           DEBUG only: the Town view shows all 12 town decorations (11b5c; screenshots, preview)
     ///   -nightSky sky-02              DEBUG only: show that night sky (sky-01 … sky-04, 11b5d) on Today and the Town tab
     ///   -skyClock 12.5|still          DEBUG only: pin the night sky effect's clock (seconds) / show its frozen Reduce Motion frame
@@ -128,6 +148,12 @@ final class AppModel {
     ///   -rerollDialog                 open the "Another building" confirmation 2 s after the night screen shows
     ///   -expiresIn HOURS              pretend the provisioning profile runs out then (AppExpiry)
     ///   -mute                         silence every sound (alarm, effects) – for screenshots of a night's end
+    ///   -fakeBattery 0.24[,unplugged|charging|full[,S]]   SIMULATOR + DEBUG only: the battery reminder (13l) sees that level and state
+    ///                                 (default unplugged); with S the state flips after S seconds (unplugged → charging, else → unplugged)
+    ///   -fakeVolume 0.12[,S,0.6]      SIMULATOR + DEBUG only: the volume reminder (13r) sees that media volume; with S,V it becomes V after S seconds
+    ///   -openSoundSheet               DEBUG only: the night screen opens its sleep sound sheet at once, the sounds as a full inline list (store screenshots, 13t)
+    ///   -restAfter S                  the black rest screen (13k) comes S seconds after the last touch instead of 30; with -screenshot
+    ///                                 the rest screen is off unless this is given
     ///   -buddy awake|asleep           force the sleep buddy's state (screenshots)
     ///   -buddyReaction purr|arch|wink show that tap reaction's hold frame (hearts / sparkle too) on Today (screenshots)
     ///   -skyCity "Name,lat,lon"       set the city of the real sky for this run (e.g. "Bratislava,48.1486,17.1077")
@@ -135,7 +161,9 @@ final class AppModel {
     ///   -skyTime HH:MM                pin the sky's time of day; -skyArc 0.3 / -skyBody sun|moon|none / -skyMoon 0.5
     ///                                 force the drawn arc / body / moon's lit fraction (see `SkyOverrides`)
     ///   -cityQuery Brat               pre-fill Settings → Sky → city so the real Apple Maps search runs
-    ///   -scrollTo sky                 scroll Settings to the Sky section (also: sounds, notifications, health, icloud)
+    ///   -riseSeconds N                set Settings → Alarm → Rise time (0, 15, 30, 45, 60, 90, 120)
+    ///   -tryRise                      Settings presses "Try the rise" itself 1.5 s after it appears (screenshots, 13z)
+    ///   -scrollTo sky                 scroll Settings to the Sky section (also: alarm, alarmRise, sounds, notifications, health, icloud)
     ///   -systemAlarm allowed|denied|notAsked   SIMULATOR ONLY: pretend that consent for the system alarm (a silent
     ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
     ///   -weather clear|cloudy|fog|rain|heavyRain|thunder|snow, -weatherTemp N, -weatherSnowCover   simulate the weather
@@ -170,6 +198,7 @@ final class AppModel {
             try? context.save()
         }
         if args.contains("-healthOn") { settings.usesHealth = true }
+        if let n = value("-riseSeconds").flatMap(Int.init), AlarmVolume.riseOptions.contains(n) { settings.alarmRiseSeconds = n }
         if args.contains("-mute") { AudioKeeper.muted = true }          // screenshots: no alarm on the Mac's speakers
         if let t = time(value("-bedtime")) { settings.schedule.bedtime = t }
         if let t = time(value("-wake")) { settings.schedule.wake = t }
@@ -233,6 +262,16 @@ final class AppModel {
                     context.insert(BoxRecord(BoxPurchase(id: "seed-collection-\(i)", at: at, nightKey: key, price: 400 + 10 * i,
                                                          seed: UInt64(i + 1), tableVersion: 1, prize: prize, payout: 0)))
                 }
+            }
+            if args.contains("-seedNap") {                        // screenshots: one complete afternoon nap (see -showResult nap)
+                let day = cal.date(byAdding: .day, value: -1, to: Date())!
+                let w = settings.schedule.window(containing: cal.startOfDay(for: day) + 12 * 3600, calendar: cal)
+                let nap = NightRecord(window: w, buildingId: "", isDebug: false, setupGrace: 300, isNap: true)
+                nap.append(.started, at: w.bedtime)
+                nap.append(.confirmed, at: w.wake)
+                nap.outcomeRaw = Outcome.complete.rawValue
+                nap.finalizedAt = w.wake + 60
+                context.insert(nap)
             }
             try? context.save()
         }
@@ -325,6 +364,8 @@ final class AppModel {
         self.timeSensitiveCheck = timeSensitiveCheck
         self.protectedDataAvailable = protectedDataAvailable
         self.defaults = defaults
+        self.guideReplayRequested = defaults.bool(forKey: Self.guideReplayKey)
+        self.briefingReplayRequested = defaults.bool(forKey: Self.briefingReplayKey)
         self.bootDate = bootDate
         self.sync = SyncEngine(transport: syncTransport, defaults: defaults, settleDelay: syncDelay, guideWait: syncGuideWait,
                                retryDelay: syncRetryDelay)
@@ -346,6 +387,8 @@ final class AppModel {
         }
         #endif
         sync.attach(self)
+        configureDiagnostics()
+        configureRestScreen()
         if initialSettings == nil, let lang = Self.launchLanguage() { language = lang }
         resumeActiveNight()
         if DevArgs.list.contains("-forgiveNight") { forgiveNight() }
@@ -356,12 +399,15 @@ final class AppModel {
         #if targetEnvironment(simulator)
         let wantedResult: Outcome = DevArgs.list.firstIndex(of: "-showResult").map {
             DevArgs.list.indices.contains($0 + 1) && DevArgs.list[$0 + 1] == "unfinished" } == true ? .unfinished : .complete
+        let wantsNap = DevArgs.list.firstIndex(of: "-showResult").map {
+            DevArgs.list.indices.contains($0 + 1) && DevArgs.list[$0 + 1] == "nap" } == true       // with -seedNap
         if DevArgs.list.contains("-showResult"), active == nil, initialSettings == nil,
-           let rec = realResults().last(where: { $0.outcome == wantedResult }) {       // store screenshots: the morning screen
+           let rec = wantsNap ? napResults().last(where: { $0.outcome == .complete })
+                              : realResults().last(where: { $0.outcome == wantedResult }) {       // store screenshots: the morning screen
             let entry = Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
                 .last { $0.key.description == rec.keyString }
             shownResult = rec
-            lastReward = entry?.coins ?? 0
+            lastReward = rec.isNap ? NapPlan.reward(.complete) : entry?.coins ?? 0
             lastReceipt = entry.flatMap { Economy.Receipt($0, calmTotal: rec.result?.calmHoursTotal) }
             if DevArgs.list.contains("-calmDemo"), let r = lastReceipt {     // screenshots: a night with 7 of 8 calm hours
                 var lines = r.lines.filter { if case .calmHours = $0.kind { false } else { true } }
@@ -388,7 +434,27 @@ final class AppModel {
         ticker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.refresh() }
         }
+        ticker?.tolerance = 0.3                   // L8: the system may coalesce the tick with other wake-ups
     }
+
+    /// The rest screen (13k) reads the night through these facts; it is off in unit tests and in `-screenshot` runs
+    /// (unless `-restAfter S` is given, which also shortens the 30 s).
+    private func configureRestScreen() {
+        let args = DevArgs.list
+        let after = Self.devValue("-restAfter", in: args).flatMap(Double.init)
+        rest.now = { [weak self] in self?.clock.now ?? Date() }
+        rest.night = { [weak self] in
+            guard let self else { return .init(isBuilding: false, setupEnds: nil, pauseRunning: false) }
+            return .init(isBuilding: phase == .building, setupEnds: graceEnds, pauseRunning: pauseEnds() != nil)
+        }
+        rest.onDiag = { [weak self] k, v in self?.diag.note(k, v) }
+        // the black screen ends by a touch: read the volume again (the observer may have missed a change, B53)
+        rest.onWoke = { [weak self] in self?.rereadMediaVolume() }
+        if let after, after > 0 { rest.delay = after }
+        rest.enabled = servicesEnabled && (!args.contains("-screenshot") || after != nil)
+    }
+
+    private static func devValue(_ flag: String, in args: [String]) -> String? { DevArgs.value(after: flag, in: args) }
 
     // MARK: - queries
 
@@ -413,6 +479,9 @@ final class AppModel {
         var jokerState: (results: [NightResult], uses: [JokerUse])?
         var coinsEarned: Int?, streak: Int?
         var stats: StatsSummary?
+        var achievements: [Achievements.Unlocked]?
+        var journalWeeks: [WeekSummary]?
+        var coinsByNight: [NightKey: Int]?              // the ledger's coins per night (L6)
     }
 
     /// Not observed: filling the cache inside a view body must not invalidate that view. The reads of `dataRevision`
@@ -425,10 +494,31 @@ final class AppModel {
         if derived.key != key { derived = Derived(key: key) }
     }
 
+    /// The fetched rows between two writes (13p, j5c): the 1 s ticker and every view read them, a fetch each time cost
+    /// 4 ms at 100 nights and 12 ms at 365. The cache can never be stale: it is dropped by `dataRevision` (every write
+    /// through `save()`, a merged sync file, a Health read, a restore), by every `ModelContext.didSave` – a save from
+    /// anywhere – and by `dropRecordsCache()` where rows are deleted; and while the context has unsaved changes (an
+    /// insert or a delete not saved yet) the rows are fetched fresh and not stored.
+    @ObservationIgnored private var recordsCache: (revision: Int, rows: [NightRecord])?
+    @ObservationIgnored nonisolated(unsafe) private var didSaveObserver: (any NSObjectProtocol)?
+
     func records() -> [NightRecord] {
-        _ = dataRevision
-        return (try? context.fetch(FetchDescriptor<NightRecord>(sortBy: [SortDescriptor(\.bedtime)]))) ?? []
+        let revision = dataRevision
+        if didSaveObserver == nil {
+            didSaveObserver = NotificationCenter.default.addObserver(forName: ModelContext.didSave, object: nil, queue: nil) { [weak self] _ in
+                guard Thread.isMainThread else { return }
+                MainActor.assumeIsolated { self?.recordsCache = nil }
+            }
+        }
+        if !context.hasChanges, let cache = recordsCache, cache.revision == revision { return cache.rows }
+        let rows = (try? context.fetch(FetchDescriptor<NightRecord>(sortBy: [SortDescriptor(\.bedtime)]))) ?? []
+        recordsCache = context.hasChanges ? nil : (revision, rows)
+        return rows
     }
+
+    deinit { if let didSaveObserver { NotificationCenter.default.removeObserver(didSaveObserver) } }
+
+    private func dropRecordsCache() { recordsCache = nil }
 
     /// Finalized real nights, oldest first (debug nights never count).
     func realResults() -> [NightRecord] {
@@ -612,9 +702,16 @@ final class AppModel {
         townSnapshot?.buildings.first { $0.nightKey == key }
     }
 
+    /// What the night paid; the ledger is replayed once per change of the data, not once per call (L6, 13p).
     func coinsEarned(for key: NightKey) -> Int? {
-        Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
-            .last { $0.key == key }?.coins
+        validateDerived()
+        if let cached = derived.coinsByNight { return cached[key] }
+        var byNight: [NightKey: Int] = [:]
+        for entry in Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes()) {
+            byNight[entry.key] = entry.coins                     // the last entry of a night wins, as `.last` did
+        }
+        derived.coinsByNight = byNight
+        return byNight[key]
     }
 
     /// The results Stats averages over. A counted test night (`bonus-…`) stays a night of the streak, the town and the
@@ -680,9 +777,13 @@ final class AppModel {
 
     /// Unlocked achievements, oldest first (replayed like the coins – old nights count too).
     var achievements: [Achievements.Unlocked] {
-        Achievements.unlocked(results: coreResults(), naps: napResults().compactMap(\.result),
-                              repairs: townSnapshot?.repairs ?? [], catalog: catalog, calendar: calendar,
-                              breaks: streakBreaks)
+        validateDerived()
+        if let cached = derived.achievements { return cached }
+        let value = Achievements.unlocked(results: coreResults(), naps: napResults().compactMap(\.result),
+                                          repairs: townSnapshot?.repairs ?? [], catalog: catalog, calendar: calendar,
+                                          breaks: streakBreaks)
+        derived.achievements = value
+        return value
     }
     /// Achievements earned by the night in `shownResult` (result screen).
     private(set) var newAchievements: [Achievement] = []
@@ -691,8 +792,12 @@ final class AppModel {
 
     /// Weeks (Monday–Sunday evenings) with nights or naps, newest first.
     var journalWeeks: [WeekSummary] {
-        WeeklyJournal.weeks(results: coreResults(), naps: napResults().compactMap(\.result),
-                            calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
+        validateDerived()
+        if let cached = derived.journalWeeks { return cached }
+        let value = WeeklyJournal.weeks(results: coreResults(), naps: napResults().compactMap(\.result),
+                                        calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
+        derived.journalWeeks = value
+        return value
     }
 
     func journalWeek(monday: NightKey) -> WeekSummary {
@@ -779,6 +884,15 @@ final class AppModel {
     /// Identifies the newest building (its night key) – the camera glides to it once per new one (B30).
     private(set) var townNewest: String?
 
+    /// The sprites the Town and the journal's thumbnails draw (13p): decoded in the background so that their first visit
+    /// does not stall the main thread. The town's own pieces first, then the buildings of the nights.
+    var spriteIdsToPrepare: [String] {
+        var seen = Set<String>()
+        let town = townRender?.sprites.map(\.spriteId) ?? []
+        let nights = realResults().map(\.buildingId)
+        return (town + nights).filter { !$0.isEmpty && seen.insert($0).inserted }
+    }
+
     /// The town decorations won from boxes, in the order won; with the debug flag `-showAllDecorations` all twelve.
     private func ownedDecorations() -> [String] {
         #if DEBUG
@@ -828,7 +942,9 @@ final class AppModel {
         context.insert(rec)
         save()
         active = rec
+        diagOpen(rec)                               // the track opens first: the services' own lines are kept
         startServices(for: rec)
+        diagBegin(rec)
         armAlarm(for: rec, setupEnds: window.setupEnds(start: now, rules: NapPlan.rules))
         fx("fx_sleep", volume: 0.6)
         say(.napStart, after: Motion.t(1.4))
@@ -844,7 +960,26 @@ final class AppModel {
     private(set) var onboardingDone = false
     /// The first-run guide is due: not finished, and not held back while a fresh install makes its first read of the
     /// sync place (a guide finished on another device is then not shown at all – phase SYNC).
-    var needsGuide: Bool { !onboardingDone && !sync.holdsGuide }
+    var needsGuide: Bool { (!onboardingDone || guideReplayRequested || firstRunGuideOpen) && !sync.holdsGuide }
+    /// The first-run guide cover is on screen. A plain UI flag (never stored, backed up or synced): once the guide is
+    /// open it finishes by itself – a sync merge that brings a finished guide from another device must not close it
+    /// mid-way (M9); the merged date is kept either way. Cleared by `completeOnboarding()`.
+    private(set) var firstRunGuideOpen = false
+    func guideCoverAppeared() { if needsGuide { firstRunGuideOpen = true } }
+    /// Debug replay requests: local only (never in the backup, the sync file or SwiftData), so a synced date cannot
+    /// close a replayed guide (B39).
+    static let guideReplayKey = "debug.guideReplay"
+    static let briefingReplayKey = "debug.briefingReplay"
+    private(set) var guideReplayRequested = false
+    /// Settings → Guide: the replayed guide is open. A plain UI flag (never stored, backed up or synced) that lives here
+    /// because a language switch rebuilds Settings (`.id(lang)`) and would reset a `@State` there (B40).
+    var showGuideReplay = false
+    // Unsaved Settings drafts (L5): plain UI state (never stored, backed up or synced) that lives here because a language
+    // switch rebuilds Settings (`.id(lang)`) and would reset a `@State` there – cleared when saved or cancelled.
+    var scheduleDraft: Schedule?
+    var pendingRestore: BackupFile?
+    var cityField: CityField?
+    private(set) var briefingReplayRequested = false
     private(set) var firstNightBriefed = false
 
     private func progress() -> UserProgress {
@@ -1082,7 +1217,10 @@ final class AppModel {
 
     func completeOnboarding() {
         let p = progress()
-        p.onboardingCompletedAt = clock.now
+        if p.onboardingCompletedAt == nil { p.onboardingCompletedAt = clock.now }
+        defaults.removeObject(forKey: Self.guideReplayKey)
+        guideReplayRequested = false
+        firstRunGuideOpen = false
         if p.changeWeekStart == nil { p.changeWeekStart = clock.now }       // the guide set the first schedule: day 1 of the first change week
         save()
         onboardingDone = true
@@ -1092,11 +1230,14 @@ final class AppModel {
 
     /// The "Tvoja prvá noc" checklist is shown once, before the first REAL night is started.
     var needsFirstNightBriefing: Bool {
-        !firstNightBriefed && debugWindow == nil && !records().contains { !$0.isDebug && $0.startedAt != nil }
+        (!firstNightBriefed || briefingReplayRequested) && debugWindow == nil && !records().contains { !$0.isDebug && $0.startedAt != nil }
     }
 
     func acknowledgeFirstNightBriefing() {
-        progress().firstNightBriefingAt = clock.now
+        let p = progress()
+        if p.firstNightBriefingAt == nil { p.firstNightBriefingAt = clock.now }
+        defaults.removeObject(forKey: Self.briefingReplayKey)
+        briefingReplayRequested = false
         save()
         firstNightBriefed = true
     }
@@ -1177,6 +1318,7 @@ final class AppModel {
         guard active == nil else { throw BackupError.nightRunning }
         guard b.version <= BackupFile.currentVersion else { throw BackupError.tooNew }
         try context.delete(model: NightRecord.self)
+        dropRecordsCache()
         for n in b.nights { context.insert(NightRecord(backup: n)) }
         let p = progress()
         p.onboardingCompletedAt = b.onboardingCompletedAt
@@ -1333,11 +1475,10 @@ final class AppModel {
 
     /// Debug: show the guide and the first-night checklist again.
     func resetGuide() {
-        let p = progress()
-        p.onboardingCompletedAt = nil
-        p.firstNightBriefingAt = nil
-        save()
-        loadProgress()
+        defaults.set(true, forKey: Self.guideReplayKey)
+        defaults.set(true, forKey: Self.briefingReplayKey)
+        guideReplayRequested = true
+        briefingReplayRequested = true
     }
 
     // MARK: - phase machine
@@ -1345,34 +1486,46 @@ final class AppModel {
     func refresh() { refresh(now: clock.now) }
 
     func refresh(now: Date) {
+        defer { rest.evaluate() }          // at once when the phase leaves .building or a pause starts
         applyPendingScheduleIfDue(now: now)
         // the lock-screen warning ends with its promised seconds, at the wake time and with the night
-        if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false { endLockWarning() }
+        if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false {
+            endLockWarning(why: now >= deadline ? "deadline" : (active == nil ? "end" : "wake"))
+        }
         if let rec = active {
+            fireSetupEndWarningIfDue(now: now)
             setEarlyFlags(canStartEarly: false, tonightPlayed: false)
+            if !diag.setupEndNoted, diag.record === rec, let g = graceEnds, now >= g {
+                diag.setupEndNoted = true
+                diag.notePower("setup")
+            }
             let log = rec.log
             if log.confirmedAt != nil || now > log.window.confirmLateUntil {
                 finalize(rec)
             } else if now >= log.window.wake {
                 if !log.has(.alarmFired) { ringAlarm() } else { startAlarmSound() }
-                phase = .alarm
+                setPhase(.alarm)
             } else {
-                phase = .building
+                setPhase(.building)
             }
             return
         }
         tidySystemAlarm(now: now)
         if shownResult != nil {
             setEarlyFlags(canStartEarly: false, tonightPlayed: false)
-            phase = .result
+            setPhase(.result)
             return
         }
-        window = debugWindow ?? settings.schedule.window(containing: now, calendar: calendar)
+        let w = debugWindow ?? settings.schedule.window(containing: now, calendar: calendar)
+        if window != w { window = w }
         let alreadyPlayed = debugWindow == nil && records().contains { $0.id == window.key.description }
-        phase = !alreadyPlayed && window.canStart(at: now, rules: nextNightRules) ? .canStart : .idle
+        setPhase(!alreadyPlayed && window.canStart(at: now, rules: nextNightRules) ? .canStart : .idle)
         setEarlyFlags(canStartEarly: debugWindow == nil && !alreadyPlayed && window.canStartEarly(at: now),
                       tonightPlayed: alreadyPlayed)
     }
+
+    /// Writes the phase only when it changes, so the 1 s tick of an unchanged state never notifies observers (M4).
+    private func setPhase(_ new: Phase) { if phase != new { phase = new } }
 
     /// Writes the two flags only when they change, so an unchanged value never notifies observers.
     private func setEarlyFlags(canStartEarly new: Bool, tonightPlayed played: Bool) {
@@ -1446,7 +1599,9 @@ final class AppModel {
         save()
         active = rec
         debugWindow = nil
+        diagOpen(rec)                               // the track opens first: the services' own lines are kept
         startServices(for: rec)
+        diagBegin(rec)
         armAlarm(for: rec, setupEnds: rec.window.setupEnds(start: now, rules: rec.rules))
         fx("fx_sleep", volume: 0.6)
         say(.goodNight, after: Motion.t(1.4))
@@ -1514,6 +1669,7 @@ final class AppModel {
     func clearNights() {
         guard active == nil else { return }
         try? context.delete(model: NightRecord.self)
+        dropRecordsCache()
         save()
         shownResult = nil
         rebuildTown()
@@ -1690,6 +1846,79 @@ final class AppModel {
     @ObservationIgnored private var systemAlarmQueue: Task<Void, Never>?
     @ObservationIgnored private var consentTask: Task<Void, Never>?
 
+    // MARK: the media volume and the alarm hand-over (13ac-2, B53)
+
+    /// The media volume (0…1) as the one night-long observer reports it; -1 = unknown (no night services, no reading yet).
+    /// Tests set it with `setMediaVolume(_:)`; `-fakeVolume V[,S,V2]` drives it in the simulator.
+    private(set) var mediaVolume: Double = -1
+    /// Our own alarm rings but cannot be heard (media volume below 10 %): the backup notifications stay armed and the
+    /// system alarm has been moved to the alarm moment (13ah) until the volume comes up.
+    @ObservationIgnored private var alarmInaudible = false
+    /// The yield to a due system alarm was written to the track already (once per alarm).
+    @ObservationIgnored private var yieldNoted = false
+    /// Our alarm player has started and its end is not noted yet (diagnostics).
+    @ObservationIgnored private var alarmSounding = false
+    @ObservationIgnored private var alarmTries = 0
+    @ObservationIgnored private var alarmRetries = 0
+    @ObservationIgnored private var alarmTryFailureNoted = false
+    @ObservationIgnored private var alarmTrySuccessNoted = false
+    @ObservationIgnored private let volumeWatcher = MediaVolumeWatcher()
+    @ObservationIgnored private lazy var mediaVolumeNote = QuietNote { [weak self] now, was in
+        self?.diag.note("vol", "media=\(now) was=\(was)")
+    }
+    @ObservationIgnored private lazy var appVolumeNote = QuietNote { [weak self] now, was in
+        self?.diag.note("vol", "app=\(now) was=\(was)")
+    }
+
+    /// Our alarm counts as audible from 10 % of media volume up (13ag; was: unless 0 %). Unknown counts as audible.
+    private var alarmIsAudible: Bool { VolumeReminder.alarmAudible(volume: mediaVolume) }
+
+    private static func percent(_ v: Double) -> Int { Int((min(max(v, 0), 1) * 100).rounded()) }
+    private var mediaPercentText: String { mediaVolume < 0 ? "na" : "\(Self.percent(mediaVolume))" }
+
+    /// The reading of the media volume (the observer, the fake, or a test). Rising to 10 % or more (13ag) while our alarm rings
+    /// without being heard does the normal stand-down, once.
+    func setMediaVolume(_ v: Double) {
+        let old = mediaVolume
+        mediaVolume = v
+        if old >= 0, v >= 0, Self.percent(old) != Self.percent(v) {
+            mediaVolumeNote.change(from: Self.percent(old), to: Self.percent(v))
+            // 13ad (B54): the volume buttons make no touch, so the black screen would never show the 🔇 / 🔉 line – a
+            // turn DOWN into the line's range lights the screen up (it rests again after the normal 30 s). Never on a rise.
+            if rest.resting, Self.percent(v) < Self.percent(old), VolumeReminder.level(volume: v) != nil {
+                rest.wake(why: "volume")
+            }
+        }
+        if alarmInaudible, alarmIsAudible, let rec = active {
+            alarmInaudible = false
+            // the normal stand-down only while OUR alarm really rings (its two minutes are not over, and with services on
+            // its engine runs); otherwise a rising volume must not touch a system alarm that is the only audible channel.
+            // An engine lost to a system alarm is picked up by the next `startAlarmSound` tick, which rings ours and then
+            // stands down in `alarmSoundStarted` – the system alarm is never stopped before ours plays.
+            let over = rec.log.has(.alarmStopped) || clock.now >= rec.wake + rec.rules.alarmDuration - 1
+            let ours = !servicesEnabled || (audio.isAlarmRinging && audio.isEngineRunning)
+            if !over, ours { standDownBehindOurAlarm() }
+        }
+    }
+
+    /// Where the media volume is read from at the decision points (the alarm); a seam for tests.
+    @ObservationIgnored var mediaVolumeReader: () -> Double = { MediaVolumeWatcher.reading() }
+
+    /// B53: the observer reports only while the audio session is active – a change made during a call, another app's
+    /// alarm or a failed restart never reaches it. So the volume is read again where it decides something: at the alarm,
+    /// at every try of the alarm sound, and after the audio came back.
+    private func rereadMediaVolume() {
+        guard servicesEnabled else { return }
+        setMediaVolume(mediaVolumeReader())
+    }
+
+    /// "wake+30s" – a time relative to the wake time of the running (or just tracked) night.
+    private func wakeRelative(_ date: Date) -> String {
+        guard let wake = (active ?? diag.record)?.wake else { return "na" }
+        let d = Int(date.timeIntervalSince(wake).rounded())
+        return "wake\(d >= 0 ? "+" : "-")\(abs(d))s"
+    }
+
     /// When the safety alarm rings (nil = none, or its time has passed): the owner confirmed waking up early, and the
     /// system alarm stays on in case he falls asleep again.
     var safetyAlarmAt: Date? {
@@ -1700,7 +1929,7 @@ final class AppModel {
     /// "I'm really up": cancels the safety alarm.
     func switchOffSafetyAlarm() {
         guard systemAlarmIsSafety else { return }
-        cancelSystemAlarm()
+        cancelSystemAlarm(why: "safetyOff")
     }
 
     // MARK: system alarm test (Settings → Developer → System alarm test)
@@ -1742,6 +1971,7 @@ final class AppModel {
 
     /// The app became active: with no night / nap running, opening SleepHole silences a ringing safety / test alarm.
     func appBecameActive() {
+        if active != nil { rereadMediaVolume() }        // 13ad: the observer may have missed a change (B53's stale reading)
         guard active == nil else { return }
         stopRingingSystemAlarms()
         Task { await refreshSleepIfIdle() }
@@ -1762,7 +1992,8 @@ final class AppModel {
     /// `shown` = the seconds the title / notification promise; `ringFor` = the whole trip allowance (from the trip's
     /// start), so the warning rings until the real collapse moment (B33: the alarm starts sounding ~2.5 s late).
     private func startLockWarning(shown seconds: TimeInterval, ringFor: TimeInterval, at date: Date) {
-        endLockWarning()
+        endLockWarning(why: "restart")
+        diag.note("warn", "lock start secs=\(Int(seconds)) ring=\(Int(ringFor))")
         lockWarningDeadline = date + ringFor
         // B28: the system alarm interrupts our audio session and iOS then suspends the app ~4 s later, so the deadline
         // would never run; a background task keeps it alive until the warning has ended
@@ -1786,8 +2017,9 @@ final class AppModel {
         }
     }
 
-    private func endLockWarning() {
+    private func endLockWarning(why: String = "end") {
         guard lockWarningDeadline != nil else { return }
+        diag.note("warn", "lock end why=\(why)")
         lockWarningDeadline = nil
         lockWarningTask?.cancel()
         lockWarningTask = nil
@@ -1841,6 +2073,7 @@ final class AppModel {
         enqueueSystemAlarm { [weak self] in
             guard let self else { return }
             let accepted = await self.systemAlarm.schedule(at: date, soundFile: file)
+            if !safety { self.diag.note("sysalarm", "schedule at=\(self.wakeRelative(date)) ok=\(accepted ? 1 : 0)") }
             if !accepted, self.systemAlarmAt == date {
                 self.systemAlarmAt = before.at
                 self.systemAlarmIsSafety = before.safety
@@ -1848,7 +2081,8 @@ final class AppModel {
         }
     }
 
-    private func cancelSystemAlarm() {
+    private func cancelSystemAlarm(why: String = "other") {
+        if systemAlarmAt != nil { diag.note("sysalarm", "cancel why=\(why)") }
         systemAlarmAt = nil
         systemAlarmIsSafety = false
         testAlarmTime = nil
@@ -1862,8 +2096,10 @@ final class AppModel {
     private func armAlarm(for rec: NightRecord, setupEnds: Date) {
         systemAlarmMoved = false
         backupNotificationsOn = true
+        resetAlarmDiagState()
         if servicesEnabled {
             Notifications.scheduleNight(wake: rec.wake, alarmFile: settings.alarmSound.fileName)
+            diag.note("notif", "backup scheduled n=5")
         }
         // the night starts with SleepHole in front: no "setup is running out" reminder until the user leaves it
         outsideApp = false
@@ -1894,7 +2130,7 @@ final class AppModel {
         guard settings.usesSystemAlarm != on else { return }
         settings.usesSystemAlarm = on
         if !on {
-            cancelSystemAlarm()
+            cancelSystemAlarm(why: "switchedOff")
             return
         }
         let rec = active.flatMap { $0.wake > clock.now ? $0 : nil }     // a night / nap whose own alarm has not rung yet
@@ -1921,16 +2157,25 @@ final class AppModel {
     /// two minutes, set again for the moment ours stops, so it still takes over when the owner sleeps through them.
     private func moveSystemAlarmBehindOurs() {
         guard !systemAlarmMoved, let rec = active, !systemAlarmIsSafety, let at = systemAlarmAt else { return }
+        // B53: ours cannot be heard (media volume below 10 %, 13ag) → the system alarm is left alone (13ah: it was moved to the alarm moment), due, ringing or waiting
+        guard alarmIsAudible else {
+            if !yieldNoted { yieldNoted = true; diag.note("sysalarm", "keep why=inaudible") }
+            return
+        }
         let now = clock.now
         let target = rec.wake + rec.rules.alarmDuration
         if at <= now {
             systemAlarmMoved = true
-            cancelSystemAlarm()                                   // stops a ringing one
-            if target.timeIntervalSince(now) > 1 { scheduleSystemAlarm(at: target) }
+            cancelSystemAlarm(why: "moved")                       // stops a ringing one
+            if target.timeIntervalSince(now) > 1 {
+                diag.note("sysalarm", "move at=\(wakeRelative(target))")
+                scheduleSystemAlarm(at: target)
+            }
             return
         }
         guard at < target else { return }
         systemAlarmMoved = true
+        diag.note("sysalarm", "move at=\(wakeRelative(target))")
         scheduleSystemAlarm(at: target)
     }
 
@@ -1938,13 +2183,24 @@ final class AppModel {
     /// expired → the system alarm is cancelled. Confirmed EARLY (a night, from wake − 30 min) → it moves to the wake
     /// time and stays as a safety alarm. Without consent there is no safety alarm. A nap confirmed early (its last
     /// 20 %) leaves none: it is cancelled like any nap's alarm.
+    /// The track's line for `settleSystemAlarm` (written before the track ends; the settling itself runs after it).
+    private func noteSystemAlarmSettle(for rec: NightRecord) {
+        guard systemAlarmAt != nil else { return }
+        let early = !rec.isNap && rec.log.confirmedAt.map { $0 < rec.wake } == true
+        if early, settings.usesSystemAlarm, systemAlarm.consent == .allowed, rec.wake > clock.now {
+            diag.note("sysalarm", "move at=wake+0s")
+        } else {
+            diag.note("sysalarm", "cancel why=\(rec.log.confirmedAt != nil ? "confirmed" : "abandoned")")
+        }
+    }
+
     private func settleSystemAlarm(for rec: NightRecord) {
         systemAlarmMoved = false
         let early = !rec.isNap && rec.log.confirmedAt.map { $0 < rec.wake } == true
         if early, settings.usesSystemAlarm, systemAlarm.consent == .allowed, rec.wake > clock.now {
             scheduleSystemAlarm(at: rec.wake, safety: true)
         } else {
-            cancelSystemAlarm()
+            cancelSystemAlarm(why: rec.log.confirmedAt != nil ? "confirmed" : "abandoned")
         }
     }
 
@@ -1986,8 +2242,13 @@ final class AppModel {
         setupReminderAt = nil
         if servicesEnabled { Notifications.cancelSetupReminder() }
         if closedAt != nil, servicesEnabled { Notifications.cancelClosed() }       // the owner is back
-        if closedAt != nil { cancelCollapseNotice() }
+        // a relaunch ends every trip in the log (`.appLaunched`): a warning or a collapse notice set in advance (13ae) would
+        // now be false
+        if servicesEnabled { Notifications.cancelNudge() }
+        cancelCollapseNotice(why: "relaunch")
+        diagOpen(rec, resume: (restarted: restarted, closed: closedAt != nil))
         startServices(for: rec)
+        diagBegin(rec)
         // came back in time after a "SleepHole was closed" warning → the same "phew" as after "Come back!"
         if let c = closedAt, !restarted, now < rec.wake, let graceEnds, c >= graceEnds,
            PausePolicy.activeUntil(rec.log, at: c) == nil, collapsedAt == nil {
@@ -1995,16 +2256,87 @@ final class AppModel {
         }
     }
 
+    // MARK: - diagnostic track (13ab)
+
+    private func configureDiagnostics() {
+        diag.now = { [weak self] in self?.clock.now ?? Date() }
+        diag.commit = { [weak self] in try? self?.context.save() }      // never `save()`: no revision bump, no sync wake-up
+        diag.observesSystem = servicesEnabled
+    }
+
+    /// The track opens BEFORE `startServices`, so what the services write while they start (`sound start`, `sound hold on`,
+    /// …) is kept; with `resume` the `ctx.resume` line comes first.
+    private func diagOpen(_ rec: NightRecord, resume: (restarted: Bool, closed: Bool)? = nil) {
+        diag.begin(rec)
+        if let resume {
+            diag.setupEndNoted = graceEnds.map { clock.now >= $0 } ?? false
+            diag.note("ctx.resume", "restart=\(resume.restarted ? 1 : 0) closed=\(resume.closed ? 1 : 0)")
+        }
+    }
+
+    /// The start snapshot (`ctx.*`) of a night / nap that was just started or picked up after a relaunch. Device state
+    /// only; saved at once.
+    private func diagBegin(_ rec: NightRecord) {
+        let began = rec.startedAt ?? rec.bedtime
+        let early = rec.window.isEarlyStart(began)
+        diag.note("ctx.app", "v=\(DeviceReading.appVersionText()) ios=\(UIDevice.current.systemVersion) lang=\(language.rawValue) nap=\(rec.isNap ? 1 : 0) strict=\(rec.rules.lockScreenCollapses ? 1 : 0) setup=\(Int(rec.window.setupEnds(start: began, rules: rec.rules).timeIntervalSince(began))) early=\(early ? 1 : 0)")
+        let timer = settings.ambienceMinutes.map { "\($0)min" } ?? "all"
+        diag.note("ctx.sound", "amb=\(sleepSound?.ambience.rawValue ?? "silence") vol=\(Int((settings.volume * 100).rounded())) timer=\(timer)")
+        let consent: String = switch systemAlarm.consent {
+        case .allowed: "allowed"
+        case .denied: "denied"
+        case .notAsked: "notAsked"
+        case .unavailable: "unavailable"
+        }
+        let alarm = "sound=\(settings.alarmSound.rawValue) start=\(settings.alarmStartPercent) end=\(settings.alarmEndPercent) rise=\(Int(settings.effectiveRiseSeconds)) sys=\(settings.usesSystemAlarm ? "on" : "off") alarmkit=\(consent)"
+        if servicesEnabled {
+            Task { [weak self, weak rec] in
+                let notif = await Notifications.diagnosticSummary()       // may land a moment after the other ctx lines
+                guard let self, let rec, self.diag.record === rec else { return }
+                self.diag.note("ctx.alarm", "\(alarm) \(notif)")
+            }
+        } else {
+            diag.note("ctx.alarm", "\(alarm) notif=na ts=na")
+        }
+        diag.note("ctx.device", "vo=\(UIAccessibility.isVoiceOverRunning ? 1 : 0) lock=\(monitor.canTellLockFromLeaving() ? 1 : 0) \(DeviceReading.powerText()) vol=\(DeviceReading.volumePercent()) out=\(DeviceReading.routeTypes()) bright=\(DeviceReading.brightnessPercent())")
+        diag.flush()
+    }
+
+    /// A `life` / `call` line from the lifecycle monitor. Going to the background saves the track at once: iOS may suspend
+    /// the app right after, and the track must hold what happened up to there.
+    func diagFromMonitor(_ k: String, _ v: String) {
+        diag.note(k, v)
+        if k == "life", v == "background" { diag.flush() }
+    }
+
+    /// Power lines at the rule events the owner asked for, and the immediate save at the alarm.
+    private func noteDiagnostics(after kind: NightEventKind) {
+        switch kind {
+        case .locked, .returned: diag.notePower(kind.rawValue)
+        case .confirmed: diag.notePower("confirmed")
+        case .alarmFired:
+            diag.notePower("alarm")
+            diag.flush()
+        default: break
+        }
+    }
+
     private func startServices(for rec: NightRecord) {
         // the sound from Settings plays from the start – unless the owner stopped it during an earlier night
         // (B19): then the engine still starts (it keeps the app alive) but silent, and there is no sleep timer
-        let ambience: AudioKeeper.Ambience = settings.playsAtStart ? settings.ambience : .silence
+        // B60: a night picked up at or after its wake time plays no sleep sound at all (keep-alive only, no `sleepSound`)
+        let ambience: AudioKeeper.Ambience = settings.playsAtStart && clock.now < rec.wake ? settings.ambience : .silence
         if ambience != .silence {
             sleepSound = (ambience, settings.ambienceSeconds.map { (rec.startedAt ?? clock.now) + $0 })
         }
         guard servicesEnabled else { return }
+        SoundFX.stopPreview()                       // 13z: a Settings alarm preview never plays on into a night or nap
         UIApplication.shared.isIdleTimerDisabled = false
+        audio.onDiag = { [weak self] k, v in self?.diag.note(k, v) }
+        audio.onRestored = { [weak self] in self?.rereadMediaVolume() }
         try? audio.start(ambience: ambience, volume: settings.volume)
+        volumeWatcher.start { [weak self] v in self?.setMediaVolume(v) }     // one observer for the whole night / nap
+        seedCallHold()
         if ambience != .silence, let total = settings.ambienceSeconds {   // sleep timer from the start of the night
             let elapsed = clock.now.timeIntervalSince(rec.startedAt ?? clock.now)
             audio.sleepTimer(seconds: max(0, total - elapsed), volume: settings.volume)
@@ -2012,8 +2344,10 @@ final class AppModel {
         audio.onInterruption = { [weak self] report in
             self?.append(report.journalKind)
         }
-        monitor.onEvent = { [weak self] kind, date in self?.append(kind, at: date) }
+        monitor.onEvent = { [weak self] kind, date in self?.monitorEvent(kind, at: date) }
         monitor.onTerminate = { [weak self] in self?.appWillTerminate() }
+        monitor.now = { [weak self] in self?.clock.now ?? Date() }
+        monitor.onDiag = { [weak self] k, v in self?.diagFromMonitor(k, v) }
         monitor.start()
         if LockLab.shouldRecord(arguments: DevArgs.list, isDebugNight: rec.isDebug) {
             monitor.onRaw = { [weak self] text in self?.lockLab.note(text) }
@@ -2032,23 +2366,91 @@ final class AppModel {
     private func stopServices() {
         sleepSound = nil
         waitingForReturn = false
+        setupEndWarning = nil                               // 13ae: nothing set for the setup's end outlives the night
+        setupEndTask?.cancel()
+        setupEndTask = nil
+        nudgeLive = false
         backupNotificationsOn = false                       // cancelled with the night's other notifications below
+        alarmInaudible = false
         guard servicesEnabled else { return }
+        volumeWatcher.stop()
+        mediaVolume = -1
         alarmTask?.cancel()
         alarmTask = nil
         monitor.stop()
         if lockLab.isRunning { lockLab.stop(); monitor.onRaw = nil }
         monitor.onEvent = nil
         monitor.onTerminate = nil
-        audio.stop()
+        monitor.onDiag = nil
+        seededHoldTask?.cancel()
+        seededHoldTask = nil
+        audio.stop()                                        // clears the call hold; notes the sound's last state first
+        audio.onDiag = nil
+        audio.onRestored = nil
         Notifications.cancelNight()
+    }
+
+    // MARK: - phone calls and the sleep sound (13ac, B52)
+
+    /// An event from the lifecycle monitor. A call holds the sleep sound silent from the ring until it ends: the audio hold
+    /// is set here, directly, whatever `append` later decides about the rule event.
+    func monitorEvent(_ kind: NightEventKind, at date: Date) {
+        switch kind {
+        case .callStarted:
+            seededHoldTask?.cancel(); seededHoldTask = nil
+            if servicesEnabled { audio.setCallHold(true) }
+        case .callEnded:
+            seededHoldTask?.cancel(); seededHoldTask = nil
+            // another call (one the monitor never saw, e.g. a seeded one) may still be live: then the hold stays
+            if servicesEnabled { liveCallProbe() ? seedCallHold() : audio.setCallHold(false) }
+        default: break
+        }
+        append(kind, at: date)
+    }
+
+    /// A night or nap that starts or is picked up while a call is live: the audio hold only – no rule events (the monitor
+    /// reports a call only when it changes; the call's end may never reach it, so the live calls are watched until none is left).
+    private func seedCallHold() {
+        seededHoldTask?.cancel()
+        seededHoldTask = nil
+        guard liveCallProbe() else { return }
+        audio.setCallHold(true)
+        seededHoldTask = Task { [weak self] in
+            while !Task.isCancelled, let self, self.liveCallProbe() { try? await Task.sleep(for: self.callPollInterval) }
+            guard !Task.isCancelled, let self else { return }
+            self.seededHoldTask = nil
+            self.audio.setCallHold(false)
+        }
+    }
+
+    /// Whether a call is live – a seam for tests; CallKit by default.
+    @ObservationIgnored var liveCallProbe: () -> Bool = { AppModel.liveCallExists() }
+    @ObservationIgnored var callPollInterval: Duration = .seconds(2)
+
+    /// A call that has not ended is on (CallKit).
+    nonisolated static func liveCallExists() -> Bool {
+        CXCallObserver().calls.contains { !$0.hasEnded }
     }
 
     private func ringAlarm() {
         guard active != nil else { return }
+        rereadMediaVolume()
+        diag.note("vol", "media=\(mediaPercentText) at=alarm")      // before `append`: it saves the track at the alarm
+        // 13ag / 13ah: an inaudible alarm gets a banner WITH the alarm sound (ringer volume, taps the Watch) – unless a
+        // system alarm is armed: that one rings at once instead (decided before the move below)
+        let bannerSound = Notifications.alarmScreenSound(audible: alarmIsAudible, systemAlarmArmed: systemAlarmAt != nil,
+                                                         alarmFile: settings.alarmSound.fileName)
+        diag.note("notif", "alarmScreen sound=\(bannerSound == nil ? "none" : "alarm")")   // before `append`, like the line above
+        // 13ah: ours cannot be heard → the armed system alarm (it lights and rings a locked iPhone) comes NOW, not at wake + 30s.
+        // `systemAlarmMoved` stays false: a volume raised to 10 % while ours plays still does the normal stand-down.
+        if let target = SystemAlarmPlan.atOnceTarget(audible: alarmIsAudible, armed: systemAlarmAt,
+                                                     isSafety: systemAlarmIsSafety, now: clock.now) {
+            diag.note("sysalarm", "move at=\(wakeRelative(target)) why=inaudible")
+            scheduleSystemAlarm(at: target)
+        }
         append(.alarmFired)
         guard servicesEnabled else { return }
-        Notifications.alarmScreen()                     // light up the lock screen
+        Notifications.alarmScreen(sound: bannerSound)   // light up the lock screen
         startAlarmSound()
     }
 
@@ -2057,24 +2459,87 @@ final class AppModel {
     /// time can keep our audio from starting, and then they are the alarm (audit 2026-10-03, B1).
     private func startAlarmSound() {
         guard servicesEnabled, let rec = active, !rec.log.has(.alarmStopped) else { return }
+        rereadMediaVolume()
+        if audio.isAlarmRinging, audio.isEngineRunning { return }
+        // B53: a system alarm that is due (it rings, or has just interrupted our engine) while ours could not be heard
+        // anyway: ours does not start on top of it, and nothing here cancels or moves it
+        if yieldsToDueSystemAlarm {
+            if !yieldNoted { yieldNoted = true; diag.note("sysalarm", "keep why=inaudible") }
+            return
+        }
         if audio.isAlarmRinging {
-            if audio.isEngineRunning { return }
+            noteAlarmEnd(by: "engineLost")
             audio.stopAlarm()                           // the engine was stopped under the alarm → ring again
         }
         // after a kill the alarm may be late: ring only for what is left of the 2 minutes
         let left = rec.rules.alarmDuration - clock.now.timeIntervalSince(rec.wake)
         guard left > 0 else { return }
-        let ringing = audio.ringAlarm(file: settings.alarmSound.fileName, ramp: settings.alarmSound.rampSeconds,
+        let ringing = audio.ringAlarm(file: settings.alarmSound.fileName, ramp: settings.effectiveRiseSeconds,
+                                      startLevel: settings.alarmStartLevel, endLevel: settings.alarmEndLevel,
                                       maxDuration: left) { [weak self] in
+            self?.noteAlarmEnd(by: "timeout")
             self?.append(.alarmStopped)
         }
-        if ringing { alarmSoundStarted() }
+        alarmTries += 1
+        if ringing {
+            alarmSounding = true
+            if !alarmTrySuccessNoted { alarmTrySuccessNoted = true; diag.note("alarm.sound", "try ok=1") }
+            diag.note("alarm.sound", "start gain=\(settings.alarmStartPercent)>\(settings.alarmEndPercent) media=\(mediaPercentText) route=\(DeviceReading.routeTypes()) audible=\(alarmIsAudible ? 1 : 0)")
+            alarmSoundStarted()
+        } else {
+            alarmRetries += 1
+            if !alarmTryFailureNoted { alarmTryFailureNoted = true; diag.note("alarm.sound", "try ok=0 why=\(audio.lastRingFailure)") }
+        }
+    }
+
+    /// B53: the backup system alarm is due (it rings, or has just interrupted our engine) while our own alarm could not
+    /// be heard anyway. Our alarm then neither starts on top of it nor cancels or moves it.
+    var yieldsToDueSystemAlarm: Bool {
+        guard !alarmIsAudible, !systemAlarmIsSafety, let at = systemAlarmAt else { return false }
+        return at <= clock.now
+    }
+
+    /// The alarm sound ended (diagnostics only): its gain at that moment and how long it rang.
+    private func noteAlarmEnd(by why: String) {
+        guard alarmSounding, let rec = active else { return }
+        alarmSounding = false
+        let after = Int(max(0, clock.now.timeIntervalSince(rec.wake)).rounded())
+        diag.note("alarm.sound", "end gain=\(audio.alarmGainPercent) after=\(after)s by=\(why)")
+    }
+
+    private func resetAlarmDiagState() {
+        alarmInaudible = false
+        yieldNoted = false
+        alarmSounding = false
+        alarmTries = 0
+        alarmRetries = 0
+        alarmTryFailureNoted = false
+        alarmTrySuccessNoted = false
     }
 
     /// Our own alarm really sounds (called by `startAlarmSound`; a seam for tests, which have no audio). The app is
     /// alive and audible → the backup notifications are cancelled; and the system alarm moves behind our two minutes,
-    /// so it takes over when the owner sleeps through them.
+    /// so it takes over when the owner sleeps through them. B53/13ag/13ah: with the media volume below 10 % our alarm rings but
+    /// nobody hears it – then none of that happens (the notifications stay armed, the system alarm already rings at once,
+    /// see `ringAlarm`) until the volume rises (`setMediaVolume`).
     func alarmSoundStarted() {
+        guard alarmIsAudible else {
+            if !alarmInaudible {
+                alarmInaudible = true
+                diag.note("notif", "backup kept why=inaudible")
+                diag.note("sysalarm", "keep why=inaudible")
+                yieldNoted = true
+            }
+            return
+        }
+        alarmInaudible = false
+        standDownBehindOurAlarm()
+    }
+
+    /// The normal hand-over once our alarm can be heard: the backup notifications go, the system alarm moves behind
+    /// our two minutes (or stops, when it is due).
+    private func standDownBehindOurAlarm() {
+        if backupNotificationsOn { diag.note("notif", "backup cancelled why=soundStarted") }
         if servicesEnabled { Notifications.cancelBackupAlarm() }
         backupNotificationsOn = false
         moveSystemAlarmBehindOurs()
@@ -2088,6 +2553,7 @@ final class AppModel {
     /// `append` stores the event synchronously (`context.save()`) before it returns – the process is about to die –
     /// and sends the warning, exactly where leaving the app would.
     func appWillTerminate() {
+        defer { diag.flush() }                              // the process dies right after: the track must be saved now
         guard let rec = active, clock.now < rec.wake else { return }
         append(.closedByOwner)
     }
@@ -2097,8 +2563,9 @@ final class AppModel {
     func forgiveNight() {
         guard let rec = active, clock.now < rec.wake, !rec.log.has(.abandoned) else { return }
         append(.forgiven)
-        if servicesEnabled { Notifications.cancelNudge(); Notifications.cancelClosed() }
-        cancelCollapseNotice()
+        if servicesEnabled { Notifications.cancelClosed() }
+        cancelPendingNudge(why: "forgiven")
+        cancelCollapseNotice(why: "forgiven")
         waitingForReturn = false
     }
 
@@ -2230,80 +2697,243 @@ final class AppModel {
         // (bug found by the owner 2026-09-29).
         let alreadyCollapsed = collapsedAt != nil
         let lockTripWasOpen = Self.lockScreenTripOpen(rec.log)
-        rec.append(kind, at: date)
+        let callWasOpen = TripState.callIsOpen(rec.log, at: date)          // 13ae (B55): the rule side, from the log
+        let tripWasOpen = TripState.openTrip(rec.log, rules: rec.rules) != nil
+        if !rec.append(kind, at: date) { diag.note("journal", "unreadable, event \(kind.rawValue) not stored") }
         save()
+        noteDiagnostics(after: kind)
+        if kind == .alarmStopped { alarmInaudible = false }         // ours is over: a later volume change stands nothing down
         updateSetupReminder(after: kind, at: date)
+        // B55: a trip that begins while a call is live is stored like any other, but the evaluator excuses the call, so
+        // nothing is sent and nothing scheduled – `.callEnded` warns if the owner is still out then. (`.closedByOwner`
+        // is not held: the process dies, the relaunch ends the call in the log and the evaluator counts the closure.)
+        if callWasOpen, kind == .leftApp || kind == .usedLockScreen {
+            diag.note("warn", "held why=call kind=\(kind.rawValue)")
+            return
+        }
         switch kind {
         case .leftApp where lockTripWasOpen && rec.rules.lockScreenCollapses:
             break           // strict: the lock-screen trip is counted and warned about since it began; nothing new
-        case .usedLockScreen where !rec.rules.lockScreenCollapses:
+        case .leftApp, .closedByOwner, .usedLockScreen:
+            warnForTrip(kind, at: date, rec: rec, alreadyCollapsed: alreadyCollapsed, tripWasOpen: tripWasOpen)
+        case .returned, .locked:
+            if servicesEnabled { Notifications.cancelPauseNotices() }
+            cancelPendingNudge(why: kind.rawValue)
+            cancelCollapseNotice(why: kind.rawValue)
+            endLockWarning(why: kind.rawValue)
+            if kind == .returned, waitingForReturn, collapsedAt == nil { buzz(.relief) }
+            waitingForReturn = false
+        case .callStarted, .pauseStarted:
+            cancelCollapseNotice(why: kind == .callStarted ? "call" : "pause")     // a call or a pause excuses the trip that is running
+            if kind == .callStarted {
+                // B55: the warning that is already out (a pending nudge, a ringing lock warning, one set for the setup's
+                // end) is withdrawn too – the call is excused, nobody should be warned during it
+                cancelPendingNudge(why: "call")
+                endLockWarning(why: "call")
+            }
+            // ... but if the owner is still out when the pause runs out, the trip goes on and so does the notice
+            if kind == .pauseStarted { scheduleProjectedCollapseNotice(after: date) }
+        case .callEnded:
+            // B55: still out after the call → the trip counts again, from this moment: the normal warning with the full
+            // tolerance and the collapse notice (the evaluator subtracts the call, so its allowance starts here)
+            if !alreadyCollapsed, !TripState.callIsOpen(rec.log, at: date),
+               let trip = TripState.openTrip(rec.log, rules: rec.rules), trip != .closedByOwner {
+                warnForTrip(trip, at: date, rec: rec, alreadyCollapsed: alreadyCollapsed)
+            }
+            scheduleProjectedCollapseNotice(after: date)
+        default:
+            break
+        }
+    }
+
+    /// The warning for a trip out of the app that begins (or, after a call, begins to count) at `date`: inside a pause, in
+    /// the setup, or the normal one. `kind` is the event that owns the trip.
+    private func warnForTrip(_ kind: NightEventKind, at stamped: Date, rec: NightRecord, alreadyCollapsed: Bool,
+                             tripWasOpen: Bool = false) {
+        // a `.leftApp` is stamped with the moment of `didEnterBackground`, up to 3 s before it is emitted: when a call ended
+        // in between, the evaluator counts the trip from the call's end, so the warning does too
+        let date = TripState.countedFrom(rec.log, at: stamped)
+        if kind == .usedLockScreen, !rec.rules.lockScreenCollapses {
             // gentle mode (owner 2026-10-09): the lock-screen use is only logged and met with one calm reminder – no
             // system alarm, no keep-alive, no deadline, no collapse notice, no "come back" state; the building stays
             if let graceEnds, date >= graceEnds, date < rec.wake, !alreadyCollapsed,
                PausePolicy.activeUntil(rec.log, at: date) == nil {
                 lockRemindersSent += 1
                 if servicesEnabled { Notifications.lockScreenReminder() }
+            } else if let graceEnds, date < graceEnds {
+                // inside the setup nothing has collapsed yet (see below): not asked here
+                scheduleSetupEndWarning(kind, rec: rec)
             }
-        case .leftApp, .closedByOwner, .usedLockScreen:
-            // no vibration here: the app is in the background now and iOS only lets the notification vibrate
-            if let pauseEnds = PausePolicy.activeUntil(rec.log, at: date) {
-                // inside a pause (D17) leaving is free – only remind when it is about to end
-                if servicesEnabled { Notifications.pauseEnding(at: pauseEnds) }
-                scheduleProjectedCollapseNotice(after: date)      // out when the pause runs out → it can collapse then
-            } else if let graceEnds, date >= graceEnds, !alreadyCollapsed, date < rec.wake {
-                // nothing counts after the wake time (away intervals are clipped to it): picking up the ringing
-                // phone must not produce "Come back … or the building collapses"
-                // a trip that starts with budget left is a full one (18 s for new nights); with the budget used up there is no time
-                // for a warning (left = 0) and the building has already collapsed
-                // owner 2026-10-09: the collapse always comes with a notice, scheduled now because the app may be dead
-                // or suspended when it happens (also with the budget used up: then it fires at once)
-                let lockTrip = kind == .usedLockScreen
-                if let fire = Notifications.collapseNoticeTime(log: rec.log, rules: rec.rules, at: date,
-                                                               alreadyCollapsed: alreadyCollapsed, lockScreen: lockTrip) {
-                    collapseNoticeAt = fire
-                    if servicesEnabled { Notifications.collapsed(isNap: rec.isNap, at: fire) }
-                }
-                // the whole trip (lock-screen trips are longer: 3 s + 15 s) and the seconds the warning promises
-                let tripAllowance = NightEvaluator.allowance(rec.log, rules: rec.rules, at: date, lockScreen: lockTrip)
-                let left = tripAllowance - rec.rules.noticeDelay
-                guard left >= 1 else { break }                // the warning would come too late
-                nudgesSent += 1
-                lastNudgeSeconds = Int(left)
-                if kind == .closedByOwner {
-                    // the process dies now: the notice is all that is left, and the relaunch ends the trip
-                    if servicesEnabled { Notifications.closed(tolerance: left) }
-                } else if kind == .usedLockScreen {
-                    // "come back" is the wrong advice on the lock screen (Face ID wants the passcode): switch the screen off.
-                    // The notification may reach only the Apple Watch, so the phone sounds the warning itself.
-                    waitingForReturn = true
-                    lastWarning = .lockScreen
-                    if servicesEnabled { Notifications.lockScreenNudge(tolerance: left) }
-                    startLockWarning(shown: left, ringFor: tripAllowance, at: date)
-                } else {
-                    waitingForReturn = true
-                    lastWarning = .comeBack
-                    if servicesEnabled { Notifications.nudge(tolerance: left) }
-                }
+            return
+        }
+        // no vibration here: the app is in the background now and iOS only lets the notification vibrate
+        if let pauseEnds = PausePolicy.activeUntil(rec.log, at: date) {
+            // inside a pause (D17) leaving is free – only remind when it is about to end
+            if servicesEnabled { Notifications.pauseEnding(at: pauseEnds) }
+            scheduleProjectedCollapseNotice(after: date)      // out when the pause runs out → it can collapse then
+        } else if let graceEnds, date >= graceEnds, !alreadyCollapsed, date < rec.wake {
+            // nothing counts after the wake time (away intervals are clipped to it): picking up the ringing
+            // phone must not produce "Come back … or the building collapses"
+            // a trip that starts with budget left is a full one (18 s for new nights); with the budget used up there is no time
+            // for a warning (left = 0) and the building has already collapsed
+            // owner 2026-10-09: the collapse always comes with a notice, scheduled now because the app may be dead
+            // or suspended when it happens (also with the budget used up: then it fires at once)
+            let lockTrip = kind == .usedLockScreen
+            var tripAllowance = NightEvaluator.allowance(rec.log, rules: rec.rules, at: date, lockScreen: lockTrip)
+            if kind == .closedByOwner, tripWasOpen, let collapse = collapseAfterRelaunch(rec: rec, at: date) {
+                // a trip was already open (e.g. a leave held during a call) and the relaunch will count it from ITS start:
+                // the evaluator's collapse moment, not "15 s from the closure", is what the notice promises (13ae review)
+                tripAllowance = max(0, collapse.timeIntervalSince(date))
+                scheduleCollapseNotice(at: max(collapse, date), rec: rec)
+            } else if let fire = Notifications.collapseNoticeTime(log: rec.log, rules: rec.rules, at: date,
+                                                                  alreadyCollapsed: alreadyCollapsed, lockScreen: lockTrip) {
+                scheduleCollapseNotice(at: fire, rec: rec)
             }
-        case .returned, .locked:
-            if servicesEnabled {
-                Notifications.cancelNudge()
-                Notifications.cancelPauseNotices()
+            // the whole trip (lock-screen trips are longer: 3 s + 15 s) and the seconds the warning promises
+            let left = tripAllowance - rec.rules.noticeDelay
+            guard left >= 1 else { return }                // the warning would come too late
+            nudgesSent += 1
+            lastNudgeSeconds = Int(left)
+            if kind == .closedByOwner {
+                // the process dies now: the notice is all that is left, and the relaunch ends the trip
+                diag.note("notice", "closed scheduled at=+0s secs=\(Int(left))")
+                if servicesEnabled { Notifications.closed(tolerance: left) }
+            } else if kind == .usedLockScreen {
+                // "come back" is the wrong advice on the lock screen (Face ID wants the passcode): switch the screen off.
+                // The notification may reach only the Apple Watch, so the phone sounds the warning itself.
+                waitingForReturn = true
+                lastWarning = .lockScreen
+                nudgeLive = true
+                diag.note("warn", "nudge scheduled at=+0s secs=\(Int(left)) kind=lock")
+                if servicesEnabled { Notifications.lockScreenNudge(tolerance: left) }
+                startLockWarning(shown: left, ringFor: tripAllowance, at: date)
+            } else {
+                waitingForReturn = true
+                lastWarning = .comeBack
+                nudgeLive = true
+                diag.note("warn", "nudge scheduled at=+0s secs=\(Int(left)) kind=back")
+                if servicesEnabled { Notifications.nudge(tolerance: left) }
             }
-            cancelCollapseNotice()
-            endLockWarning()
-            if kind == .returned, waitingForReturn, collapsedAt == nil { buzz(.relief) }
-            waitingForReturn = false
-        case .callStarted, .pauseStarted:
-            cancelCollapseNotice()                      // a call or a pause excuses the trip that is running
-            // ... but if the owner is still out when the pause runs out, the trip goes on and so does the notice
-            if kind == .pauseStarted { scheduleProjectedCollapseNotice(after: date) }
-        case .callEnded:
-            scheduleProjectedCollapseNotice(after: date)    // still out after the call → the trip counts again
-        default:
-            break
+        } else if let graceEnds, date < graceEnds {
+            // inside the setup nothing has collapsed yet: an earlier event of this very trip makes `alreadyCollapsed` look
+            // true (an open trip is projected to the wake time), so it is not asked here
+            scheduleSetupEndWarning(kind, rec: rec)
         }
     }
+
+    /// When the evaluator will collapse the building if the app is reopened after the closure just stored (a copy of the log
+    /// with a relaunch far enough ahead): `.appLaunched` ends the trip at the relaunch and DROPS an open call instead of
+    /// subtracting it, so a trip begun during a call counts from its own start.
+    private func collapseAfterRelaunch(rec: NightRecord, at date: Date) -> Date? {
+        var sim = rec.log
+        sim.append(.appLaunched, at: max(date, rec.wake - 1))
+        return NightEvaluator.collapsedAt(sim, rules: rec.rules)
+    }
+
+    // MARK: - the warning at the setup's end (13ae, B56)
+
+    /// A warning set in advance for a trip that began INSIDE the setup and is still open: the evaluator counts such a trip
+    /// from the setup's end and collapses at the setup's end + 3s + 15s, so the normal warning comes `noticeDelay` after the
+    /// setup ends (owner 2026-11-11) and the collapse notice for the projected collapse. A user who left earlier keeps the
+    /// "15s of setup left" reminder first – a second notification with another meaning.
+    struct SetupEndWarning: Equatable {
+        var kind: NightEventKind            // .leftApp / .usedLockScreen / .closedByOwner – the event that owns the trip
+        var fireAt: Date
+        var seconds: TimeInterval           // what the notification promises
+        var tripAllowance: TimeInterval
+        var gentle: Bool                    // a gentle-mode lock-screen use: the calm reminder, no seconds
+    }
+    private(set) var setupEndWarning: SetupEndWarning?
+    /// When the notification set for the setup's end fires (nil = none is waiting) – diagnostics + tests.
+    var pendingNudgeAt: Date? { setupEndWarning?.fireAt }
+    @ObservationIgnored private var setupEndTask: Task<Void, Never>?
+    /// A nudge was scheduled and not withdrawn since (a delivered one counts; only for the diagnostic track).
+    private var nudgeLive = false
+
+    private func scheduleSetupEndWarning(_ kind: NightEventKind, rec: NightRecord) {
+        guard let graceEnds else { return }
+        let fire = graceEnds + rec.rules.noticeDelay
+        guard fire < rec.wake else { return }
+        // what an earlier event of the same trip scheduled is replaced, never doubled (one warning per trip)
+        if let old = setupEndWarning {
+            if servicesEnabled { old.kind == .closedByOwner ? Notifications.cancelClosed() : Notifications.cancelNudge() }
+            diag.note("warn", "setupEnd replaced kind=\(old.kind.rawValue)")
+            setupEndWarning = nil
+        }
+        let lockTrip = kind == .usedLockScreen
+        let gentle = lockTrip && !rec.rules.lockScreenCollapses
+        if !gentle,
+           let collapse = Notifications.collapseNoticeTime(log: rec.log, rules: rec.rules, at: graceEnds,
+                                                           alreadyCollapsed: false, lockScreen: lockTrip) {
+            scheduleCollapseNotice(at: collapse, rec: rec)
+        }
+        let allowance = NightEvaluator.allowance(rec.log, rules: rec.rules, at: graceEnds, lockScreen: lockTrip)
+        let left = allowance - rec.rules.noticeDelay
+        guard gentle || left >= 1 else { return }
+        setupEndWarning = SetupEndWarning(kind: kind, fireAt: fire, seconds: left, tripAllowance: allowance, gentle: gentle)
+        diag.note("warn", "setupEnd scheduled kind=\(kind.rawValue) at=\(inSeconds(fire))")
+        if kind == .closedByOwner {
+            diag.note("notice", "closed scheduled at=\(inSeconds(fire)) secs=\(Int(left))")
+            if servicesEnabled { Notifications.closed(tolerance: left, at: fire) }
+        } else if gentle {
+            nudgeLive = true
+            diag.note("warn", "reminder scheduled at=\(inSeconds(fire))")
+            if servicesEnabled { Notifications.lockScreenReminder(at: fire) }
+        } else {
+            nudgeLive = true
+            diag.note("warn", "nudge scheduled at=\(inSeconds(fire)) secs=\(Int(left)) kind=\(lockTrip ? "lock" : "back")")
+            if servicesEnabled {
+                lockTrip ? Notifications.lockScreenNudge(tolerance: left, at: fire) : Notifications.nudge(tolerance: left, at: fire)
+            }
+        }
+        guard servicesEnabled else { return }
+        setupEndTask?.cancel()
+        setupEndTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(max(0, fire.timeIntervalSince(self?.clock.now ?? fire))))
+            guard !Task.isCancelled else { return }
+            self?.refresh()
+        }
+    }
+
+    /// The moment of the setup-end warning has come (driven by `refresh`): the notification is the OS's; here the app's own
+    /// state follows – the count, the "come back" state and, in Strict mode, the lock warning for a lock-screen use.
+    private func fireSetupEndWarningIfDue(now: Date) {
+        guard let w = setupEndWarning, now >= w.fireAt else { return }
+        setupEndWarning = nil
+        setupEndTask?.cancel()
+        setupEndTask = nil
+        guard let rec = active, now < rec.wake, now < w.fireAt + w.seconds else { return }    // already over: nothing to warn about
+        switch w.kind {
+        case .closedByOwner:
+            break                                                   // the process is dead; the notice was the OS's
+        case .usedLockScreen where w.gentle:
+            lockRemindersSent += 1
+        case .usedLockScreen:
+            nudgesSent += 1
+            lastNudgeSeconds = Int(w.seconds)
+            waitingForReturn = true
+            lastWarning = .lockScreen
+            startLockWarning(shown: w.seconds, ringFor: w.seconds, at: w.fireAt)
+        default:
+            nudgesSent += 1
+            lastNudgeSeconds = Int(w.seconds)
+            waitingForReturn = true
+            lastWarning = .comeBack
+        }
+    }
+
+    /// Withdraws the "Come back" style warning that is pending or out (the trip ended, a call began, a relaunch…).
+    private func cancelPendingNudge(why: String) {
+        if servicesEnabled { Notifications.cancelNudge() }
+        setupEndTask?.cancel()
+        setupEndTask = nil
+        if nudgeLive || setupEndWarning != nil { diag.note("warn", "nudge cancelled why=\(why)") }
+        nudgeLive = false
+        setupEndWarning = nil
+    }
+
+    /// "+Ns" – how far ahead `date` is, for the diagnostic track.
+    private func inSeconds(_ date: Date) -> String { "+\(Int(max(0, date.timeIntervalSince(clock.now)).rounded()))s" }
 
     /// The "15s of setup left" reminder is pending only while the user is outside SleepHole during the setup
     /// (`SetupReminder`, owner 2026-10-15). Observable for tests through `setupReminderAt`.
@@ -2326,13 +2956,19 @@ final class AppModel {
     /// The evaluator already knows the collapse moment of a trip that is still open (an open `.leftApp` runs to the
     /// wake time, calls and pauses are cut out of it): when that moment is still ahead, the notice is set for it.
     private func scheduleProjectedCollapseNotice(after date: Date) {
-        guard let rec = active, let fire = collapsedAt, fire > date else { return }
+        guard let rec = active, let fire = collapsedAt, fire > date, collapseNoticeAt != fire else { return }
+        scheduleCollapseNotice(at: fire, rec: rec)
+    }
+
+    private func scheduleCollapseNotice(at fire: Date, rec: NightRecord) {
         collapseNoticeAt = fire
+        diag.note("notice", "collapse scheduled at=\(inSeconds(fire))")
         if servicesEnabled { Notifications.collapsed(isNap: rec.isNap, at: fire) }
     }
 
     /// The trip ended in time or is excused: the pending collapse notice is withdrawn (a delivered one stays).
-    private func cancelCollapseNotice() {
+    private func cancelCollapseNotice(why: String) {
+        if collapseNoticeAt != nil { diag.note("notice", "collapse cancelled why=\(why)") }
         collapseNoticeAt = nil
         if servicesEnabled { Notifications.cancelCollapsed() }
     }
@@ -2414,7 +3050,17 @@ final class AppModel {
         rec.awaySeconds = result.awaySeconds
         rec.finalizedAt = clock.now
         save()
+        diag.notePower("end")                        // before `stopServices`: the battery switch is still held
+        diag.note("end", "outcome=\(result.outcome.rawValue)")
+        diag.note("vol", "media=\(mediaPercentText) at=end")
+        mediaVolumeNote.flush()
+        appVolumeNote.flush()
+        noteAlarmEnd(by: rec.log.confirmedAt != nil ? "confirm" : "timeout")
+        if alarmTries > 0 { diag.note("alarm.sound", "retries=\(alarmRetries) tries=\(alarmTries)") }
+        noteSystemAlarmSettle(for: rec)
         stopServices()
+        diag.end()
+        diag.prune(records())                        // the last 30 days keep their track (one pass, one save)
         active = nil
         collapseNoticeAt = nil                       // stopServices already withdrew the pending notice
         sync.activityEnded()                         // a sync owed since the night began runs now

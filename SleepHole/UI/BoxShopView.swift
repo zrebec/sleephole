@@ -7,6 +7,7 @@ import SwiftUI
 /// a box is vulgar slang, and so is "box" in American English. The code, the records and the backup keep "box".
 struct BoxShopView: View {
     @Environment(AppModel.self) private var model
+    @ScaledMetric(relativeTo: .body) private var emojiWidth: CGFloat = 30      // the emoji column grows with the text size (13e2)
     @State private var confirming = false
 
     var body: some View {
@@ -46,7 +47,7 @@ struct BoxShopView: View {
     @ViewBuilder
     private func todayCard(_ offer: BoxOffer, boxes: [BoxPurchase]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(L("Today's parcel")).font(.headline)
+            Text(L("Today's parcel")).font(.headline).accessibilityAddTraits(.isHeader)
             Text(L("Your coins: \(model.coins) 🪙")).font(.subheadline.monospacedDigit()).cardCaption()
             switch offer {
             case .available(let price, let boxNumber):
@@ -82,6 +83,13 @@ struct BoxShopView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .glassCard()
+        // the Buy button's branch can vanish under the open dialog (midnight): the flag must not wait for the next offer (L2)
+        .onChange(of: offerIsAvailable(offer)) { _, available in if !available { confirming = false } }
+    }
+
+    private func offerIsAvailable(_ offer: BoxOffer) -> Bool {
+        if case .available = offer { return true }
+        return false
     }
 
     /// The 1st of the month after today's.
@@ -94,7 +102,7 @@ struct BoxShopView: View {
 
     private func oddsCard(boxes: [BoxPurchase]) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(L("What a parcel can hold")).font(.headline)
+            Text(L("What a parcel can hold")).font(.headline).accessibilityAddTraits(.isHeader)
             ForEach(Array(BoxRules.odds.enumerated()), id: \.offset) { _, row in
                 oddsRow(row, boxes: boxes)
                 Divider()
@@ -115,7 +123,7 @@ struct BoxShopView: View {
         let caption: String? = row.roll == .luckyNight ? L("Your next complete night pays double.") : nil
         let ownedText = kind.map { L("\(Boxes.owned($0, boxes: boxes).count) of \(BoxCatalog.size($0))") }
         return HStack(alignment: .firstTextBaseline, spacing: 10) {
-            Text(verbatim: emoji).frame(width: 30)
+            Text(verbatim: emoji).frame(width: emojiWidth)
             VStack(alignment: .leading, spacing: 2) {
                 Text(name).font(.subheadline).fixedSize(horizontal: false, vertical: true)
                 if let caption { Text(caption).font(.caption).cardCaption().fixedSize(horizontal: false, vertical: true) }

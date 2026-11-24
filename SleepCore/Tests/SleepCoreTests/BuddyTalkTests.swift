@@ -154,6 +154,93 @@ import Testing
         #expect(l.contains(.noPolice))
     }
 
+    private func owned(_ l: [BuddyLine], _ p: OwnedPlace) -> Bool {
+        l.contains { if case .owned(p, _) = $0 { true } else { false } }
+    }
+    private func tale(_ l: [BuddyLine], _ t: CatTale) -> Bool {
+        l.contains { if case .catTale(t, _) = $0 { true } else { false } }
+    }
+
+    @Test func ownedLinesFollowTheStandingBuildings() {
+        let cases: [(OwnedPlace, String)] = [
+            (.library, "l2-library-b"), (.museum, "l2-museum-a"), (.pondPark, "l2-park-pond"),
+            (.fountainPark, "l2-park-fountain"), (.statueGarden, "l2-park-garden"), (.fireStation, "l3-firestation"),
+            (.hospital, "l3-hospital"), (.police, "l3-police"), (.school, "l3-school"), (.townHall, "l3-townhall"),
+            (.skyscraper, "l4-sky-c-a"), (.skyscraper, "l4-tower-m")]
+        for (place, id) in cases {
+            #expect(owned(lines(input(town: town([(id, .complete)]))), place), "\(id)")
+            #expect(owned(lines(input(town: town([(id, .unfinished)]))), place), "\(id)")
+            #expect(!owned(lines(input(town: town([(id, .ruins)]))), place), "ruins \(id)")
+            #expect(!owned(lines(input()), place))
+        }
+        let museum = lines(input(town: town([("l2-museum-b", .complete)])))
+        #expect(museum.contains(.owned(.museum, 0)) && museum.contains(.owned(.museum, 1)))
+        // a small park is not a pond park
+        #expect(!owned(lines(input(town: town([("l2-park-small", .complete)]))), .pondPark))
+        #expect(OwnedPlace.allCases.count == 11)
+        #expect(lines(input(town: town([("l3-police", .complete)]))).filter { $0.tier == 4 }.contains(.owned(.police, 0)))
+    }
+
+    @Test func catTalesFollowTheirBuildings() {
+        let cases: [(CatTale, String)] = [
+            (.libraryCat, "l2-library-a"), (.benchCat, "l2-park-small"), (.treeCat, "l3-firestation"),
+            (.lostCat, "l3-police"), (.classCat, "l3-school"), (.clerkCat, "l3-townhall"), (.liftCat, "l4-sky-a-0")]
+        for (t, id) in cases {
+            #expect(tale(lines(input(town: town([(id, .complete)]))), t), "\(id)")
+            #expect(!tale(lines(input(town: town([(id, .ruins)]))), t), "ruins \(id)")
+            #expect(!tale(lines(input()), t))
+        }
+        // the doorstep cat is always there, as chatter (tier 5); the others are tier 4
+        let l = lines(input())
+        #expect(tale(l, .doorstepCat))
+        #expect(BuddyLine.catTale(.doorstepCat, name: 0).tier == 5)
+        #expect(BuddyLine.catTale(.lostCat, name: 0).tier == 4)
+    }
+
+    @Test func catNamesAreStableInRangeAndDifferent() {
+        var seen = Set<Int>()
+        for d in 0..<30 {
+            let key = NightKey(year: 2026, month: 10, day: 1).adding(days: d, calendar: cal)
+            for t in CatTale.allCases {
+                let n = t.nameIndex(day: key)
+                #expect((0..<BuddyLine.catNameCount).contains(n))
+                #expect(n == t.nameIndex(day: key))
+            }
+            let names = CatTale.allCases.map { $0.nameIndex(day: key) }
+            #expect(Set(names).count == names.count, "two tales share a name on \(key)")
+            seen.insert(CatTale.lostCat.nameIndex(day: key))
+        }
+        #expect(seen.count > 3)
+        // the same day gives equal lines at any hour (the bag compares by value)
+        let t = town([("l3-police", .complete)])
+        #expect(lines(input(day: 14, hour: 8, town: t)) == lines(input(day: 14, hour: 22, town: t)))
+    }
+
+    @Test func newestBuildingRules() {
+        func newest(_ l: [BuddyLine]) -> String? {
+            for x in l { if case let .newest(id) = x { return id } }
+            return nil
+        }
+        // town() gives night keys 2026-09-(n+1): the last one is the newest
+        #expect(newest(lines(input(town: town([("l1-house-a", .complete), ("l2-park-small", .complete)])))) == "l2-park-small")
+        // the newest ruin is skipped
+        #expect(newest(lines(input(town: town([("l1-house-a", .complete), ("l2-park-small", .complete), ("l3-police", .ruins)])))) == "l2-park-small")
+        // fewer than two buildings: nothing
+        #expect(newest(lines(input(town: town([("l1-house-a", .complete)])))) == nil)
+        // built today: left to the morning-after lines
+        var t = town([("l1-house-a", .complete)])
+        t.buildings.append(TownBuilding(placement: Placement(catalogId: "l1-house-b", origin: Cell(5, 5), size: 1),
+                                        nightKey: NightKey(year: 2026, month: 10, day: 14), buildingId: "l1-house-b", state: .complete))
+        #expect(newest(lines(input(day: 14, town: t))) == nil)
+        #expect(newest(lines(input(day: 15, town: t))) == "l1-house-b")
+        #expect(BuddyLine.newest(buildingId: "x").tier == 4)
+    }
+
+    @Test func chatterCountIsSeven() {
+        #expect(BuddyLine.chatterCount == 7)
+        #expect(BuddyLine.catNameCount == 12)
+    }
+
     @Test func chatterAlwaysThere() {
         let l = lines(input())
         for k in 0..<BuddyLine.chatterCount { #expect(l.contains(.chatter(k))) }

@@ -129,11 +129,14 @@ struct StatsView: View {
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
         .glassCard()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label)
+        .accessibilityValue(Text(verbatim: "\(value)"))
     }
 
     private func card<C: View>(_ title: String, @ViewBuilder content: () -> C) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(title).font(.headline)
+            Text(title).font(.headline).accessibilityAddTraits(.isHeader)
             content()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -190,8 +193,16 @@ struct CalendarGrid: View {
     }
 
     /// The day number on its square (B7): dark text on the bright squares of dark mode (white on bright green is
-    /// unreadable there), the primary colour everywhere else.
-    static func numberColor(_ o: Outcome?, dark: Bool) -> Color {
+    /// unreadable there), the primary colour everywhere else. With iOS "Increase Contrast" (13e7) full opacity.
+    static func numberColor(_ o: Outcome?, dark: Bool, increased: Bool = false) -> Color {
+        if increased {
+            // light mode: iOS darkens the fills, white reads better than black on the grey "ruins" square
+            guard dark else { return o == .ruins ? .white : .primary }
+            switch o {
+            case .complete, .unfinished, .ruins: return .black
+            case .excused, .missed, .none: return .primary
+            }
+        }
         guard dark else { return .primary.opacity(0.7) }
         switch o {
         case .complete, .unfinished, .ruins: return .black.opacity(0.78)
@@ -200,6 +211,28 @@ struct CalendarGrid: View {
     }
 
     @Environment(\.colorScheme) private var scheme
+    /// iOS "Increase Contrast": the day numbers and glyphs at full opacity (13e7).
+    @Environment(\.colorSchemeContrast) private var contrast
+    /// iOS "Differentiate Without Color": each outcome also gets a glyph (13e2).
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiate
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    /// The glyph of a night's outcome for "Differentiate Without Color" (nothing for a night without a record).
+    static func glyph(_ o: Outcome?) -> String? {
+        switch o {
+        case .complete: "checkmark"
+        case .unfinished: "hammer.fill"
+        case .ruins: "xmark"
+        case .excused: "shield.fill"
+        case .missed, .none: nil
+        }
+    }
+
+    /// VoiceOver: the full date and what the night was ("complete", "unfinished", …); a night without a record: the date only.
+    static func dayLabel(_ key: NightKey, _ outcome: Outcome?) -> String {
+        let name = outcome.map(NightChart.outcomeName) ?? ""
+        return name.isEmpty ? Fmt.fullDate(key) : "\(Fmt.fullDate(key)), \(name)"
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -212,24 +245,45 @@ struct CalendarGrid: View {
                             .fill(Self.color(d.outcome))
                             .aspectRatio(1, contentMode: .fit)
                             .overlay(Text(verbatim: "\(d.key.day)").font(.caption2)
-                                .foregroundStyle(Self.numberColor(d.outcome, dark: scheme == .dark)))
+                                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)       // a dense grid: the numbers stop growing here (13e2)
+                                .foregroundStyle(Self.numberColor(d.outcome, dark: scheme == .dark, increased: contrast == .increased)))
+                            .overlay(alignment: .topTrailing) {
+                                if differentiate, let g = Self.glyph(d.outcome) {
+                                    Image(systemName: g).font(.system(size: 8, weight: .bold))
+                                        .foregroundStyle(Self.numberColor(d.outcome, dark: scheme == .dark, increased: contrast == .increased))
+                                        .padding(2).accessibilityHidden(true)
+                                }
+                            }
                             .overlay(RoundedRectangle(cornerRadius: 6)
                                 .stroke(Color.accentColor, lineWidth: selected.wrappedValue == d.key ? 3 : 0))
                     }
                     .buttonStyle(.plain)                 // no accent tint on the day numbers
-                    .accessibilityLabel(Fmt.fullDate(d.key))
+                    .accessibilityLabel(Self.dayLabel(d.key, d.outcome))
+                    .accessibilityAddTraits(selected.wrappedValue == d.key ? .isSelected : [])
                 }
             }
-            HStack(spacing: 12) {
-                legend(.green, L("complete")); legend(.orange, L("unfinished")); legend(.gray, L("ruins"))
-                legend(.indigo.opacity(0.55), L("joker 🛡️"))
+            // at accessibility sizes the legend wraps into several rows (13e2)
+            let legendLayout = typeSize.isAccessibilitySize ? AnyLayout(ChipFlow(spacing: 12, lineSpacing: 6))
+                                                            : AnyLayout(HStackLayout(spacing: 12))
+            legendLayout {
+                legend(.green, L("complete"), glyph: Self.glyph(.complete)); legend(.orange, L("unfinished"), glyph: Self.glyph(.unfinished))
+                legend(.gray, L("ruins"), glyph: Self.glyph(.ruins))
+                legend(.indigo.opacity(0.55), L("joker 🛡️"), glyph: Self.glyph(.excused))
             }
             .font(.caption2)
         }
     }
 
-    private func legend(_ c: Color, _ t: String) -> some View {
-        HStack(spacing: 4) { RoundedRectangle(cornerRadius: 3).fill(c).frame(width: 10, height: 10); Text(t) }
+    private func legend(_ c: Color, _ t: String, glyph: String?) -> some View {
+        HStack(spacing: 4) {
+            RoundedRectangle(cornerRadius: 3).fill(c).frame(width: 10, height: 10)
+                .overlay {
+                    if differentiate, let glyph {
+                        Image(systemName: glyph).font(.system(size: 6, weight: .bold)).foregroundStyle(contrast == .increased ? Color.black : Color.black.opacity(0.78))
+                    }
+                }
+            Text(t)
+        }
     }
 }
 
@@ -258,6 +312,7 @@ struct NightChart: View {
     }
 
     @Environment(\.colorScheme) private var scheme
+    @Environment(\.accessibilityDifferentiateWithoutColor) private var differentiate
 
     private static let barColor = Color(red: 0.40, green: 0.47, blue: 0.82)         // solid, reads on light and dark skies
 
@@ -382,7 +437,10 @@ struct NightChart: View {
                 Text(Self.callout(chosen, showsSleep: showsSleep)).font(.footnote).monospacedDigit()
                     .fixedSize(horizontal: false, vertical: true)
                 if let chosen {
-                    Button(L("Night details")) { onDetails(chosen.key) }
+                    Button { onDetails(chosen.key) } label: {
+                        Text(L("Night details"))
+                            .padding(.vertical, 14).contentShape(Rectangle()).padding(.vertical, -14)   // a bigger hit area, same look (13e2)
+                    }
                         .font(.footnote.weight(.semibold)).buttonStyle(.borderedProminent).tint(.indigo).controlSize(.small)
                 }
                 Chart {
@@ -416,11 +474,14 @@ struct NightChart: View {
                         }
                         if let s = p.startMinutes {
                             let size: Double = on ? 150 : 55
+                            let shape = Self.symbol(p.outcome, differentiate: differentiate)
                             PointMark(x: .value(L("Night"), i), y: .value(L("Start"), s))      // the ring in the card's colour
                                 .foregroundStyle(Self.ringColor(dark: dark))
+                                .symbol(shape)
                                 .symbolSize(pow(size.squareRoot() + 4, 2))
                             PointMark(x: .value(L("Night"), i), y: .value(L("Start"), s))
                                 .foregroundStyle(CalendarGrid.color(p.outcome))
+                                .symbol(shape)
                                 .symbolSize(size)
                                 .accessibilityLabel(label)
                         }
@@ -463,6 +524,7 @@ struct NightChart: View {
                 .chartOverlay { proxy in
                     GeometryReader { geo in
                         Rectangle().fill(.clear).contentShape(Rectangle())
+                            .accessibilityHidden(true)
                             .onTapGesture(coordinateSpace: .local) { location in
                                 guard let frame = proxy.plotFrame,
                                       let x = proxy.value(atX: location.x - geo[frame].origin.x, as: Double.self),
@@ -504,8 +566,13 @@ struct NightChart: View {
                             .frame(width: 3, height: 14)
                         Text(L("Without Apple Health"))
                     case .outcome(let o):
-                        Circle().fill(CalendarGrid.color(o)).frame(width: 9, height: 9)
-                            .overlay(Circle().stroke(Self.ringColor(dark: dark), lineWidth: 1))
+                        if differentiate {
+                            Image(systemName: Self.legendSymbol(o)).font(.system(size: 9))
+                                .foregroundStyle(CalendarGrid.color(o)).frame(width: 9, height: 9)
+                        } else {
+                            Circle().fill(CalendarGrid.color(o)).frame(width: 9, height: 9)
+                                .overlay(Circle().stroke(Self.ringColor(dark: dark), lineWidth: 1))
+                        }
                         Text(Self.outcomeName(o))
                     }
                 }
@@ -513,6 +580,41 @@ struct NightChart: View {
         }
         .font(.caption2)
         .accessibilityElement(children: .combine)
+    }
+
+    /// The start dot's shape: a plain circle, but with "Differentiate Without Color" one shape per outcome (13e2).
+    enum DotShape: Equatable { case circle, triangle, cross, diamond, square }
+
+    static func dotShape(_ o: Outcome?, differentiate: Bool) -> DotShape {
+        guard differentiate else { return .circle }
+        switch o {
+        case .complete: return .circle
+        case .unfinished: return .triangle
+        case .ruins: return .cross
+        case .excused: return .diamond
+        case .missed, .none: return .square
+        }
+    }
+
+    static func symbol(_ o: Outcome?, differentiate: Bool) -> BasicChartSymbolShape {
+        switch dotShape(o, differentiate: differentiate) {
+        case .circle: .circle
+        case .triangle: .triangle
+        case .cross: .cross
+        case .diamond: .diamond
+        case .square: .square
+        }
+    }
+
+    /// The same shapes as SF Symbols for the legend.
+    static func legendSymbol(_ o: Outcome) -> String {
+        switch o {
+        case .complete: "circle.fill"
+        case .unfinished: "triangle.fill"
+        case .ruins: "xmark"
+        case .excused: "diamond.fill"
+        case .missed: "square.fill"
+        }
     }
 
     static func outcomeName(_ o: Outcome) -> String {
@@ -549,7 +651,9 @@ private struct ChipFlow: Layout {
         var x: CGFloat = 0, y: CGFloat = 0, rowH: CGFloat = 0, maxW: CGFloat = 0
         for v in subviews {
             let sz = v.sizeThatFits(.unspecified)
-            if x > 0, x + sz.width > width { x = 0; y += rowH + lineSpacing; rowH = 0 }
+            // a tolerance: the parent places the flow in exactly the width it reported, and a float sum a hair over that
+            // width wrapped the last chip into a row the measured height did not have (B45)
+            if x > 0, x + sz.width > width + 0.5 { x = 0; y += rowH + lineSpacing; rowH = 0 }
             frames.append(CGRect(origin: CGPoint(x: x, y: y), size: sz))
             x += sz.width + spacing; rowH = max(rowH, sz.height); maxW = max(maxW, x - spacing)
         }
@@ -569,15 +673,16 @@ struct NightDetail: View {
     }
 
     var body: some View {
+        let record = model.nightRecord(for: key)            // resolved once per body (L6, 13p)
         VStack(alignment: .leading, spacing: 10) {
-            Text(L("Night of \(Fmt.fullDate(key))")).font(.headline)
+            Text(L("Night of \(Fmt.fullDate(key))")).font(.headline).accessibilityAddTraits(.isHeader)
             if model.coreResults().contains(where: { $0.key == key && $0.outcome == .excused }) {
                 Label(L("Protected by a joker 🛡️ – your streak waited for you."), systemImage: "shield.fill")
                     .font(.subheadline).foregroundStyle(.indigo)
             }
-            if let rec = model.nightRecord(for: key), let outcome = rec.outcome {
+            if let rec = record, let outcome = rec.outcome {
                 let r = NightReport(log: rec.log, rules: rec.rules)
-                building(outcome: outcome)
+                building(outcome: outcome, record: rec)
                 row("🌙", L("Build started"), r.startedAt.map(Fmt.timeSec))
                 row("🔒", L("Phone locked"), r.firstLockAt.map(Fmt.timeSec))
                 sleepRows(rec)
@@ -602,22 +707,22 @@ struct NightDetail: View {
             if let nap = model.napRecord(before: key), let o = nap.outcome {
                 Divider()
                 row("😴", L("Nap \(Fmt.time(nap.bedtime))–\(Fmt.time(nap.wake))"),
-                    (o == .complete ? L("complete") : o == .unfinished ? L("cut short") : L("didn't work out")) + " · +\(NapPlan.reward(o)) 🪙")
+                    (o == .complete ? L("done") : o == .unfinished ? L("cut short") : L("didn't work out")) + " · +\(NapPlan.reward(o)) 🪙")
             }
         }
         .font(.subheadline)
     }
 
     @ViewBuilder
-    private func building(outcome: Outcome) -> some View {
+    private func building(outcome: Outcome, record: NightRecord) -> some View {
         let b = model.townBuilding(for: key)
         let id = b.map { $0.state == .ruins ? "o-ruin-\($0.placement.size)" : $0.buildingId }
-            ?? model.nightRecord(for: key)?.buildingId ?? ""
+            ?? record.buildingId
         HStack(spacing: 12) {
             BuildingImage(id: id, progress: b?.state == .unfinished ? 0.6 : 1, maxHeight: 90)
                 .frame(width: 110)
             VStack(alignment: .leading, spacing: 4) {
-                Text(model.catalog?[model.nightRecord(for: key)?.buildingId ?? ""]?.displayName ?? "").font(.headline)
+                Text(model.catalog?[record.buildingId]?.displayName ?? "").font(.headline)
                 Text(outcome == .complete ? L("Complete 🏢") : outcome == .unfinished ? L("Unfinished 🚧") : L("Ruins 🧱"))
                 if b?.repairedLater == true { Text(L("Repaired later 🛠️")).foregroundStyle(Color.readableGreen) }
                 if b?.completedLater == true { Text(L("Finished later 💪")).foregroundStyle(Color.readableGreen) }
@@ -680,8 +785,8 @@ struct NightDetail: View {
         ForEach(rec.sleepSources, id: \.name) { src in
             let m = Int((src.asleepSeconds / 60).rounded())
             let mark = src.name == rec.sleepSourceName ? "> " : "· "
-            Text(verbatim: "\(mark)\(src.name): \(m / 60) h \(m % 60) min asleep, from \(Fmt.time(src.fellAsleepAt)), "
-                 + (src.hasStages ? "stages" : "no stages") + (src.isFirstParty ? ", first-party" : ""))
+            Text(verbatim: "\(mark)" + L("\(src.name): \(m / 60) h \(m % 60) min asleep, from \(Fmt.time(src.fellAsleepAt))")
+                 + ", " + (src.hasStages ? L("stages") : L("no stages")) + (src.isFirstParty ? ", " + L("first-party") : ""))
                 .font(.caption2).foregroundStyle(.secondary)
         }
     }
@@ -689,11 +794,12 @@ struct NightDetail: View {
 
     private func row(_ icon: String, _ label: String, _ value: String?) -> some View {
         HStack(alignment: .top) {
-            Text(verbatim: icon)
+            Text(verbatim: icon).accessibilityHidden(true)
             Text(label).cardCaption()
             Spacer()
             Text(value ?? "–").monospacedDigit().multilineTextAlignment(.trailing)
         }
+        .accessibilityElement(children: .combine)
     }
 
     private func trips(_ title: String, _ list: [NightReport.Trip], ok: Bool) -> some View {

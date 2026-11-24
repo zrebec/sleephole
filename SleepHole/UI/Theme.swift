@@ -113,11 +113,15 @@ struct LivingSky: View {
     let showsBody: Bool
     /// The night sky won from a mystery box (11b5d), drawn after the stars; nil = nothing extra.
     let nightSky: NightSkyEffect?
+    /// Stands still (j2, 13k): behind the night screen, which covers it, the sky keeps its last frame instead of costing
+    /// the compositor 20 frames a second.
+    let frozen: Bool
 
-    init(semicircle: Bool = false, showsBody: Bool = true, nightSky: NightSkyEffect? = nil) {
+    init(semicircle: Bool = false, showsBody: Bool = true, nightSky: NightSkyEffect? = nil, frozen: Bool = false) {
         self.semicircle = semicircle
         self.showsBody = showsBody
         self.nightSky = nightSky
+        self.frozen = frozen
     }
 
     /// The sky behind the Stats and Settings tabs: no sun or moon (it would shine through the large title).
@@ -158,7 +162,7 @@ struct LivingSky: View {
     }
 
     var body: some View {
-        let paused = !visible || scenePhase != .active || reduceMotion
+        let paused = !visible || scenePhase != .active || reduceMotion || frozen || model.rest.resting
         TimelineView(.animation(minimumInterval: 1.0 / 20, paused: paused)) { ctx in
             let t = ctx.date.timeIntervalSinceReferenceDate
             let sky = Self.state(at: ctx.date, settings: model.settings)

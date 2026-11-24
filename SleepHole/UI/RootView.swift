@@ -38,6 +38,11 @@ struct RootView: View {
             Tab(L("Settings"), systemImage: "gearshape.fill", value: 3) { SettingsView().id(lang) }
         }
         .environment(\.locale, lang.locale)
+        // the black rest screen (13k) covers the tab bar too; the touch counter watches the whole window
+        .overlay {
+            if model.rest.resting { RestScreenView().id(lang) }
+        }
+        .background { RestTouchCatcher(controller: model.rest) }
         // a solid tab bar (B15, owner: no transparency): the iOS 26 glass bar refracted the text scrolled under it
         .toolbarBackground(.visible, for: .tabBar)
         .toolbarBackground(Color(uiColor: .systemBackground), for: .tabBar)
@@ -80,6 +85,12 @@ struct RootView: View {
         .onChange(of: model.settings.theme) { _, theme in theme.apply() }
         .fullScreenCover(isPresented: Binding(get: { model.needsGuide && !screenshotMode }, set: { _ in })) {
             GuideView().id(lang).environment(\.locale, lang.locale)
+                .onAppear { model.guideCoverAppeared() }
+        }
+        // the guide replayed from Settings (B40): presented here, outside the tabs' `.id(lang)`, so switching the
+        // language on its first page rebuilds Settings without closing the sheet
+        .sheet(isPresented: Bindable(model).showGuideReplay) {
+            GuideView(replay: true).id(lang).environment(\.locale, lang.locale)
         }
     }
 }

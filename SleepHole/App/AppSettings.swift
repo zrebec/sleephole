@@ -84,6 +84,41 @@ struct AppSettings: Codable, Equatable {
         minutes.map { $0 == 1 ? L("1 min (test)") : L("\($0) min") } ?? L("All night")
     }
     var alarmSound: AlarmSound = .gentle
+    /// 13v (owner 2026-11-07): the in-app alarm's start level, in percent of the phone's media volume (10…100, steps of
+    /// 10). nil = 30, today's start. Optional so settings saved by older builds (and old backups / sync files) load.
+    /// Values off the grid read as the nearest allowed one.
+    var alarmStartPercentRaw: Int?
+    /// 13v: the level the alarm rises to, in percent (10…100, steps of 10). nil = 100. Never below the start.
+    var alarmEndPercentRaw: Int?
+    /// 13v: seconds the rise takes; nil = "by the melody" (`AlarmSound.rampSeconds`). Only `AlarmVolume.riseOptions`
+    /// are valid, anything else reads as nil. Optional so older settings still load.
+    var alarmRiseSecondsRaw: Int?
+
+    var alarmEndPercent: Int {
+        get { alarmEndPercentRaw.map(AlarmVolume.snapPercent) ?? AlarmVolume.defaultEndPercent }
+        set {
+            alarmEndPercentRaw = AlarmVolume.snapPercent(newValue)
+            if alarmStartPercent > alarmEndPercent { alarmStartPercentRaw = alarmEndPercent }
+        }
+    }
+    /// Never above `alarmEndPercent`.
+    var alarmStartPercent: Int {
+        get { min(alarmEndPercent, alarmStartPercentRaw.map(AlarmVolume.snapPercent) ?? AlarmVolume.defaultStartPercent) }
+        set {
+            let snapped = AlarmVolume.snapPercent(newValue)
+            alarmStartPercentRaw = snapped
+            if snapped > alarmEndPercent { alarmEndPercentRaw = snapped }
+        }
+    }
+    /// nil = by the melody.
+    var alarmRiseSeconds: Int? {
+        get { alarmRiseSecondsRaw.flatMap { AlarmVolume.riseOptions.contains($0) ? $0 : nil } }
+        set { alarmRiseSecondsRaw = newValue }
+    }
+    /// The seconds the rise really takes: the chosen ones, else the melody's own.
+    var effectiveRiseSeconds: Double { alarmRiseSeconds.map(Double.init) ?? alarmSound.rampSeconds }
+    var alarmStartLevel: Double { Double(alarmStartPercent) / 100 }
+    var alarmEndLevel: Double { Double(alarmEndPercent) / 100 }
     /// Appearance + sounds (owner 2026-10-02). Optional in the JSON so settings saved by older builds still load.
     var themeRaw: AppTheme?
     var theme: AppTheme {

@@ -165,8 +165,8 @@ struct JokerSheet: View {
                 Text(L("Protects \(Plural.nights(tier.nights))")).font(.subheadline)
                 Text(tier.price > 0 ? L("\(tier.price) 🪙") : L("Free")).font(.caption).foregroundStyle(.secondary)
                 switch block {
-                case .alreadyUsedThisMonth?: Text(L("Already used this month")).font(.caption).foregroundStyle(.orange)
-                case .notEnoughCoins(let missing)?: Text(L("\(missing) 🪙 short")).font(.caption).foregroundStyle(.orange)
+                case .alreadyUsedThisMonth?: Text(L("Already used this month")).font(.caption).foregroundStyle(Color.readableOrange)
+                case .notEnoughCoins(let missing)?: Text(L("\(missing) 🪙 short")).font(.caption).foregroundStyle(Color.readableOrange)
                 case .notHeldFromBox?, nil: EmptyView()
                 }
             }
