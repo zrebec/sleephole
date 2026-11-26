@@ -86,7 +86,9 @@ struct ExtrasTests {
         render(ResultView(), m)
         m.acknowledgeResult()
         #expect(m.achievements.map(\.achievement) == [.firstBuilding, .streak3])
-        #expect(m.coins == 300 + 3 * 30 + 3 * 35 + 100)
+        #expect(m.coins == 577 + 100)
+        // build 14: nights of 185 (100 + 20 + 30 + 35) × 1.02 / 1.04 / 1.06 = 189 + 192 + 196 = 577, + 2 achievements 100
+        // (before build 14: 300 + 90 + 105 + 100 = 595)
         render(StatsView(), m)
         render(AchievementsCard(), m)
         render(NewAchievements(achievements: Achievement.allCases), m)

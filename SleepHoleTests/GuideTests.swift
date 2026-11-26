@@ -352,12 +352,13 @@ struct GuideTests {
         #expect(!m.confirm(code: m.settings.wakeCode == "0000" ? "1111" : "0000"))   // a wrong code does nothing
         #expect(m.confirm(code: m.settings.wakeCode))
 
-        // 5. A complete night, a building in the town, the coins as the rules say (L1 100 + 30 without a pause, + any achievement).
+        // 5. A complete night, a building in the town, the coins as the rules say (build 14: 100 + player level 1 bonus 20 + 30
+        //    without a pause = 150, × 1.02 = 153; a short night has no calm hour; + any achievement).
         #expect(m.phase == .result)
         #expect(m.shownResult?.outcome == .complete)
         #expect(m.builtNights == 1 && m.townSnapshot?.buildings.count == 1)
-        #expect(m.coins == 130 + Achievements.coins(m.achievements))    // the first-building achievement adds its own coins
-        #expect(m.coinsEarned >= 130)
+        #expect(m.coins == 153 + Achievements.coins(m.achievements))    // the first-building achievement adds its own coins
+        #expect(m.coinsEarned >= 153)
     }
 
     /// The same change through Settings, at the same time of day, waits for tomorrow - the reason the notes say

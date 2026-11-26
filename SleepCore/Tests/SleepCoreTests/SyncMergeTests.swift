@@ -231,4 +231,26 @@ import Testing
         #expect(!SyncMerge.sameMoment(t0, t0 + 1.0) && !SyncMerge.sameMoment(t0 + 1.0, t0))
         #expect(!SyncMerge.sameMoment(t0, t0 + 5) && !SyncMerge.sameMoment(t0 + 5, t0))
     }
+
+    // MARK: the coin-rule marker (build 14, step 14a3)
+
+    @Test func twoCopiesOfOneRunEndWithTheHigherMarkerWhicheverWon() {
+        #expect(SyncMerge.coinRule(kept: nil, other: 1, sameRun: true) == 1)     // the marker-less copy won, the other has it
+        #expect(SyncMerge.coinRule(kept: 1, other: nil, sameRun: true) == 1)     // an old device sent the run back without it
+        #expect(SyncMerge.coinRule(kept: 1, other: 2, sameRun: true) == 2)       // a later rule wins
+        #expect(SyncMerge.coinRule(kept: 2, other: 1, sameRun: true) == 2)
+        #expect(SyncMerge.coinRule(kept: nil, other: nil, sameRun: true) == nil)
+    }
+
+    @Test func twoDifferentRunsKeepTheWinnersMarkerAsItIs() {
+        #expect(SyncMerge.coinRule(kept: nil, other: 1, sameRun: false) == nil)
+        #expect(SyncMerge.coinRule(kept: 1, other: nil, sameRun: false) == 1)
+        #expect(SyncMerge.coinRule(kept: 1, other: 2, sameRun: false) == 1)
+    }
+
+    @Test func theMarkerMergeIsIdempotent() {
+        let once = SyncMerge.coinRule(kept: nil, other: 1, sameRun: true)
+        #expect(SyncMerge.coinRule(kept: once, other: 1, sameRun: true) == once)
+        #expect(SyncMerge.coinRule(kept: once, other: nil, sameRun: true) == once)
+    }
 }

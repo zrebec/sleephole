@@ -65,6 +65,20 @@ public enum SyncMerge {
         return (a.outcome?.rawValue ?? "") <= (b.outcome?.rawValue ?? "")
     }
 
+    /// The coin-rule marker (build 14, `NightResult.coinRule`) a merged night ends with. Two copies of the SAME run (the same
+    /// non-nil start) end with the higher non-nil marker whichever copy won – a device from before build 14 sends the run back
+    /// without it, and the marker must never be lost (it would silently reprice the night). Two copies of DIFFERENT runs keep
+    /// the winner's marker as it is (nil stays nil). Idempotent: merging the same pair again gives the same value.
+    public static func coinRule(kept: Int?, other: Int?, sameRun: Bool) -> Int? {
+        guard sameRun else { return kept }
+        switch (kept, other) {
+        case let (k?, o?): return max(k, o)
+        case (let k?, nil): return k
+        case (nil, let o?): return o
+        case (nil, nil): return nil
+        }
+    }
+
     /// For two different dates (either may be missing): the earlier one wins, a date beats no date.
     private static func earlierWins(_ a: Date?, _ b: Date?) -> Bool {
         switch (a, b) {

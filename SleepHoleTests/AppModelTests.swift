@@ -36,10 +36,12 @@ struct AppModelTests {
 
     /// Plays one whole night starting on `day` (bedtime 22:30, wake 6:30 next day).
     @discardableResult
-    func playNight(_ h: Harness, day: Int, leaveFor: TimeInterval = 0, confirmAfterWake: TimeInterval = 60) -> Outcome? {
+    func playNight(_ h: Harness, day: Int, leaveFor: TimeInterval = 0, confirmAfterWake: TimeInterval = 60,
+                   oldCoinRule: Bool = false) -> Outcome? {
         h.clock.now = date(day, 22, 25); h.model.refresh()
         #expect(h.model.phase == .canStart)
         h.model.startNight()
+        if oldCoinRule { h.model.active?.coinRule = nil }               // as if it had started in a build before 14
         if leaveFor > 0 {
             h.clock.now = date(day, 23, 30); h.model.append(.leftApp)
             h.clock.now += leaveFor; h.model.append(.returned)
@@ -378,31 +380,39 @@ struct AppModelTests {
         let h = harness(at: date(1, 12))
         h.clock.now = date(1, 22, 25); h.model.refresh(); h.model.startNight()
         h.clock.now = date(2, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
-        // complete +100, no pause +30, 7 calm hours +35 and the achievement "First building" +50
-        #expect(h.model.coins == 215 && h.model.lastReward == 215 && h.model.newAchievements == [.firstBuilding])
+        // build 14 (rule 1): complete 100 + level 1 bonus 20 + no pause 30 + 7 calm hours 35 = 185, × 1.02 (1 night of 10) =
+        // 188.7 → 189, plus the achievement "First building" +50 = 239 (before build 14: 100 + 30 + 35 + 50 = 215)
+        #expect(h.model.coins == 239 && h.model.lastReward == 239 && h.model.newAchievements == [.firstBuilding])
         #expect(h.model.lastReceipt?.lines.contains { $0.kind == .withoutPause && $0.amount == 30 } == true)
-        #expect(h.model.lastReceipt?.total == h.model.lastReward)          // 100 + 30 + 35 + 50 achievement line
+        #expect(h.model.lastReceipt?.total == h.model.lastReward)          // 100 + 20 + 30 + 35 → 189, + 50 achievement line
         #expect(h.model.lastReceipt?.lines.last == .init(kind: .achievements, amount: Achievement.firstBuilding.reward))
         h.model.acknowledgeResult()
         #expect(h.model.lastReceipt == nil)                                // cleared with the screen
         #expect(h.model.newAchievements.isEmpty)
-        playNight(h, day: 2, confirmAfterWake: 30 * 60)                   // unfinished +50 (no bonus)
-        #expect(h.model.coins == 300)                                     // +50 +35 calm hours
+        playNight(h, day: 2, confirmAfterWake: 30 * 60)                   // unfinished: no pause bonus
+        // unfinished: 50 + half of level 1's 20 = 10 + 7 calm hours 35 = 95, × 1.04 (2 nights of 10) = 98.8 → 99;
+        // 239 + 99 = 338 (before build 14: +50 +35 → 300)
+        #expect(h.model.coins == 338)
         h.clock.now = date(3, 15)
         h.model.startTestNight(); h.model.startNight()                    // debug: nothing
         h.clock.now += 240; h.model.refresh(); h.model.confirm()
-        #expect(h.model.coins == 300 && h.model.lastReward == 0 && h.model.newAchievements.isEmpty)
+        #expect(h.model.coins == 338 && h.model.lastReward == 0 && h.model.newAchievements.isEmpty)
         h.model.acknowledgeResult()
         h.model.nextTestNightCounts = true                                // the counted test night pays
         h.model.startTestNight(); h.model.startNight()
         h.clock.now += 240; h.model.refresh(); h.model.confirm()
-        #expect(h.model.coins == 430)                                     // +100 +30 (a 4-minute night has no whole hour)
+        // a 4-minute night has no whole hour: 100 + level 1 bonus 20 + no pause 30 = 150; the counted test night shares its night
+        // key (Oct 3) with the unfinished night, so the window holds 2 keys (Oct 2, 3): × 1.04 = 156; 338 + 156 = 494
+        // (before build 14: +100 +30 → 430)
+        #expect(h.model.coins == 494)
     }
 
+    /// The rule of nights BEFORE build 14 (no marker): every 7th complete night in a row pays +200.
     @Test func seventhNightPaysTheStreakBonus() {
         let h = harness(at: date(1, 12))
-        for d in 1...6 { playNight(h, day: d) }
+        for d in 1...6 { playNight(h, day: d, oldCoinRule: true) }
         h.clock.now = date(7, 22, 25); h.model.refresh(); h.model.startNight()
+        h.model.active?.coinRule = nil
         h.clock.now = date(8, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
         // 100 + streak bonus 200 + achievements ("7 nights in a row", maybe a random first L2 building)
         let bonus = h.model.newAchievements.reduce(0) { $0 + $1.reward }
@@ -414,6 +424,24 @@ struct AppModelTests {
         let calm = h.model.coreResults().reduce(0) { $0 + ($1.calmHours ?? 0) } * Economy.calmHourBonus
         #expect(calm == 7 * 7 * Economy.calmHourBonus)
         #expect(h.model.coins == nights + 7 * PausePolicy.undisturbedBonus + calm + 200 + Achievements.coins(h.model.achievements))
+    }
+
+    /// Build 14 (rule 1): no +200 for a 7th night; the streak and its achievement still count.
+    @Test func theSeventhMarkedNightPaysNoStreakBonusButTheAchievementStillComes() {
+        let h = harness(at: date(1, 12))
+        for d in 1...6 { playNight(h, day: d) }
+        h.clock.now = date(7, 22, 25); h.model.refresh(); h.model.startNight()
+        #expect(h.model.active?.coinRule == CoinRule.current)
+        h.clock.now = date(8, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
+        let bonus = h.model.newAchievements.reduce(0) { $0 + $1.reward }
+        #expect(h.model.newAchievements.contains(.streak7))
+        #expect(h.model.lastReceipt?.lines.contains { if case .streak = $0.kind { true } else { false } } == false)
+        // the 7th night: 6 built nights before → player level 2 (+40): 100 + 40 + 30 + 7 calm hours 35 = 205, × 1.14 (7 nights
+        // of 10) = 233.7 → 234; no +200
+        let pay = h.model.lastReceipt!.lines.filter { $0.kind != .achievements }.reduce(0) { $0 + $1.amount }
+        #expect(pay == 234)
+        #expect(h.model.lastReward == 234 + bonus)
+        #expect(h.model.streak == 7)
     }
 
     @Test func sleepSoundDuringTheNight() {
@@ -523,11 +551,14 @@ struct AppModelTests {
 
     @Test func aGoldJokerCostsCoinsAndProtectsAHoliday() {
         let h = harness(at: date(5, 12))
-        for d in 2...6 { playNight(h, day: d) }
-        h.clock.now = date(7, 12); h.model.refresh()
+        // build 14: five nights already pay ~1 000 (189 + 192 + 196 + 200 + 204 + 50 = 1 031), so the "too poor" look is taken after
+        // three: 100 + 20 + 30 + 35 = 185 × 1.02 / 1.04 / 1.06 = 189 + 192 + 196 = 577, + 50 first building = 627 < 1 000
+        for d in 2...4 { playNight(h, day: d) }
+        h.clock.now = date(5, 12); h.model.refresh()
         let poor = h.model.coins
+        #expect(poor < 1000)
         #expect(h.model.jokerBlock(.silver) == .notEnoughCoins(missing: 1000 - poor))
-        for d in 7...12 { playNight(h, day: d) }                            // 11 nights + a 7-night bonus
+        for d in 5...12 { playNight(h, day: d) }                            // the same 11 nights in a row (no 7-night bonus any more)
         h.clock.now = date(13, 12); h.model.refresh()
         let before = h.model.coins
         #expect(before >= 1000 && before < 5000)
@@ -617,7 +648,7 @@ struct AppModelTests {
         h.clock.now = date(6, 6, 31); h.model.refresh()
         #expect(h.model.confirm(code: "1234"))
         #expect(h.model.shownResult?.outcome == .complete && h.model.shownResult?.result?.pauses == 1)
-        #expect(h.model.lastReceipt?.lines.contains { $0.kind == .withoutPause } == false && h.model.lastReward == 100 + 50 + 6 * Economy.calmHourBonus)   // no +30; +50 first building; the pause spoils one of 7 hours
+        #expect(h.model.lastReceipt?.lines.contains { $0.kind == .withoutPause } == false && h.model.lastReward == 153 + 50)   // no +30; the pause spoils one of 7 hours: (100 + 20 level 1 + 6 × 5 calm) = 150 × 1.02 = 153; +50 first building (before build 14: 100 + 50 + 30)
         #expect(NightReport(log: h.model.shownResult!.log).pauses.count == 1)
     }
 
@@ -882,7 +913,8 @@ extension AppModelTests {
         #expect(result?.calmHours == 7 && result?.calmHoursTotal == 7)
         #expect(h.model.lastReceipt?.lines.contains { $0.kind == .calmHours(calm: 7, total: 7) && $0.amount == 7 * Economy.calmHourBonus } == true)
         #expect(h.model.lastReceipt?.total == h.model.lastReward)          // the receipt adds up (incl. "First building")
-        #expect(h.model.lastReward == 100 + 30 + 35 + 50)          // night, no pause, calm hours, "First building"
+        // night 100 + level 1 bonus 20 + no pause 30 + calm hours 35 = 185 × 1.02 = 188.7 → 189, + "First building" 50
+        #expect(h.model.lastReward == 189 + 50)
     }
 
     @Test func aNightFromBeforeTheRuleEarnsNoCalmHours() {
@@ -892,7 +924,8 @@ extension AppModelTests {
         h.clock.now = date(2, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
         #expect(h.model.lastReceipt?.lines.contains { if case .calmHours = $0.kind { true } else { false } } == false)
         #expect(h.model.shownResult?.result?.calmHours == nil)
-        #expect(h.model.lastReward == 100 + 30 + 50)
+        // no calm hours: 100 + 20 + 30 = 150 × 1.02 = 153, + "First building" 50 (before build 14: 100 + 30 + 50)
+        #expect(h.model.lastReward == 153 + 50)
     }
 
     @Test func theBackupAndSyncFileKeepTheMarkerAndAnOldFileLoadsAsNil() throws {
@@ -1116,16 +1149,123 @@ struct RerollTests {
         #expect(m.spends().last?.amount == 400)
     }
 
+    /// The rule of nights BEFORE build 14 (no marker): the pay follows the level of the building the night ends with.
     @Test func theNightPaysByTheNewBuildingsLevel() {
         let (h, day) = richHarness(nights: 20)           // 20 built nights: levels up to L3 are drawn
         let m = h.model
         m.startNight()
         let rec = m.active!
+        rec.coinRule = nil                               // as if it had started in a build before 14
         m.rerollBuilding()
         let level = m.catalog![rec.buildingId]!.level
         h.clock.now = t.date(day + 1, 6, 30) + 60; m.refresh()
         #expect(m.confirm(code: "1234"))
         let line = m.lastReceipt?.lines.first { $0.kind == .building(level: level) }
         #expect(line?.amount == Economy.reward(.complete, level: level))
+    }
+
+    /// Build 14 (rule 1): a redraw changes the building, never the pay – the pay follows the player's level.
+    @Test func aRedrawChangesTheBuildingNotThePay() {
+        let (h, day) = richHarness(nights: 20)           // 20 built nights: the player's level is 3
+        let m = h.model
+        m.startNight()
+        let rec = m.active!
+        #expect(rec.coinRule == CoinRule.current)
+        let drawn = rec.buildingId
+        m.rerollBuilding()
+        #expect(rec.buildingId != drawn)
+        h.clock.now = t.date(day + 1, 6, 30) + 60; m.refresh()
+        #expect(m.confirm(code: "1234"))
+        let lines = m.lastReceipt?.lines ?? []
+        #expect(lines.contains { if case .building = $0.kind { true } else { false } } == false)
+        #expect(lines.first { $0.kind == .playerLevel(level: 3) }?.amount == Economy.levelBonus(level: 3))
+        // 100 + level 3 bonus 60 + no pause 30 + 7 calm hours 35 = 225, × 1.2 (10 nights of 10) = 270
+        let pay = lines.filter { $0.kind != .achievements }.reduce(0) { $0 + $1.amount }
+        #expect(pay == 270)
+    }
+}
+
+// MARK: - the coin-rule marker on the night (build 14, step 14a3)
+
+@MainActor
+extension AppModelTests {
+    @Test func aNewNightStoresTheCoinRuleAndANapNeverDoes() {
+        let h = harness(at: date(5, 13, 30))
+        h.model.refresh(); h.model.startNap()
+        #expect(h.model.active?.isNap == true && h.model.active?.coinRule == nil)    // a nap is never priced by the rule
+        h.clock.now = date(5, 14, 0) + 1; h.model.refresh()
+        h.model.confirm(); h.model.acknowledgeResult()
+        h.clock.now = date(5, 22, 25); h.model.refresh(); h.model.startNight()
+        #expect(h.model.active?.coinRule == CoinRule.current)
+        #expect(h.model.active?.result == nil)                                        // not finalized yet
+        h.clock.now = date(6, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
+        #expect(h.model.shownResult?.result?.coinRule == CoinRule.current)
+    }
+
+    @Test func aCountedTestNightAndADebugNightCarryTheMarkerToo() {
+        let h = harness(at: date(5, 15))
+        h.model.nextTestNightCounts = true
+        h.model.startTestNight(); h.model.startNight()
+        #expect(h.model.active?.isDebug == false && h.model.active?.coinRule == CoinRule.current)
+        h.clock.now += 240; h.model.refresh(); h.model.confirm(); h.model.acknowledgeResult()
+        h.model.startTestNight(); h.model.startNight()
+        #expect(h.model.active?.isDebug == true && h.model.active?.coinRule == CoinRule.current)
+    }
+
+    /// A night that started before the update (no marker) and is finalized after it keeps the old rule: nothing adds the
+    /// marker later.
+    @Test func aNightStartedWithoutTheMarkerPaysByTheOldRuleWhenItIsFinalizedNow() {
+        let h = harness(at: date(1, 12))
+        h.clock.now = date(1, 22, 25); h.model.refresh(); h.model.startNight()
+        h.model.active?.coinRule = nil                                   // as if it had started in a build before 14
+        h.clock.now = date(2, 6, 31); h.model.refresh(); h.model.confirm(code: "1234")
+        #expect(h.model.shownResult?.result?.coinRule == nil)
+        // the old rule: L1 building 100 + no pause 30 + 7 calm hours 35 = 165, + "First building" 50 = 215 (no level bonus, no multiplier)
+        #expect(h.model.lastReward == 215)
+        #expect(h.model.lastReceipt?.lines.contains { $0.kind == .building(level: 1) && $0.amount == 100 } == true)
+        h.model.acknowledgeResult()
+        h.clock.now = date(2, 22, 25); h.model.refresh(); h.model.startNight()
+        #expect(h.model.active?.coinRule == CoinRule.current)            // the next night is marked
+        #expect(h.model.records().first { $0.keyString == "2026-10-02" }?.coinRule == nil)   // the old one still is not
+    }
+
+    @Test func theBackupKeepsTheCoinRuleAndAnOldFileLoadsAsNil() throws {
+        let r = NightRecord(window: NightWindow(key: NightKey(date: date(6, 6), calendar: .current), bedtime: date(5, 22, 30),
+                                                wake: date(6, 6, 30)),
+                            buildingId: "x", isDebug: false, setupGrace: 300, coinRule: CoinRule.current)
+        let e = JSONEncoder(); e.dateEncodingStrategy = .iso8601
+        let d = JSONDecoder(); d.dateDecodingStrategy = .iso8601
+        #expect(NightRecord(backup: try d.decode(BackupFile.Night.self, from: try e.encode(r.backup))).coinRule == 1)
+        var json = try JSONSerialization.jsonObject(with: try e.encode(r.backup)) as! [String: Any]
+        #expect(json["coinRule"] as? Int == 1)
+        json.removeValue(forKey: "coinRule")
+        let old = NightRecord(backup: try d.decode(BackupFile.Night.self, from: try JSONSerialization.data(withJSONObject: json)))
+        #expect(old.coinRule == nil)
+        // an in-place overwrite (the merge) takes the marker too
+        let target = NightRecord(window: r.window, buildingId: "x", isDebug: false, setupGrace: 300)
+        target.adoptNight(r.backup)
+        #expect(target.coinRule == 1)
+    }
+
+    /// An old backup (no marker keys) restores its nights with no marker: they pay by the old rule, the balance stays.
+    @Test func restoringAnOldBackupKeepsTheBalance() throws {
+        let a = harness(at: date(1, 12))
+        for d in 1...3 { playNight(a, day: d, oldCoinRule: true) }
+        // old rule: 3 × (100 + 30 + 35) = 495, + 2 achievements ("First building" 50, "3 nights in a row" 50) = 595
+        #expect(a.model.coins == 595)
+        let data = try a.model.makeBackup().encoded()
+        var json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+        #expect((json["nights"] as! [[String: Any]]).allSatisfy { $0["coinRule"] == nil })      // the file is an old one
+        json["version"] = BackupFile.currentVersion
+        let b = harness(at: date(9, 12))
+        try b.model.restore(try BackupFile.decode(try JSONSerialization.data(withJSONObject: json)))
+        #expect(b.model.coins == 595 && b.model.records().allSatisfy { $0.coinRule == nil })
+        // a backup written by this build keeps every marker (and so its pay): 189 + 192 + 196 + 100 = 677
+        let c = harness(at: date(1, 12))
+        for d in 1...3 { playNight(c, day: d) }
+        #expect(c.model.coins == 677)
+        let d = harness(at: date(9, 12))
+        try d.model.restore(try BackupFile.decode(try c.model.makeBackup().encoded()))
+        #expect(d.model.coins == 677 && d.model.records().allSatisfy { $0.coinRule == CoinRule.current })
     }
 }

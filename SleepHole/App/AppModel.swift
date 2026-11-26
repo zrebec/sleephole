@@ -133,6 +133,8 @@ final class AppModel {
     ///                                 complete night of today – see -seedTodayNight)
     ///   -openingAt <seconds>          DEBUG only: freeze the parcel opening's timeline at that moment (0.5 wobble, 1.3 pop, 5 the end; 11b4b)
     ///   -openingStill                 DEBUG only: the parcel opening takes the Reduce Motion path (11b4b)
+    ///   -seedCoinRule                 SIMULATOR ONLY, with -seedNights: the seeded nights carry the coin-rule marker (build 14, pay by the
+    ///                                 player's level); without it they stay marker-less, so older screenshots keep their numbers
     ///   -seedTodayNight complete|unfinished|none   SIMULATOR ONLY, with -seedNights: force the newest seeded night (the one
     ///                                 with today's key) to be complete / unfinished / absent (shop screenshots, 11b4a)
     ///   -seedBoxBefore                SIMULATOR ONLY, with -seedNights: an earlier box (price 700, no prize coins) three days ago,
@@ -229,7 +231,8 @@ final class AppModel {
                                             history: history, rng: &rng)
                 if e.kind == .roadLit { town.upgradeStreets() } else { town.place(e) }
                 history.append(e.id)
-                let rec = NightRecord(window: w, buildingId: e.id, isDebug: false, setupGrace: 300)
+                let rec = NightRecord(window: w, buildingId: e.id, isDebug: false, setupGrace: 300,
+                                      coinRule: args.contains("-seedCoinRule") ? CoinRule.current : nil)
                 rec.append(.started, at: w.bedtime)
                 var roll = Int.random(in: 0..<10, using: &rng)
                 if i == n - 1, let forced = value("-seedTodayNight") {   // the newest seeded night carries today's key
@@ -412,7 +415,10 @@ final class AppModel {
             if DevArgs.list.contains("-calmDemo"), let r = lastReceipt {     // screenshots: a night with 7 of 8 calm hours
                 var lines = r.lines.filter { if case .calmHours = $0.kind { false } else { true } }
                 let calm = Economy.Receipt.Line(kind: .calmHours(calm: 7, total: 8), amount: 7 * Economy.calmHourBonus)
-                lines.insert(calm, at: min(lines.count, lines.firstIndex { if case .streak = $0.kind { true } else { false } } ?? lines.count))
+                // the old rule's receipt ends with the streak line, a marked night's with the multiplier line: the calm line goes before it
+                // (the multiplier's amount stays as the ledger priced it – a demo, the lines add up to what is shown)
+                lines.insert(calm, at: min(lines.count, lines.firstIndex {
+                    switch $0.kind { case .streak, .multiplier: true; default: false } } ?? lines.count))
                 lastReceipt = Economy.Receipt(lines: lines)
                 lastReward = lines.reduce(0) { $0 + $1.amount }
             }
@@ -1593,7 +1599,8 @@ final class AppModel {
                               idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode,
                               calmHoursRule: CalmHours.currentRule,
                               lockScreenTolerance: SleepRules.lockScreenToleranceNow,
-                              accidentalTolerance: SleepRules.accidentalToleranceNow)
+                              accidentalTolerance: SleepRules.accidentalToleranceNow,
+                              coinRule: CoinRule.current)      // build 14: every night started now (never a nap) pays by rule 1
         rec.append(.started, at: now)
         context.insert(rec)
         save()
