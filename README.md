@@ -25,8 +25,8 @@ A personal iPhone app for a **regular sleep schedule**, in the spirit of SleepTo
 | 📱 **Night** | the screen may be off, but SleepHole must stay in the foreground. When you leave, **“⚠️ Come back!”** arrives and you have **10 s** to return, otherwise the building collapses |
 | 📞 **Exceptions** | phone calls don't count. If iOS kills the app at night, it counts in your favour |
 | ⏰ **Alarm** | rings for at most **2 minutes** (even in silent mode) and lights up the screen. Confirm you're up by **shaking** or with a **code** (at the earliest 30 min before wake-up) |
-| 🏢 **Complete** | confirmed while the alarm rings (+100 🪙, every 7th complete night in a row +200 🪙) |
-| 🚧 **Unfinished** | confirmed after the alarm stopped, at the latest within 60 min (+50 🪙). Your next good night finishes it |
+| 🏢 **Complete** | confirmed while the alarm rings (100 🪙 + a bonus for your level, see below) |
+| 🚧 **Unfinished** | confirmed after the alarm stopped, at the latest within 60 min (half of a complete night). Your next good night finishes it |
 | 🧱 **Ruins** | the building collapsed, the night was cancelled, or you didn't confirm getting up. Your next complete night repairs it 🛠️ (unless an unfinished building is waiting), otherwise flowers grow over it after a week 🌸 |
 | 😴 **Nap** | in the afternoon, **30 or 60 min**, only in its window (**13:00–15:00** by default), **once a day**. Same rules as at night, 2 min setup, an alarm at the end. **It doesn't build**; complete **+50 🪙**, cut short **+25 🪙** |
 
@@ -53,7 +53,7 @@ Every night one of the unlocked levels is picked at random, then a building from
 - **Today:** always two buttons, **🌙 Go to sleep** and **😴 Nap**. Outside their windows they're disabled and explain why. Above them floats a little **island cut out of your own town** around the newest building (a crane stands on it when you can start building; tap it to open the town).
 - **Living sky** behind every tab, drawn in code: it follows *your* schedule – dawn around wake-up, a blue day with drifting clouds, sunset before bedtime, stars and the moon at night. Content sits on **Liquid Glass** cards (iOS 26; frosted glass on older systems). The town floats on the same sky as a big island.
 - **Animations and sounds:** a *Good night* splash with bursting stars when a night or nap starts, a music-box lullaby and a friendly **synthesised voice** (“Good night! Your building starts now.”); when a building is finished, the **WOW** – golden rays, the building drops in, twinkles burst, confetti, a fanfare, coins and “Good morning! Your building is finished.” Cards slide in, numbers roll. Settings → **Appearance & sounds:** theme (System / Light / Dark), sound effects and voice on/off; Developer → *Sound effects test* plays everything.
-- **🔥 Streak** of complete nights and **🪙 coins**: a complete night pays by the level of its building (L1 100, L2 120, L3 150, L4 200; unfinished half), plus the streak bonus and naps.
+- **🔥 Streak** of complete nights and **🪙 coins**: a complete night pays 100 🪙 plus a bonus for the player's level (L1 +20, L2 +40, L3 +60, L4 +100; unfinished half), +30 without a pause, +5 per calm hour, and up to +20% for consistency (the built nights among the last 10), plus naps.
 - **Jokers 🛡️** for illness or holidays, one a month: 🥉 bronze 1 night (free – used by itself when you miss a night), 🥈 silver 3 nights (1 000 🪙), 🥇 gold 7 nights (5 000 🪙). The streak waits; protected nights build nothing and pay nothing.
 - **Stats:** streak, night calendar with the story of each night, average start and wake-up, regularity, chart, naps, levels.
 - **Level-up celebration** with confetti, **ruin repair** by a good night.

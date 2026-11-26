@@ -1197,50 +1197,6 @@
         }
       }
     },
-    "A finished night pays %@–%@ 🪙, +%lld without a pause, +%lld for every calm hour. Your town gets residents and taller buildings.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A finished night pays %@–%@ 🪙, +%lld without a pause, +%lld for every calm hour. Your town gets residents and taller buildings."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hotová noc %@–%@ 🪙, bez pauzy +%lld, každá pokojná hodina +%lld. V meste pribúdajú obyvatelia a vyššie budovy."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hotová noc vynese %@–%@ 🪙, bez pauzy +%lld, každá klidná hodina +%lld. Ve městě přibývají obyvatelé a vyšší budovy."
-          }
-        }
-      }
-    },
-    "A finished night: %@ 🪙 (level 1), %@ (2), %@ (3), %@ (4). Unfinished: half.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A finished night: %@ 🪙 (level 1), %@ (2), %@ (3), %@ (4). Unfinished: half."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hotová noc: %@ 🪙 (úroveň 1), %@ (2), %@ (3), %@ (4). Rozostavaná: polovica."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hotová noc: %@ 🪙 (úroveň 1), %@ (2), %@ (3), %@ (4). Nedokončená: polovina."
-          }
-        }
-      }
-    },
     "A moment to get ready": {
       "localizations": {
         "en": {
@@ -2029,28 +1985,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zatím žádné noční oblohy. Obloha, kterou vyhraješ, rozjasní tvoje noci."
-          }
-        }
-      }
-    },
-    "No pause +%lld, every calm hour +%lld, every %lldth finished night in a row +%lld.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No pause +%lld, every calm hour +%lld, every %lldth finished night in a row +%lld."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bez pauzy +%lld, každá pokojná hodina +%lld, každá %lld. hotová noc v rade +%lld."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bez pauzy +%lld, každá klidná hodina +%lld, každá %lld. hotová noc v řadě +%lld."
           }
         }
       }
@@ -25941,6 +25875,116 @@
           "stringUnit": {
             "state": "translated",
             "value": "Vytrvalost: %1$lld z %2$lld nocí ×%3$@"
+          }
+        }
+      }
+    },
+    "A finished night pays %@–%@ 🪙 by your level, +%lld without a pause, +%lld for every calm hour, and up to %@ more for consistency. Your town gets residents and taller buildings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A finished night pays %@–%@ 🪙 by your level, +%lld without a pause, +%lld for every calm hour, and up to %@ more for consistency. Your town gets residents and taller buildings."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová noc %@–%@ 🪙 podľa tvojej úrovne, bez pauzy +%lld, každá pokojná hodina +%lld a za vytrvalosť až o %@ viac. V meste pribúdajú obyvatelia a vyššie budovy."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová noc vynese %@–%@ 🪙 podle tvé úrovně, bez pauzy +%lld, každá klidná hodina +%lld a za vytrvalost až o %@ víc. Ve městě přibývají obyvatelé a vyšší budovy."
+          }
+        }
+      }
+    },
+    "A finished night: %@ 🪙 plus your level – +%lld (level 1), +%lld (2), +%lld (3), +%lld (4). Unfinished: half.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A finished night: %@ 🪙 plus your level – +%lld (level 1), +%lld (2), +%lld (3), +%lld (4). Unfinished: half."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová noc: %@ 🪙 a k tomu tvoja úroveň – +%lld (úroveň 1), +%lld (2), +%lld (3), +%lld (4). Rozostavaná: polovica."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hotová noc: %@ 🪙 a k tomu tvoje úroveň – +%lld (úroveň 1), +%lld (2), +%lld (3), +%lld (4). Nedokončená: polovina."
+          }
+        }
+      }
+    },
+    "No pause +%lld, every calm hour +%lld.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No pause +%lld, every calm hour +%lld."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez pauzy +%lld, každá pokojná hodina +%lld."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bez pauzy +%lld, každá klidná hodina +%lld."
+          }
+        }
+      }
+    },
+    "Consistency: every built night of the last %lld (tonight included) adds %@ to the whole night – up to +%@. A night protected by a joker counts too.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consistency: every built night of the last %lld (tonight included) adds %@ to the whole night – up to +%@. A night protected by a joker counts too."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vytrvalosť: každá postavená noc z posledných %lld (aj tá dnešná) pridá k celej noci %@ – najviac +%@. Počíta sa aj noc chránená žolíkom."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vytrvalost: každá postavená noc z posledních %lld (i ta dnešní) přidá k celé noci %@ – nejvýš +%@. Počítá se i noc chráněná žolíkem."
+          }
+        }
+      }
+    },
+    "From now on every night pays +%lld 🪙 for your level.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From now on every night pays +%lld 🪙 for your level."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odteraz ti každá noc vynesie +%lld 🪙 za tvoj level."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Odteď ti každá noc vynese +%lld 🪙 za tvou úroveň."
           }
         }
       }

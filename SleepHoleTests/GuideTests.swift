@@ -80,7 +80,7 @@ struct GuideTests {
         #expect(GuideText.page(4, setup: setup).text.contains("15s"))
         #expect(GuideText.page(5, setup: setup).text.contains("Chceš si prečítať správu? Ťukni na 🌙 Pauza – 10 minút mimo appky"))
         #expect(GuideText.page(6, setup: setup).text.contains("30 minút pred budíkom") && GuideText.page(6, setup: setup).text.contains("Do 10 minút po budíku"))
-        #expect(GuideText.page(7, setup: setup).text.contains("100–200 🪙") && GuideText.page(7, setup: setup).text.contains("+30") && GuideText.page(7, setup: setup).text.contains("+5"))
+        #expect(GuideText.page(7, setup: setup).text.contains("120–200 🪙") && GuideText.page(7, setup: setup).text.contains("+30") && GuideText.page(7, setup: setup).text.contains("+5"))
         let g = GuideText.ruleGroups
         #expect(g.count == 10 && g.map(\.title).prefix(9) == ["Rozvrh", "Večer", "Noc", "Pauza", "Ráno", "Mince a mesto", "Žolíky", "Odpočinok", "Súkromie"])
         #expect(g[0].items[1].replacingOccurrences(of: "\u{a0}", with: " ").contains("2 000 🪙"))
@@ -89,7 +89,7 @@ struct GuideTests {
         #expect(g[2].items[5].contains("8s"))
         #expect(g[3].items[0].contains("50, 100, 150 🪙"))
         #expect(g[4].items[0].contains("2 minúty") && g[4].items[1].contains("30 minút") && g[4].items[2].contains("10 minút") && g[4].items[2].contains("60 minút"))
-        #expect(g[5].items[2].contains("od konca prípravy") && g[5].items[3].contains("1–5") && g[5].items[3].contains("6–15") && g[5].items[3].contains("od 31. noci"))
+        #expect(g[5].items[3].contains("od konca prípravy") && g[5].items[4].contains("1–5") && g[5].items[4].contains("6–15") && g[5].items[4].contains("od 31. noci"))
         #expect(g[6].items[0].contains("1 noc") && g[6].items[1].replacingOccurrences(of: "\u{a0}", with: " ").contains("3 noci za 1 000 🪙"))
         #expect(g[7].items[0].contains("13:00") && g[7].items[0].contains("+50 🪙") && g[7].items[0].contains("+25 🪙"))
         #expect(Plural.minutes(60) == "1 minútu" && Plural.seconds(3) == "3 sekundy" && Plural.nights(1) == "1 noc")
@@ -102,15 +102,17 @@ struct GuideTests {
         #expect(GuideText.page(2, setup: setup).text == "Tap “Go to sleep” from 10 minutes before bedtime until 30 minutes after it. Tired sooner? You can start up to 3 hours early.")
         #expect(GuideText.page(3, setup: setup).text == "After the start there's time for a podcast or story: 5 minutes from bedtime, or from the start if you start later. In another app? I'll call you 15s before the end.")
         #expect(GuideText.page(5, setup: setup).text == "Want to read a message? Tap 🌙 Pause – 10 minutes outside the app, the first one each night is free.")
-        #expect(GuideText.page(7, setup: setup).text.hasPrefix("A finished night pays 100–200 🪙, +30 without a pause, +5 for every calm hour."))
+        #expect(GuideText.page(7, setup: setup).text.hasPrefix("A finished night pays 120–200 🪙 by your level, +30 without a pause, +5 for every calm hour, and up to 20% more for consistency."))
         let g = GuideText.ruleGroups
         #expect(g[0].items[1] == "Your first change opens a change week (7 days). Then the schedule stays for a month; unlocking it sooner costs 2,000 🪙.")
         #expect(g[1].items[2] == "The setup lasts your setup time (5, 10 or 15 minutes in Settings) from bedtime, or from the start if you start later; 15 minutes from an early start.")
         #expect(g[2].items[3] == "On iOS 26, pulling down Notification Center counts as leaving the app – use 🌙 Pause to read a message.")
         #expect(g[3].items[0] == "🌙 Pause: 10 minutes outside the app. The first of a night is free, then 50, 100, 150 🪙.")
-        #expect(g[5].items[1] == "No pause +30, every calm hour +5, every 7th finished night in a row +200.")
-        #expect(g[5].items[2].contains("between the end of the setup and the alarm"))
-        #expect(g[5].items[3] == "Levels: nights 1–5 level 1, 6–15 up to level 2, 16–30 up to level 3, from night 31 up to level 4.")
+        #expect(g[5].items[0] == "A finished night: 100 🪙 plus your level – +20 (level 1), +40 (2), +60 (3), +100 (4). Unfinished: half.")
+        #expect(g[5].items[1] == "No pause +30, every calm hour +5.")
+        #expect(g[5].items[2] == "Consistency: every built night of the last 10 (tonight included) adds 2% to the whole night – up to +20%. A night protected by a joker counts too.")
+        #expect(g[5].items[3].contains("between the end of the setup and the alarm"))
+        #expect(g[5].items[4] == "Levels: nights 1–5 level 1, 6–15 up to level 2, 16–30 up to level 3, from night 31 up to level 4.")
         #expect(g[6].items[1] == "Silver: 3 nights for 1,000 🪙. Gold: 7 nights for 5,000 🪙. Each kind once a month.")
         #expect(Plural.minutes(60) == "1 minute" && Plural.seconds(3) == "3 seconds" && Plural.nights(1) == "1 night")
     }
@@ -139,15 +141,17 @@ struct GuideTests {
             Int(SetupReminder.lead), Int(r.accidentalTolerance), Int(r.awayBudget ?? 0), Int(GuideText.lockWindow),
             m(PausePolicy.duration), PausePolicy.priceStep, PausePolicy.priceStep * 2, PausePolicy.priceStep * 3,
             PausePolicy.undisturbedBonus, m(NightWindow.earlyConfirm), m(NightWindow.onTimeConfirm),
-            m(NightWindow.lateConfirm), m(r.alarmDuration), Economy.calmHourBonus, Economy.streakBonusEvery,
-            Economy.streakBonus, SchedulePolicy.weekDays, SchedulePolicy.unlockPrice, RenamePolicy.price,
+            m(NightWindow.lateConfirm), m(r.alarmDuration), Economy.calmHourBonus, Economy.nightBase,
+            Economy.consistencyWindow, Economy.consistencyPercentPerNight,
+            Economy.consistencyPercentPerNight * Economy.consistencyWindow, SchedulePolicy.weekDays, SchedulePolicy.unlockPrice, RenamePolicy.price,
             m(RenamePolicy.typoWindow), t[1].minBuilt, t[1].minBuilt + 1, t[2].minBuilt, t[2].minBuilt + 1,
             t[3].minBuilt, t[3].minBuilt + 1, nap.windowStart.hour, nap.windowEnd.hour, nap.windowStart.minute,
             NapPlan.reward(.complete), NapPlan.reward(.unfinished),
             1, 2, 3, 4, 26,                                            // level labels and "iOS 26"
         ]
         allowed.formUnion(AppSettings.setupMinuteOptions)
-        allowed.formUnion((1...4).map { Economy.completeReward(level: $0) })
+        allowed.formUnion((1...4).map { Economy.levelBonus(level: $0) })
+        allowed.formUnion((1...4).map { Economy.nightBase + Economy.levelBonus(level: $0) })
         allowed.formUnion(JokerTier.allCases.flatMap { [$0.nights, $0.price] })
         allowed.formUnion(NapPlan.allowedMinutes)
         for lang in AppLanguage.allCases {
@@ -395,5 +399,31 @@ struct GuideTests {
         Lang.current = .sk
         #expect(ReplayScheduleRows.reminderText(0) != "Reminder: off")
         #expect(ReplayScheduleRows.reminderText(30) != "Reminder 30 min before bedtime")
+    }
+
+    /// Build 14: the guide describes only today's coin rule – no 7th-night streak bonus, no "+200".
+    @Test func noStreakBonusInTheGuide() {
+        defer { Lang.current = .en }
+        for lang in AppLanguage.allCases {
+            Lang.current = lang
+            var sentences = (0..<GuideText.pageCount).map { GuideText.page($0, setup: AppSettings().setupGrace).text }
+            sentences += GuideText.ruleGroups.flatMap(\.items)
+            for text in sentences {
+                #expect(!text.contains("+200"), "\(lang): \(text)")
+                #expect(!text.contains("7th") && !text.contains("7."), "\(lang): \(text)")
+            }
+        }
+    }
+
+    /// The level-up card's line names the NEW level's bonus.
+    @Test func levelUpLineUsesTheLevelBonus() {
+        defer { Lang.current = .en }
+        Lang.current = .en
+        for level in 1...4 {
+            #expect(L("From now on every night pays +\(Economy.levelBonus(level: level)) 🪙 for your level.")
+                == "From now on every night pays +\(Economy.levelBonus(level: level)) 🪙 for your level.")
+        }
+        Lang.current = .sk
+        #expect(L("From now on every night pays +\(Economy.levelBonus(level: 4)) 🪙 for your level.") == "Odteraz ti každá noc vynesie +100 🪙 za tvoj level.")
     }
 }
