@@ -24,8 +24,8 @@ Osobná iPhone appka na **pravidelný spánok**, v duchu hry SleepTown. Večer z
 | 📱 **Noc** | displej môže byť vypnutý, ale SleepHole musí ostať v popredí. Pri odchode príde **„⚠️ Vráť sa!“** a máš **10 s** na návrat, inak sa stavba zrúti |
 | 📞 **Výnimky** | telefonát sa nepočíta. Ak appku v noci vypne iOS, počíta sa to v tvoj prospech |
 | ⏰ **Budík** | zvoní najviac **2 minúty** (aj v tichom režime) a rozsvieti obrazovku. Vstanie potvrdíš **zatrasením** alebo **kódom** (najskôr 30 min pred budíčkom) |
-| 🏢 **Hotová** | potvrdené počas zvonenia budíka (+100 🪙, každá 7. hotová noc v rade +200 🪙) |
-| 🚧 **Rozostavaná** | potvrdené po dozvonení, najneskôr do 60 min (+50 🪙). Ďalšia dobrá noc ju dostavia |
+| 🏢 **Hotová** | potvrdené počas zvonenia budíka (100 🪙 + bonus za tvoj level, viď nižšie) |
+| 🚧 **Rozostavaná** | potvrdené po dozvonení, najneskôr do 60 min (polovica hotovej noci). Ďalšia dobrá noc ju dostavia |
 | 🧱 **Ruina** | stavba sa zrútila, noc bola zrušená, alebo si vstanie nepotvrdil. Ďalšia hotová noc ju opraví 🛠️ (ak nečaká rozostavaná budova), inak po týždni zarastie kvetmi 🌸 |
 | 😴 **Odpočinok** | popoludní **30 alebo 60 min**, iba v okne (predvolene **13:00–15:00**), **raz denne**. Rovnaké pravidlá ako v noci, príprava 2 min, na konci budík. **Budovu nestavia**, hotový **+50 🪙**, skrátený **+25 🪙** |
 
@@ -63,7 +63,7 @@ Každú noc sa náhodne vyberie jeden z odomknutých levelov a z neho budova. Bu
 
   Jemné budíky postupne silnejú, agresívne hrajú naplno hneď.
 - **Dnes:** vždy dve tlačidlá, **🌙 Ísť spať** a **😴 Odpočinok**. Mimo svojho okna sú neaktívne a vysvetlia prečo.
-- **🔥 Séria** hotových nocí za sebou a **🪙 mince** (noci, bonus za sériu, odpočinky).
+- **🔥 Séria** hotových nocí za sebou a **🪙 mince** (noc: 100 🪙 + bonus za tvoj level L1 +20 … L4 +100, rozostavaná polovica, +30 bez pauzy, +5 za pokojnú hodinu, až +20 % za vytrvalosť; odpočinky).
 - **Štatistiky:** séria, kalendár nocí, priemerný štart a vstávanie, pravidelnosť, graf, odpočinky, levely.
 - **Oslava levelu** s konfetami, **oprava ruín** dobrou nocou.
 - **Úspechy:** 12 (prvá budova, 3/7/30 nocí v rade, 10/50/100 postavených nocí, prvá budova levelu 2/3, prvý mrakodrap, prvý odpočinok, opravená ruina), každý +50 🪙 (veľké +200).

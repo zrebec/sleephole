@@ -58,6 +58,7 @@ struct LevelUpCard: View {
                 ForEach(samples) { BuildingImage(id: $0.id, maxHeight: 90) }
             }
             Text(L("From tonight these buildings can be built too.")).font(.footnote).cardCaption()
+            Text(L("From now on every night pays +\(Economy.levelBonus(level: level)) 🪙 for your level.")).font(.footnote).cardCaption()
             Button(L("Great!"), action: onClose).buttonStyle(.borderedProminent).controlSize(.large)
         }
         .padding(24)

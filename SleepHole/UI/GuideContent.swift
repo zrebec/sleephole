@@ -57,7 +57,7 @@ enum GuideText {
                         text: L("Shake your phone or enter your code – from \(m(NightWindow.earlyConfirm)) before the alarm. Within \(m(NightWindow.onTimeConfirm)) after it, the building is done!"))
         case 7:
             return Page(art: "🪙🏙️", cat: "buddy-cat-happy", title: L("Rewards"),
-                        text: L("A finished night pays \(coins(Economy.completeReward(level: 1)))–\(coins(Economy.completeReward(level: 4))) 🪙, +\(PausePolicy.undisturbedBonus) without a pause, +\(Economy.calmHourBonus) for every calm hour. Your town gets residents and taller buildings."))
+                        text: L("A finished night pays \(coins(Economy.nightBase + Economy.levelBonus(level: 1)))–\(coins(Economy.nightBase + Economy.levelBonus(level: 4))) 🪙 by your level, +\(PausePolicy.undisturbedBonus) without a pause, +\(Economy.calmHourBonus) for every calm hour, and up to \(Fmt.percent(Economy.consistencyPercentPerNight * Economy.consistencyWindow)) more for consistency. Your town gets residents and taller buildings."))
         default:
             return Page(art: "🛡️🔌", cat: "buddy-cat-wink", title: L("When a night goes wrong"),
                         text: L("No worries – a joker protects your streak and the next good night repairs a ruin. Keep your phone on the charger overnight."))
@@ -116,8 +116,9 @@ enum GuideText {
                 L("Your next finished night repairs a ruin."),
             ]),
             RuleGroup(title: L("Coins and town"), items: [
-                L("A finished night: \(coins(Economy.completeReward(level: 1))) 🪙 (level 1), \(coins(Economy.completeReward(level: 2))) (2), \(coins(Economy.completeReward(level: 3))) (3), \(coins(Economy.completeReward(level: 4))) (4). Unfinished: half."),
-                L("No pause +\(PausePolicy.undisturbedBonus), every calm hour +\(Economy.calmHourBonus), every \(Economy.streakBonusEvery)th finished night in a row +\(Economy.streakBonus)."),
+                L("A finished night: \(coins(Economy.nightBase)) 🪙 plus your level – +\(Economy.levelBonus(level: 1)) (level 1), +\(Economy.levelBonus(level: 2)) (2), +\(Economy.levelBonus(level: 3)) (3), +\(Economy.levelBonus(level: 4)) (4). Unfinished: half."),
+                L("No pause +\(PausePolicy.undisturbedBonus), every calm hour +\(Economy.calmHourBonus)."),
+                L("Consistency: every built night of the last \(Economy.consistencyWindow) (tonight included) adds \(Fmt.percent(Economy.consistencyPercentPerNight)) to the whole night – up to +\(Fmt.percent(Economy.consistencyPercentPerNight * Economy.consistencyWindow)). A night protected by a joker counts too."),
                 L("A calm hour: a whole hour between the end of the setup and the alarm with no trip out of the app, no phone use and no pause."),
                 L("Levels: nights 1–\(t[1].minBuilt) level 1, \(t[1].minBuilt + 1)–\(t[2].minBuilt) up to level 2, \(t[2].minBuilt + 1)–\(t[3].minBuilt) up to level 3, from night \(t[3].minBuilt + 1) up to level 4."),
                 L("Every building has residents and the town grows with them."),
