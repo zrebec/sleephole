@@ -183,6 +183,12 @@ struct SimSnap: Sendable, Equatable {
     var building = 0, undisturbed = 0, calm = 0, streak = 0, nap = 0, achievement = 0
     /// Coin rule 1: the pay for the player's level and what the consistency multiplier added (0 under the old rule).
     var levelBonus = 0, multiplier = 0
+    /// Pay of complete / unfinished nights by the player's level at the night's start (index 0 = L1): the night's coins
+    /// (without the lucky extra and achievements) and the number of such nights.
+    var payComplete = [0, 0, 0, 0], countComplete = [0, 0, 0, 0]
+    var payUnfinished = [0, 0, 0, 0], countUnfinished = [0, 0, 0, 0]
+    /// Rule 1: sum of the multiplier percent (100 + 2n) over complete nights, and their number.
+    var multiplierPercentSum = 0, multiplierPercentCount = 0
     /// The lucky night's extra (it is also part of `boxCoins`).
     var luckyExtra = 0
     var boxCoins = 0                  // prizes + duplicates + the lucky-night extra
@@ -375,9 +381,9 @@ func simulate(_ cfg: SimConfig, run runIndex: Int, catalog: Catalog, calendar ca
             if calmHours == 0 { calmHours = p.calm.last!.0 }
             let calmBonus = calmHours * Economy.calmHourBonus
             var levelPart = 0, multiplierPart = 0
+            let playerLevel = Progression.unlockedMaxLevel(builtBefore: built)
             if newRule {
                 // coin rule 1: the night, the player's level at its start, the multiplier of the last 10 nights
-                let playerLevel = Progression.unlockedMaxLevel(builtBefore: built)
                 base = final == .complete ? Economy.nightBase : Economy.nightBase / 2
                 levelPart = final == .complete ? Economy.levelBonus(level: playerLevel) : Economy.levelBonus(level: playerLevel) / 2
                 countedDay[i] = true
@@ -385,10 +391,14 @@ func simulate(_ cfg: SimConfig, run runIndex: Int, catalog: Catalog, calendar ca
                 let sum = base + levelPart + undisturbed + calmBonus
                 coins = Economy.multiplied(sum, nights: n)
                 multiplierPart = coins - sum
+                if final == .complete { s.multiplierPercentSum += 100 + 2 * n; s.multiplierPercentCount += 1 }
             } else {
                 coins = base + streak + undisturbed + calmBonus
             }
             bal += coins
+            let li = max(0, min(3, playerLevel - 1))
+            if final == .complete { s.payComplete[li] += coins; s.countComplete[li] += 1 }
+            else if final == .unfinished { s.payUnfinished[li] += coins; s.countUnfinished[li] += 1 }
             s.building += base; s.streak += streak; s.undisturbed += undisturbed; s.calm += calmBonus
             s.levelBonus += levelPart; s.multiplier += multiplierPart
             built += 1

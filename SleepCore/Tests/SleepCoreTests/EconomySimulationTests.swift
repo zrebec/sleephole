@@ -31,10 +31,11 @@ private func aggregate(_ runs: [SimRun], checkpoint c: Int) -> [String: Double] 
                    ("rerolls", { $0.reroll }), ("boxesPaid", { $0.boxPaid }),
                    ("rerollCount", { $0.rerolls }), ("silverBought", { $0.silversBought }), ("silverWanted", { $0.silverWanted }),
                    ("luckyWon", { $0.luckyWon }), ("luckyPaid", { $0.luckyPaid }),
-                   ("boxJokersWon", { $0.jokersWon }), ("boxJokersUsed", { $0.jokersUsed })] as [(String, (SimSnap) -> Int)] {
+                   ("boxJokersWon", { $0.jokersWon }), ("boxJokersUsed", { $0.jokersUsed }),
+                   ("levelBonus", { $0.levelBonus }), ("multiplier", { $0.multiplier })] as [(String, (SimSnap) -> Int)] {
         m["mean_" + k] = mean(col(f))
     }
-    let earned = mean(snaps.map { Double($0.building + $0.undisturbed + $0.calm + $0.streak + $0.nap + $0.achievement + $0.boxCoins) })
+    let earned = mean(snaps.map { Double($0.building + $0.undisturbed + $0.calm + $0.streak + $0.levelBonus + $0.multiplier + $0.nap + $0.achievement + $0.boxCoins) })
     m["earned_per_night"] = earned / nights
     m["earned_per_30_days"] = earned / nights * 30
     let boxes = Double(snaps.map(\.boxes).reduce(0, +)), paid = Double(snaps.map(\.boxPaid).reduce(0, +))
@@ -42,6 +43,17 @@ private func aggregate(_ runs: [SimRun], checkpoint c: Int) -> [String: Double] 
     m["avg_box_price"] = boxes > 0 ? paid / boxes : 0
     m["real_return_pct"] = paid > 0 ? Double(snaps.map(\.boxCoins).reduce(0, +)) / paid * 100 : 0
     m["pct_runs_below_400"] = Double(snaps.filter(\.below400).count) / Double(snaps.count) * 100
+    for l in 0..<4 {
+        func pooled(_ pay: (SimSnap) -> Int, _ cnt: (SimSnap) -> Int) -> Double {
+            let n = snaps.map(cnt).reduce(0, +)
+            return n > 0 ? Double(snaps.map(pay).reduce(0, +)) / Double(n) : 0
+        }
+        m["pay_complete_L\(l + 1)"] = pooled({ $0.payComplete[l] }, { $0.countComplete[l] })
+        m["pay_unfinished_L\(l + 1)"] = pooled({ $0.payUnfinished[l] }, { $0.countUnfinished[l] })
+        m["count_complete_L\(l + 1)"] = mean(snaps.map { Double($0.countComplete[l]) })
+    }
+    let mpc = snaps.map(\.multiplierPercentCount).reduce(0, +)
+    m["mean_multiplier_percent"] = mpc > 0 ? Double(snaps.map(\.multiplierPercentSum).reduce(0, +)) / Double(mpc) : 0
     let big = col { $0.largestPrize }
     m["largest_prize_median"] = percentile(big, 0.5); m["largest_prize_max"] = big.max() ?? 0
     for col_ in SimCollection.allCases {
@@ -61,8 +73,13 @@ private struct Combo {
     let policy: Int
     let variant: SimOddsVariant?
     let rerolls: Bool
-    var id: String { "\(profile.name)/P\(policy)/\(variant?.name ?? "-")/rerolls-\(rerolls ? "on" : "off")" }
-    var config: SimConfig { SimConfig(profile: profile, boxesPerMonth: policy, variant: variant, rerolls: rerolls) }
+    var coinRule: Int? = nil
+    var id: String { "\(profile.name)/P\(policy)/\(variant?.name ?? "-")/rerolls-\(rerolls ? "on" : "off")/rule-\(coinRule.map(String.init) ?? "old")" }
+    var config: SimConfig {
+        var c = SimConfig(profile: profile, boxesPerMonth: policy, variant: variant, rerolls: rerolls)
+        c.coinRule = coinRule
+        return c
+    }
 }
 
 private func f0(_ x: Double) -> String { String(Int(x.rounded())) }
@@ -188,6 +205,102 @@ private func f1(_ x: Double) -> String { String(format: "%.1f", x) }
         try json.write(to: URL(fileURLWithPath: dir + "/report.json"))
     }
 
+    /// Dev aid (step 14a2): old coin rule vs rule 1. `ECON_SIM14=<dir>` writes report-b14.md / report-b14.json there.
+    @Test func writeCoinRuleReport() throws {
+        guard let dir = ProcessInfo.processInfo.environment["ECON_SIM14"] else { return }
+        let runs = Int(ProcessInfo.processInfo.environment["ECON_RUNS"] ?? "") ?? 500
+        let started = Date()
+        let catalog = try loadRealCatalog()
+        let calendar = SimCalendar()
+        var cache: [String: [String: [String: Double]]] = [:]
+        let rules: [Int?] = [nil, CoinRule.playerLevel]
+        func run(_ combos: [Combo]) {
+            for combo in combos where cache[combo.id] == nil {
+                let rs = simulateBatch(combo.config, runs: runs, catalog: catalog, calendar: calendar)
+                var per: [String: [String: Double]] = [:]
+                for (c, n) in simCheckpoints.enumerated() { per["\(n)"] = aggregate(rs, checkpoint: c) }
+                cache[combo.id] = per
+            }
+        }
+        func g(_ c: Combo, _ n: Int, _ k: String) -> Double { cache[c.id]!["\(n)"]![k]! }
+        func cb(_ p: SimProfile, _ k: Int, _ r: Bool, _ rule: Int?) -> Combo {
+            Combo(profile: p, policy: k, variant: k == 0 ? nil : .D, rerolls: r, coinRule: rule)
+        }
+        for p in SimProfile.all {
+            for rule in rules {
+                for r in [false, true] { run([cb(p, 0, r, rule)]) }
+                for k in [3, 6, 9] { run([cb(p, k, true, rule)]) }
+            }
+        }
+        func rn(_ rule: Int?) -> String { rule == nil ? "old" : "new" }
+
+        var md = "# SleepHole economy simulation, build 14 (step 14a2): old coin rule vs rule 1 (player's level + consistency multiplier)\n\n"
+        md += """
+        Same engine, seeds and profiles as the build 11 report (see `report.md` assumptions): 365 nights of a fresh user from 2026-11-01, checkpoints 30 / 100 / 365. The old rule pays by the drawn building's level and +200 every 7th complete night; rule 1 pays 100 + the player's level bonus (L1 20, L2 40, L3 60, L4 100), unfinished half, +30 without a pause, +5 per calm hour, all times (100 + 2n) % with n = built or excused nights among the last 10 (rounded), no +200. "Level part" and "multiplier part" are rule 1's extra coins (0 under the old rule). Parcels use the shipped odds D.
+
+        > Rerolls in this simulation follow the old rule's habit – a reroll only when the drawn level is below the player's maximum (under the old rule a higher level paid more). Under the new rule a reroll no longer changes the pay; players will reroll for the look of their town. Read the rerolls-off rows for the coin sink decision.
+
+        """
+        for p in SimProfile.all {
+            md += "\n## Profile: \(p.name)\n\n### P0 (no parcels)\n\n"
+            md += "| nights | rerolls | rule | balance p10 / median / p90 | earned per night | per 30 days | +30 | calm | 7th night | level part | multiplier part | spent: pauses | silver | rerolls spent | rerolls made | silver bought | silver wanted, not affordable | lowest after night 30 (median) | runs ever < 400 (%) |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n"
+            for n in simCheckpoints {
+                for r in [false, true] {
+                    for rule in rules {
+                        let c = cb(p, 0, r, rule)
+                        md += "| \(n) | \(r ? "on" : "off") | \(rn(rule)) | \(f0(g(c, n, "balance_p10"))) / \(f0(g(c, n, "balance_median"))) / \(f0(g(c, n, "balance_p90"))) | \(f1(g(c, n, "earned_per_night"))) | \(f0(g(c, n, "earned_per_30_days"))) | \(f0(g(c, n, "mean_withoutPause"))) | \(f0(g(c, n, "mean_calmHours"))) | \(f0(g(c, n, "mean_streak7"))) | \(f0(g(c, n, "mean_levelBonus"))) | \(f0(g(c, n, "mean_multiplier"))) | \(f0(g(c, n, "mean_pauses"))) | \(f0(g(c, n, "mean_silverJokers"))) | \(f0(g(c, n, "mean_rerolls"))) | \(f1(g(c, n, "mean_rerollCount"))) | \(f1(g(c, n, "mean_silverBought"))) | \(f1(g(c, n, "mean_silverWanted"))) | \(f0(g(c, n, "lowest_after_30_median"))) | \(f1(g(c, n, "pct_runs_below_400"))) |\n"
+                    }
+                }
+            }
+            md += "\n### Pay per night by the player's level at its start (checkpoint 365, P0, rerolls off; coins of the night itself, no lucky extra, no achievements)\n\n| level | complete: old | complete: new | unfinished: old | unfinished: new |\n|---|---|---|---|---|\n"
+            let o = cb(p, 0, false, nil), nw = cb(p, 0, false, CoinRule.playerLevel)
+            for l in 1...4 {
+                md += "| L\(l) | \(f1(g(o, 365, "pay_complete_L\(l)"))) | \(f1(g(nw, 365, "pay_complete_L\(l)"))) | \(f1(g(o, 365, "pay_unfinished_L\(l)"))) | \(f1(g(nw, 365, "pay_unfinished_L\(l)"))) |\n"
+            }
+            md += "\nMean multiplier over complete nights (new rule): \(f1(g(nw, 365, "mean_multiplier_percent"))) %.\n"
+            md += "\n### Parcels, odds D (rerolls on)\n\n| nights | policy | rule | balance p10 / median / p90 | parcels / month | avg price | real return % | lucky nights won | silver bought | silver wanted, not affordable | lowest after night 30 (median) | runs ever < 400 (%) |\n|---|---|---|---|---|---|---|---|---|---|---|---|\n"
+            for n in simCheckpoints {
+                for k in [3, 6, 9] {
+                    for rule in rules {
+                        let c = cb(p, k, true, rule)
+                        md += "| \(n) | P\(k) | \(rn(rule)) | \(f0(g(c, n, "balance_p10"))) / \(f0(g(c, n, "balance_median"))) / \(f0(g(c, n, "balance_p90"))) | \(f1(g(c, n, "boxes_per_month"))) | \(f0(g(c, n, "avg_box_price"))) | \(f1(g(c, n, "real_return_pct"))) | \(f1(g(c, n, "mean_luckyWon"))) | \(f1(g(c, n, "mean_silverBought"))) | \(f1(g(c, n, "mean_silverWanted"))) | \(f0(g(c, n, "lowest_after_30_median"))) | \(f1(g(c, n, "pct_runs_below_400"))) |\n"
+                    }
+                }
+            }
+            md += "\n### Collections at night 365 (odds D): month in which complete (median; 1 = Nov 2026)\n\n| policy | rule | postcards | decorations | accessories | sky effects |\n|---|---|---|---|---|---|\n"
+            for k in [3, 6, 9] {
+                for rule in rules {
+                    let c = cb(p, k, true, rule)
+                    func done(_ col: SimCollection) -> String {
+                        let x = g(c, 365, "complete_month_median_\(col.label)"); return x < 0 ? "not in a year" : f0(x)
+                    }
+                    md += "| P\(k) | \(rn(rule)) | \(done(.postcard)) | \(done(.decoration)) | \(done(.accessory)) | \(done(.nightSky)) |\n"
+                }
+            }
+        }
+
+        // observations (computed, at most 10 lines)
+        var obs: [String] = []
+        for p in SimProfile.all {
+            let o = g(cb(p, 0, false, nil), 365, "balance_median"), nw = g(cb(p, 0, false, CoinRule.playerLevel), 365, "balance_median")
+            obs.append("\(p.name) P0 rerolls off, median balance at 365: old \(f0(o)) -> new \(f0(nw)) (\(nw >= o ? "+" : "")\(f0(nw - o)) coins, \(nw >= o ? "+" : "")\(f1((nw - o) / max(1, o) * 100)) %).")
+        }
+        obs.append("Typical earned per 30 days (P0, rerolls off): old \(f0(g(cb(.typical, 0, false, nil), 365, "earned_per_30_days"))) -> new \(f0(g(cb(.typical, 0, false, CoinRule.playerLevel), 365, "earned_per_30_days"))).")
+        obs.append("Weak silver wanted, not affordable per run in a year (P0, rerolls off): old \(f1(g(cb(.weak, 0, false, nil), 365, "mean_silverWanted"))) -> new \(f1(g(cb(.weak, 0, false, CoinRule.playerLevel), 365, "mean_silverWanted"))).")
+        obs.append("Typical P6 parcels per month / average price at 365: old \(f1(g(cb(.typical, 6, true, nil), 365, "boxes_per_month"))) / \(f0(g(cb(.typical, 6, true, nil), 365, "avg_box_price"))) -> new \(f1(g(cb(.typical, 6, true, CoinRule.playerLevel), 365, "boxes_per_month"))) / \(f0(g(cb(.typical, 6, true, CoinRule.playerLevel), 365, "avg_box_price"))) (the price follows the balance).")
+        obs.append("Typical P0 (rerolls off) lowest balance after night 30, median: old \(f0(g(cb(.typical, 0, false, nil), 365, "lowest_after_30_median"))) -> new \(f0(g(cb(.typical, 0, false, CoinRule.playerLevel), 365, "lowest_after_30_median"))).")
+        obs.append("The removed +200 was worth per year (old rule, mean 7th-night bonus at 365): " + SimProfile.all.map { "\($0.name) \(f0(g(cb($0, 0, false, nil), 365, "mean_streak7")))" }.joined(separator: ", ") + ".")
+        md += "\n## Observations\n\n" + obs.prefix(10).map { "- " + $0 }.joined(separator: "\n") + "\n"
+        let secs = Int(Date().timeIntervalSince(started))
+        md += "\n(Run time of this report: \(secs) s for \(runs) runs per combination, \(cache.count) combinations.)\n"
+
+        try FileManager.default.createDirectory(atPath: dir, withIntermediateDirectories: true)
+        try md.write(toFile: dir + "/report-b14.md", atomically: true, encoding: .utf8)
+        let json = try JSONSerialization.data(withJSONObject: ["runsPerCombination": runs, "checkpoints": simCheckpoints,
+                                                               "combinations": cache], options: [.prettyPrinted, .sortedKeys])
+        try json.write(to: URL(fileURLWithPath: dir + "/report-b14.json"))
+    }
+
     // MARK: Always-on tests
 
     @Test func boxPriceTiersFloorAndRounding() {
@@ -275,6 +388,24 @@ private func f1(_ x: Double) -> String { String(format: "%.1f", x) }
                 history.append(x.id); fast.append(y.id)
             }
         }
+    }
+
+    /// Rule 1, perfect profile: a complete night at player level 4 always pays (100 + 100 + 30 + 35) x 1.20 = 318
+    /// (a perfect player has n = 10 by then); the old rule's level-1 nights pay 100 + 30 + 35 = 165, plus 200 on every
+    /// 7th complete night in a row.
+    @Test func perfectPlayerPaysTheExactNumbers() throws {
+        let catalog = try loadRealCatalog(), cal = SimCalendar()
+        var newCfg = SimConfig(profile: .perfect, boxesPerMonth: 0, variant: nil, rerolls: false)
+        newCfg.coinRule = CoinRule.playerLevel
+        let n = simulate(newCfg, run: 0, catalog: catalog, calendar: cal).snaps.last!
+        #expect(n.countComplete[3] > 0)
+        #expect(n.payComplete[3] == 318 * n.countComplete[3])
+        let oldCfg = SimConfig(profile: .perfect, boxesPerMonth: 0, variant: nil, rerolls: false)
+        let o = simulate(oldCfg, run: 0, catalog: catalog, calendar: cal).snaps.last!
+        // perfect profile = one unbroken streak; the player is level 1 for the first 5 built nights = nights 1...5, so the
+        // 7th-night bonus never falls into level 1 (it is paid from night 7 on, when the player is level 2)
+        #expect(o.countComplete[0] == 5)
+        #expect(o.payComplete[0] == 165 * o.countComplete[0])
     }
 
     @Test func sameSeedsGiveTheSameNumbers() throws {
