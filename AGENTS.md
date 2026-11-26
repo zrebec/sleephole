@@ -31,16 +31,16 @@ retrospective, the promo video or anything from "Standing notes for Opus" below.
 history goes to plan §12 and `docs/AGENDA-ARCHIVE.md` (the long build 13 item of 2026-11-09 is there verbatim). Work
 by build – the roadmap is plan §0b.
 
-1. **Build 13 = 1.1 (13) – ✅ RELEASED 2026-11-13** (plan §10 REL "Build 13", §12): uploaded 08:16; Kamaráti "Testing"; SE
-   submitted to the Beta App Review ("Waiting for Review", the first build of 1.1 – tell him Apple's answer); **the PR #4
-   `build/13` → `main` waits for his merge** (https://github.com/zrebec/sleephole/pull/4). The real night 12 → 13 complete on
-   1.1 (13), the date line confirmed by his screenshot (13ai 🟢). Optional, not blocking: the call checks dc4 – dc7, ev1, ev2
-   (build 13 page https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx). B62 (the date line wraps inside a date) – proposed for
-   build 14.
-2. **Next: build 14 = the town (smaller builds from 2026-11-12, his yes: 14 the town, 15 the statistics + nights off, 16
-   polishing, 17 the living town)** – its first step W7, the Watch buzzes ~30s before the alarm (his word 2026-11-10);
-   town needs + a choice of three + the skyscraper guarantee, shopping centres and retail parks (his word 2026-11-12), B48,
-   B49, B62 – plan §0b row 14, each step on his word.
+1. **Build 13 = 1.1 (13) – ✅ DONE** (released 2026-11-13; **PR #4 merged by him 2026-11-24**, `main` = `7236820`). Open only:
+   Apple's Beta App Review answer for SE (not checked since 13 Nov – tell him when seen); optional call checks dc4 – dc7, ev1,
+   ev2 (build 13 page https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx).
+2. **Build 14 – IN WORK since 2026-11-26 (`build/14` from `main` `7236820`; plan §10 REL "Build 14", §0b row 14).** His approval
+   on https://claude.ai/artifact/1kreWXd8ufRTT2qdqkV4s6 (`state/answers` v24): **go** for 14-0, 14a1 – 14a4 (coins + B62) and
+   14c3 (after 14c2); **approved, waiting for his word:** 14b1 / 14b2a / 14b2b (W7 – his lead **30s**, and nothing counts from
+   the pre-alarm to the alarm on nights that had one), 14d (B49), 14e1 / 14e2 (B48), 14c1 / 14c2 (shops), 14z (release). His
+   picks: full scope (~2 weeks, cut line: the shake detector → build 16), receipt "Vytrvalosť … ×1,14" + "Tvoj level 4", all
+   three extras, Debug installs A – D in the day, the later shop UX (Shop tab, cat + badge + morning line). Open with him:
+   his yes on 14a2's simulation numbers BEFORE install A; his balance noted before install A.
 
 ## Standing notes for Opus (never list them to the owner – his wish 2026-11-09)
 
@@ -173,13 +173,19 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
   an immediate warning, the same tolerance; the app killed by iOS itself and a restart of the phone stay in the
   owner's favour.
 * Levels: nights 1–5 → L1, 6–15 → L1–L2, 16–30 → L1–L3, 31+ → L1–L4 (plan §5.5).
-* Coins 🪙 (owner 2026-10-02): complete night by building level L1 100 / L2 120 / L3 150 / L4 200, unfinished half,
+* **Coins 🪙 from build 14 (owner 2026-11-26, step 14a; nights marked `coinRule` at their start):** a complete night pays
+  100 + the PLAYER's level bonus (the level unlocked at the night's start: L1 +20, L2 +40, L3 +60, L4 +100) – never the drawn
+  building's level; an unfinished night half of that (50 + half the bonus); +30 without a pause and +5 per calm hour as below;
+  the whole night × (1 + 0.02 × the built nights among the last 10 night keys, tonight included – complete, unfinished and
+  joker-excused count), max ×1.2, rounded to the nearest coin; NO +200 for a 7th night (the streak itself still counts).
+  Nights WITHOUT the marker (every night before build 14) keep the old rule below forever – no balance ever changes
+  backwards. **Old rule (nights before build 14):** complete night by building level L1 100 / L2 120 / L3 150 / L4 200, unfinished half,
   +30 for a complete night without a pause, every 7th complete night in a row +200; nap 50 / 25; **+5 per calm hour** (owner 2026-10-15, CARE-2a: whole hours from max(bedtime, end of the setup) to the wake time without a trip out of the app, a recognised use or a pause – calls do not spoil an hour; complete and unfinished nights only; nights from build 8 on).
 * **Jokers 🛡️** (owner 2026-10-02, plan D18; changed 2026-10-09): **each kind once per calendar month, independently of
   the others** – bronze 1 night free (also used by itself on the first missed night that would break a streak; one
   bronze a month, by hand or automatic), silver 3 nights 1 000 🪙, gold 7 nights 5 000 🪙. So after the month's bronze
   a silver and a gold can still be bought, and a month with a silver or a gold still gets its automatic bronze.
-  Protected nights are `Outcome.excused`: the streak neither breaks nor grows, no building, no coins.
+  Protected nights are `Outcome.excused`: the streak neither breaks nor grows, no building, no coins – but from build 14 they count in the coin multiplier's 10-night window (his decision 2026-11-26).
 * **Decorative animations** are paced by `Motion.pace` (owner: slower) and must never block the UI (a tap skips them).
   Building prices (shop, next): L1 100, L2 200, L3 400, L4 1000.
 * Nap "Odpočinok" (plan D16): 30/60 min, only in its window (default 13:00–15:00), once a day, never builds.
@@ -203,7 +209,7 @@ THE CHEAPER WORKER. OPUS IS THE ARCHITECT, SONNET SUBAGENTS ARE THE WORKERS.**
 * **Night pause (owner 2026-10-02, plan D17 – built 2026-10-03):** an intentional "🌙 Pause" button on the night
   screen (after the setup, never for a nap), 10 min each; the 1st pause of a night is free, the 2nd costs 50 🪙, the 3rd
   100, the 4th 150 (+50 each, charged at the start, only if the coins are there); a complete night with no pause pays
-  **+30 🪙** (so up to 130 for a level-1 night); the building stays complete. A pause must never turn into a habit.
+  **+30 🪙** (before build 14: up to 130 for a level-1 night; from build 14 the +30 is part of the night's sum before the multiplier); the building stays complete. A pause must never turn into a habit.
 * **Away budget (owner 2026-10-03):** outside pauses and calls, all trips out of the app after the setup share **30 s
   per night** (`SleepRules.awayBudget`); one trip is still limited to 3 s notice + 15 s (owner 2026-10-18: build 9i for using the phone in Strict
   mode – B33, the warning alarm rings until the collapse, it starts ~2.5 s late; build 9j for leaving the app; stored
@@ -284,10 +290,12 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | Path | What |
 |---|---|
 | `docs/IMPLEMENTATION_PLAN.md` | the plan (read first) |
-| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (v126 of 2026-11-19 – the night note proposed for build 15; read the page with the Artifact tool – `path: "index.html"` saves it to a file –, edit, republish) – **when §0b changes, update all three** |
+| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (v127 of 2026-11-26 – build 14 in work: coins, W7, shops; read the page with the Artifact tool – `path: "index.html"` saves it to a file –, edit, republish) – **when §0b changes, update all three** |
 | (claude.ai page) | the owner's bug list B1–B50, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (updated 2026-11-13, v28 – B62 added; source: a scratchpad file – read the page with the Artifact tool to edit it) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
 | (claude.ai pages) | per-build pages for the owner (Slovak, 2026-10-22), each with a reply form whose answers (and ticks) go to the page's shared store – read them with `ArtifactData` `get` `state/answers` (the browser also keeps a local copy under the `b10.` / `b9.` keys; never rename them): build 13 https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (13a + 13b, the Czech double check, screenshots, c1–c6 for the morning, n1–n2 for a night in Czech; prefix `b13.`), build 10 https://claude.ai/artifact/P5jc2DhAxdEwfEtKnhzkLX (what 10a–10e fixed, what to try, the switch for the night, the morning questions), build 9 https://claude.ai/artifact/T1hEdc9dpk56MAmwQxk7nr (9a–9o, the bugs, what was confirmed, what is open). Sources: scratchpad files of 2026-10-22 – read a page with the Artifact tool to edit it |
 | (claude.ai page) | all 30 postcards as app screenshots in sk / cs / en (2026-11-02, private, static, no form): https://claude.ai/artifact/JD9SGXVqygs9vkkNPcq4ae – the images come from `SleepHoleTests/PostcardTextTests` `screenshotsForTheReview()` (`TEST_RUNNER_POSTCARD_SHOTS=<dir>`, 92 PNGs); the page generator was a scratchpad script of 2026-11-02 – read the page with the Artifact tool to edit it |
+| (claude.ai page) | the build 14 economy proposal (Slovak, 2026-11-26, private): https://claude.ai/artifact/K5NVcToTPDv1pkkrLG8NRH – coins by the player's level + calm hours + a multiplier (variants on his real nights), the town's coin sinks, the original build 14 plan item by item (b14 / later / no), the orders A / B / C, the whole chat answer of that morning; answers in its store `state/answers` (browser prefix `ek14.` – never rename the field names / ids, listed in plan §12 2026-11-26). Source: a scratchpad file of 2026-11-26 – read the page with the Artifact tool to edit it |
+| (claude.ai page) | the build 14 step list for his approval (Slovak, 2026-11-26, private): https://claude.ai/artifact/1kreWXd8ufRTT2qdqkV4s6 – his decisions, the exact coin rule and the receipt, the redraw explained, 15 steps in execution order with go / ok / change each, installs A – D, the time, what Opus verified in the code, seven questions; answers in its store `state/answers` (browser prefix `s14.` – field names listed in plan §12 2026-11-26, never rename). Source: a scratchpad file of 2026-11-26 – read the page with the Artifact tool to edit it |
 | (claude.ai page) | the price-model comparison (Slovak, 2026-10-22, private): https://claude.ai/artifact/1mJPVNdRK9EAVjsLAkGfRD – a one-time price vs a subscription with a trial vs a 7-day trial + one-time unlock: Apple's rules, money per sale, indie practice, effort, Opus's view. His decision is open; never push (memory) |
 | (claude.ai page) | the build 11 proposal (Slovak, 2026-10-22): https://claude.ai/artifact/Xhg4qaa1hW9tSfKnb5Uxbo – 11a–11d, the economy numbers, the loot-box assessment, box rules and contents, nights off rules, accessibility, eight questions; answers in its store `state/answers` (browser prefix `b11.` – never rename the field names / ids). Source: a scratchpad file of 2026-10-22 – read the page with the Artifact tool to edit it |
 | (claude.ai page) | the economy simulation 11b1 for the owner (Slovak, 2026-10-26): https://claude.ai/artifact/9LZJ8RKQYyf9BJ6nr57tz4 – the three profiles, today's coins, the boxes by odds A / B / C / C-new / C-new-reserve / D, collections, the joker reserve, four questions; answers in its store `state/answers` (browser prefix `e11b1.` – never rename q1–q5; answered 2026-10-26 ~13:55, v10). Source: a scratchpad file of 2026-10-26; the numbers come from `ECON_SIM=… swift test --filter EconomySimulation` |
