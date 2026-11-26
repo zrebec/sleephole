@@ -39,10 +39,11 @@ by build – the roadmap is plan §0b.
    14c3 (after 14c2); **approved, waiting for his word:** 14b1 / 14b2a / 14b2b (W7 – his lead **30s**, and nothing counts from
    the pre-alarm to the alarm on nights that had one), 14d (B49), 14e1 / 14e2 (B48), 14c1 / 14c2 (shops), 14z (release). His
    picks: full scope (~2 weeks, cut line: the shake detector → build 16), receipt "Vytrvalosť … ×1,14" + "Tvoj level 4", all
-   three extras, Debug installs A – D in the day, the later shop UX (Shop tab, cat + badge + morning line). **Done: 14-0, 14a1 (the rule in SleepCore + the receipt lines), 14a2 (the simulation; his yes on the numbers
-   2026-11-26 – formula frozen). 14a3 (every new night carries the marker; backup, sync). Next: 14a4, then 14a5 (his idea 2026-11-26: the
-   quick night 8 min models a real night – 1 min = 1 h, scaled pause, the coin receipt at the end; a counted night never
-   scaled) → install A.** Open with him: his balance noted before install A.
+   three extras, Debug installs A – D in the day, the later shop UX (Shop tab, cat + badge + morning line). **Done: 14a complete (2026-11-26)** – 14-0, 14a1 (the rule + receipt lines), 14a2 (the simulation; his yes – formula frozen),
+   14a3 (the marker; backup, sync), 14a4 (guide, rules, level-up line, README; B62), 14a5 (the quick night 8 min models a real
+   night – 1 min = 1 h, a 10s pause, a preview receipt; a counted night never scaled). **Next: install A** (Debug over the cable,
+   in the day, his word; pull the journal and note his balance before, check it is the same after). Then 14b1 / 14d / 14e1 on
+   his word.
 
 ## Standing notes for Opus (never list them to the owner – his wish 2026-11-09)
 
@@ -292,8 +293,8 @@ python3 tools/render/contact_sheet.py assets/sprites && python3 tools/render/dem
 | Path | What |
 |---|---|
 | `docs/IMPLEMENTATION_PLAN.md` | the plan (read first) |
-| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (v129 of 2026-11-26 – build 14 in work: coins, W7, shops, 14a5 the quick night; read the page with the Artifact tool – `path: "index.html"` saves it to a file –, edit, republish) – **when §0b changes, update all three** |
-| (claude.ai page) | the owner's bug list B1–B50, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (updated 2026-11-13, v28 – B62 added; source: a scratchpad file – read the page with the Artifact tool to edit it) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
+| `docs/PLAN-BUILDOV.md` | the owner's Slovak copy of the roadmap (plan §0b), also in his iCloud `SleepHole/PLAN-BUILDOV.md` and as the private claude.ai page https://claude.ai/artifact/AARvd5DQy2uwS5v69oNkyF (v131 of 2026-11-26 – build 14 in work: 14a done, next install A; read the page with the Artifact tool – `path: "index.html"` saves it to a file –, edit, republish) – **when §0b changes, update all three** |
+| (claude.ai page) | the owner's bug list B1–B50, one sentence and a status each: https://claude.ai/artifact/4FjAHsDvwxE67poxMeLzSb (updated 2026-11-26, v29 – B62 fixed in build 14 (to check on his phone); source: a scratchpad file – read the page with the Artifact tool to edit it) – rebuilt from plan §11a; when a bug is added or changes state, update §11a first, then the page |
 | (claude.ai pages) | per-build pages for the owner (Slovak, 2026-10-22), each with a reply form whose answers (and ticks) go to the page's shared store – read them with `ArtifactData` `get` `state/answers` (the browser also keeps a local copy under the `b10.` / `b9.` keys; never rename them): build 13 https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx (13a + 13b, the Czech double check, screenshots, c1–c6 for the morning, n1–n2 for a night in Czech; prefix `b13.`), build 10 https://claude.ai/artifact/P5jc2DhAxdEwfEtKnhzkLX (what 10a–10e fixed, what to try, the switch for the night, the morning questions), build 9 https://claude.ai/artifact/T1hEdc9dpk56MAmwQxk7nr (9a–9o, the bugs, what was confirmed, what is open). Sources: scratchpad files of 2026-10-22 – read a page with the Artifact tool to edit it |
 | (claude.ai page) | all 30 postcards as app screenshots in sk / cs / en (2026-11-02, private, static, no form): https://claude.ai/artifact/JD9SGXVqygs9vkkNPcq4ae – the images come from `SleepHoleTests/PostcardTextTests` `screenshotsForTheReview()` (`TEST_RUNNER_POSTCARD_SHOTS=<dir>`, 92 PNGs); the page generator was a scratchpad script of 2026-11-02 – read the page with the Artifact tool to edit it |
 | (claude.ai page) | the build 14 economy proposal (Slovak, 2026-11-26, private): https://claude.ai/artifact/K5NVcToTPDv1pkkrLG8NRH – coins by the player's level + calm hours + a multiplier (variants on his real nights), the town's coin sinks, the original build 14 plan item by item (b14 / later / no), the orders A / B / C, the whole chat answer of that morning; answers in its store `state/answers` (browser prefix `ek14.` – never rename the field names / ids, listed in plan §12 2026-11-26). Source: a scratchpad file of 2026-11-26 – read the page with the Artifact tool to edit it |
