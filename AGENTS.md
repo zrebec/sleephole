@@ -44,7 +44,7 @@ by build – the roadmap is plan §0b.
    night – 1 min = 1 h, a 10s pause, a preview receipt; a counted night never scaled). **Install A on his phone 2026-11-26 ~11:09**
    (the store identical before / after; his balance under build A 1 490 🪙). His day tests ~11:13 – 11:46: all fine (302 / 296 / 262, B62
    confirmed; his schedule is 21:30 – 6:00 = 8.5 h, so a quick-night hour is 56s). **W7 started on his word (~11:50): today
-   14b1 lab → install B (after 15:00) → his measurement; 14b2 + install C tomorrow; W7's first real night 27 → 28 Nov (his pick).**
+   14b1 lab (done, merged `10bd4a6`) → install B (after 15:00) → his measurement; 14b2 + install C tomorrow; W7's first real night 27 → 28 Nov (his pick).**
    Open: r1 – r2 on 27 Nov (coins only); the build 14 page https://claude.ai/artifact/6JuUbzwX7xmrkNdo88UtsA (tests a1 – a7 now, r1 – r2 on
    27 Nov; store `state/answers`, prefix `b14.`). Then 14b1 / 14d / 14e1 on his word.
 
