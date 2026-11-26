@@ -26032,6 +26032,666 @@
           }
         }
       }
+    },
+    "Your alarm rings in a moment ☀️": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your alarm rings in a moment ☀️"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvoj budík o chvíľu zazvoní ☀️"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tvůj budík za chvíli zazvoní ☀️"
+          }
+        }
+      }
+    },
+    "Pre-alarm lab": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pre-alarm lab"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laboratórium predbudíka"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laboratoř předbudíku"
+          }
+        }
+      }
+    },
+    "Silent pre-alarm in 20s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silent pre-alarm in 20s"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tichý predbudík o 20s"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tichý předbudík za 20s"
+          }
+        }
+      }
+    },
+    "Silent pre-alarm in 20s – the app stops it %llds later": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Silent pre-alarm in 20s – the app stops it %llds later"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tichý predbudík o 20s – appka ho zastaví o %llds neskôr"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tichý předbudík za 20s – appka ho zastaví o %llds později"
+          }
+        }
+      }
+    },
+    "Stop the pre-alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop the pre-alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zastaviť predbudík"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zastavit předbudík"
+          }
+        }
+      }
+    },
+    "Real alarm + pre-alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Real alarm + pre-alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skutočný budík + predbudík"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skutečný budík + předbudík"
+          }
+        }
+      }
+    },
+    "Stop the real alarm only": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop the real alarm only"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zastaviť iba skutočný budík"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zastavit jen skutečný budík"
+          }
+        }
+      }
+    },
+    "“Real alarm + pre-alarm” sets the test system alarm at +45s and the pre-alarm at +20s. The two stop separately: “Stop the pre-alarm” leaves the real alarm, “Stop the real alarm only” leaves the pre-alarm. Keep SleepHole open until the pre-alarm has fired when the app stops it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“Real alarm + pre-alarm” sets the test system alarm at +45s and the pre-alarm at +20s. The two stop separately: “Stop the pre-alarm” leaves the real alarm, “Stop the real alarm only” leaves the pre-alarm. Keep SleepHole open until the pre-alarm has fired when the app stops it."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Skutočný budík + predbudík“ nastaví skúšobný systémový budík na +45s a predbudík na +20s. Zastavujú sa oddelene: „Zastaviť predbudík“ nechá skutočný budík, „Zastaviť iba skutočný budík“ nechá predbudík. Keď ho zastavuje appka, nechaj SleepHole otvorený, kým predbudík nezazvoní."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "„Skutečný budík + předbudík“ nastaví zkušební systémový budík na +45s a předbudík na +20s. Zastavují se odděleně: „Zastavit předbudík“ nechá skutečný budík, „Zastavit jen skutečný budík“ nechá předbudík. Když ho zastavuje appka, nech SleepHole otevřený, dokud předbudík nezazvoní."
+          }
+        }
+      }
+    },
+    "Alarms of the app": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alarms of the app"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budíky aplikácie"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Budíky aplikace"
+          }
+        }
+      }
+    },
+    "Real alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Real alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skutočný budík"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skutečný budík"
+          }
+        }
+      }
+    },
+    "Warning alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warning alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Varovný budík"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Varovný budík"
+          }
+        }
+      }
+    },
+    "Pre-alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pre-alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predbudík"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Předbudík"
+          }
+        }
+      }
+    },
+    "Other alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Iný budík"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jiný budík"
+          }
+        }
+      }
+    },
+    "waiting": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "waiting"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "čaká"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "čeká"
+          }
+        }
+      }
+    },
+    "ringing": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ringing"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zvoní"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "zvoní"
+          }
+        }
+      }
+    },
+    "countdown": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "countdown"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "odpočet"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "odpočet"
+          }
+        }
+      }
+    },
+    "paused": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "paused"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pozastavený"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pozastavený"
+          }
+        }
+      }
+    },
+    "Refresh the list": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refresh the list"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obnoviť zoznam"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obnovit seznam"
+          }
+        }
+      }
+    },
+    "Pre-alarm in test nights": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pre-alarm in test nights"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Predbudík v skúšobných nociach"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Předbudík ve zkušebních nocích"
+          }
+        }
+      }
+    },
+    "Keep-alive for the pre-alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep-alive for the pre-alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Udržiavanie appky pri predbudíku"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Udržování appky u předbudíku"
+          }
+        }
+      }
+    },
+    "A quick night (Developer) then sets the silent pre-alarm %llds before its wake time. Real nights, naps and counted test nights never get one. Without the keep-alive the app may be suspended while the pre-alarm rings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A quick night (Developer) then sets the silent pre-alarm %llds before its wake time. Real nights, naps and counted test nights never get one. Without the keep-alive the app may be suspended while the pre-alarm rings."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rýchla noc (Vývojár) potom nastaví tichý predbudík %llds pred svojím časom budenia. Skutočné noci, zdriemnutia a započítané skúšobné noci ho nikdy nemajú. Bez udržiavania appky môže byť appka počas zvonenia predbudíka uspatá."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rychlá noc (Vývojář) pak nastaví tichý předbudík %llds před svým časem buzení. Skutečné noci, zdřímnutí a započítané zkušební noci ho nikdy nemají. Bez udržování appky může být appka během zvonění předbudíku uspána."
+          }
+        }
+      }
+    },
+    "Checklist": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Checklist"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontrolný zoznam"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kontrolní seznam"
+          }
+        }
+      }
+    },
+    "A1. Silent pre-alarm in 20s, lock the iPhone, Apple Watch on the wrist. Does the Watch buzz, and for how long (stopwatch)? Haptic only, or also a tone? Does the iPhone light up, show a full-screen alarm, make a sound or vibrate?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A1. Silent pre-alarm in 20s, lock the iPhone, Apple Watch on the wrist. Does the Watch buzz, and for how long (stopwatch)? Haptic only, or also a tone? Does the iPhone light up, show a full-screen alarm, make a sound or vibrate?"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A1. Tichý predbudík o 20s, zamkni iPhone, Apple Watch na zápästí. Bzučia hodinky a ako dlho (stopky)? Iba vibrácia, alebo aj tón? Rozsvieti sa iPhone, ukáže budík na celú obrazovku, vydá zvuk alebo zavibruje?"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A1. Tichý předbudík za 20s, zamkni iPhone, Apple Watch na zápěstí. Bzučí hodinky a jak dlouho (stopky)? Jen vibrace, nebo i tón? Rozsvítí se iPhone, ukáže budík na celou obrazovku, vydá zvuk nebo zavibruje?"
+          }
+        }
+      }
+    },
+    "A2. The same with Sleep Focus on (the Watch in sleep mode).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A2. The same with Sleep Focus on (the Watch in sleep mode)."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A2. To isté so zapnutým režimom Spánok (hodinky v režime spánku)."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A2. Totéž se zapnutým režimem Spánek (hodinky v režimu spánku)."
+          }
+        }
+      }
+    },
+    "A3. Stop it on the Watch: does the iPhone's alert go too? Then stop it on the iPhone: does the Watch go too? With “Real alarm + pre-alarm”: is the real alarm still in the list after the pre-alarm was stopped?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A3. Stop it on the Watch: does the iPhone's alert go too? Then stop it on the iPhone: does the Watch go too? With “Real alarm + pre-alarm”: is the real alarm still in the list after the pre-alarm was stopped?"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A3. Zastav ho na hodinkách: zmizne aj upozornenie na iPhone? Potom ho zastav na iPhone: zmizne aj na hodinkách? So „Skutočný budík + predbudík“: je skutočný budík po zastavení predbudíka stále v zozname?"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A3. Zastav ho na hodinkách: zmizí i upozornění na iPhonu? Pak ho zastav na iPhonu: zmizí i na hodinkách? Se „Skutečný budík + předbudík“: je skutečný budík po zastavení předbudíku stále v seznamu?"
+          }
+        }
+      }
+    },
+    "A4. Leave it alone: when does it end by itself?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A4. Leave it alone: when does it end by itself?"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A4. Nechaj ho tak: kedy skončí sám?"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A4. Nech ho být: kdy skončí sám?"
+          }
+        }
+      }
+    },
+    "A5. The same with the ring / silent switch on silent.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A5. The same with the ring / silent switch on silent."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A5. To isté s prepínačom zvonenie / ticho nastaveným na ticho."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A5. Totéž s přepínačem vyzvánění / ticho nastaveným na ticho."
+          }
+        }
+      }
+    },
+    "A6. The Watch off the wrist: what does the iPhone show?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A6. The Watch off the wrist: what does the iPhone show?"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A6. Hodinky mimo zápästia: čo ukáže iPhone?"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A6. Hodinky mimo zápěstí: co ukáže iPhone?"
+          }
+        }
+      }
+    },
+    "A7. SleepHole open and unlocked when it fires: what is shown, does the app leave the foreground?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A7. SleepHole open and unlocked when it fires: what is shown, does the app leave the foreground?"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A7. SleepHole otvorený a odomknutý, keď predbudík zazvoní: čo sa ukáže, opustí appka popredie?"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A7. SleepHole otevřený a odemčený, když předbudík zazvoní: co se ukáže, opustí appka popředí?"
+          }
+        }
+      }
+    },
+    "B1. Developer → Quick night, gentle mode, a sleep sound playing, iPhone locked: the Watch buzzes %llds before the wake time, our alarm rings on time, the pre-alarm disappears.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "B1. Developer → Quick night, gentle mode, a sleep sound playing, iPhone locked: the Watch buzzes %llds before the wake time, our alarm rings on time, the pre-alarm disappears."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "B1. Vývojár → Rýchla noc, jemný režim, hrá zvuk na spanie, iPhone zamknutý: hodinky zabzučia %llds pred časom budenia, náš budík zazvoní načas, predbudík zmizne."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "B1. Vývojář → Rychlá noc, jemný režim, hraje zvuk ke spaní, iPhone zamknutý: hodinky zabzučí %llds před časem buzení, náš budík zazvoní včas, předbudík zmizí."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

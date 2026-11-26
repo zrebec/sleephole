@@ -23,6 +23,7 @@ struct SettingsView: View {
     @State private var soundTest = DevArgs.list.contains("-openSoundTest")
     /// Dev aid: `-openSystemAlarmTest` opens Developer → System alarm test at once (screenshots).
     @State private var systemAlarmTest = DevArgs.list.contains("-openSystemAlarmTest")
+    @State private var preAlarmLab = DevArgs.list.contains("-openPreAlarmLab")
     /// Dev aid: `-openWeatherTest` opens Developer → Weather test at once (screenshots).
     @State private var weatherTest = DevArgs.list.contains("-openWeatherTest")
     /// Dev aid: `-openSyncTest` opens Developer → Sync test at once (screenshots).
@@ -426,6 +427,7 @@ struct SettingsView: View {
                     NavigationLink(L("Vibration test")) { VibrationTestView() }
                     NavigationLink(L("Sound effects test")) { SoundEffectsTestView() }
                     NavigationLink(L("System alarm test")) { SystemAlarmTestView() }
+                    NavigationLink(L("Pre-alarm lab")) { PreAlarmLabView() }
                     NavigationLink(L("Weather test")) { WeatherTestView() }
                     NavigationLink(L("Sync test")) { SyncTestView() }
                     Button(L("Show the guide and first night again")) { model.resetGuide() }
@@ -467,6 +469,7 @@ struct SettingsView: View {
             #if DEBUG
             .navigationDestination(isPresented: $soundTest) { SoundEffectsTestView() }
             .navigationDestination(isPresented: $systemAlarmTest) { SystemAlarmTestView() }
+            .navigationDestination(isPresented: $preAlarmLab) { PreAlarmLabView() }
             .navigationDestination(isPresented: $weatherTest) { WeatherTestView() }
             .navigationDestination(isPresented: $syncTest) { SyncTestView() }
             .navigationDestination(isPresented: $textsView) { TextsView() }

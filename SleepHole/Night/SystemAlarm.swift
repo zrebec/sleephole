@@ -37,7 +37,34 @@ protocol SystemAlarm: AnyObject {
     func stopWarning()
     /// Stops every alarm of the app that is ringing right now; alarms that still wait are left alone.
     func stopRinging()
+    /// W7 (14b1): schedules the silent pre-alarm (a THIRD alarm with its own id, never THE alarm), replacing an earlier
+    /// pre-alarm. Returns false when it could not be scheduled.
+    @discardableResult func schedulePreAlarm(at date: Date) async -> Bool
+    /// Stops / cancels ONLY the pre-alarm (ringing or still waiting). Idempotent.
+    func endPreAlarm()
+    /// Cancels THE alarm and the lock-screen warning, never the pre-alarm (`cancel()` ends every alarm of the app).
+    func cancelBackup()
+    #if DEBUG
+    /// Developer lab: what AlarmKit holds for this app right now (read-only; no AlarmKit types leak out).
+    func alarmSnapshot() -> [SystemAlarmInfo]
+    #endif
 }
+
+#if DEBUG
+/// One alarm of the app as the Developer lab lists it.
+struct SystemAlarmInfo: Equatable {
+    /// The role the app knows it by: "backup", "warning", "pre-alarm" or "other".
+    let role: String
+    /// The last 4 characters of its id.
+    let idSuffix: String
+    /// "scheduled", "ringing", "countdown" or "paused".
+    let state: String
+}
+
+extension SystemAlarm {
+    func alarmSnapshot() -> [SystemAlarmInfo] { [] }
+}
+#endif
 
 extension SystemAlarmConsent {
     /// The state as the Settings row shows it.
@@ -79,6 +106,9 @@ final class NoSystemAlarm: SystemAlarm {
     func ringWarning(soundFile: String, seconds: Int) async -> Bool { false }
     func stopWarning() {}
     func stopRinging() {}
+    func schedulePreAlarm(at date: Date) async -> Bool { false }
+    func endPreAlarm() {}
+    func cancelBackup() {}
 }
 
 /// Dev aid for screenshots in the simulator (`-systemAlarm allowed|denied|notAsked`): reports a consent and remembers a
@@ -87,6 +117,7 @@ final class NoSystemAlarm: SystemAlarm {
 final class SimulatedSystemAlarm: SystemAlarm {
     private(set) var consent: SystemAlarmConsent
     private(set) var scheduledAt: Date?
+    private(set) var preAlarmAt: Date?
 
     init(consent: SystemAlarmConsent) { self.consent = consent }
 
@@ -112,10 +143,26 @@ final class SimulatedSystemAlarm: SystemAlarm {
         return true
     }
 
-    func cancel() { scheduledAt = nil }
+    func cancel() { scheduledAt = nil; preAlarmAt = nil }
     func ringWarning(soundFile: String, seconds: Int) async -> Bool { false }
     func stopWarning() {}
     func stopRinging() {}
+
+    func schedulePreAlarm(at date: Date) async -> Bool {
+        guard consent == .allowed else { return false }
+        preAlarmAt = date
+        return true
+    }
+
+    func endPreAlarm() { preAlarmAt = nil }
+    func cancelBackup() { scheduledAt = nil }
+
+    #if DEBUG
+    func alarmSnapshot() -> [SystemAlarmInfo] {
+        [scheduledAt.map { _ in SystemAlarmInfo(role: "backup", idSuffix: "SIM1", state: "scheduled") },
+         preAlarmAt.map { _ in SystemAlarmInfo(role: "pre-alarm", idSuffix: "SIM2", state: "scheduled") }].compactMap { $0 }
+    }
+    #endif
 }
 
 // MARK: - which one the app runs with
@@ -149,6 +196,15 @@ struct SystemAlarmMemory {
     let defaults: UserDefaults
     static let atKey = "systemAlarm.at"
     static let safetyKey = "systemAlarm.safety"
+    static let preAtKey = "systemAlarm.preAt"
+
+    /// W7: when the pre-alarm is set to fire (nil = none), so a relaunched app can still end it.
+    var preAt: Date? {
+        get { defaults.object(forKey: Self.preAtKey) as? Date }
+        nonmutating set {
+            if let newValue { defaults.set(newValue, forKey: Self.preAtKey) } else { defaults.removeObject(forKey: Self.preAtKey) }
+        }
+    }
 
     var at: Date? {
         get { defaults.object(forKey: Self.atKey) as? Date }
@@ -186,6 +242,9 @@ final class AlarmKitSystemAlarm: SystemAlarm {
     private let defaults: UserDefaults
     private static let idKey = "systemAlarm.id"
     private static let warningIDKey = "systemAlarm.warningID"
+    private static let preAlarmIDKey = "systemAlarm.preAlarmID"
+    /// The pre-alarm's sound: 10 s of digital silence (`tools/audio/make_silence.py`).
+    static let preAlarmSound = "prealarm_silent.caf"
     /// AlarmKit needs a date in the future: the warning is scheduled this far ahead.
     static let warningLead: TimeInterval = 1.5
 
@@ -204,6 +263,14 @@ final class AlarmKitSystemAlarm: SystemAlarm {
         get { defaults.string(forKey: Self.warningIDKey).flatMap(UUID.init(uuidString:)) }
         set {
             if let newValue { defaults.set(newValue.uuidString, forKey: Self.warningIDKey) } else { defaults.removeObject(forKey: Self.warningIDKey) }
+        }
+    }
+
+    /// The id of the W7 pre-alarm, under its own key (it is never THE alarm and never the warning).
+    private var preAlarmID: UUID? {
+        get { defaults.string(forKey: Self.preAlarmIDKey).flatMap(UUID.init(uuidString:)) }
+        set {
+            if let newValue { defaults.set(newValue.uuidString, forKey: Self.preAlarmIDKey) } else { defaults.removeObject(forKey: Self.preAlarmIDKey) }
         }
     }
 
@@ -248,9 +315,58 @@ final class AlarmKitSystemAlarm: SystemAlarm {
         let alarms = (try? AlarmManager.shared.alarms) ?? []
         for alarm in alarms { Self.end(alarm) }
         if let id = storedID, !alarms.contains(where: { $0.id == id }) { Self.end(id: id) }   // fired and gone, or not listed
+        if let id = preAlarmID, !alarms.contains(where: { $0.id == id }) { Self.end(id: id) }
+        storedID = nil
+        warningID = nil
+        preAlarmID = nil
+    }
+
+    /// THE alarm and the lock-screen warning only: the pre-alarm (and anything else of the app) is left alone.
+    func cancelBackup() {
+        guard #available(iOS 26.0, *) else { return }
+        if let id = storedID { Self.end(id: id) }
+        if let id = warningID { Self.end(id: id) }
         storedID = nil
         warningID = nil
     }
+
+    @discardableResult
+    func schedulePreAlarm(at date: Date) async -> Bool {
+        guard #available(iOS 26.0, *), consent == .allowed, date.timeIntervalSinceNow > Self.minimumLead else { return false }
+        let id = UUID()
+        do {
+            try await Self.submitPreAlarm(id: id, at: date, soundFile: Self.preAlarmSound)
+        } catch {
+            return false                                    // an earlier pre-alarm, if any, stays
+        }
+        let previous = preAlarmID
+        preAlarmID = id
+        if let previous, previous != id { Self.end(id: previous) }
+        return true
+    }
+
+    func endPreAlarm() {
+        guard #available(iOS 26.0, *), let id = preAlarmID else { return }
+        Self.end(id: id)
+        preAlarmID = nil
+    }
+
+    #if DEBUG
+    func alarmSnapshot() -> [SystemAlarmInfo] {
+        guard #available(iOS 26.0, *) else { return [] }
+        return ((try? AlarmManager.shared.alarms) ?? []).map { alarm in
+            let role = alarm.id == storedID ? "backup" : alarm.id == warningID ? "warning" : alarm.id == preAlarmID ? "pre-alarm" : "other"
+            let state: String = switch alarm.state {
+            case .scheduled: "scheduled"
+            case .alerting: "ringing"
+            case .countdown: "countdown"
+            case .paused: "paused"
+            @unknown default: "unknown"
+            }
+            return SystemAlarmInfo(role: role, idSuffix: String(alarm.id.uuidString.suffix(4)), state: state)
+        }
+    }
+    #endif
 
     func ringWarning(soundFile: String, seconds: Int) async -> Bool {
         guard #available(iOS 26.0, *), consent == .allowed else { return false }
@@ -294,6 +410,17 @@ final class AlarmKitSystemAlarm: SystemAlarm {
         _ = try await AlarmManager.shared.schedule(id: id, configuration: configuration)
     }
 
+    /// W7: the silent pre-alarm: the same Stop button and "Open SleepHole" as the alarm, a silent sound.
+    @available(iOS 26.0, *)
+    private nonisolated static func submitPreAlarm(id: UUID, at date: Date, soundFile: String) async throws {
+        let attributes = AlarmAttributes<SleepHoleAlarmMetadata>(
+            presentation: AlarmPresentation(alert: preAlarmAlert()), tintColor: .indigo)
+        let configuration = AlarmManager.AlarmConfiguration<SleepHoleAlarmMetadata>.alarm(
+            schedule: .fixed(date), attributes: attributes, secondaryIntent: OpenSleepHoleIntent(),
+            sound: .named(soundFile))
+        _ = try await AlarmManager.shared.schedule(id: id, configuration: configuration)
+    }
+
     /// The lock-screen warning: `.fixed` a moment from now, only the system's stop control (no "Open SleepHole": opening
     /// the app from the lock screen needs Face ID / the passcode, the wrong advice here), no secondary intent.
     @available(iOS 26.0, *)
@@ -317,6 +444,19 @@ final class AlarmKitSystemAlarm: SystemAlarm {
     @available(iOS 26.0, *)
     private nonisolated static func alert() -> AlarmPresentation.Alert {
         let title = LocalizedStringResource("Good morning ☀️")
+        let open = AlarmButton(text: LocalizedStringResource("Open SleepHole"), textColor: .white,
+                               systemImageName: "moon.zzz.fill")
+        if #available(iOS 26.1, *) {
+            return AlarmPresentation.Alert(title: title, secondaryButton: open, secondaryButtonBehavior: .custom)
+        }
+        let stop = AlarmButton(text: LocalizedStringResource("Stop"), textColor: .white, systemImageName: "stop.circle")
+        return AlarmPresentation.Alert(title: title, stopButton: stop, secondaryButton: open, secondaryButtonBehavior: .custom)
+    }
+
+    /// "Your alarm rings in a moment ☀️" with the Stop button (the system's own on iOS 26.1+) and "Open SleepHole".
+    @available(iOS 26.0, *)
+    private nonisolated static func preAlarmAlert() -> AlarmPresentation.Alert {
+        let title = LocalizedStringResource("Your alarm rings in a moment ☀️")
         let open = AlarmButton(text: LocalizedStringResource("Open SleepHole"), textColor: .white,
                                systemImageName: "moon.zzz.fill")
         if #available(iOS 26.1, *) {

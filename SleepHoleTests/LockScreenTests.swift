@@ -576,6 +576,36 @@ struct LockScreenTests {
         #expect(ka.began == 1 && ka.open == 0)
     }
 
+    /// W7 (14b1): the pre-alarm's keep-alive has its OWN token – a Strict lock warning in the same window neither shares
+    /// nor loses its task when the pre-alarm's one begins, expires or ends.
+    @Test func thePreAlarmKeepAliveNeverSharesTheLockWarningsToken() async {
+        let ka = FakeKeepAlive()
+        let s = Scene(self, alarm: FakeSystemAlarm(consent: .allowed), keepAlive: ka)
+        s.model.preAlarmTestNightsOverride = true
+        s.model.preAlarmKeepAliveOverride = true
+        s.model.refresh()
+        s.model.startTestNight(minutes: 4, grace: 20)
+        s.model.startNight()
+        let wake = s.t0 + 240
+        s.clock.now = wake - 60                                            // the setup is over; the display goes off
+        s.model.append(.locked, at: s.clock.now)
+        s.rig.active = false
+        s.rig.monitor.dataProtectionChanged(locked: true)
+        s.clock.now = wake - 50
+        s.rig.monitor.dataProtectionChanged(locked: false)                 // Face ID recognises him
+        s.clock.now = wake - 50 + s.window
+        await waitUntil { s.kinds.contains(.usedLockScreen) }
+        await wait(0.05)
+        #expect(ka.began == 1 && ka.names == ["lock-warning"])             // the warning's task is open
+        s.clock.now = wake - 33; s.model.refresh()                         // the pre-alarm's keep-alive begins
+        #expect(ka.began == 2 && ka.open == 2 && ka.names == ["lock-warning", "pre-alarm"])
+        ka.expireLast()                                                    // iOS takes the pre-alarm's time away
+        #expect(ka.open == 1 && ka.ended == [2])                           // only its own token; the warning's stays
+        s.comeBack(at: wake - 30)                                          // the warning ends
+        await s.model.systemAlarmIdle()
+        #expect(ka.open == 0 && ka.began == 2 && ka.ended == [2, 1])
+    }
+
     @Test func everyWarningOfANightHasItsOwnKeepAliveAndEachIsEnded() async {
         let ka = FakeKeepAlive()
         let (s, _, t) = await ringingScene(keepAlive: ka)
