@@ -1158,7 +1158,9 @@ struct CoinReceiptView: View {
 
     private func icon(_ kind: Economy.Receipt.Kind) -> String {
         switch kind {
-        case .building, .unfinishedBuilding: "🏠"
+        case .building, .unfinishedBuilding, .night, .unfinishedNight: "🏠"
+        case .playerLevel, .playerLevelHalf: "⭐"
+        case .multiplier: "📈"
         case .withoutPause, .calmHours: "🌙"
         case .streak: "🔥"
         case .luckyNight: "🍀"
@@ -1170,6 +1172,12 @@ struct CoinReceiptView: View {
         switch kind {
         case .building(let level): L("Building, level \(level)")
         case .unfinishedBuilding(let level): L("Unfinished building, level \(level) (half)")
+        case .night: L("Finished night")
+        case .unfinishedNight: L("Unfinished night (half)")
+        case .playerLevel(let level): L("Your level \(level)")
+        case .playerLevelHalf(let level): L("Your level \(level) (half)")
+        case .multiplier(let nights, let percent):
+            L("Consistency: \(nights) of \(Economy.consistencyWindow) nights ×\(Fmt.multiplier(percent: percent))")
         case .withoutPause: L("Without a pause")
         case .calmHours(let calm, let total): L("Calm hours \(calm) of \(total)")
         case .streak(let run): L("Night \(run) in a row")

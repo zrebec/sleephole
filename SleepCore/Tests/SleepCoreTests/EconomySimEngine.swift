@@ -169,6 +169,8 @@ struct SimConfig: Sendable {
     var variant: SimOddsVariant?
     var rerolls: Bool
     var nights = 365
+    /// nil = the coin rule before build 14; `CoinRule.playerLevel` = the player's level and the consistency multiplier.
+    var coinRule: Int? = nil
 }
 
 let simCheckpoints = [30, 100, 365]
@@ -179,6 +181,10 @@ struct SimSnap: Sendable, Equatable {
     var balance = 0
     // earned
     var building = 0, undisturbed = 0, calm = 0, streak = 0, nap = 0, achievement = 0
+    /// Coin rule 1: the pay for the player's level and what the consistency multiplier added (0 under the old rule).
+    var levelBonus = 0, multiplier = 0
+    /// The lucky night's extra (it is also part of `boxCoins`).
+    var luckyExtra = 0
     var boxCoins = 0                  // prizes + duplicates + the lucky-night extra
     // spent
     var pauses = 0, silver = 0, unlock = 0, reroll = 0, boxPaid = 0
@@ -201,7 +207,9 @@ struct SimTrace: Sendable {
     var pauses: [Int] = []
     var calm: [Int] = []
     var building: [String?] = []
-    var nightCoins: [Int] = []        // base + streak + undisturbed + calm (the ledger's part)
+    var nightCoins: [Int] = []        // the night's own pay (the ledger's part, without the lucky extra)
+    var luckyCoins: [Int] = []        // the lucky night's extra on that night (0 = none)
+    var luckyBoxDays: [Int] = []      // the days (index) after whose night a lucky-night box was bought
     var achievementCoins: [Int] = []
     var napOutcome: [Outcome?] = []
     var silverStarts: [Int] = []
@@ -261,6 +269,7 @@ func simulate(_ cfg: SimConfig, run runIndex: Int, catalog: Catalog, calendar ca
     var largest = 0
     var daily: [Int] = []
     var lowest = Int.max
+    var countedDay = [Bool](repeating: false, count: cfg.nights)   // coin rule 1: a built or excused night
 
     func spend(_ x: Int) { bal -= x }
 
@@ -347,28 +356,47 @@ func simulate(_ cfg: SimConfig, run runIndex: Int, catalog: Catalog, calendar ca
                     }
                 }
             }
-            if used { final = .excused } else { run = 0 }
+            if used { final = .excused; countedDay[i] = true } else { run = 0 }
         }
 
-        var coins = 0, calmHours = 0
+        var coins = 0, calmHours = 0, luckyExtra = 0
         if final.isBuildNight, let e = drawn {
             let level = e.level
-            let base = Economy.reward(final, level: level)
+            let newRule = (cfg.coinRule ?? 0) >= 1
+            var base = Economy.reward(final, level: level)
             var streak = 0
-            if final == .complete { run += 1; if run % Economy.streakBonusEvery == 0 { streak = Economy.streakBonus } }
+            if final == .complete {
+                run += 1
+                if !newRule, run % Economy.streakBonusEvery == 0 { streak = Economy.streakBonus }
+            }
             let undisturbed = final == .complete && pauses == 0 ? PausePolicy.undisturbedBonus : 0
             var acc = 0.0
             for (h, pr) in p.calm { acc += pr; if uCalm < acc { calmHours = h; break } }
             if calmHours == 0 { calmHours = p.calm.last!.0 }
             let calmBonus = calmHours * Economy.calmHourBonus
-            coins = base + streak + undisturbed + calmBonus
+            var levelPart = 0, multiplierPart = 0
+            if newRule {
+                // coin rule 1: the night, the player's level at its start, the multiplier of the last 10 nights
+                let playerLevel = Progression.unlockedMaxLevel(builtBefore: built)
+                base = final == .complete ? Economy.nightBase : Economy.nightBase / 2
+                levelPart = final == .complete ? Economy.levelBonus(level: playerLevel) : Economy.levelBonus(level: playerLevel) / 2
+                countedDay[i] = true
+                let n = countedDay[max(0, i - Economy.consistencyWindow + 1)...i].filter { $0 }.count
+                let sum = base + levelPart + undisturbed + calmBonus
+                coins = Economy.multiplied(sum, nights: n)
+                multiplierPart = coins - sum
+            } else {
+                coins = base + streak + undisturbed + calmBonus
+            }
             bal += coins
             s.building += base; s.streak += streak; s.undisturbed += undisturbed; s.calm += calmBonus
+            s.levelBonus += levelPart; s.multiplier += multiplierPart
             built += 1
             picker.append(e.id)
             // the lucky night doubles the next complete night (the extra is the night's coins once more)
             if final == .complete, pendingLucky > 0 {
                 pendingLucky -= 1; bal += coins; s.boxCoins += coins; s.luckyPaid += 1
+                luckyExtra = coins; s.luckyExtra += coins
             }
             // achievements, same order of checks as `Achievements.unlocked`
             unlock(.firstBuilding)
@@ -399,7 +427,7 @@ func simulate(_ cfg: SimConfig, run runIndex: Int, catalog: Catalog, calendar ca
                     let prize = price * tenths / 10
                     bal += prize; s.boxCoins += prize; largest = max(largest, prize)
                 case .luckyNight:
-                    pendingLucky += 1; s.luckyWon += 1
+                    pendingLucky += 1; s.luckyWon += 1; tr.luckyBoxDays.append(i)
                 case .collectible(let c):
                     var item = Int.random(in: 0..<c.size, using: &rng)
                     if v.preferNew, owned[c.rawValue].count < c.size {
@@ -426,7 +454,7 @@ func simulate(_ cfg: SimConfig, run runIndex: Int, catalog: Catalog, calendar ca
         if wantTrace {
             tr.raw.append(raw); tr.final.append(final); tr.pauses.append(pauses); tr.calm.append(calmHours)
             tr.building.append(started ? drawn?.id : nil)
-            tr.nightCoins.append(coins); tr.achievementCoins.append(dayAch); tr.napOutcome.append(napOutcome)
+            tr.nightCoins.append(coins); tr.luckyCoins.append(luckyExtra); tr.achievementCoins.append(dayAch); tr.napOutcome.append(napOutcome)
         }
         if simCheckpoints.contains(i + 1) {
             var snap = s

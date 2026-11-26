@@ -185,6 +185,24 @@ import Testing
         #expect(Fmt.permille(8).replacingOccurrences(of: "\u{a0}", with: " ") == "0,8 %")
     }
 
+    // MARK: Fmt.multiplier (the consistency line of the coin receipt, 14a1)
+
+    @Test func theMultiplierAlwaysHasTwoDecimals() {
+        defer { Lang.current = .en }
+        let en = ["1.02", "1.04", "1.06", "1.08", "1.10", "1.12", "1.14", "1.16", "1.18", "1.20"]
+        for (i, text) in en.enumerated() {
+            let percent = Economy.multiplierPercent(nights: i + 1)
+            Lang.current = .en
+            #expect(Fmt.multiplier(percent: percent) == text)
+            for lang in [AppLanguage.sk, .cs] {
+                Lang.current = lang
+                #expect(Fmt.multiplier(percent: percent) == text.replacingOccurrences(of: ".", with: ","))
+            }
+        }
+        Lang.current = .sk
+        #expect(Fmt.multiplier(percent: 114) == "1,14" && Fmt.multiplier(percent: 120) == "1,20")
+    }
+
     @Test func theOddsRowsAllHaveWords() {
         for lang in AppLanguage.allCases {
             Lang.current = lang

@@ -11,7 +11,7 @@ public struct WeekSummary: Equatable, Sendable {
     public let ruins: Int
     /// Buildings added this week (complete + unfinished nights), in order.
     public let buildingIds: [String]
-    /// Coins from this week's nights (incl. streak bonuses) and naps.
+    /// Coins from this week's nights (incl. the old rule's streak bonuses and the new rule's multiplier) and naps.
     public let coins: Int
     public let averageStart: TimeOfDay?
     public let averageWake: TimeOfDay?
