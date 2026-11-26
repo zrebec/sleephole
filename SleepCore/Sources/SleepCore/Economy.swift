@@ -1,10 +1,22 @@
 import Foundation
 
+/// Which coin rule a night was started under (build 14, owner 2026-11-26). `NightResult.coinRule == nil` is the rule of
+/// every night before build 14 (the pay follows the DRAWN building's level, +200 on every 7th complete night in a row);
+/// rule 1 pays by the PLAYER's level and a consistency multiplier (see `Economy.ledger`). A value above `current` comes
+/// from a later build and is priced by the newest rule this build knows.
+public enum CoinRule {
+    /// The rule of build 14: the pay follows the player's unlocked level, with a consistency multiplier.
+    public static let playerLevel = 1
+    /// The rule a night started now is stored with.
+    public static let current = playerLevel
+}
+
 /// Coins 🪙 (owner, 2026-09-30). Earned by nights; spent on buildings later (prices per level).
 /// Like the town, the balance is not stored – it is replayed from the finalized real nights.
 public enum Economy {
     /// Coins for a complete night by the level of its building (owner 2026-10-02: higher levels pay more, so
     /// developing them is worth more than spending on night pauses). Unfinished = half.
+    /// The rule of nights BEFORE build 14 (`coinRule == nil`); newer nights use `nightBase` + `levelBonus(level:)`.
     public static func completeReward(level: Int) -> Int {
         switch level {
         case ...1: 100
@@ -28,9 +40,36 @@ public enum Economy {
         result.buildingId.flatMap { catalog?[$0]?.level } ?? 1
     }
 
-    /// Every 7th complete night in a row adds a bonus.
+    /// Every 7th complete night in a row adds a bonus – the rule of nights before build 14 only; a night under
+    /// `CoinRule.playerLevel` gets none (the consistency multiplier replaces it).
     public static let streakBonusEvery = 7
     public static let streakBonus = 200
+
+    // MARK: - rule 1 (build 14): the player's level and the consistency multiplier
+
+    /// What every finished night pays before the level part (an unfinished night pays half of it).
+    public static let nightBase = 100
+
+    /// The level part of a complete night by the PLAYER's unlocked level (an unfinished night pays half of it).
+    public static func levelBonus(level: Int) -> Int {
+        switch level {
+        case ...1: 20
+        case 2: 40
+        case 3: 60
+        default: 100
+        }
+    }
+
+    /// The multiplier looks at this many calendar nights, the night itself included.
+    public static let consistencyWindow = 10
+    /// Percent added per counted night of the window (2 % each, so 102 % … 120 %).
+    public static let consistencyPercentPerNight = 2
+
+    /// The multiplier in percent for `nights` counted nights of the window (100 + 2 × nights).
+    public static func multiplierPercent(nights: Int) -> Int { 100 + consistencyPercentPerNight * nights }
+
+    /// A sum times the multiplier, in integers (an exact half goes up – in the user's favour).
+    public static func multiplied(_ sum: Int, nights: Int) -> Int { (sum * multiplierPercent(nights: nights) + 50) / 100 }
 
     /// Building prices by level (for the upcoming shop): a house 100, L2 200, L3 400, L4 1000.
     public static func price(level: Int) -> Int {
@@ -60,8 +99,22 @@ public enum Economy {
         public let base: Int
         public let level: Int
         public let run: Int
-        /// A lucky night ×2 from a box (11b3): the night's pay once more (base + streak + undisturbed + calm); 0 otherwise.
+        /// A lucky night ×2 from a box (11b3): the night's pay once more (base + streak + undisturbed + calm; under rule 1
+        /// the whole multiplied total); 0 otherwise.
         public let luckyBonus: Int
+        // Rule 1 (build 14) – all 0 / nil for a night paid by the old rule. There `base` is the night's own pay (100 or
+        // 50), `level` stays the drawn building's level (informational) and `streakBonus` is always 0.
+        /// The coin rule the night was priced by: nil = before build 14.
+        public let rule: Int?
+        /// The player's unlocked level at the START of the night (`Progression.unlockedMaxLevel(builtBefore:)`).
+        public let playerLevel: Int
+        /// The level part of the pay as paid: full for a complete night, half for an unfinished one.
+        public let levelBonus: Int
+        /// The consistency window: calendar nights among the last 10 (tonight included) that were complete, unfinished or
+        /// excused. The multiplier is 100 + 2 × this in percent.
+        public let windowNights: Int
+        /// What the multiplier added (the multiplied total minus the sum before it).
+        public let multiplierBonus: Int
     }
 
     /// The coin receipt of one night (11a): every part of the night's coins on its own line.
@@ -70,6 +123,16 @@ public enum Economy {
             case building(level: Int)
             case unfinishedBuilding(level: Int)
             case withoutPause
+            /// Rule 1: the night's own pay (a complete night).
+            case night
+            /// Rule 1: the night's own pay, halved (an unfinished night).
+            case unfinishedNight
+            /// Rule 1: the pay for the player's level (a complete night).
+            case playerLevel(level: Int)
+            /// Rule 1: the pay for the player's level, halved (an unfinished night).
+            case playerLevelHalf(level: Int)
+            /// Rule 1: the consistency multiplier – `nights` counted nights of the last 10, `percent` = 100 + 2 × nights.
+            case multiplier(nights: Int, percent: Int)
             case calmHours(calm: Int, total: Int)
             case streak(run: Int)
             /// The night was doubled by a lucky night from a box (11b3).
@@ -88,9 +151,31 @@ public enum Economy {
         /// `calmTotal`: the night's whole hours (`NightResult.calmHoursTotal`). nil when the night paid nothing.
         public init?(_ entry: Entry, calmTotal: Int?) {
             guard entry.outcome == .complete || entry.outcome == .unfinished, entry.base > 0 else { return nil }
-            var l: [Line] = [Line(kind: entry.outcome == .complete ? .building(level: entry.level)
-                                                                  : .unfinishedBuilding(level: entry.level),
-                                  amount: entry.base)]
+            var l: [Line] = []
+            if entry.rule != nil {
+                // rule 1 (build 14): the night, the level, no pause, calm hours, the multiplier, the lucky night
+                let complete = entry.outcome == .complete
+                l.append(Line(kind: complete ? .night : .unfinishedNight, amount: entry.base))
+                if entry.levelBonus > 0 {
+                    l.append(Line(kind: complete ? .playerLevel(level: entry.playerLevel) : .playerLevelHalf(level: entry.playerLevel),
+                                  amount: entry.levelBonus))
+                }
+                if entry.undisturbedBonus > 0 { l.append(Line(kind: .withoutPause, amount: entry.undisturbedBonus)) }
+                if entry.calmBonus > 0, entry.calmHours > 0 {
+                    l.append(Line(kind: .calmHours(calm: entry.calmHours, total: max(calmTotal ?? entry.calmHours, entry.calmHours)),
+                                  amount: entry.calmBonus))
+                }
+                if entry.multiplierBonus > 0 {
+                    l.append(Line(kind: .multiplier(nights: entry.windowNights, percent: multiplierPercent(nights: entry.windowNights)),
+                                  amount: entry.multiplierBonus))
+                }
+                if entry.luckyBonus > 0 { l.append(Line(kind: .luckyNight, amount: entry.luckyBonus)) }
+                lines = l
+                return
+            }
+            l = [Line(kind: entry.outcome == .complete ? .building(level: entry.level)
+                                                       : .unfinishedBuilding(level: entry.level),
+                      amount: entry.base)]
             if entry.undisturbedBonus > 0 { l.append(Line(kind: .withoutPause, amount: entry.undisturbedBonus)) }
             if entry.calmBonus > 0, entry.calmHours > 0 {
                 l.append(Line(kind: .calmHours(calm: entry.calmHours, total: max(calmTotal ?? entry.calmHours, entry.calmHours)),
@@ -114,6 +199,11 @@ public enum Economy {
     /// One entry per result in chronological order, with the streak bonus where it was earned.
     /// Streak semantics as in `Progression`: complete +1, unfinished neutral, ruins/missed/gaps break.
     /// `breaks`: nights that start a new streak (a paid schedule change).
+    ///
+    /// The order is the night key, then the position in `results` (a stable sort – a counted test night that shares a
+    /// key with a real night keeps the caller's order; `startedAt` is never used because `NightResult.withoutClockTimes`
+    /// drops it and the statistics price those copies). A night with `coinRule == nil` is priced exactly as before
+    /// build 14; a night with `coinRule >= 1` by `CoinRule.playerLevel` (see `Entry`).
     public static func ledger(_ results: [NightResult], calendar: Calendar, breaks: [NightKey] = [],
                               catalog: Catalog? = nil, boxes: [BoxPurchase] = []) -> [Entry] {
         var out: [Entry] = []
@@ -123,14 +213,25 @@ public enum Economy {
         var luckyUsed = 0
         var run = 0
         var prev: NightKey?
-        for r in results.sorted(by: { $0.key < $1.key }) {
+        let ordered = results.enumerated().sorted { ($0.element.key, $0.offset) < ($1.element.key, $1.offset) }.map(\.element)
+        // rule 1: the nights that count for the consistency window – one per calendar key, whatever rule paid them
+        var counted: [NightKey] = []
+        if ordered.contains(where: { ($0.coinRule ?? 0) >= 1 }) {
+            for r in ordered where r.outcome.isBuildNight || r.outcome == .excused {
+                if counted.last != r.key { counted.append(r.key) }
+            }
+        }
+        var windowStart = 0, windowEnd = 0          // counted[windowStart..<windowEnd] lies in the current night's window
+        var built = 0                               // build nights before the current result (rule 1: the player's level)
+        for r in ordered {
             if let p = prev, r.key != p, r.key != p.adding(days: 1, calendar: calendar) { run = 0 }   // a gap
             if let p = prev, breaks.contains(where: { p < $0 && $0 <= r.key }) { run = 0 }         // a schedule change
+            let newRule = (r.coinRule ?? 0) >= 1
             var bonus = 0
             switch r.outcome {
             case .complete:
                 run += 1
-                if run % streakBonusEvery == 0 { bonus = streakBonus }
+                if !newRule, run % streakBonusEvery == 0 { bonus = streakBonus }
             case .unfinished, .excused: break
             case .ruins, .missed: run = 0
             }
@@ -138,16 +239,43 @@ public enum Economy {
             let calmHours = r.outcome.isBuildNight ? r.calmHours ?? 0 : 0
             let calmBonus = calmHours * calmHourBonus
             let lvl = level(of: r, catalog: catalog)
-            let base = reward(r.outcome, level: lvl)
             var lucky2 = 0
-            if r.outcome == .complete, luckyUsed < lucky.count, lucky[luckyUsed].nightKey < r.key {
-                lucky2 = base + bonus + undisturbed + calmBonus
-                luckyUsed += 1
+            let entry: Entry
+            if newRule {
+                let playerLevel = Progression.unlockedMaxLevel(builtBefore: built)
+                // the window: the 10 calendar nights K-9 … K; `counted` is ascending, so both ends only move forward
+                let from = r.key.adding(days: -(consistencyWindow - 1), calendar: calendar)
+                while windowEnd < counted.count, counted[windowEnd] <= r.key { windowEnd += 1 }
+                while windowStart < windowEnd, counted[windowStart] < from { windowStart += 1 }
+                let n = windowEnd - windowStart
+                let base = r.outcome == .complete ? nightBase : r.outcome == .unfinished ? nightBase / 2 : 0
+                let levelPart = r.outcome == .complete ? levelBonus(level: playerLevel)
+                                : r.outcome == .unfinished ? levelBonus(level: playerLevel) / 2 : 0
+                let sum = base + levelPart + undisturbed + calmBonus
+                let total = r.outcome.isBuildNight ? multiplied(sum, nights: n) : 0
+                if r.outcome == .complete, luckyUsed < lucky.count, lucky[luckyUsed].nightKey < r.key {
+                    lucky2 = total
+                    luckyUsed += 1
+                }
+                entry = Entry(key: r.key, outcome: r.outcome, coins: total + lucky2, streakBonus: 0,
+                              undisturbedBonus: undisturbed, calmHours: calmHours, calmBonus: calmBonus,
+                              base: base, level: lvl, run: run, luckyBonus: lucky2,
+                              rule: min(r.coinRule ?? CoinRule.current, CoinRule.current), playerLevel: playerLevel,
+                              levelBonus: levelPart, windowNights: n, multiplierBonus: total - sum)
+            } else {
+                let base = reward(r.outcome, level: lvl)
+                if r.outcome == .complete, luckyUsed < lucky.count, lucky[luckyUsed].nightKey < r.key {
+                    lucky2 = base + bonus + undisturbed + calmBonus
+                    luckyUsed += 1
+                }
+                let coins = base + bonus + undisturbed + calmBonus + lucky2
+                entry = Entry(key: r.key, outcome: r.outcome, coins: coins, streakBonus: bonus,
+                              undisturbedBonus: undisturbed, calmHours: calmHours, calmBonus: calmBonus,
+                              base: base, level: lvl, run: run, luckyBonus: lucky2,
+                              rule: nil, playerLevel: 0, levelBonus: 0, windowNights: 0, multiplierBonus: 0)
             }
-            let coins = base + bonus + undisturbed + calmBonus + lucky2
-            out.append(Entry(key: r.key, outcome: r.outcome, coins: coins, streakBonus: bonus,
-                             undisturbedBonus: undisturbed, calmHours: calmHours, calmBonus: calmBonus,
-                             base: base, level: lvl, run: run, luckyBonus: lucky2))
+            out.append(entry)
+            if r.outcome.isBuildNight { built += 1 }
             prev = r.key
         }
         return out

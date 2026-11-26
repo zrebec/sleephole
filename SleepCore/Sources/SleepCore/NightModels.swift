@@ -142,12 +142,15 @@ public struct NightResult: Codable, Equatable, Sendable {
     /// A counted test night (`bonus-…`): its clock times are artificial (a daytime start), so the time statistics
     /// and the chart skip them (B13). nil / false = a real night.
     public let isTestNight: Bool?
+    /// The coin rule the night was started under (`CoinRule`, build 14). nil = a night from before the rule: it is paid
+    /// by the old formula (the building's level, +200 on every 7th complete night in a row).
+    public let coinRule: Int?
 
     public init(key: NightKey, outcome: Outcome, buildingId: String?, awaySeconds: TimeInterval = 0,
                 startedAt: Date? = nil, confirmedAt: Date? = nil, pauses: Int? = nil, bedtime: Date? = nil,
                 fellAsleepAt: Date? = nil, asleepSeconds: TimeInterval? = nil,
                 calmHours: Int? = nil, calmHoursTotal: Int? = nil,
-                sleepEndedAt: Date? = nil, isTestNight: Bool? = nil) {
+                sleepEndedAt: Date? = nil, isTestNight: Bool? = nil, coinRule: Int? = nil) {
         self.key = key
         self.outcome = outcome
         self.buildingId = buildingId
@@ -162,11 +165,12 @@ public struct NightResult: Codable, Equatable, Sendable {
         self.calmHoursTotal = calmHoursTotal
         self.sleepEndedAt = sleepEndedAt
         self.isTestNight = isTestNight
+        self.coinRule = coinRule
     }
 
     /// The same night without its clock times (what the time statistics see of a counted test night).
     public var withoutClockTimes: NightResult {
         NightResult(key: key, outcome: outcome, buildingId: buildingId, awaySeconds: awaySeconds, pauses: pauses,
-                    calmHours: calmHours, calmHoursTotal: calmHoursTotal, isTestNight: isTestNight)
+                    calmHours: calmHours, calmHoursTotal: calmHoursTotal, isTestNight: isTestNight, coinRule: coinRule)
     }
 }

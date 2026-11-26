@@ -117,6 +117,12 @@ enum Fmt {
     /// A whole percent in the app's language: "30%" in English, "30 %" (non-breaking space) in Slovak and Czech (13v).
     static func percent(_ p: Int) -> String { Lang.current.usesContinentalFormats ? "\(p)\u{00A0}%" : "\(p)%" }
 
+    /// The consistency multiplier of a night's receipt (14a1): the percent as a factor with two decimals, always –
+    /// 114 → "1.14" in English, "1,14" in Slovak and Czech; 110 → "1.10", 120 → "1.20".
+    static func multiplier(percent p: Int) -> String {
+        "\(p / 100)\(Lang.current.usesContinentalFormats ? "," : ".")\(String(format: "%02d", p % 100))"
+    }
+
     /// "30. 9." / "9/30"
     static func dayMonth(_ k: NightKey) -> String {
         Lang.current.usesContinentalFormats ? "\(k.day). \(k.month)." : "\(k.month)/\(k.day)"

@@ -286,13 +286,21 @@ private func f1(_ x: Double) -> String { String(format: "%.1f", x) }
         #expect(aggregate(a, checkpoint: 2) == aggregate(b, checkpoint: 2))
     }
 
-    /// The incremental loop must equal `Economy.ledger` + `Jokers.apply` + `Achievements` + naps, night by night.
-    @Test func incrementalLoopMatchesTheLedger() throws {
+    /// A box table that only ever pays coins, a collectible or a lucky night – no joker, so the ledger replay needs no
+    /// box jokers to match the simulation.
+    static let luckyHeavy = SimOddsVariant(name: "lucky-test", table: [
+        (.luckyNight, 500), (.coins(tenths: 5), 300), (.collectible(.postcard), 200)])
+
+    /// The incremental loop must equal `Economy.ledger` + `Jokers.apply` + `Achievements` + naps, night by night –
+    /// under the old coin rule (nil) and under rule 1, without boxes and with boxes (lucky nights).
+    @Test(arguments: [nil, CoinRule.playerLevel], [false, true]) func incrementalLoopMatchesTheLedger(rule: Int?, withBoxes: Bool) throws {
         let catalog = try loadRealCatalog(), cal = SimCalendar()
-        var excusedNights = 0, silverBought = 0, bronzeStyleBreaks = 0
+        var excusedNights = 0, silverBought = 0, bronzeStyleBreaks = 0, luckyNights = 0, multiplied = 0
         for profile in SimProfile.all {
             for r in 0..<20 {
-                let cfg = SimConfig(profile: profile, boxesPerMonth: 0, variant: nil, rerolls: false)
+                var cfg = SimConfig(profile: profile, boxesPerMonth: withBoxes ? 6 : 0, variant: withBoxes ? Self.luckyHeavy : nil,
+                                    rerolls: false)
+                cfg.coinRule = rule
                 let sim = simulate(cfg, run: r, catalog: catalog, calendar: cal, trace: true)
                 let t = sim.trace!
                 excusedNights += t.final.filter { $0 == .excused }.count
@@ -301,11 +309,16 @@ private func f1(_ x: Double) -> String { String(format: "%.1f", x) }
                 let keys = Array(cal.keys.prefix(365))
                 let results = (0..<365).map { i in
                     NightResult(key: keys[i], outcome: t.raw[i], buildingId: t.building[i], pauses: t.raw[i] == .missed ? nil : t.pauses[i],
-                                calmHours: t.raw[i].isBuildNight ? t.calm[i] : nil, calmHoursTotal: t.raw[i].isBuildNight ? 7 : nil)
+                                calmHours: t.raw[i].isBuildNight ? t.calm[i] : nil, calmHoursTotal: t.raw[i].isBuildNight ? 7 : nil,
+                                coinRule: rule)
                 }
                 let manual = t.silverStarts.map { JokerUse(tier: .silver, firstNight: keys[$0]) }
                 let (applied, _) = Jokers.apply(results: results, manual: manual, lastNight: keys[364], calendar: bratislava)
-                let ledger = Economy.ledger(applied, calendar: bratislava, catalog: catalog)
+                let boxes = t.luckyBoxDays.map {
+                    BoxPurchase(id: "box\($0)", at: Date(timeIntervalSince1970: 1_800_000_000 + Double($0)), nightKey: keys[$0],
+                                price: 400, seed: 1, tableVersion: 1, prize: .luckyNight, payout: 0)
+                }
+                let ledger = Economy.ledger(applied, calendar: bratislava, catalog: catalog, boxes: boxes)
                 let naps = (0..<365).compactMap { i in t.napOutcome[i] == .complete ? NightResult(key: keys[i], outcome: .complete, buildingId: nil) : nil }
                 let unlocked = Achievements.unlocked(results: applied, naps: naps, catalog: catalog, calendar: bratislava)
                 var achByKey: [NightKey: Int] = [:]
@@ -314,9 +327,10 @@ private func f1(_ x: Double) -> String { String(format: "%.1f", x) }
                 var ok = ledger.count == 365
                 for i in 0..<365 where ok {
                     let e = ledger[i]
-                    if e.key != keys[i] || e.outcome != t.final[i] || e.coins != t.nightCoins[i] || achByKey[keys[i], default: 0] != t.achievementCoins[i] {
+                    if e.key != keys[i] || e.outcome != t.final[i] || e.coins != t.nightCoins[i] + t.luckyCoins[i]
+                        || e.luckyBonus != t.luckyCoins[i] || achByKey[keys[i], default: 0] != t.achievementCoins[i] {
                         ok = false
-                        Issue.record("\(profile.name) run \(r) night \(i): ledger \(e.outcome) \(e.coins)+\(achByKey[keys[i], default: 0]) vs sim \(t.final[i]) \(t.nightCoins[i])+\(t.achievementCoins[i])")
+                        Issue.record("rule \(String(describing: rule)) \(profile.name) run \(r) night \(i): ledger \(e.outcome) \(e.coins)+\(achByKey[keys[i], default: 0]) vs sim \(t.final[i]) \(t.nightCoins[i])+\(t.luckyCoins[i])+\(t.achievementCoins[i])")
                     }
                 }
                 #expect(ok)
@@ -324,14 +338,22 @@ private func f1(_ x: Double) -> String { String(format: "%.1f", x) }
                 let s = sim.snaps.last!
                 let napCoins = t.napOutcome.compactMap { $0 }.reduce(0) { $0 + NapPlan.reward($1) }
                 #expect(napCoins == s.nap)
-                #expect(ledger.reduce(0) { $0 + $1.coins } == s.building + s.undisturbed + s.calm + s.streak)
+                #expect(ledger.reduce(0) { $0 + $1.coins }
+                        == s.building + s.undisturbed + s.calm + s.streak + s.levelBonus + s.multiplier + s.luckyExtra)
                 #expect(Achievements.coins(unlocked) == s.achievement)
                 #expect(ledger.reduce(0) { $0 + $1.streakBonus } == s.streak)
                 #expect(ledger.reduce(0) { $0 + $1.undisturbedBonus } == s.undisturbed)
                 #expect(ledger.reduce(0) { $0 + $1.calmBonus } == s.calm)
+                #expect(ledger.reduce(0) { $0 + $1.levelBonus } == s.levelBonus)
+                #expect(ledger.reduce(0) { $0 + $1.multiplierBonus } == s.multiplier)
+                #expect(ledger.reduce(0) { $0 + $1.luckyBonus } == s.luckyExtra)
+                luckyNights += ledger.filter { $0.luckyBonus > 0 }.count
+                multiplied += ledger.filter { $0.multiplierBonus > 0 }.count
             }
         }
         // the comparison is not vacuous: jokers, silver and real ruins all occurred
         #expect(excusedNights > 0 && silverBought > 0 && bronzeStyleBreaks > 0)
+        #expect(withBoxes ? luckyNights > 0 : luckyNights == 0)
+        #expect(rule == nil ? multiplied == 0 : multiplied > 0)
     }
 }
