@@ -135,7 +135,9 @@ enum Fmt {
         cal.timeZone = TimeZone(secondsFromGMT: 0)!
         let wake = cal.date(from: DateComponents(year: k.year, month: k.month, day: k.day, hour: 12))!
         let wd = cal.component(.weekday, from: wake)   // 1 = Sunday … 7 = Saturday
-        let to = fullDate(k)
+        // B62: spaces INSIDE a date are non-breaking, so a line wraps only between words, never inside a date
+        let nb = { (d: String) in d.replacingOccurrences(of: " ", with: "\u{00A0}") }
+        let to = nb(fullDate(k))
         if nap {
             switch wd {
             case 2: return L("Monday \(to)")
@@ -149,7 +151,7 @@ enum Fmt {
         }
         let start = cal.date(byAdding: .day, value: -1, to: wake)!
         let sc = cal.dateComponents([.year, .month, .day], from: start)
-        let from: String
+        var from: String
         if Lang.current.usesContinentalFormats {
             from = dayMonth(NightKey(year: sc.year!, month: sc.month!, day: sc.day!))
         } else {
@@ -158,6 +160,7 @@ enum Fmt {
             style.timeZone = cal.timeZone
             from = start.formatted(style)
         }
+        from = nb(from)
         switch wd {
         case 2: return L("Night from Sunday \(from) to Monday \(to)")
         case 3: return L("Night from Monday \(from) to Tuesday \(to)")
