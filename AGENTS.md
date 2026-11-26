@@ -42,8 +42,8 @@ by build – the roadmap is plan §0b.
    three extras, Debug installs A – D in the day, the later shop UX (Shop tab, cat + badge + morning line). **Done: 14a complete (2026-11-26)** – 14-0, 14a1 (the rule + receipt lines), 14a2 (the simulation; his yes – formula frozen),
    14a3 (the marker; backup, sync), 14a4 (guide, rules, level-up line, README; B62), 14a5 (the quick night 8 min models a real
    night – 1 min = 1 h, a 10s pause, a preview receipt; a counted night never scaled). **Install A on his phone 2026-11-26 ~11:09**
-   (the store identical before / after; his balance under build A 1 490 🪙). Open with him: does the phone show 1 490; his quick
-   night (a clean one previews 302); the build 14 page https://claude.ai/artifact/6JuUbzwX7xmrkNdo88UtsA (tests a1 – a7 now, r1 – r2 on
+   (the store identical before / after; his balance under build A 1 490 🪙). His day tests ~11:13 – 11:46: all fine (302 / 296 / 262, B62
+   confirmed; his schedule is 21:30 – 6:00 = 8.5 h, so a quick-night hour is 56s). Open: r1 – r2 on 27 Nov; the build 14 page https://claude.ai/artifact/6JuUbzwX7xmrkNdo88UtsA (tests a1 – a7 now, r1 – r2 on
    27 Nov; store `state/answers`, prefix `b14.`). Then 14b1 / 14d / 14e1 on his word.
 
 ## Standing notes for Opus (never list them to the owner – his wish 2026-11-09)
