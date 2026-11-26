@@ -32,6 +32,9 @@ final class NightRecord {
     /// The calm-hour rule the night started under (`CalmHours.currentRule`, build 8, owner 2026-10-15). nil = an older
     /// night (and every nap): it earns no calm-hour coins, so the balance never jumps. Optional, so the store migrates.
     var calmHoursRule: Int?
+    /// The coin rule the night started under (`CoinRule.current`, build 14, owner 2026-11-26). nil = a night from before
+    /// build 14 (and every nap): it keeps the old pay forever – nothing may add the marker later. Optional, so the store migrates.
+    var coinRule: Int?
     /// The seconds of warning a lock-screen trip got when the night started (`SleepRules.lockScreenTolerance`, build 9,
     /// owner 2026-10-18, B33). nil = an older night (and every nap before build 9j): it keeps 10. Optional, so the store migrates.
     var lockScreenTolerance: Double?
@@ -59,7 +62,7 @@ final class NightRecord {
     /// a unique id so it never collides with the real night of the same date.
     init(window: NightWindow, buildingId: String, isDebug: Bool, setupGrace: TimeInterval, idPrefix: String? = nil,
          isNap: Bool = false, strictLockScreen: Bool? = nil, calmHoursRule: Int? = nil,
-         lockScreenTolerance: Double? = nil, accidentalTolerance: Double? = nil) {
+         lockScreenTolerance: Double? = nil, accidentalTolerance: Double? = nil, coinRule: Int? = nil) {
         self.keyString = window.key.description
         let stamp = Int(Date().timeIntervalSince1970)
         self.isNap = isNap
@@ -74,6 +77,7 @@ final class NightRecord {
         self.pauses = 0
         self.strictLockScreen = strictLockScreen
         self.calmHoursRule = calmHoursRule
+        self.coinRule = coinRule
         self.lockScreenTolerance = lockScreenTolerance
         self.accidentalTolerance = accidentalTolerance
     }
@@ -140,6 +144,7 @@ final class NightRecord {
                            startedAt: startedAt, confirmedAt: confirmedAt, pauses: pauses, bedtime: bedtime,
                            fellAsleepAt: fellAsleepAt, asleepSeconds: asleepSeconds,
                            calmHours: calm?.calm, calmHoursTotal: calm?.total,
-                           sleepEndedAt: sleepEndedAt, isTestNight: isTestNight ? true : nil)
+                           sleepEndedAt: sleepEndedAt, isTestNight: isTestNight ? true : nil,
+                           coinRule: coinRule)
     }
 }

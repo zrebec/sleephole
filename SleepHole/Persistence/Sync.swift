@@ -112,8 +112,17 @@ enum SyncStore {
         for night in remote where !night.isDebug && night.finalizedAt != nil {
             let n = night.withoutSleepValues()               // whatever the file carries, Health values never come in
             if let local = byId[n.id] {
-                guard !SyncMerge.keepsFirst(copy(of: local.backup), copy(of: n)) else { continue }
-                local.adoptNight(n)                          // in place; the local sleep values stay as they are
+                // the same run (same non-nil start) ends with the higher coin-rule marker whichever copy wins (build 14)
+                let sameRun = local.startedAt != nil && local.startedAt == n.startedAt
+                if SyncMerge.keepsFirst(copy(of: local.backup), copy(of: n)) {
+                    let marker = SyncMerge.coinRule(kept: local.coinRule, other: n.coinRule, sameRun: sameRun)
+                    guard marker != local.coinRule else { continue }
+                    local.coinRule = marker                  // only the marker was raised; the rest of the local copy stays
+                } else {
+                    let had = local.coinRule
+                    local.adoptNight(n)                      // in place; the local sleep values stay as they are
+                    local.coinRule = SyncMerge.coinRule(kept: n.coinRule, other: had, sameRun: sameRun)
+                }
             } else {
                 let record = NightRecord(backup: n)
                 context.insert(record)

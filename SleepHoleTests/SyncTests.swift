@@ -568,4 +568,58 @@ struct SyncTests {
         let oldSettings = try JSONSerialization.data(withJSONObject: settings)
         #expect(try JSONDecoder().decode(AppSettings.self, from: oldSettings).changedAt == nil)
     }
+
+    // MARK: the coin-rule marker (build 14, step 14a3)
+
+    /// An old-build device (no marker) sends a run back with more events: the marked copy takes it but keeps its marker,
+    /// and the marker-less winner takes the marker from the marked copy of the same run – a second merge changes nothing.
+    @Test func theCoinRuleMarkerSurvivesACopyOfTheSameRunFromAnOldDevice() throws {
+        let a = device(at: date(1, 12)), b = device(at: date(1, 12))
+        night(a, day: 1); night(b, day: 1)
+        let ra = record(a, day: 1), rb = record(b, day: 1)
+        #expect(ra.coinRule == CoinRule.current && ra.startedAt == rb.startedAt)
+        rb.coinRule = nil                                                 // B is a device of a build before 14 …
+        rb.append(.audioResumed, at: date(2, 3))                          // … whose copy of the run has one more event
+        try b.context.save()
+        let eventsOfB = rb.backup.events.count
+        #expect(eventsOfB == ra.backup.events.count + 1)
+
+        // A adopts the longer copy but keeps the marker; a second merge changes nothing
+        #expect(try a.model.mergeSync([b.model.makeSyncFile()]))
+        #expect(record(a, day: 1).backup.events.count == eventsOfB && record(a, day: 1).coinRule == 1)
+        #expect(try a.model.mergeSync([b.model.makeSyncFile()]) == false)
+        // B's longer copy wins on B, yet it takes the marker from A's copy of the same run (only the marker is raised)
+        let beforeEvents = record(b, day: 1).backup.events
+        #expect(try b.model.mergeSync([a.model.makeSyncFile()]))
+        #expect(record(b, day: 1).coinRule == 1 && record(b, day: 1).backup.events == beforeEvents)
+        #expect(try b.model.mergeSync([a.model.makeSyncFile()]) == false)
+        #expect(nights(a) == nights(b))
+    }
+
+    /// Two different runs of one night: the winner's marker as it is – nil stays nil, a marker stays a marker.
+    @Test(arguments: [true, false]) func differentRunsKeepTheWinnersCoinRule(aStartsEarlier: Bool) throws {
+        let a = device(at: date(1, 12)), b = device(at: date(1, 12))
+        night(a, day: 1); night(b, day: 1)
+        let ra = record(a, day: 1), rb = record(b, day: 1)
+        rb.startedAt = ra.startedAt! + (aStartsEarlier ? 30 : -30)
+        rb.coinRule = nil
+        try b.context.save()
+        try a.model.mergeSync([b.model.makeSyncFile()])
+        try b.model.mergeSync([a.model.makeSyncFile()])
+        #expect(nights(a) == nights(b))
+        #expect(nights(a)[0].coinRule == (aStartsEarlier ? 1 : nil))
+    }
+
+    /// A marker travels with a night that is new on the other device, and a file from an old build has none.
+    @Test func theCoinRuleMarkerTravelsWithTheNight() throws {
+        let a = device(at: date(1, 12)), b = device(at: date(1, 12))
+        night(a, day: 1)
+        try b.model.mergeSync([a.model.makeSyncFile()])
+        #expect(record(b, day: 1).coinRule == CoinRule.current)
+        var old = a.model.makeSyncFile()
+        old.nights = old.nights.map { var n = $0; n.coinRule = nil; return n }
+        let c = device(at: date(1, 12))
+        try c.model.mergeSync([old])
+        #expect(record(c, day: 1).coinRule == nil)
+    }
 }

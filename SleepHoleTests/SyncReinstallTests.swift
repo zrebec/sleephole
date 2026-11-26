@@ -61,6 +61,35 @@ extension SyncEngineTests {
         try await reinstallScenario(day: 12, expectLocked: true)
     }
 
+    /// Build 14 (step 14a3): a fresh install meets the old-build device's marker-less copy of a run (more events) and its own
+    /// earlier marked copy of the same run – in either order, in one merge or in two – and the marker survives.
+    @Test func aFreshInstallKeepsTheCoinRuleMarkerWhateverOrderTheCopiesComeIn() throws {
+        let folder = tempFolder(); defer { try? FileManager.default.removeItem(at: folder) }
+        let a = device(folder, id: "A", at: date(1, 12), firstRead: true)
+        defer { stopAll(a) }
+        night(a, day: 1)
+        let marked = a.model.makeSyncFile()
+        #expect(marked.nights.count == 1 && marked.nights[0].coinRule == CoinRule.current)
+        var old = marked                                                  // the same run, sent back by a build before 14
+        old.nights[0].coinRule = nil
+        old.nights[0].events.append(NightEvent(.audioResumed, at: date(2, 3)))
+        for (index, order) in [[old, marked], [marked, old]].enumerated() {
+            for oneMerge in [true, false] {
+                let b = device(folder, id: "B\(index)\(oneMerge)", at: date(5, 12), firstRead: true)
+                defer { stopAll(b) }
+                if oneMerge {
+                    try b.model.mergeSync(order)
+                } else {
+                    for file in order { try b.model.mergeSync([file]) }
+                }
+                let kept = b.model.records()
+                #expect(kept.count == 1 && kept[0].coinRule == CoinRule.current)
+                #expect(kept[0].backup.events.count == old.nights[0].events.count)     // the longer copy won
+                #expect(try b.model.mergeSync(order) == false)                           // idempotent
+            }
+        }
+    }
+
     /// A truly new user (nothing in the account): the week the guide opened stays.
     @Test func aNewUserWithAnEmptyAccountKeepsTheWeekTheGuideOpened() async throws {
         let folder = tempFolder(); defer { try? FileManager.default.removeItem(at: folder) }
