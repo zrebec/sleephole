@@ -85,7 +85,9 @@ public struct NightLog: Codable, Equatable, Sendable {
     /// When each pause of the night started, oldest first.
     public var pauseStarts: [Date] { sortedEvents.filter { $0.kind == .pauseStarted }.map(\.at) }
     /// The pause windows (each lasts `PausePolicy.duration` – leaving the app is free inside them).
-    public var pauseIntervals: [(Date, Date)] { pauseStarts.map { ($0, $0 + PausePolicy.duration) } }
+    public var pauseIntervals: [(Date, Date)] { pauseIntervals(length: PausePolicy.duration) }
+    /// The pause windows of a night whose pause lasts `length` (`SleepRules.pauseLength` – a scaled developer night).
+    public func pauseIntervals(length: TimeInterval) -> [(Date, Date)] { pauseStarts.map { ($0, $0 + length) } }
 
     /// When the app was closed by its owner and has not been opened again since (nil = no such closure): the last
     /// `.closedByOwner` that no later `.appLaunched` / `.restartExcused` has answered. Diagnostic events logged

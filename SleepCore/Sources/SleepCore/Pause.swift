@@ -24,8 +24,8 @@ public enum PausePolicy {
     }
 
     /// The end of the pause that is on at `t`, if any.
-    public static func activeUntil(_ log: NightLog, at t: Date) -> Date? {
-        log.pauseIntervals.last { $0.0 <= t && t < $0.1 }?.1
+    public static func activeUntil(_ log: NightLog, rules: SleepRules = SleepRules(), at t: Date) -> Date? {
+        log.pauseIntervals(length: rules.pauseLength).last { $0.0 <= t && t < $0.1 }?.1
     }
 
     /// Why a pause can't be started at `t` (nil = it can). `coins`: the owner's balance.
@@ -37,9 +37,9 @@ public enum PausePolicy {
             let setupEnds = log.window.setupEnds(start: start, rules: rules)
             if t < setupEnds { return .setup(until: setupEnds) }
         }
-        if let until = activeUntil(log, at: t) { return .running(until: until) }
+        if let until = activeUntil(log, rules: rules, at: t) { return .running(until: until) }
         let opens = log.window.confirmOpens
-        if t + duration > opens { return .tooLate(opens: opens) }
+        if t + rules.pauseLength > opens { return .tooLate(opens: opens) }
         let price = price(number: log.pauseStarts.count + 1)
         return coins < price ? .notEnoughCoins(missing: price - coins) : nil
     }

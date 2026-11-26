@@ -8,6 +8,8 @@ import UserNotifications
 enum Plural {
     static func minutes(_ t: TimeInterval) -> String { L("\(Int((t / 60).rounded())) minutes") }
     static func seconds(_ t: TimeInterval) -> String { L("\(Int(t.rounded())) seconds") }
+    /// A pause's length: "10 minutes", or "10s" for the 10 s pause of a scaled developer night (14a5).
+    static func pauseLength(_ t: TimeInterval) -> String { t < 60 ? L("\(Int(t.rounded()))s") : minutes(t) }
     static func hours(_ t: TimeInterval) -> String { L("\(Int((t / 3600).rounded())) hours") }
     static func nights(_ n: Int) -> String { L("\(n) nights") }
     static func days(_ n: Int) -> String { L("\(n) days") }

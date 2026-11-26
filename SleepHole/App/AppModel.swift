@@ -165,7 +165,10 @@ final class AppModel {
     ///   -cityQuery Brat               pre-fill Settings → Sky → city so the real Apple Maps search runs
     ///   -riseSeconds N                set Settings → Alarm → Rise time (0, 15, 30, 45, 60, 90, 120)
     ///   -tryRise                      Settings presses "Try the rise" itself 1.5 s after it appears (screenshots, 13z)
-    ///   -scrollTo sky                 scroll Settings to the Sky section (also: alarm, alarmRise, sounds, notifications, health, icloud)
+    ///   -scrollTo sky                 scroll Settings to the Sky section (also: alarm, alarmRise, sounds, notifications, health, icloud;
+    ///                                 DEBUG: developer)
+    ///   -autoConfirm                  SIMULATOR ONLY: a developer night is confirmed 10 s before its wake (result screenshots, 14a5;
+    ///                                 e.g. with -startTestNight -testNightMinutes 1)
     ///   -systemAlarm allowed|denied|notAsked   SIMULATOR ONLY: pretend that consent for the system alarm (a silent
     ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
     ///   -weather clear|cloudy|fog|rain|heavyRain|thunder|snow, -weatherTemp N, -weatherSnowCover   simulate the weather
@@ -438,7 +441,12 @@ final class AppModel {
         }
         if DevArgs.list.contains("-startNap"), active == nil { startNap() }
         ticker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            MainActor.assumeIsolated { self?.refresh() }
+            MainActor.assumeIsolated {
+                self?.refresh()
+                #if targetEnvironment(simulator)
+                self?.autoConfirmForScreenshots()
+                #endif
+            }
         }
         ticker?.tolerance = 0.3                   // L8: the system may coalesce the tick with other wake-ups
     }
@@ -1594,13 +1602,15 @@ final class AppModel {
         #if DEBUG
         if DevArgs.list.contains("-forceBuilding"), let had = real.last.flatMap({ catalog[$0.buildingId] }) { entry = had }
         #endif
+        let scale = isDebug ? Self.timeScale(testNight: window, schedule: settings.schedule.window(containing: now, calendar: calendar)) : nil
         let rec = NightRecord(window: window, buildingId: entry.id, isDebug: isDebug,
                               setupGrace: debugWindow != nil ? debugGrace : settings.setupGrace,
                               idPrefix: isBonus ? "bonus" : nil, strictLockScreen: settings.strictMode,
                               calmHoursRule: CalmHours.currentRule,
                               lockScreenTolerance: SleepRules.lockScreenToleranceNow,
                               accidentalTolerance: SleepRules.accidentalToleranceNow,
-                              coinRule: CoinRule.current)      // build 14: every night started now (never a nap) pays by rule 1
+                              coinRule: CoinRule.current,      // build 14: every night started now (never a nap) pays by rule 1
+                              timeScale: scale)                // 14a5: only a developer night that does not count for the town
         rec.append(.started, at: now)
         context.insert(rec)
         save()
@@ -1667,6 +1677,29 @@ final class AppModel {
         shownResult = nil
         refresh(now: now)
     }
+
+    /// The scale of a developer night against the user's own schedule (14a5): the test night's length ÷ the schedule's night
+    /// length – 1/60 for an 8-minute night on an 8 h schedule (1 min = 1 h, a pause of 10 s). nil for a degenerate window.
+    static func timeScale(testNight: NightWindow, schedule: NightWindow) -> Double? {
+        let test = testNight.wake.timeIntervalSince(testNight.bedtime)
+        let real = schedule.wake.timeIntervalSince(schedule.bedtime)
+        return test > 0 && real > 0 ? test / real : nil
+    }
+
+    /// The scale a developer night of `minutes` would get tonight (for the caption under the developer buttons).
+    func testNightScale(minutes: Double) -> Double? {
+        let now = clock.now
+        let probe = NightWindow(key: NightKey(date: now, calendar: calendar), bedtime: now, wake: now + minutes * 60)
+        return Self.timeScale(testNight: probe, schedule: settings.schedule.window(containing: now, calendar: calendar))
+    }
+
+    #if targetEnvironment(simulator)
+    /// Screenshots only (`-autoConfirm`): a developer night is confirmed 10 s before its wake time, so its result can be shot.
+    private func autoConfirmForScreenshots() {
+        guard DevArgs.list.contains("-autoConfirm"), let rec = active, rec.isDebug, clock.now >= rec.wake - 10 else { return }
+        confirm()
+    }
+    #endif
 
     func cancelFastNight() {
         debugWindow = nil
@@ -2258,7 +2291,7 @@ final class AppModel {
         diagBegin(rec)
         // came back in time after a "SleepHole was closed" warning → the same "phew" as after "Come back!"
         if let c = closedAt, !restarted, now < rec.wake, let graceEnds, c >= graceEnds,
-           PausePolicy.activeUntil(rec.log, at: c) == nil, collapsedAt == nil {
+           PausePolicy.activeUntil(rec.log, rules: rec.rules, at: c) == nil, collapsedAt == nil {
             buzz(.relief)
         }
     }
@@ -2607,8 +2640,11 @@ final class AppModel {
 
     /// The end of the pause that is on now, if any.
     func pauseEnds(at t: Date? = nil) -> Date? {
-        active.flatMap { PausePolicy.activeUntil($0.log, at: t ?? clock.now) }
+        active.flatMap { PausePolicy.activeUntil($0.log, rules: $0.rules, at: t ?? clock.now) }
     }
+
+    /// How long a pause of the running night lasts (10 min; scaled on a developer night that models a real one, 14a5).
+    var pauseLength: TimeInterval { active?.rules.pauseLength ?? PausePolicy.duration }
 
     /// Price of the next pause tonight: the first is free, then 50, 100, 150 … (test nights never pay).
     var nextPausePrice: Int {
@@ -2764,7 +2800,7 @@ final class AppModel {
             // gentle mode (owner 2026-10-09): the lock-screen use is only logged and met with one calm reminder – no
             // system alarm, no keep-alive, no deadline, no collapse notice, no "come back" state; the building stays
             if let graceEnds, date >= graceEnds, date < rec.wake, !alreadyCollapsed,
-               PausePolicy.activeUntil(rec.log, at: date) == nil {
+               PausePolicy.activeUntil(rec.log, rules: rec.rules, at: date) == nil {
                 lockRemindersSent += 1
                 if servicesEnabled { Notifications.lockScreenReminder() }
             } else if let graceEnds, date < graceEnds {
@@ -2774,7 +2810,7 @@ final class AppModel {
             return
         }
         // no vibration here: the app is in the background now and iOS only lets the notification vibrate
-        if let pauseEnds = PausePolicy.activeUntil(rec.log, at: date) {
+        if let pauseEnds = PausePolicy.activeUntil(rec.log, rules: rec.rules, at: date) {
             // inside a pause (D17) leaving is free – only remind when it is about to end
             if servicesEnabled { Notifications.pauseEnding(at: pauseEnds) }
             scheduleProjectedCollapseNotice(after: date)      // out when the pause runs out → it can collapse then
@@ -3087,12 +3123,16 @@ final class AppModel {
         }
         if !rec.isDebug { writeAutoBackup() }
         if servicesEnabled, !rec.isDebug, !rec.isNap { Task { await refreshSleepIfIdle() } }   // the watch may not have synced yet: read again later
-        let entry = rec.isDebug || rec.isNap ? nil
-            : Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
-                .last { $0.key.description == rec.keyString }
-        lastReceipt = entry.flatMap { Economy.Receipt($0, calmTotal: rec.result?.calmHoursTotal) }
-            .map { $0.addingAchievements(newAchievements.reduce(0) { $0 + $1.reward }) }   // achievements pay coins too
-            .flatMap { $0.total == lastReward ? $0 : nil }
+        if rec.isDebug {
+            lastReceipt = rec.isNap ? nil : previewReceipt(for: rec)        // 14a5: shown, never paid (`lastReward` stays 0)
+        } else {
+            let entry = rec.isNap ? nil
+                : Economy.ledger(coreResults(), calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: boxes())
+                    .last { $0.key.description == rec.keyString }
+            lastReceipt = entry.flatMap { Economy.Receipt($0, calmTotal: rec.result?.calmHoursTotal) }
+                .map { $0.addingAchievements(newAchievements.reduce(0) { $0 + $1.reward }) }   // achievements pay coins too
+                .flatMap { $0.total == lastReward ? $0 : nil }
+        }
         phase = .result
         if servicesEnabled {
             switch result.outcome {
@@ -3110,6 +3150,19 @@ final class AppModel {
             if !newAchievements.isEmpty { fx("fx_sparkle", after: Motion.t(1.8)) }
         }
     }
+
+    /// What a developer night would pay (14a5): the real ledger over the stored nights PLUS this night's own result, with no
+    /// lucky night. A preview only – nothing is stored, the balance, the town and the level do not change. The night is the
+    /// last entry of its key (the ledger orders by key, then by position, and the test night comes last).
+    func previewReceipt(for rec: NightRecord) -> Economy.Receipt? {
+        guard let result = rec.result else { return nil }
+        let entry = Economy.ledger(coreResults() + [result], calendar: calendar, breaks: streakBreaks, catalog: catalog, boxes: [])
+            .last { $0.key.description == rec.keyString }
+        return entry.flatMap { Economy.Receipt($0, calmTotal: result.calmHoursTotal) }
+    }
+
+    /// The receipt on the result screen is a preview (a developer night: the coins are not added).
+    var receiptIsPreview: Bool { shownResult?.isDebug == true && lastReceipt != nil }
 
     private func save() {
         try? context.save()

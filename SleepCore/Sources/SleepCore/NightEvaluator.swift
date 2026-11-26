@@ -20,6 +20,11 @@ public struct SleepRules: Codable, Equatable, Sendable {
     /// The default 10 is the rule of every night stored before build 9j; the app starts new nights and naps
     /// with 15 (`accidentalToleranceNow`, owner 2026-10-18) – see `SleepRules.forNewNights`.
     public var accidentalTolerance: TimeInterval = 10
+    /// The length of one "hour" of the night for the calm hours (`CalmHours`). 3600 for every real night; a developer
+    /// night that models a real one on a scale (build 14, step 14a5) has `3600 × scale`.
+    public var hourLength: TimeInterval = 3600
+    /// The length of one pause (`PausePolicy.duration` for every real night; scaled the same way as `hourLength`).
+    public var pauseLength: TimeInterval = PausePolicy.duration
     /// Detecting "left the app" takes ~3 s (lock signals arrive late); the owner gets the full
     /// `accidentalTolerance` AFTER the warning notification (owner, 2026-09-29).
     public var noticeDelay: TimeInterval = 3
@@ -115,7 +120,7 @@ public enum NightEvaluator {
         return away
             .map { (max($0.0, start), min($0.1, end), $0.2) }
             .filter { $0.0 < $0.1 }
-            .flatMap { t in subtract(calls + log.pauseIntervals, from: (t.0, t.1)).map { ($0.0, $0.1, t.2) } }
+            .flatMap { t in subtract(calls + log.pauseIntervals(length: rules.pauseLength), from: (t.0, t.1)).map { ($0.0, $0.1, t.2) } }
             .sorted { $0.0 < $1.0 }
             .map { (from: $0.0, to: $0.1, lockScreen: $0.2) }
     }

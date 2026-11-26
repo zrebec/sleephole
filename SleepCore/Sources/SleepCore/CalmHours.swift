@@ -14,14 +14,15 @@ public enum CalmHours {
         public init(calm: Int, total: Int) { self.calm = calm; self.total = total }
     }
 
-    /// The whole hours of the night as `[start, end)` pairs, from `max(bedtime + rules.setupGrace, setup end)`.
+    /// The whole hours of the night as `[start, end)` pairs, from `max(bedtime + rules.setupGrace, setup end)`, each `rules.hourLength` long.
     public static func hours(of log: NightLog, rules: SleepRules = SleepRules()) -> [(Date, Date)] {
         guard let start = log.startedAt else { return [] }
         let anchor = max(log.window.bedtime + rules.setupGrace, log.window.setupEnds(start: start, rules: rules))
         var out: [(Date, Date)] = []
         var n = 0.0
-        while anchor + (n + 1) * 3600 <= log.window.wake {
-            out.append((anchor + n * 3600, anchor + (n + 1) * 3600))
+        let hour = rules.hourLength
+        while hour > 0, anchor + (n + 1) * hour <= log.window.wake {
+            out.append((anchor + n * hour, anchor + (n + 1) * hour))
             n += 1
         }
         return out
@@ -32,7 +33,7 @@ public enum CalmHours {
     /// overlapping it. A glance with Face ID, the screen lighting up and a call spoil nothing.
     public static func count(log: NightLog, rules: SleepRules = SleepRules()) -> Count {
         let hours = hours(of: log, rules: rules)
-        var spoilers = NightEvaluator.awayIntervals(log, rules: rules) + log.pauseIntervals
+        var spoilers = NightEvaluator.awayIntervals(log, rules: rules) + log.pauseIntervals(length: rules.pauseLength)
         let lockUse = log.sortedEvents.filter { $0.kind == .usedLockScreen }.map(\.at)
         spoilers = spoilers.filter { $0.0 < $0.1 }
         let calm = hours.filter { h in

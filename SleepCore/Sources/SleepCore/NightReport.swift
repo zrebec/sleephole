@@ -106,7 +106,7 @@ public struct NightReport: Equatable, Sendable {
         if let s = awaySince { trips.append(Trip(start: s, end: nil, closedApp: closed, onLockScreen: lockScreen, notCounted: free)) }
         if let s = callSince { calls.append(Trip(start: s, end: nil)) }
         let setupEnd = setupEnds ?? .distantPast
-        let pauseWindows = log.pauseIntervals
+        let pauseWindows = log.pauseIntervals(length: rules.pauseLength)
         pauses = log.pauseStarts
         lockScreenWakes = events.filter { $0.kind == .screenOn }.map(\.at)
         setupTrips = trips.filter { $0.start < setupEnd }
