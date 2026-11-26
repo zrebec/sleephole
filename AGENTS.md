@@ -39,8 +39,9 @@ by build – the roadmap is plan §0b.
    14c3 (after 14c2); **approved, waiting for his word:** 14b1 / 14b2a / 14b2b (W7 – his lead **30s**, and nothing counts from
    the pre-alarm to the alarm on nights that had one), 14d (B49), 14e1 / 14e2 (B48), 14c1 / 14c2 (shops), 14z (release). His
    picks: full scope (~2 weeks, cut line: the shake detector → build 16), receipt "Vytrvalosť … ×1,14" + "Tvoj level 4", all
-   three extras, Debug installs A – D in the day, the later shop UX (Shop tab, cat + badge + morning line). **Done: 14-0, 14a1 (2026-11-26, the rule in SleepCore + the receipt lines, no night marked yet). Next: 14a2** (the
-   simulation). Open with him: his yes on 14a2's simulation numbers BEFORE install A; his balance noted before install A.
+   three extras, Debug installs A – D in the day, the later shop UX (Shop tab, cat + badge + morning line). **Done: 14-0, 14a1 (the rule in SleepCore + the receipt lines, no night marked yet), 14a2 (the simulation report,
+   2026-11-26). Next: 14a3** after his yes. Open with him: his yes on 14a2's numbers (asked 2026-11-26) BEFORE install A; his
+   balance noted before install A.
 
 ## Standing notes for Opus (never list them to the owner – his wish 2026-11-09)
 
