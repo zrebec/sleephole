@@ -82,11 +82,13 @@ struct SetupCountdown: View {
 /// "Pause: 9:59 left – you can leave SleepHole now": the digits do not change the width, the height is reserved for "10:00".
 struct PauseCountdown: View {
     let remaining: TimeInterval
+    /// The night's pause length (the widest text the line can show); 10 min unless the night is scaled.
+    var length: TimeInterval = PausePolicy.duration
 
     var body: some View {
         let text = L("Pause: \(NightView.countdown(remaining)) left – you can leave SleepHole now")
         ZStack(alignment: .top) {
-            line(L("Pause: \(NightView.countdown(PausePolicy.duration)) left – you can leave SleepHole now"))
+            line(L("Pause: \(NightView.countdown(length)) left – you can leave SleepHole now"))
                 .hidden().accessibilityHidden(true)
             line(text)
         }

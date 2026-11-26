@@ -1269,3 +1269,144 @@ extension AppModelTests {
         #expect(d.model.coins == 677 && d.model.records().allSatisfy { $0.coinRule == CoinRule.current })
     }
 }
+
+// MARK: - the quick night models a real one on a scale (build 14, step 14a5)
+
+@MainActor
+extension AppModelTests {
+    /// Starts the 8-minute quick night (the Developer button) at 15:00 and returns the harness; the setup lasts 15 s.
+    private func quickNight() -> Harness {
+        let h = harness(at: date(5, 15))
+        h.model.startTestNight(minutes: 8)
+        h.model.startNight()
+        return h
+    }
+
+    /// Plays the rest of a quick night: the wake time passes, the night is confirmed and the result is on screen.
+    private func finish(_ h: Harness, from start: Date) {
+        h.clock.now = start + 480 + 5; h.model.refresh()
+        #expect(h.model.confirm())
+    }
+
+    @Test func theQuickNightRunsOnAScaleOfTheSchedule() {
+        let h = quickNight()
+        let scale = h.model.active?.timeScale ?? 0
+        #expect(abs(scale - 1.0 / 60) < 1e-9)                                  // 8 min ÷ 8 h
+        #expect(h.model.active?.rules.hourLength == 3600 * scale && abs((h.model.active?.rules.hourLength ?? 0) - 60) < 1e-6)
+        #expect(abs(h.model.pauseLength - 10) < 1e-6)
+        // the other developer night: 30 min on an 8 h schedule
+        let h30 = harness(at: date(5, 15))
+        h30.model.startTestNight(minutes: 30); h30.model.startNight()
+        #expect(abs((h30.model.active?.timeScale ?? 0) - 30.0 / 480) < 1e-9)
+        // what is NOT scaled: the warning, the budget, the setup
+        let rules = h.model.active!.rules
+        #expect(rules.accidentalTolerance == 15 && rules.noticeDelay == 3 && rules.awayBudget == 30 && rules.setupGrace == 15)
+    }
+
+    @Test func aCountedTestNightARealNightAndANapAreNeverScaled() {
+        let counted = harness(at: date(5, 15))
+        counted.model.nextTestNightCounts = true
+        counted.model.startTestNight(minutes: 8); counted.model.startNight()
+        #expect(counted.model.active?.isDebug == false && counted.model.active?.timeScale == nil)
+        #expect(counted.model.active?.rules.hourLength == 3600 && counted.model.pauseLength == PausePolicy.duration)
+
+        let real = harness(at: date(5, 12))
+        real.clock.now = date(5, 22, 25); real.model.refresh(); real.model.startNight()
+        #expect(real.model.active?.timeScale == nil && real.model.active?.rules.pauseLength == 600)
+
+        let nap = harness(at: date(5, 13, 30))
+        nap.model.refresh(); nap.model.startNap()
+        #expect(nap.model.active?.isNap == true && nap.model.active?.timeScale == nil)
+    }
+
+    @Test func aPauseOnTheQuickNightLastsTenSeconds() {
+        let start = date(5, 15)
+        let h = quickNight()
+        h.clock.now = start + 100; h.model.refresh()
+        #expect(h.model.pauseBlock() == nil && h.model.nextPausePrice == 0)
+        h.model.startPause()
+        #expect(h.model.pauseEnds() == start + 110 && h.model.pauseBlock() == .running(until: start + 110))
+        h.clock.now = start + 105
+        h.model.append(.leftApp); h.clock.now = start + 108; h.model.append(.returned)       // free inside the pause
+        #expect(h.model.collapsedAt == nil && h.model.awayBudgetUse()?.used == 0)
+        h.clock.now = start + 111
+        #expect(h.model.pauseEnds() == nil)
+        // "too late": confirming opens 30 s before the wake, a pause must end by then (10 s, not 10 min)
+        let opens = start + 480 - NightWindow.testNightConfirmLead
+        #expect(h.model.pauseBlock(at: opens - 10) == nil && h.model.pauseBlock(at: opens - 9) == .tooLate(opens: opens))
+        // the pause spoils the hour [75, 135) of the quick night: 6 of 7 calm hours
+        finish(h, from: start)
+        #expect(h.model.shownResult?.result?.calmHours == 6 && h.model.shownResult?.result?.calmHoursTotal == 7)
+    }
+
+    @Test func aTripOutOfTheAppSpoilsOneOrTwoOfTheScaledHours() {
+        let start = date(5, 15)
+        let one = quickNight()                                                       // 200 s – 212 s lies in [195, 255) only
+        one.clock.now = start + 200; one.model.append(.leftApp)
+        one.clock.now = start + 212; one.model.append(.returned)
+        finish(one, from: start)
+        #expect(one.model.shownResult?.outcome == .complete)
+        #expect(one.model.shownResult?.result?.calmHours == 6 && one.model.shownResult?.result?.calmHoursTotal == 7)
+
+        let two = quickNight()                                                       // 250 s – 262 s crosses the boundary at 255 s
+        two.clock.now = start + 250; two.model.append(.leftApp)
+        two.clock.now = start + 262; two.model.append(.returned)
+        finish(two, from: start)
+        #expect(two.model.shownResult?.outcome == .complete)
+        #expect(two.model.shownResult?.result?.calmHours == 5 && two.model.shownResult?.result?.calmHoursTotal == 7)
+    }
+
+    @Test func theEndOfAQuickNightShowsAReceiptThatIsNeverPaid() {
+        let start = date(5, 15)
+        let h = quickNight()
+        let coinsBefore = h.model.coins, builtBefore = h.model.builtNights
+        finish(h, from: start)
+        #expect(h.model.shownResult?.isDebug == true && h.model.shownResult?.outcome == .complete)
+        #expect(h.model.lastReward == 0 && h.model.coins == coinsBefore && h.model.builtNights == builtBefore)
+        #expect(h.model.levelUp == nil && h.model.newAchievements.isEmpty)
+        #expect(h.model.receiptIsPreview)
+        let receipt = try! #require(h.model.lastReceipt)
+        #expect(receipt.lines.contains { $0.kind == .calmHours(calm: 7, total: 7) })
+        #expect(receipt.total > 0 && !receipt.lines.contains { $0.kind == .luckyNight || $0.kind == .achievements })
+
+        // the same night as a real marked night (a fresh town, the same 7 calm hours) pays the same lines
+        let real = harness(at: date(5, 12))
+        real.clock.now = date(5, 22, 25); real.model.refresh(); real.model.startNight()
+        real.clock.now = date(6, 6, 30) + 60; real.model.refresh()
+        #expect(real.model.confirm(code: "1234"))
+        let paid = try! #require(real.model.lastReceipt)
+        #expect(real.model.coins > 0)
+        #expect(receipt.lines == paid.lines.filter { $0.kind != .achievements })
+        // the preview goes away with the result; the balance stays
+        h.model.acknowledgeResult()
+        #expect(h.model.lastReceipt == nil && !h.model.receiptIsPreview && h.model.coins == coinsBefore)
+    }
+
+    @Test func aCountedTestNightKeepsItsRealReceipt() {
+        let h = harness(at: date(5, 15))
+        h.model.nextTestNightCounts = true
+        h.model.startTestNight(minutes: 8); h.model.startNight()
+        h.clock.now = date(5, 15) + 480 + 5; h.model.refresh()
+        #expect(h.model.confirm())
+        #expect(h.model.shownResult?.isDebug == false && !h.model.receiptIsPreview)
+        #expect(h.model.lastReward > 0 && h.model.coins > 0)
+    }
+
+    @Test func aRuinedQuickNightHasNoReceipt() {
+        let start = date(5, 15)
+        let h = quickNight()
+        h.clock.now = start + 200; h.model.append(.leftApp)
+        h.clock.now = start + 230; h.model.refresh()                             // away for 30 s: the building collapsed
+        h.clock.now = start + 235; h.model.append(.returned)
+        finish(h, from: start)
+        #expect(h.model.shownResult?.outcome == .ruins && h.model.lastReceipt == nil && h.model.lastReward == 0)
+    }
+
+    @Test func theTimeScaleHelperNeedsTwoRealWindows() {
+        let w = { (len: TimeInterval) in NightWindow(key: NightKey(date: self.date(5, 15), calendar: .current), bedtime: self.date(5, 15),
+                                                     wake: self.date(5, 15) + len) }
+        #expect(AppModel.timeScale(testNight: w(480), schedule: w(8 * 3600)) == 480.0 / (8 * 3600))
+        #expect(AppModel.timeScale(testNight: w(480), schedule: w(0)) == nil)
+        #expect(AppModel.timeScale(testNight: w(0), schedule: w(3600)) == nil)
+    }
+}

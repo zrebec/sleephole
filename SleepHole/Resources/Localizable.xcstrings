@@ -9121,28 +9121,6 @@
         }
       }
     },
-    "Quick night (4 min, %llds setup)": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quick night (4 min, %llds setup)"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rýchla noc (4 min, príprava %llds)"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rychlá noc (4 min, příprava %llds)"
-          }
-        }
-      }
-    },
     "Rain": {
       "localizations": {
         "en": {
@@ -25985,6 +25963,72 @@
           "stringUnit": {
             "state": "translated",
             "value": "Odteď ti každá noc vynese +%lld 🪙 za tvou úroveň."
+          }
+        }
+      }
+    },
+    "Quick night (8 min, %llds setup)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quick night (8 min, %llds setup)"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rýchla noc (8 min, príprava %llds)"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rychlá noc (8 min, příprava %llds)"
+          }
+        }
+      }
+    },
+    "Test night – the coins are not added.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test night – the coins are not added."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skúšobná noc – mince sa nepripíšu."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zkušební noc – mince se nepřipíšou."
+          }
+        }
+      }
+    },
+    "A test night that doesn't count runs on a scale of your schedule: in the quick night an hour lasts %@, a pause %@.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A test night that doesn't count runs on a scale of your schedule: in the quick night an hour lasts %@, a pause %@."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skúšobná noc, ktorá sa nepočíta, beží v mierke tvojho rozvrhu: v rýchlej noci trvá hodina %@, pauza %@."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zkušební noc, která se nepočítá, běží v měřítku tvého rozvrhu: v rychlé noci trvá hodina %@, pauza %@."
           }
         }
       }

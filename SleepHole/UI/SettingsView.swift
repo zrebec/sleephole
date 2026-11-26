@@ -406,10 +406,10 @@ struct SettingsView: View {
 
                 #if DEBUG                                  // developer tools never ship to testers (TestFlight = Release)
                 Section(L("Developer")) {
-                    NavigationLink(L("Plans and proposals")) { PlansView() }
+                    NavigationLink(L("Plans and proposals")) { PlansView() }.id("developer")
                     NavigationLink(L("Texts")) { TextsView() }
                     NavigationLink(L("Parcel contents")) { BoxContentsView() }
-                    Button(L("Quick night (4 min, \(Int(AppModel.debugGrace))s setup)")) { model.startTestNight() }
+                    Button(L("Quick night (8 min, \(Int(AppModel.debugGrace))s setup)")) { model.startTestNight(minutes: 8) }
                         .disabled(nightRunning)
                     Button(L("Test night (30 min, \(Int(AppModel.debugGrace))s setup)")) { model.startTestNight(minutes: 30) }
                         .disabled(nightRunning)
@@ -417,6 +417,10 @@ struct SettingsView: View {
                         .disabled(nightRunning)
                     Toggle(L("Next test night counts for the town"), isOn: $model.nextTestNightCounts)
                         .disabled(nightRunning)
+                    if let scale = model.testNightScale(minutes: 8) {         // 14a5: the quick night models a real one
+                        Text(L("A test night that doesn't count runs on a scale of your schedule: in the quick night an hour lasts \(Plural.pauseLength(3600 * scale)), a pause \(Plural.pauseLength(PausePolicy.duration * scale))."))
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
                     NavigationLink(L("Night journal")) { NightLogView() }
                     NavigationLink(L("Detection test (F2)")) { DetectionTestView() }
                     NavigationLink(L("Vibration test")) { VibrationTestView() }
@@ -438,6 +442,9 @@ struct SettingsView: View {
                                                  end: model.settings.alarmEndLevel, rise: model.settings.effectiveRiseSeconds)
                     }
                 }
+                #if DEBUG
+                if target == "developer" { proxy.scrollTo("developer", anchor: .top) }
+                #endif
                 if target == "alarm" { proxy.scrollTo("alarm", anchor: .top) }
                 if target == "alarmRise" { proxy.scrollTo("alarmRise", anchor: .top) }
                 if target == "sounds" { proxy.scrollTo("sounds", anchor: UnitPoint(x: 0.5, y: -0.004)) }

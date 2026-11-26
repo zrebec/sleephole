@@ -35,6 +35,10 @@ final class NightRecord {
     /// The coin rule the night started under (`CoinRule.current`, build 14, owner 2026-11-26). nil = a night from before
     /// build 14 (and every nap): it keeps the old pay forever – nothing may add the marker later. Optional, so the store migrates.
     var coinRule: Int?
+    /// The scale of a developer night that models a real one (build 14, step 14a5): 1 / 60 = one minute stands for an hour and
+    /// a pause lasts 10 s. Set only for a debug night that does not count for the town; nil = real time (every real night,
+    /// nap and counted test night). Never synced or backed up – debug nights are neither. Optional, so the store migrates.
+    var timeScale: Double?
     /// The seconds of warning a lock-screen trip got when the night started (`SleepRules.lockScreenTolerance`, build 9,
     /// owner 2026-10-18, B33). nil = an older night (and every nap before build 9j): it keeps 10. Optional, so the store migrates.
     var lockScreenTolerance: Double?
@@ -62,7 +66,8 @@ final class NightRecord {
     /// a unique id so it never collides with the real night of the same date.
     init(window: NightWindow, buildingId: String, isDebug: Bool, setupGrace: TimeInterval, idPrefix: String? = nil,
          isNap: Bool = false, strictLockScreen: Bool? = nil, calmHoursRule: Int? = nil,
-         lockScreenTolerance: Double? = nil, accidentalTolerance: Double? = nil, coinRule: Int? = nil) {
+         lockScreenTolerance: Double? = nil, accidentalTolerance: Double? = nil, coinRule: Int? = nil,
+         timeScale: Double? = nil) {
         self.keyString = window.key.description
         let stamp = Int(Date().timeIntervalSince1970)
         self.isNap = isNap
@@ -80,6 +85,7 @@ final class NightRecord {
         self.coinRule = coinRule
         self.lockScreenTolerance = lockScreenTolerance
         self.accidentalTolerance = accidentalTolerance
+        self.timeScale = timeScale
     }
 
     /// What every source said about this night (empty when nothing is stored).
@@ -102,6 +108,10 @@ final class NightRecord {
         if !isNap, strictLockScreen == false { r.startDeadline = SleepRules.gentleStartDeadline }
         r.lockScreenTolerance = lockScreenTolerance ?? 10
         r.accidentalTolerance = accidentalTolerance ?? 10
+        if let timeScale, timeScale > 0 {                // a scaled developer night: its hour and its pause shrink together
+            r.hourLength = 3600 * timeScale
+            r.pauseLength = PausePolicy.duration * timeScale
+        }
         return r
     }
 

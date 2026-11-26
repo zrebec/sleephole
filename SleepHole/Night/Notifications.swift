@@ -219,7 +219,7 @@ enum Notifications {
                                    lockScreen: Bool = false) -> Date? {
         guard !alreadyCollapsed, let start = log.startedAt,
               date >= log.window.setupEnds(start: start, rules: rules), date < log.window.wake,
-              PausePolicy.activeUntil(log, at: date) == nil else { return nil }
+              PausePolicy.activeUntil(log, rules: rules, at: date) == nil else { return nil }
         let fire = date + NightEvaluator.allowance(log, rules: rules, at: date, lockScreen: lockScreen)
         return fire < log.window.wake ? fire : nil
     }

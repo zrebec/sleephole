@@ -483,7 +483,7 @@ struct NightView: View {
                             rerollSection(now: now)
                             BatteryNote()
                         } else if let pauseEnds {
-                            PauseCountdown(remaining: pauseEnds.timeIntervalSince(now))
+                            PauseCountdown(remaining: pauseEnds.timeIntervalSince(now), length: model.pauseLength)
                         } else {
                             Text(L("Lock your phone and good night 🌙")).font(.callout).foregroundStyle(.secondary)
                             budgetNote(now: now)
@@ -648,8 +648,8 @@ struct NightView: View {
                 Button(L("Cancel"), role: .cancel) {}
             } message: {
                 Text(price > 0
-                     ? L("For \(Plural.minutes(PausePolicy.duration)) you can leave SleepHole. This pause costs \(price) 🪙.")
-                     : L("For \(Plural.minutes(PausePolicy.duration)) you can leave SleepHole. The first pause of a night is free – a night without any pause pays +\(PausePolicy.undisturbedBonus) 🪙."))
+                     ? L("For \(Plural.pauseLength(model.pauseLength)) you can leave SleepHole. This pause costs \(price) 🪙.")
+                     : L("For \(Plural.pauseLength(model.pauseLength)) you can leave SleepHole. The first pause of a night is free – a night without any pause pays +\(PausePolicy.undisturbedBonus) 🪙."))
             }
         }
     }
@@ -1078,6 +1078,15 @@ struct ResultView: View {
                         Text(verbatim: "+\(model.lastReward) 🪙").font(.title.bold()).foregroundStyle(Color.readableYellow)
                             .popIn(delay: 0.5)
                         if !rec.isNap, let receipt = model.lastReceipt { CoinReceiptView(receipt: receipt).appearIn(delay: 0.8) }
+                    }
+                }
+                if rec.isDebug, !rec.isNap, model.receiptIsPreview, let receipt = model.lastReceipt {
+                    // 14a5: what this developer night would pay – shown, never added
+                    VStack(spacing: 6) {
+                        CoinReceiptView(receipt: receipt).appearIn(delay: 0.8)
+                        Text(verbatim: "= \(receipt.total) 🪙").font(.headline).foregroundStyle(Color.readableYellow)
+                            .appearIn(delay: 0.9)
+                        Text(L("Test night – the coins are not added.")).font(.caption).cardCaption()
                     }
                 }
                 if !rec.isDebug { NewAchievements(achievements: model.newAchievements) }

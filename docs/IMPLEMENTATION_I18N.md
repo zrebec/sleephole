@@ -369,7 +369,7 @@ Legend: **file** relative to `SleepHole/`; `{x}` = interpolation; *plural* = nee
 | Obnovené: {n} nocí ✓ | Restored: {n} nights ✓ *plural* |
 | O appke / Poďakovanie | About / Credits |
 | Vývoj | Developer |
-| Rýchla noc (4 min, príprava {n} s) | Quick night (4 min, {n} s setup) |
+| Rýchla noc (8 min, príprava {n} s) | Quick night (8 min, {n} s setup) |
 | Testovacia noc (15 min, príprava 5 min) | Test night (15 min, 5 min setup) |
 | Ďalšia testovacia noc sa počíta do mesta | Next test night counts for the town |
 | Nočný denník / Vymazať | Night journal / Delete all |
