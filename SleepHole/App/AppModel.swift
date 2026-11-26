@@ -183,6 +183,7 @@ final class AppModel {
     ///   -selectChartNight K           Stats: select the night K places before the newest on the sleep chart (0 = newest)
     ///   -healthOn                     switch Settings → Apple Health on for this run (with -sleepSim: seeded nights get sleep data)
     ///   -openSystemAlarmTest          with -openTab settings: open Developer → System alarm test at once
+    ///   -openPreAlarmLab              DEBUG builds only, with -openTab settings: open Developer → Pre-alarm lab at once
     ///   -openSyncTest                 DEBUG builds only, with -openTab settings: open Developer → Sync test at once
     ///   -syncFolder PATH              DEBUG builds only, phase SYNC: sync with the other devices through this plain folder
     ///                                 (one file per device; without it a real iPhone uses its iCloud container, the
@@ -378,6 +379,7 @@ final class AppModel {
         let memory = SystemAlarmMemory(defaults: defaults)
         systemAlarmAt = memory.at
         systemAlarmIsSafety = memory.isSafety
+        preAlarmAt = memory.preAt
         var settings = initialSettings ?? AppSettings.load()
         if initialSettings == nil { Self.applyLaunchArguments(to: &settings, context: context) }
         self.settings = settings
@@ -1518,8 +1520,14 @@ final class AppModel {
                 finalize(rec)
             } else if now >= log.window.wake {
                 if !log.has(.alarmFired) { ringAlarm() } else { startAlarmSound() }
+                // W7 safety net: a late or relaunched app (the alarm has fired already) still ends the pre-alarm at the wake time
+                if preAlarmAt != nil, PreAlarmPlan.shouldEnd(now: now, wake: log.window.wake) { endPreAlarm(why: "wake") }
+                if preAlarmKeepAliveToken != nil, now >= log.window.wake + Self.preAlarmKeepAliveMax {
+                    endPreAlarmKeepAlive(why: "limit")
+                }
                 setPhase(.alarm)
             } else {
+                beginPreAlarmKeepAliveIfDue(now: now, rec: rec)
                 setPhase(.building)
             }
             return
@@ -1886,6 +1894,45 @@ final class AppModel {
     @ObservationIgnored private var systemAlarmQueue: Task<Void, Never>?
     @ObservationIgnored private var consentTask: Task<Void, Never>?
 
+    // MARK: the silent pre-alarm (W7, build 14b1 – Developer test nights and the lab only)
+
+    /// When the silent pre-alarm is set to fire (nil = none). 14b1: only a Developer test night (`rec.isDebug`) ever gets
+    /// one – real nights and naps never. Persisted like `systemAlarmAt` so a relaunched app can still end it.
+    private(set) var preAlarmAt: Date? {
+        didSet { SystemAlarmMemory(defaults: defaults).preAt = preAlarmAt }
+    }
+    /// The keep-alive of the pre-alarm (its OWN token – the Strict lock warning has `keepAliveToken`), nil = none open.
+    @ObservationIgnored private var preAlarmKeepAliveToken: Int?
+    /// The keep-alive was begun (or tried) for this night: it begins once, an expiry is not retried (it is a measurement).
+    @ObservationIgnored private var preAlarmKeepAliveUsed = false
+    /// Tests set these; nil = the Developer toggles in UserDefaults (never read under test).
+    @ObservationIgnored var preAlarmTestNightsOverride: Bool?
+    @ObservationIgnored var preAlarmKeepAliveOverride: Bool?
+    static let preAlarmTestNightsKey = "dev.preAlarmTestNights"
+    static let preAlarmKeepAliveKey = "dev.preAlarmKeepAlive"
+
+    /// Developer toggle "Pre-alarm in test nights" (default on in Debug builds, never on in Release or under test).
+    var preAlarmTestNightsOn: Bool {
+        #if DEBUG
+        if let preAlarmTestNightsOverride { return preAlarmTestNightsOverride }
+        if SystemAlarms.isRunningTests { return false }
+        return defaults.object(forKey: Self.preAlarmTestNightsKey) as? Bool ?? true
+        #else
+        return false
+        #endif
+    }
+
+    /// Developer toggle "Keep-alive for the pre-alarm" (default on in Debug builds).
+    var preAlarmKeepAliveOn: Bool {
+        #if DEBUG
+        if let preAlarmKeepAliveOverride { return preAlarmKeepAliveOverride }
+        if SystemAlarms.isRunningTests { return false }
+        return defaults.object(forKey: Self.preAlarmKeepAliveKey) as? Bool ?? true
+        #else
+        return false
+        #endif
+    }
+
     // MARK: the media volume and the alarm hand-over (13ac-2, B53)
 
     /// The media volume (0…1) as the one night-long observer reports it; -1 = unknown (no night services, no reading yet).
@@ -1969,7 +2016,7 @@ final class AppModel {
     /// "I'm really up": cancels the safety alarm.
     func switchOffSafetyAlarm() {
         guard systemAlarmIsSafety else { return }
-        cancelSystemAlarm(why: "safetyOff")
+        cancelSystemAlarm(why: "safetyOff", keepingPreAlarm: preAlarmAt != nil)
     }
 
     // MARK: system alarm test (Settings → Developer → System alarm test)
@@ -2008,6 +2055,46 @@ final class AppModel {
     func stopRingingSystemAlarms() {
         enqueueSystemAlarm { [weak self] in self?.systemAlarm.stopRinging() }
     }
+
+    #if DEBUG
+    // MARK: W7 lab (Settings → Developer → Pre-alarm lab, build 14b1): measurements without a night
+
+    /// Sets the silent pre-alarm `seconds` from now. With `appStopsAfter` the app ends it that long after it fires
+    /// (simulates our own alarm starting, which ends the real pre-alarm). The wait uses the wall clock: keep SleepHole open.
+    /// Returns false when nothing could be set (a night runs, or AlarmKit is not allowed).
+    @discardableResult
+    func labPreAlarm(after seconds: TimeInterval = 20, appStopsAfter stopAfter: TimeInterval? = nil) -> Bool {
+        guard active == nil, systemAlarm.consent == .allowed else { return false }
+        let at = clock.now + seconds
+        enqueueSystemAlarm { [weak self] in _ = await self?.systemAlarm.schedulePreAlarm(at: at) }
+        if let stopAfter {
+            Task { [weak self] in
+                try? await Task.sleep(for: .seconds(seconds + stopAfter))
+                self?.labStopPreAlarm()
+            }
+        }
+        return true
+    }
+
+    /// Ends ONLY the pre-alarm (the test alarm and any other alarm stay).
+    func labStopPreAlarm() {
+        enqueueSystemAlarm { [weak self] in self?.systemAlarm.endPreAlarm() }
+    }
+
+    /// "Real alarm + pre-alarm": the Developer test system alarm at +45 s AND the pre-alarm at +20 s, to see that stopping
+    /// one leaves the other (the two are stopped separately: `labStopPreAlarm()` and `labStopTestAlarmOnly()`).
+    @discardableResult
+    func labRealAndPreAlarm() -> Bool {
+        guard canTestSystemAlarm, testSystemAlarm(after: 45) else { return false }
+        return labPreAlarm(after: 20)
+    }
+
+    /// Ends ONLY the test (backup-style) alarm – `cancelTestSystemAlarm()` would end every alarm of the app.
+    func labStopTestAlarmOnly() {
+        guard testAlarmAt != nil else { return }
+        cancelSystemAlarm(why: "lab", keepingPreAlarm: true)
+    }
+    #endif
 
     /// The app became active: with no night / nap running, opening SleepHole silences a ringing safety / test alarm.
     func appBecameActive() {
@@ -2121,12 +2208,93 @@ final class AppModel {
         }
     }
 
-    private func cancelSystemAlarm(why: String = "other") {
+    /// `keepingPreAlarm`: only THE alarm goes, a waiting pre-alarm stays (`cancel()` ends every alarm of the app). The
+    /// switches pass `preAlarmAt != nil`, so without a pre-alarm it is the old `cancel()`.
+    private func cancelSystemAlarm(why: String = "other", keepingPreAlarm: Bool = false) {
         if systemAlarmAt != nil { diag.note("sysalarm", "cancel why=\(why)") }
         systemAlarmAt = nil
         systemAlarmIsSafety = false
         testAlarmTime = nil
+        if keepingPreAlarm {
+            enqueueSystemAlarm { [weak self] in self?.systemAlarm.cancelBackup() }
+            return
+        }
+        if preAlarmAt != nil {                                 // `cancel()` ends it too: the intent follows
+            endPreAlarmKeepAlive(why: "end")
+            diag.note("prealarm", "end why=\(why == "other" ? "tidy" : why)")
+            preAlarmAt = nil
+        }
         enqueueSystemAlarm { [weak self] in self?.systemAlarm.cancel() }
+    }
+
+    /// W7 (14b1): arms the silent pre-alarm for a Developer test night – and ONLY for that: never a nap, never a real
+    /// night, never a counted test night (`isDebug` is false for it). It needs AlarmKit consent already (a test night
+    /// does not ask), and it does not depend on the backup switch.
+    private func armPreAlarm(for rec: NightRecord) {
+        preAlarmKeepAliveUsed = false
+        if preAlarmAt != nil {                                 // a leftover from a night this launch never settled
+            endPreAlarmKeepAlive(why: "end")
+            preAlarmAt = nil
+            enqueueSystemAlarm { [weak self] in self?.systemAlarm.endPreAlarm() }
+        }
+        guard rec.isDebug, !rec.isNap else { return }
+        let enabled = preAlarmTestNightsOn
+        guard enabled else { diag.note("prealarm", "skip why=off"); return }
+        guard systemAlarm.consent == .allowed else { diag.note("prealarm", "skip why=consent"); return }
+        guard let at = PreAlarmPlan.fireDate(wake: rec.wake, now: clock.now, isNap: rec.isNap, enabled: enabled) else {
+            diag.note("prealarm", "skip why=late")
+            return
+        }
+        preAlarmAt = at
+        enqueueSystemAlarm { [weak self] in
+            guard let self else { return }
+            let accepted = await self.systemAlarm.schedulePreAlarm(at: at)
+            self.diag.note("prealarm", "schedule at=\(self.wakeRelative(at)) ok=\(accepted ? 1 : 0)")
+            if !accepted, self.preAlarmAt == at { self.preAlarmAt = nil }
+        }
+    }
+
+    /// Ends the pre-alarm (stops it when it rings, cancels it while it waits). `note: false` = the track's line was
+    /// written earlier (a night's end writes it before the track ends, see `notePreAlarmSettle`).
+    private func endPreAlarm(why: String, note: Bool = true) {
+        guard preAlarmAt != nil else { return }
+        if note { diag.note("prealarm", "end why=\(why)") }
+        preAlarmAt = nil
+        enqueueSystemAlarm { [weak self] in self?.systemAlarm.endPreAlarm() }
+    }
+
+    /// The keep-alive begins shortly before the pre-alarm fires, once per night (a measurement: no retry after an expiry).
+    private func beginPreAlarmKeepAliveIfDue(now: Date, rec: NightRecord) {
+        guard preAlarmAt != nil, !preAlarmKeepAliveUsed, preAlarmKeepAliveToken == nil, preAlarmKeepAliveOn,
+              now >= PreAlarmPlan.keepAliveFrom(wake: rec.wake), now < rec.wake + Self.preAlarmKeepAliveMax else { return }
+        preAlarmKeepAliveUsed = true
+        preAlarmKeepAliveToken = keepAlive.begin(name: "pre-alarm") { [weak self] in self?.preAlarmKeepAliveExpired() }
+        diag.note("prealarm", "keepalive begin")
+    }
+
+    /// The keep-alive ends at the latest this long after the wake time.
+    static let preAlarmKeepAliveMax: TimeInterval = 15
+
+    private func endPreAlarmKeepAlive(why: String) {
+        guard let token = preAlarmKeepAliveToken else { return }
+        preAlarmKeepAliveToken = nil
+        keepAlive.end(token)
+        diag.note("prealarm", "keepalive end why=\(why)")
+    }
+
+    /// iOS takes the background time away: close the task (an open one would kill the app).
+    private func preAlarmKeepAliveExpired() {
+        guard let token = preAlarmKeepAliveToken else { return }
+        preAlarmKeepAliveToken = nil
+        keepAlive.end(token)
+        diag.note("prealarm", "keepalive expired")
+    }
+
+    /// The track's lines for a night's end (written before the track ends; `settleSystemAlarm` ends the alarm itself).
+    private func notePreAlarmSettle(for rec: NightRecord) {
+        endPreAlarmKeepAlive(why: "end")
+        guard preAlarmAt != nil else { return }
+        diag.note("prealarm", "end why=\(rec.log.confirmedAt != nil ? "confirmed" : "abandoned")")
     }
 
     /// The alarm side of a night / nap that has just started. The five backup notifications are ALWAYS scheduled (belt
@@ -2146,6 +2314,7 @@ final class AppModel {
         setupEndsAt = setupEnds
         setupReminderAt = nil
         if servicesEnabled { Notifications.cancelSetupReminder() }
+        armPreAlarm(for: rec)                                 // before the guard below: it never depends on the backup switch
         guard settings.usesSystemAlarm else { return }        // switched off in Settings: no backup, no question
         switch systemAlarm.consent {
         case .allowed:
@@ -2170,7 +2339,7 @@ final class AppModel {
         guard settings.usesSystemAlarm != on else { return }
         settings.usesSystemAlarm = on
         if !on {
-            cancelSystemAlarm(why: "switchedOff")
+            cancelSystemAlarm(why: "switchedOff", keepingPreAlarm: preAlarmAt != nil)
             return
         }
         let rec = active.flatMap { $0.wake > clock.now ? $0 : nil }     // a night / nap whose own alarm has not rung yet
@@ -2236,6 +2405,7 @@ final class AppModel {
 
     private func settleSystemAlarm(for rec: NightRecord) {
         systemAlarmMoved = false
+        endPreAlarm(why: "settle", note: false)      // an early confirmation keeps the safety alarm, never the pre-alarm
         let early = !rec.isNap && rec.log.confirmedAt.map { $0 < rec.wake } == true
         if early, settings.usesSystemAlarm, systemAlarm.consent == .allowed, rec.wake > clock.now {
             scheduleSystemAlarm(at: rec.wake, safety: true)
@@ -2480,6 +2650,7 @@ final class AppModel {
         // system alarm is armed: that one rings at once instead (decided before the move below)
         let bannerSound = Notifications.alarmScreenSound(audible: alarmIsAudible, systemAlarmArmed: systemAlarmAt != nil,
                                                          alarmFile: settings.alarmSound.fileName)
+        endPreAlarm(why: "ours")                    // W7: heard or not, its job is done at the wake time – before the 13ah move below
         diag.note("notif", "alarmScreen sound=\(bannerSound == nil ? "none" : "alarm")")   // before `append`, like the line above
         // 13ah: ours cannot be heard → the armed system alarm (it lights and rings a locked iPhone) comes NOW, not at wake + 30s.
         // `systemAlarmMoved` stays false: a volume raised to 10 % while ours plays still does the normal stand-down.
@@ -2563,6 +2734,7 @@ final class AppModel {
     /// nobody hears it – then none of that happens (the notifications stay armed, the system alarm already rings at once,
     /// see `ringAlarm`) until the volume rises (`setMediaVolume`).
     func alarmSoundStarted() {
+        endPreAlarmKeepAlive(why: "sound")             // W7: our alarm plays, the app no longer needs the extra time
         guard alarmIsAudible else {
             if !alarmInaudible {
                 alarmInaudible = true
@@ -3101,6 +3273,7 @@ final class AppModel {
         noteAlarmEnd(by: rec.log.confirmedAt != nil ? "confirm" : "timeout")
         if alarmTries > 0 { diag.note("alarm.sound", "retries=\(alarmRetries) tries=\(alarmTries)") }
         noteSystemAlarmSettle(for: rec)
+        notePreAlarmSettle(for: rec)
         stopServices()
         diag.end()
         diag.prune(records())                        // the last 30 days keep their track (one pass, one save)

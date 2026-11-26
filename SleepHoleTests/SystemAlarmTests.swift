@@ -17,6 +17,9 @@ final class FakeSystemAlarm: SystemAlarm {
         case ringWarning(String, Int)
         case stopWarning
         case stopRinging
+        case schedulePre(Date)
+        case endPre
+        case cancelBackup
     }
 
     var consent: SystemAlarmConsent
@@ -35,6 +38,8 @@ final class FakeSystemAlarm: SystemAlarm {
     var warningRings: Int { events.filter { if case .ringWarning = $0 { true } else { false } }.count }
     var warningStops: Int { events.filter { $0 == .stopWarning }.count }
     var ringingStops: Int { events.filter { $0 == .stopRinging }.count }
+    var preSchedules: [Date] { events.compactMap { if case .schedulePre(let date) = $0 { date } else { nil } } }
+    var preEnds: Int { events.filter { $0 == .endPre }.count }
     func forgetEvents() { events = [] }
 
     func requestConsent() async -> SystemAlarmConsent {
@@ -57,6 +62,14 @@ final class FakeSystemAlarm: SystemAlarm {
 
     func stopWarning() { events.append(.stopWarning) }
     func stopRinging() { events.append(.stopRinging) }
+
+    func schedulePreAlarm(at date: Date) async -> Bool {
+        events.append(.schedulePre(date))
+        return accepts && consent == .allowed
+    }
+
+    func endPreAlarm() { events.append(.endPre) }
+    func cancelBackup() { events.append(.cancelBackup) }
 }
 
 /// A keep-alive that counts: the tests check that every begin has its end (B28).
@@ -64,11 +77,13 @@ final class FakeSystemAlarm: SystemAlarm {
 final class FakeKeepAlive: KeepAlive {
     private(set) var began = 0
     private(set) var ended: [Int] = []
+    private(set) var names: [String] = []
     private var expire: [Int: @MainActor () -> Void] = [:]
     var open: Int { began - ended.count }
 
     func begin(name: String, onExpire: @escaping @MainActor () -> Void) -> Int {
         began += 1
+        names.append(name)
         expire[began] = onExpire
         return began
     }
@@ -113,20 +128,20 @@ struct SystemAlarmTests {
         return s
     }
 
-    func model(_ h: Harness, alarm: FakeSystemAlarm) -> AppModel {
+    func model(_ h: Harness, alarm: FakeSystemAlarm, keepAlive: any KeepAlive = NoKeepAlive()) -> AppModel {
         AppModel(context: h.container.mainContext, catalog: sprites.catalog, clock: h.clock, settings: settings(),
-                 servicesEnabled: false, systemAlarm: alarm, defaults: h.defaults)
+                 servicesEnabled: false, systemAlarm: alarm, keepAlive: keepAlive, defaults: h.defaults)
     }
 
     /// A model that has settled: its launch housekeeping is done and the fake's log is empty.
-    func harness(consent: SystemAlarmConsent, at now: Date) async -> Harness {
+    func harness(consent: SystemAlarmConsent, at now: Date, keepAlive: any KeepAlive = NoKeepAlive()) async -> Harness {
         let suite = "sleephole-systemalarm-\(UUID().uuidString)"
         let h = Harness(container: try! ModelContainer(for: NightRecord.self, UserProgress.self, CoinSpend.self,
                                                        ScheduleChange.self, JokerRecord.self, BoxRecord.self,
                                                        configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)),
                         clock: FakeClock(now), alarm: FakeSystemAlarm(consent: consent),
                         defaults: UserDefaults(suiteName: suite)!, suite: suite)
-        h.model = model(h, alarm: h.alarm)
+        h.model = model(h, alarm: h.alarm, keepAlive: keepAlive)
         await h.model.systemAlarmIdle()
         h.alarm.forgetEvents()
         return h
