@@ -37,22 +37,22 @@ struct PreAlarmAppTests {
 
     // MARK: scheduling
 
-    @Test func aDebugNightSchedulesThePreAlarmOnceAtWakeMinus30s() async {
+    @Test func aDebugNightSchedulesThePreAlarmOnceAtWakeMinus25s() async {
         let h = await harness()
         await startDebugNight(h)
-        #expect(h.alarm.preSchedules == [wake - 30])
-        #expect(h.alarm.events == [.schedulePre(wake - 30), .schedule(wake + 30, alarmFile)])   // the backup is unchanged
-        #expect(h.model.preAlarmAt == wake - 30)
-        #expect(diagLines(h).contains("prealarm schedule at=wake-30s ok=1"))
+        #expect(h.alarm.preSchedules == [wake - 25])
+        #expect(h.alarm.events == [.schedulePre(wake - 25), .schedule(wake + 30, alarmFile)])   // the backup is unchanged
+        #expect(h.model.preAlarmAt == wake - 25)
+        #expect(diagLines(h).contains("prealarm schedule at=wake-25s ok=1"))
         h.clock.now = t0 + 100; h.model.refresh()
         await h.model.systemAlarmIdle()
         #expect(h.alarm.preSchedules.count == 1)                                  // never scheduled twice
     }
 
-    @Test func anEightMinuteQuickNightAlsoFiresAtWakeMinus30s() async {
+    @Test func anEightMinuteQuickNightAlsoFiresAtWakeMinus25s() async {
         let h = await harness()
         await startDebugNight(h, minutes: 8)
-        #expect(h.alarm.preSchedules == [t0 + 8 * 60 - 30])
+        #expect(h.alarm.preSchedules == [t0 + 8 * 60 - 25])
     }
 
     @Test func aRealNightNeverGetsOne() async {
@@ -106,7 +106,7 @@ struct PreAlarmAppTests {
 
     @Test func aNightTooShortForTheLeadSkipsWithWhyLate() async {
         let h = await harness()
-        h.model.startTestNight(minutes: 0.5, grace: 5)                          // wake in 30 s: wake − 30 s is not ahead
+        h.model.startTestNight(minutes: 0.4, grace: 5)                          // wake in 24 s: wake − 25 s is not ahead
         h.model.startNight()
         await h.model.systemAlarmIdle()
         #expect(h.alarm.preSchedules.isEmpty && h.model.preAlarmAt == nil)
@@ -117,7 +117,7 @@ struct PreAlarmAppTests {
         let h = await harness()
         h.model.settings.usesSystemAlarm = false
         await startDebugNight(h)
-        #expect(h.alarm.events == [.schedulePre(wake - 30)])
+        #expect(h.alarm.events == [.schedulePre(wake - 25)])
     }
 
     @Test func theBackupSwitchOffMidNightLeavesAWaitingPreAlarmAlone() async {
@@ -127,7 +127,7 @@ struct PreAlarmAppTests {
         h.model.setSystemAlarm(on: false)
         await h.model.systemAlarmIdle()
         #expect(h.alarm.events == [.cancelBackup])                              // never `.cancel`: that ends every alarm of the app
-        #expect(h.model.preAlarmAt == wake - 30)
+        #expect(h.model.preAlarmAt == wake - 25)
     }
 
     @Test func aRefusedPreAlarmLeavesNoIntentBehind() async {
@@ -135,7 +135,7 @@ struct PreAlarmAppTests {
         h.alarm.accepts = false
         await startDebugNight(h)
         #expect(h.model.preAlarmAt == nil)
-        #expect(diagLines(h).contains("prealarm schedule at=wake-30s ok=0"))
+        #expect(diagLines(h).contains("prealarm schedule at=wake-25s ok=0"))
     }
 
     // MARK: ending
@@ -172,7 +172,7 @@ struct PreAlarmAppTests {
         h.model.alarmSoundStarted()                                             // the hand-over, as if our sound had started
         await h.model.systemAlarmIdle()
         #expect(h.alarm.events == [.schedule(wake + 120, alarmFile)])           // moved to wake + 2 min, no .endPre, no .cancel
-        #expect(h.model.preAlarmAt == wake - 30)
+        #expect(h.model.preAlarmAt == wake - 25)
     }
 
     @Test func aTickAtOrAfterTheWakeEndsAnOrphanedPreAlarm() async {
@@ -181,7 +181,7 @@ struct PreAlarmAppTests {
         await startDebugNight(h)
         h.clock.now = wake; h.model.refresh()
         await h.model.systemAlarmIdle()
-        SystemAlarmMemory(defaults: h.defaults).preAt = wake - 30
+        SystemAlarmMemory(defaults: h.defaults).preAt = wake - 25
         h.alarm.forgetEvents()
         h.clock.now = wake + 5
         let again = base.model(h, alarm: h.alarm)                                // same store, same defaults
@@ -200,7 +200,7 @@ struct PreAlarmAppTests {
         let again = base.model(h, alarm: h.alarm)
         again.preAlarmTestNightsOverride = true
         await again.systemAlarmIdle()
-        #expect(again.preAlarmAt == wake - 30)
+        #expect(again.preAlarmAt == wake - 25)
         #expect(h.alarm.events.isEmpty)
     }
 
@@ -253,9 +253,9 @@ struct PreAlarmAppTests {
         let ka = FakeKeepAlive()
         let h = await harness(keepAlive: ka)
         await startDebugNight(h)
-        h.clock.now = wake - 34; h.model.refresh()
+        h.clock.now = wake - 29; h.model.refresh()
         #expect(ka.began == 0)
-        h.clock.now = wake - 33; h.model.refresh()
+        h.clock.now = wake - 28; h.model.refresh()
         #expect(ka.began == 1 && ka.open == 1 && ka.names == ["pre-alarm"])
         h.clock.now = wake - 20; h.model.refresh()
         #expect(ka.began == 1)                                                  // once
@@ -272,7 +272,7 @@ struct PreAlarmAppTests {
         let ka = FakeKeepAlive()
         let h = await harness(keepAlive: ka)
         await startDebugNight(h)
-        h.clock.now = wake - 33; h.model.refresh()
+        h.clock.now = wake - 28; h.model.refresh()
         h.clock.now = wake + 14; h.model.refresh()
         #expect(ka.open == 1)
         h.clock.now = wake + 15; h.model.refresh()
@@ -283,7 +283,7 @@ struct PreAlarmAppTests {
         let ka = FakeKeepAlive()
         let h = await harness(keepAlive: ka)
         await startDebugNight(h)
-        h.clock.now = wake - 33; h.model.refresh()
+        h.clock.now = wake - 28; h.model.refresh()
         ka.expireLast()
         #expect(ka.open == 0)
         h.clock.now = wake - 20; h.model.refresh()
@@ -295,7 +295,7 @@ struct PreAlarmAppTests {
         let ka = FakeKeepAlive()
         let h = await harness(keepAlive: ka)
         await startDebugNight(h)
-        h.clock.now = wake - 31; h.model.refresh()
+        h.clock.now = wake - 26; h.model.refresh()
         #expect(ka.open == 1)
         h.model.abandonNight()
         await h.model.systemAlarmIdle()
@@ -306,16 +306,16 @@ struct PreAlarmAppTests {
         let ka = FakeKeepAlive()
         let h = await harness(keepAlive: ka, keepAliveOn: false)
         await startDebugNight(h)
-        h.clock.now = wake - 31; h.model.refresh()
+        h.clock.now = wake - 26; h.model.refresh()
         #expect(ka.began == 0)
-        #expect(h.model.preAlarmAt == wake - 30)                                // the pre-alarm itself is still armed
+        #expect(h.model.preAlarmAt == wake - 25)                                // the pre-alarm itself is still armed
     }
 
     @Test func aRealNightBeginsNoKeepAlive() async {
         let ka = FakeKeepAlive()
         let h = await harness(keepAlive: ka)
         await base.startTonight(h)
-        h.clock.now = base.wake - 31; h.model.refresh()
+        h.clock.now = base.wake - 26; h.model.refresh()
         #expect(ka.began == 0)
     }
 

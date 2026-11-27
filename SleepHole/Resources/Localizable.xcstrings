@@ -26473,28 +26473,6 @@
         }
       }
     },
-    "A quick night (Developer) then sets the silent pre-alarm %llds before its wake time. Real nights, naps and counted test nights never get one. Without the keep-alive the app may be suspended while the pre-alarm rings.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A quick night (Developer) then sets the silent pre-alarm %llds before its wake time. Real nights, naps and counted test nights never get one. Without the keep-alive the app may be suspended while the pre-alarm rings."
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rýchla noc (Vývojár) potom nastaví tichý predbudík %llds pred svojím časom budenia. Skutočné noci, zdriemnutia a započítané skúšobné noci ho nikdy nemajú. Bez udržiavania appky môže byť appka počas zvonenia predbudíka uspatá."
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rychlá noc (Vývojář) pak nastaví tichý předbudík %llds před svým časem buzení. Skutečné noci, zdřímnutí a započítané zkušební noci ho nikdy nemají. Bez udržování appky může být appka během zvonění předbudíku uspána."
-          }
-        }
-      }
-    },
     "Checklist": {
       "localizations": {
         "en": {
@@ -26689,6 +26667,72 @@
           "stringUnit": {
             "state": "translated",
             "value": "B1. Vývojář → Rychlá noc, jemný režim, hraje zvuk ke spaní, iPhone zamknutý: hodinky zabzučí %llds před časem buzení, náš budík zazvoní včas, předbudík zmizí."
+          }
+        }
+      }
+    },
+    "Apple Watch buzz before the alarm": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Watch buzz before the alarm"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Watch zavibruje pred budíkom"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Watch zavibrují před budíkem"
+          }
+        }
+      }
+    },
+    "Your Apple Watch vibrates %@ before SleepHole's alarm, so waking up is gentler. The iPhone stays silent, but its screen may light up. Nothing you do in those %@ counts against the night. Needs the system alarm to be allowed. Without an Apple Watch, leave it off.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your Apple Watch vibrates %@ before SleepHole's alarm, so waking up is gentler. The iPhone stays silent, but its screen may light up. Nothing you do in those %@ counts against the night. Needs the system alarm to be allowed. Without an Apple Watch, leave it off."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Watch zavibruje %@ pred budíkom SleepHole, aby bolo prebúdzanie jemnejšie. iPhone zostane potichu, no jeho obrazovka sa môže rozsvietiť. Nič, čo v tých %@ urobíš, sa noci nepočíta. Potrebuje povolený systémový budík. Bez Apple Watch ho nechaj vypnutý."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apple Watch zavibrují %@ před budíkem SleepHole, aby bylo probouzení jemnější. iPhone zůstane potichu, ale jeho obrazovka se může rozsvítit. Nic, co v těch %@ uděláš, se noci nepočítá. Potřebuje povolený systémový budík. Bez Apple Watch ho nech vypnutý."
+          }
+        }
+      }
+    },
+    "A quick night (Developer) then sets the silent pre-alarm %llds before its wake time. A real night gets one only with the switch in Settings → Alarm, a nap never. Without the keep-alive the app may be suspended while the pre-alarm rings.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A quick night (Developer) then sets the silent pre-alarm %llds before its wake time. A real night gets one only with the switch in Settings → Alarm, a nap never. Without the keep-alive the app may be suspended while the pre-alarm rings."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rýchla noc (Vývojár) potom nastaví tichý predbudík %llds pred svojím časom budenia. Skutočná noc ho má len so zapnutým prepínačom v Nastaveniach → Budík, zdriemnutie nikdy. Bez udržiavania appky môže byť appka počas zvonenia predbudíka uspatá."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rychlá noc (Vývojář) pak nastaví tichý předbudík %llds před svým časem buzení. Skutečná noc ho má jen se zapnutým přepínačem v Nastavení → Budík, zdřímnutí nikdy. Bez udržování appky může být appka během zvonění předbudíku uspána."
           }
         }
       }

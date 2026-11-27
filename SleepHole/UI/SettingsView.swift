@@ -361,11 +361,35 @@ struct SettingsView: View {
                     }
                     .disabled(model.active != nil)
                     if let rise = SoundFX.riseHolder.state { RisePreviewLine(state: rise) }
+                    // W7 (build 14b2): a silent system alarm `PreAlarmPlan.lead` (25s) before the wake time lets an Apple Watch buzz first
+                    switch alarmConsent {
+                    case .allowed, .notAsked:
+                        Toggle(L("Apple Watch buzz before the alarm"), isOn: Binding(
+                            get: { model.settings.usesWatchBuzz },
+                            set: { on in
+                                model.setWatchBuzz(on: on)
+                                if on, alarmConsent == .notAsked {       // switching it on asks iOS right away
+                                    Task {
+                                        await model.systemAlarmIdle()
+                                        alarmConsent = model.systemAlarm.consent
+                                    }
+                                }
+                            }))
+                            .id("watchBuzz")
+                    case .denied, .unavailable:
+                        HStack {
+                            Text(L("Apple Watch buzz before the alarm"))
+                            Spacer()
+                            Text(alarmConsent.title).foregroundStyle(.secondary)
+                        }
+                        .id("watchBuzz")
+                    }
                 } header: {
                     Text(L("Alarm")).id("alarm")
                 } footer: {
                     VStack(alignment: .leading, spacing: 6) {
                         Text(model.settings.alarmSound.detail)
+                        Text(L("Your Apple Watch vibrates \(Self.secondsText(Int(PreAlarmPlan.lead))) before SleepHole's alarm, so waking up is gentler. The iPhone stays silent, but its screen may light up. Nothing you do in those \(Self.secondsText(Int(PreAlarmPlan.lead))) counts against the night. Needs the system alarm to be allowed. Without an Apple Watch, leave it off."))
                         Text(L("The percentages are a share of the phone's media volume (the buttons on the side) – SleepHole can't turn that up itself. SleepHole's alarm rings for \(Int(SleepRules.forNewNights.alarmDuration / 60)) min; then the system alarm takes over, if it is on."))
                     }
                 }
@@ -449,6 +473,7 @@ struct SettingsView: View {
                 #endif
                 if target == "alarm" { proxy.scrollTo("alarm", anchor: .top) }
                 if target == "alarmRise" { proxy.scrollTo("alarmRise", anchor: .top) }
+                if target == "watchBuzz" { proxy.scrollTo("watchBuzz", anchor: UnitPoint(x: 0.5, y: 0.35)) }
                 if target == "sounds" { proxy.scrollTo("sounds", anchor: UnitPoint(x: 0.5, y: -0.004)) }
                 if target == "health" { proxy.scrollTo("health", anchor: .top) }
                 if target == "icloud" { proxy.scrollTo("icloud", anchor: .top) }

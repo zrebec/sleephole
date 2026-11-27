@@ -3,7 +3,7 @@ import SleepCore
 import SwiftUI
 
 /// Settings → Developer → Pre-alarm lab (W7, build 14b1): measures, without a night, whether an Apple Watch buzzes for a
-/// SILENT AlarmKit alarm 30 seconds before the alarm, whether the iPhone lights up, and whether the pre-alarm leaves the
+/// SILENT AlarmKit alarm 25 seconds before the alarm (`PreAlarmPlan.lead`), whether the iPhone lights up, and whether the pre-alarm leaves the
 /// real (test) alarm alone. Nothing here touches a real night. The pre-alarm in Developer test nights has its own toggles.
 struct PreAlarmLabView: View {
     @Environment(AppModel.self) private var model
@@ -62,7 +62,7 @@ struct PreAlarmLabView: View {
                 Toggle(L("Pre-alarm in test nights"), isOn: $testNights)
                 Toggle(L("Keep-alive for the pre-alarm"), isOn: $keepAlive)
             } footer: {
-                Text(L("A quick night (Developer) then sets the silent pre-alarm \(Int(PreAlarmPlan.lead))s before its wake time. Real nights, naps and counted test nights never get one. Without the keep-alive the app may be suspended while the pre-alarm rings."))
+                Text(L("A quick night (Developer) then sets the silent pre-alarm \(Int(PreAlarmPlan.lead))s before its wake time. A real night gets one only with the switch in Settings → Alarm, a nap never. Without the keep-alive the app may be suspended while the pre-alarm rings."))
             }
             Section(L("Checklist")) {
                 Text(L("A1. Silent pre-alarm in 20s, lock the iPhone, Apple Watch on the wrist. Does the Watch buzz, and for how long (stopwatch)? Haptic only, or also a tone? Does the iPhone light up, show a full-screen alarm, make a sound or vibrate?"))

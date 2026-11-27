@@ -217,11 +217,12 @@ enum Notifications {
     /// allowance reaches the wake time (away time is clipped there). With the budget used up the allowance is 0 → `date`.
     static func collapseNoticeTime(log: NightLog, rules: SleepRules, at date: Date, alreadyCollapsed: Bool,
                                    lockScreen: Bool = false) -> Date? {
+        let countsUntil = rules.countingEnd(wake: log.window.wake)         // the wake time, or the pre-alarm's fire time (W7)
         guard !alreadyCollapsed, let start = log.startedAt,
-              date >= log.window.setupEnds(start: start, rules: rules), date < log.window.wake,
+              date >= log.window.setupEnds(start: start, rules: rules), date < countsUntil,
               PausePolicy.activeUntil(log, rules: rules, at: date) == nil else { return nil }
         let fire = date + NightEvaluator.allowance(log, rules: rules, at: date, lockScreen: lockScreen)
-        return fire < log.window.wake ? fire : nil
+        return fire < countsUntil ? fire : nil
     }
 
     /// At the alarm: a time-sensitive notification lights up the lock screen (apps cannot switch the screen on

@@ -6,14 +6,14 @@ import Testing
 @Suite struct PreAlarmTests {
     let wake = Date(timeIntervalSince1970: 1_800_000_000)
 
-    @Test func theLeadIsThirtySecondsAndTheMinimumAheadThree() {
-        #expect(PreAlarmPlan.lead == 30)
+    @Test func theLeadIsTwentyFiveSecondsAndTheMinimumAheadThree() {
+        #expect(PreAlarmPlan.lead == 25)
         #expect(PreAlarmPlan.minimumAhead == 3)
     }
 
-    @Test func aNormalNightFiresThirtySecondsBeforeTheWake() {
+    @Test func aNormalNightFiresTwentyFiveSecondsBeforeTheWake() {
         let now = wake - 8 * 3600
-        #expect(PreAlarmPlan.fireDate(wake: wake, now: now, isNap: false, enabled: true) == wake - 30)
+        #expect(PreAlarmPlan.fireDate(wake: wake, now: now, isNap: false, enabled: true) == wake - 25)
     }
 
     @Test func aNapNeverGetsOne() {
@@ -24,28 +24,28 @@ import Testing
         #expect(PreAlarmPlan.fireDate(wake: wake, now: wake - 3600, isNap: false, enabled: false) == nil)
     }
 
-    @Test func aQuickNightOfEightMinutesFiresThirtySecondsBeforeItsWake() {
+    @Test func aQuickNightOfEightMinutesFiresTwentyFiveSecondsBeforeItsWake() {
         let start = wake - 8 * 60
-        #expect(PreAlarmPlan.fireDate(wake: wake, now: start, isNap: false, enabled: true) == wake - 30)
+        #expect(PreAlarmPlan.fireDate(wake: wake, now: start, isNap: false, enabled: true) == wake - 25)
     }
 
-    @Test func aQuickNightOfFourMinutesFiresThirtySecondsBeforeItsWake() {
+    @Test func aQuickNightOfFourMinutesFiresTwentyFiveSecondsBeforeItsWake() {
         let start = wake - 4 * 60
-        #expect(PreAlarmPlan.fireDate(wake: wake, now: start, isNap: false, enabled: true) == wake - 30)
+        #expect(PreAlarmPlan.fireDate(wake: wake, now: start, isNap: false, enabled: true) == wake - 25)
     }
 
     @Test func tooCloseOrPastNothingFires() {
-        // wake - 30 must lie MORE than minimumAhead (3 s) after now
-        let boundary = wake - PreAlarmPlan.lead - PreAlarmPlan.minimumAhead          // wake - 33 s: exactly 3 s ahead
+        // wake - 25 must lie MORE than minimumAhead (3 s) after now
+        let boundary = wake - PreAlarmPlan.lead - PreAlarmPlan.minimumAhead          // wake - 28 s: exactly 3 s ahead
         #expect(PreAlarmPlan.fireDate(wake: wake, now: boundary, isNap: false, enabled: true) == nil)
-        #expect(PreAlarmPlan.fireDate(wake: wake, now: boundary - 0.5, isNap: false, enabled: true) == wake - 30)
+        #expect(PreAlarmPlan.fireDate(wake: wake, now: boundary - 0.5, isNap: false, enabled: true) == wake - 25)
         #expect(PreAlarmPlan.fireDate(wake: wake, now: boundary + 0.5, isNap: false, enabled: true) == nil)
-        #expect(PreAlarmPlan.fireDate(wake: wake, now: wake - 30, isNap: false, enabled: true) == nil)
+        #expect(PreAlarmPlan.fireDate(wake: wake, now: wake - 25, isNap: false, enabled: true) == nil)
         #expect(PreAlarmPlan.fireDate(wake: wake, now: wake + 5, isNap: false, enabled: true) == nil)
     }
 
     @Test func aNightShorterThanTheLeadPlusTheMinimumHasNone() {
-        let start = wake - 32
+        let start = wake - 27
         #expect(PreAlarmPlan.fireDate(wake: wake, now: start, isNap: false, enabled: true) == nil)
     }
 
@@ -56,6 +56,6 @@ import Testing
     }
 
     @Test func theKeepAliveStartsThreeSecondsBeforeTheFire() {
-        #expect(PreAlarmPlan.keepAliveFrom(wake: wake) == wake - 33)
+        #expect(PreAlarmPlan.keepAliveFrom(wake: wake) == wake - 28)
     }
 }

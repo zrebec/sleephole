@@ -165,7 +165,7 @@ final class AppModel {
     ///   -cityQuery Brat               pre-fill Settings → Sky → city so the real Apple Maps search runs
     ///   -riseSeconds N                set Settings → Alarm → Rise time (0, 15, 30, 45, 60, 90, 120)
     ///   -tryRise                      Settings presses "Try the rise" itself 1.5 s after it appears (screenshots, 13z)
-    ///   -scrollTo sky                 scroll Settings to the Sky section (also: alarm, alarmRise, sounds, notifications, health, icloud;
+    ///   -scrollTo sky                 scroll Settings to the Sky section (also: alarm, alarmRise, watchBuzz, sounds, notifications, health, icloud;
     ///                                 DEBUG: developer)
     ///   -autoConfirm                  SIMULATOR ONLY: a developer night is confirmed 10 s before its wake (result screenshots, 14a5;
     ///                                 e.g. with -startTestNight -testNightMinutes 1)
@@ -1468,6 +1468,7 @@ final class AppModel {
         merged.healthOn = settings.healthOn
         merged.syncOff = settings.syncOff
         merged.systemAlarmOff = settings.systemAlarmOff
+        merged.watchBuzzOn = settings.watchBuzzOn
         guard merged != settings else { return false }
         applyingMergedSettings = true
         settings = merged
@@ -1505,11 +1506,13 @@ final class AppModel {
         defer { rest.evaluate() }          // at once when the phase leaves .building or a pause starts
         applyPendingScheduleIfDue(now: now)
         // the lock-screen warning ends with its promised seconds, at the wake time and with the night
-        if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.wake }) != false {
-            endLockWarning(why: now >= deadline ? "deadline" : (active == nil ? "end" : "wake"))
+        if let deadline = lockWarningDeadline, now >= deadline || active.map({ now >= $0.rules.countingEnd(wake: $0.wake) }) != false {
+            let excused = active.map { $0.rules.countingEnd(wake: $0.wake) < $0.wake } == true       // W7: the pre-alarm has fired
+            endLockWarning(why: now >= deadline ? "deadline" : (active == nil ? "end" : excused ? "prealarm" : "wake"))
         }
         if let rec = active {
             fireSetupEndWarningIfDue(now: now)
+            withdrawWarningsAtPreAlarm(now: now, rec: rec)
             setEarlyFlags(canStartEarly: false, tonightPlayed: false)
             if !diag.setupEndNoted, diag.record === rec, let g = graceEnds, now >= g {
                 diag.setupEndNoted = true
@@ -1527,6 +1530,7 @@ final class AppModel {
                 }
                 setPhase(.alarm)
             } else {
+                endPreAlarmIfConsentLost()
                 beginPreAlarmKeepAliveIfDue(now: now, rec: rec)
                 setPhase(.building)
             }
@@ -1894,10 +1898,12 @@ final class AppModel {
     @ObservationIgnored private var systemAlarmQueue: Task<Void, Never>?
     @ObservationIgnored private var consentTask: Task<Void, Never>?
 
-    // MARK: the silent pre-alarm (W7, build 14b1 – Developer test nights and the lab only)
+    // MARK: the silent pre-alarm (W7, build 14b1 – the lab; build 14b2 – every night behind a Settings switch)
 
-    /// When the silent pre-alarm is set to fire (nil = none). 14b1: only a Developer test night (`rec.isDebug`) ever gets
-    /// one – real nights and naps never. Persisted like `systemAlarmAt` so a relaunched app can still end it.
+    /// When the silent pre-alarm is set to fire (nil = none). Since 14b2 every night (never a nap) gets one while the
+    /// per-device switch "Apple Watch buzz before the alarm" is on; a Developer test night also with the Developer toggle.
+    /// Persisted like `systemAlarmAt` so a relaunched app can still end it. The NIGHT's marker is `NightRecord.preAlarmAt`
+    /// (it stays after the pre-alarm is gone: rule 12 – nothing counts from the fire time to the wake time).
     private(set) var preAlarmAt: Date? {
         didSet { SystemAlarmMemory(defaults: defaults).preAt = preAlarmAt }
     }
@@ -1905,6 +1911,9 @@ final class AppModel {
     @ObservationIgnored private var preAlarmKeepAliveToken: Int?
     /// The keep-alive was begun (or tried) for this night: it begins once, an expiry is not retried (it is a measurement).
     @ObservationIgnored private var preAlarmKeepAliveUsed = false
+    /// Rule 12 (14b2): the warnings that were pending when the pre-alarm fired have been withdrawn (once per night).
+    @ObservationIgnored private var preAlarmExcuseApplied = false
+    @ObservationIgnored private var watchBuzzConsentTask: Task<Void, Never>?
     /// Tests set these; nil = the Developer toggles in UserDefaults (never read under test).
     @ObservationIgnored var preAlarmTestNightsOverride: Bool?
     @ObservationIgnored var preAlarmKeepAliveOverride: Bool?
@@ -1922,14 +1931,15 @@ final class AppModel {
         #endif
     }
 
-    /// Developer toggle "Keep-alive for the pre-alarm" (default on in Debug builds).
+    /// The keep-alive of the pre-alarm: always on in a Release build (14b2); in Debug builds the Developer toggle
+    /// "Keep-alive for the pre-alarm" (default on) lets run B1 of the lab be repeated without it.
     var preAlarmKeepAliveOn: Bool {
         #if DEBUG
         if let preAlarmKeepAliveOverride { return preAlarmKeepAliveOverride }
         if SystemAlarms.isRunningTests { return false }
         return defaults.object(forKey: Self.preAlarmKeepAliveKey) as? Bool ?? true
         #else
-        return false
+        return true
         #endif
     }
 
@@ -2099,6 +2109,7 @@ final class AppModel {
     /// The app became active: with no night / nap running, opening SleepHole silences a ringing safety / test alarm.
     func appBecameActive() {
         if active != nil { rereadMediaVolume() }        // 13ad: the observer may have missed a change (B53's stale reading)
+        endPreAlarmIfConsentLost()                      // W7: the Settings app may have switched AlarmKit off meanwhile
         guard active == nil else { return }
         stopRingingSystemAlarms()
         Task { await refreshSleepIfIdle() }
@@ -2178,6 +2189,7 @@ final class AppModel {
     /// Waits until every system alarm call so far has finished (tests).
     func systemAlarmIdle() async {
         await consentTask?.value
+        await watchBuzzConsentTask?.value
         await systemAlarmQueue?.value
     }
 
@@ -2223,25 +2235,35 @@ final class AppModel {
             endPreAlarmKeepAlive(why: "end")
             diag.note("prealarm", "end why=\(why == "other" ? "tidy" : why)")
             preAlarmAt = nil
+            dropPendingPreAlarmMarker()
         }
         enqueueSystemAlarm { [weak self] in self?.systemAlarm.cancel() }
     }
 
-    /// W7 (14b1): arms the silent pre-alarm for a Developer test night – and ONLY for that: never a nap, never a real
-    /// night, never a counted test night (`isDebug` is false for it). It needs AlarmKit consent already (a test night
-    /// does not ask), and it does not depend on the backup switch.
+    /// W7: arms the silent pre-alarm when a night starts (never a nap): with the per-device switch "Apple Watch buzz before
+    /// the alarm" (14b2: every night, an early start included) or – in a Developer test night – with the Developer toggle.
+    /// It needs AlarmKit consent already (a night start never asks) and it does not depend on the backup switch.
     private func armPreAlarm(for rec: NightRecord) {
         preAlarmKeepAliveUsed = false
+        preAlarmExcuseApplied = false
         if preAlarmAt != nil {                                 // a leftover from a night this launch never settled
             endPreAlarmKeepAlive(why: "end")
             preAlarmAt = nil
             enqueueSystemAlarm { [weak self] in self?.systemAlarm.endPreAlarm() }
         }
-        guard rec.isDebug, !rec.isNap else { return }
-        let enabled = preAlarmTestNightsOn
-        guard enabled else { diag.note("prealarm", "skip why=off"); return }
+        guard !rec.isNap else { return }
+        guard settings.usesWatchBuzz || (rec.isDebug && preAlarmTestNightsOn) else {
+            if rec.isDebug { diag.note("prealarm", "skip why=off") }
+            return
+        }
+        schedulePreAlarm(for: rec)
+    }
+
+    /// Sets the pre-alarm for `rec` (the guards of rule 3 after the switch): consent already allowed, `wake − lead` ahead.
+    /// AlarmKit's answer decides the night's marker: only an accepted pre-alarm excuses the seconds before the wake time.
+    private func schedulePreAlarm(for rec: NightRecord) {
         guard systemAlarm.consent == .allowed else { diag.note("prealarm", "skip why=consent"); return }
-        guard let at = PreAlarmPlan.fireDate(wake: rec.wake, now: clock.now, isNap: rec.isNap, enabled: enabled) else {
+        guard let at = PreAlarmPlan.fireDate(wake: rec.wake, now: clock.now, isNap: rec.isNap, enabled: true) else {
             diag.note("prealarm", "skip why=late")
             return
         }
@@ -2250,8 +2272,63 @@ final class AppModel {
             guard let self else { return }
             let accepted = await self.systemAlarm.schedulePreAlarm(at: at)
             self.diag.note("prealarm", "schedule at=\(self.wakeRelative(at)) ok=\(accepted ? 1 : 0)")
-            if !accepted, self.preAlarmAt == at { self.preAlarmAt = nil }
+            if accepted {
+                if self.preAlarmAt == at, self.active?.id == rec.id { rec.preAlarmAt = at; self.save() }   // rule 12's marker
+            } else if self.preAlarmAt == at {
+                self.preAlarmAt = nil
+            }
         }
+    }
+
+    /// The marker leaves the night when its pre-alarm goes BEFORE it fired (the switch off, the consent revoked, the night
+    /// ended early): no pre-alarm, no excused seconds. Once it has fired the marker stays – it is part of what the night was.
+    private func dropPendingPreAlarmMarker() {
+        guard let rec = active, let at = rec.preAlarmAt, at > clock.now else { return }
+        rec.preAlarmAt = nil
+        save()
+    }
+
+    /// The Settings switch "Apple Watch buzz before the alarm" (W7, 14b2; per device, off by default). Off ends ONLY the
+    /// pre-alarm (the backup alarm stays); on, during a night whose pre-alarm time is still ahead, sets it. Consent never
+    /// asked → asks first; denied or unavailable → the switch stays off (Settings shows why). A nap never gets one.
+    func setWatchBuzz(on: Bool) {
+        guard settings.usesWatchBuzz != on else { return }
+        if !on {
+            settings.usesWatchBuzz = false
+            endPreAlarmKeepAlive(why: "end")
+            endPreAlarm(why: "switchedOff")
+            return
+        }
+        switch systemAlarm.consent {
+        case .allowed:
+            settings.usesWatchBuzz = true
+            armPreAlarmMidNight()
+        case .notAsked:
+            watchBuzzConsentTask = Task { @MainActor [weak self] in
+                guard let self else { return }
+                let answer = await self.systemAlarm.requestConsent()
+                guard answer == .allowed else { return }       // denied: it stays off
+                self.settings.usesWatchBuzz = true
+                self.armPreAlarmMidNight()
+            }
+        case .denied, .unavailable:
+            break                                              // stays off
+        }
+    }
+
+    /// The switch went on while a night runs: schedule the pre-alarm when it is still ahead (and not already set).
+    private func armPreAlarmMidNight() {
+        guard let rec = active, !rec.isNap, preAlarmAt == nil, rec.wake > clock.now else { return }
+        preAlarmKeepAliveUsed = false
+        schedulePreAlarm(for: rec)
+    }
+
+    /// AlarmKit consent was taken away (Settings app) while a pre-alarm waits: the app notices on its next tick / when it
+    /// becomes active, ends it and drops the marker if it had not fired.
+    private func endPreAlarmIfConsentLost() {
+        guard preAlarmAt != nil, systemAlarm.consent != .allowed else { return }
+        endPreAlarmKeepAlive(why: "end")
+        endPreAlarm(why: "consent")
     }
 
     /// Ends the pre-alarm (stops it when it rings, cancels it while it waits). `note: false` = the track's line was
@@ -2260,6 +2337,7 @@ final class AppModel {
         guard preAlarmAt != nil else { return }
         if note { diag.note("prealarm", "end why=\(why)") }
         preAlarmAt = nil
+        dropPendingPreAlarmMarker()
         enqueueSystemAlarm { [weak self] in self?.systemAlarm.endPreAlarm() }
     }
 
@@ -2498,7 +2576,7 @@ final class AppModel {
         case .notAsked: "notAsked"
         case .unavailable: "unavailable"
         }
-        let alarm = "sound=\(settings.alarmSound.rawValue) start=\(settings.alarmStartPercent) end=\(settings.alarmEndPercent) rise=\(Int(settings.effectiveRiseSeconds)) sys=\(settings.usesSystemAlarm ? "on" : "off") alarmkit=\(consent)"
+        let alarm = "sound=\(settings.alarmSound.rawValue) start=\(settings.alarmStartPercent) end=\(settings.alarmEndPercent) rise=\(Int(settings.effectiveRiseSeconds)) sys=\(settings.usesSystemAlarm ? "on" : "off") alarmkit=\(consent) watch=\(settings.usesWatchBuzz ? "on" : "off")"
         if servicesEnabled {
             Task { [weak self, weak rec] in
                 let notif = await Notifications.diagnosticSummary()       // may land a moment after the other ctx lines
@@ -2968,10 +3046,17 @@ final class AppModel {
         // a `.leftApp` is stamped with the moment of `didEnterBackground`, up to 3 s before it is emitted: when a call ended
         // in between, the evaluator counts the trip from the call's end, so the warning does too
         let date = TripState.countedFrom(rec.log, at: stamped)
+        // W7 rule 12 (owner 2026-11-26): from the pre-alarm to the wake time nothing counts – no warning, no notice, no collapse
+        // (the evaluator cuts trips at `SleepRules.excusedFrom`; this is the same rule for what the app says)
+        let countsUntil = rec.rules.countingEnd(wake: rec.wake)
+        if date >= countsUntil, countsUntil < rec.wake {
+            diag.note("warn", "held why=prealarm kind=\(kind.rawValue)")
+            return
+        }
         if kind == .usedLockScreen, !rec.rules.lockScreenCollapses {
             // gentle mode (owner 2026-10-09): the lock-screen use is only logged and met with one calm reminder – no
             // system alarm, no keep-alive, no deadline, no collapse notice, no "come back" state; the building stays
-            if let graceEnds, date >= graceEnds, date < rec.wake, !alreadyCollapsed,
+            if let graceEnds, date >= graceEnds, date < countsUntil, !alreadyCollapsed,
                PausePolicy.activeUntil(rec.log, rules: rec.rules, at: date) == nil {
                 lockRemindersSent += 1
                 if servicesEnabled { Notifications.lockScreenReminder() }
@@ -2986,7 +3071,7 @@ final class AppModel {
             // inside a pause (D17) leaving is free – only remind when it is about to end
             if servicesEnabled { Notifications.pauseEnding(at: pauseEnds) }
             scheduleProjectedCollapseNotice(after: date)      // out when the pause runs out → it can collapse then
-        } else if let graceEnds, date >= graceEnds, !alreadyCollapsed, date < rec.wake {
+        } else if let graceEnds, date >= graceEnds, !alreadyCollapsed, date < countsUntil {
             // nothing counts after the wake time (away intervals are clipped to it): picking up the ringing
             // phone must not produce "Come back … or the building collapses"
             // a trip that starts with budget left is a full one (18 s for new nights); with the budget used up there is no time
@@ -3021,7 +3106,9 @@ final class AppModel {
                 nudgeLive = true
                 diag.note("warn", "nudge scheduled at=+0s secs=\(Int(left)) kind=lock")
                 if servicesEnabled { Notifications.lockScreenNudge(tolerance: left) }
-                startLockWarning(shown: left, ringFor: tripAllowance, at: date)
+                // a pre-alarm night: the warning never rings into the excused seconds (rule 12)
+                let ringFor = countsUntil < rec.wake ? min(tripAllowance, max(1, countsUntil.timeIntervalSince(date))) : tripAllowance
+                startLockWarning(shown: left, ringFor: ringFor, at: date)
             } else {
                 waitingForReturn = true
                 lastWarning = .comeBack
@@ -3068,7 +3155,7 @@ final class AppModel {
     private func scheduleSetupEndWarning(_ kind: NightEventKind, rec: NightRecord) {
         guard let graceEnds else { return }
         let fire = graceEnds + rec.rules.noticeDelay
-        guard fire < rec.wake else { return }
+        guard fire < rec.rules.countingEnd(wake: rec.wake) else { return }
         // what an earlier event of the same trip scheduled is replaced, never doubled (one warning per trip)
         if let old = setupEndWarning {
             if servicesEnabled { old.kind == .closedByOwner ? Notifications.cancelClosed() : Notifications.cancelNudge() }
@@ -3110,6 +3197,21 @@ final class AppModel {
         }
     }
 
+    /// W7 rule 12: the pre-alarm has fired – whatever the app had pending for a trip in progress is withdrawn (a "come back"
+    /// warning set for later, the collapse notice, the lock-screen warning that is ringing). Once per night; nothing new is
+    /// scheduled from now on (`warnForTrip`). A notice that was delivered before the fire time stays delivered.
+    private func withdrawWarningsAtPreAlarm(now: Date, rec: NightRecord) {
+        guard !preAlarmExcuseApplied, let fire = rec.preAlarmAt, now >= fire else { return }
+        preAlarmExcuseApplied = true
+        let pending = nudgeLive || setupEndWarning != nil || collapseNoticeAt != nil || lockWarningDeadline != nil
+        guard pending else { return }
+        diag.note("warn", "withdrawn why=prealarm")
+        cancelPendingNudge(why: "prealarm")
+        cancelCollapseNotice(why: "prealarm")
+        endLockWarning(why: "prealarm")
+        waitingForReturn = false
+    }
+
     /// The moment of the setup-end warning has come (driven by `refresh`): the notification is the OS's; here the app's own
     /// state follows – the count, the "come back" state and, in Strict mode, the lock warning for a lock-screen use.
     private func fireSetupEndWarningIfDue(now: Date) {
@@ -3117,7 +3219,7 @@ final class AppModel {
         setupEndWarning = nil
         setupEndTask?.cancel()
         setupEndTask = nil
-        guard let rec = active, now < rec.wake, now < w.fireAt + w.seconds else { return }    // already over: nothing to warn about
+        guard let rec = active, now < rec.rules.countingEnd(wake: rec.wake), now < w.fireAt + w.seconds else { return }    // already over: nothing to warn about
         switch w.kind {
         case .closedByOwner:
             break                                                   // the process is dead; the notice was the OS's

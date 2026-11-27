@@ -54,7 +54,7 @@ targets:
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
         # F6b: the system alarm (AlarmKit) asks the owner once; the Slovak text is in Resources/InfoPlist.xcstrings
-        NSAlarmKitUsageDescription: SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night. In Strict mode it also rings a short warning when the phone is used at night.
+        NSAlarmKitUsageDescription: SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night. If you switch it on, a silent alarm just before lets your Apple Watch buzz. In Strict mode it also rings a short warning when the phone is used at night.
         # HEALTH: read-only access to sleep analysis; the Slovak text is in Resources/InfoPlist.xcstrings
         NSHealthShareUsageDescription: SleepHole reads your sleep data to show when you really fell asleep next to when you went to bed. Nothing leaves your iPhone.
         # App Store Connect requires this key for any app with the HealthKit entitlement (upload refused on 2026-10-10 without it) although the app never writes.

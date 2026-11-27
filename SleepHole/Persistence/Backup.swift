@@ -98,6 +98,7 @@ struct BackupFile: Codable, Equatable {
         var accidentalTolerance: Double? = nil   // nil = a night from before build 9j: a trip out of the app gets 10 s
         var calmHoursRule: Int? = nil       // nil = a night from before the calm hours (build 8, 2026-10-15): no calm-hour coins
         var coinRule: Int? = nil            // nil = a night from before build 14 (2026-11-26): it keeps the old coin rule
+        var preAlarmAt: Date? = nil         // nil = no silent pre-alarm was set (build 14b2, W7): nothing is excused before the wake time
         // what the sleep source said (phase HEALTH) – all optional, older backups still load
         var fellAsleepAt: Date? = nil
         var sleepEndedAt: Date? = nil
@@ -136,7 +137,7 @@ extension NightRecord {
                          awaySeconds: awaySeconds, startedAt: startedAt, confirmedAt: confirmedAt,
                          finalizedAt: finalizedAt, pauses: pauses, strictLockScreen: strictLockScreen,
                          lockScreenTolerance: lockScreenTolerance, accidentalTolerance: accidentalTolerance,
-                         calmHoursRule: calmHoursRule, coinRule: coinRule,
+                         calmHoursRule: calmHoursRule, coinRule: coinRule, preAlarmAt: preAlarmAt,
                          fellAsleepAt: fellAsleepAt, sleepEndedAt: sleepEndedAt, asleepSeconds: asleepSeconds,
                          awakeSeconds: awakeSeconds, sleepSourceName: sleepSourceName, sleepReadAt: sleepReadAt,
                          sleepSourcesData: sleepSourcesData, sleepRuleVersion: sleepRuleVersion)
@@ -178,6 +179,7 @@ extension NightRecord {
         strictLockScreen = n.strictLockScreen
         calmHoursRule = n.calmHoursRule
         coinRule = n.coinRule
+        preAlarmAt = n.preAlarmAt
         lockScreenTolerance = n.lockScreenTolerance
         accidentalTolerance = n.accidentalTolerance
     }

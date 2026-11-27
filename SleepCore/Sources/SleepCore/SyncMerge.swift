@@ -79,6 +79,20 @@ public enum SyncMerge {
         }
     }
 
+    /// The pre-alarm marker (build 14b2, `NightResult`-side `NightRecord.preAlarmAt`) a merged night ends with. Two copies of the
+    /// SAME run end with the earlier non-nil marker whichever copy won (a device from before 14b2 sends the run back without
+    /// it, and it must never be lost: the night's trips would be judged differently). Two copies of DIFFERENT runs keep the
+    /// winner's marker as it is. Idempotent.
+    public static func preAlarmAt(kept: Date?, other: Date?, sameRun: Bool) -> Date? {
+        guard sameRun else { return kept }
+        switch (kept, other) {
+        case let (k?, o?): return min(k, o)
+        case (let k?, nil): return k
+        case (nil, let o?): return o
+        case (nil, nil): return nil
+        }
+    }
+
     /// For two different dates (either may be missing): the earlier one wins, a date beats no date.
     private static func earlierWins(_ a: Date?, _ b: Date?) -> Bool {
         switch (a, b) {

@@ -41,6 +41,11 @@ public struct SleepRules: Codable, Equatable, Sendable {
     /// it starts while Strict mode is off ("care instead of enforcement", owner 2026-10-09): such a lock-screen
     /// trip stays in the journal but is no away time. A `.leftApp` inside it is a normal counted trip from then on.
     public var lockScreenCollapses = true
+    /// W7 (build 14b2, owner 2026-11-26): the moment the silent pre-alarm fired on a night that had one. From then to the
+    /// wake time nothing counts against the night – no trip out of the app, no recognised phone use, no closed app: a trip
+    /// that began earlier is cut here, like every trip is cut at the wake time. nil = no pre-alarm (every night before
+    /// build 14, every nap, and every night whose switch was off): the rules are exactly as before.
+    public var excusedFrom: Date?
     /// The seconds of warning a lock-screen trip (`.usedLockScreen`, Strict mode) gets after the `noticeDelay`
     /// (owner 2026-10-18, B33: the system alarm sounds ~2.5 s late, so 10 s were not enough). The default 10 =
     /// every night stored before; new nights get 15 (`SleepRules.lockScreenToleranceNow`). A trip out of the app
@@ -58,6 +63,12 @@ public struct SleepRules: Codable, Equatable, Sendable {
         return r
     }
     public init() {}
+
+    /// The last moment that can count against a night: the wake time, or the pre-alarm's fire time when that is earlier.
+    public func countingEnd(wake: Date) -> Date {
+        guard let excusedFrom else { return wake }
+        return min(wake, excusedFrom)
+    }
 }
 
 /// How much of the night's budget of seconds out of the app is left (for the night screen).
@@ -78,7 +89,7 @@ public enum NightEvaluator {
     /// `.usedLockScreen`, so it gets the lock-screen allowance).
     static func awayTrips(_ log: NightLog, rules: SleepRules = SleepRules()) -> [(from: Date, to: Date, lockScreen: Bool)] {
         guard let start = log.startedAt else { return [] }
-        let end = log.window.wake
+        let end = rules.countingEnd(wake: log.window.wake)         // the wake time, or the pre-alarm's fire time (W7)
         var away: [(Date, Date, Bool)] = [], calls: [(Date, Date)] = []
         var awaySince: Date?, callSince: Date?
         var sinceLock = false           // the open trip began with a lock-screen use
