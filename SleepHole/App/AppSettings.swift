@@ -61,6 +61,14 @@ struct AppSettings: Codable, Equatable {
         get { systemAlarmOff != true }
         set { systemAlarmOff = newValue ? nil : true }
     }
+    /// Build 14b2 (W7, owner 2026-11-26): set when the user switched "Apple Watch buzz before the alarm" ON ON THIS DEVICE.
+    /// nil = off (the default: not everybody has a Watch). Per device, like `systemAlarmOff`: a merge keeps the local value,
+    /// toggling it is no change that gets a stamp and it is never put into a sync file. Optional so older settings load as off.
+    var watchBuzzOn: Bool?
+    var usesWatchBuzz: Bool {
+        get { watchBuzzOn == true }
+        set { watchBuzzOn = newValue ? true : nil }
+    }
     /// Setup time of a normal start in minutes (build 9, owner 2026-10-15): 5 / 10 / 15, nil = 5. Copied into every
     /// night when it starts (`NightRecord.setupGrace`), so a change never touches a running or past night. Optional
     /// so settings saved by older builds (and old backups) load as 5.

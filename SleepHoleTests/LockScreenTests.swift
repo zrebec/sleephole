@@ -597,11 +597,11 @@ struct LockScreenTests {
         await waitUntil { s.kinds.contains(.usedLockScreen) }
         await wait(0.05)
         #expect(ka.began == 1 && ka.names == ["lock-warning"])             // the warning's task is open
-        s.clock.now = wake - 33; s.model.refresh()                         // the pre-alarm's keep-alive begins
+        s.clock.now = wake - 28; s.model.refresh()                         // the pre-alarm's keep-alive begins
         #expect(ka.began == 2 && ka.open == 2 && ka.names == ["lock-warning", "pre-alarm"])
         ka.expireLast()                                                    // iOS takes the pre-alarm's time away
         #expect(ka.open == 1 && ka.ended == [2])                           // only its own token; the warning's stays
-        s.comeBack(at: wake - 30)                                          // the warning ends
+        s.comeBack(at: wake - 25)                                          // the warning ends
         await s.model.systemAlarmIdle()
         #expect(ka.open == 0 && ka.began == 2 && ka.ended == [2, 1])
     }

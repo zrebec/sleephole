@@ -35,6 +35,11 @@ final class NightRecord {
     /// The coin rule the night started under (`CoinRule.current`, build 14, owner 2026-11-26). nil = a night from before
     /// build 14 (and every nap): it keeps the old pay forever – nothing may add the marker later. Optional, so the store migrates.
     var coinRule: Int?
+    /// W7 (build 14b2, owner 2026-11-26): when the silent pre-alarm fired – or would have, it was accepted by AlarmKit – on
+    /// this night. From then to the wake time nothing counts against the night (`SleepRules.excusedFrom`). nil = no pre-alarm
+    /// (every older night, every nap, a switch that was off); cleared when the switch goes off before it fires. Optional, so
+    /// the store migrates; it travels in the backup and the sync file.
+    var preAlarmAt: Date?
     /// The scale of a developer night that models a real one (build 14, step 14a5): 1 / 60 = one minute stands for an hour and
     /// a pause lasts 10 s. Set only for a debug night that does not count for the town; nil = real time (every real night,
     /// nap and counted test night). Never synced or backed up – debug nights are neither. Optional, so the store migrates.
@@ -108,6 +113,7 @@ final class NightRecord {
         if !isNap, strictLockScreen == false { r.startDeadline = SleepRules.gentleStartDeadline }
         r.lockScreenTolerance = lockScreenTolerance ?? 10
         r.accidentalTolerance = accidentalTolerance ?? 10
+        if !isNap { r.excusedFrom = preAlarmAt }         // W7: nothing counts from the pre-alarm to the wake time
         if let timeScale, timeScale > 0 {                // a scaled developer night: its hour and its pause shrink together
             r.hourLength = 3600 * timeScale
             r.pauseLength = PausePolicy.duration * timeScale

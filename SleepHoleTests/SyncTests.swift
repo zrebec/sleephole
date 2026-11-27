@@ -622,4 +622,66 @@ struct SyncTests {
         try c.model.mergeSync([old])
         #expect(record(c, day: 1).coinRule == nil)
     }
+
+    // MARK: the pre-alarm (W7, build 14b2)
+
+    @Test func theWatchBuzzSwitchStaysOnItsDevice() throws {
+        let a = device(at: date(1, 12)), b = device(at: date(1, 12))
+        a.model.settings.usesWatchBuzz = true
+        #expect(a.model.settings.changedAt == nil)                                   // no stamped change
+        #expect(a.model.makeBackup().settings.watchBuzzOn == true)                  // the backup keeps it
+        let file = a.model.makeSyncFile()
+        #expect(file.settings.watchBuzzOn == nil)
+        #expect(!String(decoding: try file.encodedForSync(), as: UTF8.self).contains("watchBuzzOn"))
+        #expect(file.settings.hasSameSyncedValues(as: a.model.makeBackup().settings))
+        // a newer remote settings file does not switch it off, and a remote device never gets it
+        b.clock.now = date(1, 14); b.model.settings.alarmSound = .bowl
+        a.clock.now = date(1, 15)
+        #expect(try a.model.mergeSync([b.model.makeSyncFile()]))
+        #expect(a.model.settings.alarmSound == .bowl && a.model.settings.usesWatchBuzz)
+        a.model.settings.alarmSound = .birds
+        a.clock.now = date(1, 16)
+        #expect(try b.model.mergeSync([a.model.makeSyncFile()]))
+        #expect(!b.model.settings.usesWatchBuzz)
+    }
+
+    /// The pre-alarm marker of a night travels with it; an older build's copy of the same run never removes it.
+    @Test func thePreAlarmMarkerTravelsAndSurvivesACopyFromAnOldDevice() throws {
+        let a = device(at: date(1, 12)), b = device(at: date(1, 12))
+        night(a, day: 1); night(b, day: 1)
+        let ra = record(a, day: 1), rb = record(b, day: 1)
+        ra.preAlarmAt = ra.wake - 30
+        rb.preAlarmAt = nil                                                   // B is a device of a build before 14b2 …
+        rb.append(.audioResumed, at: date(2, 3))                              // … whose copy of the run has one more event
+        try a.context.save(); try b.context.save()
+        #expect(nights(a)[0].preAlarmAt == ra.wake - 30)
+
+        #expect(try a.model.mergeSync([b.model.makeSyncFile()]))              // A adopts the longer copy but keeps the marker
+        #expect(record(a, day: 1).preAlarmAt == ra.wake - 30)
+        #expect(try a.model.mergeSync([b.model.makeSyncFile()]) == false)
+        let before = record(b, day: 1).backup.events
+        #expect(try b.model.mergeSync([a.model.makeSyncFile()]))              // B's longer copy wins yet takes the marker
+        #expect(record(b, day: 1).preAlarmAt == ra.wake - 30 && record(b, day: 1).backup.events == before)
+        #expect(try b.model.mergeSync([a.model.makeSyncFile()]) == false)
+        #expect(nights(a) == nights(b))
+    }
+
+    @Test func aNewNightOnAnotherDeviceBringsItsPreAlarmMarkerAndAnOldFileHasNone() throws {
+        let a = device(at: date(1, 12)), b = device(at: date(1, 12)), c = device(at: date(1, 12))
+        night(a, day: 1)
+        record(a, day: 1).preAlarmAt = date(2, 6, 30) - 30
+        try a.context.save()
+        try b.model.mergeSync([a.model.makeSyncFile()])
+        #expect(record(b, day: 1).preAlarmAt == date(2, 6, 30) - 30)
+        #expect(record(b, day: 1).rules.excusedFrom == date(2, 6, 30) - 30)
+        // a file written by a build before 14b2 has no such key and decodes with nil
+        var json = try #require(JSONSerialization.jsonObject(with: a.model.makeSyncFile().encodedForSync()) as? [String: Any])
+        var nightsJSON = try #require(json["nights"] as? [[String: Any]])
+        for i in nightsJSON.indices { nightsJSON[i].removeValue(forKey: "preAlarmAt") }
+        json["nights"] = nightsJSON
+        let old = try BackupFile.decodeSync(JSONSerialization.data(withJSONObject: json))
+        #expect(old.nights[0].preAlarmAt == nil)
+        try c.model.mergeSync([old])
+        #expect(record(c, day: 1).preAlarmAt == nil && record(c, day: 1).rules.excusedFrom == nil)
+    }
 }

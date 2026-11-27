@@ -32,19 +32,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night. In Strict mode it also rings a short warning when the phone is used at night."
+            "value" : "SleepHole sets a system alarm as a backup, so you wake up even if iOS closes the app at night. If you switch it on, a silent alarm just before lets your Apple Watch buzz. In Strict mode it also rings a short warning when the phone is used at night."
           }
         },
         "sk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SleepHole nastaví systémový budík ako zálohu, aby ťa zobudil, aj keď iOS appku v noci ukončí. V Prísnom režime ním krátko zazvoní aj výstraha, keď telefón v noci používaš."
+            "value" : "SleepHole nastaví systémový budík ako zálohu, aby ťa zobudil, aj keď iOS appku v noci ukončí. Ak to zapneš, tichý budík tesne pred ním rozvibruje tvoje Apple Watch. V Prísnom režime ním krátko zazvoní aj výstraha, keď telefón v noci používaš."
           }
         },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SleepHole nastaví systémový budík jako zálohu, aby tě vzbudil, i když iOS aplikaci v noci ukončí. V Přísném režimu jím krátce zazvoní i výstraha, když v noci používáš telefon."
+            "value" : "SleepHole nastaví systémový budík jako zálohu, aby tě vzbudil, i když iOS aplikaci v noci ukončí. Pokud to zapneš, tichý budík těsně před ním rozvibruje tvoje Apple Watch. V Přísném režimu jím krátce zazvoní i výstraha, když v noci používáš telefon."
           }
         }
       }

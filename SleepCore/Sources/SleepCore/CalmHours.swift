@@ -34,7 +34,8 @@ public enum CalmHours {
     public static func count(log: NightLog, rules: SleepRules = SleepRules()) -> Count {
         let hours = hours(of: log, rules: rules)
         var spoilers = NightEvaluator.awayIntervals(log, rules: rules) + log.pauseIntervals(length: rules.pauseLength)
-        let lockUse = log.sortedEvents.filter { $0.kind == .usedLockScreen }.map(\.at)
+        let countsUntil = rules.countingEnd(wake: log.window.wake)    // W7: a use after the pre-alarm spoils nothing
+        let lockUse = log.sortedEvents.filter { $0.kind == .usedLockScreen && $0.at < countsUntil }.map(\.at)
         spoilers = spoilers.filter { $0.0 < $0.1 }
         let calm = hours.filter { h in
             !spoilers.contains { $0.0 < h.1 && $0.1 > h.0 } && !lockUse.contains { $0 >= h.0 && $0 < h.1 }

@@ -27,7 +27,7 @@ extension BackupFile.Night {
 
 extension BackupFile {
     /// What a device writes for the others: no debug nights, no night that is not finalized (a running one belongs to
-    /// the device that runs it), no sleep values, and not the per-device switches (`syncOff`, `systemAlarmOff`). The UI language
+    /// the device that runs it), no sleep values, and not the per-device switches (`syncOff`, `systemAlarmOff`, `watchBuzzOn`). The UI language
     /// travels, but only so that a device that has never chosen one can adopt it (`UserProgress.merge`); a device that
     /// has its own language never takes another's. The POSITION of the Apple Health switch travels as a preference (it
     /// is not health data): a normal merge keeps the local switch, only a new install (no nights of its own) takes it over
@@ -37,6 +37,7 @@ extension BackupFile {
         file.nights = nights.filter { !$0.isDebug && $0.finalizedAt != nil }.map { $0.withoutSleepValues() }
         file.settings.syncOff = nil
         file.settings.systemAlarmOff = nil
+        file.settings.watchBuzzOn = nil
         return file
     }
 
@@ -62,6 +63,7 @@ extension AppSettings {
         copy.healthOn = other.healthOn
         copy.syncOff = other.syncOff
         copy.systemAlarmOff = other.systemAlarmOff
+        copy.watchBuzzOn = other.watchBuzzOn
         return copy == other
     }
 }
@@ -112,16 +114,20 @@ enum SyncStore {
         for night in remote where !night.isDebug && night.finalizedAt != nil {
             let n = night.withoutSleepValues()               // whatever the file carries, Health values never come in
             if let local = byId[n.id] {
-                // the same run (same non-nil start) ends with the higher coin-rule marker whichever copy wins (build 14)
+                // the same run (same non-nil start) ends with the higher coin-rule marker and the earlier pre-alarm marker
+                // (build 14 / 14b2) whichever copy wins
                 let sameRun = local.startedAt != nil && local.startedAt == n.startedAt
                 if SyncMerge.keepsFirst(copy(of: local.backup), copy(of: n)) {
                     let marker = SyncMerge.coinRule(kept: local.coinRule, other: n.coinRule, sameRun: sameRun)
-                    guard marker != local.coinRule else { continue }
-                    local.coinRule = marker                  // only the marker was raised; the rest of the local copy stays
+                    let pre = SyncMerge.preAlarmAt(kept: local.preAlarmAt, other: n.preAlarmAt, sameRun: sameRun)
+                    guard marker != local.coinRule || pre != local.preAlarmAt else { continue }
+                    local.coinRule = marker                  // only the markers were raised; the rest of the local copy stays
+                    local.preAlarmAt = pre
                 } else {
-                    let had = local.coinRule
+                    let had = (coin: local.coinRule, pre: local.preAlarmAt)
                     local.adoptNight(n)                      // in place; the local sleep values stay as they are
-                    local.coinRule = SyncMerge.coinRule(kept: n.coinRule, other: had, sameRun: sameRun)
+                    local.coinRule = SyncMerge.coinRule(kept: n.coinRule, other: had.coin, sameRun: sameRun)
+                    local.preAlarmAt = SyncMerge.preAlarmAt(kept: n.preAlarmAt, other: had.pre, sameRun: sameRun)
                 }
             } else {
                 let record = NightRecord(backup: n)

@@ -76,6 +76,33 @@ struct BackupStatsTests {
         #expect(b2.townNameChangedAt == date(9, 12) && b2.schedulePromptMonth == b1.schedulePromptMonth)
     }
 
+    /// W7 (build 14b2): the pre-alarm marker and the per-device switch travel in the backup; a backup from before 14b2 loads.
+    @Test func theBackupKeepsThePreAlarmMarkerAndAnOldOneLoadsWithout() throws {
+        let (m1, c1) = model(store(), at: date(1, 12))
+        night(m1, c1, day: 1)
+        let rec = try #require(m1.records().first)
+        rec.preAlarmAt = rec.wake - 30
+        m1.settings.usesWatchBuzz = true
+        let data = try m1.makeBackup().encoded()
+        let (m2, _) = model(store(), at: date(9, 12))
+        try m2.restore(try BackupFile.decode(data))
+        #expect(m2.records().first?.preAlarmAt == rec.wake - 30)
+        #expect(m2.records().first?.rules.excusedFrom == rec.wake - 30)
+        #expect(m2.settings.usesWatchBuzz)
+        // an older build's backup: the key is simply absent
+        var json = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        var nights = try #require(json["nights"] as? [[String: Any]])
+        for i in nights.indices { nights[i].removeValue(forKey: "preAlarmAt") }
+        json["nights"] = nights
+        var settings = try #require(json["settings"] as? [String: Any])
+        settings.removeValue(forKey: "watchBuzzOn")
+        json["settings"] = settings
+        let old = try BackupFile.decode(JSONSerialization.data(withJSONObject: json))
+        let (m3, _) = model(store(), at: date(9, 12))
+        try m3.restore(old)
+        #expect(m3.records().first?.preAlarmAt == nil && m3.records().first?.rules.excusedFrom == nil && !m3.settings.usesWatchBuzz)
+    }
+
     @Test func restoreClearsAMissingTownNameAndLanguage() throws {            // B12: the backup is the whole truth
         let (empty, _) = model(store(), at: date(1, 12))
         let data = try empty.makeBackup().encoded()                              // a backup with no name and no language
