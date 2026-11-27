@@ -46,8 +46,9 @@ by build – the roadmap is plan §0b.
    confirmed; his schedule is 21:30 – 6:00 = 8.5 h, so a quick-night hour is 56s). **W7 started on his word (~11:50): today
    14b1 lab (done, merged `10bd4a6`) → install B (after 15:00) → his measurement; 14b2 + install C tomorrow; W7's first real night 27 → 28 Nov (his pick).**
    **r1 – r2 done 27 Nov: the first coin night paid 302 🪙 (7 of 8 calm hours – a 9 s lock-screen use after the setup), his OK.**
-   **Install B (14b1 alone) on his phone 27 Nov ~09:32, store identical** – his A1 – A7 + B1 done (B1: our alarm on time; A4: the pre-alarm never ends by itself; A7: the lab's app-stop failed). Open
-   for the gate: B1 without touching the pre-alarm; his yes on rule 12. 14b2 in work (worker, code only) → install C before 21:30. The build 14 page https://claude.ai/artifact/6JuUbzwX7xmrkNdo88UtsA (tests a1 – a7 now, r1 – r2 on
+   **Install B (14b1 alone) on his phone 27 Nov ~09:32, store identical** – his A1 – A7 + B1 done (B1: our alarm on time; A4: the pre-alarm never ends by itself; A7: the lab's app-stop failed). Gate
+   green ~10:25 (B1 untouched: our alarm +1.0s; the keep-alive expired at wake + 0.24s → Opus recommends lead 25s, asked); his yes on
+   rule 12 and tonight 27 → 28 = the first W7 real night. 14b2 in work (worker, code only) → install C before 21:30. The build 14 page https://claude.ai/artifact/6JuUbzwX7xmrkNdo88UtsA (tests a1 – a7 now, r1 – r2 on
    27 Nov; store `state/answers`, prefix `b14.`). Then 14b1 / 14d / 14e1 on his word.
 
 ## Standing notes for Opus (never list them to the owner – his wish 2026-11-09)
