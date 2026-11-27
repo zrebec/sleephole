@@ -36,7 +36,7 @@ by build – the roadmap is plan §0b.
    ev2 (build 13 page https://claude.ai/artifact/5iqhvUbqZ7Ux5K9Wa56cMx).
 2. **Build 14 – IN WORK since 2026-11-26 (`build/14` from `main` `7236820`; plan §10 REL "Build 14", §0b row 14).** His approval
    on https://claude.ai/artifact/1kreWXd8ufRTT2qdqkV4s6 (`state/answers` v24): **go** for 14-0, 14a1 – 14a5 (coins + B62 + the quick night) and
-   14c3 (after 14c2); **approved, waiting for his word:** 14b1 / 14b2a / 14b2b (W7 – his lead **30s**, and nothing counts from
+   14c3 (after 14c2); **approved, waiting for his word:** 14b1 / 14b2a / 14b2b (W7 – his lead **25s** (was 30s, changed 27 Nov), and nothing counts from
    the pre-alarm to the alarm on nights that had one), 14d (B49), 14e1 / 14e2 (B48), 14c1 / 14c2 (shops), 14z (release). His
    picks: full scope (~2 weeks, cut line: the shake detector → build 16), receipt "Vytrvalosť … ×1,14" + "Tvoj level 4", all
    three extras, Debug installs A – D in the day, the later shop UX (Shop tab, cat + badge + morning line). **Done: 14a complete (2026-11-26)** – 14-0, 14a1 (the rule + receipt lines), 14a2 (the simulation; his yes – formula frozen),
@@ -47,7 +47,7 @@ by build – the roadmap is plan §0b.
    14b1 lab (done, merged `10bd4a6`) → install B (after 15:00) → his measurement; 14b2 + install C tomorrow; W7's first real night 27 → 28 Nov (his pick).**
    **r1 – r2 done 27 Nov: the first coin night paid 302 🪙 (7 of 8 calm hours – a 9 s lock-screen use after the setup), his OK.**
    **Install B (14b1 alone) on his phone 27 Nov ~09:32, store identical** – his A1 – A7 + B1 done (B1: our alarm on time; A4: the pre-alarm never ends by itself; A7: the lab's app-stop failed). Gate
-   green ~10:25 (B1 untouched: our alarm +1.0s; the keep-alive expired at wake + 0.24s → Opus recommends lead 25s, asked); his yes on
+   green ~10:25 (B1 untouched: our alarm +1.0s; the keep-alive expired at wake + 0.24s → his pick ~10:40: lead 25s); his yes on
    rule 12 and tonight 27 → 28 = the first W7 real night. 14b2 in work (worker, code only) → install C before 21:30. The build 14 page https://claude.ai/artifact/6JuUbzwX7xmrkNdo88UtsA (tests a1 – a7 now, r1 – r2 on
    27 Nov; store `state/answers`, prefix `b14.`). Then 14b1 / 14d / 14e1 on his word.
 
