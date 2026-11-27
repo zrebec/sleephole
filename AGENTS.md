@@ -48,7 +48,8 @@ by build – the roadmap is plan §0b.
    **r1 – r2 done 27 Nov: the first coin night paid 302 🪙 (7 of 8 calm hours – a 9 s lock-screen use after the setup), his OK.**
    **Install B (14b1 alone) on his phone 27 Nov ~09:32, store identical** – his A1 – A7 + B1 done (B1: our alarm on time; A4: the pre-alarm never ends by itself; A7: the lab's app-stop failed). Gate
    green ~10:25 (B1 untouched: our alarm +1.0s; the keep-alive expired at wake + 0.24s → his pick ~10:40: lead 25s); his yes on
-   rule 12 and tonight 27 → 28 = the first W7 real night. 14b2 in work (worker, code only) → install C before 21:30. The build 14 page https://claude.ai/artifact/6JuUbzwX7xmrkNdo88UtsA (tests a1 – a7 now, r1 – r2 on
+   rule 12 and tonight 27 → 28 = the first W7 real night. **14b2 done (merged `9dd4820`, lead 25s, rule 12); install C pre-built**
+   → on his phone today (before 12:30 or from ~14:15), his switch on + a quick night, then the first W7 night. The build 14 page https://claude.ai/artifact/6JuUbzwX7xmrkNdo88UtsA (tests a1 – a7 now, r1 – r2 on
    27 Nov; store `state/answers`, prefix `b14.`). Then 14b1 / 14d / 14e1 on his word.
 
 ## Standing notes for Opus (never list them to the owner – his wish 2026-11-09)
