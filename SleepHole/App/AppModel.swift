@@ -169,6 +169,8 @@ final class AppModel {
     ///                                 DEBUG: developer)
     ///   -autoConfirm                  SIMULATOR ONLY: a developer night is confirmed 10 s before its wake (result screenshots, 14a5;
     ///                                 e.g. with -startTestNight -testNightMinutes 1)
+    ///   -safetyAlarmDemo              SIMULATOR ONLY, with -systemAlarm allowed: a safety alarm 3 h ahead is shown (Today's big switch,
+    ///                                 the result screen's card; screenshots, 14b4)
     ///   -systemAlarm allowed|denied|notAsked   SIMULATOR ONLY: pretend that consent for the system alarm (a silent
     ///                                 stand-in – nothing is ever scheduled with AlarmKit in the simulator)
     ///   -weather clear|cloudy|fog|rain|heavyRain|thunder|snow, -weatherTemp N, -weatherSnowCover   simulate the weather
@@ -442,6 +444,9 @@ final class AppModel {
             startNight()
         }
         if DevArgs.list.contains("-startNap"), active == nil { startNap() }
+        #if targetEnvironment(simulator)
+        if DevArgs.list.contains("-safetyAlarmDemo"), active == nil { testSystemAlarm(after: 3 * 3600) }
+        #endif
         ticker = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated {
                 self?.refresh()

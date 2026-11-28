@@ -26736,6 +26736,28 @@
           }
         }
       }
+    },
+    "You can switch it off on Today, after Continue.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can switch it off on Today, after Continue."
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vypneš ho na obrazovke Dnes, po „Pokračovať“."
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vypneš ho na obrazovce Dnes, po „Pokračovat“."
+          }
+        }
+      }
     }
   },
   "version": "1.0"
