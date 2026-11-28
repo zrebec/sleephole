@@ -283,17 +283,36 @@ struct ExpiryCard: View {
 /// After an early "I'm up" (phase F6b, bug B11): the system alarm stays on at the wake time in case the owner falls
 /// asleep again – until he switches it off. Shown on Today and on the result screen.
 struct SafetyAlarmCard: View {
+    /// `.result`: information only (step 14b4 – a half-asleep user must not confirm and switch off on one screen);
+    /// `.today`: the big, hard-to-miss switch.
+    enum Placement { case result, today }
+
     @Environment(AppModel.self) private var model
     let at: Date
+    var placement: Placement = .today
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Label(L("Safety alarm at \(Fmt.time(at))"), systemImage: "alarm.fill")
-                .font(.headline)
+                .font(placement == .today ? .title2.bold() : .headline)
             Text(L("You confirmed early – the alarm stays on in case you fall asleep again."))
                 .font(.subheadline).cardCaption()
-            Button(L("I'm really up – switch it off")) { model.switchOffSafetyAlarm() }
-                .buttonStyle(.bordered)
+            switch placement {
+            case .result:
+                Text(L("You can switch it off on Today, after Continue."))
+                    .font(.subheadline.weight(.semibold)).cardCaption()
+            case .today:
+                Button { model.switchOffSafetyAlarm() } label: {
+                    Text(L("I'm really up – switch it off"))
+                        .font(.title3.weight(.semibold))
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .tint(.indigo)
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1106,7 +1125,7 @@ struct ResultView: View {
                         .symbolEffect(.bounce, options: .repeat(3), isActive: !reduceMotion)
                 }
                 if rec.isDebug { Text(L("(quick test night – doesn't count for the town)")).font(.caption).cardCaption() }
-                if let at = model.safetyAlarmAt { SafetyAlarmCard(at: at) }
+                if let at = model.safetyAlarmAt { SafetyAlarmCard(at: at, placement: .result) }
                 Button(L("Continue")) { model.acknowledgeResult() }
                     .buttonStyle(.borderedProminent).controlSize(.large)
             }
