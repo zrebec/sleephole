@@ -129,8 +129,10 @@ struct SystemAlarmTests {
     }
 
     func model(_ h: Harness, alarm: FakeSystemAlarm, keepAlive: any KeepAlive = NoKeepAlive()) -> AppModel {
-        AppModel(context: h.container.mainContext, catalog: sprites.catalog, clock: h.clock, settings: settings(),
-                 servicesEnabled: false, systemAlarm: alarm, keepAlive: keepAlive, defaults: h.defaults)
+        let m = AppModel(context: h.container.mainContext, catalog: sprites.catalog, clock: h.clock, settings: settings(),
+                         servicesEnabled: false, systemAlarm: alarm, keepAlive: keepAlive, defaults: h.defaults)
+        m.rest.appActive = { false }                  // 14b3: a normal night – the phone is locked, SleepHole is not in front
+        return m
     }
 
     /// A model that has settled: its launch housekeeping is done and the fake's log is empty.

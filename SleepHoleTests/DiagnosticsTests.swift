@@ -389,4 +389,116 @@ struct DiagnosticsTests {
         BatteryMonitoring.set("test-b", on: false)
         #expect(!BatteryMonitoring.holds("test-a") && !BatteryMonitoring.holds("test-b"))
     }
+
+    // MARK: 14b3 – the power heartbeat
+
+    func usage(_ at: Date, cpu: Double, _ threads: [UInt64: (String, Double)]) -> UsageSample {
+        UsageSample(at: at, processCPU: cpu, threads: threads.mapValues { .init(name: $0.0, cpu: $0.1) })
+    }
+
+    let ctx = HeartbeatContext(battery: "65", state: "charging", thermal: "serious", app: "bg")
+
+    @Test func heartbeatLineFormat() {
+        let t0 = date(5, 23)
+        let prev = usage(t0, cpu: 100, [1: ("main", 50), 2: ("com.apple.AURemoteIO", 10), 3: ("x", 1)])
+        let cur = usage(t0 + 1800, cpu: 142.1, [1: ("main", 80.2), 2: ("com.apple.AURemoteIO", 16), 3: ("x", 1.05)])
+        #expect(PowerHeartbeat.line(prev: prev, cur: cur, context: ctx, maxLength: 160)
+                == "hb batt=65 state=charging thermal=serious app=bg cpu=+42.1s/1800s top=main:+30.2s,AURemoteIO:+6.0s")
+        let one = usage(t0 + 1800, cpu: 101, [1: ("main", 50.5), 2: ("other", 10.2)])
+        #expect(PowerHeartbeat.line(prev: prev, cur: one, context: ctx, maxLength: 160)
+                == "hb batt=65 state=charging thermal=serious app=bg cpu=+1.0s/1800s top=main:+0.5s,other:+0.2s")
+        let quiet = usage(t0 + 1800, cpu: 100.4, [1: ("main", 50.05)])
+        #expect(PowerHeartbeat.line(prev: prev, cur: quiet, context: ctx, maxLength: 160)
+                == "hb batt=65 state=charging thermal=serious app=bg cpu=+0.4s/1800s")
+    }
+
+    @Test func heartbeatSingleThread() {
+        let t0 = date(5, 23)
+        let prev = usage(t0, cpu: 0, [1: ("main", 0)])
+        let cur = usage(t0 + 60, cpu: 3, [1: ("main", 2.5)])
+        #expect(PowerHeartbeat.line(prev: prev, cur: cur, context: ctx, maxLength: 160).hasSuffix("cpu=+3.0s/60s top=main:+2.5s"))
+    }
+
+    @Test func heartbeatDeltas() {
+        let t0 = date(5, 23)
+        let prev = usage(t0, cpu: 100, [1: ("main", 5), 9: ("gone", 50)])
+        let cur = usage(t0 + 60, cpu: 90, [1: ("main", 5.05), 7: ("newcomer", 4)])
+        let top = PowerHeartbeat.top(prev: prev, cur: cur)
+        #expect(top.map(\.name) == ["newcomer"])           // new thread counts from 0, the vanished one is ignored
+        #expect(top[0].delta == 4)
+        #expect(PowerHeartbeat.line(prev: prev, cur: cur, context: ctx, maxLength: 160).contains("cpu=+0.0s/60s"))   // clamped
+    }
+
+    @Test func heartbeatInterval() {
+        #expect(PowerHeartbeat.interval(timeScale: nil) == 1800)
+        #expect(PowerHeartbeat.interval(timeScale: 0) == 1800)
+        #expect(PowerHeartbeat.interval(timeScale: 8.0 / 510.0) == 30)
+        #expect(PowerHeartbeat.interval(timeScale: 0.1) == 180)
+    }
+
+    @Test func heartbeatValueStaysShort() {
+        let t0 = date(5, 23)
+        let long = String(repeating: "VeryLongThreadName", count: 5)
+        let prev = usage(t0, cpu: 0, [1: ("a." + long, 0), 2: (long + " x y", 0)])
+        let cur = usage(t0 + 1800, cpu: 99999, [1: ("a." + long, 9999), 2: (long + " x y", 8888)])
+        let line = PowerHeartbeat.line(prev: prev, cur: cur, context: ctx, maxLength: 160)
+        #expect(line.count <= 160)
+        #expect(PowerHeartbeat.shortName("a." + long).count == 20)
+        #expect(!PowerHeartbeat.shortName(long + " x y").contains(" "))
+    }
+
+    @Test func heartbeatWritesOnlyWhileTracking() {
+        let r = rig(at: date(5, 22))
+        let rec = running(r)
+        let d = Diagnostics()
+        d.now = { r.clock.now }
+        var cpu = 0.0
+        d.readUsage = { at in UsageSample(at: at, processCPU: cpu, threads: [1: .init(name: "main", cpu: cpu)]) }
+        d.heartbeatContext = { HeartbeatContext(battery: "50", state: "unplugged", thermal: "nominal", app: "fg") }
+        d.heartbeat()
+        #expect(d.buffer.isEmpty)     // not tracking
+        d.begin(rec)
+        let before = rec.diagLog.entries.count
+        func lastBeat() -> String? { d.flush(); return rec.diagLog.entries.last?.v }
+        cpu = 2; r.clock.now = r.clock.now + 1800
+        d.heartbeat()
+        #expect(rec.diagLog.entries.count + d.buffer.count == before + 1)
+        #expect(lastBeat() == "hb batt=50 state=unplugged thermal=nominal app=fg cpu=+2.0s/1800s top=main:+2.0s")
+        // the baseline moves on with each beat
+        cpu = 2.5; r.clock.now = r.clock.now + 1800
+        d.heartbeat()
+        #expect(lastBeat() == "hb batt=50 state=unplugged thermal=nominal app=fg cpu=+0.5s/1800s top=main:+0.5s")
+        // a new begin restarts the baseline
+        cpu = 100
+        d.begin(rec)
+        r.clock.now = r.clock.now + 60; cpu = 101
+        d.heartbeat()
+        #expect(lastBeat() == "hb batt=50 state=unplugged thermal=nominal app=fg cpu=+1.0s/60s top=main:+1.0s")
+        d.end()
+        let n = rec.diagLog.entries.count
+        d.heartbeat()
+        #expect(d.buffer.isEmpty)
+        #expect(rec.diagLog.entries.count == n)
+    }
+
+    @Test func heartbeatSilentWhenFull() {
+        let r = rig(at: date(5, 22))
+        let rec = running(r)
+        var log = DiagLog()
+        var i = 0
+        while !log.isFull && i < 100_000 { log.append(contentsOf: [DiagEntry(at: date(5, 22), k: "x", v: "y")]); i += 1 }
+        rec.diagData = log.encoded()
+        let d = Diagnostics()
+        d.now = { r.clock.now }
+        d.begin(rec)
+        d.heartbeat()
+        #expect(d.buffer.isEmpty)
+        d.end()
+    }
+
+    @Test func realReaderSeesMainThread() {
+        let s = ProcessUsageReader.read(at: Date())
+        #expect(s.processCPU > 0)
+        #expect(s.threads.values.contains { $0.name == "main" })
+    }
 }

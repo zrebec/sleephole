@@ -274,6 +274,7 @@ struct LockScreenTests {
         s.strictMode = strict
         let m = AppModel(context: c.mainContext, catalog: SpriteLibrary.loadFromBundle().catalog!, clock: clock,
                          settings: s, servicesEnabled: false, systemAlarm: alarm, keepAlive: keepAlive)
+        m.rest.appActive = { false }                  // 14b3: a normal night – the phone is locked
         Self.kept.append(c)
         return (m, clock)
     }
