@@ -29,6 +29,9 @@ MOD = "Modular Buildings/Models/OBJ format/"
 BK = "Building Kit/Models/OBJ format/"
 SUB_VAR = "City Kit - Suburban/Models/Textures/variation-%s.png"
 COM_VAR = "City Kit - Commercial/Models/Textures/variation-%s.png"
+IND_VAR = "City Kit - Industrial/Models/Textures/variation-%s.png"
+MM = "Mini Market/Models/OBJ format/"
+RAC = "Racing Kit/Models/OBJ format/"
 
 GRASS = "#8fcf6f"
 LAWN = "#7cc26a"
@@ -97,6 +100,7 @@ NAME_EN = {
     "Mrakodrap": "Skyscraper", "Výšková budova": "High-rise", "Auto": "Car", "Cesta": "Road", "Tráva": "Grass",
     "Dlažba": "Paving", "Stavebný pozemok": "Building plot", "Lešenie": "Scaffolding", "Stavenisko": "Building site",
     "Ruina": "Ruins", "Zarastená ruina": "Overgrown ruins", "Žeriav": "Crane",
+    "Nákupné centrum": "Shopping centre", "Obchodný park": "Retail park",
 }
 
 # Czech names (build 13b), keyed like NAME_EN by the Slovak name; the app falls back to the Slovak name without one.
@@ -109,6 +113,7 @@ NAME_CS = {
     "Mrakodrap": "Mrakodrap", "Výšková budova": "Výšková budova", "Auto": "Auto", "Cesta": "Silnice", "Tráva": "Tráva",
     "Dlažba": "Dlažba", "Stavebný pozemok": "Stavební pozemek", "Lešenie": "Lešení", "Stavenisko": "Staveniště",
     "Ruina": "Ruina", "Zarastená ruina": "Zarostlá ruina", "Žeriav": "Jeřáb",
+    "Nákupné centrum": "Nákupní centrum", "Obchodný park": "Obchodní park",
 }
 
 
@@ -568,6 +573,100 @@ def buddy_recipes(P=None):
     ]
 
 
+def shop_candidates():
+    """Candidate recipes for the build 14 shops (step 14c1): shopping centre SC1-SC4, retail park RP1-RP3.
+    NOT part of recipes.json – written to shop_candidates.json and rendered into build/shop-candidates/ only,
+    so the owner can pick. Footprint 2x2 (front = +z)."""
+    out = []
+
+    def cand(rid, level, name, parts, label, text, color, sign_pos=None):
+        out.append({"id": rid, "level": level, "kind": "building", "nameSK": name, "nameEN": NAME_EN[name],
+                    "nameCS": NAME_CS[name], "footprint": [2, 2], "parts": parts,
+                    "signs": [{**sign(text, color, height=0.7), **({"pos": sign_pos} if sign_pos else {})}], "label": label})
+
+    SHOP = {"sk": "NÁKUPY", "en": "SHOPPING"}
+    SHOPS = {"sk": "OBCHODY", "en": "SHOPS"}
+    SC, RP = "#c2410c", "#0f766e"
+    cars = lambda name, x, z, rot=180: part(CAR + name, x=x, z=z, rot=rot, scale=CAR_SCALE)
+
+    def carpark(zc=0.62, lamps=True, stalls=5):
+        ps = [box(1.96, 0.02, 0.84, "#5b5e70", z=0.5)]
+        for i in range(stalls):
+            ps.append(box(0.02, 0.012, 0.34, "#f5f5f5", x=round(-0.8 + i * 1.6 / (stalls - 1), 3), z=zc, y=0.03))
+        if lamps:
+            ps += [part(RAC + "lightPostModern", x=-0.92, z=0.3, scale=0.8), part(RAC + "lightPostModern", x=0.92, z=0.3, scale=0.8)]
+        return ps
+
+    # SC1 – an industrial hall turned into a mall, with a plaza and parasols
+    for v in ("a", "b"):
+        cand("cand-sc1" + ("" if v == "a" else "-b"), 3, "Nákupné centrum", [
+            plate(2, PLAZA),
+            part(IND + "building-q", z=-0.15, scale=0.88, texture=IND_VAR % ("a" if v == "a" else "c"), center=True),
+            part(COM + "detail-parasol-a", x=-0.6, z=0.83), part(COM + "detail-parasol-b", x=-0.1, z=0.83),
+            part(SUB + "tree-large", x=0.8, z=0.8), part(SUB + "planter", x=0.45, z=0.85),
+            cars("sedan", 0.45, 0.35),
+        ], "SC1 Hala", SHOP, SC)
+    # SC2 – a shop-front building with awnings and market stalls
+    cand("cand-sc2", 3, "Nákupné centrum", [
+        plate(2, PLAZA),
+        part(COM + "building-e", z=-0.5, scale=1.1, center=True),
+        part(COM + "detail-awning-wide", x=-0.42, z=0.0, y=0.0, scale=1.1),
+        part(COM + "detail-awning-wide", x=0.42, z=0.0, y=0.0, scale=1.1),
+        part(MM + "display-fruit", x=-0.55, z=0.75, scale=0.45), part(MM + "display-bread", x=0.0, z=0.75, scale=0.45),
+        part(MM + "shopping-cart", x=0.4, z=0.8, rot=30, scale=0.6),
+        part(SUB + "tree-large", x=0.8, z=0.8), cars("sedan", 0.75, 0.3),
+    ], "SC2 Pasáž s trhom", SHOP, SC)
+    # SC3 – a department store: a tall commercial block with an entrance canopy
+    cand("cand-sc3", 3, "Nákupné centrum", [
+        plate(2, PLAZA),
+        part(COM + "building-n", z=-0.25, scale=0.78, center=True),
+        part(COM + "detail-overhang-wide", x=0, z=0.3, scale=0.9),
+        part(SUB + "tree-large", x=-0.8, z=0.75), part(SUB + "planter", x=0.78, z=0.8),
+        cars("van", -0.4, 0.75), cars("hatchback-sports", 0.4, 0.75),
+    ], "SC3 Obchodný dom", SHOP, SC)
+    # SC4 – our own mall from plain boxes + Kenney details
+    GL = "#7fa7d6"
+    cand("cand-sc4", 3, "Nákupné centrum", [
+        plate(2, PLAZA),
+        box(1.74, 0.14, 1.04, "#8d89a6", z=-0.35),                       # darker plinth / ground-floor band
+        box(1.7, 0.6, 1.0, "#e9e6f2", z=-0.35, y=0.14),                  # the two-storey body
+        box(1.76, 0.05, 1.06, "#4a4a5e", z=-0.35, y=0.74),               # dark roof edge
+        box(1.5, 0.12, 0.01, GL, z=0.155, y=0.2), box(1.5, 0.12, 0.01, GL, z=0.155, y=0.5),   # front glass bands
+        box(0.01, 0.12, 0.8, GL, x=0.855, z=-0.35, y=0.2), box(0.01, 0.12, 0.8, GL, x=0.855, z=-0.35, y=0.5),  # side bands
+        box(0.5, 0.95, 0.5, "#9fc3e8", x=0.42, z=0.1),                    # glass atrium
+        box(0.52, 0.04, 0.52, "#4a4a5e", x=0.42, z=0.1, y=0.95),
+        part(COM + "detail-overhang-wide", x=0.42, z=0.3, scale=0.9),
+        part(RAC + "lightPostModern", x=-0.9, z=0.55, scale=0.8), part(RAC + "lightPostModern", x=0.9, z=0.55, scale=0.8),
+        part(COM + "detail-parasol-a", x=-0.75, z=0.8), part(SUB + "tree-large", x=0.88, z=0.88),
+        cars("sedan", -0.2, 0.8),
+    ], "SC4 Sklenené centrum", SHOP, SC, sign_pos=[-0.62, 0.2, 0.18])
+    # RP1 – one long shed with shop doors and a car park
+    for v in ("a", "b"):
+        cand("cand-rp1" + ("" if v == "a" else "-b"), 2, "Obchodný park", [
+            part(IND + "building-s", z=-0.58, scale=0.9, texture=IND_VAR % ("a" if v == "a" else "b"), center=True),
+            *carpark(),
+            cars("sedan", -0.4, 0.62), cars("hatchback-sports", 0.0, 0.62), cars("suv", 0.4, 0.62),
+            part(MM + "shopping-cart", x=0.8, z=0.55, scale=0.6), part(SUB + "tree-small", x=0.88, z=-0.1),
+        ], "RP1 Dlhá hala", SHOPS, RP)
+    # RP2 – two separate big-box units
+    cand("cand-rp2", 2, "Obchodný park", [
+        part(IND + "building-p", x=-0.55, z=-0.6, scale=0.72, texture=IND_VAR % "a", center=True),
+        part(IND + "building-h", x=0.55, z=-0.6, scale=0.7, texture=IND_VAR % "c", center=True),
+        *carpark(stalls=4),
+        cars("sedan", -0.3, 0.62), cars("van", 0.3, 0.62),
+        part(MM + "display-fruit", x=-0.55, z=-0.02, scale=0.4),
+    ], "RP2 Dve predajne", SHOPS, RP)
+    # RP3 – a row of shops with awnings
+    cand("cand-rp3", 2, "Obchodný park", [
+        part(IND + "building-t", x=-0.5, z=-0.6, scale=0.72, center=True),
+        part(IND + "building-p", x=0.55, z=-0.6, scale=0.6, center=True),
+        part(COM + "detail-awning-wide", x=-0.5, z=-0.2, scale=0.9), part(COM + "detail-awning-wide", x=0.55, z=-0.39, scale=0.8),
+        *carpark(),
+        cars("sedan", -0.4, 0.62), cars("suv", 0.4, 0.62),
+    ], "RP3 Rad s markízami", SHOPS, RP)
+    return out
+
+
 if __name__ == "__main__":
     out = os.path.join(os.path.dirname(__file__), "recipes.json")
     with open(out, "w") as f:
@@ -582,3 +681,7 @@ if __name__ == "__main__":
     with open(bout, "w") as f:
         json.dump(buddy_recipes(), f, indent=1, ensure_ascii=False)
     print(bout, 8, "buddy frames")
+    cout = os.path.join(os.path.dirname(__file__), "shop_candidates.json")
+    with open(cout, "w") as f:
+        json.dump(shop_candidates(), f, indent=1, ensure_ascii=False)
+    print(cout, len(shop_candidates()), "shop candidates")

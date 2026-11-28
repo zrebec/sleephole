@@ -1,0 +1,1340 @@
+[
+ {
+  "id": "cand-sc1",
+  "level": 3,
+  "kind": "building",
+  "nameSK": "Nákupné centrum",
+  "nameEN": "Shopping centre",
+  "nameCS": "Nákupní centrum",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Industrial/Models/OBJ format/building-q",
+    "pos": [
+     0.201,
+     0.0,
+     -0.16
+    ],
+    "rot": 0,
+    "scale": 0.88,
+    "texture": "City Kit - Industrial/Models/Textures/variation-a.png"
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-parasol-a",
+    "pos": [
+     -0.6,
+     0.0,
+     0.83
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-parasol-b",
+    "pos": [
+     -0.1,
+     0.0,
+     0.83
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.8,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     0.45,
+     0.0,
+     0.85
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     0.45,
+     0.0,
+     0.35
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ],
+  "signs": [
+   {
+    "text": "NÁKUPY",
+    "textEN": "SHOPPING",
+    "color": "#c2410c",
+    "height": 0.7,
+    "textColor": "#ffffff"
+   }
+  ],
+  "label": "SC1 Hala"
+ },
+ {
+  "id": "cand-sc1-b",
+  "level": 3,
+  "kind": "building",
+  "nameSK": "Nákupné centrum",
+  "nameEN": "Shopping centre",
+  "nameCS": "Nákupní centrum",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Industrial/Models/OBJ format/building-q",
+    "pos": [
+     0.201,
+     0.0,
+     -0.16
+    ],
+    "rot": 0,
+    "scale": 0.88,
+    "texture": "City Kit - Industrial/Models/Textures/variation-c.png"
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-parasol-a",
+    "pos": [
+     -0.6,
+     0.0,
+     0.83
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-parasol-b",
+    "pos": [
+     -0.1,
+     0.0,
+     0.83
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.8,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     0.45,
+     0.0,
+     0.85
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     0.45,
+     0.0,
+     0.35
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ],
+  "signs": [
+   {
+    "text": "NÁKUPY",
+    "textEN": "SHOPPING",
+    "color": "#c2410c",
+    "height": 0.7,
+    "textColor": "#ffffff"
+   }
+  ],
+  "label": "SC1 Hala"
+ },
+ {
+  "id": "cand-sc2",
+  "level": 3,
+  "kind": "building",
+  "nameSK": "Nákupné centrum",
+  "nameEN": "Shopping centre",
+  "nameCS": "Nákupní centrum",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-e",
+    "pos": [
+     -0.0,
+     0.0,
+     -0.5
+    ],
+    "rot": 0,
+    "scale": 1.1
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-awning-wide",
+    "pos": [
+     -0.42,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.1
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-awning-wide",
+    "pos": [
+     0.42,
+     0.0,
+     0.0
+    ],
+    "rot": 0,
+    "scale": 1.1
+   },
+   {
+    "src": "Mini Market/Models/OBJ format/display-fruit",
+    "pos": [
+     -0.55,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 0.45
+   },
+   {
+    "src": "Mini Market/Models/OBJ format/display-bread",
+    "pos": [
+     0.0,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 0.45
+   },
+   {
+    "src": "Mini Market/Models/OBJ format/shopping-cart",
+    "pos": [
+     0.4,
+     0.0,
+     0.8
+    ],
+    "rot": 30,
+    "scale": 0.6
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.8,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     0.75,
+     0.0,
+     0.3
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ],
+  "signs": [
+   {
+    "text": "NÁKUPY",
+    "textEN": "SHOPPING",
+    "color": "#c2410c",
+    "height": 0.7,
+    "textColor": "#ffffff"
+   }
+  ],
+  "label": "SC2 Pasáž s trhom"
+ },
+ {
+  "id": "cand-sc3",
+  "level": 3,
+  "kind": "building",
+  "nameSK": "Nákupné centrum",
+  "nameEN": "Shopping centre",
+  "nameCS": "Nákupní centrum",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/building-n",
+    "pos": [
+     0.0,
+     0.0,
+     -0.25
+    ],
+    "rot": 0,
+    "scale": 0.78
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-overhang-wide",
+    "pos": [
+     0,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 0.9
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     -0.8,
+     0.0,
+     0.75
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/planter",
+    "pos": [
+     0.78,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/van",
+    "pos": [
+     -0.4,
+     0.0,
+     0.75
+    ],
+    "rot": 180,
+    "scale": 0.15
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/hatchback-sports",
+    "pos": [
+     0.4,
+     0.0,
+     0.75
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ],
+  "signs": [
+   {
+    "text": "NÁKUPY",
+    "textEN": "SHOPPING",
+    "color": "#c2410c",
+    "height": 0.7,
+    "textColor": "#ffffff"
+   }
+  ],
+  "label": "SC3 Obchodný dom"
+ },
+ {
+  "id": "cand-sc4",
+  "level": 3,
+  "kind": "building",
+  "nameSK": "Nákupné centrum",
+  "nameEN": "Shopping centre",
+  "nameCS": "Nákupní centrum",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "box": [
+     1.96,
+     0.03,
+     1.96
+    ],
+    "color": "#d8d5e3",
+    "pos": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "box": [
+     1.74,
+     0.14,
+     1.04
+    ],
+    "color": "#8d89a6",
+    "pos": [
+     0.0,
+     0.0,
+     -0.35
+    ]
+   },
+   {
+    "box": [
+     1.7,
+     0.6,
+     1.0
+    ],
+    "color": "#e9e6f2",
+    "pos": [
+     0.0,
+     0.14,
+     -0.35
+    ]
+   },
+   {
+    "box": [
+     1.76,
+     0.05,
+     1.06
+    ],
+    "color": "#4a4a5e",
+    "pos": [
+     0.0,
+     0.74,
+     -0.35
+    ]
+   },
+   {
+    "box": [
+     1.5,
+     0.12,
+     0.01
+    ],
+    "color": "#7fa7d6",
+    "pos": [
+     0.0,
+     0.2,
+     0.155
+    ]
+   },
+   {
+    "box": [
+     1.5,
+     0.12,
+     0.01
+    ],
+    "color": "#7fa7d6",
+    "pos": [
+     0.0,
+     0.5,
+     0.155
+    ]
+   },
+   {
+    "box": [
+     0.01,
+     0.12,
+     0.8
+    ],
+    "color": "#7fa7d6",
+    "pos": [
+     0.855,
+     0.2,
+     -0.35
+    ]
+   },
+   {
+    "box": [
+     0.01,
+     0.12,
+     0.8
+    ],
+    "color": "#7fa7d6",
+    "pos": [
+     0.855,
+     0.5,
+     -0.35
+    ]
+   },
+   {
+    "box": [
+     0.5,
+     0.95,
+     0.5
+    ],
+    "color": "#9fc3e8",
+    "pos": [
+     0.42,
+     0.0,
+     0.1
+    ]
+   },
+   {
+    "box": [
+     0.52,
+     0.04,
+     0.52
+    ],
+    "color": "#4a4a5e",
+    "pos": [
+     0.42,
+     0.95,
+     0.1
+    ]
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-overhang-wide",
+    "pos": [
+     0.42,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 0.9
+   },
+   {
+    "src": "Racing Kit/Models/OBJ format/lightPostModern",
+    "pos": [
+     -0.9,
+     0.0,
+     0.55
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "Racing Kit/Models/OBJ format/lightPostModern",
+    "pos": [
+     0.9,
+     0.0,
+     0.55
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-parasol-a",
+    "pos": [
+     -0.75,
+     0.0,
+     0.8
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-large",
+    "pos": [
+     0.88,
+     0.0,
+     0.88
+    ],
+    "rot": 0,
+    "scale": 1.0
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     -0.2,
+     0.0,
+     0.8
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ],
+  "signs": [
+   {
+    "text": "NÁKUPY",
+    "textEN": "SHOPPING",
+    "color": "#c2410c",
+    "height": 0.7,
+    "textColor": "#ffffff",
+    "pos": [
+     -0.62,
+     0.2,
+     0.18
+    ]
+   }
+  ],
+  "label": "SC4 Sklenené centrum"
+ },
+ {
+  "id": "cand-rp1",
+  "level": 2,
+  "kind": "building",
+  "nameSK": "Obchodný park",
+  "nameEN": "Retail park",
+  "nameCS": "Obchodní park",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Industrial/Models/OBJ format/building-s",
+    "pos": [
+     0.009,
+     0.0,
+     -0.58
+    ],
+    "rot": 0,
+    "scale": 0.9,
+    "texture": "City Kit - Industrial/Models/Textures/variation-a.png"
+   },
+   {
+    "box": [
+     1.96,
+     0.02,
+     0.84
+    ],
+    "color": "#5b5e70",
+    "pos": [
+     0.0,
+     0.0,
+     0.5
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     -0.8,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     -0.4,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.0,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.4,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.8,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "src": "Racing Kit/Models/OBJ format/lightPostModern",
+    "pos": [
+     -0.92,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "Racing Kit/Models/OBJ format/lightPostModern",
+    "pos": [
+     0.92,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     -0.4,
+     0.0,
+     0.62
+    ],
+    "rot": 180,
+    "scale": 0.15
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/hatchback-sports",
+    "pos": [
+     0.0,
+     0.0,
+     0.62
+    ],
+    "rot": 180,
+    "scale": 0.15
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/suv",
+    "pos": [
+     0.4,
+     0.0,
+     0.62
+    ],
+    "rot": 180,
+    "scale": 0.15
+   },
+   {
+    "src": "Mini Market/Models/OBJ format/shopping-cart",
+    "pos": [
+     0.8,
+     0.0,
+     0.55
+    ],
+    "rot": 0,
+    "scale": 0.6
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-small",
+    "pos": [
+     0.88,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "signs": [
+   {
+    "text": "OBCHODY",
+    "textEN": "SHOPS",
+    "color": "#0f766e",
+    "height": 0.7,
+    "textColor": "#ffffff"
+   }
+  ],
+  "label": "RP1 Dlhá hala"
+ },
+ {
+  "id": "cand-rp1-b",
+  "level": 2,
+  "kind": "building",
+  "nameSK": "Obchodný park",
+  "nameEN": "Retail park",
+  "nameCS": "Obchodní park",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Industrial/Models/OBJ format/building-s",
+    "pos": [
+     0.009,
+     0.0,
+     -0.58
+    ],
+    "rot": 0,
+    "scale": 0.9,
+    "texture": "City Kit - Industrial/Models/Textures/variation-b.png"
+   },
+   {
+    "box": [
+     1.96,
+     0.02,
+     0.84
+    ],
+    "color": "#5b5e70",
+    "pos": [
+     0.0,
+     0.0,
+     0.5
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     -0.8,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     -0.4,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.0,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.4,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.8,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "src": "Racing Kit/Models/OBJ format/lightPostModern",
+    "pos": [
+     -0.92,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "Racing Kit/Models/OBJ format/lightPostModern",
+    "pos": [
+     0.92,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     -0.4,
+     0.0,
+     0.62
+    ],
+    "rot": 180,
+    "scale": 0.15
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/hatchback-sports",
+    "pos": [
+     0.0,
+     0.0,
+     0.62
+    ],
+    "rot": 180,
+    "scale": 0.15
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/suv",
+    "pos": [
+     0.4,
+     0.0,
+     0.62
+    ],
+    "rot": 180,
+    "scale": 0.15
+   },
+   {
+    "src": "Mini Market/Models/OBJ format/shopping-cart",
+    "pos": [
+     0.8,
+     0.0,
+     0.55
+    ],
+    "rot": 0,
+    "scale": 0.6
+   },
+   {
+    "src": "City Kit - Suburban/Models/OBJ format/tree-small",
+    "pos": [
+     0.88,
+     0.0,
+     -0.1
+    ],
+    "rot": 0,
+    "scale": 1.0
+   }
+  ],
+  "signs": [
+   {
+    "text": "OBCHODY",
+    "textEN": "SHOPS",
+    "color": "#0f766e",
+    "height": 0.7,
+    "textColor": "#ffffff"
+   }
+  ],
+  "label": "RP1 Dlhá hala"
+ },
+ {
+  "id": "cand-rp2",
+  "level": 2,
+  "kind": "building",
+  "nameSK": "Obchodný park",
+  "nameEN": "Retail park",
+  "nameCS": "Obchodní park",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Industrial/Models/OBJ format/building-p",
+    "pos": [
+     -0.55,
+     0.0,
+     -0.6
+    ],
+    "rot": 0,
+    "scale": 0.72,
+    "texture": "City Kit - Industrial/Models/Textures/variation-a.png"
+   },
+   {
+    "src": "City Kit - Industrial/Models/OBJ format/building-h",
+    "pos": [
+     0.957,
+     0.0,
+     -0.795
+    ],
+    "rot": 0,
+    "scale": 0.7,
+    "texture": "City Kit - Industrial/Models/Textures/variation-c.png"
+   },
+   {
+    "box": [
+     1.96,
+     0.02,
+     0.84
+    ],
+    "color": "#5b5e70",
+    "pos": [
+     0.0,
+     0.0,
+     0.5
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     -0.8,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     -0.267,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.267,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.8,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "src": "Racing Kit/Models/OBJ format/lightPostModern",
+    "pos": [
+     -0.92,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "Racing Kit/Models/OBJ format/lightPostModern",
+    "pos": [
+     0.92,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     -0.3,
+     0.0,
+     0.62
+    ],
+    "rot": 180,
+    "scale": 0.15
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/van",
+    "pos": [
+     0.3,
+     0.0,
+     0.62
+    ],
+    "rot": 180,
+    "scale": 0.15
+   },
+   {
+    "src": "Mini Market/Models/OBJ format/display-fruit",
+    "pos": [
+     -0.55,
+     0.0,
+     -0.02
+    ],
+    "rot": 0,
+    "scale": 0.4
+   }
+  ],
+  "signs": [
+   {
+    "text": "OBCHODY",
+    "textEN": "SHOPS",
+    "color": "#0f766e",
+    "height": 0.7,
+    "textColor": "#ffffff"
+   }
+  ],
+  "label": "RP2 Dve predajne"
+ },
+ {
+  "id": "cand-rp3",
+  "level": 2,
+  "kind": "building",
+  "nameSK": "Obchodný park",
+  "nameEN": "Retail park",
+  "nameCS": "Obchodní park",
+  "footprint": [
+   2,
+   2
+  ],
+  "parts": [
+   {
+    "src": "City Kit - Industrial/Models/OBJ format/building-t",
+    "pos": [
+     -0.5,
+     0.0,
+     -0.6
+    ],
+    "rot": 0,
+    "scale": 0.72
+   },
+   {
+    "src": "City Kit - Industrial/Models/OBJ format/building-p",
+    "pos": [
+     0.55,
+     0.0,
+     -0.6
+    ],
+    "rot": 0,
+    "scale": 0.6
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-awning-wide",
+    "pos": [
+     -0.5,
+     0.0,
+     -0.2
+    ],
+    "rot": 0,
+    "scale": 0.9
+   },
+   {
+    "src": "City Kit - Commercial/Models/OBJ format/detail-awning-wide",
+    "pos": [
+     0.55,
+     0.0,
+     -0.39
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "box": [
+     1.96,
+     0.02,
+     0.84
+    ],
+    "color": "#5b5e70",
+    "pos": [
+     0.0,
+     0.0,
+     0.5
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     -0.8,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     -0.4,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.0,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.4,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "box": [
+     0.02,
+     0.012,
+     0.34
+    ],
+    "color": "#f5f5f5",
+    "pos": [
+     0.8,
+     0.03,
+     0.62
+    ]
+   },
+   {
+    "src": "Racing Kit/Models/OBJ format/lightPostModern",
+    "pos": [
+     -0.92,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "Racing Kit/Models/OBJ format/lightPostModern",
+    "pos": [
+     0.92,
+     0.0,
+     0.3
+    ],
+    "rot": 0,
+    "scale": 0.8
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/sedan",
+    "pos": [
+     -0.4,
+     0.0,
+     0.62
+    ],
+    "rot": 180,
+    "scale": 0.15
+   },
+   {
+    "src": "Car Kit/Models/OBJ format/suv",
+    "pos": [
+     0.4,
+     0.0,
+     0.62
+    ],
+    "rot": 180,
+    "scale": 0.15
+   }
+  ],
+  "signs": [
+   {
+    "text": "OBCHODY",
+    "textEN": "SHOPS",
+    "color": "#0f766e",
+    "height": 0.7,
+    "textColor": "#ffffff"
+   }
+  ],
+  "label": "RP3 Rad s markízami"
+ }
+]
