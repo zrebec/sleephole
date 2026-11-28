@@ -49,7 +49,10 @@ by build – the roadmap is plan §0b.
    **Install B (14b1 alone) on his phone 27 Nov ~09:32, store identical** – his A1 – A7 + B1 done (B1: our alarm on time; A4: the pre-alarm never ends by itself; A7: the lab's app-stop failed). Gate
    green ~10:25 (B1 untouched: our alarm +1.0s; the keep-alive expired at wake + 0.24s → his pick ~10:40: lead 25s); his yes on
    rule 12 and tonight 27 → 28 = the first W7 real night. **14b2 done (merged `9dd4820`, lead 25s, rule 12); install C pre-built**
-   → on his phone today (before 12:30 or from ~14:15), his switch on + a quick night, then the first W7 night. The build 14 page https://claude.ai/artifact/6JuUbzwX7xmrkNdo88UtsA (tests a1 – a7 now, r1 – r2 on
+   → **NOT installed on 27 Nov (the phone never came back) – the night 27 → 28 ran on install B, no W7; complete, 7 / 7 calm, 302
+   expected.** His remark 28 Nov: the phone did not charge overnight and was warm (journal: 65 % from 22:40 to 06:00 while
+   `charging`, `thermal=serious` 05:19; SleepHole's lines as on earlier nights) – his Settings → Battery answer pending. Next:
+   install C on his word, his switch + C1 – C3 + B2 / B3, then the first W7 night (28 → 29 or later). The build 14 page https://claude.ai/artifact/6JuUbzwX7xmrkNdo88UtsA (tests a1 – a7 now, r1 – r2 on
    27 Nov; store `state/answers`, prefix `b14.`). Then 14b1 / 14d / 14e1 on his word.
 
 ## Standing notes for Opus (never list them to the owner – his wish 2026-11-09)
