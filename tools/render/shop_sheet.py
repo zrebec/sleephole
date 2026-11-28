@@ -15,8 +15,9 @@ except OSError:
     font = big = ImageFont.load_default()
 LABELS = {"cand-sc1": "SC1 Hala (a)", "cand-sc1-b": "SC1 Hala (b)", "cand-sc2": "SC2 Pasaz s trhom",
           "cand-sc3": "SC3 Obchodny dom", "cand-sc4": "SC4 Sklenene centrum", "cand-rp1": "RP1 Dlha hala (a)",
-          "cand-rp1-b": "RP1 Dlha hala (b)", "cand-rp2": "RP2 Dve predajne", "cand-rp3": "RP3 Rad s markizami"}
-SCALE = [("assets/sprites/L3/l3-police.png", "police (L3)"), ("assets/sprites/L3/l3-hospital.png", "hospital (L3)"),
+          "cand-rp1-b": "RP1 Dlha hala (b)", "cand-rp2": "RP2 Dve predajne", "cand-rp3": "RP3 Rad s markizami", "cand-sc5": "SC5 Velke sklenene centrum (4x4)",
+          "cand-sc5-name": "SC5 with a cat name (4x4)", "cand-sc6": "SC6 Centrum do L (4x4)"}
+SCALE = [("assets/sprites/L1/l1-house-a-0.png", "house (L1, 1x1)"), ("assets/sprites/L3/l3-police.png", "police (L3)"), ("assets/sprites/L3/l3-hospital.png", "hospital (L3)"),
          ("assets/sprites/L2/l2-library-b.png", "library (L2)"), ("assets/sprites/L4/l4-sky-a-0.png", "skyscraper (L4)")]
 
 def row(title, items):
@@ -25,11 +26,14 @@ def row(title, items):
     w = sum(i.width + 30 for i, _ in ims) + 30
     return title, ims, h, w
 
+BIG = ("cand-sc5", "cand-sc5-name", "cand-sc6")
 rows = [
     row("Nakupne centrum (shopping centre, proposed L3)",
-        [(os.path.join(cdir, e["file"]), LABELS[e["id"]]) for e in cat if e["id"].startswith("cand-sc")]),
+        [(os.path.join(cdir, e["file"]), LABELS[e["id"]]) for e in cat if e["id"].startswith("cand-sc") and e["id"] not in BIG]),
     row("Obchodny park (retail park, proposed L2)",
         [(os.path.join(cdir, e["file"]), LABELS[e["id"]]) for e in cat if e["id"].startswith("cand-rp")]),
+    row("4x4 - a whole block (shopping centre, proposed L3)",
+        [(os.path.join(cdir, e["file"]), LABELS[e["id"]]) for e in cat if e["id"] in BIG]),
     row("SCALE - existing buildings at the same pixel scale", SCALE),
 ]
 W = max(r[3] for r in rows)

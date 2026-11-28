@@ -579,10 +579,10 @@ def shop_candidates():
     so the owner can pick. Footprint 2x2 (front = +z)."""
     out = []
 
-    def cand(rid, level, name, parts, label, text, color, sign_pos=None):
+    def cand(rid, level, name, parts, label, text, color, sign_pos=None, fp=2, sign_h=0.7):
         out.append({"id": rid, "level": level, "kind": "building", "nameSK": name, "nameEN": NAME_EN[name],
-                    "nameCS": NAME_CS[name], "footprint": [2, 2], "parts": parts,
-                    "signs": [{**sign(text, color, height=0.7), **({"pos": sign_pos} if sign_pos else {})}], "label": label})
+                    "nameCS": NAME_CS[name], "footprint": [fp, fp], "parts": parts,
+                    "signs": [{**sign(text, color, height=sign_h), **({"pos": sign_pos} if sign_pos else {})}], "label": label})
 
     SHOP = {"sk": "NÁKUPY", "en": "SHOPPING"}
     SHOPS = {"sk": "OBCHODY", "en": "SHOPS"}
@@ -664,6 +664,76 @@ def shop_candidates():
         *carpark(),
         cars("sedan", -0.4, 0.62), cars("suv", 0.4, 0.62),
     ], "RP3 Rad s markízami", SHOPS, RP)
+    # ---- 4x4 alternatives: a whole block, SC4's glass language scaled up -------------------------------
+    GLASS, FAC, PLINTH, ROOF = "#7fa7d6", "#e9e6f2", "#8d89a6", "#4a4a5e"
+    lamp = lambda x, z: part(RAC + "lightPostModern", x=x, z=z, scale=0.9)
+
+    def wing(x0, x1, z0, z1, front=True, side=True, h=0.9):
+        """A two-storey glass-banded wing: plinth, body, roof edge, bands on the +z (front) and / or +x (side) face."""
+        cx, cz, w, d = (x0 + x1) / 2, (z0 + z1) / 2, x1 - x0, z1 - z0
+        ps = [box(w + 0.04, 0.2, d + 0.04, PLINTH, x=cx, z=cz), box(w, h, d, FAC, x=cx, z=cz, y=0.2),
+              box(w + 0.06, 0.06, d + 0.06, ROOF, x=cx, z=cz, y=0.2 + h)]
+        for y in (0.3, 0.3 + h / 2):
+            if front:
+                ps.append(box(w - 0.4, 0.2, 0.01, GLASS, x=cx, z=z1 + 0.005, y=y))
+            if side:
+                ps.append(box(0.01, 0.2, d - 0.4, GLASS, x=x1 + 0.005, z=cz, y=y))
+        return ps
+
+    def roof_units(pts, y=1.16):
+        return [box(0.34, 0.16, 0.26, "#9a9aa8", x=x, z=z, y=y) for x, z in pts] + \
+               [box(0.18, 0.1, 0.18, "#b8b8c4", x=x + 0.05, z=z - 0.03, y=y + 0.16) for x, z in pts[::2]]
+
+    def atrium(x, z, w, d, h, canopy_scale=1.5):
+        return [box(w, h, d, "#9fc3e8", x=x, z=z), box(w + 0.04, 0.06, d + 0.04, ROOF, x=x, z=z, y=h),
+                box(w * 0.6, 0.5, 0.01, "#5d86b8", x=x, z=z + d / 2 + 0.006, y=0.22),   # dark glass doors
+                part(COM + "detail-overhang-wide", x=x, z=z + d / 2 - 0.15, scale=canopy_scale)]
+
+    def stalls(x0, x1, zc, n_step=0.4, length=0.55):
+        n = int(round((x1 - x0) / n_step))
+        return [box(0.02, 0.012, length, "#f5f5f5", x=round(x0 + i * n_step, 3), z=zc, y=0.05) for i in range(n + 1)]
+
+    MIX = ["sedan", "hatchback-sports", "suv", "van", "taxi", "sedan-sports", "suv-luxury", "delivery"]
+
+    def parked(x0, zc, n, skip=(), step=0.4):
+        return [cars(MIX[i % len(MIX)], round(x0 + step / 2 + i * step, 3), zc) for i in range(n) if i not in skip]
+
+    def sc5(rid, text):
+        cand(rid, 3, "Nákupné centrum", [
+            plate(4, PLAZA),
+            *wing(-1.7, 1.7, -1.9, -0.1),
+            *atrium(0.0, -0.2, 1.1, 0.9, 1.8),
+            part(COM + "detail-overhang-wide", x=-1.25, z=0.05, scale=1.0), box(0.5, 0.45, 0.02, "#5d86b8", x=-1.25, z=-0.09, y=0.2),
+            part(COM + "detail-overhang-wide", x=1.2, z=0.05, scale=1.0), box(0.5, 0.45, 0.02, "#5d86b8", x=1.2, z=-0.09, y=0.2),
+            *roof_units([(-1.2, -1.5), (-0.6, -1.0), (0.9, -1.4), (1.3, -0.8), (-1.3, -0.7)]),
+            # plaza strip with parasols / planters / trees, then the car park
+            part(COM + "detail-parasol-a", x=-0.9, z=0.75), part(COM + "detail-parasol-b", x=0.9, z=0.75),
+            part(SUB + "planter", x=-1.5, z=0.75), part(SUB + "planter", x=1.5, z=0.75),
+            part(SUB + "tree-large", x=-1.85, z=0.5), part(SUB + "tree-large", x=1.85, z=0.5),
+            part(MM + "shopping-cart", x=0.35, z=0.8, rot=20, scale=0.6), part(MM + "shopping-cart", x=-0.3, z=0.85, rot=-15, scale=0.6),
+            box(3.9, 0.02, 1.0, "#5b5e70", z=1.45, y=0.03),
+            *stalls(-1.8, 1.8, 1.45, length=0.6), *parked(-1.8, 1.45, 9, skip=(2, 6)),
+            lamp(-1.9, 0.95), lamp(1.9, 0.95), lamp(-0.6, 0.95), lamp(0.6, 0.95),
+        ], "SC5 " + text["en"], text, SC, sign_pos=[-1.3, 0.6, -0.07], fp=4, sign_h=0.95)
+
+    sc5("cand-sc5", SHOP)
+    sc5("cand-sc5-name", {"sk": "FELIX", "en": "PEPPER"})
+
+    # SC6 – an L of two wings (along the back and along the +x side) around a car park, a tall corner atrium at the inner corner
+    cand("cand-sc6", 3, "Nákupné centrum", [
+        plate(4, PLAZA),
+        *wing(-1.9, 1.95, -1.95, -0.95, front=True, side=True),
+        *wing(0.95, 1.95, -0.95, 1.9, front=True, side=True),
+        *atrium(0.55, -0.7, 1.0, 1.0, 1.8),
+        *roof_units([(-1.3, -1.5), (-0.5, -1.4), (0.4, -1.6), (1.5, -1.2), (1.45, 0.0), (1.45, 1.0)]),
+        part(COM + "detail-overhang-wide", x=1.45, z=1.9, scale=1.0),
+        box(2.7, 0.02, 1.35, "#5b5e70", x=-0.62, z=1.2, y=0.03),
+        *stalls(-1.9, 0.6, 1.2, length=0.6), *parked(-1.9, 1.2, 6, skip=(2,)),
+        part(COM + "detail-parasol-a", x=-0.9, z=0.15), part(COM + "detail-parasol-b", x=-0.1, z=0.2),
+        part(SUB + "planter", x=-1.7, z=0.2), part(SUB + "tree-large", x=-1.85, z=1.85), part(SUB + "tree-large", x=0.65, z=1.85),
+        part(MM + "shopping-cart", x=0.2, z=0.5, rot=20, scale=0.6), part(MM + "shopping-cart", x=-0.5, z=0.45, rot=-15, scale=0.6),
+        lamp(-1.9, 0.5), lamp(0.7, 0.5), lamp(-0.6, 1.9),
+    ], "SC6 Centrum do L", SHOP, SC, sign_pos=[-1.4, 0.45, -0.92], fp=4, sign_h=0.95)
     return out
 
 
