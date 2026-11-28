@@ -2343,8 +2343,18 @@ final class AppModel {
 
     /// The keep-alive begins shortly before the pre-alarm fires, once per night (a measurement: no retry after an expiry).
     private func beginPreAlarmKeepAliveIfDue(now: Date, rec: NightRecord) {
-        guard preAlarmAt != nil, !preAlarmKeepAliveUsed, preAlarmKeepAliveToken == nil, preAlarmKeepAliveOn,
+        guard let fireAt = preAlarmAt, !preAlarmKeepAliveUsed, preAlarmKeepAliveToken == nil,
               now >= PreAlarmPlan.keepAliveFrom(wake: rec.wake), now < rec.wake + Self.preAlarmKeepAliveMax else { return }
+        // 14b3: decided once per night, here. SleepHole open on an unlocked phone: iOS forwards no alert to the Watch, and
+        // the silent pre-alarm would only take our audio – so it ends before it fires (and drops the marker: a pre-alarm
+        // that never fired excuses nothing). A locked phone (the normal night) goes on as before.
+        if now < fireAt, rest.appActive() {
+            preAlarmKeepAliveUsed = true
+            diag.note("prealarm", "skip why=inFront")
+            endPreAlarm(why: "inFront", note: false)
+            return
+        }
+        guard preAlarmKeepAliveOn else { return }
         preAlarmKeepAliveUsed = true
         preAlarmKeepAliveToken = keepAlive.begin(name: "pre-alarm") { [weak self] in self?.preAlarmKeepAliveExpired() }
         diag.note("prealarm", "keepalive begin")

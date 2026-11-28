@@ -447,4 +447,50 @@ struct WatchBuzzTests {
         h.clock.now = wake; h.model.refresh()
         #expect(h.model.collapsedAt == wake - 2)                                                  // 18 s from the leave, as today
     }
+
+    // MARK: 14b3 – no pre-alarm while SleepHole is open on screen
+
+    @Test func inFrontAtTheKeepAliveMomentTheWaitingPreAlarmEndsAndLeavesNoMarker() async {
+        let ka = FakeKeepAlive()
+        let h = await harness(keepAlive: ka)
+        await base.startTonight(h)
+        h.model.rest.appActive = { true }
+        h.alarm.forgetEvents()
+        h.clock.now = wake - 28; h.model.refresh()
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.events == [.endPre])                                                      // the backup alarm is untouched
+        #expect(h.model.preAlarmAt == nil && h.model.active?.preAlarmAt == nil && h.model.active?.rules.excusedFrom == nil)
+        #expect(ka.began == 0)
+        #expect(diagLines(h).contains("prealarm skip why=inFront"))
+        h.clock.now = wake - 27; h.model.refresh()
+        await h.model.systemAlarmIdle()
+        #expect(h.alarm.events == [.endPre] && ka.began == 0)                                     // decided once
+    }
+
+    @Test func inTheBackgroundTheKeepAliveBeginsAndTheMarkerStays() async {
+        let ka = FakeKeepAlive()
+        let h = await harness(keepAlive: ka)
+        await base.startTonight(h)
+        h.model.rest.appActive = { false }
+        h.clock.now = wake - 28; h.model.refresh()
+        await h.model.systemAlarmIdle()
+        #expect(ka.began == 1)
+        #expect(h.model.preAlarmAt == fire && h.model.active?.preAlarmAt == fire)
+        #expect(!diagLines(h).contains("prealarm skip why=inFront"))
+        h.model.rest.appActive = { true }                                                        // opened later: nothing changes
+        h.clock.now = fire + 1; h.model.refresh()
+        #expect(h.model.active?.preAlarmAt == fire && ka.began == 1)
+    }
+
+    @Test func aTripOnANightWhoseSkippedPreAlarmNeverFiredCountsAsOnAnUnmarkedNight() async {
+        let h = await harness()
+        await base.startTonight(h)
+        h.model.rest.appActive = { true }
+        h.clock.now = wake - 28; h.model.refresh()
+        await h.model.systemAlarmIdle()
+        h.clock.now = wake - 20; h.model.append(.leftApp)
+        #expect(h.model.nudgesSent == 1)
+        h.clock.now = wake; h.model.refresh()
+        #expect(h.model.collapsedAt == wake - 2)                                                  // 18 s from the leave, no excuse
+    }
 }

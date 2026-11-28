@@ -40,6 +40,24 @@ final class Diagnostics {
     private var timer: Task<Void, Never>?
     private var tokens: [NSObjectProtocol] = []
 
+    // 14b3: the power heartbeat – one `power` line "hb …" every `heartbeatInterval` while a night / nap is tracked.
+    /// Reads the CPU use (the app: mach / rusage; tests replace it).
+    var readUsage: (Date) -> UsageSample = { ProcessUsageReader.read(at: $0) }
+    /// The context of a beat (the app: battery, plug state, thermal state, application state; tests replace it).
+    var heartbeatContext: () -> HeartbeatContext = {
+        let app: String
+        switch UIApplication.shared.applicationState {
+        case .active: app = "fg"
+        case .background: app = "bg"
+        default: app = "inactive"
+        }
+        return HeartbeatContext(battery: DeviceReading.batteryPercentText(), state: DeviceReading.batteryStateName(),
+                                thermal: DeviceReading.thermalName(), app: app)
+    }
+    private(set) var heartbeatInterval: TimeInterval = PowerHeartbeat.baseInterval
+    private var lastUsage: UsageSample?
+    private var heartbeatTask: Task<Void, Never>?
+
     var isTracking: Bool { record != nil }
 
     // MARK: lifetime
@@ -53,13 +71,17 @@ final class Diagnostics {
         storedFull = rec.diagLog.isFull
         lastFlush = now()          // the caller saves right after its start entries; later ones wait for the interval
         setupEndNoted = false
-        if observesSystem { observeSystem() }
+        heartbeatInterval = PowerHeartbeat.interval(timeScale: rec.timeScale)
+        lastUsage = readUsage(now())
+        if observesSystem { observeSystem(); startHeartbeat() }
     }
 
     /// Writes what is waiting, stops tracking and lets go of the battery switch. Called when the night is finalized.
     func end() {
         flush()
         timer?.cancel(); timer = nil
+        heartbeatTask?.cancel(); heartbeatTask = nil
+        lastUsage = nil
         tokens.forEach(NotificationCenter.default.removeObserver)
         tokens.removeAll()
         if observesSystem { BatteryMonitoring.set(Self.batteryOwner, on: false) }
@@ -126,6 +148,29 @@ final class Diagnostics {
     /// k=power: battery, plug state and Low Power Mode right now (`reason` goes in front, e.g. "setup", "locked").
     func notePower(_ reason: String? = nil) {
         note("power", ([reason].compactMap { $0 } + [DeviceReading.powerText()]).joined(separator: " "))
+    }
+
+    /// One beat: the CPU used since the previous beat (or since `begin`) and the top threads. A plain `note` – nothing
+    /// is written when the track is full or not running.
+    func heartbeat() {
+        guard record != nil, !storedFull else { return }
+        let cur = readUsage(now())
+        if let prev = lastUsage {
+            note("power", PowerHeartbeat.line(prev: prev, cur: cur, context: heartbeatContext(), maxLength: DiagLog.maxValueLength))
+        }
+        lastUsage = cur
+    }
+
+    private func startHeartbeat() {
+        heartbeatTask?.cancel()
+        let interval = heartbeatInterval
+        heartbeatTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(interval))
+                guard !Task.isCancelled else { return }
+                self?.heartbeat()
+            }
+        }
     }
 
     private func observeSystem() {
